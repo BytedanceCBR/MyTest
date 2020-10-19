@@ -37,6 +37,7 @@
 #include <sys/sysctl.h>
 #import "TTSettingsManager.h"
 #import "FHHMDTManager.h"
+#import "TTVURLService.h"
 
 static NSString *const kvideo_controller_error_domain = @"kvideo_player_controller_error_domain";
 static NSString *platformString;
@@ -217,9 +218,9 @@ static NSString *platformString;
 
 - (void)openAutoModel
 {
-    if (self.videoEngine.supportedResolutionTypes.count > 0 || self.videoEngine.currentResolution == TTVideoEngineResolutionTypeSD) {
-        [self.videoEngine configResolution:TTVideoEngineResolutionTypeAuto];
-    }
+//    if (self.videoEngine.supportedResolutionTypes.count > 0 || self.videoEngine.currentResolution == TTVideoEngineResolutionTypeSD) {
+//        [self.videoEngine configResolution:TTVideoEngineResolutionTypeAuto];
+//    }
 }
 
 - (void)ttv_kvo

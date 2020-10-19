@@ -79,6 +79,31 @@
     return _playerView;
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    CGFloat videoAspectRatio = [self.cellModel.video.height floatValue] / [self.cellModel.video.width floatValue];
+
+    CGFloat screenAspectRatio = self.height > self.width ? (self.height / self.width) : (self.width / self.height);
+
+    if(videoAspectRatio >= screenAspectRatio){
+        self.playerView.contentMode = UIViewContentModeScaleAspectFill;
+    }else{
+//            if ([TTDeviceHelper isIPhoneXDevice]) {
+//                self.videoPlayView.top = self.tt_safeAreaInsets.top;
+//                CGFloat height = CGRectGetHeight(frame) - self.tt_safeAreaInsets.top;
+//                self.videoPlayView.height = ceil(CGRectGetWidth(frame) * 16 / 9);
+//                if(videoAspectRatio >= (16.0 / 9.0)){
+//                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
+//                }else{
+//                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
+//                }
+//            }else{
+            self.playerView.contentMode = UIViewContentModeScaleAspectFit;
+//            }
+    }
+    
+}
+
 - (void)initConstains {
     
 }
@@ -190,7 +215,7 @@
     //            model.disableFinishUIShow = YES;
     //        }
     //    }
-    //    model.mutedWhenStart = self.cellEntity.mutedWhenStart;
+//        model.mutedWhenStart = YES;
         
     //    BOOL isVideoFeedURLEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"video_feed_url" defaultValue:@NO freeze:NO] boolValue];
     //    if (isVideoFeedURLEnabled && [self.cellEntity.originData hasVideoPlayInfoUrl] && [self.cellEntity.originData isVideoUrlValid]) {
@@ -221,7 +246,7 @@
     //        self.movieView.player.banLoading = YES;
     //        self.movieView.player.muted = [self.cellEntity.originData couldAutoPlay];
     //    }
-    //    self.movieView.player.muted = self.cellEntity.muted;
+//        self.playerView.player.muted = YES;
     //    [self addUrlTrackerOnPlayer:playVideo];
         [self settingMovieView:self.playerView];
 }
