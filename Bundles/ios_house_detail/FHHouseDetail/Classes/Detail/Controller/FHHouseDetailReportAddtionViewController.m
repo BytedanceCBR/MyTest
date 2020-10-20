@@ -559,6 +559,21 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
     }];
     
     [self loadData];
+    
+    [self adddGoDetail];
+}
+
+- (void)adddGoDetail {
+    NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+    reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+    reportParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+    reportParams[UT_PAGE_TYPE] = [self pageType];
+    reportParams[@"event_tracking_id"] = @"113178";
+    TRACK_EVENT(UT_GO_DETAIL, reportParams);
+}
+
+- (NSString *)pageType {
+    return @"feedback_AddInfo_detail";
 }
 
 - (void)loadData {
@@ -928,7 +943,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
     NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
     reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
     reportParams[UT_ENTER_FROM] = @"feedback_detail";
-    reportParams[UT_PAGE_TYPE] = @"feedback_AddInfo_detail";
+    reportParams[UT_PAGE_TYPE] = [self pageType];
     reportParams[@"group_id"] = self.houseId;
     reportParams[@"event_tracking_id"] = @"113180";
     TRACK_EVENT(@"click_feedback", reportParams);
@@ -971,7 +986,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
                 NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
                 reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
                 reportParams[UT_ENTER_FROM] = @"feedback_detail";
-                reportParams[UT_PAGE_TYPE] = @"feedback_AddInfo_detail";
+                reportParams[UT_PAGE_TYPE] = [self pageType];
                 reportParams[@"group_id"] = self.houseId;
                 reportParams[@"event_tracking_id"] = @"113181";
                 TRACK_EVENT(@"feedback_confirm", reportParams);

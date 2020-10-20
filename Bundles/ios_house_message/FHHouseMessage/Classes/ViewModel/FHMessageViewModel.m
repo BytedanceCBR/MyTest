@@ -251,8 +251,10 @@
                 cell.unreadView.badgeNumber = TTBadgeNumberHidden;
             }
             NSURL *url = [NSURL URLWithString:[theModel.openUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            
+            FHMessageType type = [theModel.id integerValue];
             //ugc 消息列表
-            if([theModel.id isEqualToString:@"309"]){
+            if(type == FHMessageTypeHouseRent){
                 NSMutableDictionary *tracerDictForUgc = [NSMutableDictionary dictionary];
                 tracerDictForUgc[@"origin_from"] = @"interactive_messages";
                 tracerDictForUgc[@"enter_from"] = @"message_list";
@@ -268,9 +270,9 @@
             
             NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
             
-            if([theModel.id isEqualToString:@"312"]) {
+            if(type == FHMessageTypeHouseReport) {
                 // 房源举报反馈列表
-                tracerDict[UT_ORIGIN_FROM] = self.viewController.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+                tracerDict[UT_ORIGIN_FROM] = @"messagetab";
                 tracerDict[UT_ENTER_FROM] = @"recommend_message_list";
                 tracerDict[UT_ELEMENT_FROM] = @"feedback";
             }

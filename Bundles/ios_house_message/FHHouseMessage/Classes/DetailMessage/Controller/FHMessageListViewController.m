@@ -133,6 +133,30 @@
     [self initView];
     [self initConstraints];
     [self initViewModel];
+    [self reportGoDetail];
+}
+
+- (void)reportGoDetail {
+    NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+    
+    FHMessageType type = [self.typeId integerValue];
+    switch (type) {
+        case FHMessageTypeHouseReport:
+        {
+            reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+            reportParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+            reportParams[UT_ELEMENT_FROM] = self.tracerDict[UT_ELEMENT_FROM]?:UT_BE_NULL;
+            reportParams[UT_PAGE_TYPE] = @"feedback_detail";
+            reportParams[@"event_tracking_id"] = @"113177";
+        }
+            break;
+        default:
+            break;
+    }
+    
+    if(reportParams.allKeys.count > 0) {
+        TRACK_EVENT(UT_GO_DETAIL, reportParams);
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
