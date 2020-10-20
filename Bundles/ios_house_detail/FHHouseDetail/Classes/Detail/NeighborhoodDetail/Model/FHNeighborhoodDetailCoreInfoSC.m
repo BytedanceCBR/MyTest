@@ -13,6 +13,13 @@
 #import "FHNeighborhoodDetailQuickEntryCollectionCell.h"
 #import <FHHouseBase/FHMonitor.h>
 #import "FHNeighborhoodDetailViewController.h"
+#import "NSArray+BTDAdditions.h"
+
+@interface FHNeighborhoodDetailCoreInfoSC () <IGListBindingSectionControllerDataSource>
+
+@end
+
+
 @implementation FHNeighborhoodDetailCoreInfoSC
 
 - (instancetype)init
@@ -20,67 +27,68 @@
     self = [super init];
     if (self) {
         self.inset = UIEdgeInsetsMake(-20, 15, 12, 15);
+        self.dataSource = self;
     }
     return self;
 }
 
-#pragma mark - DataSource
-- (NSInteger)numberOfItems {
-    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-    return model.items.count;
-}
-
-- (CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
-    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-    if (model.items[index] == model.titleCellModel) {
-        return [FHNeighborhoodDetailHeaderTitleCollectionCell cellSizeWithData:model.titleCellModel width:width];
-    } else if (model.items[index] == model.subMessageModel) {
-        return [FHNeighborhoodDetailSubMessageCollectionCell cellSizeWithData:model.subMessageModel width:width];
-    } else if (model.items[index] == model.propertyInfoModel) {
-        return [FHNeighborhoodDetailPropertyInfoCollectionCell cellSizeWithData:model.propertyInfoModel width:width];
-    } else if (model.items[index] == model.quickEntryModel) {
-        return [FHNeighborhoodDetailQuickEntryCollectionCell cellSizeWithData:model.quickEntryModel width:width];
-    }
-    return CGSizeZero;
-}
-- (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
-    __weak typeof(self) weakSelf = self;
-    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-    if (model.items[index] == model.titleCellModel) {
-        FHNeighborhoodDetailHeaderTitleCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailHeaderTitleCollectionCell class] withReuseIdentifier:NSStringFromClass([model.titleCellModel class]) forSectionController:self atIndex:index];
-        [cell refreshWithData:model.titleCellModel];
-        return cell;
-    } else if (model.items[index] == model.subMessageModel) {
-        FHNeighborhoodDetailSubMessageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSubMessageCollectionCell class] withReuseIdentifier:NSStringFromClass([model.subMessageModel class]) forSectionController:self atIndex:index];
-        [cell refreshWithData:model.subMessageModel];
-        return cell;
-    } else if (model.items[index] == model.propertyInfoModel) {
-        FHNeighborhoodDetailPropertyInfoCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPropertyInfoCollectionCell class] withReuseIdentifier:NSStringFromClass([model.propertyInfoModel class]) forSectionController:self atIndex:index];
-        __weak FHNeighborhoodDetailCoreInfoSM *weakModelSM = model;
-        [cell setFoldButtonActionBlock:^{
-            weakModelSM.isFold = !weakModelSM.isFold;
-            [weakSelf.detailViewController refreshSectionModel:weakModelSM animated:YES];
-        }];
-        [cell refreshWithData:model.propertyInfoModel];
-        
-        return cell;
-    } else if (model.items[index] == model.quickEntryModel) {
-        FHNeighborhoodDetailQuickEntryCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailQuickEntryCollectionCell class] withReuseIdentifier:NSStringFromClass([model.quickEntryModel class]) forSectionController:self atIndex:index];
-        [cell refreshWithData:model.quickEntryModel];
-        [cell setQuickEntryClickBlock:^(NSString * _Nonnull quickEntryName) {
-            [weakSelf addQuickEntryClick:quickEntryName];
-            if ([quickEntryName isEqualToString:@"街景"]) {
-                [self gotoPanoramaDetail];
-            } else {
-                [self gotoMapDetail:quickEntryName];
-            }
-        }];
-        return cell;
-        
-    }
-    return nil;
-}
+//#pragma mark - DataSource
+//- (NSInteger)numberOfItems {
+//    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+//    return model.items.count;
+//}
+//
+//- (CGSize)sizeForItemAtIndex:(NSInteger)index {
+//    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+//    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+//    if (model.items[index] == model.titleCellModel) {
+//        return [FHNeighborhoodDetailHeaderTitleCollectionCell cellSizeWithData:model.titleCellModel width:width];
+//    } else if (model.items[index] == model.subMessageModel) {
+//        return [FHNeighborhoodDetailSubMessageCollectionCell cellSizeWithData:model.subMessageModel width:width];
+//    } else if (model.items[index] == model.propertyInfoModel) {
+//        return [FHNeighborhoodDetailPropertyInfoCollectionCell cellSizeWithData:model.propertyInfoModel width:width];
+//    } else if (model.items[index] == model.quickEntryModel) {
+//        return [FHNeighborhoodDetailQuickEntryCollectionCell cellSizeWithData:model.quickEntryModel width:width];
+//    }
+//    return CGSizeZero;
+//}
+//- (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
+//    __weak typeof(self) weakSelf = self;
+//    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+//    if (model.items[index] == model.titleCellModel) {
+//        FHNeighborhoodDetailHeaderTitleCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailHeaderTitleCollectionCell class] withReuseIdentifier:NSStringFromClass([model.titleCellModel class]) forSectionController:self atIndex:index];
+//        [cell refreshWithData:model.titleCellModel];
+//        return cell;
+//    } else if (model.items[index] == model.subMessageModel) {
+//        FHNeighborhoodDetailSubMessageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSubMessageCollectionCell class] withReuseIdentifier:NSStringFromClass([model.subMessageModel class]) forSectionController:self atIndex:index];
+//        [cell refreshWithData:model.subMessageModel];
+//        return cell;
+//    } else if (model.items[index] == model.propertyInfoModel) {
+//        FHNeighborhoodDetailPropertyInfoCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPropertyInfoCollectionCell class] withReuseIdentifier:NSStringFromClass([model.propertyInfoModel class]) forSectionController:self atIndex:index];
+//        __weak FHNeighborhoodDetailCoreInfoSM *weakModelSM = model;
+//        [cell setFoldButtonActionBlock:^{
+//            weakModelSM.isFold = !weakModelSM.isFold;
+//            [weakSelf.detailViewController refreshSectionModel:weakModelSM animated:YES];
+//        }];
+//        [cell refreshWithData:model.propertyInfoModel];
+//
+//        return cell;
+//    } else if (model.items[index] == model.quickEntryModel) {
+//        FHNeighborhoodDetailQuickEntryCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailQuickEntryCollectionCell class] withReuseIdentifier:NSStringFromClass([model.quickEntryModel class]) forSectionController:self atIndex:index];
+//        [cell refreshWithData:model.quickEntryModel];
+//        [cell setQuickEntryClickBlock:^(NSString * _Nonnull quickEntryName) {
+//            [weakSelf addQuickEntryClick:quickEntryName];
+//            if ([quickEntryName isEqualToString:@"街景"]) {
+//                [self gotoPanoramaDetail];
+//            } else {
+//                [self gotoMapDetail:quickEntryName];
+//            }
+//        }];
+//        return cell;
+//
+//    }
+//    return nil;
+//}
 
 - (void)gotoPanoramaDetail {
     if (![TTReachability isNetworkConnected]) {
@@ -163,6 +171,86 @@
     return @"be_null";
 }
 
+- (void)foldAction {
+    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+    
+    if (model.propertyInfoModel && [model.propertyInfoModel isKindOfClass:[FHNeighborhoodDetailPropertyInfoModel class]]) {
+        
+        FHNeighborhoodDetailPropertyInfoModel *newInfoModel = [model.propertyInfoModel transformFoldStatus];
+        
+        NSMutableArray *newArray = [NSMutableArray arrayWithArray:model.items];
+        
+        
+        
+        [newArray btd_replaceObjectAtIndex:[newArray indexOfObject:model.propertyInfoModel] withObject:newInfoModel];
+        model.items = newArray.copy;
+        model.propertyInfoModel = newInfoModel;
+        
+        
+        [self updateAnimated:YES completion:^(BOOL updated) {
 
+        }];
+    }
+
+}
+
+
+- (nonnull UICollectionViewCell<IGListBindable> *)sectionController:(nonnull IGListBindingSectionController *)sectionController cellForViewModel:(nonnull id)viewModel atIndex:(NSInteger)index {
+    __weak typeof(self) weakSelf = self;
+    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+    if (model.items[index] == model.titleCellModel) {
+        FHNeighborhoodDetailHeaderTitleCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailHeaderTitleCollectionCell class] withReuseIdentifier:NSStringFromClass([model.titleCellModel class]) forSectionController:self atIndex:index];
+        [cell refreshWithData:model.titleCellModel];
+        return cell;
+    } else if (model.items[index] == model.subMessageModel) {
+        FHNeighborhoodDetailSubMessageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSubMessageCollectionCell class] withReuseIdentifier:NSStringFromClass([model.subMessageModel class]) forSectionController:self atIndex:index];
+        [cell refreshWithData:model.subMessageModel];
+        return cell;
+    } else if (model.items[index] == model.propertyInfoModel) {
+        FHNeighborhoodDetailPropertyInfoCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPropertyInfoCollectionCell class] withReuseIdentifier:NSStringFromClass([model.propertyInfoModel class]) forSectionController:self atIndex:index];
+        [cell setFoldButtonActionBlock:^{
+            [weakSelf foldAction];
+        }];
+        [cell refreshWithData:model.propertyInfoModel];
+        
+        return cell;
+    } else if (model.items[index] == model.quickEntryModel) {
+        FHNeighborhoodDetailQuickEntryCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailQuickEntryCollectionCell class] withReuseIdentifier:NSStringFromClass([model.quickEntryModel class]) forSectionController:self atIndex:index];
+        [cell refreshWithData:model.quickEntryModel];
+        [cell setQuickEntryClickBlock:^(NSString * _Nonnull quickEntryName) {
+            [weakSelf addQuickEntryClick:quickEntryName];
+            if ([quickEntryName isEqualToString:@"街景"]) {
+                [self gotoPanoramaDetail];
+            } else {
+                [self gotoMapDetail:quickEntryName];
+            }
+        }];
+        return cell;
+        
+    }
+    return nil;
+}
+
+- (CGSize)sectionController:(nonnull IGListBindingSectionController *)sectionController sizeForViewModel:(nonnull id)viewModel atIndex:(NSInteger)index {
+    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+    if (model.items[index] == model.titleCellModel) {
+        return [FHNeighborhoodDetailHeaderTitleCollectionCell cellSizeWithData:model.titleCellModel width:width];
+    } else if (model.items[index] == model.subMessageModel) {
+        return [FHNeighborhoodDetailSubMessageCollectionCell cellSizeWithData:model.subMessageModel width:width];
+    } else if (model.items[index] == model.propertyInfoModel) {
+        return [FHNeighborhoodDetailPropertyInfoCollectionCell cellSizeWithData:model.propertyInfoModel width:width];
+    } else if (model.items[index] == model.quickEntryModel) {
+        return [FHNeighborhoodDetailQuickEntryCollectionCell cellSizeWithData:model.quickEntryModel width:width];
+    }
+    return CGSizeZero;
+}
+
+- (nonnull NSArray<id<IGListDiffable>> *)sectionController:(nonnull IGListBindingSectionController *)sectionController viewModelsForObject:(nonnull id)object {
+    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+    NSMutableArray *viewModels = [NSMutableArray array];
+    [viewModels addObjectsFromArray:model.items];
+    return viewModels.copy;
+}
 
 @end

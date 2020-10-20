@@ -19,9 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHNeighborhoodDetailSubMessageModel *subMessageModel;
 @property (nonatomic, strong) FHNeighborhoodDetailPropertyInfoModel *propertyInfoModel;
 @property (nonatomic, strong) FHNeighborhoodDetailQuickEntryModel *quickEntryModel;
-
-@property (nonatomic, assign) BOOL isFold; // 折叠
-
 @end
 
 NS_ASSUME_NONNULL_END

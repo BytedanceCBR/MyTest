@@ -7,14 +7,14 @@
 
 #import "FHDetailBaseCell.h"
 #import "FHDetailNeighborhoodModel.h"
-
+#import <IGListKit/IGListKit.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHNeighborhoodDetailSubMessageCollectionCell : FHDetailBaseCollectionCell
+@interface FHNeighborhoodDetailSubMessageCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 
 @end
 
-@interface FHNeighborhoodDetailSubMessageModel : NSObject
+@interface FHNeighborhoodDetailSubMessageModel : NSObject<IGListDiffable>
 
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighborhoodInfoModel *neighborhoodInfo ;
 @end

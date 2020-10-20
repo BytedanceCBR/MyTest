@@ -61,6 +61,10 @@
     }
 }
 
+- (void)bindViewModel:(id)viewModel {
+    [self refreshWithData:viewModel];
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -162,6 +166,14 @@
 
 
 @implementation FHNeighborhoodDetailSubMessageModel
+
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
+}
 
 
 @end

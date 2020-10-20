@@ -8,6 +8,7 @@
 #import "FHNeighborhoodDetailSectionModel.h"
 #import "FHNeighborhoodDetailReleatorCollectionCell.h"
 #import "FHNeighborhoodDetailReleatorMoreCell.h"
+#import <IGListDiffKit/IGListDiffable.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailAgentSM : FHNeighborhoodDetailSectionModel
@@ -17,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
 @property (nonatomic, assign) BOOL isFold; // 折叠
+@property (nonatomic, strong, nullable) FHNeighborhoodDetailReleatorMoreCellModel *moreModel;
 
 @end
 

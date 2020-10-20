@@ -91,6 +91,10 @@ static NSInteger const FHNeighborhoodDetailQuickEntryCount = 5;
     }
 }
 
+- (void)bindViewModel:(id)viewModel {
+    [self refreshWithData:viewModel];
+}
+
 
 @end
 
@@ -106,6 +110,13 @@ static NSInteger const FHNeighborhoodDetailQuickEntryCount = 5;
         if (self.baiduPanoramaUrl.length > 0 ){
         self.quickEntryNames = @[@"街景"];
     }
+}
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
 }
 
 @end

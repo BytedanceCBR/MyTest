@@ -155,6 +155,10 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
     }
 }
 
+- (void)bindViewModel:(id)viewModel {
+    [self refreshWithData:viewModel];
+}
+
 @end
 
 @implementation FHNeighborhoodDetailPropertyInfoModel
@@ -166,6 +170,21 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
         _isFold = YES;
     }
     return self;
+}
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
+}
+
+- (instancetype)transformFoldStatus {
+    FHNeighborhoodDetailPropertyInfoModel *newInfoModel = [[FHNeighborhoodDetailPropertyInfoModel alloc] init];
+    newInfoModel.baseInfo = self.baseInfo;
+    newInfoModel.baseInfoFoldCount = self.baseInfoFoldCount;
+    newInfoModel.isFold = !self.isFold;
+    return newInfoModel;
 }
 
 @end

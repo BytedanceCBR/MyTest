@@ -6,14 +6,15 @@
 //
 
 #import "FHDetailBaseCell.h"
+#import <IGListKit/IGListKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHNeighborhoodDetailHeaderTitleCollectionCell : FHDetailBaseCollectionCell
+@interface FHNeighborhoodDetailHeaderTitleCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 
 @end
 
-@interface FHNeighborhoodDetailHeaderTitleModel : NSObject
+@interface FHNeighborhoodDetailHeaderTitleModel : NSObject<IGListDiffable>
 @property (nonatomic, copy) NSString *titleStr;
 @property (nonatomic, copy) NSString *address;
 

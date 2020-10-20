@@ -26,4 +26,22 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+@interface FHNeighborhoodDetailBindingSectionController : IGListBindingSectionController
+
+@property (nonatomic, strong, nullable, readonly) FHNeighborhoodDetailSectionModel *sectionModel;
+
+- (FHNeighborhoodDetailViewController *)detailViewController;
+
+- (NSDictionary *)detailTracerDict;
+
+- (NSDictionary *)subPageParams;
+
+- (void)didUpdateToObject:(id)object NS_REQUIRES_SUPER;
+
+@property (nonatomic, weak, readonly) NSMutableDictionary *elementShowCaches;
+
+@end
+
+
 NS_ASSUME_NONNULL_END

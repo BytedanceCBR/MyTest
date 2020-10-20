@@ -18,7 +18,7 @@
 
 static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
 
-@interface FHNeighborhoodDetailAgentSC ()<IGListSupplementaryViewSource,IGListDisplayDelegate>
+@interface FHNeighborhoodDetailAgentSC ()<IGListSupplementaryViewSource,IGListDisplayDelegate,IGListBindingSectionControllerDataSource>
 @property (nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 @end
 
@@ -30,6 +30,7 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
     if (self) {
         self.supplementaryViewSource = self;
         self.displayDelegate = self;
+        self.dataSource = self;
     }
     return self;
 }
@@ -124,6 +125,13 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
     }
 }
 
+- (void)addRealtorClickMore {
+    NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
+    // 移除字段
+    [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id",@"enter_from"]];
+    [FHUserTracker writeEvent:@"realtor_click_more" params:tracerDic];
+}
+
 - (void)cellClick:(FHDetailContactModel *)model {
     
     FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
@@ -146,80 +154,88 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
     
 }
 
-- (NSInteger)numberOfItems {
+- (void)foldAction {
     FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
-    if (agentSM.recommendedRealtors.count <= FHNeighborhoodDetailAgentLimit) {
-        return agentSM.recommendedRealtors.count;
+    agentSM.isFold = !agentSM.isFold;
+    if (!agentSM.isFold) {
+        [self addRealtorClickMore];
     }
-    if (agentSM.isFold) {
-        return FHNeighborhoodDetailAgentLimit + 1;
-    } else {
-        return agentSM.recommendedRealtors.count + 1;
-    }
-    return 0;
+    agentSM.moreModel = [FHNeighborhoodDetailReleatorMoreCellModel modelWithFold:agentSM.isFold];
+    [self updateAnimated:YES completion:^(BOOL updated) {
+
+    }];
+//            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
 }
+//
+//- (NSInteger)numberOfItems {
+//    FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
+//    if (agentSM.recommendedRealtors.count <= FHNeighborhoodDetailAgentLimit) {
+//        return agentSM.recommendedRealtors.count;
+//    }
+//    if (agentSM.isFold) {
+//        return FHNeighborhoodDetailAgentLimit + 1;
+//    } else {
+//        return agentSM.recommendedRealtors.count + 1;
+//    }
+//    return 0;
+//}
+//
+//
+//- (CGSize)sizeForItemAtIndex:(NSInteger)index {
+//    FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
+//    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+//
+//
+//    CGFloat vHeight = 65;
+//    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == FHNeighborhoodDetailAgentLimit)) {
+//        vHeight = 44;
+//    } else {
+//        if (index < agentSM.recommendedRealtors.count) {
+//            FHDetailContactModel *obj = (FHDetailContactModel *)agentSM.recommendedRealtors[index];
+//            return [FHNeighborhoodDetailReleatorCollectionCell cellSizeWithData:obj width:width];
+//        }
+//    }
+//
+//    return CGSizeMake(width, vHeight);
+//}
+//
+//- (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
+//    __weak typeof(self) weakSelf = self;
+//    FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
+//    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == FHNeighborhoodDetailAgentLimit)) {
+//        //展开，收起
+//        FHNeighborhoodDetailReleatorMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailReleatorMoreCell class] forSectionController:self atIndex:index];
+//        __weak FHNeighborhoodDetailAgentSM *weakAgentSM = agentSM;
+//        [cell setFoldButtonActionBlock:^{
+//            weakAgentSM.isFold = !weakAgentSM.isFold;
+//            if (!weakAgentSM.isFold) {
+//                [weakSelf addRealtorClickMore];
+//            }
+//            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
+//        }];
+//        cell.foldButton.isFold = agentSM.isFold;
+//        return cell;
+//    } else {
+//        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
+//        FHNeighborhoodDetailReleatorCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailReleatorCollectionCell class] forSectionController:self atIndex:index];
+//        [cell refreshWithData:model];
+//        [cell setImClickBlock:^(FHDetailContactModel * _Nonnull model) {
+//            [weakSelf imclick:model];
+//        }];
+//        [cell setPhoneClickBlock:^(FHDetailContactModel * _Nonnull model) {
+//            [weakSelf phoneClick:model];
+//        }];
+//        [cell setLicenseClickBlock:^(FHDetailContactModel * _Nonnull model) {
+//            [weakSelf licenseClick:model];
+//        }];
+//        [cell setReleatorClickBlock:^(FHDetailContactModel * _Nonnull model) {
+//                    [weakSelf cellClick:model];
+//        }];
+//        return cell;
+//    }
+//}
 
 
-- (CGSize)sizeForItemAtIndex:(NSInteger)index {
-    FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
-
-    
-    CGFloat vHeight = 65;
-    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == FHNeighborhoodDetailAgentLimit)) {
-        vHeight = 44;
-    } else {
-        if (index < agentSM.recommendedRealtors.count) {
-            FHDetailContactModel *obj = (FHDetailContactModel *)agentSM.recommendedRealtors[index];
-            return [FHNeighborhoodDetailReleatorCollectionCell cellSizeWithData:obj width:width];
-        }
-    }
-    
-    return CGSizeMake(width, vHeight);
-}
-
-- (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
-    __weak typeof(self) weakSelf = self;
-    FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
-    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == FHNeighborhoodDetailAgentLimit)) {
-        //展开，收起
-        FHNeighborhoodDetailReleatorMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailReleatorMoreCell class] forSectionController:self atIndex:index];
-        __weak FHNeighborhoodDetailAgentSM *weakAgentSM = agentSM;
-        [cell setFoldButtonActionBlock:^{
-            weakAgentSM.isFold = !weakAgentSM.isFold;
-            if (!weakAgentSM.isFold) {
-                [weakSelf addRealtorClickMore];
-            }
-            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
-        }];
-        cell.foldButton.isFold = agentSM.isFold;
-        return cell;
-    } else {
-        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
-        FHNeighborhoodDetailReleatorCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailReleatorCollectionCell class] forSectionController:self atIndex:index];
-        [cell refreshWithData:model];
-        [cell setImClickBlock:^(FHDetailContactModel * _Nonnull model) {
-            [weakSelf imclick:model];
-        }];
-        [cell setPhoneClickBlock:^(FHDetailContactModel * _Nonnull model) {
-            [weakSelf phoneClick:model];
-        }];
-        [cell setLicenseClickBlock:^(FHDetailContactModel * _Nonnull model) {
-            [weakSelf licenseClick:model];
-        }];
-        [cell setReleatorClickBlock:^(FHDetailContactModel * _Nonnull model) {
-                    [weakSelf cellClick:model];
-        }];
-        return cell;
-    }
-}
-
-- (void)addRealtorClickMore {
-    NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
-    // 移除字段
-    [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id",@"enter_from"]];
-    [FHUserTracker writeEvent:@"realtor_click_more" params:tracerDic];
-}
 
 #pragma mark - IGListSupplementaryViewSource
 - (NSArray<NSString *> *)supportedElementKinds {
@@ -294,4 +310,69 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
     
 }
 
+#pragma mark - IGListBindingSectionControllerDataSource
+
+- (NSArray<id<IGListDiffable>> *)sectionController:(IGListBindingSectionController *)sectionController viewModelsForObject:(id)object {
+    FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
+    NSMutableArray *viewModels = [NSMutableArray array];
+    if (agentSM.recommendedRealtors.count <= FHNeighborhoodDetailAgentLimit) {
+        return agentSM.recommendedRealtors;
+    }
+    if (agentSM.isFold) {
+        [viewModels addObjectsFromArray:[agentSM.recommendedRealtors subarrayWithRange:NSMakeRange(0, FHNeighborhoodDetailAgentLimit)]];
+    } else {
+        [viewModels addObjectsFromArray:agentSM.recommendedRealtors];
+    }
+    [viewModels addObject:agentSM.moreModel];
+    return viewModels.copy;
+}
+
+- (nonnull UICollectionViewCell<IGListBindable> *)sectionController:(nonnull IGListBindingSectionController *)sectionController cellForViewModel:(nonnull id)viewModel atIndex:(NSInteger)index {
+    __weak typeof(self) weakSelf = self;
+    FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
+    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == FHNeighborhoodDetailAgentLimit)) {
+        //展开，收起
+        FHNeighborhoodDetailReleatorMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailReleatorMoreCell class] forSectionController:self atIndex:index];
+        [cell setFoldButtonActionBlock:^{
+            [weakSelf foldAction];
+        }];
+        cell.foldButton.isFold = agentSM.isFold;
+        return cell;
+    } else {
+        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
+        FHNeighborhoodDetailReleatorCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailReleatorCollectionCell class] forSectionController:self atIndex:index];
+        [cell refreshWithData:model];
+        [cell setImClickBlock:^(FHDetailContactModel * _Nonnull model) {
+            [weakSelf imclick:model];
+        }];
+        [cell setPhoneClickBlock:^(FHDetailContactModel * _Nonnull model) {
+            [weakSelf phoneClick:model];
+        }];
+        [cell setLicenseClickBlock:^(FHDetailContactModel * _Nonnull model) {
+            [weakSelf licenseClick:model];
+        }];
+        [cell setReleatorClickBlock:^(FHDetailContactModel * _Nonnull model) {
+                    [weakSelf cellClick:model];
+        }];
+        return cell;
+    }
+}
+
+- (CGSize)sectionController:(nonnull IGListBindingSectionController *)sectionController sizeForViewModel:(nonnull id)viewModel atIndex:(NSInteger)index {
+    FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
+    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+
+    
+    CGFloat vHeight = 65;
+    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > FHNeighborhoodDetailAgentLimit && index == FHNeighborhoodDetailAgentLimit)) {
+        vHeight = 44;
+    } else {
+        if (index < agentSM.recommendedRealtors.count) {
+            FHDetailContactModel *obj = (FHDetailContactModel *)agentSM.recommendedRealtors[index];
+            return [FHNeighborhoodDetailReleatorCollectionCell cellSizeWithData:obj width:width];
+        }
+    }
+    
+    return CGSizeMake(width, vHeight);
+}
 @end

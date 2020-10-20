@@ -35,4 +35,26 @@
     return self;
 }
 
+- (void)bindViewModel:(id)viewModel {
+    
+}
+
+@end
+
+@implementation FHNeighborhoodDetailReleatorMoreCellModel
+
++ (FHNeighborhoodDetailReleatorMoreCellModel *)modelWithFold:(BOOL )fold {
+    FHNeighborhoodDetailReleatorMoreCellModel *model = [[FHNeighborhoodDetailReleatorMoreCellModel alloc] init];
+    model.isFold = fold;
+    return model;
+}
+
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
+}
+
 @end

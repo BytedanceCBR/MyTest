@@ -6,15 +6,15 @@
 //
 
 #import "FHDetailBaseCell.h"
-
+#import <IGListKit/IGListKit.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHNeighborhoodDetailQuickEntryCollectionCell : FHDetailBaseCollectionCell
+@interface FHNeighborhoodDetailQuickEntryCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 @property (nonatomic, copy) void (^quickEntryClickBlock)(NSString *quickEntryName);
 
 @end
 
-@interface FHNeighborhoodDetailQuickEntryModel : NSObject
+@interface FHNeighborhoodDetailQuickEntryModel : NSObject<IGListDiffable>
 
 @property (nonatomic, strong) NSArray<NSString *> *quickEntryNames;
 @property(nonatomic, copy, nullable) NSString *gaodeLng;

@@ -16,6 +16,7 @@
     self.recommendedRealtors = model.data.recommendedRealtors;
     self.associateInfo = model.data.recommendRealtorsAssociateInfo;
     self.isFold = YES;
+    self.moreModel = [[FHNeighborhoodDetailReleatorMoreCellModel alloc] init];
 }
 
 - (nonnull id<NSObject>)diffIdentifier {

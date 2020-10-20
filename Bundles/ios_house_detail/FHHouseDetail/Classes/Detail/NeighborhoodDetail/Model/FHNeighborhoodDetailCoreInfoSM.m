@@ -65,20 +65,8 @@
 }
 
 - (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    
     return self == object;
-}
-
-- (void)setIsFold:(BOOL)isFold {
-    if (self.propertyInfoModel && [self.propertyInfoModel isKindOfClass:[FHNeighborhoodDetailPropertyInfoModel class]]) {
-        self.propertyInfoModel.isFold = isFold;
-    }
-}
-
-- (BOOL)isFold {
-    if (self.propertyInfoModel && [self.propertyInfoModel isKindOfClass:[FHNeighborhoodDetailPropertyInfoModel class]]) {
-        return self.propertyInfoModel.isFold;
-    }
-    return NO;
 }
 
 @end
