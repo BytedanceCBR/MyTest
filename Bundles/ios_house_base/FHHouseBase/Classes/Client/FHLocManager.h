@@ -58,6 +58,10 @@ extern NSString * const kFHAllConfigLoadErrorNotice;
 
 - (BOOL)isHaveLocationAuthorization;
 
+- (void)showLocationGuideAlert;
+
+- (void)clearCommonParamsLocation;
+
 + (NSString *)amapAPIKey;
 
 //尝试请求当前位置
