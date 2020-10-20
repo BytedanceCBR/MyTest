@@ -147,42 +147,20 @@ static NSString *platformString;
             }
         }
     }
-    TTVideoEngineVideoInfo *videoInfo = [[TTVideoEngineVideoInfo alloc] init];
-    videoInfo.vid = self.playerModel.videoID;
-    videoInfo.expire = self.playerModel.expirationTime;
-    videoInfo.playInfo = [[TTVideoEnginePlayInfo alloc] initWithDictionary:self.playerModel.videoPlayInfo];
     
     [self.KVOController unobserve:self.videoEngine];
     [self.videoEngine.playerView removeFromSuperview];
-    BOOL isOwn = self.playerModel.useOwnPlayer && [[UIDevice currentDevice].systemVersion floatValue] >= 8.0;
-    if (!isEmptyString(self.playerModel.localURL)) {
-        isOwn = NO;
-    }
     
-    self.videoEngine = [[TTVideoEngine alloc] initWithOwnPlayer:isOwn];
-    self.videoEngine.startTime = [[TTVPlayerCacheProgressController sharedInstance] playTimeForVideoID:self.playerModel.videoID];
+    self.videoEngine = [[TTVideoEngine alloc] initWithOwnPlayer:YES];
+//    self.videoEngine.startTime = [[TTVPlayerCacheProgressController sharedInstance] playTimeForVideoID:self.playerModel.videoID];
+    self.videoEngine.cacheEnable = YES;
     self.videoEngine.resolutionServerControlEnabled = YES;
+    
     if (self.playerStateStore.state.enableSmothlySwitch) {
         self.videoEngine.smoothlySwitching = YES;
         self.videoEngine.smoothDelayedSeconds = 3;
     }
-    self.videoEngine.netClient = [[TTVVideoNetClient alloc] init];
-    
-    BOOL hardDecoder = [[[TTSettingsManager sharedManager] settingForKey:@"tt_player_hard_decoder" defaultValue:@0 freeze:NO] boolValue];
-    if (!platformString) {
-        platformString = [[self class] ttv_platformString];
-    }
-    if ([platformString isEqualToString:@"Simulator"]) {
-        hardDecoder = NO;
-    }
-    self.videoEngine.hardwareDecode = hardDecoder;
-    if ([TTVPlayerSettingUtility ttvs_playerImageScaleEnable]) {
-        self.videoEngine.imageScaleType = TTVideoEngineImageScaleTypeLanczos;
-    }
-    if ([TTVPlayerSettingUtility tt_play_image_enhancement]) {
-        self.videoEngine.enhancementType = TTVideoEngineEnhancementTypeContrast;
-    }
-    [self.videoEngine setVideoInfo:videoInfo];
+
     self.videoEngine.playerView.userInteractionEnabled = YES;
     
     if (!isEmptyString(self.playerModel.localURL)) {
@@ -194,21 +172,10 @@ static NSString *platformString;
         self.playerStateStore.state.isUsingLocalURL = NO;
         [self.videoEngine configResolution:lastResolution completion:^(BOOL success, TTVideoEngineResolutionType completeResolution) {
             self.playerStateStore.state.currentResolution = completeResolution;
-
         }];
         
         self.playerStateStore.state.playingWithCache = NO;
-        
-        if (videoInfo) {
-            [self.videoEngine setVideoInfo:videoInfo];
-        } else {
-            [self.videoEngine setVideoID:self.playerModel.videoID];
-        }
-        
-//        if (self.playerModel.audioBalanceEnable && [TTKitchen getBOOL:KTTVideoPasterADAudioBalanceEnable]) {
-//            [self.videoEngine setOptionForKey:VEKKeyPlayerAudioEffectEnable_BOOL value:@(YES)];
-//        }
-
+        [self.videoEngine setVideoID:self.playerModel.videoID];
     }
     self.videoEngine.dataSource = self;
     self.videoEngine.delegate = self;
@@ -428,7 +395,7 @@ static NSString *platformString;
     if (![TTVResolutionStore sharedInstance].userSelected || [TTVResolutionStore sharedInstance].forceSelected) {
         [TTVResolutionStore sharedInstance].autoResolution = self.playerStateStore.state.currentResolution;
     }
-    [self openAutoModel];
+//    [self openAutoModel];
     [self.playerStateStore sendAction:TTVPlayerEventTypeShowVideoFirstFrame payload:nil];
 }
 
@@ -625,7 +592,6 @@ static NSString *platformString;
     }
     
     [[TTVPlayerCacheProgressController sharedInstance] cacheProgress:progress currentTime:self.playerStateStore.state.currentPlaybackTime VideoID:self.playerModel.videoID isDetailFeed:self.isPlayInDetailFeed];
-//    [[TTVPlayerCacheProgressController sharedInstance] cacheProgress:progress currentTime:self.playerStateStore.state.currentPlaybackTime VideoID:self.playerModel.videoID];
 }
 
 #pragma mark - fetch video
