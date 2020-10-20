@@ -20,6 +20,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailReleatorMoreCellModel : NSObject<IGListDiffable>
 
+@property (nonatomic, assign) BOOL isFold; // 折叠
+
++ (FHNewHouseDetailReleatorMoreCellModel *)modelWithFold:(BOOL )fold;
+
 @end
 
 NS_ASSUME_NONNULL_END

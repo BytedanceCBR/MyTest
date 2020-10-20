@@ -43,6 +43,12 @@
 
 @implementation FHNewHouseDetailReleatorMoreCellModel
 
++ (FHNewHouseDetailReleatorMoreCellModel *)modelWithFold:(BOOL )fold {
+    FHNewHouseDetailReleatorMoreCellModel *model = [[FHNewHouseDetailReleatorMoreCellModel alloc] init];
+    model.isFold = fold;
+    return model;
+}
+
 - (id<NSObject>)diffIdentifier {
     return self;
 }

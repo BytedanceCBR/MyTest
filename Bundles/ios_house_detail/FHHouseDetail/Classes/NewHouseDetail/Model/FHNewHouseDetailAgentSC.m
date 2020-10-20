@@ -193,6 +193,19 @@
 //    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
 }
 
+- (void)foldAction {
+    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
+    agentSM.isFold = !agentSM.isFold;
+    if (!agentSM.isFold) {
+        [self addRealtorClickMore];
+    }
+    agentSM.moreModel = [FHNewHouseDetailReleatorMoreCellModel modelWithFold:agentSM.isFold];
+    [self updateAnimated:YES completion:^(BOOL updated) {
+
+    }];
+//            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
+}
+
 #pragma mark - IGListSupplementaryViewSource
 - (NSArray<NSString *> *)supportedElementKinds {
     return @[UICollectionElementKindSectionHeader];
@@ -309,14 +322,7 @@
         FHNewHouseDetailReleatorMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorMoreCell class] forSectionController:self atIndex:index];
         __weak FHNewHouseDetailAgentSM *weakAgentSM = agentSM;
         [cell setFoldButtonActionBlock:^{
-            weakAgentSM.isFold = !weakAgentSM.isFold;
-            if (!weakAgentSM.isFold) {
-                [weakSelf addRealtorClickMore];
-            }
-            [weakSelf updateAnimated:NO completion:^(BOOL updated) {
-
-            }];
-//            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
+            [weakSelf foldAction];
         }];
         cell.foldButton.isFold = agentSM.isFold;
         return cell;
