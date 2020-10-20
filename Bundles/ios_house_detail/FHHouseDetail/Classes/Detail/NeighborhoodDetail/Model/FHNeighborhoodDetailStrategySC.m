@@ -86,8 +86,7 @@
             NSMutableDictionary *traceParam = @{}.mutableCopy;
             
             traceParam[@"origin_from"] = model.detailTracerDic[@"origin_from"] ?: @"be_null";
-            traceParam[@"enter_from"] = model.detailTracerDic[@"enter_from"] ?: @"be_null";
-            traceParam[@"page_type"] = model.detailTracerDic[@"page_type"] ?: @"be_null";
+            traceParam[@"enter_from"] = model.detailTracerDic[@"page_type"] ?: @"be_null";
             traceParam[@"element_type"] = @"neighborhood_test_evaluate";
             traceParam[@"rank"] = [NSString stringWithFormat:@"%ld",(long)index];
             traceParam[@"log_pb"] = articleModel.logPb;
