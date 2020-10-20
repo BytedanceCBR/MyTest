@@ -324,6 +324,11 @@
     if (state == TTVVideoPlaybackStateFinished) {
         [self moviePlayFinishedAction];
     }
+    if (state == TTVVideoPlaybackStatePlaying) {
+        if (self.videoDidStartPlay) {
+            self.videoDidStartPlay();
+        }
+    }
 }
 
 - (void)playerCurrentPlayBackTimeChange:(NSTimeInterval)currentPlayBackTime duration:(NSTimeInterval)duration {

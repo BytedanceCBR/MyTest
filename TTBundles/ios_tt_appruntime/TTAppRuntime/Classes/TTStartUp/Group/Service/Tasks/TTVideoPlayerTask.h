@@ -7,6 +7,6 @@
 
 #import "TTStartupTask.h"
 
-@interface TTIESPlayerTask : TTStartupTask
+@interface TTVideoPlayerTask : TTStartupTask
 
 @end

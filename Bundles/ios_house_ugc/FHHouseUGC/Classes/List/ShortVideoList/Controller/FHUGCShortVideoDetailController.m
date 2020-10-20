@@ -127,6 +127,7 @@
 
 #import "UIDevice+BTDAdditions.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHShortVideoPerLoaderManager.h"
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
 @import AVFoundation;
@@ -958,7 +959,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 //        [TSVPrefetchImageManager prefetchDetailImageWithDataFetchManager:self.dataFetchManager forward:YES];
 
-//        [TSVPrefetchVideoManager startPrefetchShortVideoInDetailWithDataFetchManager:self.dataFetchManager];
+        [FHShortVideoPerLoaderManager startPrefetchShortVideoInDetailWithDataFetchManager:self.dataFetchManager];
 
         if (!self.firstLoadFinished) {
             self.firstLoadFinished = YES;

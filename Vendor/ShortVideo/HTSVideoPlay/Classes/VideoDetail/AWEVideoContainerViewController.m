@@ -49,6 +49,7 @@
 #import "FHShortVideoTracerUtil.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "FHUGCShortVideoFullScreenCell.h"
+#import "FHShortVideoPerLoaderManager.h"
 
 // 与西瓜视频共用的流量播放开关，全局变量哦，名字别乱改
 BOOL kBDTAllowCellularVideoPlay = NO;
@@ -464,7 +465,8 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
             @strongify(self);
             [TSVPrefetchImageManager prefetchDetailImageWithDataFetchManager:self.dataFetchManager forward:forward];
             // 预加载视频
-            [TSVPrefetchVideoManager startPrefetchShortVideoInDetailWithDataFetchManager:self.dataFetchManager];
+//            [TSVPrefetchVideoManager startPrefetchShortVideoInDetailWithDataFetchManager:self.dataFetchManager];
+            [FHShortVideoPerLoaderManager startPrefetchShortVideoInDetailWithDataFetchManager:self.dataFetchManager];
         };
    
         cell.videoDidPlayOneLoop = ^{

@@ -175,6 +175,8 @@ static NSString *platformString;
         }];
         
         self.playerStateStore.state.playingWithCache = NO;
+        [self.videoEngine setOptionForKey:VEKKeyProxyServerEnable_BOOL value:@(YES)];
+        [self.videoEngine setOptionForKey:VEKKeyModelCacheVideoInfoEnable_BOOL value:@(YES)];
         [self.videoEngine setVideoID:self.playerModel.videoID];
     }
     self.videoEngine.dataSource = self;
