@@ -309,7 +309,7 @@ def appPods
     #-----播放器SDK相关-----
     pod 'TTPlayerSDK', '2.10.5.42'
     pod 'TTFFmpeg', '1.25.5.101'
-    pod 'TTVideoEngine', '1.10.5.2',:subspecs => ['CN','Base','Public','Private','NewLogger','OldModel']
+    pod_binary 'TTVideoEngine', '1.10.5.2',:subspecs => ['CN','Base','Public','Private','NewLogger','OldModel']
 #    pod 'TTPreloaderSDK', '1.4.23'
     pod_binary 'audiosdk', '0.25.0.1'
     pod_binary 'ABRInterface', '0.6.1'
