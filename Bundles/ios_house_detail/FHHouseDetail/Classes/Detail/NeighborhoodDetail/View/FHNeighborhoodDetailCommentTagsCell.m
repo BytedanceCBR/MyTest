@@ -7,6 +7,8 @@
 
 #import "FHNeighborhoodDetailCommentTagsCell.h"
 
+#define maxRowCount 3
+
 @interface FHNeighborhoodDetailCommentTagsCell ()
 
 @property(nonatomic , strong) NSMutableArray *tagViews;
@@ -40,6 +42,10 @@
                 row++;
                 currentWidth = tagWidth;
             }
+        }
+        
+        if(row > (maxRowCount - 1)){
+            row = maxRowCount - 1;
         }
         
         height += (row * 34);
@@ -97,14 +103,17 @@
         self.leftMargin = 16 + (self.currentWidth - tagWidth);
     }
     
-    self.topMargin = 34 * self.row;
-    
-    [tagView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(self.topMargin);
-        make.left.mas_equalTo(self.contentView).offset(self.leftMargin);
-        make.width.mas_equalTo(tagWidth);
-        make.height.mas_equalTo(26);
-    }];
+    if(self.row < maxRowCount){
+        self.topMargin = 34 * self.row;
+        [tagView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.contentView).offset(self.topMargin);
+            make.left.mas_equalTo(self.contentView).offset(self.leftMargin);
+            make.width.mas_equalTo(tagWidth);
+            make.height.mas_equalTo(26);
+        }];
+    }else{
+        tagView.hidden = YES;
+    }
 }
 
 - (void)removeAllTagViews {
