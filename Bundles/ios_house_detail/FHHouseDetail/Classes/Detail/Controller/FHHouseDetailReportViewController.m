@@ -744,7 +744,15 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     UIView *hintView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT)];
     hintView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     
-    void(^dismissHintViewBlock)(void) = ^(void) {
+    void(^dismissHintViewBlock)(NSString *) = ^(NSString *from) {
+        // 点击埋点
+        NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+        reportParams[UT_PAGE_TYPE] = self.tracerDict[UT_ENTER_FROM];
+        reportParams[@"popup_name"] = @"submit_success";
+        reportParams[@"click_position"] = from;
+        reportParams[@"event_tracking_id"] = @"113175";
+        TRACK_EVENT(@"popup_click", reportParams);
+        // ---
         [UIView animateWithDuration:duration animations:^{
             hintView.alpha = 0;
         } completion:^(BOOL finished) {
@@ -775,7 +783,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [closeBtn setImage:ICON_FONT_IMG(24, @"\U0000E673", [UIColor themeGray5]) forState:UIControlStateNormal];
     [[[closeBtn rac_signalForControlEvents:UIControlEventTouchUpInside] deliverOnMainThread] subscribeNext:^(__kindof UIControl * _Nullable x) {
-        dismissHintViewBlock();
+        dismissHintViewBlock(@"");
     }];
     [contentView addSubview:closeBtn];
     [closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -821,7 +829,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         make.height.mas_equalTo(40);
     }];
     [[[knownBtn rac_signalForControlEvents:UIControlEventTouchUpInside] deliverOnMainThread] subscribeNext:^(__kindof UIControl * _Nullable x) {
-        dismissHintViewBlock();
+        dismissHintViewBlock(@"know");
     }];
     
     // 显示弹窗
@@ -830,6 +838,14 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     [keyWindow addSubview:hintView];
     [UIView animateWithDuration:duration animations:^{
         hintView.alpha = 1;
+    } completion:^(BOOL finished) {
+        // 展现埋点
+        NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+        reportParams[UT_PAGE_TYPE] = self.tracerDict[UT_ENTER_FROM];
+        reportParams[@"popup_name"] = @"submit_success";
+        reportParams[@"event_tracking_id"] = @"113174";
+        TRACK_EVENT(@"popup_show", reportParams);
+        // ---
     }];
 }
 

@@ -263,10 +263,18 @@
                 return;
             }
 
-            NSDictionary *dict = @{
-                    @"typeId": theModel.id
-            };
-
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            dict[@"typeId"] = theModel.id;
+            
+            NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+            
+            if([theModel.id isEqualToString:@"312"]) {
+                // 房源举报反馈列表
+                tracerDict[UT_ORIGIN_FROM] = self.viewController.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+                tracerDict[UT_ENTER_FROM] = @"recommend_message_list";
+                tracerDict[UT_ELEMENT_FROM] = @"feedback";
+            }
+            dict[TRACER_KEY] = tracerDict;
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             

@@ -18,6 +18,7 @@
 #import "UIViewController+HUD.h"
 #import "FRUploadImageManager.h"
 #import "TTPostThreadDefine.h"
+#import "FHUserTracker.h"
 
 #define FH_HOUSE_DETAIL_ADDITION_TEXT_COUNT_LIMIN 200
 #define FHHouseDetailReportItemPhoneNumberDigitCount 11
@@ -483,6 +484,8 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
 
 // 数据
 @property (nonatomic, copy  ) NSString *ticketID;
+@property (nonatomic, copy  ) NSString *houseId;
+@property (nonatomic, copy  ) NSString *houseType;
 @property (nonatomic, strong) FRUploadImageManager *uploadImageManager;
 @end
 
@@ -496,6 +499,8 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
         self.ticketID = [paramObj.allParams btd_stringValueForKey:@"ticket_id"];
+        self.houseId = [paramObj.allParams btd_stringValueForKey:@"house_id"];
+        self.houseType = [paramObj.allParams btd_stringValueForKey:@"house_type"];
     }
     return self;
 }
@@ -919,6 +924,16 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
     }];
 }
 - (void)submitAction {
+    // 点击埋点
+    NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+    reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+    reportParams[UT_ENTER_FROM] = @"feedback_detail";
+    reportParams[UT_PAGE_TYPE] = @"feedback_AddInfo_detail";
+    reportParams[@"group_id"] = self.houseId;
+    reportParams[@"event_tracking_id"] = @"113180";
+    TRACK_EVENT(@"click_feedback", reportParams);
+    // ---
+    
     @weakify(self);
     [self showLoadingAlert:@"正在提交"];
     [self uploadImagesWithCompletion:^(NSArray<FRUploadImageModel *> *uploadImageModels) {
@@ -952,6 +967,15 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
                 return;
             }
             if(jsonObj && [jsonObj[@"status"] longValue] == 0) {
+                // 埋点
+                NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+                reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+                reportParams[UT_ENTER_FROM] = @"feedback_detail";
+                reportParams[UT_PAGE_TYPE] = @"feedback_AddInfo_detail";
+                reportParams[@"group_id"] = self.houseId;
+                reportParams[@"event_tracking_id"] = @"113181";
+                TRACK_EVENT(@"feedback_confirm", reportParams);
+                // ---
                 [[ToastManager manager] showToast:@"提交完成"];
                 [self goBack];
             }
