@@ -21,8 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSDictionary *commonTrackingParameter;
 @property (nonatomic, readonly) NSTimeInterval totalPlayTime;
 
-@property (nonatomic, copy, nullable) void (^videoDidStartPlay)();
-@property (nonatomic, copy, nullable) void (^videoDidPlayOneLoop)();
+@property (nonatomic, copy, nullable) void (^videoDidStartPlay)(void);
+@property (nonatomic, copy, nullable) void (^videoDidPlayOneLoop)(void);
 
 - (void)updateWithModel:(FHFeedUGCCellModel *)videoDetail;
 - (void)cellWillDisplay;
