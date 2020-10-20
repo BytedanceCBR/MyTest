@@ -495,7 +495,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     }
     if (self.houseType != FHHouseTypeRentHouse) {
         NSNumber *res = [BDABTestManager getExperimentValueForKey:@"home_recommend_card" withExposure:YES];
-        NSInteger vid = [res integerValue] + 2087053;
+        long vid = [res integerValue] + 2087053;
         NSString *group = [NSString stringWithFormat:@"%ld", vid];
         requestDictonary[@"client_ab_version"] = group;
     }
