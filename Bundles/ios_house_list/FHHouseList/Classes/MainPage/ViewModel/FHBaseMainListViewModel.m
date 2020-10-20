@@ -1276,6 +1276,10 @@ extern NSString *const INSTANT_DATA_KEY;
     }else{
         NSMutableDictionary *infoDict = @{}.mutableCopy;
         NSDictionary *param = [self addEnterHouseListLog:model.openUrl];
+        if (param == nil && originFrom) {
+            param = @{UT_ORIGIN_FROM: originFrom};
+        }
+        
         if (param) {
             infoDict[@"tracer"] = param;
             userInfo = [[TTRouteUserInfo alloc]initWithInfo:infoDict];
