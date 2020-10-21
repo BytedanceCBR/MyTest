@@ -29,6 +29,7 @@
 #import "UIColor+Theme.h"
 #import "TTAccountLoginManager.h"
 #import "TTAccountManager.h"
+#import "ToastManager.h"
 
 
 NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifier";
@@ -270,9 +271,10 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
         UIMenuController *menu = [UIMenuController sharedMenuController];
         UIMenuItem *copyItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"复制", nil) action:@selector(customCopy:)];
         UIMenuItem *reportItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"举报", nil) action:@selector(reportComment:)];
+        UIMenuItem *shieldItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"屏蔽", nil) action:@selector(shieldComment:)];
         if (copyItem) {
             self.menuItems = menu.menuItems;
-            menu.menuItems = @[copyItem, reportItem];
+            menu.menuItems = @[copyItem, reportItem, shieldItem];
         }
         [menu setTargetRect:self.contentLabel.frame inView:self.contentLabel.superview];
         [menu setMenuVisible:YES animated:YES];
@@ -298,7 +300,8 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 
 - (BOOL)canPerformAction:(SEL)action withSender:(__unused id)sender {
     return (action == @selector(customCopy:) ||
-            action == @selector(reportComment:));
+            action == @selector(reportComment:)||
+            action == @selector(shieldComment:));
 }
 
 - (void)customCopy:(__unused id)sender {
@@ -325,6 +328,10 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
             [[TTReportManager shareInstance] startReportUserWithType:parameters[@"report"] inputText:parameters[@"criticism"] message:nil source:@(TTReportSourceComment).stringValue userModel:model animated:YES];
         }
     }];
+}
+
+- (void)shieldComment:(__unused id)sender {
+    [[ToastManager manager] showToast:@"屏蔽成功"];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

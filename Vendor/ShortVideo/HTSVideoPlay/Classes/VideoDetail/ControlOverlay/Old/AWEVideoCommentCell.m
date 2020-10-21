@@ -31,6 +31,8 @@
 #import "UIImage+FIconFont.h"
 #import "UIButton+FHUGCMultiDigg.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import "ToastManager.h"
+#import "FHHouseUGCAPI.h"
 
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
 
@@ -399,6 +401,14 @@
                    
                     if ([strongSelf.delegate respondsToSelector:@selector(commentCell:didClickReportWithModel:)]) {
                         [strongSelf.delegate commentCell:strongSelf didClickReportWithModel:strongSelf.commentModel];
+                    }
+                }]];
+                
+                [alert addAction:[UIAlertAction actionWithTitle:@"屏蔽" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    __strong typeof(weakSelf) strongSelf = weakSelf;
+                    
+                    if ([strongSelf.delegate respondsToSelector:@selector(commentCell:didClickShieldWithModel:)]) {
+                        [strongSelf.delegate commentCell:strongSelf didClickShieldWithModel:strongSelf.commentModel];
                     }
                 }]];
             }

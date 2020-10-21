@@ -661,6 +661,8 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //        [FHEnvContext showFindTabRedDots];
 //        self.hasShowDots = YES;
 //    }
+    // 应用启动时willFinishLaunchingWithOptions里先设置了[TTDialogDirector setQueueEnabled: NO]
+    // 在首页展示后再设置为YES，确保应用内push推送功能正常工作
     [TTDialogDirector setQueueEnabled:YES];
 }
 

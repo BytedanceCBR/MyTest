@@ -22,9 +22,6 @@
 
 + (NSArray *)operationList;
 
-//根据userId获取对应的操作列表
-+ (NSArray<FHFeedOperationWord *> *)operationWordList:(NSString *)userId;
-
 + (NSArray<FHFeedOperationWord *> *)operationWordListWithPermission:(NSArray<FHUGCConfigDataPermissionModel> *)permission;
 
 + (NSArray<FHFeedOperationWord *> *)operationWordListWithViewModel:(FHFeedOperationViewModel *)viewModel;

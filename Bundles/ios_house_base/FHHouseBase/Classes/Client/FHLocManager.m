@@ -106,6 +106,20 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
 - (void)_willEnterForeground:(NSNotification *)notification
 {
     self.currentStatus = CLLocationManager.authorizationStatus;
+    if (![self isHaveLocationAuthorization]) {
+        [self cleanLocationData];
+        [self clearCommonParamsLocation];
+    }
+}
+
+- (void)clearCommonParamsLocation{
+    NSMutableDictionary *commonParams =  (NSMutableDictionary *)[[FHEnvContext sharedInstance] getRequestCommonParams];
+    if ([commonParams isKindOfClass:[NSMutableDictionary class]]) {
+        [commonParams removeObjectForKey:@"gaode_lng"];
+        [commonParams removeObjectForKey:@"gaode_lat"];
+        [commonParams removeObjectForKey:@"longitude"];
+        [commonParams removeObjectForKey:@"latitude"];
+    }
 }
 
 - (void)saveCurrentLocationData {
