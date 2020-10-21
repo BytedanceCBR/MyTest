@@ -290,10 +290,9 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
                 make.centerY.equalTo(self.contentView);
                 make.height.mas_equalTo(self.item.height);
                 make.top.bottom.equalTo(self.contentView);
+                make.width.mas_equalTo([self.item.title btd_sizeWithFont:self.titleLabel.font width:SCREEN_WIDTH].width);
             }];
-            
-            [self.titleLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
-            
+                        
             [self.contentView addSubview:self.detailLabel];
             [self.detailLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.equalTo(self.contentView);
@@ -302,7 +301,8 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
                 make.top.bottom.equalTo(self.contentView);
             }];
             
-            
+            [self.titleLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
+
             self.titleLabel.text = self.item.title;
             self.detailLabel.text = self.item.detail;
         }
@@ -317,8 +317,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
                 make.height.mas_equalTo(self.item.height);
             }];
             
-            [self.titleLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
-            
             [self.contentView addSubview:self.phoneTextField];
             [self.phoneTextField mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.equalTo(self.contentView);
@@ -326,6 +324,8 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
                 make.right.equalTo(self.contentView).offset(-20);
                 make.top.bottom.equalTo(self.contentView);
             }];
+            
+            [self.titleLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
             
             self.titleLabel.text = self.item.title;
             self.phoneTextField.text = self.item.detail;
@@ -938,15 +938,15 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
         }
     }];
 }
-- (void)submitAction {
-    // 点击埋点
+- (void)submitAction {    
+    // 埋点
     NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
     reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
     reportParams[UT_ENTER_FROM] = @"feedback_detail";
     reportParams[UT_PAGE_TYPE] = [self pageType];
     reportParams[@"group_id"] = self.houseId;
-    reportParams[@"event_tracking_id"] = @"113180";
-    TRACK_EVENT(@"click_feedback", reportParams);
+    reportParams[@"event_tracking_id"] = @"113181";
+    TRACK_EVENT(@"feedback_confirm", reportParams);
     // ---
     
     @weakify(self);
@@ -982,15 +982,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
                 return;
             }
             if(jsonObj && [jsonObj[@"status"] longValue] == 0) {
-                // 埋点
-                NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
-                reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
-                reportParams[UT_ENTER_FROM] = @"feedback_detail";
-                reportParams[UT_PAGE_TYPE] = [self pageType];
-                reportParams[@"group_id"] = self.houseId;
-                reportParams[@"event_tracking_id"] = @"113181";
-                TRACK_EVENT(@"feedback_confirm", reportParams);
-                // ---
                 [[ToastManager manager] showToast:@"提交完成"];
                 [self goBack];
             }

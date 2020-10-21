@@ -266,6 +266,24 @@
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             
             NSURL* url = [NSURL URLWithString:URLString];
+            if([url.host isEqualToString:@"house_report_additional"]) {
+                // 点击埋点
+                NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+                reportParams[UT_ORIGIN_FROM] = self.viewController.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+                reportParams[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+                reportParams[UT_PAGE_TYPE] = [self.viewController categoryName];
+                NSURLComponents *urlComponents = [NSURLComponents componentsWithString:URLString];
+                __block NSString *houseId = nil;
+                [urlComponents.queryItems enumerateObjectsUsingBlock:^(NSURLQueryItem * _Nonnull queryItem, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if([queryItem.name isEqual:@"house_id"]) {
+                        houseId = queryItem.value;
+                    }
+                }];
+                reportParams[@"group_id"] = houseId;
+                reportParams[@"event_tracking_id"] = @"113180";
+                TRACK_EVENT(@"click_feedback", reportParams);
+                // ---
+            }
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }];
         cell = msgCell;

@@ -76,7 +76,7 @@
                 categoryName = @"official_message_list";
                 break;
             case FHMessageTypeHouseReport:
-                categoryName = @"feedback_detail";
+                categoryName = @"feedback_report_detail";
                 break;
             default:
                 break;

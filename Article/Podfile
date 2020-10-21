@@ -133,11 +133,7 @@ def appDevelopPods
     
     #----弹窗互斥---
     pod 'TTDialogDirector' , :git => 'git@code.byted.org:TTIOS/TTDialogDirector.git' ,:commit => '8ed5beb' , :subspecs => [
-     'Core',
-     'PhotoLibrary',
-     'Microphone',
-     'Camera',
-     'UserNotification'
+     'Core'
      ]
     #-----视频业务库-----#
     pod 'TTVPlayerPod', :path => '../AKPlugins/TTVPlayer'

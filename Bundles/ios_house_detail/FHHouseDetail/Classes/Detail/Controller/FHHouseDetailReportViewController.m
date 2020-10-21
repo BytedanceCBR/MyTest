@@ -650,6 +650,21 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
             [self.tableView btd_scrollToBottom];
         }
     }];
+    
+    [self adddGoDetail];
+}
+
+- (void)adddGoDetail {
+    NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
+    reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
+    reportParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
+    reportParams[UT_PAGE_TYPE] = [self pageType];
+    reportParams[@"event_tracking_id"] = @"115885";
+    TRACK_EVENT(UT_GO_DETAIL, reportParams);
+}
+
+- (NSString *)pageType {
+    return @"feedback_detail";
 }
 
 - (void)updateSubmitButtonStatus:(BOOL)isEnable {
@@ -662,7 +677,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
     reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
     reportParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
-    reportParams[UT_PAGE_TYPE] = @"feedback_detail";
+    reportParams[UT_PAGE_TYPE] = [self pageType];
     reportParams[@"group_id"] = self.houseId?:UT_BE_NULL;
     reportParams[@"event_tracking_id"] = @"113945";
     TRACK_EVENT(@"feedback_confirm", reportParams);
