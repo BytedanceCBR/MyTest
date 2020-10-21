@@ -15,6 +15,7 @@
 #import "TTFavouriteContentItem.h"
 #import "TTReportContentItem.h"
 #import "TTDislikeContentItem.h"
+#import "TTBlockContentItem.h"
 //#import "TTSystemContentItem.h"
 //#import "TTCopyContentItem.h"
 //#import "TTSaveVideoContentItem.h"
