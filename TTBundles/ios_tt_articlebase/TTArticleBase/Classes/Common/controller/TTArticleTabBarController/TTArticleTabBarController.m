@@ -99,6 +99,7 @@
 #import <TTLaunchTracer.h>
 #import "FHPopupViewManager.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import "TTDialogDirector.h"
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -660,6 +661,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //        [FHEnvContext showFindTabRedDots];
 //        self.hasShowDots = YES;
 //    }
+    [TTDialogDirector setQueueEnabled:YES];
 }
 
 - (BOOL)isShowingConcernOrForumTab
