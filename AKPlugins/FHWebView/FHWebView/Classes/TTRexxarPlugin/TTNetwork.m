@@ -82,7 +82,7 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
                 [mCommonParams removeObjectForKey:key];
             }
         }
-        return mCommonParams;
+        return mCommonParams.copy;
     }
     
     return commonParams;
