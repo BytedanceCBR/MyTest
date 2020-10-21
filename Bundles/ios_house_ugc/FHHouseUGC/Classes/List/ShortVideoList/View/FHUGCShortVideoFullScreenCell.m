@@ -67,9 +67,7 @@
         FHUGCShortVideoView *playerView = [[FHUGCShortVideoView alloc]init];
         playerView.player.delegate = self;
         playerView.delegate = self;
-        playerView.player.enableRotate = NO;
-        playerView.userInteractionEnabled = NO;
-        playerView.player.controlView.miniSlider.hidden = YES;
+        playerView.userInteractionEnabled = NO;;
         [self.contentView addSubview:playerView];
         [playerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.contentView);
@@ -107,6 +105,8 @@
 - (void)initConstains {
     
 }
+
+
 
 - (void)_onPlayerDoubleTap:(UITapGestureRecognizer *)recognizer
 {
@@ -157,77 +157,25 @@
 
 - (void)updateWithModel:(FHFeedUGCCellModel *)videoDetail
 {
-         self.cellModel = videoDetail;
-        [ExploreMovieView removeAllExploreMovieView];
-    //    SAFECALL_MESSAGE(TTVCommodityViewMessage, @selector(ttv_message_removeall_comodityview), ttv_message_removeall_comodityview);
-
-        TTVPlayerSP sp =  TTVPlayerSPToutiao;
-    //    TTVFeedItem *feedItem = self.cellEntity.originData;
-    //    TTVVideoArticle *article = self.cellEntity.article;
-        
-        //TTVPlayerModel
-        TTVVideoPlayerModel *model = [[TTVVideoPlayerModel alloc] init];
-        model.categoryID = self.cellModel.categoryId;
-        model.groupID = [NSString stringWithFormat:@"%@",self.cellModel.groupId];
-        model.itemID = [NSString stringWithFormat:@"%@",self.cellModel.itemId];
-        model.isLoopPlay = YES;
+    self.cellModel = videoDetail;
+    [ExploreMovieView removeAllExploreMovieView];
+    TTVPlayerSP sp =  TTVPlayerSPToutiao;
+    TTVVideoPlayerModel *model = [[TTVVideoPlayerModel alloc] init];
+    model.categoryID = self.cellModel.categoryId;
+    model.groupID = [NSString stringWithFormat:@"%@",self.cellModel.groupId];
+    model.itemID = [NSString stringWithFormat:@"%@",self.cellModel.itemId];
+    model.isLoopPlay = YES;
     model.disableFinishUIShow = YES;
     model.disableControlView = YES;
-    //    model.aggrType = article.aggrType;
-    //    model.adID = article.adId;
-    //    model.logExtra = article.logExtra;
-        model.videoID = [NSString stringWithFormat:@"%@",self.cellModel.video.videoId];
-        model.sp = sp;
-        model.enterFrom = @"test";
-        model.categoryName = self.cellModel.categoryId;
-        model.authorId = self.cellModel.user.userId;
-        model.extraDic = self.cellModel.tracerDic;
-//        model.showMutedView
-        
-    //    if (feedItem.isVideoSourceUGCVideo) {
-    //        model.defaultResolutionType = TTVPlayerResolutionTypeHD;
-    //    }
-    //    NSDictionary *dic = [feedItem.logPb tt_JSONValue];
-    //    if ([dic isKindOfClass:[NSDictionary class]]) {
-    //        model.logPb = dic;
-    //    }
-    //    if (!isEmptyString(article.videoDetailInfo.videoSubjectId)) {
-    //        model.videoSubjectID = article.videoDetailInfo.videoSubjectId;
-    //    }
-    //    if (feedItem.isVideoSourceUGCVideo) {
-            model.defaultResolutionType = TTVPlayerResolutionTypeHD;
-    //    }
-        //只有有admodel才行,号外广告显示正常视频UI
-    //    if ([self.cellEntity.originData.adModel isCreativeAd]) {//广告
-    //        model.enablePasterAd = NO;
-    //    }else{//非广告使用贴片功能
-            model.enablePasterAd = YES;
-            model.pasterAdFrom = @"feed";
-    //    }
-    //    BOOL isAutoPlaying = [feedItem couldAutoPlay];
-    //    model.isAutoPlaying = isAutoPlaying;
-    //    model.showMutedView = isAutoPlaying;
-    //    if (isAutoPlaying) {
-    //        //广告自动播放时每次从头播放
-    //        [[TTVPlayerCacheProgressController sharedInstance] removeCacheForVideoID:article.videoId];
-    //        model.mutedWhenStart = YES;
-    //        if ([[feedItem rawAdData] tta_boolForKey:@"auto_replay"]) {
-    //            model.isLoopPlay = YES;
-    //            model.disableFinishUIShow = YES;
-    //        }
-    //    }
-//        model.mutedWhenStart = YES;
-        
-    //    BOOL isVideoFeedURLEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"video_feed_url" defaultValue:@NO freeze:NO] boolValue];
-    //    if (isVideoFeedURLEnabled && [self.cellEntity.originData hasVideoPlayInfoUrl] && [self.cellEntity.originData isVideoUrlValid]) {
-    //        model.videoPlayInfo = self.cellEntity.originData.videoPlayInfo;
-    //    }
-    //    NSInteger isVideoShowOptimizeShare = ttvs_isVideoShowOptimizeShare();
-    //    if (isVideoShowOptimizeShare > 0){
-    //        if (isEmptyString(model.adID)) {
-    //            model.playerShowShareMore = isVideoShowOptimizeShare;
-    //        }
-    //    }
+    model.videoID = [NSString stringWithFormat:@"%@",self.cellModel.video.videoId];
+    model.sp = sp;
+    model.enterFrom = @"test";
+    model.categoryName = self.cellModel.categoryId;
+    model.authorId = self.cellModel.user.userId;
+    model.extraDic = self.cellModel.tracerDic;
+    model.defaultResolutionType = TTVPlayerResolutionTypeFullHD;
+    model.enablePasterAd = YES;
+    model.pasterAdFrom = @"feed";
     _playerModel = model;
     [_playerView resetPlayerModel:_playerModel];
     // 滑动切换视频时，背景图使用首帧图
@@ -242,67 +190,46 @@
 }
 
 - (void)readyToPlay {
-        [self.playerView.player readyToPlay];
-    //    if (isAutoPlaying && self.cellEntity.article.adId.longLongValue > 0) {
-    //        self.movieView.player.banLoading = YES;
-    //        self.movieView.player.muted = [self.cellEntity.originData couldAutoPlay];
-    //    }
-//        self.playerView.player.muted = YES;
-    //    [self addUrlTrackerOnPlayer:playVideo];
-        [self settingMovieView:self.playerView];
+        [self.playerView readyToPlay];
 }
 
 - (void)reset {
-    [self.playerView.player reset];
+    [self.playerView reset];
 }
 
 - (void)pause {
-    [self.playerView.player pause];
+    [self.playerView pause];
 }
 
 - (void)stop {
-    [self.playerView.player stopWithFinishedBlock:^{
-    }];
+    [self.playerView stop];
 }
 
 - (void)play
 {
-    [self.playerView.player setBanLoading:YES];
-    [self.playerView.player play];
+    [self.playerView play];
     self.overlayViewController.playerStateStore = self.playerView.player.playerStateStore;
-    self.playerView.player.controlView.miniSlider.hidden = YES;
-//    if(!self.cellEntity.hideTitleAndWatchCount){
-//        [playVideo.player setVideoTitle:feedItem.title];
-//        [playVideo.player setVideoWatchCount:article.videoDetailInfo.videoWatchCount playText:@"次播放"];
-//    }
-//    self.logo.userInteractionEnabled = ![feedItem couldAutoPlay];
-//    if (![TTDeviceHelper isPadDevice]) {
-//        playVideo.player.commodityFloatView.animationToView = self.cellEntity.moreButton;
-//        playVideo.player.commodityFloatView.animationSuperView = self.cellEntity.cell;
-//        [playVideo.player.commodityFloatView setCommoditys:self.cellEntity.originData.commoditys];
-//        playVideo.player.commodityButton.delegate = self;
-//    }
-
-//    [self ttv_configADFinishedView:playVideo.player.tipCreator.tipFinishedView];
-//
-//    [[AKAwardCoinVideoMonitorManager shareInstance] monitorVideoWith:playVideo];
 }
 
-- (void)settingMovieView:(FHUGCShortVideoView *)movieView
-{
-    movieView.player.isInDetail = NO;
-    movieView.player.showTitleInNonFullscreen = YES;
-}
+//- (void)setMovieView:(FHUGCShortVideoView *)movieView
+//{
+//    if (([movieView isKindOfClass:[FHUGCShortVideoView class]] || !movieView)) {
+//        _playerView = movieView;
+//        _playerView.player.delegate = self;
+//        _playerView.delegate = self;
+//        [self settingMovieView:movieView];
+//    }
+//}
 
-- (void)setMovieView:(FHUGCShortVideoView *)movieView
+- (void)cellWillDisplay {
+    
+}
+#pragma mark TTVDemandPlayerDelegate
+
+- (void)willMoveToSuperview:(UIView *)newSuperview
 {
-    if (([movieView isKindOfClass:[FHUGCShortVideoView class]] || !movieView)) {
-        _playerView = movieView;
-        _playerView.player.delegate = self;
-        _playerView.delegate = self;
-//        _movieView.player.doubleTap666Delegate = self.doubleTap666Delegate;
-        [self settingMovieView:movieView];
-    }
+    [super willMoveToSuperview:newSuperview];
+
 }
 
 #pragma mark TTVDemandPlayerDelegate

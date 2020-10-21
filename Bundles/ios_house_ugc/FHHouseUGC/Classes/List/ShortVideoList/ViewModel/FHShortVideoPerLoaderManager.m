@@ -75,8 +75,7 @@
     //        return [cacheDir stringByAppendingPathComponent:fileName];
     //    };
     vidItem.preloadEnd = ^(TTVideoEngineLocalServerTaskInfo * _Nullable info, NSError * _Nullable error) {/// 预加载结束
-        NSLog(@"666");
-        NSLog(@"666");
+
     };
     /// 添加任务，开始预加载
     [TTVideoEngine ls_addTaskWithVidItem:vidItem];
