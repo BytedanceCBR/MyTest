@@ -29,13 +29,19 @@
 //        FHFeedUGCCellModel *shortVideoModel = [manager itemAtIndex:preIndex];
 //        [self preloadWithVideoModel:shortVideoModel];
 //    }
-    
-    NSInteger nextIndex = currentIndex + 1;
-    if (nextIndex >= 0 && nextIndex < [manager numberOfShortVideoItems]) {
-        FHFeedUGCCellModel *shortVideoModel = [manager itemAtIndex:nextIndex];
-        [self preloadWithVideoModel:shortVideoModel isFromShortVideo:YES];
+    NSMutableArray *preLoadArr = [[NSMutableArray alloc]init];
+    for (int m = 0; m <5; m ++) {
+        NSInteger perloadIndex = currentIndex + m ;
+        if (perloadIndex < [manager numberOfShortVideoItems]) {
+            [preLoadArr addObject:@(perloadIndex)];
+        }else{
+            return;
+        }
     }
-    
+    for (NSNumber *num in preLoadArr) {
+        FHFeedUGCCellModel *model = [manager itemAtIndex:num.integerValue];;
+        [FHShortVideoPerLoaderManager preloadWithVideoModel:model isFromShortVideo:YES];
+    }
 }
 
 

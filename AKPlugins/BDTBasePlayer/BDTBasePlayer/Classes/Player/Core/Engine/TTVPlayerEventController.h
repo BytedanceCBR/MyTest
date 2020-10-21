@@ -29,6 +29,7 @@
 - (void)releaseAysnc;
 - (void)playVideo;
 - (void)pauseVideo;
+- (void)resetVideo;
 - (void)playVideoFromPayload:(NSDictionary *)payload;
 - (void)pauseVideoFromPayload:(NSDictionary *)payload;
 - (void)stopVideo;

@@ -216,6 +216,10 @@ static __weak TTVPlayerController *currentPlayerController = nil;
     [_eventController stopVideo];
 }
 
+- (void)resetVideo {
+    [_eventController resetVideo];
+}
+
 - (void)saveCacheProgress
 {
     [_eventController saveCacheProgress];

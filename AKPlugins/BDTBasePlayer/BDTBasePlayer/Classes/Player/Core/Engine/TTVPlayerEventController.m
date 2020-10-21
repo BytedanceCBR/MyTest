@@ -526,6 +526,10 @@ static NSString *const kvideo_controller_error_domain = @"kvideo_player_controll
     }
 }
 
+- (void)resetVideo {
+     self.videoEngine.startTime = 0;
+}
+
 - (void)seekVideoToProgress:(CGFloat)progress complete:(void(^)(BOOL success))finised {
     [self _seekVideoToProgress:progress autoSeek:NO complete:finised];
 }

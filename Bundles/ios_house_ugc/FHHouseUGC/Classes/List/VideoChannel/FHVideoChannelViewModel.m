@@ -443,8 +443,17 @@
     FHUGCFullScreenVideoCell *cell = [self getFitableVideoCell];
     if ([cell.currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
         NSInteger index = [self getCellIndex:(FHFeedUGCCellModel*)cell.currentData];
-        if (index + 1 <= self.dataList.count - 1) {
-            FHFeedUGCCellModel *model = self.dataList[index + 1];
+        NSMutableArray *preLoadArr = [[NSMutableArray alloc]init];
+        for (int m = 0; m <5; m ++) {
+            NSInteger perloadIndex = index + m ;
+            if (perloadIndex < self.dataList.count) {
+                [preLoadArr addObject:@(perloadIndex)];
+            }else{
+                return;
+            }
+        }
+        for (NSNumber *num in preLoadArr) {
+            FHFeedUGCCellModel *model = self.dataList[num.integerValue];
             [FHShortVideoPerLoaderManager preloadWithVideoModel:model isFromShortVideo:NO];
         }
     }
