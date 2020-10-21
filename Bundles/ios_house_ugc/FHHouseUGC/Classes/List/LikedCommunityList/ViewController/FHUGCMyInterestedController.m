@@ -144,6 +144,13 @@
     self.guessYouLikeLabel.textColor = [UIColor themeGray1];
     self.guessYouLikeLabel.text = @"猜你喜欢";
     [headerView addSubview:self.guessYouLikeLabel];
+    [headerView addSubview:self.refreshTipView];
+    [self.refreshTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(headerView).offset(64);
+        make.left.equalTo(headerView).offset(15);
+        make.right.equalTo(headerView).offset(-15);
+        make.height.mas_equalTo(20);
+    }];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFollowStatus) name:kFHUGCUpdateFollowDataAfterAccountStatuschangedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showRefreshTip) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
@@ -173,17 +180,9 @@
         self.guessYouLikeLabel.frame = frame;
         
         self.refreshTipView.hidden = NO;
-        [headerView addSubview:self.refreshTipView];
-        [self.refreshTipView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(headerView).offset(64);
-            make.left.equalTo(headerView).offset(15);
-            make.right.equalTo(headerView).offset(-15);
-            make.height.mas_equalTo(20);
-        }];
     }else{
         self.refreshTipView.hidden = YES;
-        [self.refreshTipView removeFromSuperview];
-        
+
         CGRect frame = headerView.frame;
         frame.size.height = 85;
         headerView.frame = frame;
