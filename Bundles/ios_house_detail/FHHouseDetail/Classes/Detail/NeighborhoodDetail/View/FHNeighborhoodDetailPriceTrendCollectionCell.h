@@ -6,16 +6,16 @@
 //
 
 #import "FHDetailBaseCell.h"
-
+#import <IGListKit/IGListKit.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHNeighborhoodDetailPriceTrendCollectionCell : FHDetailBaseCollectionCell
+@interface FHNeighborhoodDetailPriceTrendCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 
 @property (nonatomic, copy) void (^addClickPriceTrendLogBlock)(void);
 
 @end
 
-@interface FHNeighborhoodDetailPriceTrendCellModel : NSObject
+@interface FHNeighborhoodDetailPriceTrendCellModel : NSObject<IGListDiffable>
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel *> *priceTrends;
 @end
 

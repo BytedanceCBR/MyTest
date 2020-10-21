@@ -154,7 +154,9 @@
 //        }];
 //    }
 }
-
+- (void)bindViewModel:(id)viewModel {
+    [self refreshWithData:viewModel];
+}
 - (void)setUnitPerSquare:(double)unitPerSquare
 {
     _unitPerSquare = unitPerSquare;
@@ -393,5 +395,13 @@
 @end
 
 @implementation FHNeighborhoodDetailPriceTrendCellModel
+
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
+}
 
 @end
