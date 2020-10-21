@@ -9,7 +9,7 @@
 #import "TTStartupNotificationTask.h"
 #import "TTApplicationHeader.h"
 #import "TTProjectLogicManager.h"
-#import "TTInstallIDManager.h"
+#import <BDInstall/BDInstall.h>
 #import "TTShareConstants.h"
 #import "TTReachability.h"
 #import "ExploreEntryManager.h"
@@ -79,7 +79,7 @@ TTAccountMulticastProtocol
 
 - (void)sendDeviceIDNotification {
     //did注册成功后发送通知
-    [[TTInstallIDManager sharedInstance] observeDeviceDidRegistered:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
+    [[BDInstall sharedInstance] observeDeviceDidRegistered:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHTrackerDidRefreshDeviceId" object:nil];
     }];
 }

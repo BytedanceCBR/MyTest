@@ -53,7 +53,7 @@
 #import "SSImpressionManager.h"
 #import "ArticleImpressionHelper.h"
 
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #import "TTFeedDislikeView.h"
 #import "ArticleUpdateManager.h"
@@ -81,7 +81,6 @@
 
 #import "TTUGCDefine.h"
 #import "TTURLTracker.h"
-#import <TTTracker/TTTrackerProxy.h>
 
 #import "ExploreMixedListBaseView+TrackEvent.h"
 #import "ExploreMixedListBaseView+HeaderView.h"
@@ -1560,7 +1559,7 @@ TTRefreshViewDelegate
                     [dictTraceParams setValue:@"be_null" forKey:@"ansid"];
                     [dictTraceParams setValue:obj.article.groupModel.groupID forKey:@"qid"];
                     [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
-                    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+                    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
                     
                 }else {
                     
@@ -1570,7 +1569,7 @@ TTRefreshViewDelegate
                     [dictTraceParams setValue:obj.logPb[@"impr_id"] forKey:@"impr_id"];
                     [dictTraceParams setValue:obj.logPb forKey:@"log_pb"];
                     [dictTraceParams setValue:@(obj.cellType) ? : @"be_null" forKey:@"cell_type"];
-                    [TTTracker eventV3:@"client_show" params:dictTraceParams];
+                    [BDTrackerProtocol eventV3:@"client_show" params:dictTraceParams];
                     
                     [_cellIdDict setObject:@"" forKey:obj.itemID];
                     
@@ -1604,7 +1603,7 @@ TTRefreshViewDelegate
                     }
                     NSString *commentId = [obj.article.displayComment tt_stringValueForKey:@"comment_id"];
                     
-                    [TTTrackerWrapper event:@"click_list_comment" label:label value:obj.ad_id extValue:commentId extValue2:nil dict:extra];
+                    [BDTrackerProtocol event:@"click_list_comment" label:label value:obj.ad_id extValue:commentId extValue2:nil dict:extra];
                 }
                 
                 [self attachVideoIfNeededForCell:cell data:obj];
@@ -1636,7 +1635,7 @@ TTRefreshViewDelegate
                     [dict setValue:label forKey:@"label"];
                     NSString *gid = [NSString stringWithFormat:@"%lld", obj.wapData.uniqueID];
                     [dict setValue:gid forKey:@"value"];
-                    [TTTrackerWrapper eventData:dict];
+                    [BDTrackerProtocol eventData:dict];
                 }
             }
             else if(obj.stockData){
@@ -1652,10 +1651,10 @@ TTRefreshViewDelegate
                 Book *book = orderedData.book;
                 if (book && [TTTrackerWrapper isOnlyV3SendingEnable]) {
                 } else {
-                    wrapperTrackEventWithCustomKeys(@"card", @"card_show", [NSString stringWithFormat:@"%lld", cardObj.uniqueID], nil, extra);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"card" label:@"card_show" value:[NSString stringWithFormat:@"%lld", cardObj.uniqueID] source:nil extraDic:extra];
                 }
                 if(book) {
-                    [TTTrackerWrapper eventV3:@"show_card" params:@{@"category_name":@"novel_channel"} isDoubleSending:YES];
+                    [BDTrackerProtocol eventV3:@"show_card" params:@{@"category_name":@"novel_channel"} isDoubleSending:YES];
                 }
             }
             else if ([((ExploreOrderedData *)obj).originalData isKindOfClass:[LastRead class]]) {
@@ -1664,7 +1663,7 @@ TTRefreshViewDelegate
             else if ([((ExploreOrderedData *)obj).originalData isKindOfClass:[Comment class]]) {
             }
 //            else if ([((ExploreOrderedData *)obj).originalData isKindOfClass:[RecommendUserCardsData class]]) {
-//                [TTTrackerWrapper eventV3:@"follow_card" params:@{
+//                [BDTrackerProtocol eventV3:@"follow_card" params:@{
 //                    @"action_type":@"show",
 //                    @"category_name": obj.categoryID,
 //                    @"source": @"list",
@@ -1672,7 +1671,7 @@ TTRefreshViewDelegate
 //                }];
 //            }
 //            else if ([((ExploreOrderedData *)obj).originalData isKindOfClass:[RecommendUserLargeCardData class]]) {
-//                [TTTrackerWrapper eventV3:@"vert_follow_card" params:@{
+//                [BDTrackerProtocol eventV3:@"vert_follow_card" params:@{
 //                    @"action_type":@"show",
 //                    @"category_name": obj.categoryID,
 //                    @"recommend_type": @(obj.recommendUserLargeCardData.groupRecommendType),
@@ -1680,7 +1679,7 @@ TTRefreshViewDelegate
 //                }];
 //            }
 //            else if ([((ExploreOrderedData *)obj).originalData isKindOfClass:[MomentsRecommendUserData class]]) {
-//                [TTTrackerWrapper eventV3:@"subscriber_behavior_card_show" params:@{
+//                [BDTrackerProtocol eventV3:@"subscriber_behavior_card_show" params:@{
 //                    @"category_name": obj.categoryID,
 //                    @"card_content": @"follow",
 //                    @"subv_num": @(obj.momentsRecommendUserData.userCardModels.count),
@@ -1691,14 +1690,14 @@ TTRefreshViewDelegate
 //                if (obj.uniqueID && obj.categoryID) {
 //                    SurveyPairData *data = (SurveyPairData *)(((ExploreOrderedData *)obj).originalData);
 //                    if (data && !data.hideNextTime) {
-//                        [TTTrackerWrapper eventV3:@"survey_pair_show" params:@{@"survey_id" : obj.uniqueID, @"category_name" : obj.categoryID}];
+//                        [BDTrackerProtocol eventV3:@"survey_pair_show" params:@{@"survey_id" : obj.uniqueID, @"category_name" : obj.categoryID}];
 //                    }
 //                }
 //            } else if ([((ExploreOrderedData *)obj).originalData isKindOfClass:[SurveyListData class]]) {
 //                if (obj.uniqueID && obj.categoryID) {
 //                    SurveyListData *data = (SurveyListData *)(((ExploreOrderedData *)obj).originalData);
 //                    if (data && !data.hideNextTime) {
-//                        [TTTrackerWrapper eventV3:@"survey_list_show" params:@{@"survey_id" : obj.uniqueID, @"category_name" : obj.categoryID}];
+//                        [BDTrackerProtocol eventV3:@"survey_list_show" params:@{@"survey_id" : obj.uniqueID, @"category_name" : obj.categoryID}];
 //                    }
 //                }
 //            } else if ([((ExploreOrderedData *)obj).originalData isKindOfClass:[Thread class]]) {
@@ -3208,14 +3207,14 @@ TTRefreshViewDelegate
 - (void)addLastReadTrackWithLabel:(NSString *)label
 {
     if ([self isNewTab]) {
-        wrapperTrackEvent(@"new_tab", label);
+        [BDTrackerProtocol event:@"new_tab" label:label];
     }
     else {
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
         [dict setValue:self.categoryID forKey:@"category_id"];
         [dict setValue:self.concernID forKey:@"concern_id"];
         [dict setValue:[NSNumber numberWithInteger:self.refer] forKey:@"refer"];
-        wrapperTrackEventWithCustomKeys(@"category", label, nil, nil, dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"category" label:label value:nil source:nil extraDic:dict];
     }
 }
 
@@ -3241,7 +3240,7 @@ TTRefreshViewDelegate
     if ([SSCommonLogic feedRefreshClearAllEnable]) {
         NSString *openUrl = @"sslocal://history?stay_id=refresh_history";
         [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:openUrl]];
-        [TTTrackerWrapper eventV3:@"enter_refresh_history" params:@{@"category_name" : @"__all__"}];
+        [BDTrackerProtocol eventV3:@"enter_refresh_history" params:@{@"category_name" : @"__all__"}];
     } else {
         _isLastReadRefresh = YES;
         if (self.delegate && [self.delegate respondsToSelector:@selector(mixListViewDidSelectLastReadCellWillBeginRefresh:)]) {
@@ -4447,16 +4446,16 @@ TTRefreshViewDelegate
     if ([self.categoryID isEqualToString:kTTMainCategoryID]) {
         [tipRefreshTrackerDic setValue:@"new_tab" forKey:@"tag"];
         [tipRefreshTrackerDic setValue:@"tip_refresh" forKey:@"label"];
-        [TTTrackerWrapper eventData:tipRefreshTrackerDic];
+        [BDTrackerProtocol eventData:tipRefreshTrackerDic];
     }
     else {
         if (!isEmptyString(self.categoryID)) {
             [tipRefreshTrackerDic setValue:@"category" forKey:@"tag"];
             [tipRefreshTrackerDic setValue:[NSString stringWithFormat:@"tip_refresh_%@", self.categoryID] forKey:@"label"];
-            [TTTrackerWrapper eventData:tipRefreshTrackerDic];
+            [BDTrackerProtocol eventData:tipRefreshTrackerDic];
         }
     }
-    wrapperTrackEvent(@"category", @"refresh_tip_all");
+    [BDTrackerProtocol event:@"category" label:@"refresh_tip_all"];
 }
 
 - (void)hideRemoteReloadTip {

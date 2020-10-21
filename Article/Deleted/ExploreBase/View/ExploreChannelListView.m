@@ -25,6 +25,7 @@
 #import "WDDefines.h"
 //#import "WDNativeListBaseListView.h"
 #import "UIResponder+Router.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kSubscribeViewH 44.f
 #define kInfoLabelX 15.f
@@ -207,11 +208,11 @@
         }
     
         
-        wrapperTrackEvent(@"channel_detail", @"enter");
+        [BDTrackerProtocol event:@"channel_detail" label:@"enter"];
         
         if (!isEmptyString(from)) {
             NSString *label = [NSString stringWithFormat:@"enter_from_%@", from];
-            [TTTrackerWrapper event:@"channel_detail" label:label json:extJson];
+            [BDTrackerProtocol event:@"channel_detail" label:label json:extJson];
         }
     }
     
@@ -290,7 +291,7 @@
         
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"已放到首屏", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
         
-        wrapperTrackEvent(@"channel_detail", @"add");
+        [BDTrackerProtocol event:@"channel_detail" label:@"add"];
     }
 }
 

@@ -228,16 +228,11 @@
     [self.multiImageView updateImageView:self.cellModel.imageList largeImageList:self.cellModel.largeImageList];
     
     if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
-        if(self.cellModel.isInNeighbourhoodCommentsList){
-            self.decorationImageView.frame = CGRectMake(cellWidth - rightMargin - 66, topMargin, 66, 66);
-            [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence"]];
-        }else{
-            self.decorationImageView.width = 44;
-            self.decorationImageView.height = 44;
-            self.decorationImageView.centerY = self.userInfoView.centerY;
-            self.decorationImageView.right = self.userInfoView.right - 20;
-            [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence_small"]];
-        }
+        self.decorationImageView.width = 42;
+        self.decorationImageView.height = 42;
+        self.decorationImageView.left = cellWidth - rightMargin - rightPadding - 42;
+        self.decorationImageView.top = self.contentContainer.top + topPadding - 1;
+        [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence_small"]];
     }
 }
 

@@ -14,6 +14,7 @@
 #import "UIImage+TTThemeExtension.h"
 #import "TTRoute.h"
 #import "TTTabBarProvider.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kTopPadding         [TTDeviceUIUtils tt_paddingForMoment:10]
 #define kBottomPadding 0
@@ -304,7 +305,7 @@
                 NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
                 [extra setValue:self.momentModel.ID forKey:@"item_id"];
                 [extra setValue:self.momentModel.group.ID forKey:@"value"];
-                [TTTrackerWrapper event:@"micronews_tab" label:@"quote" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+                [BDTrackerProtocol event:@"micronews_tab" label:@"quote" value:nil extValue:nil extValue2:nil dict:[extra copy]];
             }
             [ArticleMomentHelper openGroupDetailView:self.momentModel goDetailFromSource:_goDetailFromSource];
         }
@@ -313,7 +314,7 @@
                 NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
                 [extra setValue:self.momentModel.ID forKey:@"item_id"];
                 [extra setValue:self.momentModel.group.ID forKey:@"value"];
-                [TTTrackerWrapper event:@"micronews_tab" label:@"quote" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+                [BDTrackerProtocol event:@"micronews_tab" label:@"quote" value:nil extValue:nil extValue2:nil dict:[extra copy]];
             }
             [ArticleMomentHelper openGroupDetailView:self.momentModel.originItem goDetailFromSource:_goDetailFromSource];
         }

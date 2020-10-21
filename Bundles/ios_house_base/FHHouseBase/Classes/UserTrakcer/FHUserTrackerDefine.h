@@ -9,6 +9,7 @@
 #define FHUserTrackerDefine_h
 
 //keys
+extern NSString *const UT_EVENT_TRACKING_ID;//@"event_tracking_id"
 extern NSString *const UT_EVENT_TYPE; //@"event_type"
 extern NSString *const UT_ORIGIN_FROM; //@"origin_from"
 extern NSString *const UT_ENTER_FROM; //@"enter_from"
@@ -23,6 +24,7 @@ extern NSString *const UT_SEARCH_ID; //@"search_id"
 extern NSString *const UT_ORIGIN_SEARCH_ID; //@"origin_search_id"
 extern NSString *const UT_STAY_TIME; //@"stay_time"
 extern NSString *const UT_PAGE_TYPE; // @"page_type"
+extern NSString *const UT_FROM_PAGE_TYPE; // @"from_page_type"
 extern NSString *const UT_LOG_PB ; // @"log_pb"
 extern NSString *const UT_HOUSE_TYPE ; // @"house_type"
 extern NSString *const UT_GROUP_ID ; // @"group_id"

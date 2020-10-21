@@ -25,6 +25,7 @@
 #import <TTDialogDirector/TTDialogDirector.h>
 #import "TTContactsGuideManager.h"
 #import <TTFollowManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static BOOL kHasGuideViewDisplayed = NO;
 
@@ -67,7 +68,7 @@ static BOOL kHasGuideViewDisplayed = NO;
                     // 自定义的通讯录框授权后，开始电信取号
                     // [TTTelecomManager getMobile];
                 } else { // 点击取消【关闭】
-                    [TTTrackerWrapper eventV3:@"upload_concat_list_guide_click" params:@{
+                    [BDTrackerProtocol eventV3:@"upload_concat_list_guide_click" params:@{
                         @"action_type" : @"cancel",
                         @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
                     }];
@@ -101,13 +102,13 @@ static BOOL kHasGuideViewDisplayed = NO;
 }
 
 + (void)addressBookRequestAccess:(NSNotification *)notification {
-    [TTTrackerWrapper eventV3:@"upload_concat_list_permission_show" params:@{
+    [BDTrackerProtocol eventV3:@"upload_concat_list_permission_show" params:@{
         @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
     }];
 }
 
 + (void)addressBookRequestAccessGranted:(NSNotification *)notification {
-    [TTTrackerWrapper eventV3:@"upload_concat_list_permission_click" params:@{
+    [BDTrackerProtocol eventV3:@"upload_concat_list_permission_click" params:@{
         @"action_type": @"confirm",
         @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
     }];
@@ -116,7 +117,7 @@ static BOOL kHasGuideViewDisplayed = NO;
 }
 
 + (void)addressBookRequestAccessDenied:(NSNotification *)notification {
-    [TTTrackerWrapper eventV3:@"upload_concat_list_permission_click" params:@{
+    [BDTrackerProtocol eventV3:@"upload_concat_list_permission_click" params:@{
         @"action_type": @"cancel",
         @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
     }];
@@ -155,7 +156,7 @@ static BOOL kHasGuideViewDisplayed = NO;
     FRMonitorNetworkModelFinishBlock block = ^(NSError *error, NSObject<TTResponseModelProtocol> *responseModel, FRForumMonitorModel *monitorModel) {
         StrongSelf;
         if (error) {
-            [TTTrackerWrapper eventV3:@"upload_concat_list_status_show" params:@{
+            [BDTrackerProtocol eventV3:@"upload_concat_list_status_show" params:@{
                                                                                  @"type" : @"failure",
                                                                                  @"reason" : @2001,
                                                                                  @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
@@ -175,7 +176,7 @@ static BOOL kHasGuideViewDisplayed = NO;
                                                                                                                                 @"from_add_friend_view_controller" : @(fromAddFriendViewController)
                                                                                                                                 }];
         } else {
-            [TTTrackerWrapper eventV3:@"upload_concat_list_status_show" params:@{
+            [BDTrackerProtocol eventV3:@"upload_concat_list_status_show" params:@{
                                                                                  @"type" : @"failure",
                                                                                  @"reason" : @2002,
                                                                                  @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
@@ -224,7 +225,7 @@ static BOOL kHasGuideViewDisplayed = NO;
         }];
     };
 
-    [TTTrackerWrapper eventV3:@"upload_concat_list_guide_click" params:@{
+    [BDTrackerProtocol eventV3:@"upload_concat_list_guide_click" params:@{
         @"action_type": @"confirm",
         @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
     }];
@@ -238,7 +239,7 @@ static BOOL kHasGuideViewDisplayed = NO;
     // 上传通讯录
     TTUploadContactsBlock(^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            [TTTrackerWrapper eventV3:@"upload_concat_list_status_show" params:@{
+            [BDTrackerProtocol eventV3:@"upload_concat_list_status_show" params:@{
                 @"type": @"loading",
                 @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
             }];
@@ -256,7 +257,7 @@ static BOOL kHasGuideViewDisplayed = NO;
                     [[TTContactsGuideManager sharedManager] hideIndicatorView];
                     [[self class] showDoneHud];
 
-                    [TTTrackerWrapper eventV3:@"upload_concat_list_status_show" params:@{
+                    [BDTrackerProtocol eventV3:@"upload_concat_list_status_show" params:@{
                         @"type" : @"failure",
                         @"reason" : @5000,
                         @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
@@ -267,7 +268,7 @@ static BOOL kHasGuideViewDisplayed = NO;
     }, ^(NSError *error) {
         if (!error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [TTTrackerWrapper eventV3:@"upload_concat_list_status_show" params:@{
+                [BDTrackerProtocol eventV3:@"upload_concat_list_status_show" params:@{
                     @"type": @"success",
                     @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
                 }];
@@ -321,12 +322,12 @@ static BOOL kHasGuideViewDisplayed = NO;
                         isUploadContactsFinished = YES; // 如果未超时，阻止超时策略
 
                         if (!error2) {
-                            [TTTrackerWrapper eventV3:@"upload_concat_list_status_show" params:@{
+                            [BDTrackerProtocol eventV3:@"upload_concat_list_status_show" params:@{
                                 @"type": @"success"
                             }];
                             [[self class] requestContactFriends:fromAddFriendViewController];
                         } else {
-                            [TTTrackerWrapper eventV3:@"upload_concat_list_status_show" params:@{
+                            [BDTrackerProtocol eventV3:@"upload_concat_list_status_show" params:@{
                                 @"type": @"failure",
                                 @"reason" : @1051,
                                 @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
@@ -373,7 +374,7 @@ static BOOL kHasGuideViewDisplayed = NO;
         [TTContactsUserDefaults setContactsGuidePresentTimestamp:[[NSDate date] timeIntervalSince1970]];
         
         [_contactsView showWithCompletion:^{
-            [TTTrackerWrapper eventV3:@"upload_concat_list_guide_show" params:@{
+            [BDTrackerProtocol eventV3:@"upload_concat_list_guide_show" params:@{
                                                                                 @"type" : @"0",
                                                                                 @"frequency" : @([[TTContactsGuideManager sharedManager] contactsGuidePresentingTimes])
                                                                                 }];

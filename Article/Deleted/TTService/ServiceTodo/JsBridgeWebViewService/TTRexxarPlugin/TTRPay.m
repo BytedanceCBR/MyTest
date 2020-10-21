@@ -12,7 +12,7 @@
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTRexxar/TTRJSBForwarding.h>
 //#import <AKPay/SSPayManager.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //#import <AKPay/TTInAppPurchaseManager.h>
 #import <TTNetworkManager/TTNetworkManager.h>
 
@@ -92,7 +92,7 @@
 //            [[SKPaymentQueue defaultQueue] finishTransaction:transcation];
 //        }
 //
-//        [TTTrackerWrapper eventV3:@"iap_receipt_recheck" params:({
+//        [BDTrackerProtocol eventV3:@"iap_receipt_recheck" params:({
 //            NSMutableDictionary *mutableParam = [param mutableCopy];
 //            [mutableParam setValue:@(code == 0? 1:0) forKey:@"success"];
 //            [mutableParam copy];
@@ -128,7 +128,7 @@
         [MBProgressHUD hideHUDForView:[UIApplication sharedApplication].delegate.window animated:YES];
     });
 
-    [TTTrackerWrapper eventV3:@"iap_start" params:param];
+    [BDTrackerProtocol eventV3:@"iap_start" params:param];
     __weak typeof(webview) weakWebview = webview;
     __weak __typeof(self)weakSelf = self;
 //    [[TTInAppPurchaseManager sharedInstance] payWithIdentifier:identifier quantity:quantity applicationUsername:[self applicationUsernameWithReceiptURL:receiptURL param:receiptParam] statusHandler:^(SKPaymentTransaction *transaction, NSError *error) {
@@ -151,7 +151,7 @@
 //            [strongSelf onUpdatedTransaction:transaction];
 //        }
 //
-//        [TTTrackerWrapper eventV3:@"iap_state_change" params:({
+//        [BDTrackerProtocol eventV3:@"iap_state_change" params:({
 //            NSMutableDictionary *copy = [data mutableCopy];
 //            [copy removeObjectForKey:@"receipt"];
 //            [copy copy];

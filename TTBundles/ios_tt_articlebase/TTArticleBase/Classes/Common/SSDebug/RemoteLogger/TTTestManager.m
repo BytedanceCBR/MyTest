@@ -11,7 +11,7 @@
 #import "TTNetworkManager.h"
 
 
-#import "TTLogServer.h"
+//#import "TTLogServer.h"
 #import "TTTestAppModule.h"
 #import "TTTestCommonLogicModule.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
@@ -42,8 +42,9 @@
         return;
     }
     NSDictionary *log_config = [config tt_dictionaryValueForKey:@"log_server"];
-    [TTLogServer configWith:log_config];
-    [TTLogServer startLogger];
+    //TODO: 这个文件是否可以去掉？
+//    [TTLogServer configWith:log_config];
+//    [TTLogServer startLogger];
     
     NSDictionary *app_config = [config tt_dictionaryValueForKey:@"app"];
     [TTTestAppModule configWith:app_config];

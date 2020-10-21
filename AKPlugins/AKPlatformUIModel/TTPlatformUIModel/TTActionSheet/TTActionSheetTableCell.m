@@ -59,13 +59,15 @@
     
     CGFloat padding = [TTUIResponderHelper paddingForViewWidth:screenWidth];
     CGFloat width = screenWidth - 2 * padding;
-    self.contentLabel.frame = CGRectMake([TTDeviceUIUtils tt_padding:32] + padding, 0, (width - 32 * 2) * 3 / 4, self.contentView.height);
+    CGFloat revokeWidth = 40;
+    CGFloat labelPadding = 32;
+    self.contentLabel.frame = CGRectMake([TTDeviceUIUtils tt_padding:labelPadding] + padding, 0, width - labelPadding * 2 - revokeWidth, self.contentView.height);
     self.contentLabel.centerY = self.contentView.centerY;
     [self.contentLabel setFont:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:16.0f]]];
     
-    self.seperatorView.frame = CGRectMake(self.contentLabel.left, self.contentView.height - 0.5, width - 32 * 2, 0.5);
+    self.seperatorView.frame = CGRectMake(self.contentLabel.left, self.contentView.height - 0.5, width - labelPadding * 2, 0.5);
     
-    self.revokeLabel.frame = CGRectMake(self.contentLabel.right, 0, (width - 32 * 2) / 4, self.contentView.height);
+    self.revokeLabel.frame = CGRectMake(self.contentLabel.right, 0, revokeWidth, self.contentView.height);
     [self.revokeLabel setFont:[UIFont systemFontOfSize:[TTDeviceUIUtils tt_fontSize:16.0f]]];
     self.revokeLabel.right = self.seperatorView.right;
     self.revokeLabel.centerY = self.contentView.centerY;

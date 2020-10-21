@@ -11,6 +11,7 @@
 #import "SSThemed.h"
 #import "TTContactsRecommendUserTableViewCell.h"
 #import "SSNavigationBar.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @interface TTContactsRedPacketUsersViewController () <UITableViewDataSource, UITableViewDelegate, TTContactsRecommendUserTableViewCellDelegate>
@@ -83,7 +84,7 @@
     userModel.selected = selected;
 
     if (!selected) {
-        [TTTrackerWrapper eventV3:@"upload_contact_redpacket" params:@{@"action_type": @"unselect_friend"}];
+        [BDTrackerProtocol eventV3:@"upload_contact_redpacket" params:@{@"action_type": @"unselect_friend"}];
     }
 }
 

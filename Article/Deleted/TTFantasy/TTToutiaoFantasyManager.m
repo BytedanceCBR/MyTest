@@ -32,6 +32,7 @@
 #import "TTVVideoURLParser.h"
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "TTFingerprintManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static NSString *kTTToutiaoFantasyManagerHProjectSettingsKey = @"kTTToutiaoFantasyManagerHProjectSettingsKey";
 static NSString *kTTVideoFantasyEntryIconUrlKey = @"entry_icon_url";
@@ -221,7 +222,7 @@ TTShareManagerDelegate>
 }
 
 - (nullable NSString *)getDeviceID {
-    return [[TTInstallIDManager sharedInstance] deviceID];
+    return [BDTrackerProtocol deviceID];
 }
 
 - (nullable NSString *)getAppID {
@@ -229,7 +230,7 @@ TTShareManagerDelegate>
 }
 
 - (nullable NSString *)getInstallID {
-    return [[TTInstallIDManager sharedInstance] installID];
+    return [BDTrackerProtocol installID];
 }
 
 - (NSString *)getChannel {
@@ -497,7 +498,7 @@ TTShareManagerDelegate>
         params[@"position"] = @"fantasy",
         params[@"section"] = @"list_more";
         params[@"cache_status"] = @"available";
-        [TTTrackerWrapper eventV3:@"click_video_cache" params:[params copy]];
+        [BDTrackerProtocol eventV3:@"click_video_cache" params:[params copy]];
     }
 }
 
@@ -514,7 +515,7 @@ TTShareManagerDelegate>
         return;
     }
     if ([TTFantasy ttf_isFantasyEnabled]) {
-        [TTTrackerWrapper eventV3:eventName params:@{@"fantasy": events}];
+        [BDTrackerProtocol eventV3:eventName params:@{@"fantasy": events}];
     }
 }
 
@@ -523,7 +524,7 @@ TTShareManagerDelegate>
         return;
     }
     if ([TTFantasy ttf_isFantasyEnabled]) {
-        [TTTrackerWrapper eventV3:eventName params:@{@"fantasy": events}];
+        [BDTrackerProtocol eventV3:eventName params:@{@"fantasy": events}];
     }
 }
 

@@ -14,7 +14,7 @@
 #import "ArticleAddressManager.h"
 
 #import "TTURLDomainHelper.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTAccountBusiness.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "TTNetworkManager.h"
@@ -441,7 +441,7 @@ static NSString *s_hasNewFriendCountKey = @"s_hasNewFriendCountKey";
     [getParam setValue:[TTSandBoxHelper ssAppID] forKey:@"aid"];
     [getParam setValue:[TTDeviceHelper openUDID] forKey:@"openudid"];
     [getParam setValue:[SSCommonLogic followButtonColorStringForWap] forKey:@"followbtn_template"];
-    [getParam setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [getParam setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     
     if (extraTrack[@"enter_from"]) {
         [getParam setValue:extraTrack[@"enter_from"] forKey:@"source"];

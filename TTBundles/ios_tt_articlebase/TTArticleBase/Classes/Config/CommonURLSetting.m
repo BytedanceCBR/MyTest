@@ -1023,6 +1023,16 @@ static CommonURLSetting *_sharedInstance = nil;
     return @"http://rtlog.snssdk.com/service/2/app_log/";
 }
 
++ (NSString *)registerDeviceBaseURLString
+{
+    return [NSString stringWithFormat:@"%@/service/2/device_register/", [self logBaseURL]];
+}
+
++ (NSString *)activateDeviceBaseURLString
+{
+    return [NSString stringWithFormat:@"%@/service/2/app_alert_check/", [self logBaseURL]];
+}
+
 + (NSString *)trackLogConfigURLString
 {
     return [NSString stringWithFormat:@"%@/service/2/log_settings/", [self logBaseURL]];

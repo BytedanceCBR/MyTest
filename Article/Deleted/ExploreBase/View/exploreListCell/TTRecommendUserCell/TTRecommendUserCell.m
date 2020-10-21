@@ -25,6 +25,7 @@
 #import "TTRecommendUserCollectionView.h"
 #import "ExploreItemActionManager.h"
 #import <TTAccountManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kHeaderViewHeight 40
 #define kFooterViewHeight 10
@@ -350,12 +351,12 @@
         }
         
         if ([event isEqualToString:@"follow"]) {
-            [TTTrackerWrapper eventV3:@"rt_follow" params:rtFollowDict];
+            [BDTrackerProtocol eventV3:@"rt_follow" params:rtFollowDict];
         } else {
-            [TTTrackerWrapper eventV3:@"rt_unfollow" params:rtFollowDict];
+            [BDTrackerProtocol eventV3:@"rt_unfollow" params:rtFollowDict];
         }
     } else {
-        [TTTrackerWrapper eventV3:event params:dic];//取消关注双发
+        [BDTrackerProtocol eventV3:event params:dic];//取消关注双发
     }
 }
 

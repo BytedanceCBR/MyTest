@@ -13,7 +13,7 @@
 "flogin"                = "FHLoginViewController";
 "aboutUs"               = "FHAboutUsViewController";
 "old_house_detail"      = "FHHouseDetailViewController";
-"neighborhood_detail"   = "FHHouseDetailViewController";
+"neighborhood_detail"   = "FHNeighborhoodDetailViewController";
 "new_house_detail"      = "FHNewHouseDetailViewController";
 "rent_detail"           = "FHHouseDetailViewController";
 "house_search"          = "FHSuggestionListViewController";

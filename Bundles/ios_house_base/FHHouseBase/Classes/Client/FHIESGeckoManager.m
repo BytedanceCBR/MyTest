@@ -7,7 +7,7 @@
 
 #import "FHIESGeckoManager.h"
 #import "IESGeckoKit.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "IESFalconManager.h"
 #import "SSZipArchive.h"
 #import "FHHouseBridgeManager.h"
@@ -21,7 +21,7 @@
 
 + (void)configGeckoInfo
 {
-    [IESGeckoKit setDeviceID:[[TTInstallIDManager sharedInstance] deviceID]];
+    [IESGeckoKit setDeviceID:[BDTrackerProtocol deviceID]];
     
     NSString *stringVersion = [FHEnvContext getToutiaoVersionCode];
     NSArray *geckoChannels = [FHIESGeckoManager fhGeckoChannels];

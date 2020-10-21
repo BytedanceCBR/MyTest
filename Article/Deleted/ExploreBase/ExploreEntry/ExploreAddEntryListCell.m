@@ -12,6 +12,7 @@
 #import "ExploreEntryManager.h"
 #import "TTDeviceHelper.h"
 #import "FriendDataManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kTopMargin 15
 #define kChannelListIconImageWidth          36
@@ -144,13 +145,13 @@
         if(_cellDelegate && [_cellDelegate respondsToSelector:@selector(channelListCell:unsubscribeChannel:)]) {
             [_cellDelegate channelListCell:self unsubscribeChannel:_channelInfo];
         }
-        wrapperTrackEventWithCustomKeys(@"subscription", @"unsubscribe", self.channelInfo.mediaID.stringValue, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"subscription" label:@"unsubscribe" value:self.channelInfo.mediaID.stringValue source:nil extraDic:nil];
     }
     else {
         if(_cellDelegate && [_cellDelegate respondsToSelector:@selector(channelListCell:subscribeChannel:)]) {
             [_cellDelegate channelListCell:self subscribeChannel:_channelInfo];
         }
-        wrapperTrackEventWithCustomKeys(@"subscription", @"subscribe", self.channelInfo.mediaID.stringValue, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"subscription" label:@"subscribe" value:self.channelInfo.mediaID.stringValue source:nil extraDic:nil];
     }
     
     [self fillWithChannelInfo:self.channelInfo];

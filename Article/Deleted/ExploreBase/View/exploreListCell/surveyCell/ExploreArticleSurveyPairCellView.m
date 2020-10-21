@@ -26,6 +26,7 @@
 #import "TTNetworkTouTiaoDefine.h"
 #import "NetworkUtilities.h"
 #import "ExploreOrderedData+TTAd.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface ExploreArticleSurveyPairCellView ()
 
@@ -265,7 +266,7 @@
     if (self.orderedData.uniqueID) {
         uniqueID = self.orderedData.uniqueID;
     }
-    [TTTrackerWrapper eventV3:@"survey_selection_button_click" params:@{@"type" : @"pair", @"survey_id" : uniqueID, @"index" : @(index)}];
+    [BDTrackerProtocol eventV3:@"survey_selection_button_click" params:@{@"type" : @"pair", @"survey_id" : uniqueID, @"index" : @(index)}];
     
     [[TTNetworkManager shareInstance] requestForJSONWithURL:@"http://ci.toutiao.com/eva/survey/"
                                                      params:para

@@ -20,6 +20,7 @@
 #import "NewsDetailLogicManager.h"
 #import "TTTabBarProvider.h"
 #import "TTUGCTrackerHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface ArticleMomentDetailViewController ()
 @property(nonatomic, strong)ArticleMomentDetailView * detailView;
@@ -103,7 +104,7 @@
             }
         }
 
-        [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
+        [BDTrackerProtocol eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
     }
     return self;
 }
@@ -220,7 +221,7 @@
 }
 
 - (void)arrowButtonClicked{
-    wrapperTrackEvent(@"update_detail", @"title_bar_more_click");
+    [BDTrackerProtocol event:@"update_detail" label:@"title_bar_more_click"];
     [[self.detailView getDetailViewHeaderItem] arrowButtonClicked];
 }
 
@@ -298,7 +299,7 @@
         [stayPageDict setValue:@"micronews_list" forKey:@"refer"];
         [stayPageDict setValue:@"micronews_post" forKey:@"group_type"];
         [stayPageDict setValue:@(duration/1000.0) forKey:@"ext_value"];
-        [TTTrackerWrapper eventData:stayPageDict];
+        [BDTrackerProtocol eventData:stayPageDict];
     }
     else {
         NSMutableDictionary * trackerDic = [NSMutableDictionary dictionary];
@@ -332,7 +333,7 @@
     [dictionary setValue:_itemID forKey:@"item_id"];
     [dictionary setValue:@(_gtype) forKey:@"gtype"];
     [dictionary setValue:_clickArea forKey:@"click_area"];
-    [TTTrackerWrapper eventData:dictionary];
+    [BDTrackerProtocol eventData:dictionary];
 }
 
 @end

@@ -37,6 +37,7 @@
 #import "TTRoute.h"
 #import "TTForumModel.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kCommentViewLoadMoreCellHeight 44.f
 
@@ -748,7 +749,7 @@ typedef enum ExploreCommentEmptyViewType{
         ArticleMomentDetailViewController *detailVC = [[ArticleMomentDetailViewController alloc] initWithComment:comment groupModel:comment.groupModel momentModel:[self genSimpleMomentModelWithComment:comment] delegate:self showWriteComment:shouldShow];
         [self.navigationController pushViewController:detailVC animated:YES];
         
-        wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", comment.commentID.stringValue, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:comment.commentID.stringValue source:nil extraDic:nil];
     }
     //记录入口的comment信息
     [self recordSelectedCommentIndexPath:indexPath];
@@ -786,7 +787,7 @@ typedef enum ExploreCommentEmptyViewType{
     NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithCapacity:2];
     [extra setValue:_commentManager.groupModel.groupID forKey:@"ext_value"];
     [extra setValue:commentModel.forumModel.forumID forKey:@"forum_id"];
-    [TTTrackerWrapper category:@"umeng"
+    [BDTrackerProtocol category:@"umeng"
                   event:event
                   label:@"show_detail_comment"
                    dict:extra];
@@ -802,7 +803,7 @@ typedef enum ExploreCommentEmptyViewType{
         label = @"smart_order_comment";
     }
     NSString *tag = [[_commentManager curentArticle] isImageSubject]?@"slide_detail":@"detail";
-    wrapperTrackEvent(tag, label);
+    [BDTrackerProtocol event:tag label:label];
 }
 
 - (void)sendShowTrackForVisibleCellsIfNeeded
@@ -1180,7 +1181,7 @@ typedef enum ExploreCommentEmptyViewType{
                         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"没有网络连接" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
                     }
                     else {
-                        wrapperTrackEvent(@"delete", @"comment");
+                        [BDTrackerProtocol event:@"delete" label:@"comment"];
                         [[ExploreDeleteManager shareManager] deleteArticleCommentForCommentID:[NSString stringWithFormat:@"%@", model.commentID] isAnswer:NO isNewComment:NO];
                         if (model) {
                             [self.commentManager removeCommentForModel:model];
@@ -1326,7 +1327,7 @@ typedef enum ExploreCommentEmptyViewType{
 {
     if(![TTAccountManager isLogin])
     {
-        wrapperTrackEvent(@"login", @"login_pop_close");
+        [BDTrackerProtocol event:@"login" label:@"login_pop_close"];
     }
 }
 
@@ -1342,7 +1343,7 @@ typedef enum ExploreCommentEmptyViewType{
                 [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"没有网络连接" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
             }
             else {
-                wrapperTrackEvent(@"delete", @"comment");
+                [BDTrackerProtocol event:@"delete" label:@"comment"];
                 [[ExploreDeleteManager shareManager] deleteArticleCommentForCommentID:[NSString stringWithFormat:@"%@", _needDeleteCommentModel.commentID] isAnswer:NO isNewComment:NO];
                 if (_needDeleteCommentModel) {
                     [self.commentManager removeCommentForModel:_needDeleteCommentModel];

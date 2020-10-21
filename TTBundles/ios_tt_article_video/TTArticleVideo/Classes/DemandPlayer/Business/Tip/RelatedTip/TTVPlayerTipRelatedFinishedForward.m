@@ -12,10 +12,10 @@
 #import "TTVPlayerTipRelatedFinished.h"
 #import "TTVPlayerTipShareFinished.h"
 #import "TTSettingsManager.h"
-#import "TTInstallIDManager.h"
 #import "TTTrackerWrapper.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <ReactiveObjC/ReactiveObjC.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTVPlayerTipRelatedFinishedForward()
 @property (nonatomic, strong) TTVPlayerTipRelatedFinished *relatedView;
@@ -150,7 +150,7 @@
         self.preRemainderTime = remainderTime;
         TTVideoFinishRelatedRecommondURLRequestInfo *requestInfo = [[TTVideoFinishRelatedRecommondURLRequestInfo alloc] init];
         requestInfo.groupID = self.playerStateStore.state.playerModel.groupID;
-        requestInfo.parentRID = [NSString stringWithFormat:@"%@_%@_%@",[self currentTimeStr],self.playerStateStore.state.playerModel.groupID,[TTInstallIDManager sharedInstance].installID];
+        requestInfo.parentRID = [NSString stringWithFormat:@"%@_%@_%@",[self currentTimeStr],self.playerStateStore.state.playerModel.groupID, BDTrackerProtocol.installID];
         requestInfo.pageType = @"video";
         requestInfo.siteID = @"5000804";
         if (self.playerStateStore.state.isInDetail) {
