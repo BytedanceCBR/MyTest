@@ -30,6 +30,7 @@
 #import "FHUGCFullScreenVideoCell.h"
 #import "FHUGCCellHelper.h"
 #import "BTDResponder.h"
+#import "FHShortVideoPerLoaderManager.h"
 
 @interface FHVideoChannelViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
@@ -440,6 +441,13 @@
     }
     
     FHUGCFullScreenVideoCell *cell = [self getFitableVideoCell];
+    if ([cell.currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
+        NSInteger index = [self getCellIndex:(FHFeedUGCCellModel*)cell.currentData];
+        if (index + 1 <= self.dataList.count - 1) {
+            FHFeedUGCCellModel *model = self.dataList[index + 1];
+            [FHShortVideoPerLoaderManager preloadWithVideoModel:model isFromShortVideo:NO];
+        }
+    }
     
     if(!cell){
         [self pauseCurrentVideo];

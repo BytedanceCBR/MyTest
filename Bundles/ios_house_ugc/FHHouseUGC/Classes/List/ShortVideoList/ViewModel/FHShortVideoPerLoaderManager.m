@@ -33,23 +33,30 @@
     NSInteger nextIndex = currentIndex + 1;
     if (nextIndex >= 0 && nextIndex < [manager numberOfShortVideoItems]) {
         FHFeedUGCCellModel *shortVideoModel = [manager itemAtIndex:nextIndex];
-        [self preloadWithVideoModel:shortVideoModel];
+        [self preloadWithVideoModel:shortVideoModel isFromShortVideo:YES];
     }
     
 }
 
 
-+ (void)preloadWithVideoModel:(FHFeedUGCCellModel *)videoDetail {
-    
-    
-    TTVideoEnginePreloaderVidItem *vidItem = [TTVideoEnginePreloaderVidItem preloaderVidItem:videoDetail.video.videoId reslution:TTVideoEngineResolutionTypeFullHD preloadSize:500 * 1024 isByteVC1:NO];
++ (void)preloadWithVideoModel:(FHFeedUGCCellModel *)videoDetail isFromShortVideo:(BOOL)isFromShortVideo {
+    NSString *videoId = @"";
+    NSString *groupId = @"";
+    if (isFromShortVideo) {
+        videoId = videoDetail.video.videoId;
+        groupId = videoDetail.itemId;
+    }else {
+        videoId = videoDetail.videoDetailInfo.videoId;
+        groupId = videoDetail.groupId;
+    }
+    TTVideoEnginePreloaderVidItem *vidItem = [TTVideoEnginePreloaderVidItem preloaderVidItem:videoId reslution:TTVideoEngineResolutionTypeFullHD preloadSize:500 * 1024 isByteVC1:NO];
     vidItem.dashEnable = NO; /// 非 dash 资源
     vidItem.httpsEnable = NO;/// 非 https 资源
     vidItem.priorityLevel = TTVideoEnginePrloadPriorityDefault;/// 默认优先级
     /// apiVersion,apiStringCall,authCall 可以参照 play 接口说明
     vidItem.apiVersion = TTVideoEnginePlayAPIVersion1;
     vidItem.apiStringCall = ^NSString *(TTVideoEnginePlayAPIVersion apiVersion, NSString * _Nonnull vid) {
-        return  [TTVVideoURLParser urlWithVideoID:videoDetail.video.videoId categoryID:videoDetail.categoryId itemId:videoDetail.itemId adID:@"" sp:TTVPlayerSPToutiao base:nil];;/// 参照播放器的 apiForFetcher: 代理方法的实现
+        return  [TTVVideoURLParser urlWithVideoID:videoId categoryID:videoDetail.categoryId itemId:groupId adID:@"" sp:TTVPlayerSPToutiao base:nil];;/// 参照播放器的 apiForFetcher: 代理方法的实现
     };
     /// Version1 需要实现该接口
     vidItem.authCall = ^NSString *(TTVideoEnginePlayAPIVersion apiVersion, NSString * _Nonnull vid) {
@@ -75,7 +82,7 @@
     //        return [cacheDir stringByAppendingPathComponent:fileName];
     //    };
     vidItem.preloadEnd = ^(TTVideoEngineLocalServerTaskInfo * _Nullable info, NSError * _Nullable error) {/// 预加载结束
-
+        NSLog(@"666");
     };
     /// 添加任务，开始预加载
     [TTVideoEngine ls_addTaskWithVidItem:vidItem];
