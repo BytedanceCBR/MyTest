@@ -144,6 +144,8 @@ UITableViewDataSource
             [self.popupController pushView:keywordSelectorView animated:true];
         }
             break;
+        case FHFeedOperationOptionTypeBlackList:
+        case FHFeedOperationOptionTypeShield:
         case FHFeedOperationOptionTypeDelete:
         case FHFeedOperationOptionTypeTop:
         case FHFeedOperationOptionTypeCancelTop:

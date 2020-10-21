@@ -53,6 +53,9 @@ NS_ASSUME_NONNULL_BEGIN
 // 删除帖子
 + (TTHttpTask *)postDelete:(NSString *)groupId cellType:(NSInteger)cellType socialGroupId:(NSString *)socialGroupId enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void(^)(bool success , NSError *error))completion;
 
+//屏蔽评论
++ (TTHttpTask *)commentShield:(NSString *)groupId commentId:(NSString *)commentId completion:(void(^)(bool success , NSError *error))completion;
+
 // 管理员操作帖子
 + (TTHttpTask *)postOperation:(NSString *)groupId cellType:(NSInteger)cellType socialGroupId:(NSString *)socialGroupId operationCode:(NSString *)operationCode enterFrom:(NSString *)enterFrom pageType:(NSString *)pageType completion:(void (^ _Nonnull)(id<FHBaseModelProtocol> model, NSError *error))completion;
 

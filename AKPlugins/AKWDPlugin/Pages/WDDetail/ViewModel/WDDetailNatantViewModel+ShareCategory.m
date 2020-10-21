@@ -28,6 +28,7 @@
 #import "TTReportContentItem.h"
 #import "TTDislikeContentItem.h"
 #import "TTDeleteContentItem.h"
+#import "TTBlockContentItem.h"
 #import "TTForwardWeitoutiaoContentItem.h"
 #import "TTCommentStatContentItem.h"
 #import "TTEditContentItem.h"
@@ -261,6 +262,9 @@
 //    TTDingTalkContentItem *ddItem = [[TTDingTalkContentItem alloc] initWithTitle:[self shareTitle] desc:[self shareDesc] webPageUrl:[self shareUrl] thumbImage:[self shareImage] shareType:TTShareWebPage];
 //    TTSystemContentItem *sysItem = [[TTSystemContentItem alloc] initWithDesc:[self shareDesc] webPageUrl:[self shareUrl] image:[self shareImage]];
     TTCopyContentItem *copyItem = [[TTCopyContentItem alloc] initWithDesc:[self shareUrl]];
+    TTDislikeContentItem *disLikeItem = [[TTDislikeContentItem alloc] init];
+    TTBlockContentItem *blockItem = [[TTBlockContentItem alloc] init];
+    TTReportContentItem *reportItem = [[TTReportContentItem alloc]init];
     
     NSMutableArray<id<TTActivityContentItemProtocol>> *shareItems = [NSMutableArray array];
     //    if (![TTDeviceHelper isPadDevice] && self.detailModel.repostParams) {
@@ -268,7 +272,7 @@
     //        TTForwardWeitoutiaoContentItem *wttItem = [self weiTouTiaoItem];
     //        [shareItems addObject:wttItem];
     //    }
-    [shareItems addObjectsFromArray:@[wcTlItem, wcItem, qqItem, qqZoneItem,copyItem]];
+    [shareItems addObjectsFromArray:@[wcTlItem, wcItem, qqItem, qqZoneItem,copyItem,disLikeItem,blockItem,reportItem]];
     
     return [shareItems copy];
 }
