@@ -13,7 +13,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHShortVideoPerLoaderManager : NSObject
-+ (void)preloadWithVideoModel:(FHFeedUGCCellModel *)videoDetail;
++ (void)preloadWithVideoModel:(FHFeedUGCCellModel *)videoDetail isFromShortVideo:(BOOL)isFromShortVideo;
 + (void)startPrefetchShortVideoInDetailWithDataFetchManager:(FHShortVideoDetailFetchManager *)manager;
 @end
 
