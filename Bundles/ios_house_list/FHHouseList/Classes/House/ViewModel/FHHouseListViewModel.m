@@ -1308,7 +1308,9 @@ extern NSString *const INSTANT_DATA_KEY;
         return;
     }
 
-    NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
+    NSMutableDictionary *traceParam = [NSMutableDictionary dictionary];
+    [traceParam addEntriesFromDictionary:[self.tracerModel toDictionary] ? : @{}];
+    traceParam[UT_FROM_PAGE_TYPE] = [self pageTypeString];
     //house_search
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
@@ -1461,6 +1463,10 @@ extern NSString *const INSTANT_DATA_KEY;
         NSHashTable *hashMap = [[NSHashTable alloc]initWithOptions:NSPointerFunctionsWeakMemory capacity:1];
         [hashMap addObject:self];
         dict[OPENURL_CALLBAK] = hashMap;
+        dict[@"tracer"] = @{
+            UT_FROM_PAGE_TYPE: [self pageTypeString],
+            UT_ORIGIN_FROM: self.tracerModel.originFrom ? : @"be_null",
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
