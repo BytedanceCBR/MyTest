@@ -353,7 +353,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
  */
 - (BOOL)shouldAutoPlay
 {
-    return (self.context.tipType != TTVPlayerControlTipViewTypeFinished && !self.context.isShowingTrafficAlert && !self.movieView.player.context.midADIsPlaying);
+    return (self.context.tipType != TTVPlayerControlTipViewTypeFinished && !self.context.isShowingTrafficAlert);
 }
 
 - (void)rebindToMovieShotView:(BOOL)rebindToMovieShotView
@@ -469,7 +469,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         commodity.groupID = self.videoInfo.groupModel.groupID;
         commodity.position = [self getCommodityPosition];
         commodity.playVideo = self.movieView;
-        [self.movieView.player setCommodityView:commodity];
+//        [self.movieView.player setCommodityView:commodity];
     }
     commodity.delegate = self;
     [commodity setCommoditys:self.videoInfo.commoditys];

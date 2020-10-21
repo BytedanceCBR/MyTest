@@ -31,7 +31,7 @@ typedef void(^TTVStopFinished)(void);
 @property (nonatomic, strong ,readonly) TTVDemanderTrackerManager *commonTracker;//通用的tracker
 @property (nonatomic, weak) NSObject <FHShortPlayVideoDelegate> *delegate;
 @property (nonatomic, strong ,readonly) TTVDemandPlayer *player;
-@property (nonatomic, strong ) TTVVideoPlayerModel *playerModel;
+@property (nonatomic, strong ) TTVPlayerModel *playerModel;
 /**
  切换下一个视频的时候,重置播放器环境数据使用.
  */

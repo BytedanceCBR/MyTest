@@ -178,7 +178,7 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
     }
 }
 
-- (void)resetPlayerModel:(TTVVideoPlayerModel *)playerModel
+- (void)resetPlayerModel:(TTVPlayerModel *)playerModel
 {
     self.playerModel = playerModel;
     [self.player reset];

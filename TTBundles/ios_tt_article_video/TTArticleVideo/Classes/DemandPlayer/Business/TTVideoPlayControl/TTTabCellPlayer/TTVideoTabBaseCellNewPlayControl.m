@@ -171,7 +171,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     if (self.movieView.superview) {
         commodity = [[TTVCommodityView alloc] initWithFrame:self.movieView.bounds];
         commodity.playVideo = self.movieView;
-        [self.movieView.player setCommodityView:commodity];
+//        [self.movieView.player setCommodityView:commodity];
     }else{
         commodity = [[TTVCommodityView alloc] initWithFrame:self.logo.bounds];
         [self.logo addSubview:commodity];

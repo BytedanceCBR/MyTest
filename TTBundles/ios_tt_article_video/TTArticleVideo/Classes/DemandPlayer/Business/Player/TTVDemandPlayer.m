@@ -18,14 +18,14 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTSharePanelTransformMessage.h"
 //#import "TTVPasterPlayer.h"
-#import "TTVPasterADURLRequestInfo.h"
+//#import "TTVPasterADURLRequestInfo.h"
 #import "TTVPlayerBackgroundManager.h"
-#import "TTVPasterADViewController.h"
-#import "TTVVideoPlayerViewShareCointainerView.h"
+//#import "TTVPasterADViewController.h"
+//#import "TTVVideoPlayerViewShareCointainerView.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 //#import <lottie-ios/Lottie/Lottie.h>
 //#import "TTVCommodityButtonView.h"
-#import "TTVVideoPlayerModel.h"
+#import "TTVPlayerModel.h"
 //#import "TTVADGuideCountdownViewProtocol.h"
 #import "TTVPlayerCacheProgressController.h"
 //#import "TTVMidInsertADPlayer.h"
@@ -44,9 +44,6 @@ extern NSString * const TTActivityContentItemTypeWechat;
 extern NSString * const TTActivityContentItemTypeWechatTimeLine;
 extern NSString * const TTActivityContentItemTypeQQFriend;
 extern NSString * const TTActivityContentItemTypeQQZone;
-//extern NSString * const TTActivityContentItemTypeDingTalk;
-
-
 
 extern NSString * _Nonnull const kExploreMovieViewDidChangeFullScreenNotifictaion;
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
@@ -57,20 +54,20 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 @interface TTVDemandPlayer ()<TTVPlayerControllerDataSource ,TTVPlayerControlViewDelegate ,TTVPlayerControllerDelegate ,TTSharePanelTransformMessage>
 
 @property (nonatomic, strong) TTVPlayerController *playerController;
-@property(nonatomic, strong)TTVPlayerControlTipView *tipView;
-@property (nonatomic, strong) TTVVideoPlayerStateStore *playerStateStore;
+@property (nonatomic, strong) TTVPlayerControlTipView *tipView;
+@property (nonatomic, strong) TTVPlayerStateStore *playerStateStore;
 @property (nonatomic, assign) TTVPlayerResolutionType currentResolution;
 @property (nonatomic, strong) NSHashTable *delegates;
 //@property (nonatomic, strong) TTVDemanderTrackerManager *commonTracker;//通用的tracker
 @property (nonatomic, strong) FHDemanderTrackerManager *commonTracker;// add by zjing 修改video相关埋点
 
-@property (nonatomic, strong) TTVDemandPlayerContextVideo *context;
+@property (nonatomic, strong) TTVDemandPlayerContext *context;
 @property (nonatomic, strong) NSHashTable *map;
 //@property (nonatomic, strong) TTVCommodityFloatView *commodityFloatView;
 //@property (nonatomic, strong) TTVPasterPlayer *pasterPlayer;
 //@property (nonatomic, strong) TTVMidInsertADPlayer *midInsertADPlayer;
 //@property (nonatomic, strong) UIView<TTVADGuideCountdownViewProtocol> *guideCountdownView;
-@property (nonatomic, strong) TTVVideoPlayerViewShareCointainerView *shareCointainerView;
+//@property (nonatomic, strong) TTVVideoPlayerViewShareCointainerView *shareCointainerView;
 //@property (nonatomic, strong) LOTAnimationView *doubleTap666AnimationView;
 @property (nonatomic, strong) TTVPlayerBackgroundManager *backgroundManager;
 @property (nonatomic, strong) NSMutableArray *parts;
@@ -97,8 +94,8 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
         self.commonTracker = [[FHDemanderTrackerManager alloc] init];
         _parts = [NSMutableArray array];
         _delegates = [NSHashTable weakObjectsHashTable];
-        _context = [[TTVDemandPlayerContextVideo alloc] init];
-        _playerView = [[TTVVideoPlayerView alloc] init];
+        _context = [[TTVDemandPlayerContext alloc] init];
+        _playerView = [[TTVPlayerView alloc] init];
         _playerController = [[TTVPlayerController alloc] init];
         _playerController.playerView = self.playerView;
         _playerController.delegate = self;
@@ -131,7 +128,7 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     });
 }
 
-- (void)setPlayerModel:(TTVVideoPlayerModel *)playerModel
+- (void)setPlayerModel:(TTVPlayerModel *)playerModel
 {
     if (playerModel != _playerModel) {
         _playerModel = playerModel;
@@ -188,9 +185,9 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 //        [self ttv_addPasterPlayer];
 //    }
 //    _commodityFloatView.playerStateStore = self.playerStateStore;
-    if (ttvs_isVideoPlayFullScreenShowDirectShare()) {
-        [self ttv_addShareCointainerView];
-    }
+//    if (ttvs_isVideoPlayFullScreenShowDirectShare()) {
+//        [self ttv_addShareCointainerView];
+//    }
     if (self.playerModel.enableCommonTracker) {
         [self ttv_addPlayerTracker];
     }
@@ -424,25 +421,25 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 //    _commodityButton.playerStateStore = self.playerStateStore;
 //}
 
-- (void)ttv_addShareCointainerView
-{
-    if (ttvs_isTitanVideoBusiness()) {
-        self.shareCointainerView = [[TTVVideoPlayerViewShareCointainerView alloc] init];
-        self.playerView.shareCointainerView = self.shareCointainerView;
-        self.shareCointainerView.playerStateStore = self.playerStateStore;
-        @weakify(self);
-        self.shareCointainerView.shareCointainerViewShareAction = ^(NSString *shareActionType) {
-            @strongify(self);
-            if ([shareActionType isEqualToString:TTActivityContentItemTypeWechatTimeLine] ||
-                [shareActionType isEqualToString:TTActivityContentItemTypeWechat]         ||
-                [shareActionType isEqualToString:TTActivityContentItemTypeQQZone]         ||
-                [shareActionType isEqualToString:TTActivityContentItemTypeQQFriend]){
-                [self.playerStateStore sendAction:TTVPlayerEventTypePlayingDirectShare payload:shareActionType];
-            }
-        };
-    }
-
-}
+//- (void)ttv_addShareCointainerView
+//{
+//    if (ttvs_isTitanVideoBusiness()) {
+//        self.shareCointainerView = [[TTVVideoPlayerViewShareCointainerView alloc] init];
+//        self.playerView.shareCointainerView = self.shareCointainerView;
+//        self.shareCointainerView.playerStateStore = self.playerStateStore;
+//        @weakify(self);
+//        self.shareCointainerView.shareCointainerViewShareAction = ^(NSString *shareActionType) {
+//            @strongify(self);
+//            if ([shareActionType isEqualToString:TTActivityContentItemTypeWechatTimeLine] ||
+//                [shareActionType isEqualToString:TTActivityContentItemTypeWechat]         ||
+//                [shareActionType isEqualToString:TTActivityContentItemTypeQQZone]         ||
+//                [shareActionType isEqualToString:TTActivityContentItemTypeQQFriend]){
+//                [self.playerStateStore sendAction:TTVPlayerEventTypePlayingDirectShare payload:shareActionType];
+//            }
+//        };
+//    }
+//
+//}
 
 //- (LOTAnimationView *)doubleTap666Animation
 //{
@@ -630,9 +627,7 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 {
     return (self.playerStateStore.state.isShowingTrafficAlert ||
             self.playerStateStore.state.tipType == TTVPlayerControlTipViewTypeRetry ||
-            self.playerStateStore.state.tipType == TTVPlayerControlTipViewTypeFinished  ||
-            self.playerStateStore.state.pasterADIsPlaying ||
-            self.playerStateStore.state.midADIsPlaying);
+            self.playerStateStore.state.tipType == TTVPlayerControlTipViewTypeFinished);
 }
 
 - (void)actionChangeCallbackWithAction:(TTVFluxAction *)action state:(id)state
@@ -869,7 +864,7 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 
 - (BOOL)shouldAutoRotate
 {
-    return (self.playerStateStore.state.playbackState != TTVVideoPlaybackStateFinished || self.playerStateStore.state.pastarADEnableRotate);
+    return (self.playerStateStore.state.playbackState != TTVVideoPlaybackStateFinished);
 }
 
 - (CGRect)ttv_movieViewFrameAfterExitFullscreen

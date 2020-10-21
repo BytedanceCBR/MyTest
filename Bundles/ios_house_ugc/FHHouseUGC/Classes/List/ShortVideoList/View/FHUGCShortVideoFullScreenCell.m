@@ -16,7 +16,7 @@
 #import "TTAccountManager.h"
 
 @interface FHUGCShortVideoFullScreenCell()<TTVDemandPlayerDelegate,FHShortPlayVideoDelegate>
-@property (nonatomic, strong) TTVVideoPlayerModel *playerModel;
+@property (nonatomic, strong) TTVPlayerModel *playerModel;
 @property (nonatomic, strong) UIImageView *playImage;
 @end
 @implementation FHUGCShortVideoFullScreenCell
@@ -160,7 +160,7 @@
     self.cellModel = videoDetail;
     [ExploreMovieView removeAllExploreMovieView];
     TTVPlayerSP sp =  TTVPlayerSPToutiao;
-    TTVVideoPlayerModel *model = [[TTVVideoPlayerModel alloc] init];
+    TTVPlayerModel *model = [[TTVPlayerModel alloc] init];
     model.categoryID = self.cellModel.categoryId;
     model.groupID = [NSString stringWithFormat:@"%@",self.cellModel.groupId];
     model.itemID = [NSString stringWithFormat:@"%@",self.cellModel.itemId];
@@ -174,8 +174,6 @@
     model.authorId = self.cellModel.user.userId;
     model.extraDic = self.cellModel.tracerDic;
     model.defaultResolutionType = TTVPlayerResolutionTypeFullHD;
-    model.enablePasterAd = YES;
-    model.pasterAdFrom = @"feed";
     _playerModel = model;
     [_playerView resetPlayerModel:_playerModel];
     // 滑动切换视频时，背景图使用首帧图
