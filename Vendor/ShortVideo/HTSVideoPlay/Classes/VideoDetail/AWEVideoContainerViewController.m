@@ -901,7 +901,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                     [self sendStayPageTracking];
                     self.firstPageShown = YES;
                     [self.currentVideoCell stop];
-                    [self.currentVideoCell reset];
                     self.currentVideoCell = nil;
                     self.dataFetchManager.currentIndex = itemIndex;
                     self.currentVideoCell = cell;

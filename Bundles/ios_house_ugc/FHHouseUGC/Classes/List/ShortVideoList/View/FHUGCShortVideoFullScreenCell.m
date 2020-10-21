@@ -161,6 +161,7 @@
     [ExploreMovieView removeAllExploreMovieView];
     TTVPlayerSP sp =  TTVPlayerSPToutiao;
     TTVPlayerModel *model = [[TTVPlayerModel alloc] init];
+    model.enableCache = NO;
     model.categoryID = self.cellModel.categoryId;
     model.groupID = [NSString stringWithFormat:@"%@",self.cellModel.groupId];
     model.itemID = [NSString stringWithFormat:@"%@",self.cellModel.itemId];
