@@ -157,8 +157,8 @@ static NSInteger const FHNeighborhoodDetailQuickEntryCount = 5;
         [self addSubview:self.nameLabel];
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.top.mas_equalTo(self.iconView.mas_bottom).offset(2);
-                    make.left.mas_equalTo(16);
-                    make.right.mas_equalTo(-16);
+                    make.left.mas_equalTo(0);
+                    make.right.mas_equalTo(0);
                     make.bottom.mas_equalTo(-5);
         }];
         
