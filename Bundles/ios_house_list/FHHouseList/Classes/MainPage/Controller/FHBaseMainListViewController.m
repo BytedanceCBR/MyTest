@@ -92,6 +92,9 @@
         _tableView.scrollsToTop = YES;
         _tableView.bounces = NO;
         _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+        if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
+            _tableView.backgroundColor = [UIColor themeGray7];
+        }
     }
     return _tableView;
 }

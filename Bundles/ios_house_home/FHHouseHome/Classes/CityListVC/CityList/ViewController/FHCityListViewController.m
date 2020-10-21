@@ -375,6 +375,13 @@
         if ([self locAuthorization]) {
             // custom loading
             [[ToastManager manager] showCustomLoading:@"定位中"];
+        }else{
+            self.locationBar.isLocationSuccess = NO;
+            [FHLocManager sharedInstance].isLocationSuccess = NO;
+            [[FHLocManager sharedInstance] clearCommonParamsLocation];
+            [[FHLocManager sharedInstance] showLocationGuideAlert];
+            [[ToastManager manager] showToast:@"定位失败" duration:1.0 isUserInteraction:YES];
+            return;
         }
         [self requestCurrentLocationWithToast:YES needSwitchCity:NO];
     } else {

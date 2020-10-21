@@ -223,6 +223,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                         [[FHUGCSocialGroupData sharedInstance] resetSocialGroupDataWith:self.followData.data.userFollowSocialGroups];
                     }
                     [wself updateFollowData];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCUpdateFollowDataAfterAccountStatuschangedNotification object:nil];
 //                    if(![FHEnvContext isNewDiscovery]){
                         [wself setFocusTimerState];
 //                    }
@@ -641,6 +642,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     // 切换账号 加载数据
     [self loadFollowListData];
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCUpdateFollowDataAfterAccountStatuschangedNotification object:nil];
     // 重新加载
     [self loadFollowData];
     

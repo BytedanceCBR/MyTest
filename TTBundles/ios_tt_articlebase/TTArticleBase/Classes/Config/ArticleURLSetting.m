@@ -364,7 +364,7 @@
 
 + (NSString*)thirdPartySDKURLString
 {
-    NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/f100/activity/client/private_sdk_explain"] btd_stringByURLEncode];
+    NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/magic/page/ejs/5f6973d0daa16002f049b3bc?appType=manyhouse"] btd_stringByURLEncode];
     NSString *encodedTitle = [[NSString stringWithFormat:@"第三方SDK目录"] btd_stringByURLEncode];
     NSString *urlStr = [NSString stringWithFormat:@"%@&title=%@", encodedUrl, encodedTitle];
     return urlStr;
@@ -373,7 +373,7 @@
 
 + (NSString*)applyPermissionURLString
 {
-    NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/f100/activity/client/private_app_privilege"] btd_stringByURLEncode];
+    NSString *encodedUrl = [[NSString stringWithFormat:@"https://m.xflapp.com/magic/page/ejs/5f5a1dcc8cdeac02ee40331c?appType=manyhouse"] btd_stringByURLEncode];
     NSString *encodedTitle = [[NSString stringWithFormat:@"系统权限列表"] btd_stringByURLEncode];
     NSString *urlStr = [NSString stringWithFormat:@"%@&title=%@", encodedUrl, encodedTitle];
     return urlStr;

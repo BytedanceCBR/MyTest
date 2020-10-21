@@ -514,6 +514,10 @@
         [self gotoEditPostVC];
     } else if(view.selectdWord.type == FHFeedOperationWordTypeEditHistory) {
         [self gotoPostHistory:@"edit_record_selection"];
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeShield){
+        [[ToastManager manager] showToast:@"将减少推荐类似内容"];
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeBlackList){
+        [[ToastManager manager] showToast:@"将减少推荐类似内容"];
     }
 }
 
