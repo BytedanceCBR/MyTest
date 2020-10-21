@@ -21,6 +21,8 @@
 #import "FHHomeCellHelper.h"
 #import "UIImage+FIconFont.h"
 #import "TTDeviceHelper.h"
+#import "FHUserTracker.h"
+
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
 static const float kSegementedMainPadingBottom = 10;
@@ -328,8 +330,9 @@ static const float kMapSearchBtnRightPading = 50;
     tracerParams[@"enter_type"] = @"click";
     tracerParams[@"element_from"] = @"maintab_search";
     tracerParams[@"enter_from"] = @"maintab";
+    tracerParams[UT_FROM_PAGE_TYPE] = @"maintab";
     tracerParams[@"origin_from"] = @"maintab_search";
-
+    
     NSMutableDictionary *infos = [NSMutableDictionary new];
     infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);
     infos[@"tracer"] = tracerParams;
