@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^refreshActionBlock)(void);
 @property (nonatomic, copy) void(^mapBtnClickBlock)(NSString *);
 @property (nonatomic, copy) void(^categoryChangeBlock)(NSString *);
-
+@property (nonatomic, copy) void (^baiduPanoramaBlock)(void);
 @end
 
 @interface FHNewHouseDetailMapCellModel : NSObject

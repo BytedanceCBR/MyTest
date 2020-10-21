@@ -27,8 +27,9 @@
 @interface FHShortVideoDetailFetchManager()
 @property (nonatomic, strong) NSMutableArray<FHFeedUGCCellModel *> *awemedDetailItems;
 @property (nonatomic, strong) TSVShortVideoDecoupledFetchManager *decoupledFetchManager;
-@property(nonatomic, weak) TTHttpTask *requestTask;
+@property (nonatomic, weak) TTHttpTask *requestTask;
 @property (nonatomic, strong) FHUGCShortVideoRealtorInfo *realtorInfo;
+@property (nonatomic, assign) BOOL isLoadingMoreData;
 @end
 @implementation FHShortVideoDetailFetchManager
 
@@ -60,40 +61,42 @@
 - (void)requestDataForGroupIdAutomatically:(BOOL)isAutomatically
                                finishBlock:(TTFetchListFinishBlock)finishBlock
 {
-    NSString *urlStr = [ArticleURLSetting shortVideoInfoURL];
-    NSDictionary *params = @{
-        @"group_id" : self.groupID,
-    };
-    WeakSelf;
-    [[TTNetworkManager shareInstance] requestForJSONWithURL:urlStr params:params method:@"POST" needCommonParams:YES requestSerializer:nil responseSerializer:[HTSVideoPlayJSONResponseSerializer class] autoResume:YES callback:^(NSError *error, id jsonObj) {
-        StrongSelf;
-        if (error || jsonObj == nil || jsonObj[@"data"] == nil) {
-            if (finishBlock){
-                finishBlock(0,error);
-            }
-            return;
-        }
-        if (![jsonObj isKindOfClass:[NSDictionary class]]) {
-            return;
-        }
-        NSDictionary *dic = @{@"raw_data":jsonObj[@"data"],@"cell_type":@(FHUGCFeedListCellTypeUGCSmallVideo)};
-        FHFeedUGCCellModel *cellModle = [FHFeedUGCCellModel modelFromFeed:dic];
-        if (!cellModle) {
-            return;
-        }
-        [self.awemedDetailItems addObject:cellModle];
-        if (wself.dataDidChangeBlock) {
-            wself.dataDidChangeBlock();
-        }
-    }];
+//    NSString *urlStr = [ArticleURLSetting shortVideoInfoURL];
+//    NSDictionary *params = @{
+//        @"group_id" : self.groupID,
+//    };
+//    WeakSelf;
+//    [[TTNetworkManager shareInstance] requestForJSONWithURL:urlStr params:params method:@"POST" needCommonParams:YES requestSerializer:nil responseSerializer:[HTSVideoPlayJSONResponseSerializer class] autoResume:YES callback:^(NSError *error, id jsonObj) {
+//        StrongSelf;
+//        if (error || jsonObj == nil || jsonObj[@"data"] == nil) {
+//            if (finishBlock){
+//                finishBlock(0,error);
+//            }
+//            return;
+//        }
+//        if (![jsonObj isKindOfClass:[NSDictionary class]]) {
+//            return;
+//        }
+//        NSDictionary *dic = @{@"raw_data":jsonObj[@"data"],@"cell_type":@(FHUGCFeedListCellTypeUGCSmallVideo)};
+//        FHFeedUGCCellModel *cellModle = [FHFeedUGCCellModel modelFromFeed:dic];
+//        if (!cellModle) {
+//            return;
+//        }
+//        [self.awemedDetailItems addObject:cellModle];
+//        if (wself.dataDidChangeBlock) {
+//            wself.dataDidChangeBlock();
+//        }
+//    }];
 }
 
 - (void)requestDataAutomatically:(BOOL)isAutomatically
                      finishBlock:(TTFetchListFinishBlock)finishBlock
 {
-//    NSString *refreshType = @"pre_load_more";
+    if(self.isLoadingMoreData){
+        return;
+    }
     
-//    [self trackCategoryRefresh:refreshType];
+    self.isLoadingMoreData = YES;
     
     NSInteger listCount = self.awemedDetailItems.count;
     
@@ -108,10 +111,12 @@
     if(fCityId){
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
+    [extraDic setValue:self.groupID forKey:@"group_id"];
     __weak typeof(self)wself = self;
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:YES isFirst:NO listCount:10 extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         if (error) {
+            wself.isLoadingMoreData = NO;
             return;
         }
         if(model){
@@ -122,8 +127,11 @@
                     if (wself.dataDidChangeBlock) {
                         wself.dataDidChangeBlock();
                     }
+                    wself.isLoadingMoreData = NO;
                 });
             });
+        }else{
+            wself.isLoadingMoreData = NO;
         }
     }];
     
@@ -131,25 +139,29 @@
 
 - (void)setCurrentShortVideoModel:(FHFeedUGCCellModel *)currentShortVideoModel {
     self.awemedDetailItems = [[NSMutableArray alloc]init];
-    if (currentShortVideoModel) {
-        [self.awemedDetailItems addObject:currentShortVideoModel];
-        currentShortVideoModel.tracerDic =  [self trackDict:currentShortVideoModel rank:0];
-    }else {
-        [self requestDataForGroupIdAutomatically:YES finishBlock:^(NSUInteger increaseCount, NSError *error) {
-        }];
+    if (currentShortVideoModel && currentShortVideoModel.originContent) {
+        FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:currentShortVideoModel.originContent];
+        if (cellmodel) {
+            cellmodel.tracerDic =  [self trackDict:currentShortVideoModel rank:0];
+            [self.awemedDetailItems addObject:cellmodel];
+        }
     }
 }
 
 - (void)setOtherShortVideoModels:(NSArray<FHFeedUGCCellModel *> *)otherShortVideoModels {
-    for (int m =0; m>otherShortVideoModels.count; m ++) {
+    for (int m =0; m < otherShortVideoModels.count; m ++) {
         FHFeedUGCCellModel *itemModel = otherShortVideoModels[m];
-        itemModel.tracerDic =   [self trackDict:itemModel rank:self.awemedDetailItems.count + m];
+        if (itemModel && itemModel.originContent) {
+            FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:itemModel.originContent];
+            cellmodel.tracerDic =   [self trackDict:itemModel rank:self.awemedDetailItems.count + m];
+            [self.awemedDetailItems addObject:cellmodel];
+        }
     }
-    NSInteger numberOfItemLeft = self.numberOfShortVideoItems - self.currentIndex;
-    if (numberOfItemLeft<=4) {
-        [self requestDataAutomatically:YES finishBlock:^(NSUInteger increaseCount, NSError *error) {
-        }];
-    }
+//    NSInteger numberOfItemLeft = self.numberOfShortVideoItems - self.currentIndex;
+//    if (numberOfItemLeft<=4) {
+//        [self requestDataAutomatically:YES finishBlock:^(NSUInteger increaseCount, NSError *error) {
+//        }];
+//    }
 }
 
 - (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead {

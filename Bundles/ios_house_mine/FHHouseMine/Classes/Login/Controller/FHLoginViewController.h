@@ -9,8 +9,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @interface FHLoginViewController : FHBaseViewController
-- (void)supportCarrierLogin:(void(^)(BOOL isSupport))completion;
-- (void)showHalfLogin:(UIViewController *)vc;
 @end
 
 NS_ASSUME_NONNULL_END

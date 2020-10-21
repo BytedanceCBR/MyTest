@@ -668,6 +668,10 @@
                                 if(cellModel) {
                                     userInfo[@"cell_model"] = cellModel;
                                 }
+                                
+                                if(ugcContent){
+                                    userInfo[@"feed_content"] = ugcContent;
+                                }
                             }
                         }
                     }

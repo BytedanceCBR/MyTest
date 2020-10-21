@@ -69,6 +69,9 @@
 #import "UIFont+House.h"
 #import <TTActivityPanelDefine.h>
 #import <TTActivitiesManager.h>
+#import "TTDislikeContentItem.h"
+#import "TTBlockContentItem.h"
+#import "TTReportContentItem.h"
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -1610,6 +1613,14 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self.actionManager setContext:context];
     DetailActionRequestType requestType = [WDShareUtilsHelper requestTypeForShareActivityType:activity];
     [self.actionManager startItemActionByType:requestType];
+    
+    id<TTActivityContentItemProtocol> contentItem = [activity contentItem];
+    NSString *contentItemType = [contentItem contentItemType];
+    
+    if (contentItemType == TTActivityContentItemTypeDislike || contentItemType == TTActivityContentItemTypeBlock || contentItemType == TTActivityContentItemTypeReport) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"将减少类似推荐" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+        return;
+    }
     if (requestType != DetailActionTypeWeixinShare &&
         requestType != DetailActionTypeWeixinFriendShare &&
         requestType != DetailActionTypeQQShare &&
