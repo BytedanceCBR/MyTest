@@ -534,6 +534,10 @@ static NSString *platformString;
     }
 }
 
+- (void)resetVideo {
+     self.videoEngine.startTime = 0;
+}
+
 - (void)seekVideoToProgress:(CGFloat)progress complete:(void(^)(BOOL success))finised {
     [self _seekVideoToProgress:progress autoSeek:NO complete:finised];
 }

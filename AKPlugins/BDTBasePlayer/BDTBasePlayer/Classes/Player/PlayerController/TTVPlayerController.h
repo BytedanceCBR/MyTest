@@ -80,6 +80,7 @@ typedef void(^TTVStopFinished)(void);
 - (void)readyToPlay;
 - (void)playVideo;
 - (void)pauseVideo;
+- (void)resetVideo;
 
 
 /**
