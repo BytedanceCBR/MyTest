@@ -526,7 +526,7 @@
 }
 
 - (NSString *)pageType {
-    return @"neighborhood_comment_list";
+    return @"neighborhood_evaluate_list";
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {

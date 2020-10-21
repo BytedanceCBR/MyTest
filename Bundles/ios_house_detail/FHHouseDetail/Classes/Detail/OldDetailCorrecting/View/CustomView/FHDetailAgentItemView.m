@@ -261,6 +261,9 @@
               make.top.equalTo(self.name.mas_bottom).offset(8);
           }];
     }
+    if (self.model.realtorTags.count <= 0) {
+        self.tagsView.hidden = YES;
+    }
 }
 
 - (void)layoutForStyle2 {
