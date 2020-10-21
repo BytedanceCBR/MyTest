@@ -628,6 +628,11 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         TTActivity * reportActivity = [TTActivity activityOfReport];
         [_customActivities addObject:reportActivity];
     }
+    TTActivity * activityOfDislike = [TTActivity activityOfDislike];
+    [_customActivities addObject:activityOfDislike];
+    
+    TTActivity * activityOfBlockUser = [TTActivity activityOfBlockUser];
+    [_customActivities addObject:activityOfBlockUser];
     
     //如果没有图片， 微信分享将有问题
     if (self.shareImage == nil) {

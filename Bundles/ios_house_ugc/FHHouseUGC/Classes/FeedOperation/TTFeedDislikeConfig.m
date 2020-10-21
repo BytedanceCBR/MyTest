@@ -90,6 +90,18 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
                               @"subTitle": @"广告、低俗、重复、过时",
                               @"serverType":@"report"
                               },
+                          @{
+                              @"id": @"10",
+                              @"title": @"屏蔽",
+                              @"subTitle": @"",
+                              @"serverType":@"shield"
+                              },
+                          @{
+                              @"id": @"11",
+                              @"title": @"拉黑",
+                              @"subTitle": @"",
+                              @"serverType":@"putBlackList"
+                              },
                           ].mutableCopy;
 
     }
@@ -156,9 +168,17 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
             if(word.type == FHFeedOperationWordTypeReport && (!isShowDelete || [useAuth isEqualToString:@"2"])){
                 [items addObject:word];
             }
+            // 拉黑
+            if(word.type == FHFeedOperationWordTypeBlackList && (!isShowDelete || [useAuth isEqualToString:@"2"])){
+                [items addObject:word];
+            }
+            // 屏蔽
+            if(word.type == FHFeedOperationWordTypeShield && (!isShowDelete || [useAuth isEqualToString:@"2"])){
+                [items addObject:word];
+            }
         }
     }
-    return items;
+    return [items copy];
 }
 
 + (NSArray<FHFeedOperationWord *> *)operationWordListWithViewModel:(FHFeedOperationViewModel *)viewModel {
@@ -204,10 +224,10 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         }
         
     }else{
-        items = [self operationWordListWith:viewModel];
+        items = [[self operationWordListWith:viewModel] mutableCopy];
     }
     
-    return items;
+    return [items copy];
 }
 
 + (NSArray<FHFeedOperationWord *> *)operationWordListWithPermission:(NSArray<FHUGCConfigDataPermissionModel> *)permission {
@@ -271,11 +291,15 @@ static NSString *const kTTNewDislikeReportOptions = @"tt_new_dislike_report_opti
         type = FHFeedOperationWordTypeEdit;
     }else if([serverKey isEqualToString:@"edit_history"]){
         type = FHFeedOperationWordTypeEditHistory;
+    }else if([serverKey isEqualToString:@"shield"]){
+        type = FHFeedOperationWordTypeShield;
+    }else if([serverKey isEqualToString:@"putBlackList"]){
+        type = FHFeedOperationWordTypeBlackList;
     }else{
         type = FHFeedOperationWordTypeOther;
     }
     
-    return [NSString stringWithFormat:@"%d",type];
+    return [NSString stringWithFormat:@"%ld",(long)type];
 }
 
 @end

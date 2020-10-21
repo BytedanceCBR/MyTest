@@ -36,9 +36,6 @@ DEC_TASK("TTZlinkSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
     }
     
     if ([SharedAppDelegate conformsToProtocol:@protocol(BDUGDeepLinkDelegate)]) {
-        BDUGDeepLinkManager *manager = [BDUGDeepLinkManager shareInstance];
-        manager.delegate = (id<BDUGDeepLinkDelegate>)SharedAppDelegate;
-        
         // 获取App支持的把有Schema
         NSMutableArray *schemas = [NSMutableArray array];
         NSArray *bundleUrlTypes = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleURLTypes"];
@@ -48,8 +45,9 @@ DEC_TASK("TTZlinkSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
         }
         
         BDUGDeepLinkInfo *info = [BDUGDeepLinkInfo new];
-        info.schemas = schemas;
-        [manager registerDeepLinkWithInfo:info];
+        info.schemes = schemas;
+
+        [[BDUGDeepLinkManager shareInstance] registerDeepLinkWithInfo:info delegate:(id<BDUGDeepLinkDelegate>)SharedAppDelegate];
     }
     return YES;
 }

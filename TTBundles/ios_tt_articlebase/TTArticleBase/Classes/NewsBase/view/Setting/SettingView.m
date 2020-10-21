@@ -1428,7 +1428,7 @@ TTEditUserProfileViewControllerDelegate
         // 第三方SDK列表
         NSString *urlStr = [ArticleURLSetting thirdPartySDKURLString];
         if (urlStr.length > 0) {
-            [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@", urlStr]]];
+            [[TTRoute sharedRoute]openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://webview?url=%@&gecko_enable=0", urlStr]]];
         }
     } else if (cellType == SettingCellTypeApplyPermission) {
         // 系统权限列表

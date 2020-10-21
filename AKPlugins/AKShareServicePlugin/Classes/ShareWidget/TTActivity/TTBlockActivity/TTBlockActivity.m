@@ -39,12 +39,32 @@ NSString * const TTActivityTypeBlock = @"com.toutiao.UIKit.activity.Block";
 
 #pragma mark - Display
 
-- (NSString *)activityImageName {
-    return [self.contentItem activityImageName];
+#pragma mark - Display
+
+- (NSString *)activityImageName
+{
+    if ([self.contentItem respondsToSelector:@selector(activityImageName)]) {
+        if ([self.contentItem activityImageName].length > 0) {
+            return [self.contentItem activityImageName];
+        }else {
+            return @"shield_allshare";
+        }
+    } else {
+        return @"shield_allshare";
+    }
 }
 
-- (NSString *)contentTitle {
-    return [self.contentItem contentTitle];
+- (NSString *)contentTitle
+{
+    if ([self.contentItem respondsToSelector:@selector(contentTitle)]) {
+        if ([self.contentItem contentTitle].length > 0) {
+            return [self.contentItem contentTitle];
+        }else {
+            return @"拉黑";
+        }
+    } else {
+        return @"拉黑";
+    }
 }
 
 - (NSString *)shareLabel {

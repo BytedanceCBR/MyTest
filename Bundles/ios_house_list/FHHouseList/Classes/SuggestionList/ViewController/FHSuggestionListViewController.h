@@ -43,6 +43,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestDeleteHistory;
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
 
+- (void)scrollToIndex:(NSInteger)index;
+
 @end
 
 NS_ASSUME_NONNULL_END

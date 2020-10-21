@@ -72,7 +72,7 @@
         panelC.delegate = self;
         [panelC show];
     } else {
-        NSLog(@"无可用的ui组件！");
+        NSLog(@"无可用的ui组件！"); 
     }
 }
 
