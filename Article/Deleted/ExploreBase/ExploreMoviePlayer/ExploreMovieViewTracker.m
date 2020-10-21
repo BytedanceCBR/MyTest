@@ -7,13 +7,12 @@
 //
 
 #import "ExploreMovieViewTracker.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //#import "SSURLTracker.h"
 #import "TTURLTracker.h"
 #import "TTCategoryDefine.h"
 #import "TTAVPlayerItemAccessLog.h"
 #import "TTVideoDefinationTracker.h"
-#import <TTTracker/TTTrackerProxy.h>
 #import "MZMonitor.h"
 #import "SSMoviePlayerController.h"
 //#import "Bubble-Swift.h"
@@ -563,7 +562,7 @@
     [traceParams setValue:dictVideo[@"duration"] forKey:@"duration"];
     [traceParams setValue:dictVideo[@"percent"] forKey:@"percent"];
     
-    [TTTracker eventV3:@"video_over" params:traceParams];
+    [BDTrackerProtocol eventV3:@"video_over" params:traceParams];
 }
 
 - (void)sendFHVideoPlayEventWithLabel:(NSString *)dataLabel{
@@ -596,7 +595,7 @@
     [dic setValue:position forKey:@"position"];
     [dic addEntriesFromDictionary:_extraValue];
     [dic setValue:self.authorId forKey:@"author_id"];
-    [TTTrackerWrapper eventV3:@"video_play" params:dic isDoubleSending:animation];
+    [BDTrackerProtocol eventV3:@"video_play" params:dic isDoubleSending:animation];
 }
 
 - (void)sendVideoOverEventV3WithLabel:(NSString *)label andDuration:(NSInteger)duration isDoubleSend:(BOOL)animation{
@@ -623,7 +622,7 @@
     
     [self sendTraceVideoOver:dic];
     
-    [TTTrackerWrapper eventV3:@"video_over" params:dic isDoubleSending:animation];
+    [BDTrackerProtocol eventV3:@"video_over" params:dic isDoubleSending:animation];
 }
 
 - (void)trackDragEventFromTime:(NSTimeInterval)fromTime
@@ -644,7 +643,7 @@
     }
     [extra setValue:[self positionWithType:type] forKey:@"position"];
 
-    wrapperTrackEventWithCustomKeys(@"drag_bar", @"video_bar", model.groupID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"drag_bar" label:@"video_bar" value:model.groupID source:nil extraDic:extra];
 }
 
 - (NSString *)positionWithType:(ExploreMovieViewType)type
@@ -855,8 +854,6 @@ needOneFrameTime:(BOOL)needOneFrameTime
     [dict setValue:value forKey:@"value"];
     [dict setValue:groupModel.itemID forKey:@"item_id"];
     [dict setValue:@(groupModel.aggrType) forKey:@"aggr_type"];
-    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
-    [dict setValue:@(connectionType) forKey:@"nt"];
     if (_oneFrameDuration > 0) {
         [dict setValue:@((long long)(_oneFrameDuration * 1000.)) forKey:@"load_time"];
     }
@@ -936,7 +933,7 @@ needOneFrameTime:(BOOL)needOneFrameTime
     
     if([TTTrackerWrapper isOnlyV3SendingEnable] && [event isEqualToString:@"video_over"]) {
     } else {
-        [TTTrackerWrapper eventData:dict];
+        [BDTrackerProtocol eventData:dict];
     }
 
     if ([event rangeOfString:@"_over"].location != NSNotFound) {
@@ -983,7 +980,7 @@ needOneFrameTime:(BOOL)needOneFrameTime
         [self updateWatchDurationLogIndex];
     }
     
-    [TTTrackerWrapper eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 - (void)sendADVideoClickTrackURLIfNeed
@@ -1045,7 +1042,7 @@ needOneFrameTime:(BOOL)needOneFrameTime
     if (!isEmptyString(self.videoThirdMonitorUrl) && isEmptyString(self.aID)) {
 //        [[SSURLTracker shareURLTracker] thirdMonitorUrl:self.videoThirdMonitorUrl];
         [[TTURLTracker shareURLTracker] thirdMonitorUrl:self.videoThirdMonitorUrl];
-        [TTTrackerWrapper event:@"video_track_url" label:@"play_track_url" value:_gModel.groupID extValue:nil extValue2:nil];
+        [BDTrackerProtocol event:@"video_track_url" label:@"play_track_url" value:_gModel.groupID extValue:nil extValue2:nil];
     }
 }
 
@@ -1058,12 +1055,12 @@ needOneFrameTime:(BOOL)needOneFrameTime
 {
     //主视频发两次,一个浮层一个原有的.
     if (_type == ExploreMovieViewTypeList) {
-        wrapperTrackEvent(@"video", @"feed_click_screen");
+        [BDTrackerProtocol event:@"video" label:@"feed_click_screen"];
     } else if (_type == ExploreMovieViewTypeDetail) {
-        wrapperTrackEvent(@"video", @"detail_click_screen");
+        [BDTrackerProtocol event:@"video" label:@"detail_click_screen"];
     }
     else if (_type == ExploreMovieViewTypeVideoFloat_main || _type == ExploreMovieViewTypeVideoFloat_related) {
-        wrapperTrackEvent(@"video", @"float_click_screen");
+        [BDTrackerProtocol event:@"video" label:@"float_click_screen"];
     }
     else if (_type == ExploreMovieViewTypeLiveChatRoom) {
         [self liveTrackLabel:@"video_click_screen" needPercent:NO duration:NO];
@@ -1116,7 +1113,7 @@ needOneFrameTime:(BOOL)needOneFrameTime
     if (self.type == ExploreMovieViewTypeDetail) {
         label = @"detail_continue";
     }
-    wrapperTrackEvent(@"list_over", label);
+    [BDTrackerProtocol event:@"list_over" label:label];
 }
 
 - (void)sendContinuePlayTrack:(NSString *)stopEvent
@@ -1125,7 +1122,7 @@ needOneFrameTime:(BOOL)needOneFrameTime
     if (self.type == ExploreMovieViewTypeDetail) {
         label = @"detail_continue";
     }
-    wrapperTrackEvent(stopEvent, label);
+    [BDTrackerProtocol event:stopEvent label:label];
 }
 
 - (void)sendVideoFinishUITrackWithEvent:(NSString *)event prefix:(NSString *)prefix

@@ -31,6 +31,7 @@
 #import "TSVShortVideoDecoupledFetchManager.h"
 #import <TSVPrefetchVideoManager.h>
 #import <ReactiveObjC.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kCardRectPadding            10
 #define kMoreArrowW                 6
@@ -501,7 +502,7 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
 {
     NSMutableDictionary *logParams = [[NSMutableDictionary alloc] initWithDictionary:[self trackParamsDictForData:orderedData]];
     [logParams setValue:@"list" forKey:@"position"];
-    [TTTrackerWrapper eventV3:@"click_more_shortvideo"
+    [BDTrackerProtocol eventV3:@"click_more_shortvideo"
                        params:[logParams copy]];
 }
 

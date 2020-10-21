@@ -20,6 +20,7 @@
 #import "TTSearchHomeSugModel.h"
 #import "TTRoute.h"
 #import "TTTintThemeButton.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define kLeftPadding                15
@@ -522,7 +523,7 @@
     NSString *keyword = [NSString stringWithFormat:@"%@天气", model.city_name];
     [params setValue:@"weather_click" forKey:@"click"];
     [params setValue:model.current_condition forKey:@"type"];
-    [TTTrackerWrapper eventV3:@"feed_search_weather" params:params];
+    [BDTrackerProtocol eventV3:@"feed_search_weather" params:params];
     NSString *keywordEscape = [keyword stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
     NSString *openURL = [NSString stringWithFormat:@"sslocal://search?keyword=%@", keywordEscape];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openURL]];

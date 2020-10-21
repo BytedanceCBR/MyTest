@@ -17,7 +17,7 @@
 #import "HorizontalCard.h"
 #import <TTBaseLib/JSONAdditions.h>
 #import "TTFeedValidator.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "NSObject+TTAdditions.h"
 #import <Heimdallr/HMDTTMonitor.h>
 
@@ -1027,7 +1027,7 @@ static TTFeedValidator *_feedValidator;
     }
     // 发送几条数据出错了
     NSDictionary * events = @{@"category":@"umeng", @"tag":@"embeded_ad", @"label":@"invalidate", @"value":@(records.count)};
-    [TTTrackerWrapper eventData:events];
+    [BDTrackerProtocol eventData:events];
     
     [[TTMonitor shareManager] trackService:@"feed_incorrect_records" status:1 extra:events];
 }

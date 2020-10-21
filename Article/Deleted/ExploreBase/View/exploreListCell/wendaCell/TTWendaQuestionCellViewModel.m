@@ -24,6 +24,7 @@
 #import <TTImpression/TTRelevantDurationTracker.h>
 #import "TTKitchenHeader.h"
 #import "TTUGCDefine.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTWendaQuestionCellLayoutModelManager ()<TTAccountMulticastProtocol>
 
@@ -531,7 +532,7 @@
     [dict setValue:self.questionId forKey:@"qid"];
     [dict setValue:self.questionEntity.allAnsCount forKey:@"t_ans_num"];
     [dict setValue:self.questionEntity.niceAnsCount forKey:@"r_ans_num"];
-    [TTTrackerWrapper eventV3:@"channel_write_answer" params:dict];
+    [BDTrackerProtocol eventV3:@"channel_write_answer" params:dict];
 }
 
 - (void)eventV3:(NSString *)event extra:(NSDictionary *)extra userIDKey:(NSString *)userIDKey {
@@ -558,7 +559,7 @@
     else{
         [params setValue:self.userId forKey:@"user_id"];
     }
-    [TTTrackerWrapper eventV3:event params:params];
+    [BDTrackerProtocol eventV3:event params:params];
 }
 
 @end

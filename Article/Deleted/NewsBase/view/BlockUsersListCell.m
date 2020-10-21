@@ -9,6 +9,7 @@
 #import "BlockUsersListCell.h"
 #import "TTIndicatorView.h"
 #import "UIImage+TTThemeExtension.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface BlockUsersListCell () <TTBlockManagerDelegate>
 
@@ -61,10 +62,10 @@
     _listCellUnit.relationButtonType = FriendListCellUnitRelationButtonLoading;
     if (_blockUser.isBlocking) {
         [_blockManager unblockUser:_blockUser.ID];
-        wrapperTrackEvent(@"blacklist", @"list_click_deblacklist");
+        [BDTrackerProtocol event:@"blacklist" label:@"list_click_deblacklist"];
     } else {
         [_blockManager blockUser:_blockUser.ID];
-        wrapperTrackEvent(@"blacklist", @"list_click_blacklist");
+        [BDTrackerProtocol event:@"blacklist" label:@"list_click_blacklist"];
     }
 }
 

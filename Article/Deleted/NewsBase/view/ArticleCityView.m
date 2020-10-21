@@ -21,6 +21,7 @@
 #import "TTIndicatorView.h"
 #import "TTDeviceHelper.h"
 #import "UIImage+TTThemeExtension.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define LocationCity NSLocalizedString(@"您当前可能在", nil)
@@ -179,7 +180,7 @@ typedef NS_ENUM(NSInteger, LoadCityState) {
         
         if (!supported) {
             _loadState = LoadCityStateUnsupported;
-            wrapperTrackEvent(@"category", @"current_city_hidden");
+            [BDTrackerProtocol event:@"category" label:@"current_city_hidden"];
         }
         
         // 更新当前城市dict
@@ -371,7 +372,7 @@ typedef NS_ENUM(NSInteger, LoadCityState) {
                 [alertController addActionWithTitle:NSLocalizedString(@"知道了", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:nil];
                 [alertController showFrom:self.viewController animated:YES];
                 
-                wrapperTrackEvent(@"category", @"location_service_tips");
+                [BDTrackerProtocol event:@"category" label:@"location_service_tips"];
             }
             else {
                 _loadState = LoadCityStateLoading;
@@ -389,16 +390,16 @@ typedef NS_ENUM(NSInteger, LoadCityState) {
                     [wself.listView reloadData];
                 }];
                 [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"定位中...", nil) indicatorImage:nil autoDismiss:YES dismissHandler:nil];
-                wrapperTrackEvent(@"category", @"retry_current_city");
+                [BDTrackerProtocol event:@"category" label:@"retry_current_city"];
             }
         }
         else {
             
             if (cityDict == _currentCityDict) {
-                wrapperTrackEvent(@"category", @"click_current_city");
+                [BDTrackerProtocol event:@"category" label:@"click_current_city"];
             }
             else {
-                wrapperTrackEvent(@"category", @"click_other_city");
+                [BDTrackerProtocol event:@"category" label:@"click_other_city"];
             }
             [MBProgressHUD showHUDAddedTo:self animated:YES];
             self.viewController.view.userInteractionEnabled = NO;

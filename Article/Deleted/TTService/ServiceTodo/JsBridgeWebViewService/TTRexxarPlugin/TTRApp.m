@@ -16,6 +16,7 @@
 #import <TTNewsAccountBusiness/TTAccountManager.h>
 #import <TTBaseLib/NetworkUtilities.h>
 #import <TTBaseLib/TTStringHelper.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation TTRApp
 
@@ -96,7 +97,7 @@
     [data setValue:netType forKey:@"netType"];
     
     if([[TTJSBAuthManager sharedManager] engine:webview isAuthorizedMeta:@"device_id" domain:webview.ttr_url.host.lowercaseString]) {
-        [data setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+        [data setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     }
     
     if([[TTJSBAuthManager sharedManager] engine:webview isAuthorizedMeta:@"user_id" domain:webview.ttr_url.host.lowercaseString]) {

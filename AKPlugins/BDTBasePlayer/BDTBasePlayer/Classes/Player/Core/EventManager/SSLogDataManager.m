@@ -8,8 +8,8 @@
 
 #import "SSLogDataManager.h"
 #import "TTTrackerProxy.h"
-#import "TTLogServer.h"
 #import <pthread.h>
+#import <BDTrackerProtocol/BDTrackerProtocol+CustomEvent.h>
 
 #define kSSLogDataSaveKey @"kSSLogDataSaveKey"
 @interface SSLogDataManager(){
@@ -73,24 +73,16 @@ static SSLogDataManager * sManager;
     return self;
 }
 
+
 - (void)appendLogData:(NSDictionary *)dict
 {
+    //升级BDInstall后采用新的实现
     if ([dict isKindOfClass:[NSDictionary class]] && [dict count] > 0) {
         NSMutableDictionary * tmpDict = [NSMutableDictionary dictionaryWithDictionary:dict];
         long long uniqueKey = (long long)([[NSDate date] timeIntervalSince1970] * 1000);
         [tmpDict setValue:@(uniqueKey) forKey:@"log_id"];
         NSDictionary * sendDict = [NSDictionary dictionaryWithDictionary:tmpDict];
-        if (_isSending) {
-            pthread_mutex_lock(&_appendDataLock);
-            [self.appendingDatas addObject:sendDict];
-            pthread_mutex_unlock(&_appendDataLock);
-        } else {
-            pthread_mutex_lock(&_logDataLock);
-            [self.logDatas addObject:sendDict];
-            pthread_mutex_unlock(&_logDataLock);
-        }
-        
-        [TTLogServer sendValueToLogServer:sendDict];
+        [BDTrackerProtocol trackLogDataEvent:sendDict];
     }
 }
 

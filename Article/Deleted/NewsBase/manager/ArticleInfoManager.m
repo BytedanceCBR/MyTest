@@ -29,6 +29,7 @@
 #import "TTUserSettings/TTUserSettingsManager+NetworkTraffic.h"
 #import "TTLocationManager.h"
 #import "FRApiModel.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define GENERATE_SETTER_GETTER(PROPERTY, TYPE, SETTER) \
 \
@@ -221,7 +222,7 @@ return self.infoModel.PROPERTY;\
         [getParam setValue:from forKey:@"from"];
     }
     
-    [getParam setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [getParam setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     
     TTPlacemarkItem *placemarkItem = [TTLocationManager sharedManager].placemarkItem;
     if(placemarkItem.coordinate.longitude > 0) {

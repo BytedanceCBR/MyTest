@@ -9,6 +9,7 @@
 #import "TTCertificationConfirmCertificationViewController.h"
 #import "SSJSBridgeWebView.h"
 #import "TTCertificationOperationView.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTCertificationConfirmCertificationViewController ()
 
@@ -72,7 +73,7 @@
 
 - (void)confirmCertification
 {
-    [TTTrackerWrapper eventV3:@"certificate_v_apply_confirm" params:nil];
+    [BDTrackerProtocol eventV3:@"certificate_v_apply_confirm" params:nil];
     if(self.confirmCertificationClickBlock) {
         self.confirmCertificationClickBlock();
     }
@@ -80,7 +81,7 @@
 
 - (void)dismissSelf
 {
-    [TTTrackerWrapper eventV3:@"certificate_v_apply_confirm" params:nil];
+    [BDTrackerProtocol eventV3:@"certificate_v_apply_confirm" params:nil];
     [super dismissSelf];
 }
 

@@ -36,6 +36,7 @@
 #import "UITextView+TTAdditions.h"
 #import "ExploreMixListDefine.h"
 #import "STPersistence.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #define PUBLISHBUTTON_WIDTH [TTDeviceUIUtils tt_newPadding:57.f]
 #define PUBLISHBUTTON_HEIGHT [TTDeviceUIUtils tt_newPadding:28.f]
 
@@ -334,7 +335,7 @@ const NSInteger ExploreWriteCommentViewDefaultHeight = 160;
         [extra setValue:mediaID forKey:@"media_id"];
         [extra setValue:uid forKey:@"uid"];
         
-        [TTTrackerWrapper event:@"detail" label:@"show_recommend_to_fans" value:_groupModel.groupID extValue:_groupModel.itemID extValue2:nil dict:extra];
+        [BDTrackerProtocol event:@"detail" label:@"show_recommend_to_fans" value:_groupModel.groupID extValue:_groupModel.itemID extValue2:nil dict:extra];
     }
 }
 
@@ -428,7 +429,7 @@ const NSInteger ExploreWriteCommentViewDefaultHeight = 160;
 
 #pragma mark - Gesture
 - (void) backgroundTapActionFired:(id) sender {
-    wrapperTrackEvent(@"comment", @"write_cancel");
+    [BDTrackerProtocol event:@"comment" label:@"write_cancel"];
     if([self.delegate respondsToSelector:@selector(commentViewCancelled:)]) {
         [self.delegate performSelector:@selector(commentViewCancelled:) withObject:self];
     }
@@ -509,7 +510,7 @@ const NSInteger ExploreWriteCommentViewDefaultHeight = 160;
                 NSString *timeInterval = [NSString stringWithFormat:@"%.0f", interval];
                 [[TTPostMessageManager manager] postMessage:wself.textView.text groupModel:wself.groupModel forumModel:nil tag:wself.itemTag hasComment:isComment replyToCommentID:wself.replyToCommentID commentTimeInterval:timeInterval userInfo:userInfo adID:wself.adID staytime:wself.readQuality.stayTimeMs readPct:wself.readQuality.readPct isZZ:NO shareTT:wself.recommendToFansCheckButton.isSelected];
                 
-                wrapperTrackEvent(@"comment", @"write_confirm");
+                [BDTrackerProtocol event:@"comment" label:@"write_confirm"];
                 
                 // 统计 最终发评论时勾选了「同时转发到微头条」——发回gid、作者mid、uid
                 if (!self.recommendToFansCheckButton.hidden) {

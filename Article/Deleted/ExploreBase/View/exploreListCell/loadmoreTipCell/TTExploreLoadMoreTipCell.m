@@ -14,7 +14,7 @@
 #import <Masonry.h>
 #import <TTAlphaThemedButton.h>
 #import "UIScrollView+Refresh.h"
-#import <TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @class TTExploreLoadMoreTipCellView;
 
@@ -149,7 +149,7 @@
     params[@"tab_name"] = @"stream";
     params[@"position"] = @"list_bottom_bar";
     params[@"to_category_name"] = queryKeyValues[@"category"];
-    [TTTracker eventV3:label params:params];
+    [BDTrackerProtocol eventV3:label params:params];
 }
 
 + (CGFloat)heightForData:(ExploreOrderedData *)data cellWidth:(CGFloat)width listType:(ExploreOrderedDataListType)listType {

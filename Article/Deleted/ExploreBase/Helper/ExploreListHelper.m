@@ -15,6 +15,7 @@
 #import "TTDeviceHelper.h"
 #import <TTUserSettings/TTUserSettingsManager+NetworkTraffic.h>
 #import "TTHistoryEntryGroup.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation ExploreListHelper
 
@@ -276,7 +277,7 @@
         [dictionary setValue:concernID forKey:@"concern_id"];
     }
     [dictionary setValue:@(refer) forKey:@"refer"];
-    [TTTrackerWrapper eventData:dictionary];
+    [BDTrackerProtocol eventData:dictionary];
 }
 
 + (NSString *)refreshTypeStrForReloadFromType:(ListDataOperationReloadFromType)fromType

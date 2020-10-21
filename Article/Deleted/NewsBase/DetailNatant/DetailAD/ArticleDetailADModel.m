@@ -10,8 +10,8 @@
 
 #import "NSDictionary+TTAdditions.h"
 #import "TTURLTracker.h"
-#import "TTTrackerProxy.h"
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 const NSInteger GroupImageCount = 3;
 
 @implementation ArticleDetailADModel
@@ -199,19 +199,17 @@ const NSInteger GroupImageCount = 3;
     NSCParameterAssert(tag != nil);
     NSCParameterAssert(label != nil);
     
-    TTTrackerNetworkConnection nt = [[TTTrackerProxy sharedProxy] connectionType];
     NSMutableDictionary *events = [NSMutableDictionary dictionaryWithCapacity:10];
     [events setValue:@"umeng" forKey:@"category"];
     [events setValue:tag forKey:@"tag"];
     [events setValue:label forKey:@"label"];
-    [events setValue:@(nt) forKey:@"nt"];
     [events setValue:@"1" forKey:@"is_ad_event"];
     [events setValue:self.ad_id forKey:@"value"];
     [events setValue:self.log_extra forKey:@"log_extra"];
     if (extra) {
         [events addEntriesFromDictionary:extra];
     }
-    [TTTrackerWrapper eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 @end
 

@@ -24,13 +24,14 @@
 #import <FHUGCEditedPostModel.h>
 #import "FHUGCPublishTagModel.h"
 #import "FHInterceptionManager.h"
-#import "TTInstallIDManager.h"
 #import "ExploreExtenstionDataHelper.h"
 #import "TTModuleBridge.h"
 #import "FHErrorHubManagerUtil.h"
 #import "FHUGCShortVideoRealtorInfoModel.h"
 #import "TTSandBoxHelper+House.h"
 #import "FHFeedListModel.h"
+#import <BDInstall/BDInstall.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define DEFULT_ERROR @"请求错误"
 #define API_ERROR_CODE  10000
@@ -527,7 +528,7 @@
     //加入拦截器
     WeakSelf;
     return [[FHInterceptionManager sharedInstance] addInterception:kInterceptionUserFollows config:config Condition:^BOOL{
-        return !isEmptyString([TTInstallIDManager sharedInstance].deviceID);
+        return !isEmptyString([BDTrackerProtocol deviceID]);
     } operation:^{
         [wself requestDeviceId];
     } complete:^(BOOL success, TTHttpTask * _Nullable httpTask) {
@@ -538,7 +539,23 @@
 }
 
 + (void)requestDeviceId {
-    [[TTInstallIDManager sharedInstance] startRegisterDeviceWithAutoActivated:YES success:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
+//    [[TTInstallIDManager sharedInstance] startRegisterDeviceWithAutoActivated:YES success:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
+//        // 更新installID
+//        if(!isEmptyString(installID)) {
+//            [ExploreExtenstionDataHelper saveSharedIID:installID];
+//
+//            [[TTModuleBridge sharedInstance_tt] registerAction:@"HTSGetInstallID" withBlock:^id _Nullable(id  _Nullable object, id  _Nullable params) {
+//                return installID;
+//            }];
+//        }
+//
+//        if (!isEmptyString(deviceID)) {
+//            [ExploreExtenstionDataHelper saveSharedDeviceID:deviceID];
+//        }
+//
+//    } failure:nil];
+    
+    [[BDInstall sharedInstance] startRegisterDeviceWithSuccess:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
         // 更新installID
         if(!isEmptyString(installID)) {
             [ExploreExtenstionDataHelper saveSharedIID:installID];
@@ -551,7 +568,6 @@
         if (!isEmptyString(deviceID)) {
             [ExploreExtenstionDataHelper saveSharedDeviceID:deviceID];
         }
-        
     } failure:nil];
 }
 

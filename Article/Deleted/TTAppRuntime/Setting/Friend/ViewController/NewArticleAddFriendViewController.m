@@ -27,6 +27,7 @@
 
 #import "TTRoute.h"
 #import "TTContactsUserDefaults.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 typedef NS_ENUM(NSInteger, GetFriendType){
     GetFriendTypeNormal, //普通刷新
@@ -131,7 +132,7 @@ TTAccountMulticastProtocol
         [self synchornizeAB:nil];
     }
 
-    wrapperTrackEvent(@"add_friends", @"enter");
+    [BDTrackerProtocol event:@"add_friends" label:@"enter"];
 
     self.navigationItem.titleView = [SSNavigationBar navigationTitleViewWithTitle:NSLocalizedString(@"添加好友", nil)];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:NSLocalizedString(@"告诉朋友",nil) target:self action:@selector(rightButtonClicked)]];
@@ -342,11 +343,11 @@ TTAccountMulticastProtocol
                 
                 if(refreshType == GetFriendTypeManuallySynchronize)
                 {
-                    wrapperTrackEvent(@"add_friends", @"found_address_friend");
+                    [BDTrackerProtocol event:@"add_friends" label:@"found_address_friend"];
                 }
                 else if(refreshType == GetFriendTypeGuide)
                 {
-                    wrapperTrackEvent(@"add_friends", @"found_friend_now");
+                    [BDTrackerProtocol event:@"add_friends" label:@"found_friend_now"];
                 }
             }
             else
@@ -358,11 +359,11 @@ TTAccountMulticastProtocol
                 
                 if(refreshType == GetFriendTypeManuallySynchronize)
                 {
-                    wrapperTrackEvent(@"add_friends", @"no_address_friend");
+                    [BDTrackerProtocol event:@"add_friends" label:@"no_address_friend"];
                 }
                 else if (refreshType == GetFriendTypeGuide)
                 {
-                    wrapperTrackEvent(@"add_friends", @"no_friend_now");
+                    [BDTrackerProtocol event:@"add_friends" label:@"no_friend_now"];
                 }
             }
             if (newAccount) {
@@ -373,7 +374,7 @@ TTAccountMulticastProtocol
                 }
             } else {
                 if (newCount == 0 && displaySynchronizeInfo) {
-                    wrapperTrackEvent(@"add_friends", @"no_new_friend");
+                    [BDTrackerProtocol event:@"add_friends" label:@"no_new_friend"];
                  }
             }
         }
@@ -428,7 +429,7 @@ TTAccountMulticastProtocol
 - (void)rightButtonClicked {
     ArticleInviteFriendViewController * inviteFriendView = [[ArticleInviteFriendViewController alloc] init];
     [[TTUIResponderHelper topNavigationControllerFor: self] pushViewController:inviteFriendView animated:YES];
-    wrapperTrackEvent(@"add_friends", @"invite_friend");
+    [BDTrackerProtocol event:@"add_friends" label:@"invite_friend"];
 }
 
 - (void)addFriendListViewRequestLoadmore {
@@ -442,11 +443,11 @@ TTAccountMulticastProtocol
 
 - (void)synchornizeAB:(id)sender
 {
-    wrapperTrackEvent(@"add_friends", @"sync_contacts");
+    [BDTrackerProtocol event:@"add_friends" label:@"sync_contacts"];
     if(![TTAccountManager isLogin]) {
-        wrapperTrackEvent(@"add_friends", @"sync_contacts_logoff");
+        [BDTrackerProtocol event:@"add_friends" label:@"sync_contacts_logoff"];
     } else if([TTAddressBook isAddressBookDenied]) {
-        wrapperTrackEvent(@"add_friends", @"no_permission");
+        [BDTrackerProtocol event:@"add_friends" label:@"no_permission"];
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"没有访问通讯录权限", nil)
                                                                                 message:NSLocalizedString(@"如果要开启此功能，可依次进入［设置－隐私－通讯录］，允许［今日头条］访问手机通讯录", nil)
                                                                           preferredType:TTThemedAlertControllerTypeAlert];

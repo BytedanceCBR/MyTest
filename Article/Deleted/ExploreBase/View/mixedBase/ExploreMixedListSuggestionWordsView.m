@@ -12,6 +12,7 @@
 #import "TTSubEntranceObj.h"
 #import "TTRoute.h"
 #import "TTUISettingHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface ExploreMixedListSuggestionWordsView ()
 
@@ -144,7 +145,7 @@
             if (self.categoryID) {
                 [paras setValue:self.categoryID forKey:@"pindao"];
             }
-            [TTTrackerWrapper eventV3:@"search_tab" params:paras];
+            [BDTrackerProtocol eventV3:@"search_tab" params:paras];
         }
     } else {
         self.dataList = [NSMutableArray array];
@@ -237,7 +238,7 @@
     if (self.categoryID) {
         [paras setValue:self.categoryID forKey:@"pindao"];
     }
-    [TTTrackerWrapper eventV3:@"search_tab" params:paras];
+    [BDTrackerProtocol eventV3:@"search_tab" params:paras];
     
     NSInteger index = [_oldButtons indexOfObject:button];
     if (index >= 0 && index < 3 && index < self.dataList.count) {

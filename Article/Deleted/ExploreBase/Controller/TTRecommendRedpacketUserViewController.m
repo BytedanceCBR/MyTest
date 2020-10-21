@@ -17,6 +17,7 @@
 #import "RecommendRedpacketData.h"
 #import "TTContactsRedPacketManager.h"
 #import "ExploreOrderedData+TTBusiness.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @interface TTRecommendRedpacketUserViewController () <UITableViewDelegate, UITableViewDataSource, TTContactsRecommendUserTableViewCellDelegate, SSImpressionProtocol>
@@ -120,7 +121,7 @@
     [dict setValue:@(self.recommendRedpacketData.numberOfAvatars) forKey:@"head_image_num"];
     [dict setValue:@(self.recommendRedpacketData.hasRedPacket) forKey:@"is_redpacket"];
     [dict setValue:self.recommendRedpacketData.relationTypeValue forKey:@"relation_type"];
-    [TTTrackerWrapper eventV3:@"vert_follow_card" params:dict];
+    [BDTrackerProtocol eventV3:@"vert_follow_card" params:dict];
     
     [super dismissSelf];
 }
@@ -271,7 +272,7 @@
     [dict setValue:@(self.recommendRedpacketData.numberOfAvatars) forKey:@"head_image_num"];
     [dict setValue:@(self.recommendRedpacketData.hasRedPacket) forKey:@"is_redpacket"];
     [dict setValue:self.recommendRedpacketData.relationTypeValue forKey:@"relation_type"];
-    [TTTrackerWrapper eventV3:@"vert_follow_card" params:dict];
+    [BDTrackerProtocol eventV3:@"vert_follow_card" params:dict];
     
     [self refreshFollowButtonUI];
 }

@@ -11,7 +11,7 @@
 #import "SSBatchItemActionManager.h"
 #import "TTUserSettingsReporter.h"
 #import "SSSimpleCache.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTNetworkManager.h"
 #import <FHCHousePush/FHCHandleAPNSTask.h>
 #import <TTNetworkManager/TTDefaultHTTPRequestSerializer.h>
@@ -91,14 +91,14 @@ static NSUInteger reportTryCount = 0;
     if(![SSCommonLogic pushSDKEnable]) {
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         
-        if(!isEmptyString([[TTInstallIDManager sharedInstance] installID]))
+        if(!isEmptyString([BDTrackerProtocol installID]))
         {
-            [params setValue:[[TTInstallIDManager sharedInstance] installID] forKey:@"iid"];
+            [params setValue:[BDTrackerProtocol installID] forKey:@"iid"];
         }
         
-        if(!isEmptyString([[TTInstallIDManager sharedInstance] deviceID]))
+        if(!isEmptyString([BDTrackerProtocol deviceID]))
         {
-            [params setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            [params setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
         }
         
         if (!isEmptyString([TTSandBoxHelper appName])) {

@@ -16,8 +16,8 @@
 #import "TTURLTracker.h"
 #import "ExploreOrderedData+TTAd.h"
 #import "TTVideoDetailPlayControl.h"
-#import "TTTrackerProxy.h"
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 @implementation TTVideoDetailViewController (Log)
 
 //进入页面
@@ -44,7 +44,7 @@
         [dict setValue:@(self.detailModel.article.groupModel.aggrType) forKey:@"aggr_type"];
         [dict setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
     }
-    [TTTrackerWrapper eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 //点击举报
@@ -155,14 +155,13 @@
         [dict setValue:self.article.groupModel.groupID forKey:@"ext_value"];
     }
     
-    [dict setValue:@([TTTrackerProxy sharedProxy].connectionType) forKey:@"nt"];
     [dict setValue:logExtra forKey:@"log_extra"];
 
     if (extra.count > 0) {
         [dict addEntriesFromDictionary:extra];
     }
     
-    [TTTrackerWrapper eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 #pragma mark -
