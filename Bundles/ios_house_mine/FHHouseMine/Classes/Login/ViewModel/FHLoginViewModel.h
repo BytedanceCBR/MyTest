@@ -71,6 +71,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSMutableAttributedString *)protocolAttrTextForOneKeyLoginViewType;
 
+/// 取消登录处理
+- (void)loginCancelAction;
+
 @end
 
 NS_ASSUME_NONNULL_END

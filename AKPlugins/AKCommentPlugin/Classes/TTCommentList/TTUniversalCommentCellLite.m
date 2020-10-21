@@ -31,6 +31,8 @@
 #import "TTIndicatorView.h"
 #import "UIColor+Theme.h"
 #import "TTAccountManager.h"
+#import "ToastManager.h"
+#import "FHHouseUGCAPI.h"
 
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
@@ -445,9 +447,10 @@
         UIMenuController *menu = [UIMenuController sharedMenuController];
         UIMenuItem *copyItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"复制", nil) action:@selector(customCopy:)];
         UIMenuItem *reportItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"举报", nil) action:@selector(reportComment:)];
+        UIMenuItem *shieldItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"屏蔽", nil) action:@selector(shieldComment:)];
         if (copyItem) {
             self.menuItems = menu.menuItems;
-            menu.menuItems = @[copyItem, reportItem];
+            menu.menuItems = @[copyItem, reportItem, shieldItem];
         }
         [menu setTargetRect:self.contentLabel.frame inView:self.contentLabel.superview];
         [menu setMenuVisible:YES animated:YES];
@@ -472,7 +475,8 @@
 
 - (BOOL)canPerformAction:(SEL)action withSender:(__unused id)sender {
     if (action == @selector(customCopy:) ||
-        action == @selector(reportComment:)) {
+        action == @selector(reportComment:) ||
+        action == @selector(shieldComment:)) {
         return YES;
     }
     return [super canPerformAction:action withSender:sender];
@@ -504,6 +508,16 @@
         }
     }];
     
+}
+
+- (void)shieldComment:(__unused id)sender {
+//    [FHHouseUGCAPI commentShield:self.commentModel.groupModel.groupID commentId:self.commentModel.commentID.stringValue completion:^(bool success, NSError * _Nonnull error) {
+//        if(success){
+            [[ToastManager manager] showToast:@"屏蔽成功"];
+//        }else{
+//            [[ToastManager manager] showToast:@"屏蔽失败"];
+//        }
+//    }];    
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

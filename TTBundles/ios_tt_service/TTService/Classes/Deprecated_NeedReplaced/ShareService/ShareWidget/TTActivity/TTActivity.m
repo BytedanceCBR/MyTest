@@ -798,7 +798,7 @@
 
 - (NSString *)activityTitle
 {
-    return NSLocalizedString(@"不感兴趣", nil);
+    return NSLocalizedString(@"屏蔽", nil);
 }
 
 - (NSString *)activityImageName

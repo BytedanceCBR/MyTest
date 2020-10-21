@@ -231,25 +231,9 @@
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-
-//    NSMutableDictionary *param = [NSMutableDictionary new];
-//    FHNewHouseDetailMapCellModel *dataModel = (FHNewHouseDetailMapCellModel *) self.currentData;
-//    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
-//    tracerDict[@"element_from"] = @"map";
-//    if ([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
-//        // 二手房数据
-//        tracerDict[@"enter_from"] = @"old_detail";
-//    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
-//        tracerDict[@"enter_from"] = @"new_detail";
-//    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
-//        tracerDict[@"enter_from"] = @"neighborhood_detail";
-//    }
-//    param[TRACER_KEY] = tracerDict.copy;
-//    if (dataModel.gaodeLat.length && dataModel.gaodeLng.length) {
-//        param[@"gaodeLat"] = dataModel.gaodeLat;
-//        param[@"gaodeLon"] = dataModel.gaodeLng;
-//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
-//    }
+    if (self.baiduPanoramaBlock) {
+        self.baiduPanoramaBlock();
+    }
 }
 
 - (void)refreshWithData:(id)data {
