@@ -18,12 +18,12 @@
 
 @class TTVPlayerOrientationController;
 @class TTVDemanderTrackerManager;
-@class TTVCommodityFloatView;
-@class TTVCommodityView;
-@class TTVPasterPlayer;
-@class TTVMidInsertADPlayer;
+//@class TTVCommodityFloatView;
+//@class TTVCommodityView;
+//@class TTVPasterPlayer;
+//@class TTVMidInsertADPlayer;
 @class TTVDemandPlayerContextVideo;
-@class TTVCommodityButtonView;
+//@class TTVCommodityButtonView;
 @class TTVVideoPlayerModel;
 @class TTVVideoPlayerStateStore;
 
@@ -43,11 +43,11 @@
 @interface TTVDemandPlayer : UIView
 @property (nonatomic, strong) TTVVideoPlayerModel *playerModel;
 @property (nonatomic, weak) NSObject <TTVDemandPlayerDelegate> *delegate;//始终保持delegate唯一
-@property (nonatomic, weak) id<TTVPlayerDoubleTap666Delegate> doubleTap666Delegate;
-@property (nonatomic, strong ,readonly) TTVPasterPlayer *pasterPlayer;
-@property (nonatomic, strong ,readonly) TTVMidInsertADPlayer *midInsertADPlayer;
-@property (nonatomic, strong ,readonly) TTVCommodityFloatView *commodityFloatView;
-@property (nonatomic, strong ,readonly) TTVCommodityButtonView *commodityButton;
+//@property (nonatomic, weak) id<TTVPlayerDoubleTap666Delegate> doubleTap666Delegate;
+//@property (nonatomic, strong ,readonly) TTVPasterPlayer *pasterPlayer;
+//@property (nonatomic, strong ,readonly) TTVMidInsertADPlayer *midInsertADPlayer;
+//@property (nonatomic, strong ,readonly) TTVCommodityFloatView *commodityFloatView;
+//@property (nonatomic, strong ,readonly) TTVCommodityButtonView *commodityButton;
 @property (nonatomic, strong, readonly) TTVVideoPlayerStateStore *playerStateStore;
 //@property (nonatomic, strong ,readonly) TTVDemanderTrackerManager *commonTracker;
 @property (nonatomic, strong ,readonly) FHDemanderTrackerManager *commonTracker;

@@ -91,7 +91,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 - (void)setDoubleTap666Delegate:(id<TTVPlayerDoubleTap666Delegate>)doubleTap666Delegate {
     _doubleTap666Delegate = doubleTap666Delegate;
-    self.movieView.player.doubleTap666Delegate = doubleTap666Delegate;
+//    self.movieView.player.doubleTap666Delegate = doubleTap666Delegate;
 }
 
 - (void)setDetailStateStore:(TTVDetailStateStore *)detailStateStore
@@ -386,16 +386,16 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 - (void)resumeMovie
 {
     if (self.movieView) {
-        if ([self.movieView.player.pasterPlayer hasPasterAd]) {
-            [self.movieView.player.pasterPlayer play];
-        }else{
-            if (self.commodityView.superview != self.movieView) {
-                if (![TTDeviceHelper isPadDevice]) {
-                    [self.movieView.player.commodityFloatView setCommoditys:self.videoInfo.commoditys];
-                    self.movieView.player.commodityButton.delegate = self;
-                }
-            }
-        }
+//        if ([self.movieView.player.pasterPlayer hasPasterAd]) {
+//            [self.movieView.player.pasterPlayer play];
+//        }else{
+//            if (self.commodityView.superview != self.movieView) {
+//                if (![TTDeviceHelper isPadDevice]) {
+//                    [self.movieView.player.commodityFloatView setCommoditys:self.videoInfo.commoditys];
+//                    self.movieView.player.commodityButton.delegate = self;
+//                }
+//            }
+//        }
     }
     else
     {
@@ -506,14 +506,14 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 - (void)viewDidDisappear
 {
     [self.movieView.player sendAction:TTVPlayerEventTypeVirtualStackValuePause payload:nil];
-    [self.movieView.player.midInsertADPlayer pause];
-    [self.movieView.player.pasterPlayer pause];
+//    [self.movieView.player.midInsertADPlayer pause];
+//    [self.movieView.player.pasterPlayer pause];
 }
 
 - (void)viewDidAppear
 {
-    [self.movieView.player.midInsertADPlayer play];
-    [self.movieView.player.pasterPlayer play];
+//    [self.movieView.player.midInsertADPlayer play];
+//    [self.movieView.player.pasterPlayer play];
     
     BOOL iOS8 = kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0;
     if (iOS8) {
@@ -636,7 +636,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.movieView.player.enableRotate = ![self.videoInfo detailShowPortrait];
     [self addUrlTracker];
     _movieView.player.delegate = self;
-    self.movieView.player.doubleTap666Delegate = self.doubleTap666Delegate;
+//    self.movieView.player.doubleTap666Delegate = self.doubleTap666Delegate;
     NSDictionary *videoLargeImageDict = self.videoInfo.largeImageDict;
     if (!videoLargeImageDict) {
         videoLargeImageDict = [self.videoInfo.videoDetailInfo objectForKey:VideoInfoImageDictKey];
@@ -648,10 +648,10 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         [self configMovieView];
         [self.movieView.player play];
     }
-    if (![TTDeviceHelper isPadDevice]) {
-        [self.movieView.player.commodityFloatView setCommoditys:self.videoInfo.commoditys];
-        self.movieView.player.commodityButton.delegate = self;
-    }
+//    if (![TTDeviceHelper isPadDevice]) {
+//        [self.movieView.player.commodityFloatView setCommoditys:self.videoInfo.commoditys];
+//        self.movieView.player.commodityButton.delegate = self;
+//    }
     [self.movieView.player setVideoTitle:self.videoInfo.title];
     [self.movieView.player setVideoWatchCount:[[self.videoInfo.videoDetailInfo valueForKey:@"video_watch_count"] doubleValue] playText:@"次播放"];
     [self.movieShotView refreshUI];

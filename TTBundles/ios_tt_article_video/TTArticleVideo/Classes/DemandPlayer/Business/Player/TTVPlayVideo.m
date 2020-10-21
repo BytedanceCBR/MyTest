@@ -238,8 +238,8 @@ static __weak TTVPlayVideo *currentTTVPlayVideo_ = nil;
 - (void)stopWithFinishedBlock:(TTVStopFinished)finishedBlock
 {
     // 原视频 stop 贴片播放器同时 stop
-    [self.player.pasterPlayer stop];
-    [self.player.midInsertADPlayer stop];
+//    [self.player.pasterPlayer stop];
+//    [self.player.midInsertADPlayer stop];
     [self.player stopWithFinishedBlock:finishedBlock];
 }
 

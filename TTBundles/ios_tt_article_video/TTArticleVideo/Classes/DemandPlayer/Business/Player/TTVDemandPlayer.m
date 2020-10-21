@@ -14,22 +14,22 @@
 #import "TTMovieStore.h"
 #import "TTVPalyerTrafficAlertView.h"
 #import "TTVPlayerControlTipView.h"
-#import "TTVCommodityFloatView.h"
+//#import "TTVCommodityFloatView.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTSharePanelTransformMessage.h"
-#import "TTVPasterPlayer.h"
+//#import "TTVPasterPlayer.h"
 #import "TTVPasterADURLRequestInfo.h"
 #import "TTVPlayerBackgroundManager.h"
 #import "TTVPasterADViewController.h"
 #import "TTVVideoPlayerViewShareCointainerView.h"
 #import <TTSettingsManager/TTSettingsManager.h>
-#import <lottie-ios/Lottie/Lottie.h>
-#import "TTVCommodityButtonView.h"
+//#import <lottie-ios/Lottie/Lottie.h>
+//#import "TTVCommodityButtonView.h"
 #import "TTVVideoPlayerModel.h"
-#import "TTVADGuideCountdownViewProtocol.h"
+//#import "TTVADGuideCountdownViewProtocol.h"
 #import "TTVPlayerCacheProgressController.h"
-#import "TTVMidInsertADPlayer.h"
-#import "TTVCommodityView.h"
+//#import "TTVMidInsertADPlayer.h"
+//#import "TTVCommodityView.h"
 
 //#import "TTVDemanderTrackerManager.h"
 #import "FHDemanderTrackerManager.h"
@@ -66,15 +66,15 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 
 @property (nonatomic, strong) TTVDemandPlayerContextVideo *context;
 @property (nonatomic, strong) NSHashTable *map;
-@property (nonatomic, strong) TTVCommodityFloatView *commodityFloatView;
-@property (nonatomic, strong) TTVPasterPlayer *pasterPlayer;
-@property (nonatomic, strong) TTVMidInsertADPlayer *midInsertADPlayer;
-@property (nonatomic, strong) UIView<TTVADGuideCountdownViewProtocol> *guideCountdownView;
+//@property (nonatomic, strong) TTVCommodityFloatView *commodityFloatView;
+//@property (nonatomic, strong) TTVPasterPlayer *pasterPlayer;
+//@property (nonatomic, strong) TTVMidInsertADPlayer *midInsertADPlayer;
+//@property (nonatomic, strong) UIView<TTVADGuideCountdownViewProtocol> *guideCountdownView;
 @property (nonatomic, strong) TTVVideoPlayerViewShareCointainerView *shareCointainerView;
-@property (nonatomic, strong) LOTAnimationView *doubleTap666AnimationView;
+//@property (nonatomic, strong) LOTAnimationView *doubleTap666AnimationView;
 @property (nonatomic, strong) TTVPlayerBackgroundManager *backgroundManager;
 @property (nonatomic, strong) NSMutableArray *parts;
-@property (nonatomic, strong) TTVCommodityButtonView *commodityButton;
+//@property (nonatomic, strong) TTVCommodityButtonView *commodityButton;
 @property (nonatomic, assign) BOOL isPlaying;
 
 
@@ -174,20 +174,20 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     if (!self.tipCreator) {
         self.tipCreator = [[TTVPlayerTipCreator alloc] init];
     }
-    if (!self.playerModel.isAdBusiness) {
-        [self ttv_addCommodityFloatView];
-        [self ttv_addCommodityButton];
-        [self ttv_addDoubleTap666AnimationViewReCreate:NO];
-    }
+//    if (!self.playerModel.isAdBusiness) {
+//        [self ttv_addCommodityFloatView];
+//        [self ttv_addCommodityButton];
+//        [self ttv_addDoubleTap666AnimationViewReCreate:NO];
+//    }
     [self ttv_addPlayerController];
     [self ttv_addTipView];
     [self createTipViewSubViews];
     _controlView.playerStateStore = self.playerStateStore;
-    if (!self.playerModel.isAdBusiness) {
-        [self ttv_addMidInsertADPlayer];
-        [self ttv_addPasterPlayer];
-    }
-    _commodityFloatView.playerStateStore = self.playerStateStore;
+//    if (!self.playerModel.isAdBusiness) {
+//        [self ttv_addMidInsertADPlayer];
+//        [self ttv_addPasterPlayer];
+//    }
+//    _commodityFloatView.playerStateStore = self.playerStateStore;
     if (ttvs_isVideoPlayFullScreenShowDirectShare()) {
         [self ttv_addShareCointainerView];
     }
@@ -216,13 +216,13 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
         _backgroundManager = [[TTVPlayerBackgroundManager alloc] init];
         [_backgroundManager addDidBecomeActiveBlock:^{
             @strongify(self);
-            if (self.pasterPlayer.playerStateStore.state.pasterADIsPlaying) {
-                [self.pasterPlayer play];
-            }
+//            if (self.pasterPlayer.playerStateStore.state.pasterADIsPlaying) {
+//                [self.pasterPlayer play];
+//            }
             
-            if (self.midInsertADPlayer.playerStateStore.state.midADIsPlaying) {
-                [self.midInsertADPlayer play];
-            }
+//            if (self.midInsertADPlayer.playerStateStore.state.midADIsPlaying) {
+//                [self.midInsertADPlayer play];
+//            }
             
             if (self.context.showVideoFirstFrame) {
                 NSDictionary *dic = [NSDictionary dictionaryWithObject:TTVPlayActionEnterForground forKey:TTVPlayAction];
@@ -230,13 +230,13 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
             }
         } willResignActive:^{
             @strongify(self);
-            if (self.pasterPlayer.playerStateStore.state.pasterADIsPlaying) {
-                [self.pasterPlayer pause];
-            }
+//            if (self.pasterPlayer.playerStateStore.state.pasterADIsPlaying) {
+//                [self.pasterPlayer pause];
+//            }
             
-            if (self.midInsertADPlayer.playerStateStore.state.midADIsPlaying) {
-                [self.midInsertADPlayer pause];
-            }
+//            if (self.midInsertADPlayer.playerStateStore.state.midADIsPlaying) {
+//                [self.midInsertADPlayer pause];
+//            }
             NSDictionary *dic = [NSDictionary dictionaryWithObject:TTVPauseActionAppEnterBackgroud forKey:TTVPauseAction];
             [self sendAction:TTVPlayerEventTypeVirtualStackValuePause payload:dic];
         }];
@@ -255,105 +255,105 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     }
 }
 
-- (void)ttv_addMidInsertADPlayer
-{
-    self.midInsertADPlayer = [self ttv_createMidInsertAD];
-    self.playerView.midInsertADView = self.midInsertADPlayer;
-}
+//- (void)ttv_addMidInsertADPlayer
+//{
+//    self.midInsertADPlayer = [self ttv_createMidInsertAD];
+//    self.playerView.midInsertADView = self.midInsertADPlayer;
+//}
 
-- (void)ttv_addPasterPlayer
-{
-    self.pasterPlayer = [self ttv_createPasterAD];
-    self.playerView.pasterAdView = self.pasterPlayer;
-}
+//- (void)ttv_addPasterPlayer
+//{
+//    self.pasterPlayer = [self ttv_createPasterAD];
+//    self.playerView.pasterAdView = self.pasterPlayer;
+//}
 
-- (TTVMidInsertADPlayer *)ttv_createMidInsertAD
-{
-    if (!isEmptyString(self.playerModel.adID) || !self.playerModel.enablePasterAd) {
-        return nil;
-    }
-    
-    NSMutableDictionary *requestInfo = [NSMutableDictionary dictionaryWithCapacity:4];
-    requestInfo[@"group_id"] = self.playerModel.groupID;
-    requestInfo[@"item_id"] = self.playerModel.itemID;
-    requestInfo[@"category"] = self.playerModel.categoryID;
-    requestInfo[@"ad_from"] = self.playerModel.pasterAdFrom;
-    
-    TTVMidInsertADPlayer *paster = [[TTVMidInsertADPlayer alloc] init];
-    paster.hidden = YES;
-    paster.midInsertAdRequestInfo = requestInfo;
-    paster.playerStateStore = _playerStateStore;
+//- (TTVMidInsertADPlayer *)ttv_createMidInsertAD
+//{
+//    if (!isEmptyString(self.playerModel.adID) || !self.playerModel.enablePasterAd) {
+//        return nil;
+//    }
+//
+//    NSMutableDictionary *requestInfo = [NSMutableDictionary dictionaryWithCapacity:4];
+//    requestInfo[@"group_id"] = self.playerModel.groupID;
+//    requestInfo[@"item_id"] = self.playerModel.itemID;
+//    requestInfo[@"category"] = self.playerModel.categoryID;
+//    requestInfo[@"ad_from"] = self.playerModel.pasterAdFrom;
+//
+//    TTVMidInsertADPlayer *paster = [[TTVMidInsertADPlayer alloc] init];
+//    paster.hidden = YES;
+//    paster.midInsertAdRequestInfo = requestInfo;
+//    paster.playerStateStore = _playerStateStore;
+//
+//    @weakify(self)
+//    paster.rotateScreenAction = ^(BOOL fullScreen, BOOL animationed, void (^completionBlock)(BOOL finish)) {
+//        @strongify(self)
+//        (fullScreen) ? [self enterFullScreen:animationed completion:^(BOOL finished) {
+//            (!completionBlock) ?: completionBlock(finished);
+//        }]: [self exitFullScreen:animationed completion:^(BOOL finished) {
+//            (!completionBlock) ?: completionBlock(finished);
+//        }];
+//    };
+//    paster.guideCountdownViewNeedShow = ^(UIView<TTVADGuideCountdownViewProtocol> *guideCountdownView) {
+//        @strongify(self);
+//        self.guideCountdownView = guideCountdownView;
+//        [guideCountdownView performVerticalTranslation:self.playerStateStore.state.toolBarState == TTVPlayerControlViewToolBarStateDidHidden || (self.playerStateStore.state.isInDetail && !self.playerStateStore.state.isFullScreen) needShiftDown:![UIApplication sharedApplication].statusBarHidden && self.playerStateStore.state.isFullScreen animated:NO];
+//        [self addSubview:guideCountdownView];
+//    };
+//    return paster;
+//}
 
-    @weakify(self)
-    paster.rotateScreenAction = ^(BOOL fullScreen, BOOL animationed, void (^completionBlock)(BOOL finish)) {
-        @strongify(self)
-        (fullScreen) ? [self enterFullScreen:animationed completion:^(BOOL finished) {
-            (!completionBlock) ?: completionBlock(finished);
-        }]: [self exitFullScreen:animationed completion:^(BOOL finished) {
-            (!completionBlock) ?: completionBlock(finished);
-        }];
-    };
-    paster.guideCountdownViewNeedShow = ^(UIView<TTVADGuideCountdownViewProtocol> *guideCountdownView) {
-        @strongify(self);
-        self.guideCountdownView = guideCountdownView;
-        [guideCountdownView performVerticalTranslation:self.playerStateStore.state.toolBarState == TTVPlayerControlViewToolBarStateDidHidden || (self.playerStateStore.state.isInDetail && !self.playerStateStore.state.isFullScreen) needShiftDown:![UIApplication sharedApplication].statusBarHidden && self.playerStateStore.state.isFullScreen animated:NO];
-        [self addSubview:guideCountdownView];
-    };
-    return paster;
-}
-
-- (TTVPasterPlayer *)ttv_createPasterAD
-{
-    if (!isEmptyString(self.playerModel.adID) || !self.playerModel.enablePasterAd) {
-        return nil;
-    }
-    
-    TTVPasterADURLRequestInfo *pasterRequest = [[TTVPasterADURLRequestInfo alloc] init];
-    pasterRequest.groupID = self.playerModel.groupID;
-    pasterRequest.itemID = self.playerModel.itemID;
-    pasterRequest.category = self.playerModel.categoryID;
-    pasterRequest.adFrom = self.playerModel.pasterAdFrom;
-    if (isEmptyString(pasterRequest.adFrom)) {
-        pasterRequest.adFrom = self.playerStateStore.state.isInDetail ? @"textlink" : @"feed";
-    }
-    
-    TTVPasterPlayer *paster = [[TTVPasterPlayer alloc] init];
-    paster.pasterAdRequestInfo = pasterRequest;
-    paster.playerStateStore = _playerStateStore;
-    paster.hidden = YES;
-    
-    @weakify(self)
-    paster.replayAction = ^{
-        @strongify(self);
-        [self.playerController playVideoFromPayload:@{TTVPlayAction : TTVPlayActionRetry}];
-    };
-    paster.rotateScreenAction = ^(BOOL fullScreen, BOOL animationed, void (^completionBlock)(BOOL finish)) {
-        @strongify(self);
-        (fullScreen) ? [self enterFullScreen:animationed completion:^(BOOL finished) {
-            (!completionBlock) ?: completionBlock(finished);
-        }]: [self exitFullScreen:animationed completion:^(BOOL finished) {
-            (!completionBlock) ?: completionBlock(finished);
-        }];
-    };
-    paster.fadePlayerLastFrameAction = ^(void (^finishedBlock)(void)) {
-        @strongify(self);
-        self.playerView.logoImageView.hidden = YES;
-        CGFloat duration = 0.3f;
-        [UIView animateWithDuration:duration delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
-            self.playerView.playerLayer.alpha = 0.0f;
-        } completion:^(BOOL finished) {
-            if (finishedBlock) {
-                finishedBlock();
-            }
-            CGFloat delay = [TTVPasterADViewController ttv_pasterFadeInTimeInterval];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                self.playerView.playerLayer.alpha = 1.0f;
-                self.playerView.logoImageView.hidden = NO;
-            });
-        }];
-    };
-    return paster;
-}
+//- (TTVPasterPlayer *)ttv_createPasterAD
+//{
+//    if (!isEmptyString(self.playerModel.adID) || !self.playerModel.enablePasterAd) {
+//        return nil;
+//    }
+//    
+//    TTVPasterADURLRequestInfo *pasterRequest = [[TTVPasterADURLRequestInfo alloc] init];
+//    pasterRequest.groupID = self.playerModel.groupID;
+//    pasterRequest.itemID = self.playerModel.itemID;
+//    pasterRequest.category = self.playerModel.categoryID;
+//    pasterRequest.adFrom = self.playerModel.pasterAdFrom;
+//    if (isEmptyString(pasterRequest.adFrom)) {
+//        pasterRequest.adFrom = self.playerStateStore.state.isInDetail ? @"textlink" : @"feed";
+//    }
+//    
+//    TTVPasterPlayer *paster = [[TTVPasterPlayer alloc] init];
+//    paster.pasterAdRequestInfo = pasterRequest;
+//    paster.playerStateStore = _playerStateStore;
+//    paster.hidden = YES;
+//    
+//    @weakify(self)
+//    paster.replayAction = ^{
+//        @strongify(self);
+//        [self.playerController playVideoFromPayload:@{TTVPlayAction : TTVPlayActionRetry}];
+//    };
+//    paster.rotateScreenAction = ^(BOOL fullScreen, BOOL animationed, void (^completionBlock)(BOOL finish)) {
+//        @strongify(self);
+//        (fullScreen) ? [self enterFullScreen:animationed completion:^(BOOL finished) {
+//            (!completionBlock) ?: completionBlock(finished);
+//        }]: [self exitFullScreen:animationed completion:^(BOOL finished) {
+//            (!completionBlock) ?: completionBlock(finished);
+//        }];
+//    };
+//    paster.fadePlayerLastFrameAction = ^(void (^finishedBlock)(void)) {
+//        @strongify(self);
+//        self.playerView.logoImageView.hidden = YES;
+//        CGFloat duration = 0.3f;
+//        [UIView animateWithDuration:duration delay:0.0f options:UIViewAnimationOptionCurveLinear animations:^{
+//            self.playerView.playerLayer.alpha = 0.0f;
+//        } completion:^(BOOL finished) {
+//            if (finishedBlock) {
+//                finishedBlock();
+//            }
+//            CGFloat delay = [TTVPasterADViewController ttv_pasterFadeInTimeInterval];
+//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delay * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//                self.playerView.playerLayer.alpha = 1.0f;
+//                self.playerView.logoImageView.hidden = NO;
+//            });
+//        }];
+//    };
+//    return paster;
+//}
 
 - (void)setTipCreator:(id<TTVPlayerTipCreator>)tipCreator
 {
@@ -404,25 +404,25 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     });
 }
 
-- (void)ttv_addCommodityFloatView
-{
-    if (!self.commodityFloatView) {
-        self.commodityFloatView = [[TTVCommodityFloatView alloc] initWithFrame:self.bounds];
-    }
-    self.commodityFloatView.hidden = YES;
-    self.playerView.commodityFloatView = self.commodityFloatView;
-    self.commodityFloatView.player = self;
-    _commodityFloatView.playerStateStore = self.playerStateStore;
-}
+//- (void)ttv_addCommodityFloatView
+//{
+//    if (!self.commodityFloatView) {
+//        self.commodityFloatView = [[TTVCommodityFloatView alloc] initWithFrame:self.bounds];
+//    }
+//    self.commodityFloatView.hidden = YES;
+//    self.playerView.commodityFloatView = self.commodityFloatView;
+//    self.commodityFloatView.player = self;
+//    _commodityFloatView.playerStateStore = self.playerStateStore;
+//}
 
-- (void)ttv_addCommodityButton
-{
-    if (!self.commodityButton) {
-        self.commodityButton = [[TTVCommodityButtonView alloc] init];
-    }
-    self.playerView.commodityButton = self.commodityButton;
-    _commodityButton.playerStateStore = self.playerStateStore;
-}
+//- (void)ttv_addCommodityButton
+//{
+//    if (!self.commodityButton) {
+//        self.commodityButton = [[TTVCommodityButtonView alloc] init];
+//    }
+//    self.playerView.commodityButton = self.commodityButton;
+//    _commodityButton.playerStateStore = self.playerStateStore;
+//}
 
 - (void)ttv_addShareCointainerView
 {
@@ -444,36 +444,36 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 
 }
 
-- (LOTAnimationView *)doubleTap666Animation
-{
-    BOOL landscape = self.playerStateStore.state.isFullScreen && self.playerStateStore.state.enableRotate;
-    NSString *animationPath = [[NSBundle mainBundle] pathForResource:landscape ? @"landscape" : @"portrait" ofType:@"json" inDirectory:[NSString stringWithFormat:@"tt_video_doubleClickApprove.bundle/%@", landscape ? @"landscape" : @"portrait"]];
-    _doubleTap666AnimationView = [LOTAnimationView animationWithFilePath:animationPath];
-    _doubleTap666AnimationView.contentMode = UIViewContentModeScaleAspectFit;
-    _doubleTap666AnimationView.userInteractionEnabled = NO;
-    _doubleTap666AnimationView.frame = self.bounds;
-    _doubleTap666AnimationView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _doubleTap666AnimationView.hidden = YES;
-    [self addSubview:_doubleTap666AnimationView];
-    return _doubleTap666AnimationView;
-}
+//- (LOTAnimationView *)doubleTap666Animation
+//{
+//    BOOL landscape = self.playerStateStore.state.isFullScreen && self.playerStateStore.state.enableRotate;
+//    NSString *animationPath = [[NSBundle mainBundle] pathForResource:landscape ? @"landscape" : @"portrait" ofType:@"json" inDirectory:[NSString stringWithFormat:@"tt_video_doubleClickApprove.bundle/%@", landscape ? @"landscape" : @"portrait"]];
+//    _doubleTap666AnimationView = [LOTAnimationView animationWithFilePath:animationPath];
+//    _doubleTap666AnimationView.contentMode = UIViewContentModeScaleAspectFit;
+//    _doubleTap666AnimationView.userInteractionEnabled = NO;
+//    _doubleTap666AnimationView.frame = self.bounds;
+//    _doubleTap666AnimationView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    _doubleTap666AnimationView.hidden = YES;
+//    [self addSubview:_doubleTap666AnimationView];
+//    return _doubleTap666AnimationView;
+//}
 
-- (void)ttv_addDoubleTap666AnimationViewReCreate:(BOOL)isReCreate {
-    if (!isEmptyString(self.playerModel.adID)) {
-        return;
-    }
-     BOOL doubleTapForDiggEnabled = ttvs_isDoubleTapForDiggEnabled();
-    if (doubleTapForDiggEnabled) {
-        if (isReCreate) {
-            [self.doubleTap666AnimationView removeFromSuperview];
-            self.doubleTap666AnimationView = [self doubleTap666Animation];
-        }else{
-            if (!self.doubleTap666AnimationView) {
-                self.doubleTap666AnimationView = [self doubleTap666Animation];
-            }
-        }
-    }
-}
+//- (void)ttv_addDoubleTap666AnimationViewReCreate:(BOOL)isReCreate {
+//    if (!isEmptyString(self.playerModel.adID)) {
+//        return;
+//    }
+//     BOOL doubleTapForDiggEnabled = ttvs_isDoubleTapForDiggEnabled();
+//    if (doubleTapForDiggEnabled) {
+//        if (isReCreate) {
+//            [self.doubleTap666AnimationView removeFromSuperview];
+//            self.doubleTap666AnimationView = [self doubleTap666Animation];
+//        }else{
+//            if (!self.doubleTap666AnimationView) {
+//                self.doubleTap666AnimationView = [self doubleTap666Animation];
+//            }
+//        }
+//    }
+//}
 
 - (void)ttv_addPlayerController
 {
@@ -539,13 +539,13 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
         @strongify(self);
         [self runOnMainThread:^{
             @strongify(self);
-            if ([change[NSKeyValueChangeNewKey] isKindOfClass:[NSNumber class]] && [change[NSKeyValueChangeOldKey] isKindOfClass:[NSNumber class]] && [change[NSKeyValueChangeNewKey] boolValue] != [change[NSKeyValueChangeOldKey] boolValue]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    @strongify(self);
-                    [self ttv_addDoubleTap666AnimationViewReCreate:YES];
-                });
-            }
-            [self.guideCountdownView performVerticalTranslation:self.playerStateStore.state.toolBarState == TTVPlayerControlViewToolBarStateDidHidden || (self.playerStateStore.state.isInDetail && !self.playerStateStore.state.isFullScreen) needShiftDown:![UIApplication sharedApplication].statusBarHidden && self.playerStateStore.state.isFullScreen animated:NO];
+//            if ([change[NSKeyValueChangeNewKey] isKindOfClass:[NSNumber class]] && [change[NSKeyValueChangeOldKey] isKindOfClass:[NSNumber class]] && [change[NSKeyValueChangeNewKey] boolValue] != [change[NSKeyValueChangeOldKey] boolValue]) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    @strongify(self);
+//                    [self ttv_addDoubleTap666AnimationViewReCreate:YES];
+//                });
+//            }
+//            [self.guideCountdownView performVerticalTranslation:self.playerStateStore.state.toolBarState == TTVPlayerControlViewToolBarStateDidHidden || (self.playerStateStore.state.isInDetail && !self.playerStateStore.state.isFullScreen) needShiftDown:![UIApplication sharedApplication].statusBarHidden && self.playerStateStore.state.isFullScreen animated:NO];
             for (id <TTVDemandPlayerDelegate> delegate in self.map) {
                 if ([delegate respondsToSelector:@selector(playerOrientationState:)]) {
                     [delegate playerOrientationState:self.playerStateStore.state.isFullScreen];
@@ -561,9 +561,9 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
         [self runOnMainThread:^{
             @strongify(self);
             if (self.playerStateStore.state.toolBarState == TTVPlayerControlViewToolBarStateWillShow) {
-                [self.guideCountdownView performVerticalTranslation:NO || (self.playerStateStore.state.isInDetail && !self.playerStateStore.state.isFullScreen) needShiftDown:![UIApplication sharedApplication].statusBarHidden && self.playerStateStore.state.isFullScreen animated:YES];
+//                [self.guideCountdownView performVerticalTranslation:NO || (self.playerStateStore.state.isInDetail && !self.playerStateStore.state.isFullScreen) needShiftDown:![UIApplication sharedApplication].statusBarHidden && self.playerStateStore.state.isFullScreen animated:YES];
             } else if (self.playerStateStore.state.toolBarState == TTVPlayerControlViewToolBarStateWillHidden) {
-                [self.guideCountdownView performVerticalTranslation:YES needShiftDown:![UIApplication sharedApplication].statusBarHidden && self.playerStateStore.state.isFullScreen animated:YES];
+//                [self.guideCountdownView performVerticalTranslation:YES needShiftDown:![UIApplication sharedApplication].statusBarHidden && self.playerStateStore.state.isFullScreen animated:YES];
             }
         }];
     }];
@@ -590,10 +590,10 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     _tipView.center = CGPointMake(self.controlView.width / 2, self.controlView.height / 2);
 }
 
-- (void)setCommodityView:(TTVCommodityView *)commodityView {
-    commodityView.playerStateStore = self.playerStateStore;
-    self.playerView.commodityView = commodityView;
-}
+//- (void)setCommodityView:(TTVCommodityView *)commodityView {
+//    commodityView.playerStateStore = self.playerStateStore;
+//    self.playerView.commodityView = commodityView;
+//}
 
 
 - (void)ttv_addPlayerTracker
@@ -680,21 +680,21 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
             break;
         case TTVPlayerEventTypeControlViewDoubleClickScreen: {
             @weakify(self);
-            if (self.doubleTap666AnimationView && [self.doubleTap666Delegate respondsToSelector:@selector(ttv_doubleTapDigType)]) {
-                TTVDoubleTapDigType digType = [self.doubleTap666Delegate ttv_doubleTapDigType];
-                if ([self.doubleTap666Delegate respondsToSelector:@selector(ttv_doDigActionWhenDoubleTap:)]) {
-                    [self.doubleTap666Delegate ttv_doDigActionWhenDoubleTap:digType];
-                }
-                if (digType == TTVDoubleTapDigTypeCanDig || digType == TTVDoubleTapDigTypeAlreadyDig) {
-                    [self bringSubviewToFront:self.doubleTap666AnimationView];
-                    self.doubleTap666AnimationView.hidden = NO;
-                    [self.doubleTap666AnimationView playWithCompletion:^(BOOL animationFinished) {
-                        @strongify(self);
-                        self.doubleTap666AnimationView.hidden = YES;
-                        [self sendSubviewToBack:self.doubleTap666AnimationView];
-                    }];
-                }
-            }
+//            if (self.doubleTap666AnimationView && [self.doubleTap666Delegate respondsToSelector:@selector(ttv_doubleTapDigType)]) {
+//                TTVDoubleTapDigType digType = [self.doubleTap666Delegate ttv_doubleTapDigType];
+//                if ([self.doubleTap666Delegate respondsToSelector:@selector(ttv_doDigActionWhenDoubleTap:)]) {
+//                    [self.doubleTap666Delegate ttv_doDigActionWhenDoubleTap:digType];
+//                }
+//                if (digType == TTVDoubleTapDigTypeCanDig || digType == TTVDoubleTapDigTypeAlreadyDig) {
+//                    [self bringSubviewToFront:self.doubleTap666AnimationView];
+//                    self.doubleTap666AnimationView.hidden = NO;
+//                    [self.doubleTap666AnimationView playWithCompletion:^(BOOL animationFinished) {
+//                        @strongify(self);
+//                        self.doubleTap666AnimationView.hidden = YES;
+//                        [self sendSubviewToBack:self.doubleTap666AnimationView];
+//                    }];
+//                }
+//            }
         }
             break;
             case TTVPlayerEventTypeAdDetailAction:{
@@ -800,13 +800,13 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
         [self addBackgroundManager];
     }
     [self.playerController playVideo];
-    [self.guideCountdownView resumeTimer];
+//    [self.guideCountdownView resumeTimer];
 }
 
 - (void)pause
 {
     [self.playerController pauseVideo];
-    [self.guideCountdownView pauseTimer];
+//    [self.guideCountdownView pauseTimer];
 }
 
 - (void)seekVideoToProgress:(CGFloat)progress complete:(void(^)(BOOL success))finised

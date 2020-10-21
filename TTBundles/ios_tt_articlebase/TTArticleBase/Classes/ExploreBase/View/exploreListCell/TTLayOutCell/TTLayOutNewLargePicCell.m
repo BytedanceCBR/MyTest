@@ -290,10 +290,10 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 - (void)movieViewPlayFinished
 {
     if (![self.movieView isAdMovie]) {
-        if (!self.movieView.player.pasterPlayer.hasPasterAd) {
+//        if (!self.movieView.player.pasterPlayer.hasPasterAd) {
             // 没有后贴片直接将播放器移除和之前逻辑保持一致
             [self invalideMovieView];
-        }
+//        }
     } else
     {
         if ([self.orderedData.raw_ad_data tta_boolForKey:@"auto_replay"]) {

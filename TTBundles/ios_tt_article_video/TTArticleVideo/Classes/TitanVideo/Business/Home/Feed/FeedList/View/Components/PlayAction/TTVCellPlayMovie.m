@@ -77,7 +77,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 - (void)setDoubleTap666Delegate:(id<TTVPlayerDoubleTap666Delegate>)doubleTap666Delegate {
     _doubleTap666Delegate = doubleTap666Delegate;
-    self.movieView.player.doubleTap666Delegate = doubleTap666Delegate;
+//    self.movieView.player.doubleTap666Delegate = doubleTap666Delegate;
 }
 
 - (TTVVideoArticle *)article
@@ -221,7 +221,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     //movieView
     TTVPlayVideo *playVideo = [[TTVPlayVideo alloc] initWithFrame:self.logo.bounds playerModel:model];
     playVideo.player.delegate = self;
-    playVideo.player.doubleTap666Delegate = self.doubleTap666Delegate;
+//    playVideo.player.doubleTap666Delegate = self.doubleTap666Delegate;
     playVideo.delegate = self;
     if ([self.cellEntity.originData.adModel isCreativeAd]) {//广告
         playVideo.player.tipCreator = [[TTVPlayerTipAdNewCreator alloc] init];
@@ -254,12 +254,12 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     }
     self.logo.userInteractionEnabled = ![feedItem couldAutoPlay];
     [self.logo addSubview:self.movieView];
-    if (![TTDeviceHelper isPadDevice]) {
-        playVideo.player.commodityFloatView.animationToView = self.cellEntity.moreButton;
-        playVideo.player.commodityFloatView.animationSuperView = self.cellEntity.cell;
-        [playVideo.player.commodityFloatView setCommoditys:self.cellEntity.originData.commoditys];
-        playVideo.player.commodityButton.delegate = self;
-    }
+//    if (![TTDeviceHelper isPadDevice]) {
+//        playVideo.player.commodityFloatView.animationToView = self.cellEntity.moreButton;
+//        playVideo.player.commodityFloatView.animationSuperView = self.cellEntity.cell;
+//        [playVideo.player.commodityFloatView setCommoditys:self.cellEntity.originData.commoditys];
+//        playVideo.player.commodityButton.delegate = self;
+//    }
 
     [self ttv_configADFinishedView:playVideo.player.tipCreator.tipFinishedView];
     
@@ -518,7 +518,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         _movieView = movieView;
         _movieView.player.delegate = self;
         _movieView.delegate = self;
-        _movieView.player.doubleTap666Delegate = self.doubleTap666Delegate;
+//        _movieView.player.doubleTap666Delegate = self.doubleTap666Delegate;
         [self settingMovieView:movieView];
     }
 }
@@ -649,7 +649,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     UIView *movieView = self.movieView;
     self.movieView.player.delegate = nil;
     self.movieView.delegate = nil;
-    self.movieView.player.doubleTap666Delegate = nil;
+//    self.movieView.player.doubleTap666Delegate = nil;
     
     BOOL iOS9OrLater = kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0;
     if (iOS9OrLater) {
@@ -667,7 +667,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         self.movieView.player.bannerHeight = 0;
         self.movieView.player.delegate = self;
         self.movieView.delegate = self;
-        self.movieView.player.doubleTap666Delegate = self.doubleTap666Delegate;
+//        self.movieView.player.doubleTap666Delegate = self.doubleTap666Delegate;
         [self.logo addSubview:movieView];
         [self.logo bringSubviewToFront:movieView];
         movieView.frame = self.logo.bounds;
@@ -733,14 +733,14 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     if (context == TTCellDisappearTypeChangeCategory) {
         [self.commodityView closeCommodity];
         if (self.movieView && self.movieView.superview) {
-            if (![self.movieView.player.pasterPlayer shouldPasterADPause] &&
-                isEmptyString(self.cellEntity.originData.adID) &&
-                !self.movieView.player.context.isCommodityViewShow) {
+//            if (![self.movieView.player.pasterPlayer shouldPasterADPause] &&
+//                isEmptyString(self.cellEntity.originData.adID) &&
+//                !self.movieView.player.context.isCommodityViewShow) {
                 [self invalideMovieView];
                 if (!self.isActive) {
                     [self.movieView removeFromSuperview];
                 }
-            }
+//            }
         }
     }else if(context == TTCellDisappearTypeGoDetail){
     }else if(context == TTCellDisappearTypePresentedViewController){
