@@ -38,6 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *firstBizType;
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, copy , nullable) NSString *userAuthInfo;
+@property (nonatomic, copy , nullable) NSString *userBackgroundColor;
+@property (nonatomic, copy , nullable) NSString *userBorderColor;
+@property (nonatomic, copy , nullable) NSString *userFontColor;
 @property (nonatomic, copy , nullable) NSString *desc;
 @property (nonatomic, copy, nullable) FHFeedContentRawDataCommentRelationModel *relation;
 @property (nonatomic, copy, nullable) FHFeedContentRawDataCommentRelationCountModel *relationCount;
@@ -222,6 +225,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 //小区点评模块
 
 //是否在小区点评列表页
+@property (nonatomic, assign) BOOL isNewNeighbourhoodDetail;
 @property (nonatomic, assign) BOOL isInNeighbourhoodCommentsList;
 //底部分割线高度
 @property (nonatomic, assign) CGFloat bottomLineHeight;

@@ -190,6 +190,10 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *userVerified;
 @property (nonatomic, copy , nullable) NSString *roomSchema;
 @property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, copy , nullable) NSString *userBackgroundColor;
+@property (nonatomic, copy , nullable) NSString *userBorderColor;
+@property (nonatomic, copy , nullable) NSString *userFontColor;
+
 @end
 
 @interface FHFeedContentRawDataCommentBaseUserBlockModel : JSONModel

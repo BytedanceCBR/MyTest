@@ -127,10 +127,11 @@
         FHMultiMediaItemModel *model = _medias[index];
         if (model.mediaType == FHMultiMediaTypeVRPicture) {
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VRELLID forIndexPath:indexPath];
-        } else if (model.mediaType == FHMultiMediaTypePicture) {
-            cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_IMAGECELLID forIndexPath:indexPath];
         } else if (model.mediaType == FHMultiMediaTypeVideo) {
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VIDEOCELLID forIndexPath:indexPath];
+        } else {
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_IMAGECELLID forIndexPath:indexPath];
+           
         }
         [cell updateViewModel:model];
     }

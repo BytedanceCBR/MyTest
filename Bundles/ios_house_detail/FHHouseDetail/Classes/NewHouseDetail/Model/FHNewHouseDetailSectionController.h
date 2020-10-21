@@ -10,7 +10,24 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FHNewHouseDetailSectionModel,FHNewHouseDetailViewController;
+
 @interface FHNewHouseDetailSectionController : IGListSectionController
+
+@property (nonatomic, strong, nullable, readonly) FHNewHouseDetailSectionModel *sectionModel;
+
+- (FHNewHouseDetailViewController *)detailViewController;
+
+- (NSDictionary *)detailTracerDict;
+
+- (NSDictionary *)subPageParams;
+
+- (void)didUpdateToObject:(id)object NS_REQUIRES_SUPER;
+
+@property (nonatomic, weak, readonly) NSMutableDictionary *elementShowCaches;
+
+@end
+
+@interface FHNewHouseDetailBindingSectionController : IGListBindingSectionController
 
 @property (nonatomic, strong, nullable, readonly) FHNewHouseDetailSectionModel *sectionModel;
 

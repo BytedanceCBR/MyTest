@@ -899,12 +899,18 @@
         user.userId = model.user.userId;
         user.schema = model.user.schema;
         user.userAuthInfo = model.user.userAuthInfo;
+        user.userBackgroundColor = model.user.userBackgroundColor;
+        user.userBorderColor = model.user.userBorderColor;
+        user.userFontColor = model.user.userFontColor;
     } else if(model.rawData.user) {
         user.name = model.rawData.user.name;
         user.avatarUrl = model.rawData.user.avatarUrl;
         user.userId = model.rawData.user.userId;
         user.schema = model.rawData.user.schema;
         user.userAuthInfo = model.rawData.user.userAuthInfo;
+        user.userBackgroundColor = model.rawData.user.userBackgroundColor;
+        user.userBorderColor = model.rawData.user.userBorderColor;
+        user.userFontColor = model.rawData.user.userFontColor;
     }
 
     
@@ -1098,7 +1104,12 @@
     if(isInNeighbourhoodCommentsList){
         width = screenWidth - 70;
     }
-    self.numberOfLines = self.imageList.count > 0 ? 3 : 5;
+    if(self.isNewNeighbourhoodDetail){
+        width = screenWidth - 62;
+        self.numberOfLines = 2;
+    }else{
+        self.numberOfLines = self.imageList.count > 0 ? 3 : 5;
+    }
     [FHUGCCellHelper setRichContentWithModel:self width:width numberOfLines:self.numberOfLines];
 }
 

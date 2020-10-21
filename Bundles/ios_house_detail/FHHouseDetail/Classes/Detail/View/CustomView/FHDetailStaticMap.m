@@ -20,6 +20,15 @@ const CGFloat kStaticMapHWRatio  = 7.0f / 16.0f;
 @end
 
 @implementation FHStaticMapAnnotation
+
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
+}
+
 @end
 
 @interface FHStaticMapAnnotationView ()
