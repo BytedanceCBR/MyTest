@@ -19,8 +19,6 @@
 @property (nonatomic, strong, readonly) UIView *playerLayer;
 @property (nonatomic, strong) TTVPlayerStateStore *playerStateStore;
 @property (nonatomic, assign) BOOL muted;
-/// 播放时是否使用缓存&预加载
-@property (nonatomic, assign) BOOL useCache;
 /// 是否在feed内流播放
 @property (nonatomic, assign) BOOL isPlayInDetailFeed;
 /**

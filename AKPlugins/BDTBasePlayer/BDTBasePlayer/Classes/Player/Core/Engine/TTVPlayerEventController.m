@@ -29,7 +29,7 @@
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TTVPlayerLogEvent.h"
 #import "TTVPlayerAudioController.h"
-#import "TTVVideoNetClient.h"
+#import <TTVideoEngine/TTVideoEngineHeader.h>
 //#import "TTVOwnPlayerPreloaderWrapper.h"
 //#import "TTVOwnPlayerCacheWrapper.h"
 #import "TTVAudioActiveCenter.h"
@@ -40,7 +40,7 @@
 #import "TTVURLService.h"
 
 static NSString *const kvideo_controller_error_domain = @"kvideo_player_controller_error_domain";
-static NSString *platformString;
+//static NSString *platformString;
 @interface TTVPlayerEventController () <TTVFluxStoreCallbackProtocol ,TTVideoEngineDataSource,TTVideoEngineDelegate,TTVideoEngineResolutionDelegate>
 
 @property (nonatomic, strong) TTVideoEngine *videoEngine;
@@ -54,22 +54,22 @@ static NSString *platformString;
 
 @implementation TTVPlayerEventController
 
-+ (NSString *)platform{
-    size_t size;
-    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
-    char *machine = malloc(size);
-    sysctlbyname("hw.machine", machine, &size, NULL, 0);
-    NSString *platform = [NSString stringWithUTF8String:machine];
-    free(machine);
-    return platform;
-}
-
-+ (NSString *)ttv_platformString{
-    NSString *platform = [self platform];
-    if ([platform isEqualToString:@"i386"])         return @"Simulator";
-    if ([platform isEqualToString:@"x86_64"])       return @"Simulator";
-    return platform;
-}
+//+ (NSString *)platform{
+//    size_t size;
+//    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+//    char *machine = malloc(size);
+//    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+//    NSString *platform = [NSString stringWithUTF8String:machine];
+//    free(machine);
+//    return platform;
+//}
+//
+//+ (NSString *)ttv_platformString{
+//    NSString *platform = [self platform];
+//    if ([platform isEqualToString:@"i386"])         return @"Simulator";
+//    if ([platform isEqualToString:@"x86_64"])       return @"Simulator";
+//    return platform;
+//}
 
 
 #pragma life cycle
@@ -77,7 +77,6 @@ static NSString *platformString;
 - (instancetype)init{
     self = [super init];
     if (self) {
-        _useCache = YES;
         self.logEvent = [TTVPlayerLogEvent sharedInstance];
         _watchTimer = [[TTVPlayerWatchTimer alloc] init];
         _activeCenter = [[TTVAudioActiveCenter alloc] init];
@@ -180,13 +179,6 @@ static NSString *platformString;
     self.videoEngine.delegate = self;
     self.videoEngine.resolutionDelegate = self;
     [self ttv_kvo];
-}
-
-- (void)openAutoModel
-{
-//    if (self.videoEngine.supportedResolutionTypes.count > 0 || self.videoEngine.currentResolution == TTVideoEngineResolutionTypeSD) {
-//        [self.videoEngine configResolution:TTVideoEngineResolutionTypeAuto];
-//    }
 }
 
 - (void)ttv_kvo
@@ -397,7 +389,7 @@ static NSString *platformString;
     if (![TTVResolutionStore sharedInstance].userSelected || [TTVResolutionStore sharedInstance].forceSelected) {
         [TTVResolutionStore sharedInstance].autoResolution = self.playerStateStore.state.currentResolution;
     }
-//    [self openAutoModel];
+
     [self.playerStateStore sendAction:TTVPlayerEventTypeShowVideoFirstFrame payload:nil];
 }
 
@@ -559,7 +551,9 @@ static NSString *platformString;
     }
     if ([action isKindOfClass:[TTVPlayerStateAction class]]) {
         if (action.actionType == TTVPlayerEventTypeShowVideoFirstFrame) {
-            [self _showVideoFirstFrame];
+            if(self.playerModel.enableCache){
+                [self _showVideoFirstFrame];
+            }
         } else if (action.actionType == TTVPlayerEventTypeSwitchResolution) {
             NSMutableDictionary *dic = action.payload;
             if (!dic) {
