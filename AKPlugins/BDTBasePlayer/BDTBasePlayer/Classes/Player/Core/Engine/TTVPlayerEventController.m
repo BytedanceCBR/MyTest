@@ -50,7 +50,7 @@ static NSString *platformString;
 @property (nonatomic, strong) TTVAudioActiveCenter *activeCenter;
 @property(nonatomic, copy)NSString *directVideoUrl;//直接可播放的视频url
 
-@property (nonatomic, strong) NSMutableSet *retainTaskSet;
+//@property (nonatomic, strong) NSMutableSet *retainTaskSet;
 @end
 
 @implementation TTVPlayerEventController
@@ -124,7 +124,7 @@ static NSString *platformString;
 }
 
 - (void)ttv_setup {
-    [self.retainTaskSet removeAllObjects];
+//    [self.retainTaskSet removeAllObjects];
     [_watchTimer reset];
     [_watchTimer endWatch];
     [TTVResolutionStore sharedInstance].resolutionAlertClick = NO;
