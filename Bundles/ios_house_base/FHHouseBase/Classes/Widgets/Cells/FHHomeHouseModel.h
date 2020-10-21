@@ -234,6 +234,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHHomeHouseItemTitleTagModel<NSObject>
+
+@end
+
+@interface FHHomeHouseItemTitleTagModel : JSONModel
+
+@property (nonatomic, assign) BOOL isGradient;
+@property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *textColor;
+@property (nonatomic, copy , nullable) NSString *backgroundColor;
+@property (nonatomic, copy , nullable) NSString *topBackgroundColor;
+@property (nonatomic, copy , nullable) NSString *bottomBackgroundColor;
+
+@end
+
 //@protocol FHHomeHouseDataItemsImagesModel<NSObject>
 //
 //@end
@@ -291,6 +306,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSMutableAttributedString *tagString;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contactModel ;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+@property (nonatomic, strong, nullable) FHHouseTagsModel *propertyTag;
+@property (nonatomic, strong, nullable) NSArray<FHHomeHouseItemTitleTagModel> *titleTags;
 
 
 @property (nonatomic, copy , nullable) NSString *houseType;

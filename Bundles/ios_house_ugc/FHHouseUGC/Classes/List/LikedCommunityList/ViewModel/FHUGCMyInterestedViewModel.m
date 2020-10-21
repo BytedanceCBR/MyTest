@@ -15,6 +15,7 @@
 #import "FHLocManager.h"
 #import "FHUserTracker.h"
 #import "UIViewController+Track.h"
+#import "FHUGCConfig.h"
 
 #define kCellId @"cell_id"
 
@@ -136,6 +137,26 @@
             }
         }
     }];
+}
+
+- (void)updateDataListFollowStatus {
+    NSMutableSet<NSString *> *socialGroupIdSet = [[NSMutableSet alloc] init];
+    [[FHUGCConfig sharedInstance].followList enumerateObjectsUsingBlock:^(FHUGCScialGroupDataModel* _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [socialGroupIdSet addObject:obj.socialGroupId];
+    }];
+    
+    [self.dataList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([obj isKindOfClass:[FHUGCMyInterestDataRecommendSocialGroupsModel class]]){
+                FHUGCMyInterestDataRecommendSocialGroupsModel *model = (FHUGCMyInterestDataRecommendSocialGroupsModel *)obj;
+                if([socialGroupIdSet containsObject:model.socialGroup.socialGroupId]){
+                    model.socialGroup.hasFollow = @"YES";
+                }else{
+                    model.socialGroup.hasFollow = @"NO";
+                }
+            }
+    }];
+    
+    [self.tableView reloadData];
 }
 
 - (void)addEnterCategoryLog {

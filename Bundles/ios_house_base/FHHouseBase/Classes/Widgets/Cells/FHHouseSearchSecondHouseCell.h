@@ -9,7 +9,23 @@
 
 NS_ASSUME_NONNULL_BEGIN
 //新二手房列表页、搜索页cell
+@class FHHouseSearchSecondHouseCell;
+@class FHHomeHouseDataItemsModel;
+@protocol FHHouseSearchSecondHouseCellDelegate <NSObject>
+
+@optional
+//dislike确认
+- (void)dislikeConfirm:(FHHomeHouseDataItemsModel *)model cell:(FHHouseSearchSecondHouseCell *)cell;
+//dislike按钮点击前
+- (BOOL)canDislikeClick;
+
+@end
+
 @interface FHHouseSearchSecondHouseCell : FHListBaseCell
+
+@property (nonatomic, weak) id<FHHouseSearchSecondHouseCellDelegate> delegate;
+
+- (void)updateHeightByTopMargin:(CGFloat)topMarigin;
 
 - (void)resumeVRIcon;
 

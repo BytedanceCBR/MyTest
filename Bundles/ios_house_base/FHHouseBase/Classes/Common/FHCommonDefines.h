@@ -49,6 +49,7 @@
 #define XFLog(fmt, ...) NSLog((@"XFLog %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 #define SMLog(fmt, ...) NSLog((@"SMLog %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 #define CHLog(fmt, ...) NSLog((@"CHLog %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define ZWLog(fmt, ...) NSLog((@"ZWLog %s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 
 #else
 
@@ -57,6 +58,7 @@
 #define XFLog(fmt, ...)
 #define SMLog(fmt, ...)
 #define CHLog(fmt, ...)
+#define ZWLog(fmt, ...)
 
 #endif
 
