@@ -677,6 +677,11 @@ typedef void(^TTActivityAction)(NSString *type);
     if ([AKAwardCoinManager isShareTypeWithActivityType:itemType]) {
         [AKAwardCoinManager requestShareBounsWithGroup:self.model.groupId fromPush:NO completion:nil];
     }
+    
+    if ( itemType == TTActivityTypeDislike || itemType == TTActivityTypeBlockUser) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"将减少类似推荐" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+        return;
+    }
     if (view == _phoneShareView) {
         if (itemType == TTActivityTypeWeitoutiao || itemType == TTActivityTypeDislike || itemType ==TTActivityTypeReport || itemType == TTActivityTypeEMail || itemType == TTActivityTypeSystem ||itemType == TTActivityTypeMessage) {
             if (self.playVideo) {

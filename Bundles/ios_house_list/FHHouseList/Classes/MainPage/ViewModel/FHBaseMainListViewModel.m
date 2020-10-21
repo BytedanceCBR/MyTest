@@ -103,7 +103,6 @@ extern NSString *const INSTANT_DATA_KEY;
 //预约以后的状态暂存
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
-@property (nonatomic, assign) BOOL isAbtest;//106二手房、新房UI改版ab实验
 
 @end
 
@@ -124,7 +123,6 @@ extern NSString *const INSTANT_DATA_KEY;
     self = [super init];
     if (self) {
         
-        _isAbtest = NO;
         _houseList = [NSMutableArray new];
         _sugesstHouseList = [NSMutableArray new];
         _showHouseDict = [NSMutableDictionary new];
@@ -195,11 +193,11 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceCellId];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHouseBaseItemCellList"];
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
+    //[_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeRentHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];
      [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNewHouse]];
-     [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHListSynchysisNewHouseCell"];
+     //[_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHListSynchysisNewHouseCell"];
     [_tableView registerClass:[FHHouseAgentCardCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseAgentCardCell class])];
     [_tableView registerClass:[FHFindHouseHelperCell class] forCellReuseIdentifier:@"FHFindHouseHelperCell"];
     [_tableView registerClass:[FHHouseSearchSecondHouseCell class] forCellReuseIdentifier:@"FHHouseSearchSecondHouseCell"];
@@ -778,9 +776,6 @@ extern NSString *const INSTANT_DATA_KEY;
                         itemModel.topMargin = 10;
                     }
                     theItemModel = itemModel;
-                    if ((itemModel.houseType.integerValue == FHHouseTypeSecondHandHouse && itemModel.cellStyles == 7) || (itemModel.houseType.integerValue == FHHouseTypeNewHouse && itemModel.cellStyles == 8)) {
-                        _isAbtest = YES;
-                    }
                 }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
                     FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
                     if (agencyInfoModel.agencyTotal.integerValue != 0 && agencyInfoModel.houseTotal.integerValue != 0) {
@@ -865,9 +860,6 @@ extern NSString *const INSTANT_DATA_KEY;
                     itemModel.isRecommendCell = YES;
                     itemModel.isLastCell = (idx == items.count - 1);
                     theItemModel = itemModel;
-                    if ((itemModel.houseType.integerValue == FHHouseTypeSecondHandHouse && itemModel.cellStyles == 7) || (itemModel.houseType.integerValue == FHHouseTypeNewHouse && itemModel.cellStyles == 8)) {
-                        _isAbtest = YES;
-                    }
                 }
 
                 if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
@@ -933,9 +925,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 cellModel.cellHeight = self.tableView.height - self.topView.height - 121;
                 [self.houseList addObject:cellModel];
             }
-        }
-        if (_isAbtest) {
-            self.tableView.backgroundColor = [UIColor themeGray7];
         }
         [self.tableView reloadData];
         
@@ -1623,7 +1612,7 @@ extern NSString *const INSTANT_DATA_KEY;
         __weak typeof(self)wself = self;
         if (identifier.length > 0) {
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-            if (_isAbtest) {
+            if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
                 cell.backgroundColor = [UIColor themeGray7];
             }
             if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
@@ -1757,7 +1746,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }else {
                 item.topMargin = 0;
             }
-            if (_isAbtest) {
+            if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
                 if (isFirstCell) {
                     item.topMargin = 5;
                 } else {
@@ -1959,7 +1948,7 @@ extern NSString *const INSTANT_DATA_KEY;
                         //小于一屏再进行设置
                         self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
                         
-                    }
+                    } 
                 }
             }
         }

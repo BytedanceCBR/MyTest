@@ -747,6 +747,9 @@
             
             _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
         }
+        if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
+            _tableView.backgroundColor = [UIColor themeGray7];
+        }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.showsVerticalScrollIndicator = NO;
         _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
