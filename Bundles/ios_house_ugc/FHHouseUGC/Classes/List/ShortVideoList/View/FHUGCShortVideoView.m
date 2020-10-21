@@ -60,6 +60,8 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
 - (void)createViews {
     self.backgroundColor = [UIColor blackColor];
     _player = [[TTVDemandPlayer alloc] initWithFrame:self.bounds];
+    _player.enableRotate = NO;
+    _player.controlView.miniSlider.hidden = YES;
     [self addSubview:_player];
 }
 
@@ -250,12 +252,6 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
     [self.player stopWithFinishedBlock:finishedBlock];
 }
 
-- (void)stop
-{
-    [self stopWithFinishedBlock:^{
-    }];
-}
-
 - (void)exitFullScreen:(BOOL)animated completion:(TTVPlayerOrientationCompletion)completion
 {
     [self.player exitFullScreen:animated completion:completion];
@@ -286,6 +282,58 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
 - (BOOL)isAdMovie
 {
     return self.playerModel.adID.length > 0;
+}
+
+- (void)readyToPlay {
+        [self.player readyToPlay];
+    //    if (isAutoPlaying && self.cellEntity.article.adId.longLongValue > 0) {
+    //        self.movieView.player.banLoading = YES;
+    //        self.movieView.player.muted = [self.cellEntity.originData couldAutoPlay];
+    //    }
+//        self.playerView.player.muted = YES;
+    //    [self addUrlTrackerOnPlayer:playVideo];
+        [self settingMovieView:self.player];
+}
+
+- (void)reset {
+    [self.player reset];
+}
+
+- (void)pause {
+    [self.player pause];
+}
+
+- (void)stop {
+    [self.player stopWithFinishedBlock:^{
+    }];
+}
+
+- (void)play
+{
+    [self.player setBanLoading:YES];
+    [self.player play];
+    self.player.controlView.miniSlider.hidden = YES;
+//    if(!self.cellEntity.hideTitleAndWatchCount){
+//        [playVideo.player setVideoTitle:feedItem.title];
+//        [playVideo.player setVideoWatchCount:article.videoDetailInfo.videoWatchCount playText:@"次播放"];
+//    }
+//    self.logo.userInteractionEnabled = ![feedItem couldAutoPlay];
+//    if (![TTDeviceHelper isPadDevice]) {
+//        playVideo.player.commodityFloatView.animationToView = self.cellEntity.moreButton;
+//        playVideo.player.commodityFloatView.animationSuperView = self.cellEntity.cell;
+//        [playVideo.player.commodityFloatView setCommoditys:self.cellEntity.originData.commoditys];
+//        playVideo.player.commodityButton.delegate = self;
+//    }
+
+//    [self ttv_configADFinishedView:playVideo.player.tipCreator.tipFinishedView];
+//
+//    [[AKAwardCoinVideoMonitorManager shareInstance] monitorVideoWith:playVideo];
+}
+
+- (void)settingMovieView:(TTVDemandPlayer *)player
+{
+    player.isInDetail = NO;
+    player.showTitleInNonFullscreen = YES;
 }
 
 @end

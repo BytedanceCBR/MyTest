@@ -56,6 +56,12 @@ typedef void(^TTVStopFinished)(void);
 + (FHUGCShortVideoView *)currentPlayingPlayVideo;
 
 - (BOOL)isAdMovie;
+
+- (void)play;
+- (void)pause;
+- (void)stop;
+- (void)reset;
+- (void)readyToPlay;
 @end
 
 NS_ASSUME_NONNULL_END
