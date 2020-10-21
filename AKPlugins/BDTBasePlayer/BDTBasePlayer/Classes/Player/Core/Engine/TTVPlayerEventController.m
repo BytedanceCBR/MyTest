@@ -328,6 +328,9 @@ static NSString *platformString;
     }
 }
 
+- (void)videoEngine:(TTVideoEngine *)videoEngine mdlKey:(NSString *)key hitCacheSze:(NSInteger)cacheSize {
+//    NSLog(@"666");
+}
 
 /**
  playbackState loadingState 都会重试,不能拿来做最终失败的UI暂时时机

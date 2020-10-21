@@ -182,6 +182,7 @@
         model.categoryName = self.cellModel.categoryId;
         model.authorId = self.cellModel.user.userId;
         model.extraDic = self.cellModel.tracerDic;
+//        model.showMutedView
         
     //    if (feedItem.isVideoSourceUGCVideo) {
     //        model.defaultResolutionType = TTVPlayerResolutionTypeHD;
@@ -266,9 +267,8 @@
 
 - (void)play
 {
-
+    [self.playerView.player setBanLoading:YES];
     [self.playerView.player play];
-    
     self.overlayViewController.playerStateStore = self.playerView.player.playerStateStore;
     self.playerView.player.controlView.miniSlider.hidden = YES;
 //    if(!self.cellEntity.hideTitleAndWatchCount){
