@@ -146,7 +146,7 @@
             reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
             reportParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
             reportParams[UT_ELEMENT_FROM] = self.tracerDict[UT_ELEMENT_FROM]?:UT_BE_NULL;
-            reportParams[UT_PAGE_TYPE] = @"feedback_detail";
+            reportParams[UT_PAGE_TYPE] = [self categoryName];
             reportParams[@"event_tracking_id"] = @"113177";
         }
             break;

@@ -659,7 +659,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
     reportParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
     reportParams[UT_PAGE_TYPE] = [self pageType];
-    reportParams[@"event_tracking_id"] = @"115885";
+    reportParams[@"event_tracking_id"] = @"115886";
     TRACK_EVENT(UT_GO_DETAIL, reportParams);
 }
 
@@ -798,7 +798,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     UIButton *closeBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [closeBtn setImage:ICON_FONT_IMG(24, @"\U0000E673", [UIColor themeGray5]) forState:UIControlStateNormal];
     [[[closeBtn rac_signalForControlEvents:UIControlEventTouchUpInside] deliverOnMainThread] subscribeNext:^(__kindof UIControl * _Nullable x) {
-        dismissHintViewBlock(@"");
+        dismissHintViewBlock(@"know");
     }];
     [contentView addSubview:closeBtn];
     [closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {

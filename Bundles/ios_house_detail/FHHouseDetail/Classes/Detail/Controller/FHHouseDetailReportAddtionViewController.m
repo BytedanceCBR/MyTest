@@ -942,7 +942,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
     // 埋点
     NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
     reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
-    reportParams[UT_ENTER_FROM] = @"feedback_detail";
+    reportParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM]?:UT_BE_NULL;
     reportParams[UT_PAGE_TYPE] = [self pageType];
     reportParams[@"group_id"] = self.houseId;
     reportParams[@"event_tracking_id"] = @"113181";
