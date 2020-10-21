@@ -19,7 +19,7 @@
 #import <AVFoundation/AVFoundation.h>
 //#import "TTVPalyerTrafficAlert.h"
 #import "TTVPlayerAudioWave.h"
-#import "TTVFullscreeenController.h"
+//#import "TTVFullscreeenController.h"
 #import "TTVResolutionStore.h"
 #import "UIColor+TTThemeExtension.h"
 #import "TTVAudioActiveCenter.h"
@@ -39,11 +39,11 @@ static __weak TTVPlayerController *currentPlayerController = nil;
  */
 @property (nonatomic, strong) TTVPlayerEventController *eventController;
 @property (nonatomic, strong) TTVPlayerOrientationController *orientationController;//新旋转
-@property (nonatomic, strong) TTVFullscreeenController *fullscreeenController;//旧旋转
+//@property (nonatomic, strong) TTVFullscreeenController *fullscreeenController;//旧旋转
 //@property (nonatomic, strong) TTVPalyerTrafficAlert *trafficAlert;
 @property (nonatomic, strong) TTVPlayerAudioWave *audioWave;
-@property(nonatomic, strong)TTVChangeResolutionView *changeResolutionView;
-@property(nonatomic, strong)TTVChangeResolutionAlertView *changeResolutionAlertView;
+@property (nonatomic, strong) TTVChangeResolutionView *changeResolutionView;
+@property (nonatomic, strong) TTVChangeResolutionAlertView *changeResolutionAlertView;
 @end
 
 @implementation TTVPlayerController
@@ -78,17 +78,12 @@ static __weak TTVPlayerController *currentPlayerController = nil;
     [_eventController readyToPlay];
     [self ttv_addPlayerView];
     [self ttv_addControlView];
-//    [self performSelector:@selector(ttv_addControlView) withObject:nil afterDelay:0];
 //    [self ttv_addTrafficView];
     if ([_playerDataSource respondsToSelector:@selector(videoPlayerTipView)]) {
         _playerView.tipView = [_playerDataSource videoPlayerTipView];
     }
 
-    if ([TTVPlayerSettingUtility ttvs_isVideoNewRotateEnabled]) {
-        [self ttv_addRotate];//新旋转
-    }else{
-        [self ttv_addFullScreen];//旧旋转
-    }
+    [self ttv_addRotate];//新旋转
     [self ttv_addChageResolution];
     //不要去掉,为了再次设置setCategory
     [TTVAudioActiveCenter setupAudioSessionIsMuted:self.playerModel.mutedWhenStart];
@@ -122,7 +117,6 @@ static __weak TTVPlayerController *currentPlayerController = nil;
 - (void)setRotateView:(UIView *)rotateView
 {
     _rotateView = rotateView;
-    _fullscreeenController.rotateView = self.rotateView;
     _orientationController.rotateView = self.rotateView;
 }
 
@@ -147,34 +141,12 @@ static __weak TTVPlayerController *currentPlayerController = nil;
 
 - (void)ttv_addRotate
 {
-    if (_fullscreeenController) {
-        [_fullscreeenController exitFullScreen:YES completion:^(BOOL finished) {
-            
-        }];
-    }
     if (!_orientationController) {
         _orientationController = [[TTVPlayerOrientationController alloc] init];
         _orientationController.delegate = self;
     }
     _orientationController.playerStateStore = _playerStateStore;
     _orientationController.rotateView = self.rotateView;
-    _fullscreeenController = nil;
-}
-
-- (void)ttv_addFullScreen
-{
-    if (_orientationController) {
-        [_orientationController exitFullScreen:YES completion:^(BOOL finished) {
-            
-        }];
-    }
-    if (!_fullscreeenController) {
-        _fullscreeenController = [[TTVFullscreeenController alloc] init];
-        _fullscreeenController.delegate = self;
-    }
-    _fullscreeenController.playerStateStore = _playerStateStore;
-    _fullscreeenController.rotateView = self.rotateView;
-    _orientationController = nil;
 }
 
 - (void)ttv_addChageResolution
@@ -196,20 +168,12 @@ static __weak TTVPlayerController *currentPlayerController = nil;
 
 - (void)exitFullScreen:(BOOL)animated completion:(TTVPlayerOrientationCompletion)completion
 {
-    if (self.fullscreeenController) {
-        [self.fullscreeenController exitFullScreen:animated completion:completion];
-    }else{
-        [self.orientationController exitFullScreen:animated completion:completion];
-    }
+    [self.orientationController exitFullScreen:animated completion:completion];
 }
 
 - (void)enterFullScreen:(BOOL)animated completion:(TTVPlayerOrientationCompletion)completion
 {
-    if (self.fullscreeenController) {
-        [self.fullscreeenController enterFullScreen:animated completion:completion];
-    }else{
-        [self.orientationController enterFullScreen:animated completion:completion];
-    }
+    [self.orientationController enterFullScreen:animated completion:completion];
 }
 
 - (void)changeResolution:(TTVPlayerResolutionType)type

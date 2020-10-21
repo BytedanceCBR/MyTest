@@ -43,14 +43,13 @@ static NSString *const kvideo_controller_error_domain = @"kvideo_player_controll
 static NSString *platformString;
 @interface TTVPlayerEventController () <TTVFluxStoreCallbackProtocol ,TTVideoEngineDataSource,TTVideoEngineDelegate,TTVideoEngineResolutionDelegate>
 
-@property (nonatomic, strong)  TTVideoEngine *videoEngine;
+@property (nonatomic, strong) TTVideoEngine *videoEngine;
 @property (nonatomic, copy) NSString *requestUrl;
 @property (nonatomic, strong) TTVPlayerWatchTimer *watchTimer;
-@property(nonatomic, strong)TTVPlayerLogEvent *logEvent;
+@property (nonatomic, strong) TTVPlayerLogEvent *logEvent;
 @property (nonatomic, strong) TTVAudioActiveCenter *activeCenter;
-@property(nonatomic, copy)NSString *directVideoUrl;//直接可播放的视频url
+@property (nonatomic, copy) NSString *directVideoUrl;//直接可播放的视频url
 
-//@property (nonatomic, strong) NSMutableSet *retainTaskSet;
 @end
 
 @implementation TTVPlayerEventController
@@ -84,7 +83,6 @@ static NSString *platformString;
         _activeCenter = [[TTVAudioActiveCenter alloc] init];
         BOOL playUseIp = [[[TTSettingsManager sharedManager] settingForKey:@"tt_play_use_ip" defaultValue:@NO freeze:NO] boolValue];
         [[self class] setEnableHTTPDNS:playUseIp];
-//        [[TTVPlayerAudioController sharedInstance] setCategory:AVAudioSessionCategoryPlayback];
     }
     return self;
 }
@@ -124,7 +122,6 @@ static NSString *platformString;
 }
 
 - (void)ttv_setup {
-//    [self.retainTaskSet removeAllObjects];
     [_watchTimer reset];
     [_watchTimer endWatch];
     [TTVResolutionStore sharedInstance].resolutionAlertClick = NO;
@@ -175,8 +172,8 @@ static NSString *platformString;
         }];
         
         self.playerStateStore.state.playingWithCache = NO;
-        [self.videoEngine setOptionForKey:VEKKeyProxyServerEnable_BOOL value:@(YES)];
-        [self.videoEngine setOptionForKey:VEKKeyModelCacheVideoInfoEnable_BOOL value:@(YES)];
+//        [self.videoEngine setOptionForKey:VEKKeyProxyServerEnable_BOOL value:@(YES)];
+//        [self.videoEngine setOptionForKey:VEKKeyModelCacheVideoInfoEnable_BOOL value:@(YES)];
         [self.videoEngine setVideoID:self.playerModel.videoID];
     }
     self.videoEngine.dataSource = self;
