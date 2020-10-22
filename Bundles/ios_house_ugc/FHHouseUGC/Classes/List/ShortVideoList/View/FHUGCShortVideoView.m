@@ -285,6 +285,7 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
 }
 
 - (void)readyToPlay {
+        [self.player setBanLoading:YES];
         [self.player readyToPlay];
     //    if (isAutoPlaying && self.cellEntity.article.adId.longLongValue > 0) {
     //        self.movieView.player.banLoading = YES;
@@ -310,7 +311,6 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
 
 - (void)play
 {
-    [self.player setBanLoading:YES];
     [self.player play];
     self.player.controlView.miniSlider.hidden = YES;
 //    if(!self.cellEntity.hideTitleAndWatchCount){
