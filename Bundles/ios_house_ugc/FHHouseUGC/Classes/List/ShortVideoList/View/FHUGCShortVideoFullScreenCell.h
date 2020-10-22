@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)stop;
 - (void)reset;
 - (void)readyToPlay;
+- (void)resetPlayerModel;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -191,6 +191,7 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
     _player.rotateView = self;
 }
 
+
 - (void)setVideoLargeImageDict:(NSDictionary *)videoLargeImageDict
 {
     if (!_logoImageView) {

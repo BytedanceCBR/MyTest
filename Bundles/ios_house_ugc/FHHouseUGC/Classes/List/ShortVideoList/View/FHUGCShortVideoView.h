@@ -35,7 +35,7 @@ typedef void(^TTVStopFinished)(void);
 /**
  切换下一个视频的时候,重置播放器环境数据使用.
  */
-- (void)resetPlayerModel:(TTVVideoPlayerModel *)playerModel;
+- (void)resetPlayerModel:(TTVPlayerModel *)playerModel;
 /**
  播放器封面图,可以转化为TTImageInfosModel的videoLargeImageDict,如果非TTImageInfosModel类型的model.
  使用替换 [self.player setLogoImageView:_logoImageView];
@@ -56,6 +56,8 @@ typedef void(^TTVStopFinished)(void);
 + (FHUGCShortVideoView *)currentPlayingPlayVideo;
 
 - (BOOL)isAdMovie;
+
+- (void)removePlayer;
 
 - (void)play;
 - (void)pause;
