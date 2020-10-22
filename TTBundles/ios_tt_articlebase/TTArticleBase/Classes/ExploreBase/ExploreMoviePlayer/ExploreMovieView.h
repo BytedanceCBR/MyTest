@@ -122,6 +122,7 @@ extern NSString * _Nonnull const kExploreMovieViewDidChangeFullScreenNotifictaio
 
 + (void)removeAllExploreMovieView;
 + (void)stopAllExploreMovieView;
++ (void)removeExploreMovieViewExcept:(UIView <TTMovieStoreAction> *)video;
 
 - (void)showDetailButtonIfNeeded;
 - (void)pauseMovieAndShowToolbar;

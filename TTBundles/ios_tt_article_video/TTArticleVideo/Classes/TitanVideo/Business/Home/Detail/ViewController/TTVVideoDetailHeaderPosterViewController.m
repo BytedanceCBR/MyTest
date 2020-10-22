@@ -108,12 +108,12 @@ extern CGFloat ttvs_detailVideoMaxHeight(void);
 - (void)setShareMovie:(TTVideoShareMovie *)shareMovie
 {
     if (shareMovie != _shareMovie) {
-        if ([shareMovie.movieView isKindOfClass:[TTVPlayVideo class]]) {
-            TTVPlayVideo *movieView = (TTVPlayVideo *)shareMovie.movieView;
-            if ([movieView isAdMovie] && movieView.playerModel.isAutoPlaying) {
-                [self sendADEvent:@"detail_ad" label:@"detail_play" value:self.videoInfo.adModel.ad_id extra:nil logExtra:self.videoInfo.adModel.log_extra];
-            }
-        }
+//        if ([shareMovie.movieView isKindOfClass:[TTVPlayVideo class]]) {
+//            TTVPlayVideo *movieView = (TTVPlayVideo *)shareMovie.movieView;
+//            if ([movieView isAdMovie] && movieView.playerModel.isAutoPlaying) {
+//                [self sendADEvent:@"detail_ad" label:@"detail_play" value:self.videoInfo.adModel.ad_id extra:nil logExtra:self.videoInfo.adModel.log_extra];
+//            }
+//        }
         
         [self.KVOController unobserve:_shareMovie];
         _shareMovie = shareMovie;

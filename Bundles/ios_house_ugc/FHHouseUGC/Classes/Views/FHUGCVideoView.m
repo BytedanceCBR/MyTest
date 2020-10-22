@@ -38,7 +38,7 @@ extern CGFloat ttvs_listVideoMaxHeight(void);
 extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
 extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 
-@interface FHUGCVideoView ()<TTVCellPlayMovieDelegate, TTVPlayerDoubleTap666Delegate>
+@interface FHUGCVideoView ()<TTVCellPlayMovieDelegate>
 
 @property (nonatomic, strong) SSThemedLabel *videoRightBottomLabel; //默认显示时间
 @property (nonatomic, strong) SSThemedLabel *videoTitleLabel;
@@ -46,7 +46,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 @property (nonatomic, strong) TTAlphaThemedButton *playButton;
 @property (nonatomic ,strong) NSString *videoLeftTime;
 //下面的分割线
-@property (nonatomic, strong) UIImageView *topMaskView;
+//@property (nonatomic, strong) UIImageView *topMaskView;
 @property (nonatomic, strong) TTImageView *logo;
 @property (nonatomic ,strong) TTVCellPlayMovie *playMovie;
 @end
@@ -71,7 +71,9 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 #define kBottomViewH [TTDeviceUIUtils tt_newPadding:6]
 
 @interface FHUGCVideoView ()
-@property (nonatomic ,strong)UIImageView *videoRightBottomLabelImageView;
+
+@property (nonatomic , strong) UIImageView *videoRightBottomLabelImageView;
+
 @end
 
 @implementation FHUGCVideoView
@@ -80,6 +82,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 - (void)dealloc{
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -87,14 +90,8 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         _logo = [[TTImageView alloc] initWithFrame:CGRectZero];
         _logo.imageContentMode = TTImageViewContentModeScaleAspectFill;
-//        _logo.dayModeCoverHexString = @"00000033";
         _logo.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_logo];
-        
-//        UIImage *topMaskImage = [[UIImage imageNamed:@"thr_shadow_video"] resizableImageWithCapInsets:UIEdgeInsetsZero];
-//        _topMaskView = [[UIImageView alloc] initWithImage:topMaskImage];
-//        _topMaskView.frame = CGRectMake(0, 0, self.width, kTopMaskH);
-//        [self.logo addSubview:_topMaskView];
         
         _videoTitleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
         _videoTitleLabel.backgroundColor = [UIColor clearColor];
@@ -136,6 +133,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         _playButton.imageName = imageName;
         [_playButton addTarget:self action:@selector(playButtonClicked) forControlEvents:UIControlEventTouchUpInside];
         [self.logo addSubview:_playButton];
+        
         self.playMovie = [[TTVCellPlayMovie alloc] init];
     }
     return self;
@@ -147,11 +145,14 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         self.playMovie = [[TTVCellPlayMovie alloc] init];
     }
     self.playMovie.delegate = self;
-    self.playMovie.doubleTap666Delegate = self;
     self.playMovie.logo = self.logo;
     self.playMovie.frame = self.logo.bounds;
     self.playMovie.fromView = self.logo;
     self.playMovie.cellEntity = self.cellEntity;
+}
+
+- (void)readyToPlay {
+    
 }
 
 - (void)playButtonClicked
@@ -178,12 +179,6 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         _playMovie = playMovie;
         [self configurePlayMovie];
     }
-}
-
-- (void)addCommodity
-{
-    [self configurePlayMovie];
-    [self.playMovie addCommodity];
 }
 
 - (void)setMuted:(BOOL)muted {
@@ -241,21 +236,6 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 {
     if (self.ttv_DirectShareOnMovieViewDidPressBlock) {
         self.ttv_DirectShareOnMovieViewDidPressBlock(activityType);
-    }
-}
-
-
-- (void)ttv_commodityViewClosed
-{
-    if (self.ttv_commodityViewClosedBlock) {
-        self.ttv_commodityViewClosedBlock();
-    }
-}
-
-- (void)ttv_commodityViewShowed
-{
-    if (self.ttv_commodityViewShowedBlock) {
-        self.ttv_commodityViewShowedBlock();
     }
 }
 
@@ -330,21 +310,6 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
     _playButton.userInteractionEnabled = YES;
 }
 
-+ (CGFloat)obtainHeightForFeed:(TTVFeedListItem *)cellEntity cellWidth:(CGFloat)width
-{
-    if (cellEntity && !cellEntity.imageHeight) {
-        TTImageInfosModel *model = [[TTImageInfosModel alloc] initWithImageUrlList:cellEntity.article.largeImageList];
-        // 根据图片实际宽高设置其在cell中的高度
-        BOOL isPad = [TTDeviceHelper isPadDevice];
-        float picWidth = isPad ? (width - 2 * kCellLeftPadding) : width;
-        
-        float imageHeight = [[self class] heightForImageWidth:model.width height:model.height constraintWidth:picWidth proportion:cellEntity.article.videoProportion];
-        cellEntity.imageHeight = ceil(imageHeight);
-    }
-    
-    return cellEntity ? cellEntity.imageHeight : 0;
-}
-
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -355,7 +320,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 - (void)adjustFrameOfSubviews
 {
     [self layoutPic];
-    _topMaskView.frame = CGRectMake(0, 0, self.logo.width, kTopMaskH);
+
     if (self.cellEntity.titleHeight < 1) {
         CGFloat height = [TTLabelTextHelper heightOfText:self.videoTitleLabel.text fontSize:[[self class] settedTitleFontSize] forWidth:[self getLogoWidth] - kVideoTitleX * 2 constraintToMaxNumberOfLines:2];
         self.cellEntity.titleHeight = height;
@@ -379,11 +344,9 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 
 - (void)layoutPic
 {
-    BOOL isPad = [TTDeviceHelper isPadDevice];
-    float left = isPad ? kCellLeftPadding : 0;
+    float left = 0;
     float picWidth = [self getLogoWidth];
     if (!self.cellEntity.imageHeight) {
-//        float imageHeight = [[self class] heightForImageWidth:self.logo.model.width height:self.logo.model.height constraintWidth:picWidth proportion:[self article].videoProportion];
         self.cellEntity.imageHeight = self.height;
     }
     self.logo.frame = CGRectMake(left, 0, picWidth, self.cellEntity.imageHeight);
@@ -391,65 +354,8 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 
 - (float)getLogoWidth {
     // 根据图片实际宽高设置其在cell中的高度
-    BOOL isPad = [TTDeviceHelper isPadDevice];
-    float picWidth = isPad ? (self.width - 2 * kCellLeftPadding) : self.width;
+    float picWidth = self.width;
     return picWidth;
-}
-
-
-#pragma mark - TTVPlayerDoubleTap666Delegate
-
-- (TTVDoubleTapDigType)ttv_doubleTapDigType {
-    if (!isEmptyString(self.cellEntity.originData.adIDStr)) {
-        return TTVDoubleTapDigTypeForbidDig;
-    }
-    if (self.cellEntity.originData.userBury) {
-        return TTVDoubleTapDigTypeAlreadyBury;
-    }
-    if (self.cellEntity.originData.userDigg) {
-        return TTVDoubleTapDigTypeAlreadyDig;
-    }
-    return TTVDoubleTapDigTypeCanDig;
-}
-
-- (void)ttv_doDigActionWhenDoubleTap:(TTVDoubleTapDigType)digType {
-    if (digType == TTVDoubleTapDigTypeForbidDig || digType == TTVDoubleTapDigTypeAlreadyBury) {
-        return;
-    }
-    NSMutableDictionary *pramas = [NSMutableDictionary dictionary];
-    if ([self.cellEntity.categoryId isEqualToString:kTTMainCategoryID]) {
-        [pramas setValue:@"click_headline" forKey:@"enter_from"];
-    }else{
-        [pramas setValue:@"click_category" forKey:@"enter_from"];
-    }
-    [pramas setValue:self.cellEntity.categoryId forKey:@"category_name"];
-    [pramas setValue:self.cellEntity.originData.groupModel.groupID forKey:@"group_id"];
-    [pramas setValue:self.cellEntity.originData.groupModel.itemID forKey:@"item_id"];
-    [pramas setValue:@"list" forKey:@"position"];
-    [pramas setValue:(self.playMovie.isFullScreen ? @"fullscreen" : @"notfullscreen") forKey:@"fullscreen"];
-    [pramas setValue:@"double_like" forKey:@"action_type"];
-    [TTTrackerWrapper eventV3:@"rt_like" params:pramas];
-    
-    int diggCount = self.cellEntity.originData.diggCount;
-    diggCount ++;
-    if (digType == TTVDoubleTapDigTypeCanDig) {
-        TTVideoArticleService *articleService = [[TTServiceCenter sharedInstance] getService:[TTVideoArticleService class]];
-        TTVideoDiggBuryParameter *parameter = [[TTVideoDiggBuryParameter alloc] init];
-        parameter.aggr_type = self.cellEntity.originData.aggrType;
-        parameter.item_id = self.cellEntity.originData.itemID;
-        parameter.group_id = self.cellEntity.originData.groupModel.groupID;
-        parameter.ad_id = self.cellEntity.originData.adIDNumber.longLongValue > 0 ? self.cellEntity.originData.adIDNumber.stringValue : nil;
-        NSString *unique_id = parameter.group_id ? parameter.group_id : parameter.ad_id;
-        @weakify(self);
-        [articleService digg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
-            @strongify(self);
-            if (error) {
-                return;
-            }
-            SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:YES uniqueIDStr:unique_id);
-            SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
-        }];
-    }
 }
 
 #pragma mark - helpers
@@ -462,24 +368,6 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         @strongify(self);
         [self.logo setImage:nil];
     }];
-}
-
-/**
- *  width:图片宽度 height:图片高度 cwidth:容器宽度 proportionControllable:宽高比是否可控 proportion:宽高比
- */
-
-+ (float)heightForImageWidth:(float)width height:(float)height constraintWidth:(float)cWidth proportion:(float)proportion
-{
-    if (proportion > 0.01) {//大于0.01做保护
-        CGFloat height = cWidth / proportion;
-        CGFloat maxHeight = ttvs_listVideoMaxHeight();
-        if (maxHeight > 0 && height > maxHeight) {
-            height = maxHeight;
-        }
-        height = ceilf(height);
-        return height;
-    }
-    return [ExploreCellHelper heightForVideoImageWidth:width height:height constraintWidth:cWidth];
 }
 
 static NSDictionary *fontSizes = nil;

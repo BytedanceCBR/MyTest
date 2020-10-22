@@ -277,7 +277,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 
 - (void)cellInListWillDisappear:(CellInListDisappearContextType)context
 {
-    if (self.movieView && self.movieView.superview && ![self.movieView isAdMovie]) {
+    if (self.movieView && self.movieView.superview) {
         if (!self.movieView.player.context.isFullScreen && !self.movieView.player.context.isRotating) {
             [self.movieView stop];
             self.movieView.hidden = YES;
@@ -289,23 +289,23 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
 
 - (void)movieViewPlayFinished
 {
-    if (![self.movieView isAdMovie]) {
+//    if (![self.movieView isAdMovie]) {
 //        if (!self.movieView.player.pasterPlayer.hasPasterAd) {
             // 没有后贴片直接将播放器移除和之前逻辑保持一致
             [self invalideMovieView];
 //        }
-    } else
-    {
-        if ([self.orderedData.raw_ad_data tta_boolForKey:@"auto_replay"]) {
-            //广告视频自动播放
-            [self.movieView.player setLogoImageViewHidden:YES];
-            [self.movieView.player play];
-            //针对循环播放将这个状态置回
-            self.movieView.player.playerStateStore.state.hasEnterDetail = NO;
-        }else{
-            self.picView.userInteractionEnabled = YES;
-        }
-    }
+//    } else
+//    {
+//        if ([self.orderedData.raw_ad_data tta_boolForKey:@"auto_replay"]) {
+//            //广告视频自动播放
+//            [self.movieView.player setLogoImageViewHidden:YES];
+//            [self.movieView.player play];
+//            //针对循环播放将这个状态置回
+//            self.movieView.player.playerStateStore.state.hasEnterDetail = NO;
+//        }else{
+//            self.picView.userInteractionEnabled = YES;
+//        }
+//    }
     
 }
 
@@ -514,17 +514,17 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     switch (state) {
         case TTVVideoPlaybackStateFinished:
         {
-            if ([self.movieView isAdMovie] && self.orderedData.trackSDK == 1) {
-                [[TTADVideoMZTracker sharedManager] mzStopTrack];
-            }
+//            if ([self.movieView isAdMovie] && self.orderedData.trackSDK == 1) {
+//                [[TTADVideoMZTracker sharedManager] mzStopTrack];
+//            }
             [self movieViewPlayFinished];
         }
             break;
         case TTVVideoPlaybackStatePlaying:
         {
-            if ([self.movieView isAdMovie] && self.orderedData.trackSDK == 1) {
-                [[TTADVideoMZTracker sharedManager] mzTrackVideoUrls:self.orderedData.adPlayTrackUrls adView:self.movieView];
-            }
+//            if ([self.movieView isAdMovie] && self.orderedData.trackSDK == 1) {
+//                [[TTADVideoMZTracker sharedManager] mzTrackVideoUrls:self.orderedData.adPlayTrackUrls adView:self.movieView];
+//            }
         }
             break;
         default:

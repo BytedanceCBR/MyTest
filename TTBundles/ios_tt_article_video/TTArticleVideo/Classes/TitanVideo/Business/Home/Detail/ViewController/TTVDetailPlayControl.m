@@ -139,28 +139,28 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     if (state == TTVVideoPlaybackStatePlaying) {
         self.movieBanner.hidden = YES;
         [self ttv_showPrePlayBtnWithBannerHeight:0];
-        if ([self.movieView isAdMovie] && self.enableTrackSDK == 1) {
-            if (self.detailStateStore.state.videoProgress > 0) {
-                //这里判断是否要根据跳转的参数seek到一个进度
-                [self.movieView.player seekVideoToProgress:self.detailStateStore.state.videoProgress complete:^(BOOL success) {
-                }];
-                self.detailStateStore.state.videoProgress = 0;
-            }
-            [[TTADVideoMZTracker sharedManager] mzTrackVideoUrls:orderData.adPlayTrackUrls adView:self.movieView];
-        }
+//        if ([self.movieView isAdMovie] && self.enableTrackSDK == 1) {
+//            if (self.detailStateStore.state.videoProgress > 0) {
+//                //这里判断是否要根据跳转的参数seek到一个进度
+//                [self.movieView.player seekVideoToProgress:self.detailStateStore.state.videoProgress complete:^(BOOL success) {
+//                }];
+//                self.detailStateStore.state.videoProgress = 0;
+//            }
+//            [[TTADVideoMZTracker sharedManager] mzTrackVideoUrls:orderData.adPlayTrackUrls adView:self.movieView];
+//        }
     } else if (state == TTVVideoPlaybackStateFinished) {
         self.movieBanner.hidden = NO;
         [self.movieBanner sendShowEvent];
-        if ([self.movieView isAdMovie]) {
-            if (self.enableTrackSDK == 1 && [TTADVideoMZTracker sharedManager].trackSDKView) {
-                [[TTADVideoMZTracker sharedManager] mzStopTrack];
-            }
-            if (self.movieView.playerModel.isLoopPlay) {
-                //广告视频自动播放
-                [self.movieView.player setLogoImageViewHidden:YES];
-                [self.movieView.player play];
-            }
-        }
+//        if ([self.movieView isAdMovie]) {
+//            if (self.enableTrackSDK == 1 && [TTADVideoMZTracker sharedManager].trackSDKView) {
+//                [[TTADVideoMZTracker sharedManager] mzStopTrack];
+//            }
+//            if (self.movieView.playerModel.isLoopPlay) {
+//                //广告视频自动播放
+//                [self.movieView.player setLogoImageViewHidden:YES];
+//                [self.movieView.player play];
+//            }
+//        }
         // 播放上一个按钮
         [self ttv_showPrePlayBtnWithBannerHeight:(self.movieBanner.hidden)? 0: self.movieBanner.height];
     }

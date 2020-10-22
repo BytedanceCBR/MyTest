@@ -2873,6 +2873,17 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
     [[NSNotificationCenter defaultCenter] postNotificationName:kExploreNeedStopAllMovieViewPlaybackNotification object:nil];
 }
 
++ (void)removeExploreMovieViewExcept:(UIView <TTMovieStoreAction> *)video
+{
+    
+//    [ExploreMovieView setCurrentVideoPlaying:NO];
+    
+    [TTVPlayVideo removeExcept:video];
+    //点击了别的视频，当前的view被remove掉
+//    [TTMovieViewCacheManager sharedInstance].currentPlayingVideoID = @"";
+    [[NSNotificationCenter defaultCenter] postNotificationName:kExploreNeedStopAllMovieViewPlaybackNotification object:nil];
+}
+
 + (void)stopAllExploreMovieView
 {
     
