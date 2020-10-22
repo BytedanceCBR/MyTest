@@ -68,16 +68,18 @@ static const char xorStr[] = "x1yNd0a2Z";
         }
     }
     
-//    if (longitude != 0 && longitude != 0) {
-//        requestParam[@"longitude"] = @(longitude);
-//        requestParam[@"latitude"] = @(latitude);
-//    }
-    
-    //通用参数使用as_id代替longitude和latitude
-    NSString *as_id = [self generateAsID:coordinate];
-    if (as_id && as_id.length) {
-        requestParam[@"as_id"] = as_id;
-        [self checkAsId:as_id coordinate:coordinate];
+    //【经纬度加密需求】通用参数使用as_id代替longitude和latitude, 使用f_setting.f_enable_longitude_in_common_params作为控制开关，默认策略是使用as_id
+    if ([[TTSettingsManager fSettings] btd_boolValueForKey:@"f_enable_longitude_in_common_params" default:NO]) {
+        if (longitude != 0 && longitude != 0) {
+            requestParam[@"longitude"] = @(longitude);
+            requestParam[@"latitude"] = @(latitude);
+        }
+    } else {
+        NSString *as_id = [self generateAsID:coordinate];
+        if (as_id && as_id.length) {
+            requestParam[@"as_id"] = as_id;
+            [self checkAsId:as_id coordinate:coordinate];
+        }
     }
 
     
