@@ -17,4 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHCornerCustomLabel : UILabel
+
+@property(nonatomic , assign) UIRectCorner corners;
+@property(nonatomic , assign) CGFloat cornerRadius;
+
+@end
+
 NS_ASSUME_NONNULL_END

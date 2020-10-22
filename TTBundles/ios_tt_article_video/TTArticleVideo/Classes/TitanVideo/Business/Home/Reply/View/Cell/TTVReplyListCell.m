@@ -31,6 +31,7 @@
 #import <TTThemed/TTThemeManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "UIColor+Theme.h"
+#import "ToastManager.h"
 
 NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
@@ -288,9 +289,10 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
         UIMenuController *menu = [UIMenuController sharedMenuController];
         UIMenuItem *copyItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"复制", nil) action:@selector(customCopy:)];
         UIMenuItem *reportItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"举报", nil) action:@selector(reportComment:)];
+        UIMenuItem *shieldItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"屏蔽", nil) action:@selector(shieldComment:)];
         if (copyItem) {
             self.menuItems = menu.menuItems;
-            menu.menuItems = @[copyItem, reportItem];
+            menu.menuItems = @[copyItem, reportItem, shieldItem];
         }
         [menu setTargetRect:self.contentLabel.frame inView:self.contentLabel.superview];
         [menu setMenuVisible:YES animated:YES];
@@ -316,7 +318,8 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
 
 - (BOOL)canPerformAction:(SEL)action withSender:(__unused id)sender {
     return (action == @selector(customCopy:) ||
-            action == @selector(reportComment:));
+            action == @selector(reportComment:)||
+            action == @selector(shieldComment:));
 }
 
 - (void)customCopy:(__unused id)sender {
@@ -344,6 +347,10 @@ NSString *const kTTVReplyListCellIdentifier = @"kTTVReplyListCellIdentifier";
         }
     }];
     
+}
+
+- (void)shieldComment:(__unused id)sender {
+    [[ToastManager manager] showToast:@"屏蔽成功"];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

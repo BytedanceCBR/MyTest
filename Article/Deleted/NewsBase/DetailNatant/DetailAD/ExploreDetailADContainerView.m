@@ -18,13 +18,13 @@
 #import "TTAppLinkManager.h"
 #import "TTRoute.h"
 #import "TTStringHelper.h"
-#import "TTTrackerProxy.h"
 #import "TTUIResponderHelper.h"
 #import "TTURLUtils.h"
 #import "ArticleDetailHeader.h"
 #import "NewsDetailConstant.h"
 #import <objc/message.h>
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 @interface ExploreDetailADContainerView ()
 
 @property(nonatomic, strong) NSMutableArray *adViews;
@@ -108,10 +108,8 @@ static NSMutableDictionary *_adClasses;
                 [events setValue:itemID forKey:@"item_id"];
                 [events setValue:obj.log_extra forKey:@"log_extra"];
                 [events setValue:@"1" forKey:@"is_ad_event"];
-                TTInstallNetworkConnection nt = [[TTTrackerProxy sharedProxy] connectionType];
-                [events setValue:@(nt) forKey:@"nt"];
 
-                wrapperTrackEventWithCustomKeys(@"detail_ad", @"show", obj.mediaID, nil, events);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"detail_ad" label:@"show" value:obj.mediaID source:nil extraDic:events];
             }
             else {
                 [obj sendTrackEventWithLabel:@"show" eventName:@"detail_ad"];
@@ -456,16 +454,14 @@ static NSMutableDictionary *_adClasses;
         [events setValue:itemID forKey:@"item_id"];
         [events setValue:adModel.log_extra forKey:@"log_extra"];
         [events setValue:@"1" forKey:@"is_ad_event"];
-        TTInstallNetworkConnection nt = [[TTTrackerProxy sharedProxy] connectionType];
-        [events setValue:@(nt) forKey:@"nt"];
 
-        wrapperTrackEventWithCustomKeys(@"detail_ad", @"click", adModel.mediaID, nil, events);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail_ad" label:@"click" value:adModel.mediaID source:nil extraDic:events];
         [adModel sendTrackEventWithLabel:@"detail_show" eventName:@"detail_ad"];
     } else {
         [adModel sendTrackEventWithLabel:@"click" eventName:@"detail_ad"];
     }
     if (self.isVideoAd) {
-        wrapperTrackEventWithCustomKeys(@"video", @"detail_selfad", [@(self.viewModel.article.uniqueID) stringValue], nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_selfad" value:[@(self.viewModel.article.uniqueID) stringValue] source:nil extraDic:nil];
     }
 }
 

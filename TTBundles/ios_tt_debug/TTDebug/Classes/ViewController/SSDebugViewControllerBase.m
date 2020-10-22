@@ -18,7 +18,6 @@
 #import "SSDebugDNSViewController.h"
 #import "DebugUmengIndicator.h"
 #import "SSDebugUserDefaultsViewController.h"
-#import "TTInstallIDManager.h"
 #import "TTIndicatorView.h"
 #import "TTThemedAlertController.h"
 #import "TTLocationManager.h"
@@ -40,7 +39,6 @@
 #import "TTStringHelper.h"
 
 #import "TTVideoTip.h"
-#import "TTLogServer.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
 
 //#import "SSADManager.h"

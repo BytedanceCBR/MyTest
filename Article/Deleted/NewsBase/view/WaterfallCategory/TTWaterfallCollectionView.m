@@ -34,6 +34,7 @@
 #import "TTNetworkMonitorTransaction.h"
 #import "SSCommon+UIApplication.h"
 #import "TTUIResponderHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kDefaultDismissDuration 2.0f
 #define kColumnSpacing 5
@@ -240,7 +241,7 @@ UIViewControllerErrorHandler>
         HuoShanTalentBanner *banner = (HuoShanTalentBanner *)(orderedData.originalData);
         
         if (!isEmptyString(banner.schemaUrl)) {
-            wrapperTrackEvent(@"go_detail", @"click_got_talent_banner");
+            [BDTrackerProtocol event:@"go_detail" label:@"click_got_talent_banner"];
             NSURL *url = [TTStringHelper URLWithURLString:banner.schemaUrl];
             
             if ([[TTRoute sharedRoute] canOpenURL:url]) {
@@ -503,7 +504,7 @@ UIViewControllerErrorHandler>
                                                  // 统计自动刷新
                                                  if (captureRefreshFromType == ListDataOperationReloadFromTypeAuto) {
                                                      NSString *label = [NSString stringWithFormat:@"refresh_enter_auto_%@", captureCategoryID];
-                                                     wrapperTrackEvent(@"category", label);
+                                                     [BDTrackerProtocol event:@"category" label:label];
                                                  }
                                                  
                                                  NSDictionary *remoteTipResult = [(NSDictionary *)[(NSDictionary *)[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"] objectForKey:@"tips"];
@@ -967,7 +968,7 @@ UIViewControllerErrorHandler>
             canOpenURL = YES;
             [[TTRoute sharedRoute] openURLByPushViewController:url];
             
-            wrapperTrackEventWithCustomKeys(@"go_detail", @"click_got_talent_video", gid, nil, extraInfo);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"go_detail" label:@"click_got_talent_video" value:gid source:nil extraDic:extraInfo];
         }
         else if ([[UIApplication sharedApplication] canOpenURL:url]) {
             canOpenURL = YES;
@@ -1025,7 +1026,7 @@ UIViewControllerErrorHandler>
     
     NSString *channelLabel = [self.categoryID isEqualToString:kTTMainCategoryID] ? @"newtab" : @"category";
     NSString *trackLabel = [NSString stringWithFormat:@"%@_%@_%@", channelLabel, (isLoadMore?@"load_more":@"refresh"), label];
-    wrapperTrackEvent(@"load_status", trackLabel);
+    [BDTrackerProtocol event:@"load_status" label:trackLabel];
     
 }
 

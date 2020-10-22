@@ -11,7 +11,6 @@
 #import "ExploreArticleCellViewConsts.h"
 #import "Article.h"
 #import "TTRoute.h"
-#import "TTInstallIDManager.h"
 #import "TTNetworkManager.h"
 #import "TTDeviceHelper.h"
 #import "TTStringHelper.h"

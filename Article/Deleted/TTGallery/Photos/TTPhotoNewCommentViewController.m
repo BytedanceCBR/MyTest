@@ -37,6 +37,7 @@
 #import "TTCommentViewControllerProtocol.h"
 #import "AKHelper.h"
 #import "FHTraceEventUtils.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define  KPhotoCommentTipViewHeight    55
 
@@ -243,7 +244,7 @@
         [params setValue:self.detailModel.orderedData.logPb forKey:@"log_pb"];
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
         [params setValue:self.detailModel.clickLabel forKey:@"enter_from"];
-        [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+        [BDTrackerProtocol eventV3:@"comment_undigg" params:params];
     } else {
         NSMutableDictionary *params = [[NSMutableDictionary alloc] initWithCapacity:5];
         [params setValue:@"house_app2c_v2" forKey:@"event_type"];
@@ -255,7 +256,7 @@
         [params setValue:self.detailModel.orderedData.categoryID forKey:@"category_name"];
         [params setValue:[FHTraceEventUtils generateEnterfrom:self.detailModel.orderedData.categoryID] forKey:@"enter_from"];
          [params setValue:@"comment" forKey:@"position"];
-        [TTTrackerWrapper eventV3:@"rt_like" params:params];
+        [BDTrackerProtocol eventV3:@"rt_like" params:params];
     }
 }
 
@@ -304,7 +305,7 @@
 {
     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
     [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
-    wrapperTrackEventWithCustomKeys(@"fold_comment", @"click", self.detailModel.article.groupModel.groupID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment" label:@"click" value:self.detailModel.article.groupModel.groupID source:nil extraDic:extra];
     NSMutableDictionary *condition = [[NSMutableDictionary alloc] init];
     [condition setValue:self.detailModel.article.groupModel.groupID forKey:@"groupID"];
     [condition setValue:self.detailModel.article.groupModel.itemID forKey:@"itemID"];
@@ -349,7 +350,7 @@
 - (void)_writeCommentActionFired:(id)sender {
     BOOL switchToEmojiInput = (sender == self.toolbarView.emojiButton);
     if (switchToEmojiInput) {
-        [TTTrackerWrapper eventV3:@"emoticon_click" params:@{
+        [BDTrackerProtocol eventV3:@"emoticon_click" params:@{
             @"status" : @"no_keyboard",
             @"source" : @"comment"
         }];

@@ -30,6 +30,7 @@
 
 #import "UIView+CustomTimingFunction.h"
 #import "UIButton+TTAdditions.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 NSString *const kCategoryManagerViewWillDisplayNotification     = @"kCategoryManagerViewWillDisplayNotification";
 //NSString *const kCategoryManagerViewWillHideNotification        = @"kCategoryManagerViewWillHideNotification";
@@ -457,7 +458,7 @@ NSString *const kCloseCategoryManagerViewNotification         = @"kCloseCategory
 
 - (void)editButtonClicked:(id)sender
 {
-    wrapperTrackEvent(@"channel_manage", _editing ? @"finish" : @"edit");
+    [BDTrackerProtocol event:@"channel_manage" label:_editing ? @"finish" : @"edit"];
     [self setEditing:!_editing];
 }
 
@@ -595,7 +596,7 @@ NSString *const kCloseCategoryManagerViewNotification         = @"kCloseCategory
             [self.containerView bringSubviewToFront:_longPressView];
             
             // 统计 - 长按进入编辑状态
-            wrapperTrackEvent(@"channel_manage", @"long_press");
+            [BDTrackerProtocol event:@"channel_manage" label:@"long_press"];
         }
     }
     else if(recognizer.state == UIGestureRecognizerStateCancelled || recognizer.state == UIGestureRecognizerStateEnded){
@@ -654,7 +655,7 @@ NSString *const kCloseCategoryManagerViewNotification         = @"kCloseCategory
                 }
                 
                 // 统计 - 拖曳频道排序
-                wrapperTrackEvent(@"channel_manage", @"subscribe_drag");
+                [BDTrackerProtocol event:@"channel_manage" label:@"subscribe_drag"];
             }
             
         }
@@ -1117,7 +1118,7 @@ NSString *const kCloseCategoryManagerViewNotification         = @"kCloseCategory
 
 - (void)closeClicked:(id)sender
 {
-    wrapperTrackEvent(@"channel_manage", @"close");
+    [BDTrackerProtocol event:@"channel_manage" label:@"close"];
     [self close];
 }
 
@@ -1139,11 +1140,11 @@ NSString *const kCloseCategoryManagerViewNotification         = @"kCloseCategory
         // 统计 - 非编辑状态，频道面板中，点击"我的频道"中的频道
         NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithCapacity:0];
         [extra setValue:[cell model].categoryID forKey:@"channel_name"];
-        wrapperTrackEventWithCustomKeys(@"channel_manage", @"click_mine", nil, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"channel_manage" label:@"click_mine" value:nil source:nil extraDic:extra];
         
         // 统计 - 在频道面板中点击“订阅”频道
         if ([[cell model].categoryID isEqualToString:kTTSubscribeCategoryID]) {
-            wrapperTrackEvent(@"subscription", @"enter_panel");
+            [BDTrackerProtocol event:@"subscription" label:@"enter_panel"];
         }
 //        cell.model.enterType = @"none";
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
@@ -1159,9 +1160,9 @@ NSString *const kCloseCategoryManagerViewNotification         = @"kCloseCategory
         [extraInfo setValue:cell.model.categoryID forKey:@"channel_name"];
         
         if ([cell model].subscribed) {
-            wrapperTrackEventWithCustomKeys(@"channel_manage", @"remove", nil, nil, extraInfo);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"channel_manage" label:@"remove" value:nil source:nil extraDic:extraInfo];
         } else {
-            wrapperTrackEventWithCustomKeys(@"channel_manage", @"click_more", nil, nil, extraInfo);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"channel_manage" label:@"click_more" value:nil source:nil extraDic:extraInfo];
         }
         
         [self reverseCategoryCellSubsribedStatus:cell];

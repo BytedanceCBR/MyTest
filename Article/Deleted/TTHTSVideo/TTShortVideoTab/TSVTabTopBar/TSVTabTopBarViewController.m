@@ -26,6 +26,7 @@
 #import "TSVRedPackPublishButton.h"
 #import "NewsBaseDelegate.h"
 #import "TTAccountLoginManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //#import "TTSFHelper.h"
 
 static const NSInteger kCategoryItemHeight = 44;
@@ -356,7 +357,7 @@ static NSString * const kTTNotificationNameRedpackIntroUpdated = @"kTTNotificati
 ////    if ([GET_SERVICE_BY_PROTOCOL(TTUGCPermissionService) shouldShowSpringShortVideoRedPackGuide]) {
 //        [self openSpringShortVideoTemplatePage];
 //    } else {
-        [TTTrackerWrapper eventV3:@"click_publisher_shortvideo_top" params:@{
+        [BDTrackerProtocol eventV3:@"click_publisher_shortvideo_top" params:@{
                                                                              @"tab_name": kTTUGCVideoCategoryID,
                                                                              @"category_name": [self.viewModel currentCategoryName],
                                                                              }];

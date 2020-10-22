@@ -26,6 +26,7 @@
 #import <TTNetworkUtil.h>
 #import "ExploreOrderedData+TTAd.h"
 #import <TTFollowManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define kLeftPadding 15
@@ -283,7 +284,7 @@
         [dict addEntriesFromDictionary:extraDic];
     }
 
-    [TTTrackerWrapper eventV3:event params:dict];
+    [BDTrackerProtocol eventV3:event params:dict];
 }
 
 - (void)willAppear {

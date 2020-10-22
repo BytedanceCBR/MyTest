@@ -10,7 +10,6 @@
 #import "NetworkUtilities.h"
 
 #import "TTLogClient.h"
-#import "TTInstallIDManager.h"
 
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "TTPersistence.h"
@@ -212,7 +211,7 @@ static NSString *const kTrackFaildURLFileName = @"ssADTrackFailedURLs.plist";
         deviceIdRange = [sendURLStr rangeOfString:@"__DUID__"];
     }
     if (deviceIdRange.location != NSNotFound) {
-        NSString *didStr = [[TTInstallIDManager sharedInstance] deviceID];
+        NSString *didStr = [BDTrackerProtocol deviceID];
         if (!isEmptyString(didStr)) {
             sendURLStr = [sendURLStr stringByReplacingCharactersInRange:deviceIdRange withString:didStr];
         }
@@ -239,7 +238,7 @@ static NSString *const kTrackFaildURLFileName = @"ssADTrackFailedURLs.plist";
         deviceIdRange = [sendURLStr rangeOfString:@"__UID__"];
     }
     if (deviceIdRange.location != NSNotFound) {
-        NSString *didStr = [[TTInstallIDManager sharedInstance] deviceID];
+        NSString *didStr = [BDTrackerProtocol deviceID];
         if (!isEmptyString(didStr)) {
             sendURLStr = [sendURLStr stringByReplacingCharactersInRange:deviceIdRange withString:didStr];
         }
@@ -298,7 +297,9 @@ static NSString *const kTrackFaildURLFileName = @"ssADTrackFailedURLs.plist";
     }
 
     NSString *trackDescription = [NSString stringWithFormat:@"TrackURL:%@", url.absoluteString];
-    [TTLogServer sendValueToLogServer:trackDescription parameters:@{@"color":@"ff0000"}];
+    
+    //使用最新的TTTracker可以去掉下面的代码
+//    [TTLogServer sendValueToLogServer:trackDescription parameters:@{@"color":@"ff0000"}];
 
     [[self.uploadSession dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSInteger statusCode = -1;

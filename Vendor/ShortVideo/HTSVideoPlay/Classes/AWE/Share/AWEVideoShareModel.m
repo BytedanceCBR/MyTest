@@ -161,10 +161,11 @@
             if (shareEnable.boolValue) {
                 
                 [secondArray addObject:[self favoriteContentItem]];
-                
+                [secondArray addObject:[self dislikeContentItem]];
+                [secondArray addObject:[self blockContentItem]];
                 if (![self.model.user.userId isEqualToString:[TTAccountManager userID]]) {
                     //自己发的小视频不支持保存视频、举报、保存视频、分享链接
-//                    [secondArray addObject:[self dislikeContentItem]];
+                    
                     [secondArray addObject:[self reportContentItem]];
 //                    [secondArray addObject:[self saveVideoContentItem]];
 //                    [secondArray addObject:[self copyContentItem]];
@@ -297,6 +298,12 @@
 {
     TTDislikeContentItem *dislikeContentItem = [[TTDislikeContentItem alloc] init];
     return dislikeContentItem;
+}
+
+- (TTBlockContentItem *)blockContentItem
+{
+    TTBlockContentItem *blockContentItem = [[TTBlockContentItem alloc] init];
+    return blockContentItem;
 }
 
 //- (TTSystemContentItem *)systemContentItem

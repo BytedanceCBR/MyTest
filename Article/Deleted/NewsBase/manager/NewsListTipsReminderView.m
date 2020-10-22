@@ -9,7 +9,7 @@
 #import "NewsListTipsReminderView.h"
 #import "NewsListLogicManager.h"
 #import "SSThemed.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface NewsListTipsReminderView()
 
@@ -180,7 +180,7 @@
     NewsListTipsReminderViewType type = [SSCommonLogic feedTipsShowStrategyType];
     NewsListTipsReminderViewColor color = [SSCommonLogic feedTipsShowStrategyColor];
     NSString *cID = self.categoryID;
-    [TTTrackerWrapper eventV3:@"new_style_tips_click" params:@{@"strategy":@(type), @"color":@(color), @"categoryID":cID}];
+    [BDTrackerProtocol eventV3:@"new_style_tips_click" params:@{@"strategy":@(type), @"color":@(color), @"categoryID":cID}];
 }
 
 - (void)refreshAndHide
@@ -250,7 +250,7 @@
                 NewsListTipsReminderViewType type = [SSCommonLogic feedTipsShowStrategyType];
                 NewsListTipsReminderViewColor color = [SSCommonLogic feedTipsShowStrategyColor];
                 NSString *cID = self.categoryID;
-                [TTTrackerWrapper eventV3:@"new_style_tips_show" params:@{@"strategy":@(type), @"color":@(color), @"categoryID":cID}];
+                [BDTrackerProtocol eventV3:@"new_style_tips_show" params:@{@"strategy":@(type), @"color":@(color), @"categoryID":cID}];
             }
         }
     }

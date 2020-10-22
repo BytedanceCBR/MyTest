@@ -177,7 +177,8 @@
         if (index >= 0 && index < [self.listController.houseTypeArray count]) {
             self.currentTabIndex = index;
             self.listController.segmentControl.selectedSegmentIndex = index;
-            self.listController.houseType = [self.listController.houseTypeArray[index] integerValue];
+//            self.listController.houseType = [self.listController.houseTypeArray[index] integerValue];
+            [self.listController scrollToIndex:index];
         }
     } else {
         //加载数据

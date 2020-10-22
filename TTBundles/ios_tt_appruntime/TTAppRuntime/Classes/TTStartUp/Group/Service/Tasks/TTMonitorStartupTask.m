@@ -8,7 +8,7 @@
 
 #import "TTMonitorStartupTask.h"
 #import "TTMonitor.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTDebugRealMonitorManager.h"
 
 #import "NewsBaseDelegate.h"
@@ -118,8 +118,8 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
     [self registerTransferService];
     [[TTMonitor shareManager] startWithAppkey:[SharedAppDelegate appKey] paramsBlock:^NSDictionary *{
         NSMutableDictionary * paramsDict = [[NSMutableDictionary alloc] init];
-        [paramsDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-        [paramsDict setValue:[[TTInstallIDManager sharedInstance] installID] forKey:@"install_id"];
+        [paramsDict setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
+        [paramsDict setValue:[BDTrackerProtocol installID] forKey:@"install_id"];
         return [paramsDict copy];
     }];
     if ([SSCommonLogic enableDebugRealMonitor]) {
@@ -189,8 +189,8 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
     injectedInfo.appID = [TTSandBoxHelper ssAppID];
     injectedInfo.appName = [TTSandBoxHelper appName];
     injectedInfo.channel = [TTSandBoxHelper getCurrentChannel];
-    injectedInfo.deviceID = [TTInstallIDManager sharedInstance].deviceID;
-    injectedInfo.installID = [TTInstallIDManager sharedInstance].installID;
+    injectedInfo.deviceID = BDTrackerProtocol.deviceID;
+    injectedInfo.installID = BDTrackerProtocol.installID;
     injectedInfo.userID = [[TTAccount sharedAccount] userIdString];
     injectedInfo.userName = [[[TTAccount sharedAccount] user] name];
     injectedInfo.commonParams = [TTNetworkManager shareInstance].commonParams;

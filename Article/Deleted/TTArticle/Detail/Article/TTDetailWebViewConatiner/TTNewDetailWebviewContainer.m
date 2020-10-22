@@ -30,6 +30,7 @@
 #import "TTUIResponderHelper.h"
 #import "TTKeyboardListener.h"
 #import "TTProfileFillManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kFooterDivKey @"toutiao_ios_footer_div"
 
@@ -600,7 +601,7 @@ static CGFloat kProfileFillBubbleHeight = 66.f;
             [_delegate processRequestOpenWebViewUseURL:requestURL supportRotate:NO];
         }
     }
-    wrapperTrackEvent(@"detail", @"open_url");
+    [BDTrackerProtocol event:@"detail" label:@"open_url"];
 }
 
 - (void)DOMContentHeightHasChangedWithRequset:(NSURL *)requestURL {
@@ -679,10 +680,10 @@ static CGFloat kProfileFillBubbleHeight = 66.f;
     
     if (originStatus != _footerStatus) {
         if (_footerStatus == TTDetailWebViewFooterStatusDisplayHalf && originStatus == TTDetailWebViewFooterStatusNoDisplay) {
-            wrapperTrackEvent(@"detail", @"pull_open_drawer");
+            [BDTrackerProtocol event:@"detail" label:@"pull_open_drawer"];
         }
         else if (_footerStatus == TTDetailWebViewFooterStatusNoDisplay && originStatus == TTDetailWebViewFooterStatusDisplayHalf) {
-            wrapperTrackEvent(@"detail", @"pull_close_drawer");
+            [BDTrackerProtocol event:@"detail" label:@"pull_close_drawer"];
         }
     }
     

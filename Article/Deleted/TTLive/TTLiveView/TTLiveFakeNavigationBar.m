@@ -32,12 +32,12 @@
 #import "TTLiveHeaderView.h"
 #import "TTImageView.h"
 #import "TTIconFontChatroomDefine.h"
-#import <TTTracker/TTTrackerProxy.h>
 #import "TTUIResponderHelper.h"
 #import "TTFollowThemeButton.h"
 #import "UIImage+Masking.h"
 #import "UIButton+SDAdapter.h"
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 extern NSString * const TTFollowSuccessForPushGuideNotification;
 
 @interface TTLiveFakeNavigationBar () <SSActivityViewDelegate>
@@ -809,10 +809,9 @@ static CGFloat realNavBarHeight = 44;
         NSMutableDictionary* dict = [NSMutableDictionary dictionary];
         [dict setValue:live.logExtra forKey:@"log_extra"];
         [dict setValue:live.liveId forKey:@"ext_value"];
-        [dict setValue:@([[TTTrackerProxy sharedProxy] connectionType]) forKey:@"nt"];
         [dict setValue:@"1" forKey:@"is_ad_event"];
         [dict setValue:live.liveStateNum forKey:@"live_status"];
-        wrapperTrackEventWithCustomKeys(@"embeded_ad", @"detail_to_feed", live.adId, nil, dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"detail_to_feed" value:live.adId source:nil extraDic:dict];
     }
     [[TTUIResponderHelper topNavigationControllerFor:self] popViewControllerAnimated:YES];
 }

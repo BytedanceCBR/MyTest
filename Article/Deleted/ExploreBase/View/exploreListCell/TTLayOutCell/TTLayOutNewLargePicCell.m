@@ -46,6 +46,7 @@
 #import "TTVPasterPlayer.h"
 
 #import "SSCommonLogic.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
@@ -924,7 +925,7 @@ extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
     [dictionary setValue:self.orderedData.logPb forKey:@"log_pb"];
     dictionary[@"event_type"] = @"house_app2c_v2";
 
-    [TTTrackerWrapper eventV3:eventName params:dictionary isDoubleSending:NO];
+    [BDTrackerProtocol eventV3:eventName params:dictionary isDoubleSending:NO];
 }
 
 - (NSString *)enterFrom{

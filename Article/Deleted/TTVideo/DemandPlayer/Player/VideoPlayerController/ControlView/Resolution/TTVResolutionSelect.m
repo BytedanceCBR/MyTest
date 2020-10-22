@@ -16,7 +16,7 @@
 #import "EXTScope.h"
 #import "EXTKeyPathCoding.h"
 #import "UIViewAdditions.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static const NSTimeInterval kAnimDuration = 0.35;
 
@@ -137,7 +137,7 @@ static const NSTimeInterval kAnimDuration = 0.35;
         [TTTrackerWrapper ttTrackEventWithCustomKeys:@"video" label:@"clarity_click" value:self.playerStateStore.state.playerModel.groupID source:nil extraDic:extra];
         NSMutableDictionary *dic = [self.playerStateStore.state ttv_logV3CommonDic];
         [dic setValue:[@(types.count) stringValue] forKey:@"num"];
-        [TTTrackerWrapper eventV3:@"video_clarity_click" params:dic isDoubleSending:YES];
+        [BDTrackerProtocol eventV3:@"video_clarity_click" params:dic isDoubleSending:YES];
     }
 
 }
@@ -168,7 +168,7 @@ static const NSTimeInterval kAnimDuration = 0.35;
         [TTTrackerWrapper ttTrackEventWithCustomKeys:@"video" label:@"clarity_select" value:self.playerStateStore.state.playerModel.groupID source:nil extraDic:extra];
         NSMutableDictionary *dic = [self.playerStateStore.state ttv_logV3CommonDic];
         [dic setValuesForKeysWithDictionary:extra];
-        [TTTrackerWrapper eventV3:@"video_clarity_select" params:dic isDoubleSending:YES];
+        [BDTrackerProtocol eventV3:@"video_clarity_select" params:dic isDoubleSending:YES];
     }
 }
 

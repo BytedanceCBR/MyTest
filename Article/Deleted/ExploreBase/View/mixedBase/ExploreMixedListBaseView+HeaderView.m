@@ -23,6 +23,7 @@
 #import "TTDeviceHelper.h"
 #import <objc/runtime.h>
 #import "TTSubEntranceBar.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface ExploreMixedListBaseView () <UIPopoverControllerDelegate>
 
@@ -148,7 +149,7 @@
 
 - (void)citySelectViewClicked:(id)sender
 {
-    wrapperTrackEvent(@"category_nav", @"select_city_enter");
+    [BDTrackerProtocol event:@"category_nav" label:@"select_city_enter"];
     if ([TTDeviceHelper isPadDevice]) {
         ArticleCityViewController *controller = [[ArticleCityViewController alloc] init];
         self.padCitySelectPopover = [[UIPopoverController alloc] initWithContentViewController:controller];
