@@ -537,6 +537,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
             if (continuePlaying) {
                 [self showPromotionIfNecessaryWithIndex:indexPath.item];
                 // 首次进入的播放
+                self.dataFetchManager.currentIndex = indexPath.row;
                 [self.currentVideoCell readyToPlay];
                 [self.currentVideoCell play];
                 [self didSwitchToCell:self.currentVideoCell];

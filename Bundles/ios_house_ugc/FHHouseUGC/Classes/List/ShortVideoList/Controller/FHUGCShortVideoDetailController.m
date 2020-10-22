@@ -292,6 +292,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         [self initReportOptions];
         [self initProperty];
         self.dataFetchManager = [[FHShortVideoDetailFetchManager alloc]init];
+        self.dataFetchManager.currentIndex= 0;
         self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
         self.dataFetchManager.categoryId = @"f_house_smallvideo_flow";
         if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
