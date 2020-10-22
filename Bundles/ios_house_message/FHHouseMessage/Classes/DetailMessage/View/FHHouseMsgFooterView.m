@@ -37,7 +37,7 @@
 }
 
 - (void)initViews {
-    self.backgroundColor = [UIColor whiteColor];
+    self.contentView.backgroundColor = [UIColor themeWhite];
     self.openAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_openAllBtn addTarget:self action:@selector(openAll) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_openAllBtn];

@@ -11,6 +11,10 @@
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 
+@interface FHHouseHeaderView()
+@property (nonatomic, strong) UIView *dateViewSection;
+@end
+
 @implementation FHHouseHeaderView
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -29,14 +33,21 @@
 
 - (void)initViews {
     
-    self.backgroundColor = [UIColor themeGray7];
-    self.contentView.backgroundColor = [UIColor whiteColor];
+    self.contentView.backgroundColor = [UIColor themeWhite];
+    
+    self.dateViewSection = [UIView new];
+    self.dateViewSection.backgroundColor = [UIColor themeGray7];
+    [self.contentView addSubview:self.dateViewSection];
+    [self.dateViewSection mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.equalTo(self.contentView);
+        make.height.mas_equalTo(50);
+    }];
     
     self.dateView = [[UIView alloc] init];
     _dateView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1];
     _dateView.layer.cornerRadius = 4;
     _dateView.layer.masksToBounds = YES;
-    [self.contentView addSubview:_dateView];
+    [self.dateViewSection addSubview:_dateView];
     [self.dateView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(20);
         make.height.mas_equalTo(20);
@@ -58,7 +69,7 @@
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(20);
         make.right.mas_equalTo(self.contentView).offset(-20);
-        make.top.mas_equalTo(self.contentView).offset(10);
+        make.top.mas_equalTo(self.dateViewSection.mas_bottom).offset(10);
         make.bottom.mas_equalTo(self.contentView).offset(-10);
     }];
     
