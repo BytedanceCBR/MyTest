@@ -15,7 +15,7 @@
 #import "HuoShan.h"
 #import "NetworkUtilities.h"
 #import "TTLayOutCellDataHelper.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "SSWebViewController.h"
 #import "TTStringHelper.h"
 #import "ArticleDetailHeader.h"
@@ -58,7 +58,6 @@
 #import "TTVideoTabBaseCellPlayControl.h"
 #import <TTBaseLib/JSONAdditions.h>
 #import "TTVAutoPlayManager.h"
-#import <TTTracker/TTTrackerProxy.h>
 //#import "TTCommonwealManager.h"
 #import "TTURLUtils.h"
 #import "TTRelevantDurationTracker.h"
@@ -331,7 +330,7 @@
                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(statParams)];
                 //针对广告不能通过sdk打开，但是传的有内部schema的情况
                 if(!isEmptyString(orderedData.ad_id)){
-                    wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", orderedData.ad_id, nil, applinkParams);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"open_url_h5" value:orderedData.ad_id source:nil extraDic:applinkParams];
                 }
             }
         }
@@ -354,7 +353,7 @@
                 detailURL = [detailURL stringByAppendingFormat:@"&ad_id=%@", orderedData.ad_id];
                 //针对不能通过sdk和openurl打开的情况
                 if (!isEmptyString(orderedData.openURL)) { //open_url存在,没有成功唤起app @muhuai
-                    wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", orderedData.ad_id, nil, applinkParams);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"open_url_h5" value:orderedData.ad_id source:nil extraDic:applinkParams];
                 }
             }
             
@@ -493,17 +492,15 @@
 
 + (void)trackRealTime:(ExploreOrderedData*)orderData extraData:(NSDictionary *)extraData
 {
-    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
     NSMutableDictionary* params = [NSMutableDictionary dictionary];
     [params setValue:@"umeng" forKey:@"category"];
     [params setValue:orderData.ad_id forKey:@"value"];
     [params setValue:@"realtime_ad" forKey:@"tag"];
     [params setValue:orderData.log_extra forKey:@"log_extra"];
     [params setValue:@"2" forKey:@"ext_value"];
-    [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
     [params addEntriesFromDictionary:[orderData realTimeAdExtraData:@"embeded_ad" label:@"click" extraData:extraData]];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 
@@ -608,7 +605,7 @@
 //    [logv3Dic setValue:[huoShanModel.userInfo objectForKey:@"user_id"] forKey:@"user_id"];
 //    [logv3Dic setValue:labelStr forKey:@"enter_from"];
 //    [logv3Dic setValue:orderedData.logPb forKey:@"log_pb"];
-//    [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
+//    [BDTrackerProtocol eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
 //
 //
 //    if (TTNetworkConnected()) {

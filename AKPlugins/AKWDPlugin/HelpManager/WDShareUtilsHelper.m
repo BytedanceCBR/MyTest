@@ -54,6 +54,7 @@
     else if (contentItemType == TTActivityContentItemTypeWechatTimeLine) {
         return DetailActionTypeWeixinShare;
     }
+  
 //    else if (contentItemType == TTActivityContentItemTypeWeibo) {
 //        return DetailActionTypeSystemShare; //微博之前无类型
 //    }

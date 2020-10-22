@@ -8,7 +8,7 @@
 #import "FHDebugTools.h"
 #import "MLeaksConfig.h"
 #import "MLeaksFinder.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation FHDebugTools
 
@@ -16,7 +16,7 @@
 - (void)configMemLeaks {
     NSString * appVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
-    NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
+    NSString *deviceId = [BDTrackerProtocol deviceID];
     NSString *didStr = [NSString stringWithFormat:@"Device ID:\n%@",deviceId];
     
     //设置过滤条件，一些系统的误报在这里添加过滤白名单，by xsm

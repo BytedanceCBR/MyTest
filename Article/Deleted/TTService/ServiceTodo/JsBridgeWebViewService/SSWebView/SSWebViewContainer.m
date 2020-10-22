@@ -25,8 +25,7 @@
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTUIWidget/UIView+Refresh_ErrorHandler.h>
-#import <TTTracker/TTTrackerProxy.h>
-#import <TTtracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTRoute/TTRoute.h>
 #import <TTSettingsManager/TTSettingsManager.h>
 
@@ -244,7 +243,7 @@
     
     if ([request.URL.scheme isEqualToString:@"sslocal"] && [request.URL.host isEqualToString:@"refresh_user_info"]) {
         // 登录
-        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_refresh_user_info"}];
+        [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_refresh_user_info"}];
         [TTAccountManager setIsLogin:YES];
         [TTAccountManager startGetAccountStatus:NO];
         
@@ -314,7 +313,7 @@
             self.tmpSaveImgURLString = nil;
         }
         else {
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_savephoto"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewcontainer_savephoto"}];
             [[TTNetworkManager shareInstance] requestForBinaryWithURL:_tmpSaveImgURLString params:nil method:@"GET" needCommonParams:NO callback:^(NSError *error, id obj) {
                 if (![obj isKindOfClass:[NSData class]]) {
                     return;
@@ -436,7 +435,7 @@
                 }
             }
         }
-        [TTTrackerWrapper eventData:dict];
+        [BDTrackerProtocol eventData:dict];
         
         // 这里要把这个变成空的，下次如果看到时间是空的，则不重新发送统计。
         self.startLoadDate = nil;
@@ -455,8 +454,6 @@
     [dict setValue:@"landing_page" forKey:@"label"];
     [dict setValue:self.adID forKey:@"value"];
     [dict setValue:@"1" forKey:@"is_ad_event"];
-    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
-    [dict setValue:@(connectionType) forKey:@"nt"];
 
     if (!isEmptyString(self.logExtra)) {
         [dict setValue:self.logExtra forKey:@"log_extra"];
@@ -528,7 +525,7 @@
     }
     [dict setValue:[ad_extra_data tt_JSONRepresentation] forKey:@"ad_extra_data"];
 
-    [TTTrackerWrapper eventData:dict];
+    [BDTrackerProtocol eventData:dict];
     
     // 这里要把这个变成空的，下次如果看到时间是空的，则不重新发送统计。
     self.startLoadDate = nil;
@@ -545,9 +542,7 @@
     [dict setValue:self.adID forKey:@"value"];
     [dict setValue:self.logExtra forKey:@"log_extra"];
     [dict setValue:@"1" forKey:@"is_ad_event"];
-    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
-    [dict setValue:@(connectionType) forKey:@"nt"];
-    [TTTrackerWrapper eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 - (UIScrollView *)scrollView {

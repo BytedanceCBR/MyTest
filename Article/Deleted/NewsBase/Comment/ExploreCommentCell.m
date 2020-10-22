@@ -29,6 +29,7 @@
 #import "UIImage+TTThemeExtension.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kAvatarViewSize             (([TTDeviceHelper isPadDevice]) ? 44 : 32)
 #define kAvatarRightPadding         15
@@ -396,7 +397,7 @@
             [_replyListView didClickReplyToMakeAction:^(TTCommentReplyModel *replyModel) {
                 if (wself.delegate && [wself.delegate respondsToSelector:@selector(commentViewCellBase:replyListClickedWithModel:)]) {
                     [wself.delegate commentViewCellBase:wself replyListClickedWithModel:wself.commentModel];
-                    wrapperTrackEvent(@"comment", @"enter_detail_comment");
+                    [BDTrackerProtocol event:@"comment" label:@"enter_detail_comment"];
                 }
             }];
             [_replyListView didClickReplyToViewUser:^(TTCommentReplyModel *replyModel) {
@@ -408,7 +409,7 @@
                 }
                 else {
                     if (wself.delegate && [wself.delegate respondsToSelector:@selector(commentViewCellBase:replyListClickedWithModel:)]) {
-                        wrapperTrackEvent(@"comment", @"enter_detail_comment");
+                        [BDTrackerProtocol event:@"comment" label:@"enter_detail_comment"];
                         [wself.delegate commentViewCellBase:wself replyListClickedWithModel:wself.commentModel];
                     }
                 }
@@ -532,13 +533,13 @@
 
 - (void)avatarViewClicked
 {
-    wrapperTrackEvent(@"comment", @"click_avatar");
+    [BDTrackerProtocol event:@"comment" label:@"click_avatar"];
     [self showAuthorProfile];
 }
 
 - (void)nameViewClicked
 {
-    wrapperTrackEvent(@"comment", @"click_name");
+    [BDTrackerProtocol event:@"comment" label:@"click_name"];
     [self showAuthorProfile];
 }
 
@@ -589,7 +590,7 @@
         [_actionManager startItemActionByType:DetailActionCommentDigg];
         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
         [dic setValue:_commentModel.commentID.stringValue forKey:@"ext_value"];
-        wrapperTrackEventWithCustomKeys(@"comment", @"digg_button", _commentModel.groupModel.groupID, nil, dic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"comment" label:@"digg_button" value:_commentModel.groupModel.groupID source:nil extraDic:dic];
     }
     else if (_commentModel.userDigged) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"您已经赞过", nil) indicatorImage:nil autoDismiss:YES dismissHandler:nil];
@@ -609,7 +610,7 @@
 
 - (void)commentButtonClicked
 {
-    wrapperTrackEvent(@"comment", @"click_comment");
+    [BDTrackerProtocol event:@"comment" label:@"click_comment"];
     if (_commentModel.isBlocking || _commentModel.isBlocked) {
         NSString * description = nil;
         if (_commentModel.isBlocked) {

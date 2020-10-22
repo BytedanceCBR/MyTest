@@ -10,6 +10,7 @@
 #import "ExploreArticleLianZaiCellView.h"
 #import "LianZai.h"
 #import "TTRoute.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation ExploreArticleLianZaiCell
 
@@ -26,7 +27,7 @@
         NSURL *lianzaiURL = [TTStringHelper URLWithURLString:lianzai.openURL];
         if ([[TTRoute sharedRoute] canOpenURL:lianzaiURL]) {
             [[TTRoute sharedRoute] openURLByPushViewController:lianzaiURL];
-            wrapperTrackEventWithCustomKeys(@"feed_novel", @"feed_novel_click", [NSString stringWithFormat:@"%@", lianzai.serialID], nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"feed_novel" label:@"feed_novel_click" value:[NSString stringWithFormat:@"%@", lianzai.serialID] source:nil extraDic:nil];
         }
     }
 

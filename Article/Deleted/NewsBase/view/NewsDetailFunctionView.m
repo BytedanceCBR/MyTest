@@ -15,6 +15,7 @@
 #import "TTThemeConst.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
 #import "TTUserSettings/TTUserSettingsManager+NetworkTraffic.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface NewsDetailFunctionView()<UIGestureRecognizerDelegate>
 
@@ -203,7 +204,7 @@
     UISwitch *nightModeSwitch = (UISwitch*)sender;
     ////// 统计是否是夜间模式
     NSString * eventID = (nightModeSwitch.on) ? @"click_to_night":@"click_to_day";
-    wrapperTrackEvent(_umengEventName, eventID);
+    [BDTrackerProtocol event:_umengEventName label:eventID];
     [[TTThemeManager sharedInstance_tt] switchThemeModeto:(nightModeSwitch.isOn ? TTThemeModeNight : TTThemeModeDay)];
     if (_dismissAfterChangeSetting) {
         [self dismiss];
@@ -230,7 +231,7 @@
     } else {
         eventID = fontArray[0];
     }
-    wrapperTrackEvent(_umengEventName, eventID);
+    [BDTrackerProtocol event:_umengEventName label:eventID];
     [TTUserSettingsManager setSettingFontSize:(int)segment.selectedSegmentIndex];
     
     if (_dismissAfterChangeSetting) {

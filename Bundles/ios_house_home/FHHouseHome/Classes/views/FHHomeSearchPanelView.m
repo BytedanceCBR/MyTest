@@ -18,6 +18,7 @@
 #import "UIImage+FIconFont.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
+#import "UIView+FHTracker.h"
 
 @interface FHHomeSearchPanelView()
 {
@@ -178,8 +179,10 @@
     tracerParams[@"enter_type"] = @"click";
     tracerParams[@"element_from"] = @"maintab_search";
     tracerParams[@"enter_from"] = @"maintab";
-    tracerParams[@"origin_from"] = @"maintab_search";
     
+    tracerParams[UT_ORIGIN_FROM] = self.fh_originFrom ? : @"maintab_search";
+    tracerParams[UT_FROM_PAGE_TYPE] = self.fh_pageType ? : @"be_null";
+            
     NSMutableDictionary *infos = [NSMutableDictionary new];
     infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);
     infos[@"tracer"] = tracerParams;

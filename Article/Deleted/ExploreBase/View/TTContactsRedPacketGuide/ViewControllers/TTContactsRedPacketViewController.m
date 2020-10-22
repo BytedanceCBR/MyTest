@@ -24,6 +24,7 @@
 #import "TTRecommendRedpacketAction.h"
 #import "TTContactsGuideManager.h"
 #import <TTFollowManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTContactsRedPacketViewController () <TTRedPacketBaseViewDelegate>
 
@@ -108,7 +109,7 @@
     if (self.type == TTContactsRedPacketViewControllerTypeRecommendRedpacket ||
         self.type == TTContactsRedPacketViewControllerTypeRecommendRedpacketNoLogin) {
         //猛推人二期埋点
-        [TTTrackerWrapper eventV3:@"red_button" params:@{
+        [BDTrackerProtocol eventV3:@"red_button" params:@{
             @"position" : @"list",
             @"action_type" : @"show",
             @"source" : @"all_follow_card",
@@ -199,14 +200,14 @@
     if (self.type == TTContactsRedPacketViewControllerTypeRecommendRedpacket ||
         self.type == TTContactsRedPacketViewControllerTypeRecommendRedpacketNoLogin) {
         //猛推人二期埋点
-        [TTTrackerWrapper eventV3:@"red_button" params:@{
+        [BDTrackerProtocol eventV3:@"red_button" params:@{
             @"position" : @"list",
             @"action_type" : @"close",
             @"source" : @"all_follow_card",
             @"category_name" : [self.trackDict tt_stringValueForKey:@"category_name"] ?: @""
         }];
     } else {
-        [TTTrackerWrapper eventV3:@"upload_contact_redpacket" params:@{@"action_type": @"close"}];
+        [BDTrackerProtocol eventV3:@"upload_contact_redpacket" params:@{@"action_type": @"close"}];
     }
 
 
@@ -235,14 +236,14 @@
     if (self.type == TTContactsRedPacketViewControllerTypeRecommendRedpacket ||
         self.type == TTContactsRedPacketViewControllerTypeRecommendRedpacketNoLogin) {
         //猛推人二期埋点
-        [TTTrackerWrapper eventV3:@"red_button" params:@{
+        [BDTrackerProtocol eventV3:@"red_button" params:@{
             @"position" : @"list",
             @"action_type" : @"open",
             @"source" : @"all_follow_card",
             @"category_name" : [self.trackDict tt_stringValueForKey:@"category_name"] ?: @""
         }];
     } else {
-        [TTTrackerWrapper eventV3:@"upload_contact_redpacket" params:@{@"action_type": @"open"}];
+        [BDTrackerProtocol eventV3:@"upload_contact_redpacket" params:@{@"action_type": @"open"}];
     }
 
     if (![TTAccountManager isLogin]) {
@@ -271,7 +272,7 @@
         [self.redPacketDetailView configWithViewModel:self.viewModel];
         [self.redPacketView performSelector:@selector(startTransitionAnimation) withObject:nil afterDelay:0.45];
 
-        [TTTrackerWrapper eventV3:@"red_button" params:@{
+        [BDTrackerProtocol eventV3:@"red_button" params:@{
             @"position" : @"list",
             @"action_type" : @"success",
             @"source" : @"all_follow_card",
@@ -346,7 +347,7 @@
                 }
             }
 
-            [TTTrackerWrapper eventV3:@"rt_follow" params:@{
+            [BDTrackerProtocol eventV3:@"rt_follow" params:@{
                 @"to_user_id_list": to_user_list ?: @"",
                 @"follow_type": @"others",
                 @"follow_num": @(userIds.count),
@@ -487,13 +488,13 @@
                 [dict setValue:@(1) forKey:@"is_redpacket"];
                 [dict setValue:[self.trackDict tt_stringValueForKey:@"relation_type"] forKey:@"relation_type"];
 
-                [TTTrackerWrapper eventV3:@"rt_follow" params:dict];
+                [BDTrackerProtocol eventV3:@"rt_follow" params:dict];
 
                 if (self.fromPush) {
                     [self performSelector:@selector(backgroundTurnGrey) withObject:nil afterDelay:0.45];
                 }
 
-                [TTTrackerWrapper eventV3:@"red_button" params:@{
+                [BDTrackerProtocol eventV3:@"red_button" params:@{
                     @"position" : @"list",
                     @"action_type" : @"success",
                     @"source" : @"all_follow_card",
@@ -512,7 +513,7 @@
             }
         }else if ([error.domain isEqualToString:kTTNetworkServerDataFormatErrorDomain]) {
             if (!isEmptyString([error.userInfo tt_stringValueForKey:@"description"])) {
-                [TTTrackerWrapper eventV3:@"red_button" params:@{
+                [BDTrackerProtocol eventV3:@"red_button" params:@{
                     @"position" : @"list",
                     @"action_type" : @"fail_over",
                     @"source" : @"all_follow_card",

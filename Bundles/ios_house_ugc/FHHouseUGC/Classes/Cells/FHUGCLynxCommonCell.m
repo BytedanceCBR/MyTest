@@ -13,7 +13,7 @@
 #import "FHLynxView.h"
 #import "FHLynxManager.h"
 #import "HMDTTMonitor.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 @interface FHUGCLynxCommonCell()<LynxViewClient>
 
 @property(nonatomic ,strong) UIView *bottomSepView;
@@ -206,7 +206,7 @@
 - (void)sendEvent:(NSString *)statusStr andError:(NSError *)error
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     [uploadParams setValue:error.description forKey:@"error"];
     [uploadParams setValue:statusStr forKey:@"status"];
@@ -216,7 +216,7 @@
 - (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
      [uploadParams setValue:@(time) forKey:@"lynx_page_duration"];
     [[HMDTTMonitor defaultManager] hmdTrackService:sevice metric:uploadParams category:nil extra:paramsExtra];

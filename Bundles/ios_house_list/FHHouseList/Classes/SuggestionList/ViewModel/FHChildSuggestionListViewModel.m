@@ -22,6 +22,7 @@
 #import "FHHouseListRecommendTipCell.h"
 #import "FHEnvContext.h"
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "FHSuggestionListViewController+FHTracker.h"
 
 @interface FHChildSuggestionListViewModel () <FHSugSubscribeListDelegate>
 
@@ -1299,6 +1300,7 @@
             wself.sugListData = model.data;
             [wself.listController.emptyView hideEmptyView];
             [wself reloadSugTableView];
+            [wself.listController.fatherVC trackSuggestionWithWord:query houseType:houseType result:model];
             // 埋点 associate_word_show
             [wself associateWordShow];
         } else {

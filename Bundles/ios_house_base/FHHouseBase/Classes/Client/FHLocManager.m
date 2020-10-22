@@ -21,7 +21,7 @@
 #import "NSTimer+NoRetain.h"
 #import "TTUIResponderHelper.h"
 #import "HMDTTMonitor.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTArticleCategoryManager.h"
 #import "FHHouseUGCAPI.h"
 #import "FHIntroduceManager.h"
@@ -349,7 +349,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
     BDUGLocationAppConfig *config = [[BDUGLocationAppConfig alloc] init];
     config.oversea = NO;
     config.appID = @"1370";
-    config.deviceID = [[TTInstallIDManager sharedInstance] deviceID];
+    config.deviceID = [BDTrackerProtocol deviceID];
     config.appVersion =  [FHEnvContext getToutiaoVersionCode];
     config.devicePlatform = @"iPhone";
     [BDUGLocationManager sharedManager].hostAppConfig = config;
@@ -403,7 +403,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         
         NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
         
-        [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+        [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
         
         NSInteger statusNum = 1;
         if (![self isHaveLocationAuthorization]) {
@@ -572,7 +572,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         
         NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
         
-        [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+        [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
         
         NSInteger statusNum = 1;
         if (![wSelf isHaveLocationAuthorization]) {

@@ -16,6 +16,7 @@
 #import "TTCommentReplyModel.h"
 #import "TTDeviceHelper.h"
 #import "TTNetworkManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface SSCommentManagerObject()
 @property(nonatomic, assign)BOOL requestRaiseError; //获取远端发生了错误
@@ -503,7 +504,7 @@
     
     // 统计 - 详情页detail，评论加载更多发送comment_loadmore
     NSString *tag = [_article isImageSubject]?@"slide_detail":@"detail";
-    wrapperTrackEvent(tag, @"comment_loadmore");
+    [BDTrackerProtocol event:tag label:@"comment_loadmore"];
 }
 
 - (void)forceCurrentObjectShouldLoadMore

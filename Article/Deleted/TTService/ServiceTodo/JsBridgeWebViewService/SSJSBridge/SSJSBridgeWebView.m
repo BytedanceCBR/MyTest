@@ -8,7 +8,7 @@
 
 #import "SSJSBridgeWebView.h"
 #import "SSJSBridgeWebViewDelegate.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTJSBAuthManager.h"
 #import "TTPlatformSwitcher.h"
 #import "SSWebViewUtil.h"
@@ -53,7 +53,7 @@ static NSString *const kJSBridgeScheme = @"bytedance";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.bridge unregisterAllHandlerBlocks];
     
-    [TTTrackerWrapper eventV3:@"webview_history_tracker" params:({
+    [BDTrackerProtocol eventV3:@"webview_history_tracker" params:({
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         [params setValue:_historyTracker forKey:@"pages"];
         [params copy];
@@ -281,7 +281,7 @@ static NSString *const kJSBridgeScheme = @"bytedance";
         }
     }
     
-    [TTTrackerWrapper eventData:parameters];
+    [BDTrackerProtocol eventData:parameters];
 }
 
 - (void)sendV3TrackDataFromQuery:(NSString *)query {
@@ -290,7 +290,7 @@ static NSString *const kJSBridgeScheme = @"bytedance";
     NSString *eventName = [[parameters tt_stringValueForKey:@"event"] URLDecodedString];
     NSDictionary *params = [[[parameters tt_stringValueForKey:@"params"] URLDecodedString] JSONValue];
     BOOL isDoubleSending = [parameters tt_boolValueForKey:@"is_double_sending"];
-    [TTTrackerWrapper eventV3:eventName params:params isDoubleSending:isDoubleSending];
+    [BDTrackerProtocol eventV3:eventName params:params isDoubleSending:isDoubleSending];
 }
 
 #pragma mark - day & font

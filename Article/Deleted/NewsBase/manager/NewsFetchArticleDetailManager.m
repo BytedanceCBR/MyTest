@@ -17,6 +17,7 @@
 #import "TTMonitor.h"
 #import "TTVideoArticleService.h"
 #import "TTVVideoArticle+Extension.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @implementation TTVFetchEntity
@@ -485,7 +486,7 @@ static NewsFetchArticleDetailManager * sharedManager;
 - (void)_sendArticleContentOrFullRequestTrackWithLabel:(NSString *)label
                                                   dict:(NSDictionary *)dict
 {
-    [TTTrackerWrapper category:@"article"
+    [BDTrackerProtocol category:@"article"
                   event:@"detail_load"
                   label:label
                    dict:dict];
@@ -753,7 +754,7 @@ static NewsFetchArticleDetailManager * sharedManager;
                 [dict setValue:uniqueID forKey:@"value"];
                 [dict setValue:@1 forKey:@"error_type"];
                 [dict setValue:@"nativeArticle with no content" forKey:@"error_msg"];
-                [TTTrackerWrapper category:@"article"
+                [BDTrackerProtocol category:@"article"
                               event:@"detail_load"
                               label:@"error"
                                dict:dict];

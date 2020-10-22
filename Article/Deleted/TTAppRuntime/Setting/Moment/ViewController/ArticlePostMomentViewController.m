@@ -30,6 +30,7 @@
 #import "UIColor+TTThemeExtension.h"
 #import "TTImagePicker.h"
 #import "UITextView+TTAdditions.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define NumberOfImagesPerRow 4
@@ -185,7 +186,7 @@
         return;
     }
     
-    wrapperTrackEvent(self.eventName, @"add_pic");
+    [BDTrackerProtocol event:self.eventName label:@"add_pic"];
     
     TTImagePickerController *picker = [[TTImagePickerController alloc] initWithDelegate:self];
     picker.maxImagesCount = self.selectionLimit - [self.selectedAssetsImages count];
@@ -233,11 +234,11 @@
 - (void)ttimagePickerController:(TTImagePickerController *)picker didFinishPickingPhotos:(NSArray<UIImage *> *)photos sourceAssets:(NSArray<TTAssetModel *> *)assets
 {
     if (photos.count == 0) {
-        wrapperTrackEvent(self.eventName, @"finish_none");
+        [BDTrackerProtocol event:self.eventName label:@"finish_none"];
         return;
     }
     
-    wrapperTrackEvent(self.eventName, @"finish");
+    [BDTrackerProtocol event:self.eventName label:@"finish"];
     
     for (TTAssetModel * assetModel in assets)
     {
@@ -254,7 +255,7 @@
 
 - (void)ttimagePickerController:(TTImagePickerController *)picker didFinishTakePhoto:(UIImage *)photo selectedAssets:(NSArray<TTAssetModel *> *)assets withInfo:(NSDictionary *)info
 {
-    wrapperTrackEvent(self.eventName, @"confirm_shoot");
+    [BDTrackerProtocol event:self.eventName label:@"confirm_shoot"];
     
     NSMutableArray *assetAarray = [[NSMutableArray alloc] initWithArray:assets];
     for (id obj in assetAarray) {
@@ -278,7 +279,7 @@
 // 选择器取消选择的回调
 - (void)ttImagePickerControllerDidCancel:(TTImagePickerController *)picker
 {
-    wrapperTrackEvent(self.eventName, @"cancel_shoot");
+    [BDTrackerProtocol event:self.eventName label:@"cancel_shoot"];
     [picker dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -317,7 +318,7 @@
     NSUInteger index = [self.selectedImageViews indexOfObject:sender];
     if (index != NSNotFound)
     {
-        wrapperTrackEvent(self.eventName, @"preview_photo");
+        [BDTrackerProtocol event:self.eventName label:@"preview_photo"];
         NSMutableArray * isSelecteds = [NSMutableArray arrayWithCapacity:[self.selectedAssetsImages count]];
         for (NSUInteger n = 0; n < [self.selectedAssetsImages count]; ++n)
         {
@@ -433,7 +434,7 @@ unsigned int g_postMomentMaxCharactersLimit = TextViewCharactersLimit;
 
 - (void)viewDidLoad
 {
-    wrapperTrackEvent(self.eventName, @"enter");
+    [BDTrackerProtocol event:self.eventName label:@"enter"];
     [super viewDidLoad];
     
     if ([self respondsToSelector:@selector(automaticallyAdjustsScrollViewInsets)]) {
@@ -583,17 +584,17 @@ unsigned int g_postMomentMaxCharactersLimit = TextViewCharactersLimit;
     [self.inputTextView resignFirstResponder];
     if (isEmptyString(self.inputTextView.text) && self.addImagesView.selectedAssetsImages.count == 0)
     {
-        wrapperTrackEvent(self.eventName, @"cancel_none");
+        [BDTrackerProtocol event:self.eventName label:@"cancel_none"];
         [self.manager cancelAllOperations];
         [self finish];
     }
     else
     {
-        wrapperTrackEvent(self.eventName, @"cancel");
+        [BDTrackerProtocol event:self.eventName label:@"cancel"];
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"确定退出？", nil) message:@"" preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithTitle:NSLocalizedString(@"取消", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
         [alert addActionWithTitle:NSLocalizedString(@"退出", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-            wrapperTrackEvent(self.eventName, @"cancel_confirm");
+            [BDTrackerProtocol event:self.eventName label:@"cancel_confirm"];
             [self.manager cancelAllOperations];
             [self finish];
         }];
@@ -639,13 +640,13 @@ unsigned int g_postMomentMaxCharactersLimit = TextViewCharactersLimit;
     }
     
     if (self.addImagesView.selectedAssetsImages.count == 0) {
-        wrapperTrackEvent(self.eventName, @"post");
+        [BDTrackerProtocol event:self.eventName label:@"post"];
     } else {
-        wrapperTrackEvent(self.eventName, @"post_pic");
+        [BDTrackerProtocol event:self.eventName label:@"post_pic"];
     }
     
     if (self.forwardButton.checked) {
-        wrapperTrackEvent(self.eventName, @"syn_update");
+        [BDTrackerProtocol event:self.eventName label:@"syn_update"];
     }
     
     __weak typeof(self) wself = self;
@@ -714,9 +715,9 @@ unsigned int g_postMomentMaxCharactersLimit = TextViewCharactersLimit;
     if (error)
     {
         if (self.addImagesView.selectedAssetsImages.count == 0) {
-            wrapperTrackEvent(self.eventName, @"post_fail");
+            [BDTrackerProtocol event:self.eventName label:@"post_fail"];
         } else {
-            wrapperTrackEvent(self.eventName, @"post_pic_fail");
+            [BDTrackerProtocol event:self.eventName label:@"post_pic_fail"];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -758,7 +759,7 @@ unsigned int g_postMomentMaxCharactersLimit = TextViewCharactersLimit;
     {
         if (buttonIndex != alertView.cancelButtonIndex)
         {
-            wrapperTrackEvent(self.eventName, @"cancel_confirm");
+            [BDTrackerProtocol event:self.eventName label:@"cancel_confirm"];
             [self.manager cancelAllOperations];
             [self finish];
         }

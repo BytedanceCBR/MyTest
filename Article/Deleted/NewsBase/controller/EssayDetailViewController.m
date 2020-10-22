@@ -22,6 +22,7 @@
 
 #import "TTRoute.h"
 #import <TTInteractExitHelper.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface EssayDetailViewController () <ExploreSearchViewDelegate,TTInteractExitProtocol>
 
@@ -105,7 +106,7 @@
         [self.view addSubview:self.essayDetailView];
     }
     
-    wrapperTrackEvent(@"essay_detail", [NSString stringWithFormat:@"enter_%@", _trackLabel]);
+    [BDTrackerProtocol event:@"essay_detail" label:[NSString stringWithFormat:@"enter_%@", _trackLabel]];
     
     [self initLeftBarButton];
     [self initRightBarButtons];
@@ -179,7 +180,7 @@
 
 - (void)p_showSearchViewController {
     UIView *navibar = [TTNavigationController refactorNaviEnabled]? self.parentViewController.ttNavigationBar: self.navigationController.navigationBar;
-    wrapperTrackEvent(@"search", @"detail_icon_essay");
+    [BDTrackerProtocol event:@"search" label:@"detail_icon_essay"];
     //动画分解
     //1.贴图
     //2.按钮隐藏

@@ -28,6 +28,7 @@
 //#import "TTRNBundleManager.h"
 #import "NSString+URLEncoding.h"
 #import "AKLoginTrafficViewController.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #define kTTSettingEntryCommonwealDidClicKey @"kTTSettingEntryCommonwealDidClicKey"
 #define pgcEntryKey @"pgc"
 
@@ -416,10 +417,10 @@
         [interceptedEntry clearHint];
     }
     if (!isEmptyString(interceptedEntry.key)) {
-        wrapperTrackEvent(@"mine_tab", interceptedEntry.key);
+        [BDTrackerProtocol event:@"mine_tab" label:interceptedEntry.key];
     }
     if ([interceptedEntry.key isEqualToString:@"mine_notification"]) {
-        wrapperTrackEvent(@"mine_tab", @"mine_msg");
+        [BDTrackerProtocol event:@"mine_tab" label:@"mine_msg"];
     }
 }
 
@@ -438,7 +439,7 @@
         entry.enter = ^(){
             
             if (![TTAccountManager isLogin]) {
-                wrapperTrackEvent(@"private_letter", @"click_logoff");
+                [BDTrackerProtocol event:@"private_letter" label:@"click_logoff"];
                 
                 if (weakEntry.hintCount > 0 && weakEntry.hintStyle == TTSettingHintStyleNumber) {
                     [[TTBadgeTrackerHelper class] trackTipsWithLabel:@"click" position:@"private_letter" style:@"num_tips"];
@@ -470,17 +471,17 @@
         entry.enter = ^(){
             
             if(![TTAccountManager isLogin]){
-                wrapperTrackEvent(@"message_list", @"click_logoff");
+                [BDTrackerProtocol event:@"message_list" label:@"click_logoff"];
                 [AKLoginTrafficViewController presentLoginTrafficViewControllerWithCompleteBlock:nil];
             }
             else{
                 if (weakEntry.isImportantMessage){
-                    wrapperTrackEventWithCustomKeys(@"message_list", @"click_with_vip",weakEntry.msgID, nil,kTTMessageNotificationTrackExtra(weakEntry.actionType));
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"message_list" label:@"click_with_vip" value:weakEntry.msgID source:nil extraDic:kTTMessageNotificationTrackExtra(weakEntry.actionType];
                 }
                 else if (weakEntry.hintCount > 0) {
-                    wrapperTrackEventWithCustomKeys(@"message_list", @"click_with_badge",nil, nil, kTTMessageNotificationTrackExtra(weakEntry.actionType));
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"message_list" label:@"click_with_badge" value:nil source:nil extraDic:kTTMessageNotificationTrackExtra(weakEntry.actionType];
                 }else {
-                    wrapperTrackEventWithCustomKeys(@"message_list", @"click_without_badge", nil, nil, kTTMessageNotificationTrackExtra(weakEntry.actionType));
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"message_list" label:@"click_without_badge" value:nil source:nil extraDic:kTTMessageNotificationTrackExtra(weakEntry.actionType];
                 }
                 [[TTMessageNotificationTipsManager sharedManager] clearTipsModel];
             
@@ -496,7 +497,7 @@
             } else {
                 [TTAccountManager presentQuickLoginFromVC:[TTUIResponderHelper topNavigationControllerFor:nil] type:TTAccountLoginDialogTitleTypeDefault source:@"" isPasswordStyle:YES completion:nil];
             }
-            wrapperTrackEvent(@"ad_register", @"mine_ad_register_clk");
+            [BDTrackerProtocol event:@"ad_register" label:@"mine_ad_register_clk"];
         };
     }
     else {
@@ -630,13 +631,13 @@
         if (changedSwitch) {
             [changedSwitch setOn:NO];
         }
-        wrapperTrackEvent(@"mine_tab", @"night_view_on");
+        [BDTrackerProtocol event:@"mine_tab" label:@"night_view_on"];
     }
     else {
         if (changedSwitch) {
             [changedSwitch setOn:YES];
         }
-        wrapperTrackEvent(@"mine_tab", @"night_view_off");
+        [BDTrackerProtocol event:@"mine_tab" label:@"night_view_off"];
     }
     
     if (![TTDeviceHelper isPadDevice]) {

@@ -12,7 +12,7 @@
 #import "NetworkUtilities.h"
 #import "TTIndicatorView.h"
 #import "SSCommonLogic.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "SSCheckbox.h"
 #import "TTThemedAlertController.h"
 #import "TTNavigationController.h"
@@ -244,7 +244,7 @@ static struct timeval commentTimeval;
     __weak typeof(self) wself = self;
     ArticleMobilePiplineCompletion sendLogic = ^(ArticleLoginState state){
         ////////////////// 友盟统计:
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"update_write_confirm", [_extraTrackDict objectForKey:@"value"], nil, _extraTrackDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"update_write_confirm" value:[_extraTrackDict objectForKey:@"value"] source:nil extraDic:_extraTrackDict];
         
         [wself publishCommentWithContextInfo:wself.contextInfo finishBlock:^(ArticleMomentCommentModel *model, NSError *error) {
             if (error) {

@@ -7,6 +7,7 @@
 //
 
 #import "TTBadgeTrackerHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation TTBadgeTrackerHelper
 
@@ -22,7 +23,7 @@
         [extra setValue:categoryID forKey:@"category_name"];
         [extra setValue:position forKey:@"position"];
         [extra setValue:style forKey:@"style"];
-        wrapperTrackEventWithCustomKeys(@"tips", label, nil, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"tips" label:label value:nil source:nil extraDic:extra];
     }
 }
 

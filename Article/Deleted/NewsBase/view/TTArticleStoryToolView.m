@@ -10,6 +10,7 @@
 #import "TTRoute.h"
 #import "UIButton+TTAdditions.h"
 #import "TTDeviceHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kToolViewHoriPadding    15.f
 #define kToolViewVertiPadding   12.f
@@ -199,7 +200,7 @@ typedef NS_ENUM(NSInteger, ToolItemType)
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setValue:_article.groupModel.itemID forKey:@"item_id"];
-    wrapperTrackEventWithCustomKeys(@"detail", label, _article.groupModel.groupID, nil, dict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:label value:_article.groupModel.groupID source:nil extraDic:dict];
 }
 
 - (NSString *)_jumpSchemaWithToolItemType:(ToolItemType)type

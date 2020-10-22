@@ -36,8 +36,8 @@
 #import "TTStringHelper.h"
 #import "TTUISettingHelper.h"
 #import <TTServiceKit/TTServiceCenter.h>
-#import <TTTracker/TTTrackerProxy.h>
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 // MARK: - TTADBaseCell
 /** 广告类型基类 */
 
@@ -651,17 +651,15 @@
 
 + (void)trackRealTime:(ExploreOrderedData*)orderData extraData:(NSDictionary *)extraData
 {
-    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
     NSMutableDictionary* params = [NSMutableDictionary dictionary];
     [params setValue:@"umeng" forKey:@"category"];
     [params setValue:orderData.ad_id forKey:@"value"];
     [params setValue:@"realtime_ad" forKey:@"tag"];
     [params setValue:orderData.log_extra forKey:@"log_extra"];
     [params setValue:@"2" forKey:@"ext_value"];
-    [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
     [params addEntriesFromDictionary:[orderData realTimeAdExtraData:@"embeded_ad" label:@"click" extraData:extraData]];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 

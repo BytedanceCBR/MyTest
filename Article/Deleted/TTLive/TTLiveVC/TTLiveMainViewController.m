@@ -43,6 +43,7 @@
 #import "TTLiveFoldableLayout.h"
 #import "TTImageView.h"
 #import "TTSurfaceManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kHeightOfTopFakeNavBar 64
 #define kHeightOfTopFakeNavBarMatch 74
@@ -1470,7 +1471,7 @@
     
     if ([TTTrackerWrapper isOnlyV3SendingEnable] && ([event isEqualToString:@"stay_live"] || [event isEqualToString:@"go_live"])) {
     } else {
-        wrapperTrackEventWithCustomKeys(event, label, self.overallModel.liveId, nil, extraDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:event label:label value:self.overallModel.liveId source:nil extraDic:extraDic];
     }
     
     // AppLog 3.0
@@ -1496,7 +1497,7 @@
         
         if (!eventV3) return;
         
-        [TTTrackerWrapper eventV3:eventV3 params:log3Dict isDoubleSending:YES];
+        [BDTrackerProtocol eventV3:eventV3 params:log3Dict isDoubleSending:YES];
     }
 }
 

@@ -4,10 +4,11 @@
 
 #import <Foundation/Foundation.h>
 #import "MAPointAnnotation.h"
+#import <IGListDiffKit/IGListDiff.h>
 //静态地图固定宽高比例
 extern const CGFloat kStaticMapHWRatio;
 
-@interface FHStaticMapAnnotation : MAPointAnnotation
+@interface FHStaticMapAnnotation : MAPointAnnotation<IGListDiffable>
 @property(nonatomic, copy) NSString *extra;
 @end
 

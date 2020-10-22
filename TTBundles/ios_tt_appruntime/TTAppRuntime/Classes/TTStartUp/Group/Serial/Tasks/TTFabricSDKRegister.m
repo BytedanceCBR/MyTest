@@ -8,7 +8,6 @@
 
 #import "TTFabricSDKRegister.h"
 #import "NewsBaseDelegate.h"
-#import "TTInstallIDManager.h"
 //#import "revision.h"
 
 #import "TTTrackerUtil.h"

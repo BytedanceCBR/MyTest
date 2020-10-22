@@ -17,6 +17,7 @@
 #import <UIDevice+BTDAdditions.h>
 #import "FHEnvContext.h"
 #import "HMSegmentedControl.h"
+#import "UIView+FHTracker.h"
 
 #define BTN_WIDTH  24
 #define BG_LAYER_HEIGHT 100
@@ -270,6 +271,9 @@
         tracerParams[@"enter_type"] = @"click";
         tracerParams[@"element_from"] = @"map_search";
         tracerParams[@"enter_from"] = @"map_search";
+        
+        tracerParams[UT_FROM_PAGE_TYPE] = self.fh_pageType ? : @"be_null";
+        tracerParams[UT_ORIGIN_FROM] = self.fh_originFrom ? : @"be_null";
         
         NSMutableDictionary *infos = [NSMutableDictionary new];
         infos[@"house_type"] = @(self.houseType);

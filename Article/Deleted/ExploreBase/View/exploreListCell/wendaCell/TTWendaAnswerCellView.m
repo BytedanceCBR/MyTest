@@ -38,6 +38,7 @@
 #import "TTKitchenHeader.h"
 #import <TTServiceKit/TTModuleBridge.h>
 #import "FriendDataManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 typedef NS_ENUM(NSInteger, WDImageViewTagPosition)
 {
@@ -1250,7 +1251,7 @@ typedef NS_ENUM(NSInteger, WDImageViewTagPosition)
 //                self.layoutModel.needCalculateLayout = YES;
 //                self.layoutModel.isExpanded = YES;
 //                NSString *categoryName = [self.categoryID length] > 0 ? self.categoryID : @"";
-//                [TTTrackerWrapper eventV3:@"follow_card" params:@{@"action_type":@"show",
+//                [BDTrackerProtocol eventV3:@"follow_card" params:@{@"action_type":@"show",
 //                                                                  @"category_name":categoryName,
 //                                                                  @"source": @"list",
 //                                                                  @"is_direct" : @(0)
@@ -1339,7 +1340,7 @@ typedef NS_ENUM(NSInteger, WDImageViewTagPosition)
         [dict addEntriesFromDictionary:extraDic];
     }
     [dict setValue:@"list" forKey:@"source"];
-    [TTTrackerWrapper eventV3:event params:dict];
+    [BDTrackerProtocol eventV3:event params:dict];
     if ([event isEqualToString:@"follow"] || [event isEqualToString:@"unfollow"]) { // "rt_follow" 关注动作统一化 埋点
         NSMutableDictionary* rtFollowDict = [NSMutableDictionary dictionaryWithObject:@"from_recommend" forKey:@"follow_type"];
         [rtFollowDict setValue:self.categoryID forKey:@"category_name"];
@@ -1352,9 +1353,9 @@ typedef NS_ENUM(NSInteger, WDImageViewTagPosition)
         [rtFollowDict setValue:[extraDic objectForKey:@"is_redpacket"] forKey:@"is_redpacket"];
         
         if ([event isEqualToString:@"follow"]) {
-            [TTTrackerWrapper eventV3:@"rt_follow" params:rtFollowDict];
+            [BDTrackerProtocol eventV3:@"rt_follow" params:rtFollowDict];
         } else {
-            [TTTrackerWrapper eventV3:@"rt_unfollow" params:rtFollowDict];
+            [BDTrackerProtocol eventV3:@"rt_unfollow" params:rtFollowDict];
         }
     }
 }

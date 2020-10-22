@@ -14,6 +14,7 @@
 #import "TTMovieFullscreenViewController.h"
 #import "TTModuleBridge.h"
 #import "ExploreOrderedData+TTAd.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation ExploreArticleMovieViewDelegate
 
@@ -53,7 +54,7 @@
                 detailURL = [detailURL stringByAppendingFormat:@"&ad_id=%@", aID];
             }
             //播放完成点击查看详情需要给embeded_id发click事件
-            wrapperTrackEvent(@"embeded_ad", @"click");
+            [BDTrackerProtocol event:@"embeded_ad" label:@"click"];
             [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:detailURL] userInfo:TTRouteUserInfoWithDict(statParams)];
         }
     }

@@ -35,6 +35,7 @@
 
 //爱看
 #import "AKHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define  KPhotoCommentTipViewHeight    55
 
@@ -301,7 +302,7 @@
 {
     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
     [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
-    wrapperTrackEventWithCustomKeys(@"fold_comment", @"click", self.detailModel.article.groupModel.groupID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment" label:@"click" value:self.detailModel.article.groupModel.groupID source:nil extraDic:extra];
     NSMutableDictionary *condition = [[NSMutableDictionary alloc] init];
     [condition setValue:self.detailModel.article.groupModel.groupID forKey:@"groupID"];
     [condition setValue:self.detailModel.article.groupModel.itemID forKey:@"itemID"];
@@ -356,7 +357,7 @@
 - (void)_writeCommentActionFired:(id)sender {
     BOOL switchToEmojiInput = (sender == self.toolbarView.emojiButton);
     if (switchToEmojiInput) {
-        [TTTrackerWrapper eventV3:@"emoticon_click" params:@{
+        [BDTrackerProtocol eventV3:@"emoticon_click" params:@{
             @"status" : @"no_keyboard",
             @"source" : @"comment"
         }];

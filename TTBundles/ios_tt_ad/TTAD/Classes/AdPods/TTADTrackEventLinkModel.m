@@ -7,7 +7,7 @@
 //
 
 #import "TTADTrackEventLinkModel.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "NSStringAdditions.h"
 #import <TTBaseLib/JSONAdditions.h>
 #import <TTBaseLib/TTBaseMacro.h>
@@ -83,7 +83,7 @@
     
     NSString *cid = self.adID ? self.adID : @"";
     
-    NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
+    NSString *did = [BDTrackerProtocol deviceID];
     did = did ? did : @"";
     
     NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
