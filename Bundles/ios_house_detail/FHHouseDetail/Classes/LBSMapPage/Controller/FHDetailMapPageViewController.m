@@ -11,7 +11,6 @@
 #import <AMapLocationKit/AMapLocationKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
-#import <MAMapKit/MAMapKit.h>
 #import <YYText/YYLabel.h>
 #import "TTDeviceHelper.h"
 #import "TTUIResponderHelper.h"

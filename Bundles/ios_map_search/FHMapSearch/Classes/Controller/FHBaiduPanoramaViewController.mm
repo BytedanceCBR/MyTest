@@ -8,14 +8,9 @@
 #import "FHBaiduPanoramaViewController.h"
 #import <F100BaiduMapKit/BaiduPanoUtils.h>
 #import <F100BaiduMapKit/BaiduPanoramaView.h>
-#import <F100BaiduMapKit/BMKBaseComponent.h>
-#import <F100BaiduMapKit/BMKMapComponent.h>
-#import <F100BaiduMapKit/BMKSearchComponent.h>
-#import <F100BaiduMapKit/BMKMapComponent.h>
-#import <F100BaiduMapKit/BMKUtilsComponent.h>
-
 #import <AMapSearchKit/AMapSearchKit.h>
-
+#import <MAMapKit/MAMapKit.h>
+#import <AMapFoundationKit/AMapFoundationKit.h>
 #import "TTSandBoxHelper.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <ByteDanceKit/NSString+BTDAdditions.h>
@@ -40,21 +35,6 @@ NSString * const FHAMapHospitalCode = @"090100";
 NSString * const FHAMapShoppingMallCode = @"060100";
 NSString * const FHAMapComplexCode = @"120300";
 
-
-@interface BMKPoiSearch (fh_property)
-@property (nonatomic, copy) NSString *fh_keyword;
-@end
-
-@implementation BMKPoiSearch (fh_property)
-- (void)setFh_keyword:(NSString *)fh_keyword {
-    objc_setAssociatedObject(self, FHBaiduPanoramaPOISearchResultKeyName, fh_keyword, OBJC_ASSOCIATION_COPY);
-}
-
-- (NSString *)fh_keyword {
-    return objc_getAssociatedObject(self, FHBaiduPanoramaPOISearchResultKeyName);
-}
-@end
-
 @interface AMapPOISearchBaseRequest (fh_property)
 
 @property (nonatomic, copy) NSString *fh_keyword;
@@ -72,8 +52,6 @@ NSString * const FHAMapComplexCode = @"120300";
 }
 
 @end
-
-
 
 @interface BaiduPanoImageOverlay (fh_property)
 
@@ -112,8 +90,7 @@ NSString * const FHAMapComplexCode = @"120300";
 
 @end
 
-@interface FHBaiduPanoramaViewController ()<BMKGeneralDelegate,BMKMapViewDelegate,BaiduPanoramaViewDelegate,BMKPoiSearchDelegate,BMKGeoCodeSearchDelegate,
-AMapSearchDelegate>
+@interface FHBaiduPanoramaViewController ()<AMapSearchDelegate, MAMapViewDelegate,BaiduPanoramaViewDelegate>
 
 @property (nonatomic, strong) UIView *topBar;
 @property (nonatomic, weak) UIButton *overlayButton;
@@ -122,12 +99,7 @@ AMapSearchDelegate>
 @property (nonatomic, weak) UIButton *originPositionButton;
 
 @property (nonatomic, strong) BaiduPanoramaView *panoramaView;
-
-@property (nonatomic, strong) BMKMapView *mapView;
-
-@property (nonatomic, strong) BMKMapManager *mapManager;
-
-
+@property (nonatomic, strong) MAMapView *amapView;
 @property (nonatomic, strong) AMapSearchAPI *searchApi;
 
 @property (nonatomic) double gaodeLat;
@@ -173,7 +145,6 @@ AMapSearchDelegate>
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if (self = [super initWithRouteParamObj:paramObj]) {
-        [self setupMapManager];
         
         _lastStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
         self.isResetStatusBar = NO;
@@ -208,32 +179,16 @@ AMapSearchDelegate>
     return _filterPoiList;
 }
 
-- (void)setupMapManager {
-    self.mapManager = [[BMKMapManager alloc] init];
-    BOOL ret = [_mapManager start:[self.class baiduAK] generalDelegate:self];
-    if (!ret) {
-        NSLog(@"baidu_start_fail");
-    }
-}
-
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     [self setupUI];
     [self setupTopBottomBar];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self.mapView viewWillAppear];
-    self.mapView.delegate = self;
-}
-
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    [self.mapView viewWillDisappear];
-    self.mapView.delegate = nil;
+    self.amapView.delegate = nil;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -298,26 +253,27 @@ AMapSearchDelegate>
         make.right.mas_equalTo(-5);
     }];
     
-    self.mapView = [[BMKMapView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds)-120, CGRectGetWidth(self.view.bounds), 120)];
-    self.mapView.delegate = self;
-    self.mapView.centerCoordinate = self.point;
-//    self.mapView.buildingsEnabled = NO;
-//    self.mapView.showMapPoi = NO;
-    self.mapView.rotateEnabled = NO;
-//    self.mapView.overlookEnabled = NO;
-//    self.mapView.showMapScaleBar = NO;
-    self.mapView.zoomLevel = 18;
-    [self.mapView setMapType:BMKMapTypeStandard];
-    self.mapView.layer.masksToBounds = YES;
-    self.mapView.layer.cornerRadius = 4.0;
-    [self.view addSubview:self.mapView];
-    [self.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
+    // Amap
+    self.amapView = [[MAMapView alloc] initWithFrame:CGRectMake(0,
+                                                                CGRectGetHeight(self.view.bounds)-120,
+                                                                CGRectGetWidth(self.view.bounds),
+                                                                120)];
+    self.amapView.delegate = self;
+    self.amapView.centerCoordinate = self.point;
+    self.amapView.rotateEnabled = NO;
+    self.amapView.zoomLevel = 18;
+    self.amapView.showsCompass = NO;
+    [self.amapView setMapType:MAMapTypeStandard];
+    self.amapView.layer.masksToBounds = YES;
+    self.amapView.layer.cornerRadius = 4.f;
+    [self.view addSubview:self.amapView];
+    [self.amapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.bottom.mas_equalTo(-40);
         make.width.mas_equalTo(42);
         make.height.mas_equalTo(42);
     }];
-    
+
     UIButton *originPositionButton = [UIButton buttonWithType:UIButtonTypeCustom];
     originPositionButton.backgroundColor = [UIColor whiteColor];
     originPositionButton.layer.masksToBounds = YES;
@@ -326,9 +282,10 @@ AMapSearchDelegate>
     [originPositionButton addTarget:self action:@selector(originPositionButtonAction) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:originPositionButton];
     self.originPositionButton = originPositionButton;
+    
     [self.originPositionButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
-        make.bottom.mas_equalTo(self.mapView.mas_top).mas_offset(-20);
+        make.bottom.mas_equalTo(self.amapView.mas_top).mas_offset(-20);
         make.size.mas_equalTo(CGSizeMake(42, 42));
     }];
     
@@ -339,19 +296,20 @@ AMapSearchDelegate>
     [headingButton addTarget:self action:@selector(headingButtonAction) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:headingButton];
     self.headingButton = headingButton;
+    
     [self.headingButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(47, 47));
-        make.centerX.mas_equalTo(self.mapView.mas_centerX);
-        make.centerY.mas_equalTo(self.mapView.mas_centerY);
+        make.centerX.mas_equalTo(self.amapView.mas_centerX);
+        make.centerY.mas_equalTo(self.amapView.mas_centerY);
     }];
-    
     
     UIButton *zoomButton = [UIButton buttonWithType:UIButtonTypeCustom];
     zoomButton.backgroundColor = [UIColor clearColor];
     [zoomButton setImage:[UIImage imageNamed:@"baidu_panorama_scale_icon"] forState:UIControlStateNormal];
     [zoomButton addTarget:self action:@selector(zoomButtonAction) forControlEvents:UIControlEventTouchUpInside];
     zoomButton.alpha = 0;
-    [self.mapView addSubview:zoomButton];
+//    [self.mapView addSubview:zoomButton];
+    [self.amapView addSubview:zoomButton];
     self.zoomButton = zoomButton;
     [self.zoomButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.size.mas_equalTo(CGSizeMake(50, 50));
@@ -376,21 +334,22 @@ AMapSearchDelegate>
         return;
     }
     self.point = [BaiduPanoUtils baiduCoorEncryptLon:self.gaodeLon lat:self.gaodeLat coorType:COOR_TYPE_COMMON];
-    self.mapView.zoomLevel = 18;
-    [self.mapView setCenterCoordinate:self.point animated:YES];
+    self.amapView.zoomLevel = 18;
+    [self.amapView setCenterCoordinate:self.point animated:YES];
     [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
 }
 
 - (void)zoomButtonAction {
     self.isZoomMapAnimation = YES;
     [UIView animateWithDuration:0.3 animations:^{
-        [self.mapView mas_updateConstraints:^(MASConstraintMaker *make) {
+        [self.amapView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
             make.bottom.mas_equalTo(-40);
             make.width.mas_equalTo(42);
             make.height.mas_equalTo(42);
         }];
-        self.mapView.layer.cornerRadius = 4.0;
+        self.amapView.layer.cornerRadius = 4.0;
+        
         self.zoomButton.alpha = .0;
         [self.view setNeedsLayout];
         [self.view layoutIfNeeded];
@@ -410,13 +369,14 @@ AMapSearchDelegate>
         bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
     [UIView animateWithDuration:0.3 animations:^{
-        [self.mapView mas_updateConstraints:^(MASConstraintMaker *make) {
+        [self.amapView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(0);
             make.bottom.mas_equalTo(0);
             make.width.mas_equalTo(width);
             make.height.mas_equalTo(120 + bottomInset);
         }];
-        self.mapView.layer.cornerRadius = .0;
+        self.amapView.layer.cornerRadius = .0;
+        
         self.zoomButton.hidden = NO;
         self.zoomButton.alpha = 1.0;
         [self.view setNeedsLayout];
@@ -427,12 +387,6 @@ AMapSearchDelegate>
 }
 
 - (void)overlayButtonAction {
-//    [self.panoramaView removeAllOverlay];
-//    [self.overlays removeAllObjects];
-//    [self addOverlays:self.testArray];
-//
-//    [self.testArray removeAllObjects];
-//    return;
     self.overlayButton.selected = !self.overlayButton.selected;
     [self.panoramaView setAllCustomOverlaysHidden:self.overlayButton.selected];
     [self.panoramaView setPoiOverlayHidden:self.overlayButton.selected];
@@ -462,23 +416,8 @@ AMapSearchDelegate>
     
     self.searchApi = [[AMapSearchAPI alloc] init];
     self.searchApi.delegate = self;
-    
+    AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
     for (NSString *keyword in @[@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"]) {
-//        BMKPoiSearch *poiSearch = [[BMKPoiSearch alloc] init];
-//        poiSearch.delegate = self;
-//        poiSearch.fh_keyword = keyword;
-//        BMKPOINearbySearchOption *option = [[BMKPOINearbySearchOption alloc] init];/// POI周边检索参数信息类
-//        option.keywords = @[keyword];
-//        option.location = self.point;
-//        option.radius = 1000;
-//        option.isRadiusLimit = YES;
-//        option.scope = BMK_POI_SCOPE_DETAIL_INFORMATION;
-//        option.pageIndex = 0;
-//        option.pageSize = 20;
-//        [poiSearch poiSearchNearBy:option];
-        
-        
-        AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
         requestPoi.fh_keyword = keyword;
         requestPoi.keywords = keyword;
         AMapGeoPoint *apoint = [AMapGeoPoint locationWithLatitude:self.point.latitude longitude:self.point.longitude];
@@ -490,129 +429,124 @@ AMapSearchDelegate>
     }
     
     if (!self.selectOverlay) {
-        BMKGeoCodeSearch *geoSearch = [[BMKGeoCodeSearch alloc] init];
-        geoSearch.delegate = self;
-        BMKReverseGeoCodeSearchOption *geoSearchOption = [[BMKReverseGeoCodeSearchOption alloc] init];
-        geoSearchOption.location = self.point;
-        geoSearchOption.isLatestAdmin = YES;
-        geoSearchOption.pageSize = 1;
-        geoSearchOption.pageNum = 0;
-        [geoSearch reverseGeoCode:geoSearchOption];
+        AMapReGeocodeSearchRequest *geoSearch = [[AMapReGeocodeSearchRequest alloc] init];
+        geoSearch.location = [AMapGeoPoint locationWithLatitude:self.point.latitude longitude:self.point.longitude];
+        [self.searchApi AMapReGoecodeSearch:geoSearch];
     }
 }
 
 static NSInteger overlayIndex = 0;
 
-- (void)handlePoiResult:(BMKPOISearchResult *)poiResult keyword:(NSString *)keyword{
-    dispatch_async(self.serialQueue, ^{
-        NSMutableArray *overlays = [NSMutableArray array];
-        for (BMKPoiInfo *poiInfo in poiResult.poiInfoList) {
-            if (!poiInfo.hasDetailInfo) {
-                if ([keyword isEqualToString:@"公交"]) {
-                    BMKPOIDetailInfo *detailIn = [[BMKPOIDetailInfo alloc] init];
-                    detailIn.type = @"bus";
-                    detailIn.tag = keyword;
-                    detailIn.distance = [self distanceBetweenOrderBy:self.point other:poiInfo.pt];
-                    poiInfo.detailInfo = detailIn;
-                } else {
-                    continue;
-                }
-            }
-            
-            BMKPOIDetailInfo *detailInfo = poiInfo.detailInfo;
-//            NSString *type = detailInfo.type;
-            if ([detailInfo.tag containsString:@"atm"]) {
-                continue;
-            }
-            if (!detailInfo.tag.length) {
-                //                [self.filterPoiList addObject:poiInfo];
-                continue;
-            }
-            if (detailInfo.distance < 10) {
-                continue;
-            }
-//            NSString *name = poiInfo.name;
-            NSString *typeName = keyword;
-            //tag
-
-            if (!typeName.length) {
-                if ([detailInfo.type isEqualToString:@"education"]) {
-                    typeName = @"教育";
-                } else if ([detailInfo.type isEqualToString:@"hospital"]) {
-                    typeName = @"医院";
-                } else if ([detailInfo.type isEqualToString:@"shopping"]) {
-                    typeName = @"商场";
-                } else if ([detailInfo.type isEqualToString:@"house"]) {
-                    typeName = @"小区";
-                } else if ([detailInfo.tag containsString:@"地铁"]) {
-                    typeName = @"地铁";
-                }
-            }
-            if (!typeName.length) {
-                continue;
-            }
-            if (self.limitDict[typeName]) {
-                NSInteger limit = [[self.limitDict objectForKey:typeName] integerValue];
-                if (limit >= 3) {
-                    continue;
-                }
-                //名称去重
-                __block NSUInteger index = NSNotFound;
-                [self.filterPoiList enumerateObjectsUsingBlock:^(BMKPoiInfo * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                    if ([obj.name isEqualToString:poiInfo.name]) {
-                        index = idx;
-                        *stop = YES;
-                    }
-                }];
-                if (index != NSNotFound) {
-                    continue;
-                }
-
-                limit += 1;
-                self.limitDict[typeName] = @(limit);
-            } else {
-                self.limitDict[typeName] = @(1);
-            }
-            [self.filterPoiList addObject:poiInfo];
-            
-            NSString *imageName = nil;
-            //@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"
-            if ([typeName isEqualToString:@"公交"]) {
-                imageName = @"baidu_overlay_type_bus";
-            } else if ([typeName isEqualToString:@"银行"]) {
-                imageName = @"baidu_overlay_type_bank";
-            }else if ([typeName isEqualToString:@"地铁"]) {
-                imageName = @"baidu_overlay_type_subway";
-            } else if ([typeName isEqualToString:@"教育"]) {
-                imageName = @"baidu_overlay_type_school";
-            } else if ([typeName isEqualToString:@"医院"]) {
-                imageName = @"baidu_overlay_type_hospital";
-            } else if ([typeName isEqualToString:@"商场"]) {
-                imageName = @"baidu_overlay_type_shop";
-            } else if ([typeName isEqualToString:@"小区"]) {
-                imageName = @"baidu_overlay_type_area";
-            }
-            
-            //type
-
-            overlayIndex += 1;
-            BaiduPanoImageOverlay *overlay = [[BaiduPanoImageOverlay alloc] init];
-            overlay.overlayKey = [@(overlayIndex) stringValue];
-            overlay.type = BaiduPanoOverlayTypeImage;
-            overlay.coordinate = poiInfo.pt;
-            overlay.height = 0;
-            overlay.fh_imageName = imageName;
-            overlay.fh_name = poiInfo.name;
-            overlay.fh_distance = detailInfo.distance;
-            [overlays addObject:overlay];
-        }
-        if (overlays.count) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self addOverlays:overlays.copy];
-            });
-        }
-    });
-}
+//- (void)handlePoiResult:(BMKPOISearchResult *)poiResult keyword:(NSString *)keyword{
+//    dispatch_async(self.serialQueue, ^{
+//        NSMutableArray *overlays = [NSMutableArray array];
+//        for (BMKPoiInfo *poiInfo in poiResult.poiInfoList) {
+//            if (!poiInfo.hasDetailInfo) {
+//                if ([keyword isEqualToString:@"公交"]) {
+//                    BMKPOIDetailInfo *detailIn = [[BMKPOIDetailInfo alloc] init];
+//                    detailIn.type = @"bus";
+//                    detailIn.tag = keyword;
+//                    detailIn.distance = [self distanceBetweenOrderBy:self.point other:poiInfo.pt];
+//                    poiInfo.detailInfo = detailIn;
+//                } else {
+//                    continue;
+//                }
+//            }
+//
+//            BMKPOIDetailInfo *detailInfo = poiInfo.detailInfo;
+////            NSString *type = detailInfo.type;
+//            if ([detailInfo.tag containsString:@"atm"]) {
+//                continue;
+//            }
+//            if (!detailInfo.tag.length) {
+//                //                [self.filterPoiList addObject:poiInfo];
+//                continue;
+//            }
+//            if (detailInfo.distance < 10) {
+//                continue;
+//            }
+////            NSString *name = poiInfo.name;
+//            NSString *typeName = keyword;
+//            //tag
+//
+//            if (!typeName.length) {
+//                if ([detailInfo.type isEqualToString:@"education"]) {
+//                    typeName = @"教育";
+//                } else if ([detailInfo.type isEqualToString:@"hospital"]) {
+//                    typeName = @"医院";
+//                } else if ([detailInfo.type isEqualToString:@"shopping"]) {
+//                    typeName = @"商场";
+//                } else if ([detailInfo.type isEqualToString:@"house"]) {
+//                    typeName = @"小区";
+//                } else if ([detailInfo.tag containsString:@"地铁"]) {
+//                    typeName = @"地铁";
+//                }
+//            }
+//            if (!typeName.length) {
+//                continue;
+//            }
+//            if (self.limitDict[typeName]) {
+//                NSInteger limit = [[self.limitDict objectForKey:typeName] integerValue];
+//                if (limit >= 3) {
+//                    continue;
+//                }
+//                //名称去重
+//                __block NSUInteger index = NSNotFound;
+//                [self.filterPoiList enumerateObjectsUsingBlock:^(BMKPoiInfo * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//                    if ([obj.name isEqualToString:poiInfo.name]) {
+//                        index = idx;
+//                        *stop = YES;
+//                    }
+//                }];
+//                if (index != NSNotFound) {
+//                    continue;
+//                }
+//
+//                limit += 1;
+//                self.limitDict[typeName] = @(limit);
+//            } else {
+//                self.limitDict[typeName] = @(1);
+//            }
+//            [self.filterPoiList addObject:poiInfo];
+//
+//            NSString *imageName = nil;
+//            //@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"
+//            if ([typeName isEqualToString:@"公交"]) {
+//                imageName = @"baidu_overlay_type_bus";
+//            } else if ([typeName isEqualToString:@"银行"]) {
+//                imageName = @"baidu_overlay_type_bank";
+//            }else if ([typeName isEqualToString:@"地铁"]) {
+//                imageName = @"baidu_overlay_type_subway";
+//            } else if ([typeName isEqualToString:@"教育"]) {
+//                imageName = @"baidu_overlay_type_school";
+//            } else if ([typeName isEqualToString:@"医院"]) {
+//                imageName = @"baidu_overlay_type_hospital";
+//            } else if ([typeName isEqualToString:@"商场"]) {
+//                imageName = @"baidu_overlay_type_shop";
+//            } else if ([typeName isEqualToString:@"小区"]) {
+//                imageName = @"baidu_overlay_type_area";
+//            }
+//
+//            //type
+//
+//            overlayIndex += 1;
+//            BaiduPanoImageOverlay *overlay = [[BaiduPanoImageOverlay alloc] init];
+//            overlay.overlayKey = [@(overlayIndex) stringValue];
+//            overlay.type = BaiduPanoOverlayTypeImage;
+//            overlay.coordinate = poiInfo.pt;
+//            overlay.height = 0;
+//            overlay.fh_imageName = imageName;
+//            overlay.fh_name = poiInfo.name;
+//            overlay.fh_distance = detailInfo.distance;
+//            [overlays addObject:overlay];
+//        }
+//        if (overlays.count) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [self addOverlays:overlays.copy];
+//            });
+//        }
+//    });
+//}
 
 - (void)handleAMapPoiResponse:(AMapPOISearchResponse *)poiResponse keyword:(NSString *)keyword {
     dispatch_async(self.serialQueue, ^{
@@ -876,7 +810,7 @@ static NSInteger overlayIndex = 0;
     NSLog(@"baidu_onGetPermissionState %d",iError);
 }
 
-#pragma mark - 全景回掉
+#pragma mark - 全景回调
 /**
  * @abstract 全景图将要加载
  * @param panoramaView 当前全景视图
@@ -926,7 +860,7 @@ static NSInteger overlayIndex = 0;
                     self.firstLoadPoint = self.point;
                 }
                 self.isZoomMapAnimation = YES;
-                [self.mapView setCenterCoordinate:self.point animated:YES];
+                [self.amapView setCenterCoordinate:self.point animated:YES];
             }
         }
     }
@@ -950,7 +884,7 @@ static NSInteger overlayIndex = 0;
         self.point = self.lastPoint;
         self.lastPoint = kCLLocationCoordinate2DInvalid;
         self.isZoomMapAnimation = YES;
-        [self.mapView setCenterCoordinate:self.point animated:YES];
+        [self.amapView setCenterCoordinate:self.point animated:YES];
         [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
     }
 }
@@ -974,7 +908,7 @@ static NSInteger overlayIndex = 0;
             self.lastPoint = self.point;
             self.point = overlay.coordinate;
             self.isZoomMapAnimation = YES;
-            [self.mapView setCenterCoordinate:self.point animated:YES];
+            [self.amapView setCenterCoordinate:self.point animated:YES];
             [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
             break;
         }
@@ -990,274 +924,19 @@ static NSInteger overlayIndex = 0;
 //    NSLog(@"baidu_panoramaViewdidReceivedMessage_heading:%f",heading);
 }
 
-/// MapView的Delegate，mapView通过此类来通知用户对应的事件
-#pragma mark - BMKMapViewDelegate
+#pragma mark - MAMapViewDelegate 高德地图回调
 /**
- *地图初始化完毕时会调用此接口
- *@param mapView 地图View
+ * @brief 地图区域改变完成后会调用此接口
+ * @param mapView 地图View
+ * @param animated 是否动画
  */
-- (void)mapViewDidFinishLoading:(BMKMapView *)mapView {
-//    NSLog(@"baidu_mapViewDidFinishLoading");
-}
-
-/**
- *地图绘制出有效数据时调用此接口
- *@param mapView 地图View
- *@param error 错误码
-*/
-- (void)mapViewDidRenderValidData:(BMKMapView *)mapView withError:(NSError *)error {
-//    NSLog(@"baidu_mapViewDidRenderValidData");
-}
-
-/**
- *地图渲染完毕后会调用此接口
- *@param mapView 地图View
- */
-- (void)mapViewDidFinishRendering:(BMKMapView *)mapView {
-    
-}
-
-/**
- *地图渲染每一帧画面过程中，以及每次需要重绘地图时（例如添加覆盖物）都会调用此接口
- *@param mapView 地图View
- *@param status 此时地图的状态
- */
-- (void)mapView:(BMKMapView *)mapView onDrawMapFrame:(BMKMapStatus*)status {
-    
-}
-
-/**
- *地图区域即将改变时会调用此接口
- *@param mapView 地图View
- *@param animated 是否动画
- */
-- (void)mapView:(BMKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
-    
-}
-
-/**
- *地图区域即将改变时会调用此接口
- *@param mapView 地图View
- *@param animated 是否动画
- *@param reason 地区区域改变的原因
- */
-- (void)mapView:(BMKMapView *)mapView regionWillChangeAnimated:(BOOL)animated reason:(BMKRegionChangeReason)reason {
-    
-}
-
-/**
- *地图区域改变完成后会调用此接口
- *@param mapView 地图View
- *@param animated 是否动画
- */
-- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
-//    NSLog(@"baidu_mapView_regionDidChangeAnimated");
-//    拿到地图更改的经纬度 更新全景视图，如果全景视图更新失败，回到原来位置
-    
-}
-
-/**
- *地图区域改变完成后会调用此接口
- *@param mapView 地图View
- *@param animated 是否动画
- *@param reason 地区区域改变的原因
- */
-- (void)mapView:(BMKMapView *)mapView regionDidChangeAnimated:(BOOL)animated reason:(BMKRegionChangeReason)reason {
+- (void)mapView:(MAMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
     if (self.isZoomMapAnimation) {
         self.isZoomMapAnimation = NO;
         return;
     }
     self.lastPoint = self.point;
     [self.panoramaView setPanoramaWithLon:mapView.centerCoordinate.longitude lat:mapView.centerCoordinate.latitude];
-}
-
-/**
- *根据anntation生成对应的View
- *@param mapView 地图View
- *@param annotation 指定的标注
- *@return 生成的标注View
- */
-//- (BMKAnnotationView *)mapView:(BMKMapView *)mapView viewForAnnotation:(id <BMKAnnotation>)annotation;
-
-/**
- *当mapView新添加annotation views时，调用此接口
- *@param mapView 地图View
- *@param views 新添加的annotation views
- */
-//- (void)mapView:(BMKMapView *)mapView didAddAnnotationViews:(NSArray *)views;
-
-/**
- *当点击一个annotation view时，调用此接口
- *每次点击BMKAnnotationView都会回调此接口。
- *@param mapView 地图View
- *@param view 点击的annotation view
- */
-//- (void)mapView:(BMKMapView *)mapView clickAnnotationView:(BMKAnnotationView *)view;
-
-/**
- *当选中一个annotation views时，调用此接口
- *当BMKAnnotation的title为nil，BMKAnnotationView的canShowCallout为NO时，不显示气泡，点击BMKAnnotationView会回调此接口。
- *当气泡已经弹出，点击BMKAnnotationView不会继续回调此接口。
- *@param mapView 地图View
- *@param view 选中的annotation views
- */
-//- (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view;
-
-/**
- *当取消选中一个annotation views时，调用此接口
- *@param mapView 地图View
- *@param view 取消选中的annotation views
- */
-//- (void)mapView:(BMKMapView *)mapView didDeselectAnnotationView:(BMKAnnotationView *)view;
-
-/**
- *拖动annotation view时，若view的状态发生变化，会调用此函数。ios3.2以后支持
- *@param mapView 地图View
- *@param view annotation view
- *@param newState 新状态
- *@param oldState 旧状态
- */
-//- (void)mapView:(BMKMapView *)mapView annotationView:(BMKAnnotationView *)view didChangeDragState:(BMKAnnotationViewDragState)newState fromOldState:(BMKAnnotationViewDragState)oldState;
-
-/**
- *当点击annotation view弹出的泡泡时，调用此接口
- *@param mapView 地图View
- *@param view 泡泡所属的annotation view
- */
-//- (void)mapView:(BMKMapView *)mapView annotationViewForBubble:(BMKAnnotationView *)view;
-
-/**
- *根据overlay生成对应的View
- *@param mapView 地图View
- *@param overlay 指定的overlay
- *@return 生成的覆盖物View
- */
-//- (BMKOverlayView *)mapView:(BMKMapView *)mapView viewForOverlay:(id <BMKOverlay>)overlay;
-
-/**
- *当mapView新添加overlay views时，调用此接口
- *@param mapView 地图View
- *@param overlayViews 新添加的overlay views
- */
-//- (void)mapView:(BMKMapView *)mapView didAddOverlayViews:(NSArray *)overlayViews;
-
-/**
- *点中覆盖物后会回调此接口，目前只支持点中BMKPolylineView时回调
- *@param mapView 地图View
- *@param overlayView 覆盖物view信息
- */
-//- (void)mapView:(BMKMapView *)mapView onClickedBMKOverlayView:(BMKOverlayView *)overlayView;
-
-/**
- *点中底图标注后会回调此接口
- *@param mapView 地图View
- *@param mapPoi 标注点信息
- */
-//- (void)mapView:(BMKMapView *)mapView onClickedMapPoi:(BMKMapPoi*)mapPoi;
-
-/**
- *点中底图空白处会回调此接口
- *@param mapView 地图View
- *@param coordinate 空白处坐标点的经纬度
- */
-//- (void)mapView:(BMKMapView *)mapView onClickedMapBlank:(CLLocationCoordinate2D)coordinate;
-
-/**
- *双击地图时会回调此接口
- *@param mapView 地图View
- *@param coordinate 返回双击处坐标点的经纬度
- */
-//- (void)mapview:(BMKMapView *)mapView onDoubleClick:(CLLocationCoordinate2D)coordinate;
-
-/**
- *长按地图时会回调此接口
- *@param mapView 地图View
- *@param coordinate 返回长按事件坐标点的经纬度
- */
-//- (void)mapview:(BMKMapView *)mapView onLongClick:(CLLocationCoordinate2D)coordinate;
-
-/**
- *3DTouch 按地图时会回调此接口（仅在支持3D Touch，且fouchTouchEnabled属性为YES时，会回调此接口）
- *@param mapView 地图View
- *@param coordinate 触摸点的经纬度
- *@param force 触摸该点的力度(参考UITouch的force属性)
- *@param maximumPossibleForce 当前输入机制下的最大可能力度(参考UITouch的maximumPossibleForce属性)
- */
-//- (void)mapview:(BMKMapView *)mapView onForceTouch:(CLLocationCoordinate2D)coordinate force:(CGFloat)force maximumPossibleForce:(CGFloat)maximumPossibleForce;
-
-/**
- *地图状态改变完成后会调用此接口
- *@param mapView 地图View
- */
-//- (void)mapStatusDidChanged:(BMKMapView *)mapView;
-
-/**
- *地图进入/移出室内图会调用此接口
- *@param mapView 地图View
- *@param flag  YES:进入室内图; NO:移出室内图
- *@param info 室内图信息
- */
-//- (void)mapview:(BMKMapView *)mapView baseIndoorMapWithIn:(BOOL)flag baseIndoorMapInfo:(BMKBaseIndoorMapInfo *)info;
-
-///搜索delegate，用于获取搜索结果
-#pragma mark - BMKPoiSearchDelegate
-/**
- *返回POI搜索结果
- *@param searcher 搜索对象
- *@param poiResult 搜索结果列表
- *@param errorCode 错误号，@see BMKSearchErrorCode
- */
-- (void)onGetPoiResult:(BMKPoiSearch*)searcher result:(BMKPOISearchResult*)poiResult errorCode:(BMKSearchErrorCode)errorCode {
-//    NSLog(@"baidu_onGetPoiResult");
-    [self handlePoiResult:poiResult keyword:[searcher fh_keyword]];
-    if (errorCode != BMK_SEARCH_NO_ERROR) {
-        //上报"api_error"
-    }
-}
-
-/**
- *返回POI详情搜索结果
- *@param searcher 搜索对象
- *@param poiDetailResult 详情搜索结果
- *@param errorCode 错误号，@see BMKSearchErrorCode
- */
-- (void)onGetPoiDetailResult:(BMKPoiSearch*)searcher result:(BMKPOIDetailSearchResult*)poiDetailResult errorCode:(BMKSearchErrorCode)errorCode {
-//    NSLog(@"baidu_onGetPoiDetailResult");
-}
-
-/**
- *返回POI室内搜索结果
- *@param searcher 搜索对象
- *@param poiIndoorResult 搜索结果列表
- *@param errorCode 错误号，@see BMKSearchErrorCode
- */
-//- (void)onGetPoiIndoorResult:(BMKPoiSearch*)searcher result:(BMKPOIIndoorSearchResult*)poiIndoorResult errorCode:(BMKSearchErrorCode)errorCode;
-
-///搜索delegate，用于获取搜索结果
-#pragma mark - BMKGeoCodeSearchDelegate
-/**
- *返回地址信息搜索结果
- *@param searcher 搜索对象
- *@param result 搜索结果
- *@param error 错误号，@see BMKSearchErrorCode
- */
-//- (void)onGetGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKGeoCodeSearchResult *)result errorCode:(BMKSearchErrorCode)error;
-
-/**
- *返回反地理编码搜索结果
- *@param searcher 搜索对象
- *@param result 搜索结果
- *@param error 错误号，@see BMKSearchErrorCode
- */
-- (void)onGetReverseGeoCodeResult:(BMKGeoCodeSearch *)searcher result:(BMKReverseGeoCodeSearchResult *)result errorCode:(BMKSearchErrorCode)error {
-//    NSLog(@"baidu_onGetReverseGeoCodeResult: %@ %@ %@ %@",result.address,result.businessCircle,result.addressDetail.streetName,result.sematicDescription);
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (result.addressDetail.streetName.length) {
-            self.customNavBarView.title.text = result.addressDetail.streetName;
-        } else {
-            self.customNavBarView.title.text = @"未知路段";
-        }
-    });
 }
 
 #pragma mark - AMapSearchDelegate
@@ -1269,6 +948,20 @@ static NSInteger overlayIndex = 0;
  */
 - (void)onPOISearchDone:(AMapPOISearchBaseRequest *)request response:(AMapPOISearchResponse *)response {
     [self handleAMapPoiResponse:response keyword:[request fh_keyword]];
+}
+/**
+ * @brief 逆地理编码查询回调函数
+ * @param request  发起的请求，具体字段参考 AMapReGeocodeSearchRequest 。
+ * @param response 响应结果，具体字段参考 AMapReGeocodeSearchResponse 。
+ */
+- (void)onReGeocodeSearchDone:(AMapReGeocodeSearchRequest *)request response:(AMapReGeocodeSearchResponse *)response {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (response.regeocode.formattedAddress.length) {
+            self.customNavBarView.title.text = response.regeocode.formattedAddress;
+        } else {
+            self.customNavBarView.title.text = @"未知路段";
+        }
+    });
 }
 
 /**
