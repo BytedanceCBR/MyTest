@@ -87,6 +87,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     self.cacheClickIds = [NSMutableArray new];
     self.cacheSimilarIdsDict = [NSMutableDictionary new];
     self.cahceHouseRankidsDict = [NSMutableDictionary new];
+    self.traceFirstScreenNeedUploadCache = [NSMutableArray new];
     
     self.isRetryedPullDownRefresh = NO;
     self.hasMore = YES;
@@ -720,6 +721,10 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
           }
        }
    }
+    
+    if (scrollView == self.tableView) {
+        NSLog(@"");
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -1021,10 +1026,27 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             dic[@"element_from"] = @"maintab_list";
             cellModel.tracerDict = [dic copy];
             
+
+            
             if (tracerDict && !self.isOriginShowSelf) {
                 [self.traceNeedUploadCache addObject:tracerDict];
             }else
             {
+                
+                if (indexPath.row < 10) {
+                    CGFloat safeTop = 20;
+                    if (@available(iOS 11.0, *)) {
+                        safeTop = [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].top;
+                    }
+                    CGFloat topHeight = 44 + (safeTop == 0 ? 20 : safeTop);
+                    CGRect rectInTableView = [tableView rectForRowAtIndexPath:indexPath];
+                    CGRect rectInWindow = [tableView convertRect:rectInTableView toView:[tableView superview]];
+                    CGFloat targetOriginY = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType] + topHeight + rectInWindow.origin.y + kFHHomeHouseItemHeight + kFHHomeSearchbarHeight;
+                    if (targetOriginY < [UIScreen mainScreen].bounds.size.height) {
+                        NSLog(@"index house show=%ld rectInTableView.y=%f rectInWindow.y=%f device.height=%f",indexPath.row, rectInTableView.origin.y,targetOriginY ,[UIScreen mainScreen].bounds.size.height);
+                    }
+                }
+                
                 [FHEnvContext recordEvent:tracerDict andEventKey:@"house_show"];
             }
         }
