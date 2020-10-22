@@ -370,19 +370,24 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)refreshCurrentModel
 {
-    //清理上一个视频的状态
-    [self endLastImpression];
-    [self.currentVideoCell stop];
-    [self sendVideoOverTracking];
-    [self sendStayPageTracking];
     
-    [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:self.dataFetchManager.currentIndex inSection:0]]];
-    self.currentIndexPath = nil;
+    [self.currentVideoCell stop];
+    [self.currentVideoCell reset];
+    [self.currentVideoCell resetPlayerModel];
     self.currentVideoCell = nil;
-    [self playCurrentVideoIfAllowed];
-    //重新开始记录impression 和 stay_page
-    [self beginFirstImpression];
-    [self.tracker flushStayPageTime];
+//    //清理上一个视频的状态
+//    [self endLastImpression];
+//    [self.currentVideoCell stop];
+//    [self sendVideoOverTracking];
+//    [self sendStayPageTracking];
+//
+//    [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:self.dataFetchManager.currentIndex inSection:0]]];
+//    self.currentIndexPath = nil;
+//    self.currentVideoCell = nil;
+//    [self playCurrentVideoIfAllowed];
+//    //重新开始记录impression 和 stay_page
+//    [self beginFirstImpression];
+//    [self.tracker flushStayPageTime];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -901,9 +906,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                     [self sendVideoOverTracking];
                     [self sendStayPageTracking];
                     self.firstPageShown = YES;
-                    [self.currentVideoCell stop];
-                    [self.currentVideoCell reset];
-                    self.currentVideoCell = nil;
+                    [self refreshCurrentModel];
                     self.dataFetchManager.currentIndex = itemIndex;
                     self.currentVideoCell = cell;
                     self.currentIndexPath = newIndexPath;

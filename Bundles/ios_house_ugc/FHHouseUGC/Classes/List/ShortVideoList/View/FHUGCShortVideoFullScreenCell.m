@@ -224,6 +224,11 @@
 - (void)cellWillDisplay {
     
 }
+
+- (void)resetPlayerModel {
+    TTVPlayerModel *model = [[TTVPlayerModel alloc] init];
+    [self.playerView resetPlayerModel:model];
+}
 #pragma mark TTVDemandPlayerDelegate
 
 - (void)willMoveToSuperview:(UIView *)newSuperview
