@@ -14,6 +14,8 @@
 #import <F100BaiduMapKit/BMKMapComponent.h>
 #import <F100BaiduMapKit/BMKUtilsComponent.h>
 
+#import <AMapSearchKit/AMapSearchKit.h>
+
 #import "TTSandBoxHelper.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <ByteDanceKit/NSString+BTDAdditions.h>
@@ -26,8 +28,18 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 
+
 char *const FHBaiduPanoramaPOISearchResultKeyName = "FHBaiduPanoramaPOISearchResultKeyName";
 char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchResultTypeName";
+//高德POI类型 POI相关文档： https://lbs.amap.com/api/ios-sdk/guide/map-data/poi
+NSString * const FHAMapSubwayCode = @"150500";
+NSString * const FHAMapBusCode = @"150700";
+NSString * const FHAMapBankCode = @"150100";
+NSString * const FHAMapEduCode = @"141200";
+NSString * const FHAMapHospitalCode = @"090100";
+NSString * const FHAMapShoppingMallCode = @"060100";
+NSString * const FHAMapComplexCode = @"120300";
+
 
 @interface BMKPoiSearch (fh_property)
 @property (nonatomic, copy) NSString *fh_keyword;
@@ -42,6 +54,26 @@ char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchRe
     return objc_getAssociatedObject(self, FHBaiduPanoramaPOISearchResultKeyName);
 }
 @end
+
+@interface AMapPOISearchBaseRequest (fh_property)
+
+@property (nonatomic, copy) NSString *fh_keyword;
+
+@end
+
+@implementation AMapPOISearchBaseRequest (fh_property)
+
+- (void)setFh_keyword:(NSString *)fh_keyword {
+    objc_setAssociatedObject(self, FHBaiduPanoramaPOISearchResultKeyName, fh_keyword, OBJC_ASSOCIATION_COPY);
+}
+
+- (NSString *)fh_keyword {
+    return objc_getAssociatedObject(self, FHBaiduPanoramaPOISearchResultKeyName);
+}
+
+@end
+
+
 
 @interface BaiduPanoImageOverlay (fh_property)
 
@@ -80,7 +112,8 @@ char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchRe
 
 @end
 
-@interface FHBaiduPanoramaViewController ()<BMKGeneralDelegate,BMKMapViewDelegate,BaiduPanoramaViewDelegate,BMKPoiSearchDelegate,BMKGeoCodeSearchDelegate>
+@interface FHBaiduPanoramaViewController ()<BMKGeneralDelegate,BMKMapViewDelegate,BaiduPanoramaViewDelegate,BMKPoiSearchDelegate,BMKGeoCodeSearchDelegate,
+AMapSearchDelegate>
 
 @property (nonatomic, strong) UIView *topBar;
 @property (nonatomic, weak) UIButton *overlayButton;
@@ -93,6 +126,9 @@ char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchRe
 @property (nonatomic, strong) BMKMapView *mapView;
 
 @property (nonatomic, strong) BMKMapManager *mapManager;
+
+
+@property (nonatomic, strong) AMapSearchAPI *searchApi;
 
 @property (nonatomic) double gaodeLat;
 @property (nonatomic) double gaodeLon;
@@ -424,19 +460,33 @@ char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchRe
                        @"商场": @(0),
                        @"小区": @(0)}.mutableCopy;
     
+    self.searchApi = [[AMapSearchAPI alloc] init];
+    self.searchApi.delegate = self;
+    
     for (NSString *keyword in @[@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"]) {
-        BMKPoiSearch *poiSearch = [[BMKPoiSearch alloc] init];
-        poiSearch.delegate = self;
-        poiSearch.fh_keyword = keyword;
-        BMKPOINearbySearchOption *option = [[BMKPOINearbySearchOption alloc] init];
-        option.keywords = @[keyword];
-        option.location = self.point;
-        option.radius = 1000;
-        option.isRadiusLimit = YES;
-        option.scope = BMK_POI_SCOPE_DETAIL_INFORMATION;
+//        BMKPoiSearch *poiSearch = [[BMKPoiSearch alloc] init];
+//        poiSearch.delegate = self;
+//        poiSearch.fh_keyword = keyword;
+//        BMKPOINearbySearchOption *option = [[BMKPOINearbySearchOption alloc] init];/// POI周边检索参数信息类
+//        option.keywords = @[keyword];
+//        option.location = self.point;
+//        option.radius = 1000;
+//        option.isRadiusLimit = YES;
+//        option.scope = BMK_POI_SCOPE_DETAIL_INFORMATION;
 //        option.pageIndex = 0;
-        option.pageSize = 20;
-        [poiSearch poiSearchNearBy:option];
+//        option.pageSize = 20;
+//        [poiSearch poiSearchNearBy:option];
+        
+        
+        AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
+        requestPoi.fh_keyword = keyword;
+        requestPoi.keywords = keyword;
+        AMapGeoPoint *apoint = [AMapGeoPoint locationWithLatitude:self.point.latitude longitude:self.point.longitude];
+        requestPoi.location = apoint;
+        requestPoi.radius = 1000;
+        requestPoi.requireExtension = YES;
+        requestPoi.requireSubPOIs = YES;
+        [self.searchApi AMapPOIAroundSearch:requestPoi];
     }
     
     if (!self.selectOverlay) {
@@ -563,6 +613,91 @@ static NSInteger overlayIndex = 0;
         }
     });
 }
+
+- (void)handleAMapPoiResponse:(AMapPOISearchResponse *)poiResponse keyword:(NSString *)keyword {
+    dispatch_async(self.serialQueue, ^{
+        NSMutableArray *overlays = [NSMutableArray array];
+        if (poiResponse.pois.count) {
+            for (AMapPOI *poiInfo in poiResponse.pois) {
+                if (poiInfo.distance < 10) {
+                    continue;
+                }
+                NSString *typeName = keyword;
+                if (!typeName.length) {
+                    if ([poiInfo.typecode isEqualToString:FHAMapEduCode]) {
+                        typeName = @"教育";
+                    } else if ([poiInfo.typecode isEqualToString:FHAMapHospitalCode]) {
+                        typeName = @"医院";
+                    } else if ([poiInfo.typecode isEqualToString:FHAMapShoppingMallCode]) {
+                        typeName = @"商场";
+                    } else if ([poiInfo.typecode isEqualToString:FHAMapComplexCode]) {
+                        typeName = @"小区";
+                    } else if ([poiInfo.typecode isEqualToString:FHAMapSubwayCode]) {
+                        typeName = @"地铁";
+                    }
+                    continue;
+                }
+                if (self.limitDict[typeName]) {
+                    NSInteger limit = [[self.limitDict objectForKey:typeName] integerValue];
+                    if (limit >= 3) {
+                        continue;
+                    }
+                    //名称去重
+                    __block NSUInteger index = NSNotFound;
+                    [self.filterPoiList enumerateObjectsUsingBlock:^(AMapPOI * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                        if ([obj.name isEqualToString:poiInfo.name]) {
+                            index = idx;
+                            *stop = YES;
+                        }
+                    }];
+                    if (index != NSNotFound) {
+                        continue;
+                    }
+                    limit += 1;
+                    self.limitDict[typeName] = @(limit);
+                } else {
+                    self.limitDict[typeName] = @(1);
+                }
+                [self.filterPoiList addObject:poiInfo];
+                
+                NSString *imageName = nil;
+                //@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"
+                if ([typeName isEqualToString:@"公交"]) {
+                    imageName = @"baidu_overlay_type_bus";
+                } else if ([typeName isEqualToString:@"银行"]) {
+                    imageName = @"baidu_overlay_type_bank";
+                }else if ([typeName isEqualToString:@"地铁"]) {
+                    imageName = @"baidu_overlay_type_subway";
+                } else if ([typeName isEqualToString:@"教育"]) {
+                    imageName = @"baidu_overlay_type_school";
+                } else if ([typeName isEqualToString:@"医院"]) {
+                    imageName = @"baidu_overlay_type_hospital";
+                } else if ([typeName isEqualToString:@"商场"]) {
+                    imageName = @"baidu_overlay_type_shop";
+                } else if ([typeName isEqualToString:@"小区"]) {
+                    imageName = @"baidu_overlay_type_area";
+                }
+                
+                overlayIndex += 1;
+                BaiduPanoImageOverlay *overlay = [[BaiduPanoImageOverlay alloc] init];
+                overlay.overlayKey = [@(overlayIndex) stringValue];
+                overlay.type = BaiduPanoOverlayTypeImage;
+                overlay.coordinate = CLLocationCoordinate2DMake(poiInfo.location.latitude, poiInfo.location.longitude);
+                overlay.height = 0;
+                overlay.fh_imageName = imageName;
+                overlay.fh_name = poiInfo.name;
+                overlay.fh_distance = poiInfo.distance;
+                [overlays addObject:overlay];
+            }
+            if (overlays.count) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self addOverlays:overlays.copy];
+                });
+            }
+        }
+    });
+}
+
 
 - (void)addOverlays:(NSArray *)overlays {
     for (BaiduPanoImageOverlay *overlay in overlays) {
@@ -1123,6 +1258,26 @@ static NSInteger overlayIndex = 0;
             self.customNavBarView.title.text = @"未知路段";
         }
     });
+}
+
+#pragma mark - AMapSearchDelegate
+
+/**
+ * @brief POI查询回调函数
+ * @param request  发起的请求，具体字段参考 AMapPOISearchBaseRequest 及其子类。
+ * @param response 响应结果，具体字段参考 AMapPOISearchResponse 。
+ */
+- (void)onPOISearchDone:(AMapPOISearchBaseRequest *)request response:(AMapPOISearchResponse *)response {
+    [self handleAMapPoiResponse:response keyword:[request fh_keyword]];
+}
+
+/**
+ * @brief 当请求发生错误时，会调用代理的此方法.
+ * @param request 发生错误的请求.
+ * @param error   返回的错误.
+ */
+- (void)AMapSearchRequest:(id)request didFailWithError:(NSError *)error {
+    //on error
 }
 
 #pragma mark - 埋点
