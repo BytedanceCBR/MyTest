@@ -49,8 +49,7 @@
     }
 }
 
-- (void)updateMainImageWithUrl:(NSString *)url
-{
+- (void)updateMainImageWithUrl:(NSString *)url {
     NSURL *imgUrl = [NSURL URLWithString:url];
     if (imgUrl) {
         [self.mainImageView bd_setImageWithURL:imgUrl placeholder:[[self class] placeholderImage]];
@@ -59,8 +58,7 @@
     }
 }
 
-- (void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast
-{
+- (void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast {
     if (isFirst) {
         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(15, 15)];
         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
@@ -78,8 +76,7 @@
     }
 }
 
--(UILabel *)mainTitleLabel
-{
+-(UILabel *)mainTitleLabel {
     if (!_mainTitleLabel) {
         _mainTitleLabel = [[UILabel alloc]init];
         _mainTitleLabel.font = [UIFont themeFontRegular:16];
@@ -88,8 +85,7 @@
     return _mainTitleLabel;
 }
 
--(UILabel *)subTitleLabel
-{
+-(UILabel *)subTitleLabel {
     if (!_subTitleLabel) {
         _subTitleLabel = [[UILabel alloc]init];
         _subTitleLabel.font = [UIFont themeFontRegular:12];
@@ -98,8 +94,7 @@
     return _subTitleLabel;
 }
 
--(YYLabel *)tagLabel
-{
+-(YYLabel *)tagLabel {
     if (!_tagLabel) {
         _tagLabel = [[YYLabel alloc]init];
         _tagLabel.font = [UIFont themeFontRegular:12];
@@ -108,8 +103,7 @@
     return _tagLabel;
 }
 
--(UILabel *)pricePerSqmLabel
-{
+-(UILabel *)pricePerSqmLabel {
     if (!_pricePerSqmLabel) {
         _pricePerSqmLabel = [[UILabel alloc]init];
         if ([UIDevice btd_isScreenWidthLarge320]) {
@@ -122,8 +116,7 @@
     return _pricePerSqmLabel;
 }
 
--(UILabel *)priceLabel
-{
+-(UILabel *)priceLabel {
     if (!_priceLabel) {
         _priceLabel = [[UILabel alloc]init];
         _priceLabel.font = [UIFont themeFontSemibold:16];
@@ -132,8 +125,7 @@
     return _priceLabel;
 }
 
--(UILabel *)originPriceLabel
-{
+-(UILabel *)originPriceLabel {
     if (!_originPriceLabel) {
         _originPriceLabel = [[UILabel alloc]init];
         if ([UIDevice btd_isScreenWidthLarge320]) {
@@ -147,8 +139,7 @@
     return _originPriceLabel;
 }
 
--(LOTAnimationView *)vrLoadingView
-{
+-(LOTAnimationView *)vrLoadingView {
     if (!_vrLoadingView) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
         _vrLoadingView = [LOTAnimationView animationWithFilePath:path];
@@ -157,8 +148,7 @@
     return _vrLoadingView;
 }
 
--(UIImageView *)mainImageView
-{
+-(UIImageView *)mainImageView {
     if (!_mainImageView) {
         _mainImageView = [[UIImageView alloc]init];
         _mainImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -191,12 +181,68 @@
     return _rightInfoView;
 }
 
-
 - (UIView *)houseCellBackView {
     if (!_houseCellBackView) {
         _houseCellBackView = [[UIView alloc] init];
     }
     return _houseCellBackView;
+}
+
+-(UIView *)houseMainImageBackView {
+    if (!_houseMainImageBackView) {
+        _houseMainImageBackView = [[UIView alloc] init];
+        _houseMainImageBackView.backgroundColor = [UIColor whiteColor];
+        CALayer * layer = _houseMainImageBackView.layer;
+        layer.shadowOffset = CGSizeMake(0, 4);
+        layer.shadowRadius = 6;
+        layer.shadowColor = [UIColor blackColor].CGColor;;
+        layer.shadowOpacity = 0.2;
+    }
+    return _houseMainImageBackView;
+}
+
+-(FHCornerView *)imageTagLabelBgView {
+    if (!_imageTagLabelBgView) {
+        _imageTagLabelBgView = [[FHCornerView alloc]init];
+        _imageTagLabelBgView.backgroundColor = [UIColor themeRed3];
+        _imageTagLabelBgView.hidden = YES;
+    }
+    return _imageTagLabelBgView;
+}
+
+-(UILabel *)imageTagLabel {
+    if (!_imageTagLabel) {
+        _imageTagLabel = [[UILabel alloc]init];
+        _imageTagLabel.text = @"";
+        _imageTagLabel.textAlignment = NSTextAlignmentCenter;
+        _imageTagLabel.font = [UIFont themeFontRegular:10];
+        _imageTagLabel.textColor = [UIColor whiteColor];
+    }
+    return _imageTagLabel;
+}
+
+-(UIImageView *)houseVideoImageView {
+    if (!_houseVideoImageView) {
+        _houseVideoImageView = [[UIImageView alloc]init];
+        _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video"];
+        _houseVideoImageView.backgroundColor = [UIColor clearColor];
+    }
+    return _houseVideoImageView;
+}
+
+- (UIView *)priceBgView {
+    if (!_priceBgView) {
+        _priceBgView = [[UIView alloc] init];
+    }
+    return _priceBgView;
+}
+
+- (FHHouseRecommendReasonView *)recReasonView {
+    
+    if (!_recReasonView) {
+        _recReasonView = [[FHHouseRecommendReasonView alloc] init];
+    }
+    return _recReasonView;
 }
 
 @end
