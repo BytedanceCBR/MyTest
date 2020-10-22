@@ -215,6 +215,14 @@
         [weakSelf.headerView scrollToItemAtIndex:currentIndex];
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
     }];
+    [pictureDetailViewController setWillBeginPanBackBlock:^(NSInteger index) {
+        if(weakSelf.dataHelper.headerViewData.baiduPanoramaIndex != -1) {
+            if(index >= weakSelf.dataHelper.headerViewData.baiduPanoramaIndex){
+                index = index + 1;
+            }
+        }
+        [weakSelf.headerView scrollToItemAtIndex:index];
+    }];
 
     pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
         [weakSelf trackSavePictureWithIndex:currentIndex];
