@@ -38,7 +38,7 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 
 @property (nonatomic, strong) NSMutableArray *traceNeedUploadCache;
-@property (nonatomic, strong) NSMutableArray *traceFirstScreenNeedUploadCache;
+@property (nonatomic, strong) NSMutableDictionary *traceFirstScreenNeedUploadCache;
 @property (nonatomic, strong) NSMutableDictionary *traceEnterCategoryCache;
 @property (nonatomic, strong) NSMutableDictionary *traceEnterTopTabache;
 @property (nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
