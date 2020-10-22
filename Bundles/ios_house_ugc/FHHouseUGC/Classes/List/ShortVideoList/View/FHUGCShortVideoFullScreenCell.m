@@ -194,6 +194,7 @@
 
 - (void)reset {
     [self.playerView reset];
+    self.playImage.hidden = YES;
 }
 
 - (void)pause {
