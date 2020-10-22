@@ -164,7 +164,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 }
 
 - (void)playVideo {
-    [self configurePlayMovie];
+//    [self configurePlayMovie];
     [_playMovie play];
     self.cellEntity.playVideo = _playMovie.movieView;
     [self.logo addSubview:[_playMovie currentMovieView]];
@@ -257,11 +257,8 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 {
     if (_cellEntity != cellEntity) {
         _cellEntity = cellEntity;
-        if ([self.playMovie.movieView.playerModel.videoID isEqualToString:cellEntity.article.videoId] && !isEmptyString(cellEntity.article.videoId)) {
-            if (![self.playMovie isRotating]) { //iOS8 旋转过程中会触发layout,导致视频被移出
-                [self.playMovie invalideMovieViewAfterDelay:YES];//invalideMovieViewAfterDelay 会把movieView置为nil
-            }
-        }
+
+        [self configurePlayMovie];
         [self configureUI];
         [self setNeedsLayout];
     }

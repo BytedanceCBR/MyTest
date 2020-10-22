@@ -21,5 +21,6 @@
 @property (nonatomic, assign) CGRect frame;
 - (void)attachMovieView:(TTVPlayVideo *)movieView;
 - (UIView *)detachMovieView;
+- (void)readyToPlay;
 
 @end

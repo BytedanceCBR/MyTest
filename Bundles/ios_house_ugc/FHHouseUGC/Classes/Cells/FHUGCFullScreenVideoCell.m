@@ -769,6 +769,10 @@
     }
 }
 
+- (void)readyToPlay {
+    [self.videoView readyToPlay];
+}
+
 - (void)play {
     if(self.isStartPlaying){
         return;
