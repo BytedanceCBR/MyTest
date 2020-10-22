@@ -15,6 +15,7 @@
 #import "TTUGCEmojiTextAttachment.h"
 #import "TTArticleDetailDefine.h"
 #import "SSCommonLogic.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface ExploreDetailToolbarView ()
 
@@ -605,7 +606,7 @@
 #pragma mark - target-action
 
 - (void)shareButtonOnClicked:(id)sender {
-    [TTTrackerWrapper eventV3:@"share_icon_click" params:@{@"icon_type": @([SSCommonLogic shareIconStye]).stringValue}];
+    [BDTrackerProtocol eventV3:@"share_icon_click" params:@{@"icon_type": @([SSCommonLogic shareIconStye]).stringValue}];
 }
 
 - (void)themeChanged:(NSNotification *)notification {

@@ -40,6 +40,7 @@
 #import "TTLayOutCellViewBase.h"
 #import "HTSVideoPageParamHeader.h"
 #import <TSVDebugInfoConfig.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 NSInteger const kCustomEditControlWidth = 53.f;
 
@@ -493,7 +494,7 @@ NSInteger const kCustomEditControlWidth = 53.f;
                     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(statParams)];
                     //针对广告不能通过sdk打开，但是传的有内部schema的情况
                     if(!isEmptyString(orderedData.ad_id)){
-                        wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", ad_id, nil, applinkParams);
+                        [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"open_url_h5" value:ad_id source:nil extraDic:applinkParams];
                     }
                 }
             }
@@ -504,7 +505,7 @@ NSInteger const kCustomEditControlWidth = 53.f;
                     detailURL = [detailURL stringByAppendingFormat:@"&ad_id=%@", ad_id];
                     //针对不能通过sdk和openurl打开的情况
                     if (!isEmptyString(article.openURL)) { //open_url存在,没有成功唤起app @muhuai
-                        wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", ad_id, nil, applinkParams);
+                        [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"open_url_h5" value:ad_id source:nil extraDic:applinkParams];
                     }
                 }
                 
@@ -582,7 +583,7 @@ NSInteger const kCustomEditControlWidth = 53.f;
 //        [logv3Dic setValue:[huoShanModel.userInfo objectForKey:@"user_id"] forKey:@"user_id"];
 //        [logv3Dic setValue:labelStr forKey:@"enter_from"];
 //        [logv3Dic setValue:((ExploreOrderedData *)self.cellData).logPb forKey:@"log_pb"];
-//        [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
+//        [BDTrackerProtocol eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
 //
 //        if (TTNetworkConnected()) {
 //            if (TTNetworkWifiConnected() || !huoShanShowConnectionAlertCount) {
@@ -646,7 +647,7 @@ NSInteger const kCustomEditControlWidth = 53.f;
 //                [dictionary setValue:orderedData.categoryID forKey:@"category_name"];
 //                [dictionary setValue:orderedData.thread.threadId forKey:@"category_id"];
 //                [dictionary setValue:orderedData.logPb forKey:@"log_pb"];
-//                [TTTrackerWrapper eventV3:@"cell_go_detail" params:[dictionary copy] isDoubleSending:YES];
+//                [BDTrackerProtocol eventV3:@"cell_go_detail" params:[dictionary copy] isDoubleSending:YES];
 //            }
 //            [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:schema]];
 //            ((ExploreOrderedData *)self.cellData).originalData.hasRead = @(YES);

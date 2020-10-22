@@ -45,6 +45,7 @@
 #import "TTVSettingsConfiguration.h"
 #import "TTRShare.h"
 #import "TTWeChatShare+TTService.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kWeixinExtShareLocalUrlKey  @"localUrl"
 
@@ -924,7 +925,7 @@ static BOOL isMovieFullScreen;
             [dict setValue:page_type forKey:@"page_type"];
             [dict setValue:_groupModel.groupID forKey:@"group_id"];
             [dict setValue:_groupModel.itemID forKey:@"id"];
-            [dict setValue:[[TTInstallIDManager sharedInstance] installID] forKey:@"iid"];
+            [dict setValue:[BDTrackerProtocol installID] forKey:@"iid"];
             [weixin sendWebpageWithMiniProgramShareInScene:WXSceneSession withParameterDict:dict WebpageURL:urlStr thumbnailImage:image title:title description:desc customCallbackUserInfo:nil];
         }else{
             [weixin sendWebpageToScene:WXSceneSession withWebpageURL:urlStr thumbnailImage:image title:title description:desc customCallbackUserInfo:nil];
@@ -1588,7 +1589,7 @@ static BOOL isMovieFullScreen;
                 eventName = @"share_fail";
             }
             if (!ttvs_isTitanVideoBusiness()) {
-                wrapperTrackEventWithCustomKeys(tag, label, self.uniqueId, nil, extraDict);
+                [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:self.uniqueId source:nil extraDic:extraDict];
             }
             SAFECALL_MESSAGE(TTVShareActionTrackMessage, @selector(message_shareTrackActivityWithGroupID:ActivityType:FromSource:eventName:),message_shareTrackActivityWithGroupID:self.uniqueId ActivityType:_activityType FromSource: _clickSource eventName:eventName);
             
@@ -1625,15 +1626,15 @@ static BOOL isMovieFullScreen;
                 eventName = @"share_fail";
             }
             if (!ttvs_isTitanVideoBusiness()) {
-                wrapperTrackEventWithCustomKeys(tag, label, self.uniqueId, nil, extraDict);
+                [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:self.uniqueId source:nil extraDic:extraDict];
             }
             SAFECALL_MESSAGE(TTVShareDetailTrackerMessage, @selector(message_detailshareTrackActivityWithGroupID:ActivityType:FromSource:eventName:), message_detailshareTrackActivityWithGroupID:self.uniqueId ActivityType:activityType FromSource:_clickSource eventName:eventName);
         }else{
-            wrapperTrackEventWithCustomKeys(tag, label, self.uniqueId, nil, extraDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:self.uniqueId source:nil extraDic:extraDict];
         }
         
     }else if (_platformType == TTSharePlatformTypeOfForumPlugin) {
-        [TTTrackerWrapper category:@"umeng" event:tag label:label dict:@{@"source":self.uniqueId}];
+        [BDTrackerProtocol category:@"umeng" event:tag label:label dict:@{@"source":self.uniqueId}];
     }
 }
 + (void)copyText:(NSString *)text

@@ -8,7 +8,7 @@
 
 #import "TTLiveBaseCell.h"
 #import "Live.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTUISettingHelper.h"
 #import "TTArticleCellConst.h"
 #import "TTArticleCellHelper.h"
@@ -17,7 +17,6 @@
 #import "TTNetworkManager.h"
 #import "TTIndicatorView.h"
 #import "TTFollowNotifyServer.h"
-#import <TTTracker/TTTrackerProxy.h>
 #import "TTRoute.h"
 #import "TTURLTracker.h"
 #import "TTPlatformSwitcher.h"
@@ -41,7 +40,7 @@ extern NSString * const TTFollowSuccessForPushGuideNotification;
     [super didSelectAtIndexPath:indexPath viewModel:viewModel];
     Live *live = (Live *)((ExploreOrderedData *)self.cellData).originalData;
     [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString: live.url]];
-    wrapperTrackEventWithCustomKeys(@"livetalk", @"click", [NSString stringWithFormat:@"%@", live.liveId], nil, @{@"stat": [NSString stringWithFormat:@"%@", live.status]});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"livetalk" label:@"click" value:[NSString stringWithFormat:@"%@", live.liveId] source:nil extraDic:@{@"stat": [NSString stringWithFormat:@"%@", live.status]}];
 }
 
 @end
@@ -455,19 +454,17 @@ extern NSString * const TTFollowSuccessForPushGuideNotification;
 - (void)trackWithTag:(NSString *)tag label:(NSString *)label extra:(NSDictionary *)extra {
     NSCParameterAssert(tag != nil);
     NSCParameterAssert(label != nil);
-    TTInstallNetworkConnection nt = [[TTTrackerProxy sharedProxy] connectionType];
     NSMutableDictionary *events = [NSMutableDictionary dictionaryWithCapacity:10];
     [events setValue:@"umeng" forKey:@"category"];
     [events setValue:tag forKey:@"tag"];
     [events setValue:label forKey:@"label"];
-    [events setValue:@(nt) forKey:@"nt"];
     [events setValue:@"1" forKey:@"is_ad_event"];
     [events setValue:self.orderedData.ad_id forKey:@"value"];
     [events setValue:self.orderedData.log_extra forKey:@"log_extra"];
     if (extra) {
         [events addEntriesFromDictionary:extra];
     }
-    [TTTracker eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 - (void)sourceViewClick:(id)sender {
@@ -531,10 +528,9 @@ extern NSString * const TTFollowSuccessForPushGuideNotification;
         NSMutableDictionary* dict = [NSMutableDictionary dictionary];
         [dict setValue:live.logExtra forKey:@"log_extra"];
         [dict setValue:[NSNumber numberWithLongLong:live.uniqueID] forKey:@"ext_value"];
-        [dict setValue:@([[TTTrackerProxy sharedProxy] connectionType]) forKey:@"nt"];
         [dict setValue:@"1" forKey:@"is_ad_event"];
         [dict setValue:live.status forKey:@"live_status"];
-        wrapperTrackEventWithCustomKeys(@"embeded_ad", [live.followed boolValue] ? @"click_unfollow" : @"click_follow", self.orderedData.ad_id, nil, dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:[live.followed boolValue] ? @"click_unfollow" : @"click_follow" value:self.orderedData.ad_id source:nil extraDic:dict];
     }
 }
 
@@ -563,7 +559,7 @@ extern NSString * const TTFollowSuccessForPushGuideNotification;
         self.orderedData.live.followed = @0;
         trackLabel = @"reserve_cancel";
     }
-    wrapperTrackEventWithCustomKeys(@"livetalk", trackLabel, [[[self.orderedData live] liveId] stringValue], nil, @{@"stat": ([[self.orderedData live] status] ?: @0)});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"livetalk" label:trackLabel value:[[[self.orderedData live] liveId] stringValue] source:nil extraDic:@{@"stat": ([[self.orderedData live] status] ?: @0)}];
     
     self.followView.followed = reserve;
     
@@ -587,13 +583,12 @@ extern NSString * const TTFollowSuccessForPushGuideNotification;
 
     [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString: live.url] userInfo:TTRouteUserInfoWithDict(baseDic)];
     
-    wrapperTrackEventWithCustomKeys(@"livetalk", @"click", [NSString stringWithFormat:@"%@", live.liveId], nil, @{@"stat": [NSString stringWithFormat:@"%@", live.status]});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"livetalk" label:@"click" value:[NSString stringWithFormat:@"%@", live.liveId] source:nil extraDic:@{@"stat": [NSString stringWithFormat:@"%@", live.status]}];
     
     if ([ad_id longLongValue] > 0) {
         NSMutableDictionary* dict = [NSMutableDictionary dictionary];
         [dict setValue:self.orderedData.log_extra forKey:@"log_extra"];
         [dict setValue:[NSNumber numberWithLongLong:live.uniqueID] forKey:@"ext_value"];
-        [dict setValue:@([[TTTrackerProxy sharedProxy] connectionType]) forKey:@"nt"];
         [dict setValue:@"1" forKey:@"is_ad_event"];
         [dict setValue:live.status forKey:@"live_status"];
         
@@ -604,7 +599,7 @@ extern NSString * const TTFollowSuccessForPushGuideNotification;
             }
         }
     
-        wrapperTrackEventWithCustomKeys(@"embeded_ad", @"click", ad_id, nil, dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"click" value:ad_id source:nil extraDic:dict];
         if (self.orderedData.adModel.click_track_url_list) {
             ttTrackURLsModel(self.orderedData.adModel.click_track_url_list, [[TTURLTrackerModel alloc] initWithAdId:ad_id logExtra:self.orderedData.log_extra]);
         } else {

@@ -24,7 +24,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import "BDAgileLog.h"
 #import <FHHouseBase/FHMainApi.h>
-#import <TTInstallService/TTInstallIDManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTBaseMacro.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import "FHBuildingDetailModel.h"
@@ -492,7 +492,7 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     param[@"target_id"] = @(houseId.longLongValue);
     param[@"target_type"] = @(houseType);
     param[@"source"] = source;
-    param[@"device_id"] = @([[[TTInstallIDManager sharedInstance] deviceID] longLongValue]);
+    param[@"device_id"] = @([[BDTrackerProtocol deviceID] longLongValue]);
     param[@"feed_back"] = @(feedType);
     
     return [FHMainApi postJsonRequest:path query:nil params:param completion:^(NSDictionary * _Nullable result, NSError * _Nullable error) {

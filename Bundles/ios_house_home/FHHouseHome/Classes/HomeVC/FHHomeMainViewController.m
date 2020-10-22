@@ -16,7 +16,7 @@
 #import "TTSandBoxHelper.h"
 #import "TTSandBoxHelper+House.h"
 #import "TTAppUpdateHelper.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "CommonURLSetting.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "UIViewController+Track.h"
@@ -448,8 +448,8 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 {
     [[FHPopupViewManager shared] outerPopupViewShow];
     //内测弹窗
-    NSString * iidValue = [[TTInstallIDManager sharedInstance] installID];
-    NSString * didValue = [[TTInstallIDManager sharedInstance] deviceID];
+    NSString * iidValue = [BDTrackerProtocol installID];
+    NSString * didValue = [BDTrackerProtocol deviceID];
     NSString * channelValue = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
 //    NSString * baseUrl = [CommonURLSetting baseURL];
     //    NSString * baseUrl = @"https://i.snssdk.com";

@@ -16,6 +16,7 @@
 //#import "Bubble-Swift.h"
 #import "TTCategoryStayTrackManager.h"
 #import "FHEnvContext.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation ExploreMixedListBaseView (TrackEvent)
 
@@ -54,7 +55,7 @@
         return;
     }
     if (!isEmptyString(self.umengEventName)) {
-        wrapperTrackEvent(self.umengEventName, label);
+        [BDTrackerProtocol event:self.umengEventName label:label];
     }
     else {
         [ExploreListHelper trackEventForLabel:label listType:self.listType categoryID:self.categoryID concernID:self.concernID refer:self.refer];
@@ -79,7 +80,7 @@
 //    [[EnvContext shared].tracer writeEvent:@"category_refresh" params:dict];
     [FHEnvContext recordEvent:dict andEventKey:@"category_refresh"];
     
-//    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];
+//    [BDTrackerProtocol eventV3:@"category_refresh" params:dict isDoubleSending:YES];
     
 }
 
@@ -153,7 +154,7 @@
         value = @(status).stringValue;
     }
     
-    wrapperTrackEventWithCustomKeys(@"load_status", trackLabel, value,nil,extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"load_status" label:trackLabel value:value source:nil extraDic:extraDict];
     
     //端监控
     NSMutableDictionary *events = [NSMutableDictionary dictionaryWithCapacity:2];

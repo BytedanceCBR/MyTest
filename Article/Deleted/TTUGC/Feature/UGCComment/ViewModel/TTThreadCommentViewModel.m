@@ -17,6 +17,7 @@
 #import "TTAccountManager.h"
 #import "TTCommentReplyModel.h"
 #import "ExploreMomentDefine.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTThreadCommentViewModel ()
 @property(nonatomic, strong) NSMutableDictionary <NSNumber *, TTCommentManagedObject *> *commentCategoryModels;
@@ -679,7 +680,7 @@
     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
     [extra setValue:@(self.fid) forKey:@"forum_id"];
 
-    wrapperTrackEventWithCustomKeys(@"fold_comment", @"show", @(self.tid).stringValue, nil, extra.copy);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment" label:@"show" value:@(self.tid).stringValue source:nil extraDic:extra.copy];
 }
 
 @end

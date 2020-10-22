@@ -16,7 +16,7 @@
 #import <mach/mach_time.h>
 #import "TTSettingsManager.h"
 #import "HMDTTMonitor.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static NSString * const kFHLynxSettingControlKey = @"lynx_config";
 static NSString * const kFHLynxActiveChannelsKey = @"active_channels";
@@ -95,7 +95,7 @@ static NSString * const kFHLynxEnableControlKey = @"lynx_enable";
 - (void)sendEvent:(NSString *)status channel:(NSString *)ch
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     [uploadParams setValue:status forKey:@"error"];
     [[HMDTTMonitor defaultManager] hmdTrackService:@"lynx_template_data_source" status:[status integerValue] extra:paramsExtra];

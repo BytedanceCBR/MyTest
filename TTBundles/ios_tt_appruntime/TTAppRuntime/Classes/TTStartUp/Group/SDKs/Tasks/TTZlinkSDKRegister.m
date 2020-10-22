@@ -10,7 +10,6 @@
 #import "TTLaunchDefine.h"
 #import "BDUGDeepLinkManager.h"
 #import "NewsBaseDelegate.h"
-#import "TTInstallIDManager.h"
 #import "TTSandBoxHelper.h"
 #import "TTNetworkHelper.h"
 #import "TTSettingsManager.h"

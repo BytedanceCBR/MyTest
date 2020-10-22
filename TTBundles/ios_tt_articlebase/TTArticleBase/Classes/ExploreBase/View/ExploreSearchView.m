@@ -28,7 +28,6 @@
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "ArticleURLSetting.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
-#import "TTInstallIDManager.h"
 #import "TTUIResponderHelper.h"
 #import "TTURLUtils.h"
 #import "TTNavigationController.h"
@@ -1197,9 +1196,9 @@
     NSEnumerator *getEnum = [getParameter keyEnumerator];
     NSString *key = nil;
     
-    if(!isEmptyString([[TTInstallIDManager sharedInstance] installID]) && [string rangeOfString:@"iid"].location == NSNotFound)
+    if(!isEmptyString([BDTrackerProtocol installID]) && [string rangeOfString:@"iid"].location == NSNotFound)
     {
-        [string appendFormat:@"%@iid=%@", sep, [[TTInstallIDManager sharedInstance] installID]];
+        [string appendFormat:@"%@iid=%@", sep, [BDTrackerProtocol installID]];
         sep = @"&";
     }
     

@@ -8,7 +8,7 @@
 #import "TTPushServiceDelegate.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <TTKitchen/TTKitchen.h>
-#import <TTInstallService/TTInstallIDManager.h>
+#import <BDInstall/BDInstall.h>
 #import "ArticleAPNsManager.h"
 #import "TTUserSettings/TTUserSettingsManager+Notification.h"
 #import "SSAPNsAlertManager.h"
@@ -66,7 +66,7 @@ typedef void(^NotificationActionCompletionBlock) (void);
 
 - (void)registerNotification
 {
-    [[TTInstallIDManager sharedInstance] observeDeviceDidRegistered:^(NSString *deviceID, NSString *installID) {
+    [[BDInstall sharedInstance] observeDeviceDidRegistered:^(NSString *deviceID, NSString *installID) {
 
         BDUGRequestParam *param = [BDUGRequestParam requestParam];
         param.deviceId = deviceID;

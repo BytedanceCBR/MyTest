@@ -36,6 +36,7 @@
 #import <TTCategoryDefine.h>
 #import "TTUGCDefine.h"
 #import "TTCertificationConst.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTCertificationRootViewController ()
 <
@@ -144,7 +145,7 @@ TTAccountMulticastProtocol
         TTCertificationFailureViewController *failure = [[TTCertificationFailureViewController alloc] init];
         _router[NSStringFromClass([TTCertificationFailureViewController class])] = failure;
         failure.operationViewClickBlock = ^{
-            [TTTrackerWrapper eventV3:@"certificate_reapply" params:nil];
+            [BDTrackerProtocol eventV3:@"certificate_reapply" params:nil];
             weakSelf.responeModel.data.user_auth_data.status = @(0);
             [weakSelf setupSkip];
         };

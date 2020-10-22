@@ -9,13 +9,13 @@
 #import "ExploreMovieView.h"
 #import "TTAVPlayerItemAccessLog.h"
 #import "TTAdCommonUtil.h"
-#import "TTTrackerProxy.h"
 #import "TTURLTracker.h"
 #import "TTVideoPasterADModel.h"
 #import "TTVideoPasterADTracker.h"
 //#import "SSURLTracker.h"
 #import "JSONAdditions.h"
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 static NSString *const kEmbededADKey = @"embeded_ad";
 
 @interface TTVideoPasterADTracker()
@@ -55,8 +55,6 @@ static NSString *const kEmbededADKey = @"embeded_ad";
     [dict setValue:label forKey:@"label"];
     [dict setValue:[self.adModel.videoPasterADInfoModel.adID stringValue] forKey:@"value"];
     [dict setValue:self.adModel.videoPasterADInfoModel.logExtra forKey:@"log_extra"];
-    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
-    [dict setValue:@(connectionType) forKey:@"nt"];
     
     if (duration > 0) {
         
@@ -74,7 +72,7 @@ static NSString *const kEmbededADKey = @"embeded_ad";
         [dict addEntriesFromDictionary:extra];
     }
     
-    [TTTrackerWrapper eventData:dict];
+    [BDTrackerProtocol eventData:dict];
     
     if ([label isEqualToString:@"show"]) {
         
@@ -242,7 +240,7 @@ static NSString *const kEmbededADKey = @"embeded_ad";
     extraData[@"trigger_position"] = [[self stringForViewType:type] stringByReplacingOccurrencesOfString:@"_" withString:@""];
     self.showOverInfo[@"ad_extra_data"] = [extraData tt_JSONRepresentation];
     
-    [TTTrackerWrapper eventData:self.showOverInfo];
+    [BDTrackerProtocol eventData:self.showOverInfo];
 }
 
 - (void)sendClickReplayButtonEventWithExtra:(NSDictionary *)extra duration:(NSInteger)duration viewType:(ExploreMovieViewType)type {

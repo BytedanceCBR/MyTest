@@ -9,6 +9,7 @@
 #import "TTCertificationConditionViewController.h"
 #import "SSThemed.h"
 #import "TTCertificationConst.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTCertificationConditionViewController ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -22,7 +23,7 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
     [self setupSubview];
-    [TTTrackerWrapper eventV3:@"certificate_pre_identity" params:nil];
+    [BDTrackerProtocol eventV3:@"certificate_pre_identity" params:nil];
 }
 
 - (void)questionButtonClick:(id)sender {

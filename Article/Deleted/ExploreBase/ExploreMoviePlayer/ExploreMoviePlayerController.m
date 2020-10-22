@@ -13,6 +13,7 @@
 #import "TTAlphaThemedButton.h"
 #import "TTMovieViewCacheManager.h"
 #import "TTAPPIdleTime.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static const NSTimeInterval kAnimDuration = 0.1;
 extern NSString *ttv_getFormattedTimeStrOfPlay(NSTimeInterval playTimeInterval);
@@ -382,7 +383,7 @@ extern NSString *ttv_getFormattedTimeStrOfPlay(NSTimeInterval playTimeInterval);
     if (self.enableMultiResolution) {
         NSArray *types = [self.moviePlayerDelegate supportedResolutionTypes];
         NSDictionary *extra = @{@"num" : [@(types.count) stringValue]};
-        wrapperTrackEventWithCustomKeys(@"video", @"clarity_click", self.gModel.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"clarity_click" value:self.gModel.groupID source:nil extraDic:extra];
     }
 }
 
@@ -456,7 +457,7 @@ extern NSString *ttv_getFormattedTimeStrOfPlay(NSTimeInterval playTimeInterval);
             str = @"720P";
         }
         [extra setValue:str forKey:@"definition"];
-        wrapperTrackEventWithCustomKeys(@"video", @"clarity_select", self.gModel.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"clarity_select" value:self.gModel.groupID source:nil extraDic:extra];
     }
 }
 
@@ -502,7 +503,7 @@ extern NSString *ttv_getFormattedTimeStrOfPlay(NSTimeInterval playTimeInterval);
     if (self.enableMultiResolution) {
         NSArray *types = [self.moviePlayerDelegate supportedResolutionTypes];
         NSDictionary *extra = @{@"num" : [@(types.count) stringValue]};
-        wrapperTrackEventWithCustomKeys(@"video", @"clarity_show", self.gModel.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"clarity_show" value:self.gModel.groupID source:nil extraDic:extra];
     }
 }
 

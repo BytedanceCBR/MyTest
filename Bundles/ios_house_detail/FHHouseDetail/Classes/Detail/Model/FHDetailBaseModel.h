@@ -14,6 +14,7 @@
 #import <FHHouseBase/FHImageModel.h>
 #import <FHHouseBase/FHHouseCoreInfoModel.h>
 #import <UIKit/UIKit.h>
+#import <IGListDiffKit/IGListDiffable.h>
 
 @class FHDetailHouseTitleModel;
 @class FHHouseDetailImageGroupModel;
@@ -110,7 +111,7 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @protocol FHDetailContactModel<NSObject>
 @end
 
-@interface FHDetailContactModel : JSONModel
+@interface FHDetailContactModel : JSONModel<IGListDiffable>
 
 @property (nonatomic, copy , nullable) NSString *style;
 @property (nonatomic, copy , nullable) NSString *certificate;

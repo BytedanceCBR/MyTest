@@ -12,6 +12,7 @@
 //#import "SSSimpleCache.h"
 #import "ExploreArticleCellViewConsts.h"
 #import "ExploreCellHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @interface ExploreArticleEssayGIFCellView () <UIGestureRecognizerDelegate>
@@ -101,17 +102,17 @@
         {
             if (!isEmptyString([self.orderedData categoryID])) {
                 if ([[self.orderedData categoryID] isEqualToString:kTTMainCategoryID]) {
-                    wrapperTrackEvent(@"list_content", @"pause_headline");
+                    [BDTrackerProtocol event:@"list_content" label:@"pause_headline"];
                 }
                 else {
-                    wrapperTrackEvent(@"list_content", @"pause_channel");
+                    [BDTrackerProtocol event:@"list_content" label:@"pause_channel"];
                 }
             }
         }
             break;
         case ExploreOrderedDataListTypeFavorite:
         {
-            wrapperTrackEvent(@"list_content", @"pause_favor");
+            [BDTrackerProtocol event:@"list_content" label:@"pause_favor"];
         }
             break;
 
@@ -145,17 +146,17 @@
         {
             if (!isEmptyString(self.orderedData.categoryID)) {
                 if ([self.orderedData.categoryID isEqualToString:kTTMainCategoryID]) {
-                    wrapperTrackEvent(@"list_content", @"play_gif_headline");
+                    [BDTrackerProtocol event:@"list_content" label:@"play_gif_headline"];
                 }
                 else {
-                    wrapperTrackEvent(@"list_content", @"play_gif_channel");
+                    [BDTrackerProtocol event:@"list_content" label:@"play_gif_channel"];
                 }
             }
         }
             break;
         case ExploreOrderedDataListTypeFavorite:
         {
-            wrapperTrackEvent(@"list_content", @"play_gif_favor");
+            [BDTrackerProtocol event:@"list_content" label:@"play_gif_favor"];
         }
             break;
 

@@ -20,7 +20,7 @@
 #import <CoreTelephony/CTCallCenter.h>
 #import <CoreTelephony/CTCall.h>
 #import "FHEnvContext.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHDetailQuestionButton.h"
 #import "FHDetailBottomBarView.h"
@@ -815,7 +815,7 @@
         }
         
         NSString *houseId = self.viewModel.houseId;
-        NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
+        NSString *deviceId = [BDTrackerProtocol deviceID];
         NSString *cacheKey = @"";
 
         if(!isEmptyString(houseId)){

@@ -141,6 +141,15 @@
 
 
 @implementation FHDetailContactModel
+
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
+}
+
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{

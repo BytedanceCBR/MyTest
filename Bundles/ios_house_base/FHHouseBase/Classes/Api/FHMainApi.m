@@ -21,7 +21,6 @@
 #import <Heimdallr/HMDUserExceptionTracker.h>
 #import "TTTabbarLoadEpidemicSituatioHelper.h"
 #import "FHErrorHubManagerUtil.h"
-#import <TTInstallService/TTInstallUtil.h>
 #import "NSDictionary+BTDAdditions.h"
 
 #define GET @"GET"

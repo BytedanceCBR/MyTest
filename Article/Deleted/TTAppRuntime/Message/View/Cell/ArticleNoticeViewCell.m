@@ -24,6 +24,7 @@
 #import "SSWebViewController.h"
 
 #import "TTRoute.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 const CGSize ArticleNoticeDefaultSize = {320, 78};
@@ -149,7 +150,7 @@ static CGFloat ArticleNoticePGCButtonAbstractHeight = 34.f;
     /// 点击用户名称
     [self.navigationController pushViewController:viewController animated:YES];
     //////////////////TODO:  友盟统计
-    wrapperTrackEvent(@"information", @"click_name");
+    [BDTrackerProtocol event:@"information" label:@"click_name"];
 }
 
 
@@ -167,7 +168,7 @@ static CGFloat ArticleNoticePGCButtonAbstractHeight = 34.f;
     /// 点击头像
     [self.navigationController pushViewController:viewController animated:YES];
     //////////////////TODO:  友盟统计
-    wrapperTrackEvent(@"information", @"click_avatar");
+    [BDTrackerProtocol event:@"information" label:@"click_avatar"];
 }
 
 - (CGRect)_avatarViewFrame

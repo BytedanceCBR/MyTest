@@ -22,6 +22,7 @@
 #import "TTIndicatorView.h"
 #import "SSNavigationBar.h"
 #import "NetworkUtilities.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @interface TTRealnameAuthViewController ()
@@ -230,7 +231,7 @@
             break;
         case TTRealnameAuthStateCardForegroundCamera: {
             //第二级入口点击开始拍照
-            wrapperTrackEvent(@"shiming", @"idphoto2");
+            [BDTrackerProtocol event:@"shiming" label:@"idphoto2"];
             [self.viewModel setupModel:model withSender:self];
             TTRealnameAuthCardCameraViewController *vc = [[TTRealnameAuthCardCameraViewController alloc] initWithViewModel:self.viewModel];
             
@@ -293,7 +294,7 @@
             
             if (!isEmptyString(name) && !(isEmptyString(IDNum))) {
                 //第二级入口点击确认并提交
-                wrapperTrackEvent(@"shiming", @"idconfirm2");
+                [BDTrackerProtocol event:@"shiming" label:@"idconfirm2"];
                 model.name = name;
                 model.IDNum = IDNum;
                 [self.viewModel setupModel:model withSender:self];
@@ -310,7 +311,7 @@
             break;
         case TTRealnameAuthStatePersonCamera: {
             //第二级入口点击实名的开始识别
-            wrapperTrackEvent(@"shiming", @"facerecog2");
+            [BDTrackerProtocol event:@"shiming" label:@"facerecog2"];
             [self.viewModel setupModel:model withSender:self];
             TTRealnameAuthPersonCameraViewController *vc = [[TTRealnameAuthPersonCameraViewController alloc] initWithViewModel:self.viewModel];
             
@@ -319,7 +320,7 @@
             break;
         case TTRealnameAuthStatePersonSubmitting: {
             //第二级入口点击最后一步确认并提交
-            wrapperTrackEvent(@"shiming", @"faceconfirm2");
+            [BDTrackerProtocol event:@"shiming" label:@"faceconfirm2"];
             if (!TTNetworkConnected()) {
                 [self showToastWithMsg:kTTRealnameAuthErrorNetworkMsg];
                 return;

@@ -14,6 +14,7 @@
 #import "TTDeviceHelper.h"
 #import "TTStringHelper.h"
 #import "TTLabelTextHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define kLabelFontSize 13
@@ -181,10 +182,10 @@
                 [ArticleMomentHelper openMomentProfileView:model navigationController:[TTUIResponderHelper topNavigationControllerFor: self] from:kFromFeedDigg];
                 
                 if (![TTAccountManager isLogin]) {
-                    wrapperTrackEvent(_umengEventName, @"logoff_click_digger");
+                    [BDTrackerProtocol event:_umengEventName label:@"logoff_click_digger"];
                 }
                 else {
-                    wrapperTrackEvent(_umengEventName, @"click_digger");
+                    [BDTrackerProtocol event:_umengEventName label:@"click_digger"];
                 }
             }
         }

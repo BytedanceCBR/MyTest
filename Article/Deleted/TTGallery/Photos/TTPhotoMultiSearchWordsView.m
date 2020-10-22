@@ -12,6 +12,7 @@
 #import "UIColor+TTThemeExtension.h"
 #import "TTStringHelper.h"
 #import "TTRoute.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #pragma mark - 搜索词view参数
 NS_INLINE CGFloat SearchWordsTopPadding(){
@@ -114,7 +115,7 @@ NS_INLINE NSInteger SearchWordsMaxLength(){
     if([[TTRoute sharedRoute] canOpenURL:openURL]){
         [[TTRoute sharedRoute] openURLByPushViewController:openURL];
     }
-    wrapperTrackEvent(@"gallery2", @"click");
+    [BDTrackerProtocol event:@"gallery2" label:@"click"];
 }
 
 @end
