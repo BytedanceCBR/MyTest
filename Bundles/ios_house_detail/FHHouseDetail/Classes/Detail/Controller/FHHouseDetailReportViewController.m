@@ -125,6 +125,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UIView  *contentArea;
 @property (nonatomic, strong) FHHouseDetailReportItem *item;
+@property (nonatomic, strong) NSIndexPath *indexPath;
 @end
 
 @implementation FHHouseDetailReportBaseCell
@@ -459,12 +460,15 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 @interface FHHouseDetailReportViewController ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) NSArray<FHHouseDetailReportItem *> *items;
-@property (nonatomic, strong) NSDictionary *itemMap;
 @property (nonatomic, strong) UIButton *submitButton;
 @property (nonatomic, strong) UIView *submitView;
 @property (nonatomic, copy) NSString *houseId;
 @property (nonatomic, copy) NSString *houseUrl;
 @property (nonatomic, copy) NSString *houseType;
+
+@property (nonatomic, strong) FHHouseDetailReportTypeCell *problemTypeCell;
+@property (nonatomic, strong) FHHouseDetailReportPhoneNumberCell *phoneCell;
+@property (nonatomic, strong) FHHouseDetailReportExtraCell *extraCell;
 @end
 
 @implementation FHHouseDetailReportViewController
@@ -523,17 +527,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 
 - (void)tapAction:(UITapGestureRecognizer *)tap {
     [self.view endEditing:YES];
-}
-
-- (NSDictionary *)itemMap {
-    if(!_itemMap) {
-        _itemMap = @{
-            @(FHHouseDetailReportItemType_Type): FHHouseDetailReportTypeCell.class,
-            @(FHHouseDetailReportItemType_Phone): FHHouseDetailReportPhoneNumberCell.class,
-            @(FHHouseDetailReportItemType_Extra): FHHouseDetailReportExtraCell.class,
-        };
-    }
-    return _itemMap;
 }
 
 - (NSArray<FHHouseDetailReportItem *> *)items {
@@ -603,6 +596,11 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     self.view.backgroundColor = [UIColor themeWhite];
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"房源问题反馈";
+    
+    self.problemTypeCell = [[FHHouseDetailReportTypeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    self.phoneCell = [[FHHouseDetailReportPhoneNumberCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    self.extraCell = [[FHHouseDetailReportExtraCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    
     [self.view addSubview:self.tableView];
     
     [self.submitView addSubview:self.submitButton];
@@ -647,7 +645,13 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         }];
         
         if(isShow) {
-            [self.tableView btd_scrollToBottom];
+            if(self.phoneCell.phoneTextField.isFirstResponder) {
+                [self.tableView scrollToRowAtIndexPath:self.phoneCell.indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+            } else if(self.extraCell.isFirstResponder) {
+                [self.tableView scrollToRowAtIndexPath:self.extraCell.indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+            } else {
+                [self.tableView btd_scrollToBottom];
+            }
         }
     }];
     
@@ -879,9 +883,30 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     FHHouseDetailReportItem *item = self.items[indexPath.row];
-    NSString *reuseIdentifier = NSStringFromClass(self.itemMap[@(item.type)]);
-    FHHouseDetailReportBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+    
+    FHHouseDetailReportBaseCell *cell = nil;
+    switch (item.type) {
+        case FHHouseDetailReportItemType_Type:
+        {
+            cell = self.problemTypeCell;
+        }
+            break;
+        case FHHouseDetailReportItemType_Phone:
+        {
+            cell = self.phoneCell;
+        }
+            break;
+        case FHHouseDetailReportItemType_Extra:
+        {
+            cell = self.extraCell;
+        }
+            break;
+        default:
+            cell = [FHHouseDetailReportBaseCell new];
+            break;
+    }
     cell.item = item;
+    cell.indexPath = indexPath;
     return cell;
 }
 

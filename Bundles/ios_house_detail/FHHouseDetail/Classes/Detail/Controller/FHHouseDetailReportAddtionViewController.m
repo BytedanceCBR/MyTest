@@ -1039,6 +1039,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
             cell = self.hintCell;
             break;
         default:
+            cell = [FHHouseDetailReportAdditionCell createCell];
             break;
     }
     
