@@ -471,6 +471,11 @@
     
     if(![self.currentVideoCell cell_isPlaying]){
         [cell play];
+        
+        FHUGCFullScreenVideoCell *nextCell = [self getNextFitableVideoCell];
+        if(nextCell){
+            [nextCell readyToPlay];
+        }
     }
 }
 
@@ -484,6 +489,24 @@
             CGRect frame = [vCell.videoView convertRect:vCell.videoView.bounds toView:self.viewController.view];
             if(frame.origin.y >= CGRectGetMaxY(self.viewController.customNavBarView.frame) && (CGRectGetMaxY(frame) - 50) < maxY){
                 return vCell;
+            }
+        }
+    }
+    return nil;
+}
+
+- (FHUGCFullScreenVideoCell *)getNextFitableVideoCell {
+    CGFloat maxY = MAX(self.viewController.view.width, self.viewController.view.height);
+    NSArray *cells = [self.tableView visibleCells];
+    for (NSInteger i = 0; i < (cells.count - 1); i++) {
+        UITableViewCell *cell = cells[i];
+        UITableViewCell *nextCell = cells[i+1];
+        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)] && [nextCell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [nextCell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
+            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)cell;
+            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vNextCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)nextCell;
+            CGRect frame = [vCell.videoView convertRect:vCell.videoView.bounds toView:self.viewController.view];
+            if(frame.origin.y >= CGRectGetMaxY(self.viewController.customNavBarView.frame) && (CGRectGetMaxY(frame) - 50) < maxY){
+                return vNextCell;
             }
         }
     }

@@ -31,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showMutedBtn;
 
+- (void)readyToPlay;
+
 @end
 
 NS_ASSUME_NONNULL_END

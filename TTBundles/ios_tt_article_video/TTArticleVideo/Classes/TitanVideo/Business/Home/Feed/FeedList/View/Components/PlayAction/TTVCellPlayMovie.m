@@ -51,7 +51,8 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 @property (nonatomic, copy) dispatch_block_t shareButtonClickedBlock;
 @property (nonatomic, assign) BOOL isActive;
 @property (nonatomic, assign) CGRect movieViewFrame;
-//@property (nonatomic, strong) TTVCommodityView *commodityView;
+@property (nonatomic, strong) TTVPlayerModel *model;
+
 @end
 
 @implementation TTVCellPlayMovie
@@ -114,10 +115,12 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     }
 }
 
-- (void)play
-{
-    [ExploreMovieView removeAllExploreMovieView];
+- (void)setCellEntity:(TTVFeedListItem *)cellEntity {
+    _cellEntity = cellEntity;
+    [self configurePlayerModel];
+}
 
+- (void)configurePlayerModel {
     TTVPlayerSP sp = (self.cellEntity.article.groupFlags & ArticleGroupFlagsDetailSP) > 0 ? TTVPlayerSPLeTV : TTVPlayerSPToutiao;
     TTVFeedItem *feedItem = self.cellEntity.originData;
     TTVVideoArticle *article = self.cellEntity.article;
@@ -132,44 +135,41 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     model.logExtra = article.logExtra;
     model.videoID = article.videoId;
     model.sp = sp;
-//    model.enterFrom = [self enterFrom];
     model.categoryName = self.cellEntity.categoryId;
     model.authorId = article.userId;
     model.extraDic = self.cellEntity.extraDic;
-
+    
+    if (feedItem.isVideoSourceUGCVideo) {
+        model.defaultResolutionType = TTVPlayerResolutionTypeHD;
+    }
     NSDictionary *dic = [feedItem.logPb tt_JSONValue];
     if ([dic isKindOfClass:[NSDictionary class]]) {
         model.logPb = dic;
     }
-    
     if (!isEmptyString(article.videoDetailInfo.videoSubjectId)) {
         model.videoSubjectID = article.videoDetailInfo.videoSubjectId;
     }
-    
-//    BOOL isVideoFeedURLEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"video_feed_url" defaultValue:@NO freeze:NO] boolValue];
-//    if (isVideoFeedURLEnabled && [self.cellEntity.originData hasVideoPlayInfoUrl] && [self.cellEntity.originData isVideoUrlValid]) {
-//        model.videoPlayInfo = self.cellEntity.originData.videoPlayInfo;
-//    }
-//    NSInteger isVideoShowOptimizeShare = ttvs_isVideoShowOptimizeShare();
-//    if (isVideoShowOptimizeShare > 0){
-//        if (isEmptyString(model.adID)) {
-//            model.playerShowShareMore = isVideoShowOptimizeShare;
-//        }
-//    }
-    
+    BOOL isVideoFeedURLEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"video_feed_url" defaultValue:@NO freeze:NO] boolValue];
+    if (isVideoFeedURLEnabled && [self.cellEntity.originData hasVideoPlayInfoUrl] && [self.cellEntity.originData isVideoUrlValid]) {
+        model.videoPlayInfo = self.cellEntity.originData.videoPlayInfo;
+    }
+
+    _model = model;
+}
+
+- (void)readyToPlay {
+    TTVFeedItem *feedItem = self.cellEntity.originData;
+    TTVVideoArticle *article = self.cellEntity.article;
     //movieView
-    TTVPlayVideo *playVideo = [[TTVPlayVideo alloc] initWithFrame:self.logo.bounds playerModel:model];
+    TTVPlayVideo *playVideo = [[TTVPlayVideo alloc] initWithFrame:self.logo.bounds playerModel:self.model];
     playVideo.player.delegate = self;
-//    playVideo.player.doubleTap666Delegate = self.doubleTap666Delegate;
     playVideo.delegate = self;
-//    if ([self.cellEntity.originData.adModel isCreativeAd]) {//广告
-//        playVideo.player.tipCreator = [[TTVPlayerTipAdNewCreator alloc] init];
-//    }else{
-//        NSInteger isVideoShowDirectShare = ttvs_isVideoShowDirectShare();
-//        if ((isVideoShowDirectShare == 1 || isVideoShowDirectShare == 3) && isEmptyString(model.adID)){
-//            playVideo.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
-//        }
-//    }
+
+    NSInteger isVideoShowDirectShare = ttvs_isVideoShowDirectShare();
+    if ((isVideoShowDirectShare == 1 || isVideoShowDirectShare == 3) && isEmptyString(self.model.adID)){
+        playVideo.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
+    }
+    
     playVideo.player.enableRotate = !self.cellEntity.forbidRotate;
     
     NSDictionary *videoLargeImageDict = feedItem.largeImageDict;
@@ -179,21 +179,110 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     [playVideo setVideoLargeImageDict:videoLargeImageDict];
     self.movieView = playVideo;
     [self.movieView.player readyToPlay];
-//    if (isAutoPlaying && self.cellEntity.article.adId.longLongValue > 0) {
-//        self.movieView.player.banLoading = YES;
-//        self.movieView.player.muted = [self.cellEntity.originData couldAutoPlay];
-//    }
+//    [self.movieView.player setBanLoading:self.cellEntity.banLoading];
     self.movieView.player.muted = self.cellEntity.muted;
     [self addUrlTrackerOnPlayer:playVideo];
     [self settingMovieView:self.movieView];
-    [self.movieView.player play];
+    
     if(!self.cellEntity.hideTitleAndWatchCount){
         [playVideo.player setVideoTitle:feedItem.title];
         [playVideo.player setVideoWatchCount:article.videoDetailInfo.videoWatchCount playText:@"次播放"];
     }
     self.logo.userInteractionEnabled = ![feedItem couldAutoPlay];
     [self.logo addSubview:self.movieView];
+    self.movieView.hidden = YES;
 }
+
+- (void)play
+{
+    if(!self.movieView){
+        [self readyToPlay];
+    }
+    [ExploreMovieView removeAllExceptExploreMovieView:self.movieView];
+    [self.movieView.player play];
+    self.movieView.hidden = NO;
+}
+
+//- (void)play
+//{
+//    [ExploreMovieView removeAllExploreMovieView];
+//
+//    TTVPlayerSP sp = (self.cellEntity.article.groupFlags & ArticleGroupFlagsDetailSP) > 0 ? TTVPlayerSPLeTV : TTVPlayerSPToutiao;
+//    TTVFeedItem *feedItem = self.cellEntity.originData;
+//    TTVVideoArticle *article = self.cellEntity.article;
+//
+//    //TTVPlayerModel
+//    TTVPlayerModel *model = [[TTVPlayerModel alloc] init];
+//    model.categoryID = self.cellEntity.categoryId;
+//    model.groupID = [NSString stringWithFormat:@"%lld",article.groupId];
+//    model.itemID = [NSString stringWithFormat:@"%lld",article.itemId];
+//    model.aggrType = article.aggrType;
+//    model.adID = article.adId;
+//    model.logExtra = article.logExtra;
+//    model.videoID = article.videoId;
+//    model.sp = sp;
+////    model.enterFrom = [self enterFrom];
+//    model.categoryName = self.cellEntity.categoryId;
+//    model.authorId = article.userId;
+//    model.extraDic = self.cellEntity.extraDic;
+//
+//    NSDictionary *dic = [feedItem.logPb tt_JSONValue];
+//    if ([dic isKindOfClass:[NSDictionary class]]) {
+//        model.logPb = dic;
+//    }
+//
+//    if (!isEmptyString(article.videoDetailInfo.videoSubjectId)) {
+//        model.videoSubjectID = article.videoDetailInfo.videoSubjectId;
+//    }
+//
+////    BOOL isVideoFeedURLEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"video_feed_url" defaultValue:@NO freeze:NO] boolValue];
+////    if (isVideoFeedURLEnabled && [self.cellEntity.originData hasVideoPlayInfoUrl] && [self.cellEntity.originData isVideoUrlValid]) {
+////        model.videoPlayInfo = self.cellEntity.originData.videoPlayInfo;
+////    }
+////    NSInteger isVideoShowOptimizeShare = ttvs_isVideoShowOptimizeShare();
+////    if (isVideoShowOptimizeShare > 0){
+////        if (isEmptyString(model.adID)) {
+////            model.playerShowShareMore = isVideoShowOptimizeShare;
+////        }
+////    }
+//
+//    //movieView
+//    TTVPlayVideo *playVideo = [[TTVPlayVideo alloc] initWithFrame:self.logo.bounds playerModel:model];
+//    playVideo.player.delegate = self;
+////    playVideo.player.doubleTap666Delegate = self.doubleTap666Delegate;
+//    playVideo.delegate = self;
+////    if ([self.cellEntity.originData.adModel isCreativeAd]) {//广告
+////        playVideo.player.tipCreator = [[TTVPlayerTipAdNewCreator alloc] init];
+////    }else{
+////        NSInteger isVideoShowDirectShare = ttvs_isVideoShowDirectShare();
+////        if ((isVideoShowDirectShare == 1 || isVideoShowDirectShare == 3) && isEmptyString(model.adID)){
+////            playVideo.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
+////        }
+////    }
+//    playVideo.player.enableRotate = !self.cellEntity.forbidRotate;
+//
+//    NSDictionary *videoLargeImageDict = feedItem.largeImageDict;
+//    if (!videoLargeImageDict) {
+//        videoLargeImageDict = [feedItem.videoDetailInfo objectForKey:VideoInfoImageDictKey];
+//    }
+//    [playVideo setVideoLargeImageDict:videoLargeImageDict];
+//    self.movieView = playVideo;
+//    [self.movieView.player readyToPlay];
+////    if (isAutoPlaying && self.cellEntity.article.adId.longLongValue > 0) {
+////        self.movieView.player.banLoading = YES;
+////        self.movieView.player.muted = [self.cellEntity.originData couldAutoPlay];
+////    }
+//    self.movieView.player.muted = self.cellEntity.muted;
+//    [self addUrlTrackerOnPlayer:playVideo];
+//    [self settingMovieView:self.movieView];
+//    [self.movieView.player play];
+//    if(!self.cellEntity.hideTitleAndWatchCount){
+//        [playVideo.player setVideoTitle:feedItem.title];
+//        [playVideo.player setVideoWatchCount:article.videoDetailInfo.videoWatchCount playText:@"次播放"];
+//    }
+//    self.logo.userInteractionEnabled = ![feedItem couldAutoPlay];
+//    [self.logo addSubview:self.movieView];
+//}
 
 - (void)setVideoTitle:(NSString *)title
 {
@@ -468,6 +557,11 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 - (void)stopAllMovieViewPlay:(NSNotification *)notification
 {
+    NSDictionary *userInfo = notification.userInfo;
+    if(userInfo[@"video"] && userInfo[@"video"] == self.movieView){
+        return;
+    }
+    
     [self invalideMovieView];
     [[TTVAutoPlayManager sharedManager] resetForce];
     self.movieView = nil;
