@@ -42,7 +42,6 @@
     
 }
 
-
 - (void)resumeVRIcon {
     if (_vrLoadingView && !self.vrLoadingView.hidden) {
         [self.vrLoadingView play];
@@ -66,7 +65,7 @@
         maskLayer.path = maskPath.CGPath;
         self.houseCellBackView.layer.mask = maskLayer;
     } else if (isLast) {
-                UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.houseCellBackView.bounds byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
         maskLayer.frame = self.houseCellBackView.bounds;
         maskLayer.path = maskPath.CGPath;
@@ -76,7 +75,7 @@
     }
 }
 
--(UILabel *)mainTitleLabel {
+- (UILabel *)mainTitleLabel {
     if (!_mainTitleLabel) {
         _mainTitleLabel = [[UILabel alloc]init];
         _mainTitleLabel.font = [UIFont themeFontRegular:16];
@@ -85,7 +84,7 @@
     return _mainTitleLabel;
 }
 
--(UILabel *)subTitleLabel {
+- (UILabel *)subTitleLabel {
     if (!_subTitleLabel) {
         _subTitleLabel = [[UILabel alloc]init];
         _subTitleLabel.font = [UIFont themeFontRegular:12];
@@ -94,7 +93,7 @@
     return _subTitleLabel;
 }
 
--(YYLabel *)tagLabel {
+- (YYLabel *)tagLabel {
     if (!_tagLabel) {
         _tagLabel = [[YYLabel alloc]init];
         _tagLabel.font = [UIFont themeFontRegular:12];
@@ -103,12 +102,12 @@
     return _tagLabel;
 }
 
--(UILabel *)pricePerSqmLabel {
+- (UILabel *)pricePerSqmLabel {
     if (!_pricePerSqmLabel) {
         _pricePerSqmLabel = [[UILabel alloc]init];
         if ([UIDevice btd_isScreenWidthLarge320]) {
             _pricePerSqmLabel.font = [UIFont themeFontRegular:12];
-        }else {
+        } else {
             _pricePerSqmLabel.font = [UIFont themeFontRegular:10];
         }
         _pricePerSqmLabel.textColor = [UIColor themeGray1];
@@ -116,7 +115,7 @@
     return _pricePerSqmLabel;
 }
 
--(UILabel *)priceLabel {
+- (UILabel *)priceLabel {
     if (!_priceLabel) {
         _priceLabel = [[UILabel alloc]init];
         _priceLabel.font = [UIFont themeFontSemibold:16];
@@ -125,7 +124,7 @@
     return _priceLabel;
 }
 
--(UILabel *)originPriceLabel {
+- (UILabel *)originPriceLabel {
     if (!_originPriceLabel) {
         _originPriceLabel = [[UILabel alloc]init];
         if ([UIDevice btd_isScreenWidthLarge320]) {
@@ -139,7 +138,7 @@
     return _originPriceLabel;
 }
 
--(LOTAnimationView *)vrLoadingView {
+- (LOTAnimationView *)vrLoadingView {
     if (!_vrLoadingView) {
         NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
         _vrLoadingView = [LOTAnimationView animationWithFilePath:path];
@@ -148,7 +147,7 @@
     return _vrLoadingView;
 }
 
--(UIImageView *)mainImageView {
+- (UIImageView *)mainImageView {
     if (!_mainImageView) {
         _mainImageView = [[UIImageView alloc]init];
         _mainImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -188,7 +187,7 @@
     return _houseCellBackView;
 }
 
--(UIView *)houseMainImageBackView {
+- (UIView *)houseMainImageBackView {
     if (!_houseMainImageBackView) {
         _houseMainImageBackView = [[UIView alloc] init];
         _houseMainImageBackView.backgroundColor = [UIColor whiteColor];
@@ -201,7 +200,7 @@
     return _houseMainImageBackView;
 }
 
--(FHCornerView *)imageTagLabelBgView {
+- (FHCornerView *)imageTagLabelBgView {
     if (!_imageTagLabelBgView) {
         _imageTagLabelBgView = [[FHCornerView alloc]init];
         _imageTagLabelBgView.backgroundColor = [UIColor themeRed3];
@@ -210,7 +209,7 @@
     return _imageTagLabelBgView;
 }
 
--(UILabel *)imageTagLabel {
+- (UILabel *)imageTagLabel {
     if (!_imageTagLabel) {
         _imageTagLabel = [[UILabel alloc]init];
         _imageTagLabel.text = @"";
@@ -221,7 +220,7 @@
     return _imageTagLabel;
 }
 
--(UIImageView *)houseVideoImageView {
+- (UIImageView *)houseVideoImageView {
     if (!_houseVideoImageView) {
         _houseVideoImageView = [[UIImageView alloc]init];
         _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video"];
