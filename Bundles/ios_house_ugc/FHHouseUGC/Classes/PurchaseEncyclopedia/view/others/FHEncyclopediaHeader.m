@@ -18,7 +18,7 @@
 #import "SDWebImageManager.h"
 #import "UIColor+Theme.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "HMDTTMonitor.h"
 
 @interface FHEncyclopediaHeader()<LynxViewClient>
@@ -115,7 +115,7 @@
 - (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",@"ugc_encyclopedia_lynx_header"];
     if (time < 15) {
@@ -127,7 +127,7 @@
 - (void)lynxView:(LynxView*)view didReceiveFirstLoadPerf:(LynxPerformance*)perf{
     
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
         [uploadParams addEntriesFromDictionary:[perf toDictionary]];

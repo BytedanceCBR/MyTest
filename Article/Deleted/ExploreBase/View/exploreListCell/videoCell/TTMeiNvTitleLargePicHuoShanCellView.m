@@ -22,6 +22,7 @@
 #import "TTArticleCellHelper.h"
 #import "NSString-Extension.h"
 #import "TTDeviceHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define kDurationRightPadding 5
@@ -200,7 +201,7 @@
     
     //入口需要发送统计
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        wrapperTrackEventWithCustomKeys(@"go_detail", @"click_image_ppmm", self.orderedData.huoShan.liveId.stringValue, nil, @{@"room_id":self.orderedData.huoShan.liveId,@"user_id":[self.orderedData.huoShan.userInfo objectForKey:@"user_id"]});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"go_detail" label:@"click_image_ppmm" value:self.orderedData.huoShan.liveId.stringValue source:nil extraDic:@{@"room_id":self.orderedData.huoShan.liveId,@"user_id":[self.orderedData.huoShan.userInfo objectForKey:@"user_id"]}];
     }
     
     //log3.0 doubleSending
@@ -209,7 +210,7 @@
     [logv3Dic setValue:[self.orderedData.huoShan.userInfo objectForKey:@"user_id"] forKey:@"user_id"];
     [logv3Dic setValue:@"click_image_ppmm" forKey:@"enter_from"];
     [logv3Dic setValue:self.orderedData.logPb forKey:@"log_pb"];
-    [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
+    [BDTrackerProtocol eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
 }
 
 

@@ -24,6 +24,7 @@
 #import "TTBadgeNumberView.h"
 #import "TTViewWrapper.h"
 #import "TTDeviceHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 
@@ -203,7 +204,7 @@
 - (void)addSubscribeTapAction:(UITapGestureRecognizer *)recognizer
 {
 
-    wrapperTrackEventWithCustomKeys(@"subscription", @"enter", nil, nil, @{@"source":@"card"});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"subscription" label:@"enter" value:nil source:nil extraDic:@{@"source":@"card"}];
     
     ExploreAddEntryListViewController * controller = [[ExploreAddEntryListViewController alloc] init];
     [[TTUIResponderHelper topNavigationControllerFor: self] pushViewController:controller animated:YES];
@@ -262,7 +263,7 @@
                                           
                                           if (wself.listTableView.pullDownView.isUserPullAndRefresh)
                                           {
-                                              wrapperTrackEvent(@"subscription", @"pull_refresh");
+                                              [BDTrackerProtocol event:@"subscription" label:@"pull_refresh"];
                                               [wself trackPullDownEventForLabel:@"refresh_pull"];
                                           }
                                           
@@ -589,11 +590,11 @@
             {
                 if ([entry.badgeCount intValue] > 0 || [entry.isNewSubscibed boolValue])
                 {
-                    wrapperTrackEventWithCustomKeys(@"subscription", @"click_pgc_tip", entry.mediaID.stringValue, nil, nil);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"subscription" label:@"click_pgc_tip" value:entry.mediaID.stringValue source:nil extraDic:nil];
                 }
                 else
                 {
-                    wrapperTrackEventWithCustomKeys(@"subscription", @"click_pgc", entry.mediaID.stringValue, nil, nil);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"subscription" label:@"click_pgc" value:entry.mediaID.stringValue source:nil extraDic:nil];
                 }
 
                 _needClearBadgeDataIndex = dataIndex;
@@ -626,7 +627,7 @@
         {
             ExploreEntry * entry = (ExploreEntry *)data;
             
-            wrapperTrackEventWithCustomKeys(@"sub_old", @"sub_show_account_old", entry.mediaID.stringValue, nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"sub_old" label:@"sub_show_account_old" value:entry.mediaID.stringValue source:nil extraDic:nil];
         }
         [_cellIsDisplayedDictionary setObject:@(YES) forKey:row];//记录哪些cell已经统计过了
     }
@@ -689,7 +690,7 @@
                 {
                     ExploreEntry * entry = (ExploreEntry *)data;
                     
-                    wrapperTrackEventWithCustomKeys(@"sub_old", @"sub_show_account_old", entry.mediaID.stringValue, nil, nil);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"sub_old" label:@"sub_show_account_old" value:entry.mediaID.stringValue source:nil extraDic:nil];
                 }
                 [_cellIsDisplayedDictionary setObject:@(YES) forKey:row];//记录哪些cell已经统计过了
             }

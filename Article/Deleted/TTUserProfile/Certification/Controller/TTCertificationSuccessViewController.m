@@ -14,6 +14,7 @@
 #import <TTAccountBusiness.h>
 #import "TTThemedAlertController.h"
 #import "TTCertificationConst.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 @interface TTCertificationSuccessBottomView : SSThemedView
 
 @property (nonatomic, strong) SSThemedLabel *titleLabel;
@@ -498,7 +499,7 @@
 
 - (void)modifyOperationViewClick
 {
-    [TTTrackerWrapper eventV3:@"certificate_modify" params:nil];
+    [BDTrackerProtocol eventV3:@"certificate_modify" params:nil];
     if(self.operationViewClick) {
         self.operationViewClick(YES);
     }
@@ -507,12 +508,12 @@
 - (void)certificationGetViewClick
 {
     if ([self.authType isEqualToString:KTTVerifyNoVVerifyType]) {
-        [TTTrackerWrapper eventV3:@"certificate_v_apply" params:nil];
+        [BDTrackerProtocol eventV3:@"certificate_v_apply" params:nil];
         if(self.certificationGetVClick) {
             self.certificationGetVClick();
         }
     } else {
-        [TTTrackerWrapper eventV3:@"certificate_modify" params:nil];
+        [BDTrackerProtocol eventV3:@"certificate_modify" params:nil];
         if(self.operationViewClick) {
             self.operationViewClick(YES);
         }

@@ -11,6 +11,7 @@
 #import "TTURLDomainHelper.h"
 #import "NSDictionary+TTAdditions.h"
 #import "TTPushGuideSettings.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @import ObjectiveC;
 
@@ -88,9 +89,9 @@
         BOOL canOpenSettings = &UIApplicationOpenSettingsURLString != NULL;
         
         if (canOpenSettings) {
-            wrapperTrackEvent(@"pop", @"push_feed_limit_choose");
+            [BDTrackerProtocol event:@"pop" label:@"push_feed_limit_choose"];
         } else {
-            wrapperTrackEvent(@"pop", @"push_feed_limit_show");
+            [BDTrackerProtocol event:@"pop" label:@"push_feed_limit_show"];
         }
         
         TTPushGuideDialogCategory category = [self.class categoryOfFiringPushGuideDlg:self.authorizeModel.pushFireReason];
@@ -112,12 +113,12 @@
                     [[UIApplication sharedApplication] openURL:url];
                 }
                 
-                wrapperTrackEvent(@"pop", @"push_feed_limit_set");
+                [BDTrackerProtocol event:@"pop" label:@"push_feed_limit_set"];
             }
             
             // 显示引导弹窗埋点
             if (TTPushNoteGuideFireReasonNone != self.authorizeModel.pushFireReason) {
-                [TTTrackerWrapper eventV3:@"push_guide" params:@{@"click_push_guide_dialog": @(1)}];
+                [BDTrackerProtocol eventV3:@"push_guide" params:@{@"click_push_guide_dialog": @(1)}];
             }
             
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(10 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -128,7 +129,7 @@
                 } else {
                     isAPNSEnabled = ([[UIApplication sharedApplication] enabledRemoteNotificationTypes] != UIRemoteNotificationTypeNone);
                 }
-                [TTTrackerWrapper eventV3:@"push_guide" params:@{@"click_push_guide_dialog": @(1), @"notificationStatus": isAPNSEnabled ? @(1) : @(0)}];
+                [BDTrackerProtocol eventV3:@"push_guide" params:@{@"click_push_guide_dialog": @(1), @"notificationStatus": isAPNSEnabled ? @(1) : @(0)}];
             });
             
             [[TTGuideDispatchManager sharedInstance_tt] removeGuideViewItem:self];
@@ -137,12 +138,12 @@
         } cancelBlock:^{
             
             if (canOpenSettings) {
-                wrapperTrackEvent(@"pop", @"push_feed_limit_cancel");
+                [BDTrackerProtocol event:@"pop" label:@"push_feed_limit_cancel"];
             }
             
             // 显示引导弹窗埋点
             if (TTPushNoteGuideFireReasonNone != self.authorizeModel.pushFireReason) {
-                [TTTrackerWrapper eventV3:@"push_guide" params:@{@"click_push_guide_dialog": @(3)}];
+                [BDTrackerProtocol eventV3:@"push_guide" params:@{@"click_push_guide_dialog": @(3)}];
             }
             
             [[TTGuideDispatchManager sharedInstance_tt] removeGuideViewItem:self];
@@ -299,18 +300,18 @@
     __weak typeof(self) wself = self;
     _hintView = [self authorizeHintViewWithTitle:@"开启要闻通知" message:@"允许今日头条获取推送权限，第一时间获知重大新闻" imageName:@"img_popup_notice" okButtonTitle:@"确定" okBlock:^{
         __strong typeof(wself) self = wself;
-        wrapperTrackEvent(@"pop", @"push_permission_guide_confirm");
+        [BDTrackerProtocol event:@"pop" label:@"push_permission_guide_confirm"];
         if(completionHandler){
             completionHandler();
         }
         [self updateShowTime];
         [[TTGuideDispatchManager sharedInstance_tt]removeGuideViewItem:self];
     } cancelBlock:^{
-        wrapperTrackEvent(@"pop", @"push_permission_guide_cancel");
+        [BDTrackerProtocol event:@"pop" label:@"push_permission_guide_cancel"];
         [[TTGuideDispatchManager sharedInstance_tt]removeGuideViewItem:self];
     }];
     [[TTGuideDispatchManager sharedInstance_tt] addGuideViewItem:self withContext:nil];
-    wrapperTrackEvent(@"pop", @"push_permission_guide_show");
+    [BDTrackerProtocol event:@"pop" label:@"push_permission_guide_show"];
 }
 
 //根据时间和次数判断是否应该显示自有推送权限弹窗
@@ -342,7 +343,7 @@
     
     // 显示引导弹窗埋点
     if (TTPushNoteGuideFireReasonNone != self.authorizeModel.pushFireReason) {
-        [TTTrackerWrapper eventV3:@"push_guide" params:@{@"show_guide_dialog": @([self positionForFirePushGuideDlg])}];
+        [BDTrackerProtocol eventV3:@"push_guide" params:@{@"show_guide_dialog": @([self positionForFirePushGuideDlg])}];
     }
 }
 

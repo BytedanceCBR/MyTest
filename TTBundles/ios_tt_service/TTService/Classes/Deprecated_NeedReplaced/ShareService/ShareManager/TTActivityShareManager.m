@@ -36,7 +36,6 @@
 
 #import "TTRoute.h"
 
-#import "TTInstallIDManager.h"
 #import "UIView+SupportFullScreen.h"
 #import "FHUserTracker.h"
 #import "TTVShareActionsTracker.h"
@@ -942,7 +941,7 @@ static BOOL isMovieFullScreen;
             [dict setValue:page_type forKey:@"page_type"];
             [dict setValue:_groupModel.groupID forKey:@"group_id"];
             [dict setValue:_groupModel.itemID forKey:@"id"];
-            [dict setValue:[[TTInstallIDManager sharedInstance] installID] forKey:@"iid"];
+            [dict setValue:[BDTrackerProtocol installID] forKey:@"iid"];
             [weixin sendWebpageWithMiniProgramShareInScene:WXSceneSession withParameterDict:dict WebpageURL:urlStr thumbnailImage:image title:title description:desc customCallbackUserInfo:nil];
         }else{
             [weixin sendWebpageToScene:WXSceneSession withWebpageURL:urlStr thumbnailImage:image title:title description:desc customCallbackUserInfo:nil];

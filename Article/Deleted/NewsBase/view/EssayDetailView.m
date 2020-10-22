@@ -50,6 +50,7 @@
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
 #import <TTServiceKit/TTServiceCenter.h>
 #import "TTAdManagerProtocol.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 // These macros are copied from "NewsDetailView.m"
 // Be used to set the frame of AASettingButton
@@ -248,13 +249,13 @@ typedef enum ShowLoginReason
 {
     if (scrollView.contentOffset.y > view.commentTableView.tableHeaderView.height) {
         if (!_currentIsOpenStatus) {
-            wrapperTrackEvent(@"detail", @"pull_open_drawer");
+            [BDTrackerProtocol event:@"detail" label:@"pull_open_drawer"];
         }
         _currentIsOpenStatus = YES;
     }
     else {
         if (_currentIsOpenStatus) {
-            wrapperTrackEvent(@"detail", @"pull_close_drawer");
+            [BDTrackerProtocol event:@"detail" label:@"pull_close_drawer"];
         }
         _currentIsOpenStatus = NO;
     }
@@ -490,8 +491,8 @@ typedef enum ShowLoginReason
 
     TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:gID];
     [_essayCommentView openInputViewWithContent:nil inputTitle:sDefaultTitle groupModel:groupModel commentID:nil itemTag:nil itemBannComment:banComment];
-    wrapperTrackEvent(@"detail", @"write_button");
-    wrapperTrackEvent(@"comment", @"input_comment");
+    [BDTrackerProtocol event:@"detail" label:@"write_button"];
+    [BDTrackerProtocol event:@"comment" label:@"input_comment"];
 }
 
 - (void)openAASettingView:(id) sender {
@@ -507,7 +508,7 @@ typedef enum ShowLoginReason
         [_functionView showInView:self atPoint:CGPointMake(0,  self.height - _functionView.height)];
         [_functionView.superview bringSubviewToFront:_functionView];
     }
-    wrapperTrackEvent(@"detail", @"preferences");
+    [BDTrackerProtocol event:@"detail" label:@"preferences"];
 }
 
 //现有逻辑应该走不到，加上防止crash
@@ -633,8 +634,8 @@ typedef enum ShowLoginReason
    
 }
 -(void)reportButtonClicked {
-    wrapperTrackEvent(@"detail", @"report_button");
-    wrapperTrackEvent(@"detail", @"report");
+    [BDTrackerProtocol event:@"detail" label:@"report_button"];
+    [BDTrackerProtocol event:@"detail" label:@"report"];
     [self reportEssay];
 }
 
@@ -646,13 +647,13 @@ typedef enum ShowLoginReason
     {
         [_essayCommentView scrollToTopCommentAnimated:YES];
         needScrollToComment = NO;
-        wrapperTrackEvent(@"detail", @"handle_open_drawer");
+        [BDTrackerProtocol event:@"detail" label:@"handle_open_drawer"];
     }
     else
     {
         [_essayCommentView scrollToTopHeaderAnimated:YES];
         needScrollToComment = YES;
-        wrapperTrackEvent(@"detail", @"handle_close_drawer");
+        [BDTrackerProtocol event:@"detail" label:@"handle_close_drawer"];
     }
 }
 
@@ -714,7 +715,7 @@ typedef enum ShowLoginReason
     }
     NSString *label = [TTActivityShareManager labelNameForShareActivityType:itemType];
     NSString *essayId = [NSString stringWithFormat:@"%lld", _essayData.uniqueID];
-    wrapperTrackEventWithCustomKeys(_tag, label, essayId, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:_tag label:label value:essayId source:nil extraDic:nil];
 }
 
 #pragma mark -- SSActivityViewDelegate
@@ -750,7 +751,7 @@ typedef enum ShowLoginReason
                 [[TTThemeManager sharedInstance_tt] switchThemeModeto:TTThemeModeDay];
                 eventID = @"click_to_day";
             }
-            wrapperTrackEvent(tag, eventID);
+            [BDTrackerProtocol event:tag label:eventID];
             //做一个假的动画效果 让夜间渐变
             UIView * imageScreenshot = [self.window snapshotViewAfterScreenUpdates:NO];
             
@@ -803,7 +804,7 @@ typedef enum ShowLoginReason
 {
     if(![TTAccountManager isLogin])
     {
-        wrapperTrackEvent(@"login", @"login_pop_close");
+        [BDTrackerProtocol event:@"login" label:@"login_pop_close"];
     }
 }
 

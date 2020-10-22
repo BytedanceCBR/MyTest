@@ -17,7 +17,7 @@
 #import "SSAppStore.h"
 #import "TTRoute.h"
 #import "TTVFantasy.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTAlphaThemedButton.h"
 #import "TTFeedDislikeView.h"
 #import "ExploreMixListDefine.h"
@@ -436,7 +436,7 @@ extern NSString * const kTTFEnterFromTypeKey;
         categoryID = self.orderedData.categoryID;
     }
     if (self.orderedData.uniqueID) {
-        [TTTrackerWrapper eventV3:@"fantasy_card_click" params:@{@"fantasy_card_id" : self.orderedData.uniqueID, @"category_name" : categoryID, @"click_position" : @"all"}];
+        [BDTrackerProtocol eventV3:@"fantasy_card_click" params:@{@"fantasy_card_id" : self.orderedData.uniqueID, @"category_name" : categoryID, @"click_position" : @"all"}];
     }
     
     FantasyCardData *fantasyCardData = self.orderedData.fantasyCardData;

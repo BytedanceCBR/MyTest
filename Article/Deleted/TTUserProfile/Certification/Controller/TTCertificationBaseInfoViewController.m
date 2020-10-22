@@ -15,6 +15,7 @@
 #import "TTCertificationOrganizationViewController.h"
 #import "TTCertificationTakePhotoTipView.h"
 #import "TTCertificationConst.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kSegmentViewHeight 41
 #define kTopNavViewHeight (TTNavigationBarHeight + [UIApplication sharedApplication].statusBarFrame.size.height)
@@ -252,10 +253,10 @@
     NSString *imageName = nil;
     if(photoType == TTPhotoTypeIDCard) {
         imageName = @"certification_person";
-        [TTTrackerWrapper eventV3:@"certificate_identity_add" params:@{@"from" : @"hold_photo"}];
+        [BDTrackerProtocol eventV3:@"certificate_identity_add" params:@{@"from" : @"hold_photo"}];
     } else {
         imageName = @"certification_card";
-        [TTTrackerWrapper eventV3:@"certificate_identity_add" params:@{@"from" : @"full_face"}];
+        [BDTrackerProtocol eventV3:@"certificate_identity_add" params:@{@"from" : @"full_face"}];
     }
     takePhotoTipView.imageName = imageName;
     takePhotoTipView.titleModels = [self photoTipModelsWithType:self.photoType];
@@ -317,7 +318,7 @@
 
 - (void)operationViewClick
 {
-    [TTTrackerWrapper eventV3:@"certificate_next" params:nil];
+    [BDTrackerProtocol eventV3:@"certificate_next" params:nil];
     if(self.opreationViewClickBlock) {
         self.opreationViewClickBlock();
     }
@@ -354,7 +355,7 @@
     if(buttonIndex == 0) {
         
         if(self.photoType == TTPhotoTypeIDCard) {
-            [TTTrackerWrapper eventV3:@"certificate_take_photo" params:@{@"from" : @"hold_photo"}];
+            [BDTrackerProtocol eventV3:@"certificate_take_photo" params:@{@"from" : @"hold_photo"}];
             pick.sourceType = UIImagePickerControllerSourceTypeCamera;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 UINavigationController *nav = [TTUIResponderHelper topNavigationControllerFor:self.view];
@@ -363,7 +364,7 @@
             
         } else {
             TTCertificationTakePhotoViewController *takePhotoViewController = [[TTCertificationTakePhotoViewController alloc] init];
-            [TTTrackerWrapper eventV3:@"certificate_take_photo" params:@{@"from" : @"full_face"}];
+            [BDTrackerProtocol eventV3:@"certificate_take_photo" params:@{@"from" : @"full_face"}];
             takePhotoViewController.needEdging = YES;
             __weak typeof(self) weakSelf = self;
             takePhotoViewController.didFinishBlock = ^(UIImage *image) {
@@ -377,9 +378,9 @@
         }
     } else if(buttonIndex == 1) {
         if(self.photoType == TTPhotoTypeIDCard) {
-            [TTTrackerWrapper eventV3:@"certificate_upload_photo" params:@{@"from" : @"hold_photo"}];
+            [BDTrackerProtocol eventV3:@"certificate_upload_photo" params:@{@"from" : @"hold_photo"}];
         } else {
-            [TTTrackerWrapper eventV3:@"certificate_upload_photo" params:@{@"from" : @"full_face"}];
+            [BDTrackerProtocol eventV3:@"certificate_upload_photo" params:@{@"from" : @"full_face"}];
         }
         pick.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -403,7 +404,7 @@
 {
     [self tapClick];
     if(toIndex == 1) {
-        [TTTrackerWrapper eventV3:@"certificate_identity_click_org" params:@{@"refer" : @"identity"}];
+        [BDTrackerProtocol eventV3:@"certificate_identity_click_org" params:@{@"refer" : @"identity"}];
         [self.view addSubview:self.organizationVC.view];
         self.organizationVC.view.left = 0;
         self.organizationVC.view.top = self.segmentView.bottom;

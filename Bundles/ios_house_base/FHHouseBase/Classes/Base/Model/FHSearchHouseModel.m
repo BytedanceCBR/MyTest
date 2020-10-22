@@ -419,6 +419,7 @@
                            @"houseType": @"house_type",
                            @"houseVideo": @"house_video",
                            @"displaySameNeighborhoodTitle": @"display_same_neighborhood_title",
+                           @"displayNewNeighborhoodTitle":@"display_new_neighborhood_title",
                            @"baseInfoMap": @"base_info_map",
                            @"coreInfo": @"core_info",
                            @"hid":@"id",
@@ -432,6 +433,7 @@
                            @"associateInfo": @"associate_info",
                            @"tagImage": @"tag_image",
                            @"recommendType": @"recommend_type",
+                           @"titleTags": @"title_tags",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

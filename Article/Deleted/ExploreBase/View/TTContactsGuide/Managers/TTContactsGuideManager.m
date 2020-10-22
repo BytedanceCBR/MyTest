@@ -21,6 +21,7 @@
 #import "TTContactsGuideViewHelper.h"
 #import "TTContactsRedPacketGuideViewHelper.h"
 #import <TTDialogDirector/TTDialogDirector.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 NSString * const kTTContactsCheckResultKey               = @"kTTContactsCheckResultKey"; // 上次请求通讯录弹窗接口的结果缓存
@@ -96,11 +97,11 @@ static TTIndicatorView *kIndicatorView = nil;
                         if (!error2) {
                             [TTContactsUserDefaults setHasUploadedContacts:YES];
 
-                            [TTTrackerWrapper eventV3:@"upload_concat_list_auto" params:@{
+                            [BDTrackerProtocol eventV3:@"upload_concat_list_auto" params:@{
                                 @"type": @"success"
                             }];
                         } else {
-                            [TTTrackerWrapper eventV3:@"upload_concat_list_auto" params:@{
+                            [BDTrackerProtocol eventV3:@"upload_concat_list_auto" params:@{
                                 @"type" : @"failure",
                                 @"reason" : @(error2.code)
                             }];
@@ -108,7 +109,7 @@ static TTIndicatorView *kIndicatorView = nil;
                     }];
                 });
             } else {
-                [TTTrackerWrapper eventV3:@"upload_concat_list_auto" params:@{
+                [BDTrackerProtocol eventV3:@"upload_concat_list_auto" params:@{
                     @"type" : @"failure",
                     @"reason" : @(error.code)
                 }];

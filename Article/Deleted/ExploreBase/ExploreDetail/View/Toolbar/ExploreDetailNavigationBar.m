@@ -20,6 +20,7 @@
 #import "TTIconLabel+VerifyIcon.h"
 #import "ExploreAvatarView+VerifyIcon.h"
 #import <TTInstallJSONHelper.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define AvatarViewHeightWithShowFans 36
 #define AvatarViewHeightWithoutShowFans 24
@@ -222,7 +223,7 @@
         [params setValue:@"gallery_detail" forKey:@"source"];
         [params setValue:article.mediaUserID forKey:@"user_id"];
         [params setValue:[article groupModel].groupID forKey:@"group_id"];
-        [TTTrackerWrapper eventV3:@"follow_show" params:params];
+        [BDTrackerProtocol eventV3:@"follow_show" params:params];
         
         _mediaName.alpha = 1;
         [self setNeedsLayout];

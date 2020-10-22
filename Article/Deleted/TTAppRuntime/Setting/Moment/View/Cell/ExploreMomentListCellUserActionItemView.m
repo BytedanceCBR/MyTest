@@ -24,6 +24,7 @@
 #import "TTBusinessManager+StringUtils.h"
 #import "ArticleMomentGroupModel.h"
 #import "TTTabBarProvider.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kViewHeight (7 + 14 + 16)
 
@@ -97,10 +98,10 @@
 {
     if (self.isInMomentListView) {
         if ([TTTabBarProvider isFollowTabOnTabBar]) {
-            wrapperTrackEvent(self.listUmengEventName, @"digg");
+            [BDTrackerProtocol event:self.listUmengEventName label:@"digg"];
         }
     } else {
-        wrapperTrackEvent(self.detailUmengEventName, @"digg");
+        [BDTrackerProtocol event:self.detailUmengEventName label:@"digg"];
     }
     if (!TTNetworkConnected()) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"没有网络连接" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:nil];
@@ -117,7 +118,7 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"digg" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"digg" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
     }
     
@@ -267,9 +268,9 @@
 - (void)openForwardView
 {
     if (self.isInMomentListView) {
-        wrapperTrackEvent(self.listUmengEventName, @"repost");
+        [BDTrackerProtocol event:self.listUmengEventName label:@"repost"];
     } else {
-        wrapperTrackEvent(self.detailUmengEventName, @"repost");
+        [BDTrackerProtocol event:self.detailUmengEventName label:@"repost"];
     }
     
     ArticleForwardSourceType sourceType = ArticleForwardSourceTypeOther;

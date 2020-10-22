@@ -13,7 +13,7 @@
 #import "CommonURLSetting.h"
 #import "UIDevice+TTAdditions.h"
 #import "SSCommonLogic.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "CommonURLSetting.h"
 #import "TTProjectLogicManager.h"
 #import "TTSandBoxHelper.h"
@@ -268,7 +268,7 @@ static SSFeedbackManager *manager = nil;
     
     NSMutableDictionary * parameterDict = [NSMutableDictionary dictionaryWithCapacity:10];
     [parameterDict setValue:_feedbackKey forKey:@"appkey"];
-    [parameterDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [parameterDict setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     if (isLoadMore) {
         [parameterDict setValue:cId forKey:@"max_id"];
     }
@@ -370,7 +370,7 @@ static SSFeedbackManager *manager = nil;
     
     
     [postParameterDict setValue:_feedbackKey forKey:@"appkey"];
-    [postParameterDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [postParameterDict setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     [postParameterDict setObject:[TTNetworkHelper connectMethodName] forKey:@"network_type"];
     [postParameterDict setObject:[[UIDevice currentDevice] systemVersion] forKey:@"os_version"];
     [postParameterDict setValue:[[UIDevice currentDevice] platformString] forKey:@"device"];

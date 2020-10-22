@@ -16,7 +16,7 @@
 #import "TTNavigationController.h"
 #import "FHSugSubscribeListViewController.h"
 #import "HMDTTMonitor.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHOldSuggestionItemCell.h"
 #import "FHSuggestionEmptyCell.h"
 #import "FHFindHouseHelperCell.h"
@@ -409,7 +409,7 @@
         if (!url) {
             NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
             [paramsExtra setValue:@"跳转错误" forKey:@"desc"];
-            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
             [[HMDTTMonitor defaultManager] hmdTrackService:@"guess_you_want_error" status:1 extra:paramsExtra];
         }else
         {

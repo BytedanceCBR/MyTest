@@ -134,10 +134,6 @@ def appDevelopPods
     #----弹窗互斥---
     pod 'TTDialogDirector' , :git => 'git@code.byted.org:TTIOS/TTDialogDirector.git' ,:commit => '8ed5beb' , :subspecs => [
      'Core',
-     'PhotoLibrary',
-     'Microphone',
-     'Camera',
-     'UserNotification'
      ]
     #-----视频业务库-----#
     pod 'TTVPlayerPod', :path => '../AKPlugins/TTVPlayer'
@@ -226,7 +222,7 @@ def appPods
     
 
     #-----头条获取installID---
-    pod_binary 'TTInstallService','2.1.6'
+    pod 'TTInstallService','3.0.0.-rc.9'
 
     #-----头条用户设置库--------
     pod_binary 'TTUserSettings','0.3.20'
@@ -235,7 +231,7 @@ def appPods
     #----头条组件协议库-----
 
     pod 'TTServiceProtocols','7.5.7.2'
-    pod_binary 'BDTrackerProtocol','2.1.1'
+    pod 'BDTrackerProtocol','2.6.3'
 
 
     #-----头条头像-----
@@ -382,15 +378,28 @@ def appPods
     #-----头条交互式退出手势----
     pod_binary 'TTImagePreviewAnimateManager', '1.0.13'
     #-----头条日志库-----
-    pod_binary 'TTTracker','1.3.20'
+    pod 'TTTracker','1.3.33'
 #    pod_binary 'BDTracker','1.3.1',:subspecs => [
 #    'Network',
 #    'Base',
 #    'Core',
-#    'Debug'
+#    'Debug',
 #    ]
-    pod_binary 'BDDataDecorator','2.0.1',:subspecs => [
+    pod 'BDInstall', '1.5.0',:subspecs => [
+    	'Core',
+    	'IDFA',
+    	'URLConfig/China'
+    ]
+    pod 'BDTracker','2.5.2',:subspecs => [
+        'Base',
+        'Network',
+        'Core',
+        'IDFA',
+        'URLConfig/CN'
+    ]
+    pod 'BDDataDecorator','2.0.4-alpha.1',:subspecs => [
       'Data',
+      'AES'
     ]
     
     pod 'Lynx','1.3.7-alpha.29',:subspecs =>[
@@ -409,7 +418,7 @@ def appPods
     pod 'TTRoute','1.1.3-rc.0-f100' # git:'git@code.byted.org:TTIOS/tt_pods_route.git', :branch => 'f100'
 
     #-----头条impression库-----
-    pod_binary 'TTImpression', '0.0.26'
+    pod_binary 'TTImpression', '0.1.0-ab'
     #-----平台化基础库-----
     # pod 'TTPlatformBaseLib','1.3.1'
 #    pod 'TTPlatformBaseLib'  , '0.2.29' , :subspecs => [
@@ -601,6 +610,8 @@ def testPods
 #    pod 'FHErrorHubManager', :path => '../../FHErrorHubManager'
     pod 'FHErrorHubManager', '1.0.15'
     pod 'BDiOSDebugBinary', '0.0.4'
+    pod 'BDTracker/Debug', '2.5.2'
+    pod 'BDInstall/Debug', '1.5.0'
 end
 
 target 'NewsLiteInHouse' do

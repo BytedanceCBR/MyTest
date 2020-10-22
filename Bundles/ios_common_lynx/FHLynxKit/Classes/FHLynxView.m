@@ -12,7 +12,7 @@
 #import <Lynx/LynxView.h>
 #import <mach/mach_time.h>
 #import "HMDTTMonitor.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <SDWebImage/SDWebImageManager.h>
 #import "UIDevice+BTDAdditions.h"
 #import "IESGeckoKit.h"
@@ -150,7 +150,7 @@
     [BDWebViewBlankDetect detectBlankByOldSnapshotWithView:view CompleteBlock:^(BOOL isBlank, UIImage * _Nonnull image, NSError * _Nonnull error) {
         if (isBlank) {
             NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
             NSMutableDictionary *uploadParams = [NSMutableDictionary new];
             [uploadParams setValue:error.description forKey:@"error"];
             [uploadParams setValue:self.channel forKey:@"channel"];
@@ -171,7 +171,7 @@
 - (void)sendEvent:(NSString *)statusStr andError:(NSError *)error
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     [uploadParams setValue:error.description forKey:@"error"];
     [uploadParams setValue:statusStr forKey:@"status"];
@@ -181,7 +181,7 @@
 - (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",_channel];
     if (time < 15) {
@@ -193,7 +193,7 @@
 - (void)lynxView:(LynxView*)view didReceiveFirstLoadPerf:(LynxPerformance*)perf{
     
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
         [uploadParams addEntriesFromDictionary:[perf toDictionary]];

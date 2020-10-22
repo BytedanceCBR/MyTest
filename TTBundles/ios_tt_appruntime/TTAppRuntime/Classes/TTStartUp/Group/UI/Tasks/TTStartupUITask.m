@@ -29,7 +29,6 @@
 #import "TTLaunchDefine.h"
 #import "BDSSOAuthManager.h"
 #import "NSDictionary+TTAdditions.h"
-#import "TTInstallIDManager.h"
 #import "TTSandBoxHelper.h"
 #import "FHUtils.h"
 #import <FHHouseBase/FHPermissionAlertViewController.h>

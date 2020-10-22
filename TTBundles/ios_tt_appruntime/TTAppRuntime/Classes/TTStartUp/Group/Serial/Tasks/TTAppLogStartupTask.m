@@ -13,7 +13,7 @@
 #import <TTImpression/SSImpressionManager.h>
 #import "ExploreExtenstionDataHelper.h"
 #import "NewsBaseDelegate.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTAccountBusiness.h"
 #import "SSImpressionManager.h"
 #import "SSLogDataManager.h"
@@ -28,6 +28,17 @@
 #import "SSCommonLogic.h"
 #import "CommonURLSetting.h"
 #import "TTLaunchDefine.h"
+#import <BDABTestSDK/BDABTestManager.h>
+#import <BDTracker/BDTrackerSDK.h>
+#import <BDTracker/BDTrackerSDK+Debug.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import <BDTrackerProtocol/BDTrackerProtocol+ABTest.h>
+#import <TTKitchen/TTKitchen.h>
+
+#if __has_include(<TTTracker/TTTracker.h>)
+#import <TTTracker/TTTracker.h>
+#import <TTTracker/TTTrackerCleaner.h>
+#endif
 
 DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
 
@@ -57,6 +68,89 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
 }
 
 + (void)startupTracker {
+    //一期只升级BDInstall，暂时不使用BDTracker
+//    BOOL useBDTracker = NO;// [TTKitchen getBOOL:kTTBDTrackerEnable];
+//    if (useBDTracker) {
+//        [BDTrackerProtocol setBDTrackerEnabled];
+//        [self setupBDTracker];
+//    } else {
+        [BDTrackerProtocol setTTTrackerEnabled];
+        [self setupTTTracker];
+//    }
+}
+
++ (void)setupBDTracker {
+    // 下面这些设置要在初始化SDK之前
+    [BDTrackerSDK setSDKEnable:YES];
+    BDTrackerConfig *config = [BDTrackerConfig new];
+    config.appID = [TTSandBoxHelper ssAppID];
+    config.appName = [TTSandBoxHelper appName];
+    config.channel = [TTSandBoxHelper getCurrentChannel];
+    //是否加密
+    config.needEncrypt = [SSCommonLogic useEncrypt];
+    if ([TTSandBoxHelper isInHouseApp]) {
+        if ([BDTrackerSDK respondsToSelector:@selector(setIsInHouseVersion:)]) {
+            [BDTrackerSDK setIsInHouseVersion:YES];
+        }
+        config.needEncrypt = NO;
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:@"AppLogClearDidInhouse"]) {
+            [BDTrackerSDK clearDidAndIid];
+        }
+    }
+    
+    [config setAbSDKVersionBlock:^NSString * _Nullable {
+        return [BDABTestManager queryExposureExperiments];
+    }];
+    
+    //用户id
+    config.userIDBlock = ^NSString * _Nullable{
+        return [TTAccount sharedAccount].userIdString;
+    };
+    @weakify(self);
+    config.URLBlock = ^NSString * _Nullable(BDTrackerURLType type) {
+        //return @"http://log.snssdk.com/service/2/app_log/";
+        @strongify(self);
+        switch (type) {
+            case BDTrackerURLTypeConfig:
+                return [self configURL];
+            case BDTrackerURLTypeBatchReport:
+                return [self batchReportURL];
+            case BDTrackerURLTypeBatchReportBackup:
+                return [self batchReportBackupURL];
+            case BDTrackerURLTypeImmediateReport:
+                return [self immediateReportURL];
+            case BDTrackerURLTypeImmediateReportBackup:
+                return [self immediateReportBackupURL];
+            case BDTrackerURLTypeRegister:
+                return [self registerDeviceURL];
+            case BDTrackerURLTypeActivate:
+                return [self activateDeviceURL];
+            case BDTrackerURLTypeTest:
+                return [self testURL];
+            default:
+                break;
+        }
+        return nil;
+    };
+    //自定义请求header参数
+    NSString *webUA = [SSWebViewUtil userAgentString:YES];
+    config.customRequestHeaderBlock = ^NSDictionary<NSString *,id> * _Nullable{
+        NSMutableDictionary *customHeader = [NSMutableDictionary dictionary];
+        if ([SSCommonLogic isUAEnable]) {
+            [customHeader setValue:[self userAgentString] forKey:@"web_ua"];
+        }
+        NSString* currentCityName = [FHLocManager sharedInstance].currentReGeocode.city;
+        NSString* provinceName = [FHLocManager sharedInstance].currentReGeocode.administrativeArea;
+        customHeader[@"city_name"] = currentCityName;
+        customHeader[@"province_name"] = provinceName;
+        customHeader[@"house_city"] =  [FHEnvContext getCurrentUserDeaultCityNameFromLocal];
+        customHeader[@"update_version_code"] = [TTSandBoxHelper buildVerion];
+        return [customHeader copy];
+    };
+    [BDTrackerSDK startWithConfig:config];
+}
+
++ (void)setupTTTracker {
     [[TTTracker sharedInstance] setConfigParamsBlock:^(void) {
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
         [params setValue:[TTAccountManager userID] forKey:@"user_id"];
@@ -66,7 +160,7 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
 //        } else {
             [params setValue:@([SSCommonLogic useEncrypt]) forKey:@"need_encrypt"];
 //        }
-        
+
         return [params copy];
     }];
     
@@ -161,5 +255,42 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
     return nil;
 }
 
+#pragma mark - BDTrackerURLConfigProtocol
+
++ (nonnull NSString *)activateDeviceURL {
+    // 激活
+    return [CommonURLSetting activateDeviceBaseURLString];
+}
+
++ (nullable NSString *)batchReportBackupURL {
+    return @"https://applog.snssdk.com/service/2/app_log/";
+}
+
++ (nonnull NSString *)batchReportURL {
+    // 批量上报
+    return  [CommonURLSetting appLogURLString];
+}
+
++ (nonnull NSString *)configURL {
+    return [CommonURLSetting trackLogConfigURLString];
+}
+
++ (nullable NSString *)immediateReportBackupURL {
+    return @"https://rtlog.snssdk.com/service/2/app_log/";
+}
+
++ (nullable NSString *)immediateReportURL {
+    // 实时上报
+    return [CommonURLSetting rtAppLogURLString];
+}
+
++ (nonnull NSString *)registerDeviceURL {
+    // 注册
+    return [CommonURLSetting registerDeviceBaseURLString];
+}
+
++ (nullable NSString *)testURL {
+    return @"https://log.snssdk.com/service/2/app_log_test/";
+}
 
 @end

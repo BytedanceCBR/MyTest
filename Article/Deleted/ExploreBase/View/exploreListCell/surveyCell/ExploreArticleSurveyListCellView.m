@@ -26,7 +26,7 @@
 #import "ExploreMixListDefine.h"
 #import "ExploreOrderedData+TTBusiness.h"
 #import "ExploreOrderedData+TTAd.h"
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface ExploreArticleSurveyListCellView ()
 
@@ -400,7 +400,7 @@
     if (self.orderedData.uniqueID) {
         uniqueID = self.orderedData.uniqueID;
     }
-    [TTTrackerWrapper eventV3:@"survey_selection_button_click" params:@{@"type" : @"list", @"survey_id" : uniqueID, @"index" : @(btn.tag)}];
+    [BDTrackerProtocol eventV3:@"survey_selection_button_click" params:@{@"type" : @"list", @"survey_id" : uniqueID, @"index" : @(btn.tag)}];
     [[TTNetworkManager shareInstance] requestForJSONWithURL:@"http://ci.toutiao.com/eva/survey/"
                                                      params:para
                                                      method:@"POST"

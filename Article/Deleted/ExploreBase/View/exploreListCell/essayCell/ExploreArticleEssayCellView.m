@@ -44,6 +44,7 @@
 #import "TTTopBar.h"
 #import "EssayDetailViewController.h"
 #import <TTInteractExitHelper.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kMaxEssayImageHeight (2 * [TTUIResponderHelper screenSize].height)
 #define kTitleLabel (NSLocalizedString(@"内涵段子", nil))
@@ -188,9 +189,9 @@
 - (void)contentImageSingleTapRecognizer:(UITapGestureRecognizer *)sender
 {
     if (self.from == EssayCellStyleList) {
-        wrapperTrackEvent(@"image", @"enter_essay_list");
+        [BDTrackerProtocol event:@"image" label:@"enter_essay_list"];
     } else if (self.from == EssayCellStyleDetail) {
-        wrapperTrackEvent(@"image", @"enter_essay_detail");
+        [BDTrackerProtocol event:@"image" label:@"enter_essay_detail"];
     }
 
     EssayData *essay = self.orderedData.essayData?:self.essayData;
@@ -1113,9 +1114,9 @@ static void *ExploreArticleEssayCellContext = &ExploreArticleEssayCellContext;
         }];
         
         if ([TTDeviceHelper isPadDevice]) {
-            wrapperTrackEvent(_trackEventName, [NSString stringWithFormat:@"%@_dig", _trackLabelPrefix]);
+            [BDTrackerProtocol event:_trackEventName label:[NSString stringWithFormat:@"%@_dig", _trackLabelPrefix]];
         }
-        wrapperTrackEvent(@"xiangping", @"digg");
+        [BDTrackerProtocol event:@"xiangping" label:@"digg"];
     }
     else if (sender == _buryButton) {
         [_buryButton doZoomInAndDisappearMotion];
@@ -1148,9 +1149,9 @@ static void *ExploreArticleEssayCellContext = &ExploreArticleEssayCellContext;
         }];
 
         if ([TTDeviceHelper isPadDevice]) {
-            wrapperTrackEvent(_trackEventName, [NSString stringWithFormat:@"%@_bury", _trackLabelPrefix]);
+            [BDTrackerProtocol event:_trackEventName label:[NSString stringWithFormat:@"%@_bury", _trackLabelPrefix]];
         }
-        wrapperTrackEvent(@"xiangping", @"bury");
+        [BDTrackerProtocol event:@"xiangping" label:@"bury"];
     }
     else if (sender == _favouriteButton) {
         if (essayData.userRepined == YES) {
@@ -1181,7 +1182,7 @@ static void *ExploreArticleEssayCellContext = &ExploreArticleEssayCellContext;
             if (!isEmptyString(tipMsg)) {
                 [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tipMsg indicatorImage:image autoDismiss:YES dismissHandler:nil];
             }
-            wrapperTrackEvent(@"xiangping", @"list_unfavorite");
+            [BDTrackerProtocol event:@"xiangping" label:@"list_unfavorite"];
         }
         else {
 //            __weak __typeof__(self) wself = self;
@@ -1214,9 +1215,9 @@ static void *ExploreArticleEssayCellContext = &ExploreArticleEssayCellContext;
                 [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tipMsg indicatorImage:image autoDismiss:YES dismissHandler:nil];
             }
             if ([TTDeviceHelper isPadDevice]) {
-                wrapperTrackEvent(_trackEventName, [NSString stringWithFormat:@"%@_favourite", _trackLabelPrefix]);
+                [BDTrackerProtocol event:_trackEventName label:[NSString stringWithFormat:@"%@_favourite", _trackLabelPrefix]];
             }
-            wrapperTrackEvent(@"xiangping", @"list_favorite");
+            [BDTrackerProtocol event:@"xiangping" label:@"list_favorite"];
         }
         [self updateActionButtons:essayData];
     }
@@ -1225,11 +1226,11 @@ static void *ExploreArticleEssayCellContext = &ExploreArticleEssayCellContext;
         NSString *uniqueID = [NSString stringWithFormat:@"%lld", self.orderedData.essayData.uniqueID];
         NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:TTShareSourceObjectTypeEssay];
         NSString *label = [TTActivityShareManager labelNameForShareActivityType:TTActivityTypeShareButton];
-        wrapperTrackEventWithCustomKeys(tag, label, uniqueID, self.orderedData.categoryID, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:uniqueID source:self.orderedData.categoryID extraDic:nil];
 
     } else if (sender == _commentButton) {
         [self commentButtonDidPress];
-        wrapperTrackEvent(@"xiangping", @"more_comment");
+        [BDTrackerProtocol event:@"xiangping" label:@"more_comment"];
     }
 }
 
@@ -1250,7 +1251,7 @@ static void *ExploreArticleEssayCellContext = &ExploreArticleEssayCellContext;
     [_phoneShareView showOnWindow:self.window];
     
        if (self.orderedData.essayData) {
-        wrapperTrackEvent(@"list_content", @"share_channel");
+        [BDTrackerProtocol event:@"list_content" label:@"share_channel"];
     }
 }
 
@@ -1291,7 +1292,7 @@ static void *ExploreArticleEssayCellContext = &ExploreArticleEssayCellContext;
     NSString *uniqueID = [NSString stringWithFormat:@"%lld", self.orderedData.essayData.uniqueID];
     NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:TTShareSourceObjectTypeEssay];
     NSString *label = [TTActivityShareManager labelNameForShareActivityType:itemType];
-    wrapperTrackEventWithCustomKeys(tag, label, uniqueID, self.orderedData.categoryID, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:uniqueID source:self.orderedData.categoryID extraDic:nil];
 }
 
 - (void)updateActionButtons:(EssayData *)essayData

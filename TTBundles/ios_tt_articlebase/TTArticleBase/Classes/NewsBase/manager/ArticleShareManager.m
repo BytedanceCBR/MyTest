@@ -11,7 +11,7 @@
 #import "SSSimpleCache.h"
 #import "NetworkUtilities.h"
 #import "UIDevice+TTAdditions.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTReportManager.h"
 #import <TTImage/TTWebImageManager.h>
 #import "ExploreEntryHelper.h"
@@ -93,7 +93,7 @@ static ArticleShareManager * manager;
     NSString *shareUrl = [NSString stringWithFormat:@"%@?share_ht_uid=%@&did=%@",
                           [huoshan.shareInfo objectForKey:@"source_url"],
                           [TTAccountManager userID],
-                          [[TTInstallIDManager sharedInstance] deviceID]
+                          [BDTrackerProtocol deviceID]
                           ];
     NSString *shareImageUrl = [huoshan.shareInfo objectForKey:@"pic_url"];
     NSString *shareTitle = [huoshan.shareInfo objectForKey:@"title"];

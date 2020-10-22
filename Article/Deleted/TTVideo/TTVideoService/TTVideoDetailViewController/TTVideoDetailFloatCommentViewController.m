@@ -10,6 +10,7 @@
 #import "ArticleMomentDetailView.h"
 #import "TTVideoCommentDetailView.h"
 #import "TTHeaderScrollView.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //#import "TTTabContainerView.h"
 
 static const CGFloat kLinePadding = 0;
@@ -186,7 +187,7 @@ static const CGFloat kBarHeight = 49;
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", _commentModel.commentID.stringValue, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:_commentModel.commentID.stringValue source:nil extraDic:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -253,7 +254,7 @@ static const CGFloat kBarHeight = 49;
 }
 
 - (void)p_moreBtnClick:(UIButton *)sender {
-    wrapperTrackEvent(@"update_detail", @"title_bar_more_click");
+    [BDTrackerProtocol event:@"update_detail" label:@"title_bar_more_click"];
     [[self.detailView getDetailViewHeaderItem] arrowButtonClicked];
     [[self.oldDetailView getDetailViewHeaderItem] arrowButtonClicked];
 }

@@ -61,6 +61,7 @@
 #import <TTServiceKit/TTServiceCenter.h>
 #import "TTAdManagerProtocol.h"
 #import <TTInteractExitHelper.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 extern NSString *const kForumLikeStatusChangeNotification;
 extern NSString *const kForumLikeStatusChangeForumIDKey;
@@ -210,7 +211,7 @@ static NSInteger subscribeCount = 0;
     __weak ArticleJSBridge *weakself = self;
     
     [self registerHandlerBlock:^NSDictionary *(NSString * callbackId, NSDictionary *result, NSString *JSSDKVersion, BOOL * executeCallback) {
-        wrapperTrackEventWithCustomKeys(@"jsbridge", @"playVideo", nil, self.webView.request.URL.absoluteString, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"jsbridge" label:@"playVideo" value:nil source:self.webView.request.URL.absoluteString extraDic:nil];
         if (executeCallback) {
             *executeCallback = NO;
         }
@@ -517,7 +518,7 @@ static NSInteger subscribeCount = 0;
 {
     __weak ArticleJSBridge *weakSelf = self;
     [self registerHandlerBlock:^NSDictionary *(NSString *callbackId, NSDictionary *result, NSString *JSSDKVersion,  BOOL *executeCallback) {
-        wrapperTrackEventWithCustomKeys(@"jsbridge", @"share", nil, self.webView.request.URL.absoluteString, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"jsbridge" label:@"share" value:nil source:self.webView.request.URL.absoluteString extraDic:nil];
         
         NSString *platform = [result objectForKey:@"platform"];
         if(([platform isEqualToString:@"qzone"] || [platform isEqualToString:@"qq"]) && ![[TTQQShare sharedQQShare] isAvailable])
@@ -749,7 +750,7 @@ static NSInteger subscribeCount = 0;
     [self registerHandlerBlock:^NSDictionary *(NSString *callbackId, NSDictionary *result, NSString *JSSDKVersion, BOOL *executeCallback) {
         NSString *mediaID = [result objectForKey:@"id"];
         [[ExploreEntryManager sharedManager] fetchEntryFromMediaID:mediaID notifySubscribedStatus:YES finishBlock:nil];
-        wrapperTrackEventWithCustomKeys(@"jsbridge", @"media_like", nil, self.webView.request.URL.absoluteString, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"jsbridge" label:@"media_like" value:nil source:self.webView.request.URL.absoluteString extraDic:nil];
         return @{@"code": @1};
     } forJSMethod:@"media_like" authType:SSJSBridgeAuthProtected];
 }
@@ -760,7 +761,7 @@ static NSInteger subscribeCount = 0;
     [self registerHandlerBlock:^NSDictionary *(NSString *callbackId, NSDictionary *result, NSString *JSSDKVersion, BOOL *executeCallback) {
         NSString *mediaID = [result objectForKey:@"id"];
         [[ExploreEntryManager sharedManager] fetchEntryFromMediaID:mediaID notifySubscribedStatus:YES finishBlock:nil];
-        wrapperTrackEventWithCustomKeys(@"jsbridge", @"media_unlike", nil, self.webView.request.URL.absoluteString, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"jsbridge" label:@"media_unlike" value:nil source:self.webView.request.URL.absoluteString extraDic:nil];
         return @{@"code": @1};
     } forJSMethod:@"media_unlike" authType:SSJSBridgeAuthProtected];
 }
@@ -770,7 +771,7 @@ static NSInteger subscribeCount = 0;
 {
     __weak typeof(self) wself = self;
     [self registerHandlerBlock:^NSDictionary *(NSString *callbackId, NSDictionary *result, NSString *JSSDKVersion, BOOL *executeCallback) {
-        wrapperTrackEventWithCustomKeys(@"jsbridge", @"share_pgc", nil, self.webView.request.URL.absoluteString, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"jsbridge" label:@"share_pgc" value:nil source:self.webView.request.URL.absoluteString extraDic:nil];
         __strong typeof(wself) self = wself;
         if (executeCallback) {
             *executeCallback = NO;
@@ -1089,7 +1090,7 @@ static NSInteger subscribeCount = 0;
                     [[TTThemeManager sharedInstance_tt] switchThemeModeto:TTThemeModeDay];
                     eventID = @"click_to_day";
                 }
-                wrapperTrackEvent(@"profile", eventID);
+                [BDTrackerProtocol event:@"profile" label:eventID];
                 
                 //做一个假的动画效果 让夜间渐变
                 UIView *imageScreenshot = [[TTUIResponderHelper mainWindow] snapshotViewAfterScreenUpdates:NO];
@@ -1125,7 +1126,7 @@ static NSInteger subscribeCount = 0;
                     label = @"profile_more_close";
                 }
                 
-                [TTTrackerWrapper event:tag label:label value:self.mediaID extValue:self.userID extValue2:nil];
+                [BDTrackerProtocol event:tag label:label value:self.mediaID extValue:self.userID extValue2:nil];
             }
         } else {
             [[self shareManager] performActivityActionByType:itemType inViewController:[TTUIResponderHelper topViewControllerFor: self.webView] sourceObjectType:self.curShareSourceType uniqueId:self.userID];
@@ -1507,7 +1508,7 @@ static NSInteger subscribeCount = 0;
         NSMutableDictionary * extraDict = [[NSMutableDictionary alloc] initWithDictionary:result];
         [extraDict setValue:categoryID forKey:@"category_name"];
         [extraDict setValue:nil forKey:@"category"];
-        wrapperTrackEventWithCustomKeys(@"add_channel", @"click", nil, nil, extraDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"add_channel" label:@"click" value:nil source:nil extraDic:extraDict];
         
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
         [userInfo setValue:categoryModel forKey:kTTInsertCategoryNotificationCategoryKey];
@@ -1593,14 +1594,14 @@ static NSInteger subscribeCount = 0;
 {
     NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:TTShareSourceObjectTypePGC];
     NSString *label = [TTActivityShareManager labelNameForShareActivityType:itemType];
-    wrapperTrackEventWithCustomKeys(tag, label, _mediaID, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:_mediaID source:nil extraDic:nil];
 }
 
 - (void)sendVideoSubjectShareTrackWithItemType:(TTActivityType)itemType
 {
     NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:TTShareSourceObjectTypeVideoSubject];
     NSString *label = [TTActivityShareManager labelNameForShareActivityType:itemType];
-    wrapperTrackEventWithCustomKeys(tag, label, _mediaID, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:_mediaID source:nil extraDic:nil];
 }
 
 @end

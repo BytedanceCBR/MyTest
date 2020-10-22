@@ -20,6 +20,7 @@
 #import "ExploreMomentDefine.h"
 
 #import "TTStringHelper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kLeftMargin (9 + kMomentCellItemViewLeftPadding)
 #define kRightMargin (9 + kMomentCellItemViewRightPadding)
@@ -217,10 +218,10 @@
             }
             
             if (![TTAccountManager isLogin]) {
-                wrapperTrackEvent(@"update_tab", @"logoff_click_replier");
+                [BDTrackerProtocol event:@"update_tab" label:@"logoff_click_replier"];
             }
             else {
-                wrapperTrackEvent(@"update_tab", @"click_replier");
+                [BDTrackerProtocol event:@"update_tab" label:@"click_replier"];
             }
         }
         else if (index == kToReplyUserNameIndex) {
@@ -229,10 +230,10 @@
             }
 
             if (![TTAccountManager isLogin]) {
-                wrapperTrackEvent(@"update_tab", @"logoff_click_replier");
+                [BDTrackerProtocol event:@"update_tab" label:@"logoff_click_replier"];
             }
             else {
-                wrapperTrackEvent(@"update_tab", @"click_replier");
+                [BDTrackerProtocol event:@"update_tab" label:@"click_replier"];
             }
         }
     }
