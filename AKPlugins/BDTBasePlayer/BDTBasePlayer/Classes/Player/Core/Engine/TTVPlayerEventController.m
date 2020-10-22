@@ -171,8 +171,9 @@ static NSString *const kvideo_controller_error_domain = @"kvideo_player_controll
         }];
         
         self.playerStateStore.state.playingWithCache = NO;
-//        [self.videoEngine setOptionForKey:VEKKeyProxyServerEnable_BOOL value:@(YES)];
-//        [self.videoEngine setOptionForKey:VEKKeyModelCacheVideoInfoEnable_BOOL value:@(YES)];
+        //绑定缓存关键类
+        [self.videoEngine setOptionForKey:VEKKeyProxyServerEnable_BOOL value:@(YES)];
+        [self.videoEngine setOptionForKey:VEKKeyModelCacheVideoInfoEnable_BOOL value:@(YES)];
         [self.videoEngine setVideoID:self.playerModel.videoID];
     }
     self.videoEngine.dataSource = self;
