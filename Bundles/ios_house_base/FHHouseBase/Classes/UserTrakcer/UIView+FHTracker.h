@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface UIView(FHTracker)
 
-@property (nonatomic, weak) NSString *fh_pageType;
+@property (nonatomic, copy) NSString *fh_pageType;
 @property (nonatomic, copy) NSString *fh_originFrom;
 
 @end
