@@ -16,9 +16,13 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import "FHUIAdaptation.h"
 #import "FHUtils.h"
-#import <ByteDanceKit/UIDevice+BTDAdditions.h>
 #import <FHHouseBase/FHRealtorAvatarView.h>
 #import "UIButton+BDWebImage.h"
+#import <ByteDanceKit/ByteDanceKit.h>
+
+CGFloat const FHBottomBarLeftViewAvatarViewLeftMargin = 15;
+CGFloat const FHBottomBarLeftViewAvatarSize = 50;
+CGFloat const FHBottomBarLeftViewNameLabelLeftMargin = 8;
 
 @interface FHOldDetailBottomBarView ()
 
@@ -68,19 +72,14 @@
     [self.leftView addSubview:self.agencyLabel];
     [self.leftView addSubview:self.licenseIcon];
     
-    CGFloat avatarLeftMargin = 20;
-    if ([UIDevice btd_is568Screen]) {
-        avatarLeftMargin = 15;
-    }
-    
     [self.avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(avatarLeftMargin);
+        make.left.mas_equalTo(FHBottomBarLeftViewAvatarViewLeftMargin);
         make.centerY.mas_equalTo(self);
-        make.width.height.mas_equalTo(50);
+        make.width.height.mas_equalTo(FHBottomBarLeftViewAvatarSize);
     }];
 
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
+        make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(FHBottomBarLeftViewNameLabelLeftMargin);
         make.top.mas_equalTo(self.avatarView).offset(2);
     }];
     [self.licenseIcon mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -91,33 +90,27 @@
     }];
 
     [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.nameLabel);
+        make.left.mas_equalTo(self.nameLabel.mas_left);
         make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(2);
         make.right.mas_equalTo(self.leftView);
     }];
-
-    [self addSubview:self.contactBtn];
     
-    [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self);
-        make.right.mas_equalTo(self).offset(-20);
-        make.width.mas_equalTo(AdaptOffset(88));
-        make.height.mas_equalTo(44);
-    }];
     [self addSubview:self.imChatBtn];
     [self.imChatBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self);
-        make.right.mas_equalTo(self.contactBtn.mas_left).offset(-10);
-        make.width.mas_equalTo(AdaptOffset(88));
+        make.left.mas_equalTo(self.leftView.mas_right).mas_offset(6);
+        make.height.mas_equalTo(44);
+        make.width.mas_equalTo(self.contactBtn.mas_width);
+    }];
+
+    [self addSubview:self.contactBtn];
+    [self.contactBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.left.mas_equalTo(self.imChatBtn.mas_right).offset(6);
+        make.right.mas_equalTo(self).offset(-15);
+        make.width.mas_equalTo(self.imChatBtn.mas_width);
         make.height.mas_equalTo(44);
     }];
-    
-    CGFloat btnBetween = 10;
-    CGFloat btnRightMargin = -20;
-    if ([UIDevice btd_is568Screen]) {
-        btnBetween = 5;
-        btnRightMargin = -15;
-    }
     
     [self.contactBtn addTarget:self action:@selector(contactBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     [self.licenseIcon addTarget:self action:@selector(licenseBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
@@ -161,7 +154,7 @@
     if (isDisplay) {
         [self.nameLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
+            make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(FHBottomBarLeftViewNameLabelLeftMargin);
             make.top.mas_equalTo(self.avatarView).offset(2);
         }];
         CGSize licenseIconSize = isNewStyle ? CGSizeMake(18, 16) : CGSizeMake(20, 20);
@@ -179,7 +172,7 @@
         }
     } else {
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(10);
+            make.left.mas_equalTo(self.avatarView.mas_right).mas_offset(FHBottomBarLeftViewNameLabelLeftMargin);
             make.top.mas_equalTo(self.avatarView).offset(2);
             make.right.mas_equalTo(0);
         }];
@@ -205,9 +198,6 @@
     if (contactPhone) {
         [self.avatarView updateAvatarWithModel:contactPhone];
     }
-
-//    FHDetailContactImageTagModel *tag = contactPhone.imageTag;
-//    [self refreshIdentifyView:self.identifyView withUrl:tag.imageUrl];
 
     NSString *realtorName = contactPhone.realtorName;
     if (contactPhone.realtorName.length > 0) {
@@ -241,27 +231,27 @@
     }else {
         self.agencyLabel.hidden = YES;
     }
-    CGFloat maxAgencyLabelWidth = [UIScreen mainScreen].bounds.size.width - 124 -AdaptOffset(176);//176为两个按钮大小
-    CGFloat agencyLabelWidth = [contactPhone.agencyName boundingRectWithSize:CGSizeMake(maxAgencyLabelWidth, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.agencyLabel.font} context:nil].size.width + 1;
-    CGFloat realtorContentWidth = 0;
-    if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
-        realtorContentWidth = [UIScreen mainScreen].bounds.size.width - 178;
-    } else {
-        CGFloat labelWidth = MAX(nameLabelwidth, agencyLabelWidth);
-        CGFloat avatarWidth = 50;
-        CGFloat avatarLeftMargin = 20;
-        CGFloat avatarLabelMargin = 10;
-        realtorContentWidth = labelWidth + avatarWidth + avatarLabelMargin + avatarLeftMargin;
+    UIFont *agencyFont = [UIFont themeFontRegular:14];
+    if (contactPhone.agencyName.length > 6) {
+        agencyFont = [UIFont themeFontRegular:12];
     }
+    self.agencyLabel.font = agencyFont;
+    CGFloat agencyLabelWidth = 0;
+    if (contactPhone.agencyName.length <= 8) {
+        agencyLabelWidth = [contactPhone.agencyName btd_widthWithFont:agencyFont height:22];
+    } else {
+        agencyLabelWidth = [[contactPhone.agencyName substringToIndex:8] btd_widthWithFont:agencyFont height:22];
+    }
+    
+    CGFloat realtorContentWidth = MAX(nameLabelwidth, agencyLabelWidth) + FHBottomBarLeftViewAvatarSize + FHBottomBarLeftViewAvatarViewLeftMargin + FHBottomBarLeftViewNameLabelLeftMargin;
 
+    //显示经纪人信息，否则leftview 宽度为0
     CGFloat leftWidth = contactPhone.showRealtorinfo == 1 ? realtorContentWidth : 0;
 
+    //不显示经纪人
     if (!showIM) {
-
         if (contactPhone.showRealtorinfo != 1)  {
-            
         // 阴影颜色
-            _contactBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#ff9629"].CGColor;
             _contactBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
             [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.equalTo(self);
@@ -272,19 +262,21 @@
         }
     }else {
         if (contactPhone.showRealtorinfo == 1) {
-                [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [self.contactBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.equalTo(self);
-                make.right.mas_equalTo(self).offset(-20);
-                make.width.mas_equalTo(AdaptOffset(88));
+                make.left.mas_equalTo(self.imChatBtn.mas_right).offset(6);
+                make.right.mas_equalTo(self).offset(-15);
+                make.width.mas_equalTo(self.imChatBtn.mas_width);
                 make.height.mas_equalTo(44);
             }];
         }
-        _contactBtn.layer.shadowColor = [UIColor themeOrange1].CGColor;
         _contactBtn.backgroundColor = [UIColor themeOrange1];
     }
+    
     [self.leftView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(leftWidth);
     }];
+    
     if(contactPhone.isInstantData){
         _instantHasShow = YES;
     }
@@ -374,21 +366,10 @@
         _contactBtn = [[FHLoadingButton alloc]init];
         [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_contactBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        if ([UIDevice btd_is568Screen]) {
-            _contactBtn.titleLabel.font = [UIFont themeFontRegular:14];
-        } else {
-            _contactBtn.titleLabel.font = [UIFont themeFontRegular:16];
-        }
+        _contactBtn.titleLabel.font = [UIFont themeFontRegular:14];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
         _contactBtn.layer.cornerRadius = 22;
-        // 阴影颜色
-        _contactBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#fe5500"].CGColor;
-        // 阴影偏移量 默认为(0,3)
-        _contactBtn.layer.shadowOffset = CGSizeMake(0, 8);
-        // 阴影透明度
-        _contactBtn.layer.shadowOpacity = .2;
-        _contactBtn.layer.shadowRadius = 6;
         _contactBtn.backgroundColor =[UIColor colorWithHexStr:@"#fe5500"];
      
     }
@@ -399,16 +380,8 @@
     if (!_imChatBtn) {
         _imChatBtn = [[UIButton alloc] init];
         _imChatBtn.layer.cornerRadius = 22;
-        _imChatBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#ff9629"].CGColor;
-        _imChatBtn.layer.shadowOffset = CGSizeMake(0, 8);
-        _imChatBtn.layer.shadowOpacity = .2 ;
-        _imChatBtn.layer.shadowRadius = 6;
         _imChatBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
-        if ([UIDevice btd_is568Screen]) {
-            _imChatBtn.titleLabel.font = [UIFont themeFontRegular:14];
-        } else {
-            _imChatBtn.titleLabel.font = [UIFont themeFontRegular:16];
-        }
+        _imChatBtn.titleLabel.font = [UIFont themeFontRegular:14];
         [_imChatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [_imChatBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         [_imChatBtn setTitle:@"在线联系" forState:UIControlStateNormal];
