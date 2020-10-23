@@ -102,9 +102,7 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
     
     [self addSmallVideoListTest];
 
-    if ([FHEnvContext isHasShortVideoList]) {
-        [self addVideoPerloadTest];
-    }
+    [self addVideoPerloadTest];
     
     //启动实验引擎，请确保在所有客户端本地分流实验都注册完成后再调用此接口！
     [BDABTestManager launchClientExperimentManager];
