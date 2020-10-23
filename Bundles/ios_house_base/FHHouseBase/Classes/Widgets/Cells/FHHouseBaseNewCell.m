@@ -9,6 +9,8 @@
 
 @implementation FHHouseBaseNewCell
 
+@synthesize subTitleLabel = _subTitleLabel;
+
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -64,7 +66,7 @@
         layout.top = YGPointValue(11.5 + 3);
         layout.left = YGPointValue(8.5);
         layout.width = YGPointValue(106 - 6);
-        layout.height = YGPointValue(106 - 6);
+        layout.height = YGPointValue(80 - 6);
     }];
     
     
@@ -312,6 +314,19 @@
         _bottomRecommendLabel.textColor = [UIColor themeGray1];
     }
     return _bottomRecommendLabel;
+}
+
+- (UILabel *)subTitleLabel {
+    if (!_subTitleLabel) {
+        _subTitleLabel = [[UILabel alloc]init];
+        _subTitleLabel.font = [UIFont themeFontRegular:12];
+        _subTitleLabel.textColor = [UIColor themeGray2];
+    }
+    return _subTitleLabel;
+}
+
+- (void)setSubTitleLabel:(UILabel *)subTitleLabel {
+    _subTitleLabel = subTitleLabel;
 }
 
 -(CGFloat)contentMaxWidth

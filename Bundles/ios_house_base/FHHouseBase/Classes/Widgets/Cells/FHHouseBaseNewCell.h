@@ -6,12 +6,7 @@
 //
 
 #import "FHHouseBaseCell.h"
-#import "UIColor+Theme.h"
-#import <HTSVideoPlay/Yoga.h>
-#import <HTSVideoPlay/UIView+Yoga.h>
 #import "FHCommonDefines.h"
-#import <FHCommonUI/UIColor+Theme.h>
-#import <FHCommonUI/UIFont+House.h>
 
 
 NS_ASSUME_NONNULL_BEGIN
@@ -23,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *bottomRecommendViewBack;//底部背景
 @property (nonatomic, strong) UIImageView *bottomIconImageView; //活动icon
 @property (nonatomic, strong) UILabel *bottomRecommendLabel; //活动title
+@property (nonatomic, strong, readwrite) UILabel *subTitleLabel;
 
 @end
 

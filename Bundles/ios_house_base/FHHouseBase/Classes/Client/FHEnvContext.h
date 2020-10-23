@@ -288,6 +288,11 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 + (BOOL)isShowHomeHouseCard;
 
 /*
+ 降级卡片开关
+ */
++ (BOOL)isDisplayNewCardType;
+
+/*
 判断开启首次安装用户引导，默认YES
  */
 + (BOOL)isIntroduceOpen;

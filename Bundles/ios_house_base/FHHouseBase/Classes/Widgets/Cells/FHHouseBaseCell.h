@@ -10,6 +10,16 @@
 #import <lottie-ios/Lottie/LOTAnimationView.h>
 #import "FHHouseRecommendReasonView.h"
 #import "FHCornerView.h"
+#import <FHCommonUI/UIColor+Theme.h>
+#import <FHCommonUI/UIFont+House.h>
+#import "UIButton+TTAdditions.h"
+#import <lottie-ios/Lottie/LOTAnimationView.h>
+#import "Masonry.h"
+#import "UIButton+TTAdditions.h"
+#import <UIDevice+BTDAdditions.h>
+#import <BDWebImage/UIImageView+BDWebImage.h>
+#import <HTSVideoPlay/Yoga.h>
+#import <HTSVideoPlay/UIView+Yoga.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -49,6 +59,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateMainImageWithUrl:(NSString *)url;
 
 - (void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast;
+
+- (void)hideRecommendReason;
 
 @end
 

@@ -45,6 +45,7 @@
 #import "FHUserTracker.h"
 #import "BDABTestManager.h"
 #import "TTSandBoxHelper.h"
+#import "NSDictionary+BTDAdditions.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -1195,6 +1196,12 @@ static NSInteger kGetLightRequestRetryCount = 3;
         return [res boolValue];
     }
     return NO;
+}
+
++ (BOOL)isDisplayNewCardType {
+    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    BOOL NewCardType = [fhSettings btd_boolValueForKey:@"f_house_card_type" default:NO];
+    return NewCardType;
 }
 
 + (BOOL)isIntroduceOpen {

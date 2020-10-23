@@ -6,14 +6,6 @@
 //
 
 #import "FHHouseBaseCell.h"
-#import <FHCommonUI/UIColor+Theme.h>
-#import <FHCommonUI/UIFont+House.h>
-#import "UIButton+TTAdditions.h"
-#import <lottie-ios/Lottie/LOTAnimationView.h>
-#import "Masonry.h"
-#import "UIButton+TTAdditions.h"
-#import <UIDevice+BTDAdditions.h>
-#import <BDWebImage/UIImageView+BDWebImage.h>
 
 @implementation FHHouseBaseCell
 
@@ -76,6 +68,16 @@
         self.houseCellBackView.layer.mask = maskLayer;
     } else {
         self.houseCellBackView.layer.mask = nil;
+    }
+}
+
+-(void)hideRecommendReason
+{
+    if ( _recReasonView && self.recReasonView.yoga.isIncludedInLayout) {
+        [self.recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
+            layout.isIncludedInLayout = NO;
+        }];
+        self.recReasonView.hidden = YES;
     }
 }
 
