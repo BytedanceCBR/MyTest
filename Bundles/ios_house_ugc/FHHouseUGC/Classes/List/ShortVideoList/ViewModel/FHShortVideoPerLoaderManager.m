@@ -8,6 +8,7 @@
 #import "FHShortVideoPerLoaderManager.h"
 #import "TTVideoEngine+Preload.h"
 #import "TTVVideoURLParser.h"
+#import "FHEnvContext.h"
 
 @interface FHShortVideoPerLoaderManager ()
 @property (strong, nonatomic) NSMutableDictionary *cacheVidWithKeyMap;
@@ -19,16 +20,12 @@
 
 + (void)startPrefetchShortVideoInDetailWithDataFetchManager:(FHShortVideoDetailFetchManager *)manager
 {
-//    if (![self isPrefetchEnabled]) {
-//        return;
-//    }
-    NSInteger currentIndex = manager.currentIndex;
     
-//    NSInteger preIndex = currentIndex - 1;
-//    if (preIndex >= 0 && preIndex < [manager numberOfShortVideoItems]) {
-//        FHFeedUGCCellModel *shortVideoModel = [manager itemAtIndex:preIndex];
-//        [self preloadWithVideoModel:shortVideoModel];
-//    }
+    if (![FHEnvContext isHasPerLoadForVideo]) {
+        return;
+    }
+    
+    NSInteger currentIndex = manager.currentIndex;
     NSMutableArray *preLoadArr = [[NSMutableArray alloc]init];
     for (int m = 0; m <5; m ++) {
         NSInteger perloadIndex = currentIndex + m ;

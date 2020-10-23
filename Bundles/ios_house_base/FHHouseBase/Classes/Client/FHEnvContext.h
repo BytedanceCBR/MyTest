@@ -283,6 +283,13 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 + (BOOL)isHasShortVideoList;
 
 /*
+ 
+ 是否开启视频预加载实验，默认NO
+  */
+ + (BOOL)isHasPerLoadForVideo;
+
+ /*
+  
 判断开启首次安装用户引导，默认YES
  */
 + (BOOL)isIntroduceOpen;

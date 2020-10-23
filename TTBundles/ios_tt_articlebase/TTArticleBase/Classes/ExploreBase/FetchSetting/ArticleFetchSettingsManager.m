@@ -235,6 +235,10 @@
         experiments[@"discover_type"] = @([fhSettings[@"discover_type"] integerValue]);
     }
     
+    if ([fhSettings valueForKey:@"is_video_perload"]) {
+        experiments[@"is_video_perload"] = @([fhSettings[@"is_video_perload"] integerValue]);
+    }
+    
     if (experiments.count > 0) {
         [BDABTestManager saveServerSettingsForClientExperiments:experiments];
     }

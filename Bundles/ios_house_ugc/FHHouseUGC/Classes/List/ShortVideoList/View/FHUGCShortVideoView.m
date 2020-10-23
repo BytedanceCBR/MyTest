@@ -143,15 +143,7 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
 - (void)ttv_kvo
 {
     @weakify(self);
-//    [self.KVOController unobserve:[SSADManager shareInstance]];
-//    [self.KVOController observe:[SSADManager shareInstance] keyPath:@keypath([SSADManager shareInstance],isSplashADShowed) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-//        @strongify(self);
-//        if ([SSADManager shareInstance].isSplashADShowed) {
-//            [self.player sendAction:TTVPlayerEventTypeVirtualStackValuePause payload:nil];
-//        }else{
-//            [self.player sendAction:TTVPlayerEventTypeVirtualStackValuePlay payload:nil];
-//        }
-//    }];
+
     [self.KVOController unobserve:[TTAdSplashMediator shareInstance]];
     [self.KVOController observe:[TTAdSplashMediator shareInstance] keyPath:@keypath([TTAdSplashMediator shareInstance],isAdShowing) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
         @strongify(self);
@@ -233,23 +225,12 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
     [super removeFromSuperview];
 }
 
-- (void)willMoveToSuperview:(UIView *)newSuperview
-{
-    [super willMoveToSuperview:newSuperview];
-    if ([self.delegate respondsToSelector:@selector(movieViewWillMoveToSuperView:)]) {
-        [self.delegate movieViewWillMoveToSuperView:newSuperview];
-    }
-
-}
 /**
  TTMovieStoreAction 为了满足协议
  */
 
 - (void)stopWithFinishedBlock:(TTVStopFinished)finishedBlock
 {
-    // 原视频 stop 贴片播放器同时 stop
-//    [self.player.pasterPlayer stop];
-//    [self.player.midInsertADPlayer stop];
     [self.player stopWithFinishedBlock:finishedBlock];
 }
 
@@ -288,13 +269,6 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
 - (void)readyToPlay {
         [self.player setBanLoading:YES];
         [self.player readyToPlay];
-    //    if (isAutoPlaying && self.cellEntity.article.adId.longLongValue > 0) {
-    //        self.movieView.player.banLoading = YES;
-    //        self.movieView.player.muted = [self.cellEntity.originData couldAutoPlay];
-    //    }
-//        self.playerView.player.muted = YES;
-    //    [self addUrlTrackerOnPlayer:playVideo];
-        [self settingMovieView:self.player];
 }
 
 - (void)reset {
@@ -314,27 +288,7 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
 {
     [self.player play];
     self.player.controlView.miniSlider.hidden = YES;
-//    if(!self.cellEntity.hideTitleAndWatchCount){
-//        [playVideo.player setVideoTitle:feedItem.title];
-//        [playVideo.player setVideoWatchCount:article.videoDetailInfo.videoWatchCount playText:@"次播放"];
-//    }
-//    self.logo.userInteractionEnabled = ![feedItem couldAutoPlay];
-//    if (![TTDeviceHelper isPadDevice]) {
-//        playVideo.player.commodityFloatView.animationToView = self.cellEntity.moreButton;
-//        playVideo.player.commodityFloatView.animationSuperView = self.cellEntity.cell;
-//        [playVideo.player.commodityFloatView setCommoditys:self.cellEntity.originData.commoditys];
-//        playVideo.player.commodityButton.delegate = self;
-//    }
-
-//    [self ttv_configADFinishedView:playVideo.player.tipCreator.tipFinishedView];
-//
-//    [[AKAwardCoinVideoMonitorManager shareInstance] monitorVideoWith:playVideo];
 }
 
-- (void)settingMovieView:(TTVDemandPlayer *)player
-{
-    player.isInDetail = NO;
-    player.showTitleInNonFullscreen = YES;
-}
 
 @end
