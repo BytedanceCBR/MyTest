@@ -42,9 +42,7 @@ static const char xorStr[] = "x1yNd0a2Z";
         }
     }
     
-    CLLocationCoordinate2D coordinate = [FHLocManager sharedInstance].currentLocaton.coordinate;
-    double longitude = coordinate.longitude;
-    double latitude = coordinate.latitude;
+    
     NSString *gCityId = [FHLocManager sharedInstance].currentReGeocode.cityCode;
     NSString *gCityName = [FHLocManager sharedInstance].currentReGeocode.city;
     
@@ -60,26 +58,10 @@ static const char xorStr[] = "x1yNd0a2Z";
         requestParam[@"f_memory"] = @(f_memory);
     }
     
-    //【经纬度加密需求】去掉通用参数里的gaode_lng和gaode_lat参数，和Android端确认的结果：目前只有/f100/v2/api/config接口使用这两个参数, 使用f_setting.f_enable_gaode_lng_in_common_params作为控制开关，默认策略是下掉这两个参数
-    if ([[TTSettingsManager fSettings] btd_boolValueForKey:@"f_enable_gaode_lng_in_common_params" default:NO]) {
-        if (longitude != 0 && longitude != 0) {
-            requestParam[@"gaode_lng"] = @(longitude);
-            requestParam[@"gaode_lat"] = @(latitude);
-        }
-    }
     
-    //【经纬度加密需求】通用参数使用as_id代替longitude和latitude, 使用f_setting.f_enable_longitude_in_common_params作为控制开关，默认策略是使用as_id
-    if ([[TTSettingsManager fSettings] btd_boolValueForKey:@"f_enable_longitude_in_common_params" default:NO]) {
-        if (longitude != 0 && longitude != 0) {
-            requestParam[@"longitude"] = @(longitude);
-            requestParam[@"latitude"] = @(latitude);
-        }
-    } else {
-        NSString *as_id = [self generateAsID:coordinate];
-        if (as_id && as_id.length) {
-            requestParam[@"as_id"] = as_id;
-            [self checkAsId:as_id coordinate:coordinate];
-        }
+    NSDictionary *locationParams = [self generateLocationParams];
+    if (locationParams) {
+        [requestParam addEntriesFromDictionary:locationParams];
     }
 
     
@@ -93,6 +75,42 @@ static const char xorStr[] = "x1yNd0a2Z";
     }
     
     return requestParam;
+}
+
+
++ (NSDictionary *)generateLocationParams {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    
+    CLLocationCoordinate2D coordinate = [FHLocManager sharedInstance].currentLocaton.coordinate;
+    double longitude = coordinate.longitude;
+    double latitude = coordinate.latitude;
+    
+    //【经纬度加密需求】去掉通用参数里的gaode_lng和gaode_lat参数，和Android端确认的结果：目前只有/f100/v2/api/config接口使用这两个参数, 使用f_setting.f_enable_gaode_lng_in_common_params作为控制开关(0: off，1:on)，默认策略是0
+    if ([[TTSettingsManager fSettings] btd_boolValueForKey:@"f_enable_gaode_lng_in_common_params" default:NO]) {
+        if (longitude != 0 && longitude != 0) {
+            [params btd_setObject:@(longitude) forKey:@"gaode_lng"];
+            [params btd_setObject:@(latitude) forKey:@"gaode_lat"];
+        }
+    }
+    
+    //【经纬度加密需求】通用参数使用as_id代替longitude和latitude, 使用f_setting.f_enable_longitude_in_common_params作为控制开关(0: as_id only，1:longitude&longitude only, 2:both)，默认策略是0
+    int asIdMode = [[TTSettingsManager fSettings] btd_intValueForKey:@"f_enable_longitude_in_common_params" default:0];
+    if (asIdMode == 1 || asIdMode == 2) {
+        if (longitude != 0 && longitude != 0) {
+            [params btd_setObject:@(longitude) forKey:@"longitude"];
+            [params btd_setObject:@(latitude) forKey:@"latitude"];
+        }
+    }
+    
+    if (asIdMode == 0 || asIdMode == 2) {
+        NSString *as_id = [self generateAsID:coordinate];
+        if (as_id && as_id.length) {
+            [params btd_setObject:as_id forKey:@"as_id"];
+            [self checkAsId:as_id coordinate:coordinate];
+        }
+    }
+    
+    return params;
 }
 
 //将经纬度拼接，对原始字节进行异或，然后进行base64，得到 as_id
