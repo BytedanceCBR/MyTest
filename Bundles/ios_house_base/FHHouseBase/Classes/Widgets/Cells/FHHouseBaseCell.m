@@ -38,6 +38,10 @@
     return self;
 }
 
+- (void)initUI {
+    
+}
+
 - (void)refreshWithData:(id)data {
     
 }
@@ -242,6 +246,17 @@
         _recReasonView = [[FHHouseRecommendReasonView alloc] init];
     }
     return _recReasonView;
+}
+
+- (FHCornerItemLabel *)tagTitleLabel {
+    if (!_tagTitleLabel) {
+        _tagTitleLabel = [[FHCornerItemLabel alloc] init];
+        _tagTitleLabel.textAlignment = NSTextAlignmentCenter;
+        _tagTitleLabel.font = [UIFont themeFontMedium:10];
+        _tagTitleLabel.textColor = [UIColor themeWhite];
+        _tagTitleLabel.frame = CGRectMake(0, 0, 16, 16);
+    }
+    return _tagTitleLabel;
 }
 
 @end
