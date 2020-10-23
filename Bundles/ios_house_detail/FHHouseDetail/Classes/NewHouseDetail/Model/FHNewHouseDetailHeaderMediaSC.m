@@ -45,7 +45,7 @@
         [cell refreshWithData:model.headerCellModel];
         return cell;
     }
-    return nil;
+    return [super defaultCellAtIndex:index];
 }
 
 #pragma mark - Action

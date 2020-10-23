@@ -96,4 +96,8 @@
     // sub implements.........
 }
 
+- (void)bindViewModel:(id)viewModel {
+    // ...
+}
+
 @end
