@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVideoAdCellShareController.m
 //  Article
 //
@@ -149,7 +150,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     if ([self.orderedData.article hasVideoSubjectID]) {
         extValueDic[@"video_subject_id"] = self.orderedData.article.videoSubjectID;
     }
-    wrapperTrackEventWithCustomKeys(tag, label, uniqueID, @"video", extValueDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:uniqueID source:@"video" extraDic:extValueDic];
 }
 
 
@@ -195,7 +196,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         if (!isEmptyString(tipMsg)) {
             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tipMsg indicatorImage:image autoDismiss:YES dismissHandler:nil];
         }
-        wrapperTrackEvent(@"xiangping", @"video_list_unfavorite");
+        [BDTrackerProtocol event:@"xiangping" label:@"video_list_unfavorite"];
     }
     else {
         __weak __typeof__(self) wself = self;
@@ -211,7 +212,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         if (!isEmptyString(tipMsg)) {
             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tipMsg indicatorImage:image autoDismiss:YES dismissHandler:nil];
         }
-        wrapperTrackEvent(@"xiangping", @"video_list_favorite");
+        [BDTrackerProtocol event:@"xiangping" label:@"video_list_favorite"];
     }
 }
 

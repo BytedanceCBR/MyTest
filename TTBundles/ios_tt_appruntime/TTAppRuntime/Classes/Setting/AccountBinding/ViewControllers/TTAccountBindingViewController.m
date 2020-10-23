@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTAccountBindingViewController.m
 //  Article
 //
@@ -766,7 +767,7 @@ TTAccountMulticastProtocol
                     }];
                     
                     if ([info isKindOfClass:[WeixinUserAccount class]]) {
-                        wrapperTrackEvent(@"login", @"auth_weixin");
+                        [BDTrackerProtocol event:@"login" label:@"auth_weixin"];
                     }
                 } else {
                     if ([self numberOfLoginedAccounts] < 2 && [self mobilePhoneNumber].length == 0) {
@@ -778,7 +779,7 @@ TTAccountMulticastProtocol
                     }
                 }
                 if (![info isKindOfClass:[WeixinUserAccount class]]) {
-                    wrapperTrackEvent(@"login", [NSString stringWithFormat:@"account_setting_%@", info.keyName]);
+                    [BDTrackerProtocol event:@"login" label:[NSString stringWithFormat:@"account_setting_%@", info.keyName]];
                 }
             }
         };
@@ -801,10 +802,10 @@ TTAccountMulticastProtocol
         StrongSelf;
         if (buttonIndex != actionSheet.cancelButtonIndex) {
             [self bindMobile];
-            wrapperTrackEvent(@"login_register", @"unbind_last_confirm");
+            [BDTrackerProtocol event:@"login_register" label:@"unbind_last_confirm"];
         } else {
             [self reload];
-            wrapperTrackEvent(@"login_register", @"unbind_last_cancel");
+            [BDTrackerProtocol event:@"login_register" label:@"unbind_last_cancel"];
         }
     };
 }
@@ -830,7 +831,7 @@ TTAccountMulticastProtocol
     
     // log
     if ([info isKindOfClass:[WeixinUserAccount class]]) {
-        wrapperTrackEvent(@"login", [NSString stringWithFormat:@"account_setting_%@", info.keyName]);
+        [BDTrackerProtocol event:@"login" label:[NSString stringWithFormat:@"account_setting_%@", info.keyName]];
     }
 }
 
@@ -841,7 +842,7 @@ TTAccountMulticastProtocol
 
 - (void)bindMobile
 {
-    wrapperTrackEvent(@"login", @"auth_mobile");
+    [BDTrackerProtocol event:@"login" label:@"auth_mobile"];
     
     ArticleMobileNumberViewController *viewController = [[ArticleMobileNumberViewController alloc] initWithMobileNumberUsingType:ArticleMobileNumberUsingTypeBind];
     viewController.completion = ^(ArticleLoginState state){
@@ -865,14 +866,14 @@ TTAccountMulticastProtocol
 - (void)changePassword
 {
     // 友盟统计
-    wrapperTrackEvent(@"login", @"change_password");
+    [BDTrackerProtocol event:@"login" label:@"change_password"];
     
     NSString *mobileNumber = [self mobilePhoneNumber];
     if ([SSCommonLogic ttAlertControllerEnabled]) {
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"修改登录密码", nil) message:[NSString stringWithFormat:NSLocalizedString(@"将给手机%@发送验证码", nil), mobileNumber] preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithTitle:NSLocalizedString(@"取消", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
         [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-            wrapperTrackEvent(@"login", @"confirm_change");
+            [BDTrackerProtocol event:@"login" label:@"confirm_change"];
             
             ArticleMobilePasswordViewController *viewController = [[ArticleMobilePasswordViewController alloc] initWithNibName:nil bundle:nil];
             viewController.mobileNumber = mobileNumber;
@@ -888,7 +889,7 @@ TTAccountMulticastProtocol
         [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             StrongSelf;
             // 友盟统计
-            wrapperTrackEvent(@"login", @"confirm_change");
+            [BDTrackerProtocol event:@"login" label:@"confirm_change"];
             
             ArticleMobilePasswordViewController *viewController = [[ArticleMobilePasswordViewController alloc] initWithNibName:nil bundle:nil];
             viewController.mobileNumber = mobileNumber;

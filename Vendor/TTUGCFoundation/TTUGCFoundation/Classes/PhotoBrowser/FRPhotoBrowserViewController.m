@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  FRPhotoBrowserViewController.m
 //  Article
 //
@@ -626,7 +627,7 @@ static BOOL staticPhotoBrowserAtTop = NO;
             cell.hidden = NO;
             [cell resetImageViews];
             [Answers logCustomEventWithName:@"interactive_exit" customAttributes:@{@"weitoutiao_pan_close" : _inList ? @"列表页":@"详情页"}];
-            wrapperTrackEventWithCustomKeys(@"slide_over", @"random_slide_close",nil, nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
             break;
         case TTPreviewAnimateStateWillCancel:
             [[UIApplication sharedApplication] setStatusBarHidden:YES

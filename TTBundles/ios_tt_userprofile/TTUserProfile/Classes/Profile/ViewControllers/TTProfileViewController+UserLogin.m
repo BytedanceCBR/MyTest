@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTProfileViewController+UserLogin.m
 //  Article
 //
@@ -79,7 +80,7 @@
 {
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        wrapperTrackEvent(@"mine_tab", @"login_mobile");
+        [BDTrackerProtocol event:@"mine_tab" label:@"login_mobile"];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -97,7 +98,7 @@
 {
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        wrapperTrackEvent(@"mine_tab", @"login_weixin");
+        [BDTrackerProtocol event:@"mine_tab" label:@"login_weixin"];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -158,7 +159,7 @@
 {
     // LogV1
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        wrapperTrackEvent(@"mine_tab", @"login_qzone");
+        [BDTrackerProtocol event:@"mine_tab" label:@"login_qzone"];
     }
     // LogV3
     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -212,7 +213,7 @@
     } else {
         // LogV1
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            wrapperTrackEvent(@"mine_tab", @"login_more");
+            [BDTrackerProtocol event:@"mine_tab" label:@"login_more"];
         }
         // LogV3
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];

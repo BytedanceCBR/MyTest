@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTPhotoNewCommentViewController.m
 //  Article
 //
@@ -305,7 +306,7 @@
 {
     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
     [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
-    wrapperTrackEventWithCustomKeys(@"fold_comment", @"click", self.detailModel.article.groupModel.groupID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment" label:@"click" value:self.detailModel.article.groupModel.groupID source:nil extraDic:extra];
     NSMutableDictionary *condition = [[NSMutableDictionary alloc] init];
     [condition setValue:self.detailModel.article.groupModel.groupID forKey:@"groupID"];
     [condition setValue:self.detailModel.article.groupModel.itemID forKey:@"itemID"];

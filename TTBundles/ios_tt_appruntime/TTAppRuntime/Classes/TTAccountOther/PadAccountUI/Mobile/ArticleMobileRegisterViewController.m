@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ArticleMobileRegisterViewController.m
 //  Article
 //
@@ -170,7 +171,7 @@
 #pragma mark - PrivateMethod
 - (void)loginButtonActionFired:(id)sender {
     if (self.captchaField.text.length == 0) {
-        wrapperTrackEvent(@"login_register", @"register_login_noauth");
+        [BDTrackerProtocol event:@"login_register" label:@"register_login_noauth"];
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"友情提示", nil) message:NSLocalizedString(@"请输入验证码", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
             [self.captchaField becomeFirstResponder];
@@ -179,7 +180,7 @@
         return;
     }
     if (self.passwordField.text.length == 0) {
-        wrapperTrackEvent(@"login_register", @"register_login_nopsw");
+        [BDTrackerProtocol event:@"login_register" label:@"register_login_nopsw"];
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"友情提示", nil) message:NSLocalizedString(@"请输入密码", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
             [self.passwordField becomeFirstResponder];
@@ -204,11 +205,11 @@
                     [weakSelf dismissWaitingIndicatorWithError:error];
                 }
                 /////// 友盟统计
-                wrapperTrackEvent(@"login_register", @"register_login_fail");
+                [BDTrackerProtocol event:@"login_register" label:@"register_login_fail"];
             } else {
                 
                 /////// 友盟统计
-                wrapperTrackEvent(@"login_register", @"register_login_success");
+                [BDTrackerProtocol event:@"login_register" label:@"register_login_success"];
                 /// TODO:修改用户名
                 ArticleMobileSettingViewController *viewController =
                 [[ArticleMobileSettingViewController alloc] initWithNibName:nil bundle:nil];

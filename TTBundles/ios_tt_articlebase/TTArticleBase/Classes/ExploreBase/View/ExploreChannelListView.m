@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreChannelListView.m
 //  Article
 //
@@ -208,7 +209,7 @@
         }
     
         
-        wrapperTrackEvent(@"channel_detail", @"enter");
+        [BDTrackerProtocol event:@"channel_detail" label:@"enter"];
         
         if (!isEmptyString(from)) {
             NSString *label = [NSString stringWithFormat:@"enter_from_%@", from];
@@ -291,7 +292,7 @@
         
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"已放到首屏", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
         
-        wrapperTrackEvent(@"channel_detail", @"add");
+        [BDTrackerProtocol event:@"channel_detail" label:@"add"];
     }
 }
 

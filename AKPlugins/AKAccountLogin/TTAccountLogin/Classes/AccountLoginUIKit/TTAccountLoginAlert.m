@@ -869,7 +869,7 @@ UITextFieldDelegate
                         [self.tipBtn setTitle:@"请输入密码" forState:UIControlStateNormal];
                     } else {
                         //绑定手机号时提示已绑定其他账号， 确认放弃原账号
-                        wrapperTrackEvent(@"login", @"binding_mobile_abandon_confirm");
+                        [BDTrackerProtocol event:@"login" label:@"binding_mobile_abandon_confirm"];
                         [self phoneNumSwitch];
                     }
                     break;
@@ -882,7 +882,7 @@ UITextFieldDelegate
                         [self.tipBtn setTitle:@"请输入密码" forState:UIControlStateNormal];
                     } else {
                         //绑定手机号时提示已绑定其他账号， 确认放弃原账号
-                        wrapperTrackEvent(@"login", @"binding_mobile_abandon_confirm");
+                        [BDTrackerProtocol event:@"login" label:@"binding_mobile_abandon_confirm"];
                         [self phoneNumSwitch];
                     }
                     

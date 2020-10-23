@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  BlockUsersListCell.m
 //  Article
 //
@@ -63,10 +64,10 @@
     _listCellUnit.relationButtonType = FriendListCellUnitRelationButtonLoading;
     if (_blockUser.isBlocking) {
         [_blockManager unblockUser:_blockUser.ID];
-        wrapperTrackEvent(@"blacklist", @"list_click_deblacklist");
+        [BDTrackerProtocol event:@"blacklist" label:@"list_click_deblacklist"];
     } else {
         [_blockManager blockUser:_blockUser.ID];
-        wrapperTrackEvent(@"blacklist", @"list_click_blacklist");
+        [BDTrackerProtocol event:@"blacklist" label:@"list_click_blacklist"];
     }
 }
 

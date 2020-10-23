@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  FHEditUserViewModel.m
 //  FHHouseMine
 //
@@ -245,16 +246,16 @@
         
         // log
         if (buttonIndex == actionSheet.cancelButtonIndex) {
-            wrapperTrackEvent(@"account_setting_avatar", @"cancel");
+            [BDTrackerProtocol event:@"account_setting_avatar" label:@"cancel"];
         } else {
             if (buttonIndex < [imageSourceTypes count]) {
                 NSString *logString = [imageSourceTypes[buttonIndex] unsignedIntegerValue] == UIImagePickerControllerSourceTypePhotoLibrary ? @"upload_avatar" : @"take_avatar";
-                wrapperTrackEvent(@"account_setting_avatar", logString);
+                [BDTrackerProtocol event:@"account_setting_avatar" label:logString];
             }
         }
     }];
     
-    wrapperTrackEvent(@"edit_profile", @"account_setting_avatar");
+    [BDTrackerProtocol event:@"edit_profile" label:@"account_setting_avatar"];
 }
 
 - (void)showAlertWithTitle:(NSString *)title msg:(NSString *)msg callback:(void(^)(void))callback

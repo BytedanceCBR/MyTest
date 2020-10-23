@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTProfileViewController+Notification.m
 //  Article
 //
@@ -100,11 +101,11 @@
     if (platformName) {
         // 统计
         if ([platformName isEqualToString:PLATFORM_SINA_WEIBO]) {
-            wrapperTrackEvent(@"mine_tab", @"login_sina_success");
+            [BDTrackerProtocol event:@"mine_tab" label:@"login_sina_success"];
         } else if ([platformName isEqualToString:PLATFORM_QZONE]) {
-            wrapperTrackEvent(@"mine_tab", @"login_qzone_success");
+            [BDTrackerProtocol event:@"mine_tab" label:@"login_qzone_success"];
         } else if ([platformName isEqualToString:PLATFORM_WEIXIN]) {
-            wrapperTrackEvent(@"mine_tab", @"login_weixin_success");
+            [BDTrackerProtocol event:@"mine_tab" label:@"login_weixin_success"];
         }
     }
 }

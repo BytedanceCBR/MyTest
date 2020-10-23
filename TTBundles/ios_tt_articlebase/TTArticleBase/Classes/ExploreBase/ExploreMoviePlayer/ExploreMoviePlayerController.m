@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreMoviePlayerController.m
 //  Article
 //
@@ -384,7 +385,7 @@ extern NSString *ttv_getFormattedTimeStrOfPlay(NSTimeInterval playTimeInterval);
     if (self.enableMultiResolution) {
         NSArray *types = [self.moviePlayerDelegate supportedResolutionTypes];
         NSDictionary *extra = @{@"num" : [@(types.count) stringValue]};
-        wrapperTrackEventWithCustomKeys(@"video", @"clarity_click", self.gModel.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"clarity_click" value:self.gModel.groupID source:nil extraDic:extra];
     }
 }
 
@@ -458,7 +459,7 @@ extern NSString *ttv_getFormattedTimeStrOfPlay(NSTimeInterval playTimeInterval);
             str = @"720P";
         }
         [extra setValue:str forKey:@"definition"];
-        wrapperTrackEventWithCustomKeys(@"video", @"clarity_select", self.gModel.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"clarity_select" value:self.gModel.groupID source:nil extraDic:extra];
     }
 }
 
@@ -504,7 +505,7 @@ extern NSString *ttv_getFormattedTimeStrOfPlay(NSTimeInterval playTimeInterval);
     if (self.enableMultiResolution) {
         NSArray *types = [self.moviePlayerDelegate supportedResolutionTypes];
         NSDictionary *extra = @{@"num" : [@(types.count) stringValue]};
-        wrapperTrackEventWithCustomKeys(@"video", @"clarity_show", self.gModel.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"clarity_show" value:self.gModel.groupID source:nil extraDic:extra];
     }
 }
 

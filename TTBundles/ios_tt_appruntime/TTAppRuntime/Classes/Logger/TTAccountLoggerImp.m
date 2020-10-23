@@ -251,7 +251,7 @@
                                   forPlatform:(TTAccountAuthType)type
 {
     NSString *labelName = selected ? @"auth_recommend_on" : @"auth_recommend_off";
-    wrapperTrackEvent(@"xiangping", labelName);
+    [BDTrackerProtocol event:@"xiangping" label:labelName];
 }
 
 /**
@@ -289,16 +289,16 @@
 
 - (void)accountAuthPlatformBoundForbidError
 {
-    wrapperTrackEvent(@"login", @"binding_third_error");
+    [BDTrackerProtocol event:@"login" label:@"binding_third_error"];
 }
 
 - (void)dropOriginalAccountAlertViewDidCancel:(BOOL)cancelled
                                   forPlatform:(TTAccountAuthType)type
 {
     if (!cancelled) {
-        wrapperTrackEvent(@"login", @"binding_third_abandon");
+        [BDTrackerProtocol event:@"login" label:@"binding_third_abandon"];
     } else {
-        wrapperTrackEvent(@"login", @"binding_third_cancel");
+        [BDTrackerProtocol event:@"login" label:@"binding_third_cancel"];
     }
 }
 
@@ -306,7 +306,7 @@
                          forPlatform:(TTAccountAuthType)type
 {
     if (!cancelled) {
-        wrapperTrackEvent(@"login", @"binding_third_abandon_confirm");
+        [BDTrackerProtocol event:@"login" label:@"binding_third_abandon_confirm"];
     } else {
         
     }
@@ -314,12 +314,12 @@
 
 - (void)SSOSwitchBindDidCompleteWithError:(NSError *)error
 {
-    wrapperTrackEvent(@"login", @"binding_third_abandon_success");
+    [BDTrackerProtocol event:@"login" label:@"binding_third_abandon_success"];
 }
 
 - (void)customWebSSOSwitchBindDidCompleteWithError:(NSError *)error
 {
-    wrapperTrackEvent(@"login", @"binding_third_abandon_success");
+    [BDTrackerProtocol event:@"login" label:@"binding_third_abandon_success"];
 }
 
 

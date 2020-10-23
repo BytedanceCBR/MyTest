@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  APNsManager.m
 //  Essay
 //
@@ -97,7 +98,7 @@ static APNsManager *_sharedManager = nil;
 
 - (void)handleRemoteNotification:(NSDictionary *)userInfo
 {
-    [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:TTTrackerLaunchFromRemotePush];
+    [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:BDTrackerLaunchFromRemotePush];
 
     if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
         //正在展示隐私弹窗        
@@ -111,7 +112,7 @@ static APNsManager *_sharedManager = nil;
     NSString *rid = [userInfo btd_stringValueForKey:@"rid"];
     NSString *postBack = [userInfo btd_stringValueForKey:@"post_back"];
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        wrapperTrackEventWithCustomKeys(@"apn", @"news_notification_view", rid, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"apn" label:@"news_notification_view" value:rid source:nil extraDic:nil];
     }
  
     if ([self tryForOldAPNsLogical:userInfo]) {
@@ -296,7 +297,7 @@ static APNsManager *_sharedManager = nil;
          @"value" : valueString}];
     }
     else {
-        wrapperTrackEvent(event, label);
+        [BDTrackerProtocol event:event label:label];
     }
 }
 

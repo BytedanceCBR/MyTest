@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTEditPGCTableViewControllerImp.m
 //  Article
 //
@@ -517,16 +518,16 @@ UIActionSheetDelegate
         
         // log
         if (buttonIndex == actionSheet.cancelButtonIndex) {
-            wrapperTrackEvent(@"account_setting_avatar", @"cancel");
+            [BDTrackerProtocol event:@"account_setting_avatar" label:@"cancel"];
         } else {
             if (buttonIndex < [imageSourceTypes count]) {
                 NSString *logString = [imageSourceTypes[buttonIndex] unsignedIntegerValue] == UIImagePickerControllerSourceTypePhotoLibrary ? @"upload_avatar" : @"take_avatar";
-                wrapperTrackEvent(@"account_setting_avatar", logString);
+                [BDTrackerProtocol event:@"account_setting_avatar" label:logString];
             }
         }
     }];
     
-    wrapperTrackEvent(@"edit_profile", @"account_setting_avatar");
+    [BDTrackerProtocol event:@"edit_profile" label:@"account_setting_avatar"];
 }
 
 - (void)changeUsernameDidClickCell:(TTEditUserProfileItemCell *)cell {
@@ -538,7 +539,7 @@ UIActionSheetDelegate
     inputView.delegate = self.viewModel;
     [inputView showInView:self.viewModel.profileView animated:YES];
     
-    wrapperTrackEvent(@"edit_profile", @"account_setting_username");
+    [BDTrackerProtocol event:@"edit_profile" label:@"account_setting_username"];
 }
 
 - (void)changeDescriptionDidClickCell:(TTEditUserProfileItemCell *)cell {
@@ -550,7 +551,7 @@ UIActionSheetDelegate
     inputView.delegate = self.viewModel;
     [inputView showInView:self.viewModel.profileView animated:YES];
     
-    wrapperTrackEvent(@"edit_profile", @"account_setting_signature");
+    [BDTrackerProtocol event:@"edit_profile" label:@"account_setting_signature"];
 }
 
 - (void)changeGenderDidClickCell:(TTEditUserProfileCell *)cell

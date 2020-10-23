@@ -259,14 +259,14 @@ static NSInteger screenshotViewTag = 1119;
         {
             endRect.origin.y += CGRectGetHeight(self.originRect);
             if (self.panRun){
-                wrapperTrackEventWithCustomKeys(@"slide_over", @"down_slide_close", [@(self.realPhotoDetailController.detailModel.article.uniqueID?:0)stringValue], nil, nil);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"slide_over" label:@"down_slide_close" value:[@(self.realPhotoDetailController.detailModel.article.uniqueID?:0)stringValue] source:nil extraDic:nil];
             }
         }
         else if (self.direction == kPhotoDetailMoveDirectionVerticalTop)
         {
             endRect.origin.y -= CGRectGetHeight(self.originRect);
             if (self.panRun){
-                wrapperTrackEventWithCustomKeys(@"slide_over", @"up_slide_close", [@(self.realPhotoDetailController.detailModel.article.uniqueID?:0)stringValue], nil, nil);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"slide_over" label:@"up_slide_close" value:[@(self.realPhotoDetailController.detailModel.article.uniqueID?:0)stringValue] source:nil extraDic:nil];
             }
         }
         opacity = 0;
@@ -896,7 +896,7 @@ static NSInteger screenshotViewTag = 1119;
                 [self animationCompletion];
                 [self uninstallNavViewSnapshot];
             });
-            wrapperTrackEventWithCustomKeys(@"slide_over", @"random_slide_close", [@(self.realPhotoDetailController.detailModel.article.uniqueID?:0)stringValue], nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:[@(self.realPhotoDetailController.detailModel.article.uniqueID?:0)stringValue] source:nil extraDic:nil];
         }
             break;
         case TTPreviewAnimateStateDidCancel:
