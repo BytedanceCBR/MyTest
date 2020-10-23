@@ -20,6 +20,7 @@
 #import "NSDictionary+TTInstallAdditions.h"
 #import <TTSettingsManager/TTSettingsManager.h>
 #import <pthread.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static NSString *const kTTFingerprintStoragekey = @"kTTFingerprintStoragekey";
 static NSString *const kTTFingerprintLastSuccessTS = @"kTTFingerprintLastSuccessTS";
@@ -114,7 +115,7 @@ static NSUInteger kTTFingerprintFetchInterval = 60 * 60 * 24;//24h
     NSMutableDictionary *postBody = [NSMutableDictionary dictionary];
     [postBody setValue:@"ios" forKey:@"platform"];
     [postBody setValue:@([TTInstallIDManager sharedInstance].appID.longLongValue) forKey:@"aid"];
-    [postBody setValue:[TTInstallIDManager sharedInstance].deviceID forKey:@"did"];
+    [postBody setValue:BDTrackerProtocol.deviceID forKey:@"did"];
     [postBody setValue:self.fingerprint ?: @"" forKey:@"fingerprint"];
     
     NSDictionary *collectInfo = [[TTSettingsManager sharedManager] settingForKey:@"tt_device_info_collect_controller" defaultValue:@{@"device_info_switch":@(1),@"sensitive":@{@"name":@(1),@"ssid":@(1),@"bssid":@(1)}} freeze:NO];

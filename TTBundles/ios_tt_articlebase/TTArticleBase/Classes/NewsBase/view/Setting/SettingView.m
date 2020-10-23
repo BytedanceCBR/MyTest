@@ -25,7 +25,7 @@
 #import "SSFeedbackManager.h"
 #import "SSWebViewController.h"
 #import "ArticleURLSetting.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "DebugUmengIndicator.h"
 #import "SSNavigationBar.h"
 #import "ExploreLogicSetting.h"
@@ -328,13 +328,13 @@ TTEditUserProfileViewControllerDelegate
 #ifdef DEBUG
     
     NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©幸福里 %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
-    [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
+    [string appendFormat:@"deviceID:%@, userID:%@", [BDTrackerProtocol deviceID], [TTAccountManager userID]];
     
     _aboutLabel.text = string;
 #endif
     if ([TTSandBoxHelper isInHouseApp]) {
         NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©幸福里 inHouse %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
-        [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
+        [string appendFormat:@"deviceID:%@, userID:%@", [BDTrackerProtocol deviceID], [TTAccountManager userID]];
         _aboutLabel.text = string;
     }
     
@@ -394,7 +394,7 @@ TTEditUserProfileViewControllerDelegate
     self.tapCount++;
 
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    pasteboard.string = [NSString stringWithFormat:@"did: %@\nuid: %@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
+    pasteboard.string = [NSString stringWithFormat:@"did: %@\nuid: %@", [BDTrackerProtocol deviceID], [TTAccountManager userID]];
     if ([TTSandBoxHelper isInHouseApp]) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
     }
@@ -402,7 +402,7 @@ TTEditUserProfileViewControllerDelegate
     if (self.tapCount > 5) {
         
         NSMutableString *string = [NSMutableString stringWithFormat:NSLocalizedString(@"©幸福里 %s %s %@ %s\n", nil), __DATE__ ,__TIME__, [TTSandBoxHelper getCurrentChannel], BuildRev];
-        [string appendFormat:@"deviceID:%@, userID:%@", [[TTInstallIDManager sharedInstance] deviceID], [TTAccountManager userID]];
+        [string appendFormat:@"deviceID:%@, userID:%@", [BDTrackerProtocol deviceID], [TTAccountManager userID]];
         
         _aboutLabel.text = string;
         

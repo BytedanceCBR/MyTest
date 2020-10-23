@@ -29,6 +29,7 @@
         }
         
         if (attribute.representedElementCategory == UICollectionElementCategorySupplementaryView) {
+//            NSLog(@"layoutAttributesForElementsInRect attribute.indexPath %@",attribute.indexPath);
             CGRect frame = attribute.frame;
             frame.origin.x = 15;
             frame.size.width = CGRectGetWidth(self.collectionView.bounds) - 15 * 2;
@@ -47,6 +48,15 @@
     }];
 
     return newArray;
+}
+
+- (nullable UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewLayoutAttributes *attribute = [super layoutAttributesForSupplementaryViewOfKind:elementKind atIndexPath:indexPath];
+    CGRect frame = attribute.frame;
+    frame.origin.x = 15;
+    frame.size.width = CGRectGetWidth(self.collectionView.bounds) - 15 * 2;
+    attribute.frame = frame;
+    return attribute;
 }
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForDecorationViewOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath {

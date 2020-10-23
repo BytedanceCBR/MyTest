@@ -22,6 +22,7 @@
 #import "TTNetworkUtil.h"
 #import "NewsUserSettingManager.h"
 #import "TTTabBarProvider.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kTopPadding     0
 #define kBottomPadding  [TTDeviceUIUtils tt_paddingForMoment:3]
@@ -244,7 +245,7 @@
                 label = [label stringByAppendingString:@"_list"];
             }
             
-            wrapperTrackEvent(@"web_view", label);
+            [BDTrackerProtocol event:@"web_view" label:label];
         }
         if([url.absoluteString isEqualToString:@"forumNameUrl"]){
             if (!isEmptyString(self.momentModel.openURL)) {
@@ -271,7 +272,7 @@
                     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
                     [extra setValue:self.momentModel.ID forKey:@"item_id"];
                     [extra setValue:self.momentModel.group.ID forKey:@"value"];
-                    [TTTrackerWrapper event:@"micronews_tab" label:@"quote" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+                    [BDTrackerProtocol event:@"micronews_tab" label:@"quote" value:nil extValue:nil extValue2:nil dict:[extra copy]];
                 }
             }
             
@@ -306,7 +307,7 @@
 
 - (void)handleLongPress:(UIGestureRecognizer*)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        wrapperTrackEvent(@"update_detail", @"longpress");
+        [BDTrackerProtocol event:@"update_detail" label:@"longpress"];
         [self becomeFirstResponder];
         UIMenuController *menu = [UIMenuController sharedMenuController];
         UIMenuItem *copyItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"复制", nil) action:@selector(customCopy:)];
@@ -340,7 +341,7 @@
 }
 
 - (void)customCopy:(__unused id)sender {
-    wrapperTrackEvent(@"update_detail", @"longpress_copy");
+    [BDTrackerProtocol event:@"update_detail" label:@"longpress_copy"];
     [[UIPasteboard generalPasteboard] setString:self.commentLabel.text];
 }
 

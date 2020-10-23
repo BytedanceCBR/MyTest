@@ -29,6 +29,7 @@
 #import "TTMovieViewCacheManager.h"
 #import "TTVideoTip.h"
 #import "ExploreOrderedData+TTAd.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kTopInViewLength 250
 #define kBottomInViewLength 70
@@ -308,7 +309,7 @@ TTBaseCellAction>
 {
     Article *article = cell.cellEntity.article;
     if (!cell.cellEntity.showed) {
-        wrapperTrackEventWithCustomKeys(@"video_float", @"show", article.groupModel.groupID, article.groupModel.itemID, [[self class] baseExtraWithArticle:article]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video_float" label:@"show" value:article.groupModel.groupID source:article.groupModel.itemID extraDic:[[self class] baseExtraWithArticle:article]];
     }
     cell.cellEntity.showed = YES;
 }
@@ -375,7 +376,7 @@ TTBaseCellAction>
         }
     } error:^(NSError *error) {
         StrongSelf;
-        wrapperTrackEventWithCustomKeys(@"video_float", @"related_failed", [self currentCellArticle].groupModel.groupID, [self currentCellArticle].groupModel.itemID, [[self class] baseExtraWithArticle:[self currentCellArticle]]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video_float" label:@"related_failed" value:[self currentCellArticle].groupModel.groupID source:[self currentCellArticle].groupModel.itemID extraDic:[[self class] baseExtraWithArticle:[self currentCellArticle]]];
     }];
 }
 
@@ -1176,7 +1177,7 @@ TTBaseCellAction>
 #pragma mark 统计
 - (void)tt_logImmerseActivity
 {
-    wrapperTrackEventWithCustomKeys(@"video_float", @"float_click_screen", self.toPlayCell.cellEntity.article.groupModel.groupID, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_float" label:@"float_click_screen" value:self.toPlayCell.cellEntity.article.groupModel.groupID source:nil extraDic:nil];
 }
 
 + (nullable NSMutableDictionary *)baseExtraWithArticle:( Article * _Nonnull )article

@@ -15,6 +15,11 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHUGCSearchView.h"
+#import <FHUGCConfig.h>
+#import "YYLabel.h"
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
+#import "NSAttributedString+YYText.h"
 
 @interface FHUGCMyInterestedController ()<TTRouteInitializeProtocol,UIViewControllerErrorHandler>
 
@@ -22,7 +27,8 @@
 @property (nonatomic , strong) UITableView *tableView;
 @property (nonatomic , assign) NSTimeInterval lastRequestTime;
 @property (nonatomic , strong) FHUGCSearchView *searchView;
-
+@property (nonatomic , strong) UILabel *guessYouLikeLabel;
+@property (nonatomic , strong) UIView *refreshTipView;
 @end
 
 @implementation FHUGCMyInterestedController
@@ -49,7 +55,6 @@
     [self initConstraints];
     [self initViewModel];
     
-    [TTAccount addMulticastDelegate:self];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -134,13 +139,107 @@
     searchView.tracerDict = tracerDict;
     [headerView addSubview:searchView];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 15 + 49, [UIScreen mainScreen].bounds.size.width, 21)];
-    label.font = [UIFont themeFontRegular:15];
-    label.textColor = [UIColor themeGray1];
-    label.text = @"猜你喜欢";
-    [headerView addSubview:label];
+    self.guessYouLikeLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 15 + 49, [UIScreen mainScreen].bounds.size.width, 21)];
+    self.guessYouLikeLabel.font = [UIFont themeFontRegular:15];
+    self.guessYouLikeLabel.textColor = [UIColor themeGray1];
+    self.guessYouLikeLabel.text = @"猜你喜欢";
+    [headerView addSubview:self.guessYouLikeLabel];
+    [headerView addSubview:self.refreshTipView];
+    [self.refreshTipView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(headerView).offset(64);
+        make.left.equalTo(headerView).offset(15);
+        make.right.equalTo(headerView).offset(-15);
+        make.height.mas_equalTo(20);
+    }];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateFollowStatus) name:kFHUGCUpdateFollowDataAfterAccountStatuschangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showRefreshTip) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     return headerView;
+}
+
+-(void)updateFollowStatus {
+    [self.viewModel updateDataListFollowStatus];
+}
+
+- (void)showRefreshTip {
+    BOOL needRefresh = [FHUGCConfig sharedInstance].followList.count > 0;
+    if(self.refreshTipView.hidden == !needRefresh) {
+        return;
+    }
+    
+    UIView *headerView = self.tableView.tableHeaderView;
+    self.tableView.tableHeaderView = nil;
+    
+    if(needRefresh) {
+        CGRect frame = headerView.frame;
+        frame.size.height = 120;
+        headerView.frame = frame;
+        
+        frame = self.guessYouLikeLabel.frame;
+        frame.origin.y = 99;
+        self.guessYouLikeLabel.frame = frame;
+        
+        self.refreshTipView.hidden = NO;
+    }else{
+        self.refreshTipView.hidden = YES;
+
+        CGRect frame = headerView.frame;
+        frame.size.height = 85;
+        headerView.frame = frame;
+        
+        frame = self.guessYouLikeLabel.frame;
+        frame.origin.y = 64;
+        self.guessYouLikeLabel.frame = frame;
+        
+    }
+
+    self.tableView.tableHeaderView = headerView;
+}
+
+-(UIView *)refreshTipView {
+    if(!_refreshTipView){
+        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:@"你关注的圈子有内容更新，点击刷新查看"];
+        NSDictionary *commonTextStyle = @{ NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor themeGray3]};
+        [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
+        [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
+        NSRange tapRange = [attrText.string rangeOfString:@"点击刷新查看"];
+        [attrText yy_setTextHighlightRange:tapRange color:[UIColor themeOrange1] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHMyJoinVCReloadVCNotification object:nil];
+        }];
+        YYLabel *refreshTipLabel = [[YYLabel alloc] init];
+        refreshTipLabel.attributedText = attrText;
+        
+        UIView *leftLine = [[UIView alloc] init];
+        leftLine.backgroundColor = [UIColor themeGray6];
+        UIView *rightLine = [[UIView alloc] init];
+        rightLine.backgroundColor = [UIColor themeGray6];
+        UIView *refreshTipView = [[UIView alloc] init];
+        refreshTipView.hidden = YES;
+        
+        [refreshTipView addSubview:refreshTipLabel];
+        [refreshTipView addSubview:leftLine];
+        [refreshTipView addSubview:rightLine];
+        
+        [refreshTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.bottom.equalTo(refreshTipView);
+            make.centerX.equalTo(refreshTipView);
+            make.width.mas_equalTo(252);
+        }];
+        [leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(refreshTipView);
+            make.left.equalTo(refreshTipView);
+            make.right.equalTo(refreshTipLabel.mas_left).offset(-20);
+            make.height.mas_equalTo(1);
+        }];
+        [rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(refreshTipView);
+            make.right.equalTo(refreshTipView);
+            make.left.equalTo(refreshTipLabel.mas_right).offset(20);
+            make.height.mas_equalTo(1);
+        }];
+        _refreshTipView = refreshTipView;
+    }
+    return _refreshTipView;
 }
 
 - (void)initConstraints {

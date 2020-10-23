@@ -16,6 +16,7 @@
 #import "UIView+Refresh_ErrorHandler.h"
 #import "TTIndicatorView.h"
 #import "UIImage+TTThemeExtension.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 static float const kBlockUserListCellHeight = 66;
@@ -169,7 +170,7 @@ static float const kBlockUserListCellHeight = 66;
     
     if (row < [_blockUsers count]) {
         
-        wrapperTrackEvent(@"blacklist", @"list_click_information");
+        [BDTrackerProtocol event:@"blacklist" label:@"list_click_information"];
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

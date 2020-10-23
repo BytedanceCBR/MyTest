@@ -22,6 +22,7 @@
 #import "amrFileCodec.h"
 #import "TTIndicatorView.h"
 #import "NetworkUtilities.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 static NSString *TTLiveAudioPlayModeSpeaker  = @"扬声器播放";
@@ -367,7 +368,7 @@ static TTLiveAudioManager *_sharedInstance;
     [TTLiveAudioManager showIndicatorViewWithText:tips];
     
     // event track
-    wrapperTrackEventWithCustomKeys(@"livecell", @"audio_download_fail", nil, nil, [self dict4EventTrack]);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"livecell" label:@"audio_download_fail" value:nil source:nil extraDic:[self dict4EventTrack]];
 }
 
 // 扬声器与听筒切换，isManu : 是否是手动自动切换。
@@ -398,7 +399,7 @@ static TTLiveAudioManager *_sharedInstance;
     
     if (eventTrackLabel) {
 //        [[TTLiveManager sharedManager] trackerEvent:@"livecell" label:eventTrackLabel tab:nil extValue:nil];
-        wrapperTrackEventWithCustomKeys(@"livecell", eventTrackLabel, nil, nil, [self dict4EventTrack]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"livecell" label:eventTrackLabel value:nil source:nil extraDic:[self dict4EventTrack]];
     }
 }
 
@@ -578,7 +579,7 @@ static TTLiveAudioManager *_sharedInstance;
     [self switchToAudioPlayMode:self.currentAudioPlayMode isManual:NO showTips:NO];
     
     // event track
-    wrapperTrackEventWithCustomKeys(@"livecell", @"audio_play_fail", nil, nil, [self dict4EventTrack]);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"livecell" label:@"audio_play_fail" value:nil source:nil extraDic:[self dict4EventTrack]];
 }
 
 // 贴近或远离听筒

@@ -16,6 +16,7 @@
 #import "TTAdShortVideoModel.h"
 #import "TTShortVideoModel+TTAdFactory.h"
 #import "TSVMonitorManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 NSString * const klistEntranceKey = @"more_shortvideo";
 
@@ -188,7 +189,7 @@ NSString * const klistEntranceKey = @"more_shortvideo";
         [params setValue:refreshTypeStr forKey:@"refresh_type"];
         [params setValue:klistEntranceKey forKey:@"list_entrance"];
         [params setValue:cardPosition forKey:@"card_position"];
-        [TTTrackerWrapper eventV3:@"category_refresh" params:params];
+        [BDTrackerProtocol eventV3:@"category_refresh" params:params];
     }
     
     WeakSelf;

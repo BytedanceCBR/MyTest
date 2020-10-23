@@ -34,6 +34,7 @@
     // Do any additional setup after loading the view.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadVC) name:kFHMyJoinVCReloadVCNotification object:nil];
     self.view.backgroundColor = [UIColor whiteColor];
     [self loadVC];
 }
@@ -93,12 +94,13 @@
         return;
     }
     
-    _interestedVC = nil;
-    
     if(_currentView){
         [_currentView removeFromSuperview];
         _currentView = nil;
     }
+    
+    [_interestedVC removeFromParentViewController];
+    _interestedVC = nil;
     
     FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
     vc.listType = FHCommunityFeedListTypeMyJoin;
@@ -122,12 +124,13 @@
         return;
     }
     
-    _feedListVC = nil;
-    
     if(_currentView){
         [_currentView removeFromSuperview];
         _currentView = nil;
     }
+    
+    [_feedListVC removeFromParentViewController];
+    _feedListVC = nil;
     
     FHUGCMyInterestedController *vc =[[FHUGCMyInterestedController alloc] init];
     vc.type = FHUGCMyInterestedTypeEmpty;

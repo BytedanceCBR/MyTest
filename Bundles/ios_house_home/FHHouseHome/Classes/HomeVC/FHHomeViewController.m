@@ -23,7 +23,6 @@
 #import "FHHomeScrollBannerCell.h"
 #import "TTDeviceHelper.h"
 #import "TTAppUpdateHelper.h"
-#import "TTInstallIDManager.h"
 #import "CommonURLSetting.h"
 #import "FHCommuteManager.h"
 #import "TTUIResponderHelper.h"
@@ -39,6 +38,8 @@
 #import "FHHomeMainViewController.h"
 #import <FHHouseBase/FHHomeScrollBannerView.h>
 #import "FHUGCCategoryManager.h"
+#import "UIView+FHTracker.h"
+#import "FHUserTracker.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -210,6 +211,8 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (TTTopBar *)topBar {
     if (!_topBar) {
         _topBar = [[TTTopBar alloc] init];
+        _topBar.fh_pageType = [self fh_pageType];
+        _topBar.fh_originFrom = @"maintab_search";
         _topBar.isShowTopSearchPanel = YES;
         _topBar.tab = @"home";
         _topBar.delegate = self;
@@ -524,7 +527,9 @@ static CGFloat const kSectionHeaderHeight = 38;
     return _scrollView;
 }
 
-
-
+#pragma mark - Tracker相关
+- (NSString *)fh_pageType {
+    return @"maintab";
+}
 
 @end

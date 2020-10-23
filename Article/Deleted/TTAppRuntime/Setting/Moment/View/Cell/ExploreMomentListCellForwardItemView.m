@@ -30,6 +30,7 @@
 #import <TTBaseLib/JSONAdditions.h>
 
 #import <TTInteractExitHelper.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kArrowStr @".. >>"
 
@@ -372,10 +373,10 @@
     [dict setValue:self.momentModel.ID forKey:@"id"];
     
     if (self.sourceType == ArticleMomentSourceTypeForum) {
-        [TTTrackerWrapper category:@"umeng" event:@"image" label:@"enter_topic" dict:dict];
+        [BDTrackerProtocol category:@"umeng" event:@"image" label:@"enter_topic" dict:dict];
     } else if (self.sourceType == ArticleMomentSourceTypeMoment
                || self.sourceType == ArticleMomentSourceTypeProfile) {
-        [TTTrackerWrapper category:@"umeng" event:@"image" label:@"enter_update" dict:dict];
+        [BDTrackerProtocol category:@"umeng" event:@"image" label:@"enter_update" dict:dict];
     }
     
     TTPhotoScrollViewController * showImageViewController = [[TTPhotoScrollViewController alloc] init];

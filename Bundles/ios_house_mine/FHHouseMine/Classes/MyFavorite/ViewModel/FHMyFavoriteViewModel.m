@@ -470,7 +470,7 @@ extern NSString *const kFHDetailFollowUpNotification;
     if (self.showPlaceHolder) {
         return 10;
     }
-    return [_dataList count];
+    return [self.dataList count];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath

@@ -10,7 +10,7 @@
 #import "TTArticleCellHelper.h"
 #import "TTArticleCellConst.h"
 #import "ExploreEntryManager.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "ExploreMixListDefine.h"
 #import "ExploreEntryDefines.h"
 #import "TTIndicatorView.h"

@@ -19,6 +19,7 @@
 #import "TTDetailNatantVideoBanner.h"
 #import "TTVideoDetailPlayControl.h"
 #import "ExploreOrderedData+TTAd.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static const NSTimeInterval kAnimDuration = 0.2;
 static const CGFloat kCommentVCTolerance = 10;
@@ -88,7 +89,7 @@ static const CGFloat kCommentVCTolerance = 10;
 - (void)vdvi_trackWithLabel:(NSString *)label source:(NSString *)source groupId:(NSString *)groupId {
     NSMutableDictionary *extraDict = [[NSMutableDictionary alloc] init];
     [extraDict setValue:source forKey:@"action_type"];
-    wrapperTrackEventWithCustomKeys(@"video_player", label, groupId, nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_player" label:label value:groupId source:nil extraDic:extraDict];
 }
 
 #pragma mark - private method

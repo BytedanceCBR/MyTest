@@ -7,9 +7,10 @@
 
 #import "FHDetailBaseCell.h"
 #import "FHDetailStaticMap.h"
+#import <IGListKit/IGListKit.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHNewHouseDetailMapCollectionCell : FHDetailBaseCollectionCell
+@interface FHNewHouseDetailMapCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 
 @property (nonatomic, copy) void (^refreshActionBlock)(void);
 @property (nonatomic, copy) void(^mapBtnClickBlock)(NSString *);
@@ -17,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^baiduPanoramaBlock)(void);
 @end
 
-@interface FHNewHouseDetailMapCellModel : NSObject
+@interface FHNewHouseDetailMapCellModel : NSObject<IGListDiffable>
 
 @property(nonatomic, copy, nullable) NSString *gaodeLng;
 @property(nonatomic, copy, nullable) NSString *gaodeLat;

@@ -83,7 +83,6 @@
         containView.layer.cornerRadius = 2;
         
         UIImageView *backImage = [UIImageView new];
-        UIView *shaderBackView = [UIView new];
 
         if ([itemModel.image isKindOfClass:[NSArray class]] && [itemModel.image.firstObject isKindOfClass:[FHConfigDataOpData2ItemsImageModel class]]) {
             FHConfigDataOpData2ItemsImageModel *itemImage = (FHConfigDataOpData2ItemsImageModel *)itemModel.image.firstObject;
@@ -99,24 +98,10 @@
         backImage.layer.masksToBounds = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(houseTypeBannerClick:)];
         [backImage addGestureRecognizer:tapGesture];
-        CGFloat shaderWidht = 3;
         
         [backImage setFrame:CGRectMake((viewWidth - imageWidth)/2, 3, imageWidth, imageHeight)];
-
-        [shaderBackView setFrame:CGRectMake(backImage.frame.origin.x + 3, backImage.frame.origin.y + 3, backImage.frame.size.width - 6, backImage.frame.size.height - 6)];
-        [shaderBackView setBackgroundColor:[UIColor clearColor]];
-        
-        
-        // 设置阴影的路径 此处效果为在view周边添加宽度为4的阴影效果
-        UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(- shaderWidht, -shaderWidht, shaderBackView.frame.size.width + shaderWidht * 2, shaderBackView.frame.size.height + shaderWidht * 2)];
-        shaderBackView.layer.shadowPath = path.CGPath;
-        shaderBackView.layer.shadowOffset = CGSizeMake(0, 4);
-        shaderBackView.layer.shadowRadius = 6;
-        shaderBackView.layer.shadowColor = [UIColor blackColor].CGColor;
-        shaderBackView.layer.shadowOpacity = 0.1;
         
         backImage.tag = i;
-        [containView addSubview:shaderBackView];
         [containView addSubview:backImage];
         
         if ([itemModel.tagImage isKindOfClass:[NSArray class]] && itemModel.tagImage.count > 0) {

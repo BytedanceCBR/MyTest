@@ -14,6 +14,7 @@
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import <TTUIWidget/TTAlphaThemedButton.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 extern NSString * const assertDesc_articleType;
 
@@ -124,7 +125,7 @@ extern NSString * const assertDesc_articleType;
         extValueDic[@"enter_from"] = [self enterFromString];
         extValueDic[@"category_name"] = [self categoryName];
         extValueDic[@"event_type"] = @"house_app2c_v2";
-        [TTTracker eventV3:@"rt_share_to_platform" params:extValueDic];
+        [BDTrackerProtocol eventV3:@"rt_share_to_platform" params:extValueDic];
 //        wrapperTrackEventWithCustomKeys(tag, label, groupId, source, extValueDic);
         return;
     }
@@ -161,7 +162,7 @@ extern NSString * const assertDesc_articleType;
     extValueDic[@"enter_from"] = [self enterFromString];
     extValueDic[@"category_name"] = [self categoryName];
     extValueDic[@"event_type"] = @"house_app2c_v2";
-    [TTTracker eventV3:@"rt_share_to_platform" params:extValueDic];
+    [BDTrackerProtocol eventV3:@"rt_share_to_platform" params:extValueDic];
 //    wrapperTrackEventWithCustomKeys(tag, label, groupId, source, extValueDic);
 }
 

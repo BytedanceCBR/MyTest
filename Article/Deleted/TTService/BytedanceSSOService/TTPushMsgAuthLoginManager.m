@@ -12,7 +12,7 @@
 #import <TTAccountSDK/TTAccountSDK.h>
 #import <TTAccountLoginViewController.h>
 #import "TTProjectLogicManager.h"
-#import <TTTrackerWrapper.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "SSCommonLogic.h"
 #import "TTProfileViewController.h"
 #import "TTArticleTabBarController.h"
@@ -360,11 +360,11 @@ BDSDKApiDelegate
 {
     switch (platformType) {
         case TTAccountAuthTypeHuoshan: {
-            [TTTrackerWrapper eventV3:@"login_out_success" params:@{@"action_type": @"hotsoon"}];
+            [BDTrackerProtocol eventV3:@"login_out_success" params:@{@"action_type": @"hotsoon"}];
         }
             break;
         case TTAccountAuthTypeDouyin: {
-            [TTTrackerWrapper eventV3:@"login_out_success" params:@{@"action_type": @"douyin"}];
+            [BDTrackerProtocol eventV3:@"login_out_success" params:@{@"action_type": @"douyin"}];
         }
             break;
             

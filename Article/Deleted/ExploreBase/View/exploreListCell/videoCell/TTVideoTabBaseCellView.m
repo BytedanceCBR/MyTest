@@ -66,7 +66,6 @@
 #import "TTPlatformSwitcher.h"
 #import "TTFeedDislikeView.h"
 #import <TTServiceKit/TTServiceCenter.h>
-#import <TTTracker/TTTrackerProxy.h>
 #import "UIView+SupportFullScreen.h"
 //#import "TTRedPacketManager.h"
 
@@ -90,6 +89,7 @@
 #import "TTVideoCellActionBar.h"
 #import "TTVVideoDetailViewController.h"
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #define kVideoTitleX 15
 #define kVideoTitleY 12
 #define B_kVideoTitleY 8
@@ -890,7 +890,7 @@ static NSDictionary *fontSizes = nil;
         [extra setValue:article.itemID forKey:@"item_id"];
         [extra setValue:@"video" forKey:@"source"];
         [extra setValue:@"click_list" forKey:@"action"];
-        wrapperTrackEventWithCustomKeys(@"enter_comment", [NSString stringWithFormat:@"click_%@", self.orderedData.categoryID], article.groupModel.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"enter_comment" label:[NSString stringWithFormat:@"click_%@", self.orderedData.categoryID] value:article.groupModel.groupID source:nil extraDic:extra];
     } else if (sender == _actionBar.adActionButton) {
         if ([self.player isMovieFullScreen]) {
             [self.player exitFullScreen:YES completion:^(BOOL finished) {
@@ -980,7 +980,6 @@ static NSDictionary *fontSizes = nil;
 
 + (void)trackRealTime:(ExploreOrderedData*)orderData extraData:(NSDictionary *)extraData
 {
-    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
     NSMutableDictionary* params = [NSMutableDictionary dictionary];
     [params setValue:@"umeng" forKey:@"category"];
     [params setValue:orderData.ad_id forKey:@"value"];
@@ -989,10 +988,9 @@ static NSDictionary *fontSizes = nil;
     [params setValue:@"1" forKey:@"ext_value"];
     [params setValue:orderData.log_extra forKey:@"log_extra"];
     [params setValue:@"2" forKey:@"ext_value"];
-    [params setValue:@(connectionType) forKey:@"nt"];
     [params setValue:@"1" forKey:@"is_ad_event"];
     [params addEntriesFromDictionary:[orderData realTimeAdExtraData:@"embeded_ad" label:@"click" extraData:extraData]];
-    [TTTracker eventV3:@"realtime_click" params:params];
+    [BDTrackerProtocol eventV3:@"realtime_click" params:params];
 }
 
 //监听电话状态
@@ -1059,7 +1057,7 @@ static NSDictionary *fontSizes = nil;
     [_phoneShareView showOnViewController:[TTUIResponderHelper correctTopViewControllerFor: self] useShareGroupOnly:NO isFullScreen:[self.player isMovieFullScreen]];
     
     if (self.orderedData.article) {
-        wrapperTrackEvent(@"list_content", @"share_channel");
+        [BDTrackerProtocol event:@"list_content" label:@"share_channel"];
     }
 }
 
@@ -1183,7 +1181,7 @@ static NSDictionary *fontSizes = nil;
     
     
     if (self.orderedData.article) {
-        wrapperTrackEvent(@"list_content", @"share_channel");
+        [BDTrackerProtocol event:@"list_content" label:@"share_channel"];
     }
 }
 
@@ -1313,7 +1311,7 @@ static NSDictionary *fontSizes = nil;
     
     
     if (self.orderedData.article) {
-        wrapperTrackEvent(@"list_content", @"share_channel");
+        [BDTrackerProtocol event:@"list_content" label:@"share_channel"];
     }
 }
 
@@ -1439,7 +1437,7 @@ static NSDictionary *fontSizes = nil;
             if (article.isSubscribe.boolValue) {
                 [self cancelSubscribArticle:mediaId];
                 
-                wrapperTrackEventWithCustomKeys(@"list_share", @"unconcern",self.orderedData.article.groupModel.groupID, nil, [self extraValueDic]);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"list_share" label:@"unconcern" value:self.orderedData.article.groupModel.groupID source:nil extraDic:[self extraValueDic]];
             }
             else {
 //                if ([TTFirstConcernManager firstTimeGuideEnabled]) {
@@ -1448,10 +1446,10 @@ static NSDictionary *fontSizes = nil;
 //                }
                 [self subscribArticle:mediaId];
                 
-                wrapperTrackEventWithCustomKeys(@"list_share", @"concern", self.orderedData.article.groupModel.groupID, nil, [self extraValueDic]);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"list_share" label:@"concern" value:self.orderedData.article.groupModel.groupID source:nil extraDic:[self extraValueDic]];
             }
             //统计
-            wrapperTrackEvent(@"xiangping", @"video_list_pgc_button");
+            [BDTrackerProtocol event:@"xiangping" label:@"video_list_pgc_button"];
             
             self.phoneShareView= nil;
         }
@@ -1500,7 +1498,7 @@ static NSDictionary *fontSizes = nil;
             [extraDict setValue:@(1) forKey:@"aggr_type"];
             [extraDict setValue:@(1) forKey:@"type"];
             NSString *uniqueID = [NSString stringWithFormat:@"%lld", self.orderedData.originalData.uniqueID];
-            wrapperTrackEventWithCustomKeys(@"list_share", @"delete_ugc", uniqueID, nil, extraDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"list_share" label:@"delete_ugc" value:uniqueID source:nil extraDic:extraDict];
             WeakSelf;
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             [params setValue:[[self.orderedData.article userInfo] stringValueForKey:@"user_id" defaultValue:nil] forKey:@"user_id"];
@@ -1704,19 +1702,17 @@ static NSDictionary *fontSizes = nil;
 - (void)trackWithTag:(NSString *)tag label:(NSString *)label extra:(NSDictionary *)extra {
     NSCParameterAssert(tag != nil);
     NSCParameterAssert(label != nil);
-    TTInstallNetworkConnection nt = [[TTTrackerProxy sharedProxy] connectionType];
     NSMutableDictionary *events = [NSMutableDictionary dictionaryWithCapacity:10];
     [events setValue:@"umeng" forKey:@"category"];
     [events setValue:tag forKey:@"tag"];
     [events setValue:label forKey:@"label"];
-    [events setValue:@(nt) forKey:@"nt"];
     [events setValue:@"1" forKey:@"is_ad_event"];
     [events setValue:self.orderedData.ad_id forKey:@"value"];
     [events setValue:self.orderedData.log_extra forKey:@"log_extra"];
     if (extra) {
         [events addEntriesFromDictionary:extra];
     }
-    [TTTracker eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 - (void)digUpActivityClicked
@@ -1758,7 +1754,7 @@ static NSDictionary *fontSizes = nil;
         }
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.orderedData.article.userInfo ttgc_contentID] forKey:@"author_id"];
-        [TTTracker eventV3:@"rt_unlike" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"rt_unlike" params:[dict copy]];
 
     } else {
         article.userDigg = YES;
@@ -1781,7 +1777,7 @@ static NSDictionary *fontSizes = nil;
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.orderedData.article.userInfo ttgc_contentID] forKey:@"author_id"];
 
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_list_digg",nil,nil,dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_list_digg" value:nil source:nil extraDic:dict];
     }
 }
 
@@ -1819,7 +1815,7 @@ static NSDictionary *fontSizes = nil;
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.orderedData.article.userInfo ttgc_contentID] forKey:@"author_id"];
         
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_list_bury",nil,nil,dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_list_bury" value:nil source:nil extraDic:dict];
 
     } else {
         article.userBury = NO;
@@ -1845,7 +1841,7 @@ static NSDictionary *fontSizes = nil;
         }
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.orderedData.article.userInfo ttgc_contentID] forKey:@"author_id"];
-        [TTTracker eventV3:@"rt_unbury" params:[dict copy]];
+        [BDTrackerProtocol eventV3:@"rt_unbury" params:[dict copy]];
     }
 }
 
@@ -1875,7 +1871,7 @@ static NSDictionary *fontSizes = nil;
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.orderedData.article.userInfo ttgc_contentID] forKey:@"author_id"];
         
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_list_unfavorite",nil,nil,dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_list_unfavorite" value:nil source:nil extraDic:dict];
     }
     else {
         __weak __typeof__(self) wself = self;
@@ -1896,7 +1892,7 @@ static NSDictionary *fontSizes = nil;
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.orderedData.article.userInfo ttgc_contentID] forKey:@"author_id"];
         
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_list_favorite",nil,nil,dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_list_favorite" value:nil source:nil extraDic:dict];
 
     }
 }
@@ -1989,7 +1985,7 @@ static NSDictionary *fontSizes = nil;
     if (iconSeat) {
         [extValueDic setValue:iconSeat forKey:@"icon_seat"];
     }
-    wrapperTrackEventWithCustomKeys(tag, label, uniqueID, @"video", extValueDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:uniqueID source:@"video" extraDic:extValueDic];
     
 }
 
@@ -2175,10 +2171,10 @@ static CGFloat sActionBarHeight = 0;
     [params setValue:@"video" forKey:@"article_type"];
     [params setValue:[self.orderedData.article.userInfo ttgc_contentID] forKey:@"author_id"];
     if ([self.orderedData.article isFollowed]){
-        [TTTrackerWrapper eventV3:@"rt_unfollow" params:params];
+        [BDTrackerProtocol eventV3:@"rt_unfollow" params:params];
     }else{
 
-        [TTTrackerWrapper eventV3:@"rt_follow" params:params];
+        [BDTrackerProtocol eventV3:@"rt_follow" params:params];
     }
     
 }
@@ -2224,7 +2220,7 @@ static CGFloat sActionBarHeight = 0;
         [param setValue:position forKey:@"position"];
         [param setValue:@"video" forKey:@"source"];
         [param setValue:categoryName forKey:@"category_name"];
-        [TTTrackerWrapper eventV3:@"red_button" params:param];
+        [BDTrackerProtocol eventV3:@"red_button" params:param];
     }
 }
 

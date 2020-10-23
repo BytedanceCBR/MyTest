@@ -17,6 +17,7 @@
 #import "TTNightShiftService.h"
 #import <Crashlytics/Crashlytics.h>
 #import "ArticleTabbarStyleNewsListViewController.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTInterfaceTipNightShiftView() <CAAnimationDelegate>
 @property (nonatomic, strong)SSThemedLabel *titleLabel;
@@ -126,7 +127,7 @@
     [TTNightShiftService hasShowNightShiftModeTipView];
     _showTime = [[NSDate alloc] init];
     
-    [TTTrackerWrapper eventV3:@"eye_care_pop_show" params:@{@"pop_states":@"show"}];
+    [BDTrackerProtocol eventV3:@"eye_care_pop_show" params:@{@"pop_states":@"show"}];
     NSInteger count = [[NSUserDefaults standardUserDefaults] integerForKey:@"kTTNightShiftTipViewCountKey"];
     [Answers logCustomEventWithName:@"night_shift" customAttributes:@{@"tip_show":@(count)}];
 }
@@ -160,7 +161,7 @@
         [Answers logCustomEventWithName:@"night_shift" customAttributes:@{@"hidden":@"auto_tab"}];
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
         [params setValue:@([self stayTimeInterval]) forKey:@"stay_time"];
-        [TTTrackerWrapper eventV3:@"eye_care_pop_hide" params:params];
+        [BDTrackerProtocol eventV3:@"eye_care_pop_hide" params:params];
     }
 }
 
@@ -170,7 +171,7 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
     [params setValue:@([self stayTimeInterval]) forKey:@"stay_time"];
     [Answers logCustomEventWithName:@"night_shift" customAttributes:@{@"hidden":@"auto_vc"}];
-    [TTTrackerWrapper eventV3:@"eye_care_pop_hide" params:params];
+    [BDTrackerProtocol eventV3:@"eye_care_pop_hide" params:params];
 }
 
 - (void)enterBackground
@@ -180,7 +181,7 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:1];
     [params setValue:@([self stayTimeInterval]) forKey:@"stay_time"];
     [Answers logCustomEventWithName:@"night_shift" customAttributes:@{@"hidden":@"auto_background"}];
-    [TTTrackerWrapper eventV3:@"eye_care_pop_hide" params:params];
+    [BDTrackerProtocol eventV3:@"eye_care_pop_hide" params:params];
 }
 
 - (CGFloat)timerDuration
@@ -222,7 +223,7 @@
     NSInteger stay_time = [self stayTimeInterval];
     [params setValue:nightShiftWorking ? @"on" : @"off" forKey:@"switch_states"];
     [params setValue:@(time) forKey:@"datetime"];
-    [TTTrackerWrapper eventV3:@"eye_care_pop_switch" params:params];
+    [BDTrackerProtocol eventV3:@"eye_care_pop_switch" params:params];
     [Answers logCustomEventWithName:@"night_shift" customAttributes:@{@"status":nightShiftWorking ? @"tip_on" : @"tip_off",@"time" : stay_time < 3 ? @"less_3" : @"than_3"}];
 }
 
@@ -233,7 +234,7 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
     [params setValue:@(stay_time) forKey:@"stay_time"];
     [params setValue:@"close" forKey:@"close_method"];
-    [TTTrackerWrapper eventV3:@"eye_care_pop_close" params:params];
+    [BDTrackerProtocol eventV3:@"eye_care_pop_close" params:params];
     [Answers logCustomEventWithName:@"night_shift" customAttributes:@{@"hidden":@"close", @"time" : stay_time < 3 ? @"less_3" : @"than_3"}];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -252,7 +253,7 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
     [params setValue:@(stay_time) forKey:@"stay_time"];
     [params setValue:@"gesture" forKey:@"close_method"];
-    [TTTrackerWrapper eventV3:@"eye_care_pop_close" params:params];
+    [BDTrackerProtocol eventV3:@"eye_care_pop_close" params:params];
     [Answers logCustomEventWithName:@"night_shift" customAttributes:@{@"hidden":@"pan_gesture", @"time" : stay_time < 3 ? @"less_3" : @"than_3"}];
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -270,7 +271,7 @@
         NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:2];
         [params setValue:@(stay_time) forKey:@"stay_time"];
         [params setValue:@"auto" forKey:@"close_method"];
-        [TTTrackerWrapper eventV3:@"eye_care_pop_close" params:params];
+        [BDTrackerProtocol eventV3:@"eye_care_pop_close" params:params];
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [TTNightShiftService showBubbleTip];

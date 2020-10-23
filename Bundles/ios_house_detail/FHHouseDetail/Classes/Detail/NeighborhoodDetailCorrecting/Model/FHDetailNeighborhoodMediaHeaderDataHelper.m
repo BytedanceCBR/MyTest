@@ -123,11 +123,12 @@ FHDetailNeighborhoodMediaHeaderDataHelperHeaderViewData *headerViewData = [[FHDe
         pictureVideoModel.vHeight = videoModel.vHeight;
         pictureVideoModel.muted = NO;
         pictureVideoModel.repeated = NO;
-        pictureVideoModel.isShowControl = NO;
+        pictureVideoModel.isShowControl = YES;
         pictureVideoModel.isShowMiniSlider = YES;
         pictureVideoModel.isShowStartBtnWhenPause = YES;
         
         videoItemModel.videoModel = pictureVideoModel;
+        videoItemModel.videoModel.coverImageUrl = videoModel.imageUrl;
         videoItemModel.rootGroupName = @"视频";
         [pictureArray addObject:videoItemModel];
         

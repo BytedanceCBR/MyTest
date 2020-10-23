@@ -13,7 +13,6 @@
 #import "FHUserTracker.h"
 #import "TTRoute.h"
 #import "FHHomeCellHelper.h"
-#import "FHShadowView.h"
 #import <FHHouseBase/FHHomeScrollBannerView.h>
 
 
@@ -21,7 +20,6 @@
 
 @property (nonatomic, strong)   FHConfigDataMainPageBannerOpDataModel       *model;
 @property (nonatomic, strong)   NSMutableDictionary       *tracerDic;
-@property (nonatomic, strong)   FHShadowView       *shadowView;
 @property (nonatomic, strong)   NSMutableArray *validOpDatas;
 
 @end
@@ -50,11 +48,6 @@
     _bannerView.layer.masksToBounds = YES;
     _bannerView.layer.cornerRadius = 8;
 
-    _shadowView = [[FHShadowView alloc] initWithFrame:CGRectMake(15, 14, [UIScreen mainScreen].bounds.size.width -  kFHScrollBannerLeftRightMargin * 2, kFHScrollBannerHeight)];
-    [_shadowView setCornerRadius:10];
-    [_shadowView setShadowColor:[UIColor colorWithRed:110.f/255.f green:110.f/255.f blue:110.f/255.f alpha:1]];
-    [_shadowView setShadowOffset:CGSizeMake(0, 2)];
-    [self.contentView addSubview:_shadowView];
     [self.contentView addSubview:_bannerView];
     
     [_bannerView mas_makeConstraints:^(MASConstraintMaker *make) {

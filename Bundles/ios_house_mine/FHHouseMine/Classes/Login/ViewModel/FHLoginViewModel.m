@@ -28,7 +28,7 @@
 #import <FHWebView/SSWebViewController.h>
 #import <ByteDanceKit/NSString+BTDAdditions.h>
 #import "FHLoginConflictBridgePlugin.h"
-#import <TTInstallService/TTInstallIDManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import "FHLoginConflictBridgePlugin.h"
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
@@ -865,7 +865,7 @@ static FHLoginSharedModel *_sharedModel = nil;
                         NSString *platform_screen_name_conflict = error.userInfo[@"platform_screen_name_conflict"];
                         NSInteger last_login_time = [error.userInfo[@"last_login_time"] integerValue];
                         NSString *enter_from = tracerDict[@"enter_from"];
-                        NSString *device_id = [[TTInstallIDManager sharedInstance] deviceID];
+                        NSString *device_id = [BDTrackerProtocol deviceID];
                         NSString *URLString = [NSString stringWithFormat:@" http://m.haoduofangs.com/passport/auth_bind_conflict/index/?aid=1370&enter_from=%@&mobile=%@&screen_name=%@&avatar_url=%@&last_login_time=%@&platform_screen_name_current=%@&platform_screen_name_conflict=%@&profile_key=%@&device_id=%@",enter_from, mobile, screen_name, avatar_url, @(last_login_time), platform_screen_name_current, platform_screen_name_conflict, profileKey, device_id];
                         
                         ssOpenWebView([NSURL btd_URLWithString:URLString], nil, strongSelf.viewController.navigationController, NO, @{@"hide_nav_bar": @"1",@"hide_back_button": @"1"});

@@ -19,6 +19,7 @@
 #import "TTServiceCenter.h"
 #import "TTAdManagerProtocol.h"
 #import "TTAdManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTPhotoDetailViewModel () <ArticleInfoManagerDelegate>
 
@@ -297,7 +298,7 @@
                            @"value":    @(self.detailModel.article.uniqueID) ? : @"",
                            @"item_id":  self.detailModel.article.groupModel.itemID ? : @""
                            };
-    [TTTrackerWrapper eventData:data];
+    [BDTrackerProtocol eventData:data];
 }
 
 - (void)sendEvent4ImageRecommendClick:(NSDictionary *)queryItems {
@@ -326,6 +327,6 @@
         [data addEntriesFromDictionary:extra];
     }
     
-    [TTTrackerWrapper eventData:data];
+    [BDTrackerProtocol eventData:data];
 }
 @end

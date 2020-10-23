@@ -11,7 +11,7 @@
 #import "TTImageView.h"
 #import "ExploreOrderedData+TTBusiness.h"
 #import "Card+CoreDataClass.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTRoute.h"
 #import "TTAlphaThemedButton.h"
 #import "TTThemeConst.h"
@@ -269,10 +269,10 @@
         [params setValue:@"list" forKey:@"position"];
         [params setValue:@"click_headline" forKey:@"enter_from"];
         [params setValue:self.categoryID forKey:@"category_name"];
-        [TTTrackerWrapper eventV3:@"click_more_news" params:params];
+        [BDTrackerProtocol eventV3:@"click_more_news" params:params];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:self.showMoreSchema]];
     }
-    wrapperTrackEventWithCustomKeys(@"card", label, self.cardID, nil, @{@"category_name":self.categoryID});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"card" label:label value:self.cardID source:nil extraDic:@{@"category_name":self.categoryID}];
 }
 
 - (void)setTarget:(id)target selector:(SEL)selector {
