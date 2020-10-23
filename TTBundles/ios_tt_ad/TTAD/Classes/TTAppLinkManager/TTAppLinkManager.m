@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTAppLinkManager.m
 //  Article
 //
@@ -85,9 +86,9 @@ NSString *const kAppLinkBackURLPlaceHolder = @"__back_url__";
                 NSString *extraDicStr = [query stringValueForKey:kAppLinkExtraDic defaultValue:nil];
                 NSDictionary *extraDic = [extraDicStr tt_JSONValue];
                 if ([channel isEqualToString:@"sdk"]) {
-                    wrapperTrackEventWithCustomKeys(event, @"sdk_appback", value, nil, extraDic);
+                    [BDTrackerProtocol trackEventWithCustomKeys:event label:@"sdk_appback" value:value source:nil extraDic:extraDic];
                 } else if ([channel isEqualToString:@"open_url"]) {
-                    wrapperTrackEventWithCustomKeys(event, @"open_url_appback", value, nil, extraDic);
+                    [BDTrackerProtocol trackEventWithCustomKeys:event label:@"open_url_appback" value:value source:nil extraDic:extraDic];
                 }
             }
         });
@@ -163,7 +164,7 @@ NSString *const kAppLinkBackURLPlaceHolder = @"__back_url__";
     }
     BOOL result = [[UIApplication sharedApplication] openURL:openURL];
     if (result) {
-        wrapperTrackEventWithCustomKeys(sourceTag, @"open_url_app", value, nil, extraDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:sourceTag label:@"open_url_app" value:value source:nil extraDic:extraDic];
     }
     return result;
 }

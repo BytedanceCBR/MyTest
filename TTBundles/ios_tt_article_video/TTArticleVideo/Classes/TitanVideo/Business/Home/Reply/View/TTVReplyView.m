@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVReplyView.m
 //  Article
 //
@@ -266,7 +267,7 @@ static CGRect splitViewFrameForView(UIView *view)
 
 - (void)userInfoDiggButtonClicked:(UIButton *)sender{
     if (![sender isSelected]){
-        wrapperTrackEvent(@"update_detail", @"top_digg_click");
+        [BDTrackerProtocol event:@"update_detail" label:@"top_digg_click"];
     }
     
     if ([_delegate respondsToSelector:@selector(replyView:userInfoDiggButtonClicked:)]) {
@@ -535,7 +536,7 @@ static CGRect splitViewFrameForView(UIView *view)
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    wrapperTrackEvent(@"update_detail", @"reply_replier_content");
+    [BDTrackerProtocol event:@"update_detail" label:@"reply_replier_content"];
     
     TTVReplyListItem *item = [self getCurReplyListItemAtIndexPath:indexPath];
     

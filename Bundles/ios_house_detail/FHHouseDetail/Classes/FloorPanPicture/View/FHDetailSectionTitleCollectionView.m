@@ -16,6 +16,10 @@
     [super prepareForReuse];
     self.arrowsImg.hidden = YES;
     self.subTitleLabel.hidden = YES;
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.centerY.mas_equalTo(self).offset(2);
+    }];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {

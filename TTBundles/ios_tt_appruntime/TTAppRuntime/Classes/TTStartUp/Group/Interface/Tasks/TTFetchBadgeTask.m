@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTFetchBadgeTask.m
 //  Article
 //
@@ -35,7 +36,7 @@ DEC_TASK("TTFetchBadgeTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+7);
 #pragma mark - UIApplicationDelegate Method
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     if ([[UIApplication sharedApplication] applicationIconBadgeNumber] > 0) {
-        wrapperTrackEvent(@"apn", @"badge");
+        [BDTrackerProtocol event:@"apn" label:@"badge"];
         [[TTLaunchTracer shareInstance] setBadgeNumber:[UIApplication sharedApplication].applicationIconBadgeNumber];
     }
     [[ArticleBadgeManager shareManger] startFetch];

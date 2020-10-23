@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  WDDetailView.m
 //  Article
 //
@@ -1121,7 +1122,7 @@ typedef NS_ENUM(NSInteger, SSWebViewStayStat) {
 - (void)processRequestShowImgInPhotoScrollViewAtIndex:(NSUInteger)index withFrameValue:(NSValue *)frameValue
 {
     // show photo scroll view
-    wrapperTrackEvent(@"image", @"enter_detail");
+    [BDTrackerProtocol event:@"image" label:@"enter_detail"];
     TTPhotoScrollViewController *showImageViewController = [[TTPhotoScrollViewController alloc] init];
     self.photoScrollViewController = showImageViewController;
     showImageViewController.targetView = self.detailWebView.webView.scrollView;

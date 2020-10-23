@@ -205,7 +205,7 @@
         }];
         return cell;
     }
-    return nil;
+    return [super defaultCellAtIndex:index];
 }
 
 

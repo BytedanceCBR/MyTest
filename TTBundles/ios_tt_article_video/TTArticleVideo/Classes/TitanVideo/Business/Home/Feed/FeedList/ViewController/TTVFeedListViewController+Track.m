@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVFeedListViewController+Track.m
 //  Article
 //
@@ -132,7 +133,7 @@
     if ([label isEqualToString:@"network_error"]) {
         value = @(status).stringValue;
     }
-    wrapperTrackEventWithCustomKeys(@"load_status", trackLabel, value,nil,extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"load_status" label:trackLabel value:value source:nil extraDic:extraDict];
 
 }
 

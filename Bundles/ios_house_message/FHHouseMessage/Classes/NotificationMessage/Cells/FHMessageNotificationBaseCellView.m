@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTMessageNotificationBaseCellView.m
 //  Article
 //
@@ -366,7 +367,7 @@ NS_INLINE CGFloat kBottomLineViewHeight() {
 
 - (void)multiTextViewOnClick:(id)sender {
     if (!isEmptyString(self.messageModel.content.multiUrl)) {
-        wrapperTrackEventWithCustomKeys(@"message_cell", @"more", self.messageModel.ID, nil, [FHMessageNotificationCellHelper listCellLogExtraForData:self.messageModel]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"message_cell" label:@"more" value:self.messageModel.ID source:nil extraDic:[FHMessageNotificationCellHelper listCellLogExtraForData:self.messageModel]];
         NSURL *url = [TTStringHelper URLWithURLString:self.messageModel.content.multiUrl];
         NSString *URLString = url.absoluteString;
         

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  SSCommentInputView.m
 //  Article
 //
@@ -73,7 +74,7 @@
 
 - (void)backButtonClicked
 {
-    wrapperTrackEvent(@"comment", @"write_cancel");
+    [BDTrackerProtocol event:@"comment" label:@"write_cancel"];
     if(_delegate && [_delegate respondsToSelector:@selector(commentInputViewCancelled:)])
     {
         [_delegate performSelector:@selector(commentInputViewCancelled:) withObject:self];
@@ -161,7 +162,7 @@
                                                             replyToCommentID:_replyToCommentID
                                                                      context:userInfo];
                 [self showIndicatorMsg:sSending imageName:nil];
-                wrapperTrackEvent(@"comment", @"write_confirm");
+                [BDTrackerProtocol event:@"comment" label:@"write_confirm"];
             }
         }
 
@@ -268,7 +269,7 @@
             else {
                 label = [label stringByAppendingString:@"_fail"];
             }
-            wrapperTrackEventWithCustomKeys(@"pgc_profile", label, _mediaID, nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"pgc_profile" label:label value:_mediaID source:nil extraDic:nil];
         }
         else {
             if (!_topMostViewController) {
@@ -312,7 +313,7 @@
                 
             }
             if (self.platformType == TTSharePlatformTypeOfMain) {
-                wrapperTrackEventWithCustomKeys(tag, label, _groupModel.groupID, nil, extraDic);
+                [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:_groupModel.groupID source:nil extraDic:extraDic];
             }else {
                 [TTTrackerWrapper category:@"umeng" event:tag label:label dict:@{@"source":self.uniqueId}];
             }

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTAdPhotoAlbumManager.m
 //  Article
 //
@@ -450,7 +451,7 @@
               value:(NSString *)value
            extraDic:(NSDictionary *)dic
 {
-    wrapperTrackEventWithCustomKeys(tag, label, value, nil, dic);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:value source:nil extraDic:dic];
 }
 
 - (void)trackRealTimeDownload

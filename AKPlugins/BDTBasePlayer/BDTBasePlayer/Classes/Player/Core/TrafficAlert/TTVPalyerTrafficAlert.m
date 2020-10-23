@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVPalyerTrafficAlert.m
 //  Article
 //
@@ -226,18 +227,18 @@ static TTThemedAlertControllerManager *manager;
 
 - (void)cancelTrack
 {
-    wrapperTrackEventWithCustomKeys(@"video", @"net_alert_cancel", self.playerStateStore.state.playerModel.groupID, nil, @{@"is_initial":@(NO),@"position":[self ttv_position]});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"net_alert_cancel" value:self.playerStateStore.state.playerModel.groupID source:nil extraDic:@{@"is_initial":@(NO),@"position":[self ttv_position]}];
 }
 
 - (void)confimTrack
 {
     //重播不显示
-    wrapperTrackEventWithCustomKeys(@"video", @"net_alert_confirm", self.playerStateStore.state.playerModel.groupID, nil, @{@"is_initial":@(NO),@"position":[self ttv_position]});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"net_alert_confirm" value:self.playerStateStore.state.playerModel.groupID source:nil extraDic:@{@"is_initial":@(NO),@"position":[self ttv_position]}];
 }
 
 - (void)showTrack
 {
-    wrapperTrackEventWithCustomKeys(@"video", @"net_alert_show", self.playerStateStore.state.playerModel.groupID, nil, @{@"is_initial":@(NO),@"position":[self ttv_position]});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"net_alert_show" value:self.playerStateStore.state.playerModel.groupID source:nil extraDic:@{@"is_initial":@(NO),@"position":[self ttv_position]}];
 }
 
 #pragma mark - traffic alert

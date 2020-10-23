@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVAdActionButtonCommand.m
 //  Article
 //
@@ -192,7 +193,7 @@
         NSMutableDictionary *applinkParams = [NSMutableDictionary dictionary];
         [applinkParams setValue:self.videoFeed.logExtra forKey:@"log_extra"];
         if (!isEmptyString(model.web_url) && isEmptyString(model.open_url)) {
-            wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", self.videoFeed.adID, nil, applinkParams);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"open_url_h5" value:self.videoFeed.adID source:nil extraDic:applinkParams];
         }
         return YES;
     }

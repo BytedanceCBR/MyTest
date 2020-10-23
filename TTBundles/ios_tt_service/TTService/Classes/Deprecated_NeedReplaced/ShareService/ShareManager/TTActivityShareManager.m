@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTActivityShareManager.m
 //  Article
 //
@@ -1605,7 +1606,7 @@ static BOOL isMovieFullScreen;
                 eventName = @"share_fail";
             }
             if (!ttvs_isTitanVideoBusiness()) {
-                wrapperTrackEventWithCustomKeys(tag, label, self.uniqueId, nil, extraDict);
+                [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:self.uniqueId source:nil extraDic:extraDict];
             }
             SAFECALL_MESSAGE(TTVShareActionTrackMessage, @selector(message_shareTrackActivityWithGroupID:ActivityType:FromSource:eventName:),message_shareTrackActivityWithGroupID:self.uniqueId ActivityType:_activityType FromSource: _clickSource eventName:eventName);
             
@@ -1642,11 +1643,11 @@ static BOOL isMovieFullScreen;
                 eventName = @"share_fail";
             }
             if (!ttvs_isTitanVideoBusiness()) {
-                wrapperTrackEventWithCustomKeys(tag, label, self.uniqueId, nil, extraDict);
+                [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:self.uniqueId source:nil extraDic:extraDict];
             }
             SAFECALL_MESSAGE(TTVShareDetailTrackerMessage, @selector(message_detailshareTrackActivityWithGroupID:ActivityType:FromSource:eventName:), message_detailshareTrackActivityWithGroupID:self.uniqueId ActivityType:activityType FromSource:_clickSource eventName:eventName);
         }else{
-            wrapperTrackEventWithCustomKeys(tag, label, self.uniqueId, nil, extraDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:self.uniqueId source:nil extraDic:extraDict];
         }
         
     }else if (_platformType == TTSharePlatformTypeOfForumPlugin) {

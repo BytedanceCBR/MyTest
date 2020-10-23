@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVPasterADViewController.m
 //  Article
 //
@@ -566,7 +567,7 @@ static UINavigationController *nav;
         [applinkParams setValue:adModel.log_extra forKey:@"log_extra"];
         if (!isEmptyString(adModel.web_url) && isEmptyString(adModel.open_url)) {
             NSString *adIDStr = [NSString stringWithFormat:@"%@",model.adID];
-            wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", adIDStr, nil, applinkParams);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"open_url_h5" value:adIDStr source:nil extraDic:applinkParams];
         }
         return YES;
     }

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTRChannel.m
 //  Article
 //
@@ -24,7 +25,7 @@ TTR_PROTECTED_HANDLER(@"TTRChannel.addChannel", @"TTRChannel.getSubScribedChanne
     NSMutableDictionary * extraDict = [[NSMutableDictionary alloc] initWithDictionary:param];
     [extraDict setValue:categoryID forKey:@"category_name"];
     [extraDict setValue:nil forKey:@"category"];
-    wrapperTrackEventWithCustomKeys(@"add_channel", @"click", nil, nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"add_channel" label:@"click" value:nil source:nil extraDic:extraDict];
 
 //    TTCategory *categoryModel = [TTArticleCategoryManager categoryModelByCategoryID:categoryID];
 //    if (!categoryModel) {

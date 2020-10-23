@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTPhotoMultiSearchWordsView.m
 //  Article
 //
@@ -118,7 +119,7 @@ NS_INLINE NSInteger SearchWordsMaxLength(){
     if([[TTRoute sharedRoute] canOpenURL:openURL]){
         [[TTRoute sharedRoute] openURLByPushViewController:openURL];
     }
-    wrapperTrackEvent(@"gallery2", @"click");
+    [BDTrackerProtocol event:@"gallery2" label:@"click"];
 }
 
 @end

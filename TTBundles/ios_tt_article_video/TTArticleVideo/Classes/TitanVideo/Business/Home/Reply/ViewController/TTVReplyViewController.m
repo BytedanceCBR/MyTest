@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVReplyViewController.m
 //  Article
 //
@@ -196,7 +197,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     [super viewWillAppear:animated];
     NSMutableDictionary *logDict = [NSMutableDictionary dictionary];
     [logDict setValue:self.commentModel.commentIDNum forKey:@"comment_id"];
-    wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", self.commentModel.commentIDNum.stringValue, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:self.commentModel.commentIDNum.stringValue source:nil extraDic:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -248,7 +249,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     }
 
     if (_viewModel.curAllReplyItems.count) {
-        wrapperTrackEvent(@"update_detail", @"replier_loadmore");
+        [BDTrackerProtocol event:@"update_detail" label:@"replier_loadmore"];
     }
     CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent() * 1000.f;
     @weakify(self);
@@ -270,7 +271,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     }];
 
     if (_viewModel.curAllReplyItems.count + _viewModel.curHotReplyItems.count > 0) {
-        wrapperTrackEvent(@"profile", @"more_comment");
+        [BDTrackerProtocol event:@"profile" label:@"more_comment"];
     }
 }
 
@@ -634,11 +635,11 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
                 }
                 if (_needDeleteCommentModel) {
                     if (self.sourceType == ArticleMomentSourceTypeMoment) {
-                        wrapperTrackEvent(@"delete", @"reply_update");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_update"];
                     } else if (self.sourceType == ArticleMomentSourceTypeForum) {
-                        wrapperTrackEvent(@"delete", @"reply_post");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_post"];
                     } else if (self.sourceType == ArticleMomentSourceTypeProfile) {
-                        wrapperTrackEvent(@"delete", @"reply_profile");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_profile"];
                     }
 
                     [self p_deleteLocalCommentModel:_needDeleteCommentModel];
@@ -670,7 +671,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 
 - (void)replyListCell:(UITableViewCell *)view deleteCommentWithModel:(id<TTVReplyModelProtocol>)model {
 
-    wrapperTrackEvent(@"update_detail", @"delete");
+    [BDTrackerProtocol event:@"update_detail" label:@"delete"];
 
     self.needDeleteCommentModel = model;
     [self p_deleteReplyComment];

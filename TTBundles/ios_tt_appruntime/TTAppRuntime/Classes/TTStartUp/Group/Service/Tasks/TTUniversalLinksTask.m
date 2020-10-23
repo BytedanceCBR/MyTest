@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTUniversalLinksTask.m
 //  Article
 //
@@ -44,7 +45,7 @@ DEC_TASK("TTUniversalLinksTask",FHTaskTypeService,TASK_PRIORITY_HIGH+7);
         NSString *url = webpageURL.absoluteString;
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
         [extraDict setValue:url forKey:@"url"];
-        wrapperTrackEventWithCustomKeys(@"activity_type", @"click_wap_browsing_web", nil, nil, extraDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"activity_type" label:@"click_wap_browsing_web" value:nil source:nil extraDic:extraDict];
         
         NSDictionary *queryDict = [TTURLUtils queryItemsForURL:webpageURL];
         
