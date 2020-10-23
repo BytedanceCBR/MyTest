@@ -89,7 +89,7 @@
             }
         }
     }
-    return [[FHDetailBaseCollectionCell alloc] init];
+    return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHSearchHouseDataItemsModel class]) forIndexPath:indexPath];
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {

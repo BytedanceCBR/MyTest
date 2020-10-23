@@ -118,7 +118,7 @@
         return cell;
     }
     
-    return nil;
+    return [super defaultCellAtIndex:index];
 }
 
 
@@ -187,7 +187,7 @@
         if (self.canCommentElementShow) {
             self.canCommentElementShow = NO;
             NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
-            tracerDic[@"element_type"] = @"neighborhood_evaluate";
+            tracerDic[@"element_type"] = @"neighborhood_comment";
             [tracerDic removeObjectForKey:@"element_from"];
             [FHUserTracker writeEvent:@"element_show" params:tracerDic];
         }

@@ -363,17 +363,13 @@
 }
 
 - (NSString *)fh_pageType {
+    NSAssert(NO, @"子类需要重写才能使用这个方法");
     return NSStringFromClass(self.class);
 }
 
 - (NSString *)fh_originFrom {
     if (!self.tracerDict || ![self.tracerDict isKindOfClass:NSDictionary.class]) return @"be_null";
     return [self.tracerDict btd_objectForKey:UT_ORIGIN_FROM default:@"be_null"];
-}
-
-- (NSString *)fh_fromPageType {
-    if (!self.tracerDict || ![self.tracerDict isKindOfClass:NSDictionary.class]) return @"be_null";
-    return [self.tracerDict btd_objectForKey:UT_FROM_PAGE_TYPE default:@"be_null"];
 }
 /**
  * 支持禁止Push跳转（与TopVC是同一个VC以及，参数相同的页面），默认是NO（走之前逻辑）

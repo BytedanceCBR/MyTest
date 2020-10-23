@@ -16,6 +16,7 @@
 #import "WDLayoutHelper.h"
 #import "WDUIHelper.h"
 #import "WDFontDefines.h"
+#import "UIColor+Theme.h"
 
 #import "TTTAttributedLabel.h"
 #import "TTAlphaThemedButton.h"
@@ -98,7 +99,7 @@
     CGFloat contentHeight = [self heightForTTContentLabelWithMaxNumberOfLines:[_viewModel defaultNumberOfLines]];
     CGFloat realHeight = [self heightForTTContentLabelWithMaxNumberOfLines:0];
     
-    _isNeedUnfold = !(contentHeight == realHeight);
+    _isNeedUnfold = (contentHeight < realHeight);
     
     [self addSubview:self.contentLabel];
     [self addSubview:self.imageBoxView];
@@ -147,7 +148,7 @@
 
 - (CGRect)frameForContentLabel
 {
-    if (self.isFoldState) {
+    if (self.isFoldState && self.isNeedUnfold) {
         CGFloat contentHeight = [self heightForTTContentLabelWithMaxNumberOfLines:[_viewModel defaultNumberOfLines]];
         return CGRectMake(kWDCellLeftPadding, 0, SSWidth(self) - kWDCellLeftPadding - kWDCellRightPadding, contentHeight);
     } else {
@@ -221,13 +222,13 @@
     NSMutableAttributedString *foldToken = [[NSMutableAttributedString alloc] initWithString:foldString
                                                                                   attributes:@{
                                                                                                NSFontAttributeName : [UIFont systemFontOfSize:fontSize],
-                                                                                               NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:@"red1"]}
+                                                                                               NSForegroundColorAttributeName : [UIColor themeRed3]}
                                             ];
     NSString *arrowString = [NSString stringWithFormat:@" %@",ask_arrow_down];
     NSMutableAttributedString *tokenArrow = [[NSMutableAttributedString alloc] initWithString:arrowString
                                                                                    attributes:@{NSBaselineOffsetAttributeName:@(fontSize/2 - 6),
                                                                                                 NSFontAttributeName : [UIFont fontWithName:wd_iconfont size:10],
-                                                                                                NSForegroundColorAttributeName : [UIColor tt_themedColorForKey:@"red1"]}
+                                                                                                NSForegroundColorAttributeName : [UIColor themeRed3]}
                                              ];
     [token appendAttributedString:foldToken];
     [token appendAttributedString:tokenArrow];

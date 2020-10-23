@@ -60,6 +60,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**点击头图的tab栏出现的埋点*/
 @property(nonatomic, copy) void (^clickTitleTabBlock)(NSInteger index);
 
+/**当拖动图片 图片变成可拖动状态时候的操作 一般是让外面把图片准备好*/
+@property(nonatomic, copy) void (^willBeginPanBackBlock)(NSInteger index);
+
 
 /** 详情页数据 */
 @property (nonatomic, copy)     NSString       *houseId;
