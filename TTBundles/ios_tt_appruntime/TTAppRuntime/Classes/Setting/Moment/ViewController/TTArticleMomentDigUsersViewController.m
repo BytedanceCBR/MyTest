@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTArticleMomentDigUsersViewController.m
 //  Article
 //
@@ -93,7 +94,7 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    wrapperTrackEvent(@"update_detail", @"enter_diggers");
+    [BDTrackerProtocol event:@"update_detail" label:@"enter_diggers"];
     if (!TTNetworkConnected()) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"网络不给力，请稍后重试" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:nil];
     }

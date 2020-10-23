@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTNotificationCenterDelegate.m
 //  Article
 //
@@ -63,12 +64,12 @@ typedef void(^NotificationActionCompletionBlock) (void);
 #pragma clang diagnostic pop
                                       completionHandler:^(BOOL granted, NSError * _Nullable error) {
                                           if([TTAuthorizeManager sharedManager].pushObj.authorizeModel.isPushAuthorizeDetermined == NO){
-                                              wrapperTrackEvent(@"pop", @"push_permission_show");
+                                              [BDTrackerProtocol event:@"pop" label:@"push_permission_show"];
                                               if(!granted){
-                                                  wrapperTrackEvent(@"pop", @"push_permission_cancel");
+                                                  [BDTrackerProtocol event:@"pop" label:@"push_permission_cancel"];
                                               }
                                               else{
-                                                  wrapperTrackEvent(@"pop", @"push_permission_confirm");
+                                                  [BDTrackerProtocol event:@"pop" label:@"push_permission_confirm"];
                                               }
                                               [TTAuthorizeManager sharedManager].pushObj.authorizeModel.isPushAuthorizeDetermined = YES;
                                               [[TTAuthorizeManager sharedManager].pushObj.authorizeModel saveData];
@@ -175,7 +176,7 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     if ([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
 
         [TTLaunchOrientationHelper executeBlockAfterStatusbarOrientationNormal:^{
-            wrapperTrackEvent(@"apn", @"click_notification");
+            [BDTrackerProtocol event:@"apn" label:@"click_notification"];
  
             ((ArticleAPNsManager *)[ArticleAPNsManager sharedManager]).delegate = SharedAppDelegate;
 
@@ -218,7 +219,7 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
 //            }
 //            else {
                 [TTLaunchOrientationHelper executeBlockAfterStatusbarOrientationNormal:^{
-                    wrapperTrackEvent(@"apn", @"click_launch");
+                    [BDTrackerProtocol event:@"apn" label:@"click_launch"];
 
                     ((ArticleAPNsManager *)[ArticleAPNsManager sharedManager]).delegate = SharedAppDelegate;
                     [[APNsManager sharedManager] handleRemoteNotification:payload];

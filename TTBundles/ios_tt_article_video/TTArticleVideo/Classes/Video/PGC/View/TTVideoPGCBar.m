@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVideoPGCCell.m
 //  Article
 //
@@ -287,7 +288,7 @@
             
             [ExploreMovieView removeAllExploreMovieView];
             
-            wrapperTrackEvent(@"video", @"feed_enter_pgc_list_hd");
+            [BDTrackerProtocol event:@"video" label:@"feed_enter_pgc_list_hd"];
         }
     }
 }
@@ -306,7 +307,7 @@
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    wrapperTrackEvent(@"video", @"feed_pgc_list_slide");
+    [BDTrackerProtocol event:@"video" label:@"feed_pgc_list_slide"];
 }
 
 @end
@@ -435,7 +436,7 @@
             
             [ExploreMovieView removeAllExploreMovieView];
             
-            wrapperTrackEvent(@"video", @"feed_enter_pgc_null_hd");
+            [BDTrackerProtocol event:@"video" label:@"feed_enter_pgc_null_hd"];
         }
     }
 }

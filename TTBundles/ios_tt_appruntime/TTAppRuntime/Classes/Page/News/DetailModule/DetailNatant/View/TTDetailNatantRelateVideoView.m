@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTDetailNatantRelateVideoView.m
 //  Article
 //
@@ -54,7 +55,7 @@
     NSString * outerSchema = [_infoDict objectForKey:@"outer_schema"];
     if ([[UIApplication sharedApplication] canOpenURL:[TTStringHelper URLWithURLString:outerSchema]]) {
         [[UIApplication sharedApplication] openURL:[TTStringHelper URLWithURLString:outerSchema]];
-        wrapperTrackEvent(@"detail", @"enter_youku");
+        [BDTrackerProtocol event:@"detail" label:@"enter_youku"];
         return;
     }
     NSString * openURL = [_infoDict objectForKey:@"open_page_url"];

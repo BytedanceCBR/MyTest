@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTAdVideoManager.m
 //  Article
 //
@@ -279,7 +280,7 @@
               value:(NSString *)value
            extraDic:(NSDictionary *)dic
 {
-    wrapperTrackEventWithCustomKeys(tag, label, value, nil, dic);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:value source:nil extraDic:dic];
 }
 
 #pragma mark 视频详情页Banner位广告

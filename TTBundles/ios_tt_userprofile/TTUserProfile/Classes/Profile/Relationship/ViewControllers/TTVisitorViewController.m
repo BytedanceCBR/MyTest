@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVisitorViewController.m
 //  Article
 //
@@ -42,7 +43,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    wrapperTrackEvent(@"mine_visitor", @"visitor_pull_refresh");
+    [BDTrackerProtocol event:@"mine_visitor" label:@"visitor_pull_refresh"];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -214,10 +215,10 @@
     NSString *fromString = isFromMe ? kFromMyVisitors : kFromOtherVisitors;
     NSString *umengEventlabelPrefix = @"visitors";
     if ([umengEventlabelPrefix length] > 0) {
-        wrapperTrackEvent(self.umengEventName, [NSString stringWithFormat:@"%@_profile", umengEventlabelPrefix]);
+        [BDTrackerProtocol event:self.umengEventName label:[NSString stringWithFormat:@"%@_profile", umengEventlabelPrefix]];
     }
     
-    wrapperTrackEvent(@"mine_visitor", @"enter_visitors_profile");
+    [BDTrackerProtocol event:@"mine_visitor" label:@"enter_visitors_profile"];
     TTVisitorFormattedModelItem *aModel = _formattedModel.users[indexPath.row];
     ArticleMomentProfileViewController *controller = [[ArticleMomentProfileViewController alloc] initWithUserID:aModel.user_id];
     controller.from = fromString;

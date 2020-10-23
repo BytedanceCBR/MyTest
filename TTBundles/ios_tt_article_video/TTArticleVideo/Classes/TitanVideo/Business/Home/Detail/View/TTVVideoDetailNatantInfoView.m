@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailInfoView.m
 //  viewModel.infoModel
 //
@@ -768,10 +769,10 @@ extern float tt_ssusersettingsManager_detailVideoContentFontSize();
     [self doRotateDetailButtonAnimation];
     [self refreshUI];
     if (_contentLabel.hidden) {
-        wrapperTrackEvent(@"detail", @"detail_fold_content");
+        [BDTrackerProtocol event:@"detail" label:@"detail_fold_content"];
     }
     else {
-        wrapperTrackEvent(@"detail", @"detail_unfold_content");
+        [BDTrackerProtocol event:@"detail" label:@"detail_unfold_content"];
     }
 }
 

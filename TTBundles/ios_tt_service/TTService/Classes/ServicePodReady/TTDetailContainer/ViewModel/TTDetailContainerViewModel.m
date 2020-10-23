@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTDetailContainerViewModel.m
 //  Article
 //
@@ -448,7 +449,7 @@
                 }
             }
         } else if (isWenda) {
-            wrapperTrackEvent(@"detail", @"wenda_subject");
+            [BDTrackerProtocol event:@"detail" label:@"wenda_subject"];
         }
     }
     
@@ -628,7 +629,7 @@
 -(void)logEnter{
     BOOL isImageSubject = [self isImageDetail];
     NSString *tag = isImageSubject ? @"slide_detail" : @"detail";
-    wrapperTrackEvent(tag, @"enter");
+    [BDTrackerProtocol event:tag label:@"enter"];
 }
 
 @end

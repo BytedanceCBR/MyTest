@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTArticleDetailViewController.m
 //  Article
 //
@@ -286,7 +287,7 @@
         [self detailContainerViewController:nil reloadData:_detailModel];
     }
     
-    wrapperTrackEvent(@"detail", @"enter");
+    [BDTrackerProtocol event:@"detail" label:@"enter"];
     [self p_sendGoDetailTrack];
     
     TLS_LOG(@"TTArticleDetailViewController viewDidLoad with groupID %lld, adID:%lld", self.detailModel.article.uniqueID, self.detailModel.adID.longLongValue);
@@ -471,7 +472,7 @@
     if (!isEmptyString(self.detailModel.orderedData.ad_id)) {
         [extra setValue:self.detailModel.orderedData.ad_id forKey:@"aid"];
     }
-    wrapperTrackEventWithCustomKeys(@"detail", @"long_press", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"long_press" value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extra];
 }
 
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
@@ -512,7 +513,7 @@
     if (!isEmptyString(self.detailModel.orderedData.ad_id)) {
         [extra setValue:self.detailModel.orderedData.ad_id forKey:@"aid"];
     }
-    wrapperTrackEventWithCustomKeys(@"detail", @"search_click", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"search_click" value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extra];
 }
 #pragma mark - setter
 -(void)setShouldShowLogoView:(BOOL)shouldShowLogoView {
@@ -1034,17 +1035,17 @@
     switch ([self.detailView.detailViewModel tt_articleDetailType]) {
         case TTDetailArchTypeSimple:
         {
-            wrapperTrackEvent(@"detail", @"simple_mode");
+            [BDTrackerProtocol event:@"detail" label:@"simple_mode"];
         }
             break;
         case TTDetailArchTypeNoComment:
         {
-            wrapperTrackEvent(@"detail", @"no_comments_mode");
+            [BDTrackerProtocol event:@"detail" label:@"no_comments_mode"];
         }
             break;
         case TTDetailArchTypeNoToolBar:
         {
-            wrapperTrackEvent(@"detail", @"hide_mode");
+            [BDTrackerProtocol event:@"detail" label:@"hide_mode"];
         }
             break;
         default:
@@ -2210,11 +2211,11 @@
     }
     
     if (sender == self.backButtonView.closeButton) {
-        wrapperTrackEvent(@"detail", @"close_button");
+        [BDTrackerProtocol event:@"detail" label:@"close_button"];
         _closeButtonTouched = YES;
     }
     else if (sender == self.backButtonView.backButton && couldSendPageBack) {
-        wrapperTrackEvent(@"detail", @"page_back");
+        [BDTrackerProtocol event:@"detail" label:@"page_back"];
     }
 }
 
@@ -2248,11 +2249,11 @@
 - (void)p_sendNatantViewVisableTrack
 {
     if ([self.detailView.detailWebView isNatantViewOnOpenStatus]) {
-        wrapperTrackEvent(@"detail", @"handle_close_drawer");
+        [BDTrackerProtocol event:@"detail" label:@"handle_close_drawer"];
         TLS_LOG(@"handle_close_drawer");
     }
     else {
-        wrapperTrackEvent(@"detail", @"handle_open_drawer");
+        [BDTrackerProtocol event:@"detail" label:@"handle_open_drawer"];
         TLS_LOG(@"handle_open_drawer");
         
     }
@@ -2366,11 +2367,11 @@
     NSString *leaveType;
     if (!_closeButtonTouched) {
         if (_backButtonTouched) {
-            wrapperTrackEvent(@"detail", @"back_button");
+            [BDTrackerProtocol event:@"detail" label:@"back_button"];
             leaveType = @"page_back_button";
         }
         else {
-            wrapperTrackEvent(@"detail", @"back_gesture");
+            [BDTrackerProtocol event:@"detail" label:@"back_gesture"];
             leaveType = @"back_gesture";
         }
     }
@@ -2791,7 +2792,7 @@
 {
     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
     [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
-    wrapperTrackEventWithCustomKeys(@"fold_comment", @"click", self.detailModel.article.groupModel.groupID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment" label:@"click" value:self.detailModel.article.groupModel.groupID source:nil extraDic:extra];
     NSMutableDictionary *condition = [[NSMutableDictionary alloc] init];
     [condition setValue:self.detailModel.article.groupModel.groupID forKey:@"groupID"];
     [condition setValue:self.detailModel.article.groupModel.itemID forKey:@"itemID"];

@@ -70,7 +70,7 @@ NSString * const TTActivityTypeSetFont = @"com.toutiao.UIKit.activity.SetFont";
 
 - (void)performActivityWithCompletion:(TTActivityCompletionHandler)completion
 {
-    wrapperTrackEvent(@"detail", @"display_setting");
+    [BDTrackerProtocol event:@"detail" label:@"display_setting"];
 
     [self.activityView show];
 

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  SSAPNsAlertManager.m
 //  Article
 //
@@ -172,7 +173,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                         [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
                     });
                 }
-                wrapperTrackEventWithCustomKeys(@"apn", @"news_alert_view", rid, nil, nil);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"apn" label:@"news_alert_view" value:rid source:nil extraDic:nil];
             };
             
             if ([importanceString isKindOfClass:[NSString class]] && [importanceString isEqualToString:kTTAPNsImportanceKey]) {
@@ -189,7 +190,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                         [TTTrackerWrapper eventV3:@"apn" params:@{@"news_alert_click": @(1)}];
                         //AB测旧埋点不能丢
                         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                            wrapperTrackEventWithCustomKeys(@"apn", @"news_alert_view", rid, nil, nil);
+                            [BDTrackerProtocol trackEventWithCustomKeys:@"apn" label:@"news_alert_view" value:rid source:nil extraDic:nil];
                         }
                     }
                 } willHideBlock:nil didHideBlock:nil];
@@ -221,7 +222,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                         
                         //AB测旧埋点不能丢
                         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                            wrapperTrackEventWithCustomKeys(@"apn", @"news_alert_view", rid, nil, nil);
+                            [BDTrackerProtocol trackEventWithCustomKeys:@"apn" label:@"news_alert_view" value:rid source:nil extraDic:nil];
                         }
 
                     }
@@ -291,7 +292,7 @@ static NSString * const kTTAPNsImportanceKey = @"important";
         if (!hasRead) {
             TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"实时推送", nil) message:title preferredType:TTThemedAlertControllerTypeAlert];
             [alert addActionWithTitle:NSLocalizedString(@"忽略", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-                wrapperTrackEvent(@"apn", @"news_alert_close");
+                [BDTrackerProtocol event:@"apn" label:@"news_alert_close"];
             }];
             [alert addActionWithTitle:NSLocalizedString(@"立即查看", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
                 //推送过来 如果是弹框打开的 把click_apn 改成click_news_alert
@@ -314,11 +315,11 @@ static NSString * const kTTAPNsImportanceKey = @"important";
                     });
                 }
                 if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                    wrapperTrackEventWithCustomKeys(@"apn", @"news_alert_view", rid, nil, nil);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"apn" label:@"news_alert_view" value:rid source:nil extraDic:nil];
                 }
             }];
             [alert showFrom:[TTUIResponderHelper topmostViewController] animated:YES];
-            wrapperTrackEvent(@"apn", @"news_alert_show");
+            [BDTrackerProtocol event:@"apn" label:@"news_alert_show"];
         }
     }
 //    else if ([[[TTStringHelper URLWithURLString:schemaString] host] isEqualToString:@"xigua_live"]){
