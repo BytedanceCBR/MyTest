@@ -1186,7 +1186,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if(res){
         return [res boolValue];
     }
-    return YES;
+    return NO;
 }
 
 + (BOOL)isHasPerLoadForVideo {
