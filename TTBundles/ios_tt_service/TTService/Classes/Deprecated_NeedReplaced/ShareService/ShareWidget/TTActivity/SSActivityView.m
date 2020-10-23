@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  SSActivityView.m
 //  Article
 //
@@ -385,7 +386,7 @@
         }];
     }
     [self refreshCancelButtonTitle:@"取消"];
-    wrapperTrackEvent(@"detail", @"display_setting");
+    [BDTrackerProtocol event:@"detail" label:@"display_setting"];
 }
 
 #pragma mark -- protected

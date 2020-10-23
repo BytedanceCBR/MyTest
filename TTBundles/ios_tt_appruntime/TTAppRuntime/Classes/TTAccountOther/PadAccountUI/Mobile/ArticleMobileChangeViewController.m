@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ArticleMobileChangeViewController.m
 //  Article
 //
@@ -120,7 +121,7 @@
     self.nextButton = [self mobileButtonWithTitle:NSLocalizedString(@"下一步", nil) target:self action:@selector(nextButtonActionFired:)];
     [self.containerView addSubview:self.nextButton];
     
-    wrapperTrackEvent(@"login_register", @"change_mobile");
+    [BDTrackerProtocol event:@"login_register" label:@"change_mobile"];
 }
 
 - (void)viewWillAppear:(BOOL)animated{

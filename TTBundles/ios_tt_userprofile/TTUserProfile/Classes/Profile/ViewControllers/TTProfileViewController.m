@@ -226,7 +226,7 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
 //    }
     
     if ([TTSettingMineTabManager sharedInstance_tt].hadDisplayedADRegisterEntrance) {
-        wrapperTrackEvent(@"ad_register", @"mine_ad_register_show");
+        [BDTrackerProtocol event:@"ad_register" label:@"mine_ad_register_show"];
     }
 }
 
@@ -563,7 +563,7 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
         if ([entry.key isEqualToString:@"shiming"]) {
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^{
-                wrapperTrackEvent(@"mine_tab", @"shiming_show");
+                [BDTrackerProtocol event:@"mine_tab" label:@"shiming_show"];
             });
         }
         
@@ -637,7 +637,7 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
 
 - (IBAction)favBtnTouched:(id)sender
 {
-    wrapperTrackEvent(@"mine_tab", @"favorite");
+    [BDTrackerProtocol event:@"mine_tab" label:@"favorite"];
     
     TTFavoriteHistoryViewController * controller = [[TTFavoriteHistoryViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(@{@"stay_id":@"favorite"})];
     [self showViewController:controller];
@@ -645,7 +645,7 @@ static NSString *const kTTProfileMessageFunctionCellIdentifier = @"kTTProfileMes
 
 - (IBAction)historyBtnTouched:(id)sender
 {
-    wrapperTrackEvent(@"mine_tab", @"history");
+    [BDTrackerProtocol event:@"mine_tab" label:@"history"];
     
     TTFavoriteHistoryViewController * controller = [[TTFavoriteHistoryViewController alloc] initWithRouteParamObj:TTRouteParamObjWithDict(@{@"stay_id":@"read_history"})];
     [self showViewController:controller];

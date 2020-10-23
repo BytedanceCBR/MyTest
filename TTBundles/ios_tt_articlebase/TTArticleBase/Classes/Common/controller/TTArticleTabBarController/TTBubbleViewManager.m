@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTBubbleViewManager.m
 //  Article
 //
@@ -147,21 +148,22 @@ static NSString *const TTBubbleViewGeneralTypeHuoShanKey = @"tab_huoshan";
 
 - (void)sendTrackForTipsShow
 {
-    wrapperTrackEventWithCustomKeys(@"navbar", [NSString stringWithFormat:@"%@_show_notice",self.trackLabelForTipType], nil, nil, self.extraDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"navbar" label:[NSString stringWithFormat:@"%@_show_notice",self.trackLabelForTipType] value:nil source:nil extraDic:self.extraDic];
 }
 
 - (void)sendTrackForTipsActiveClose
 {
-    wrapperTrackEventWithCustomKeys(@"navbar", [NSString stringWithFormat:@"%@_close_notice",self.trackLabelForTipType], nil, nil, self.extraDic);}
+    [BDTrackerProtocol trackEventWithCustomKeys:@"navbar" label:[NSString stringWithFormat:@"%@_close_notice",self.trackLabelForTipType] value:nil source:nil extraDic:self.extraDic];
+}
 
 - (void)sendTrackForTipsAutoClose
 {
-    wrapperTrackEventWithCustomKeys(@"navbar", [NSString stringWithFormat:@"%@_auto_close_notice",self.trackLabelForTipType], nil, nil, self.extraDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"navbar" label:[NSString stringWithFormat:@"%@_auto_close_notice",self.trackLabelForTipType] value:nil source:nil extraDic:self.extraDic];
 }
 
 - (void)sendTrackForTipsEnterClick
 {
-    wrapperTrackEventWithCustomKeys(@"navbar", [NSString stringWithFormat:@"enter_%@_click_notice",self.trackLabelForTipType], nil, nil, self.extraDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"navbar" label:[NSString stringWithFormat:@"enter_%@_click_notice",self.trackLabelForTipType] value:nil source:nil extraDic:self.extraDic];
 }
 
 - (NSString *)trackLabelForTipType

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  FHCommentDetailViewController
 //  FHHouseUGC
 //
@@ -759,7 +760,7 @@
 {
     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
     [extra setValue:self.groupModel.itemID forKey:@"item_id"];
-    wrapperTrackEventWithCustomKeys(@"fold_comment", @"click", self.groupModel.groupID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment" label:@"click" value:self.groupModel.groupID source:nil extraDic:extra];
     NSMutableDictionary *condition = [[NSMutableDictionary alloc] init];
     [condition setValue:self.groupModel.groupID forKey:@"groupID"];
     [condition setValue:self.groupModel.itemID forKey:@"itemID"];

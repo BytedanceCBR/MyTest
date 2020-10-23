@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoTabViewController.m
 //  Article
 //
@@ -460,7 +461,7 @@ extern BOOL ttsettings_showRefreshButton(void);
             self.lastSelectedPageIndex = index;
             
             NSString *label = [NSString stringWithFormat:@"%@_%@", @"enter_click", category.categoryID];
-            wrapperTrackEvent(@"category", label);
+            [BDTrackerProtocol event:@"category" label:label];
             
             //log3.0
             NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
@@ -533,7 +534,7 @@ extern BOOL ttsettings_showRefreshButton(void);
         
         TTCategory *currCategoryModel = self.categories[toIndex];
         NSString *label = [NSString stringWithFormat:@"%@_%@", @"enter_flip", currCategoryModel.categoryID];
-        wrapperTrackEvent(@"category", label);
+        [BDTrackerProtocol event:@"category" label:label];
         
         //log3.0
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:10];
@@ -567,7 +568,7 @@ extern BOOL ttsettings_showRefreshButton(void);
     TTVFeedListPageCell *cell = (TTVFeedListPageCell *)[_pageViewController currentCollectionPageCell];
     [cell triggerPullRefresh];
     
-    wrapperTrackEvent(@"refresh", [NSString stringWithFormat:@"video_%@", cell.category.categoryID]);
+    [BDTrackerProtocol event:@"refresh" label:[NSString stringWithFormat:@"video_%@", cell.category.categoryID]];
 }
 
 - (void)handleRefreshButtonSettingEnabledNotification:(NSNotification *)notification
@@ -631,7 +632,7 @@ extern BOOL ttsettings_showRefreshButton(void);
 - (void)searchActionFired:(id)sender {
     [TTVPlayVideo removeAll];
     [self searchBarButtonActionFired:sender];
-    wrapperTrackEvent(@"video", @"video_tab_search");
+    [BDTrackerProtocol event:@"video" label:@"video_tab_search"];
 }
 
 - (void)searchBarButtonActionFired:(id)sender {

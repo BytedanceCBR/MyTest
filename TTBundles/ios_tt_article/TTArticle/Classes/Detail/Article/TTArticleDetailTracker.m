@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTArticleDetailTracker.m
 //  Article
 //
@@ -488,7 +489,7 @@
 {
     NSMutableDictionary *extValueDic = [NSMutableDictionary dictionary];
     [extValueDic setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
-    wrapperTrackEventWithCustomKeys(@"detail", @"transcode_start", self.detailModel.article.groupModel.groupID, nil, extValueDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"transcode_start" value:self.detailModel.article.groupModel.groupID source:nil extraDic:extValueDic];
 }
 
 - (void)tt_sendStayTimeImpresssion

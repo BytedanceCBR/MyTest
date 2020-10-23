@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTCommentWriteManager.m
 //  Article
 //
@@ -562,7 +563,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                                                                      context:userInfo
                                                                     callback:nil];
 
-                wrapperTrackEventWithCustomKeys(@"comment", @"write_confirm", nil, nil, self.extraTrackDict);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"comment" label:@"write_confirm" value:nil source:nil extraDic:self.extraTrackDict];
 
                 NSDictionary <NSString *, NSString *> *emojis = [TTUGCEmojiParser parseEmojis:content];
                 [TTUGCEmojiParser markEmojisAsUsed:emojis];
@@ -599,7 +600,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                 if (self.publishStatusForTrack == 1) {
                     self.publishStatusForTrack = 2;
 
-                    wrapperTrackEventWithCustomKeys(@"comment", @"write_confirm_unlog_done", nil, nil, self.extraTrackDict);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"comment" label:@"write_confirm_unlog_done" value:nil source:nil extraDic:self.extraTrackDict];
                 }
             }
         };
@@ -609,7 +610,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
         if (![TTAccountManager isLogin]) {
             if (self.publishStatusForTrack <= 1){
                 self.publishStatusForTrack = 1;
-                wrapperTrackEventWithCustomKeys(@"comment", @"write_confirm_unlog_done", nil, nil, _extraTrackDict);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"comment" label:@"write_confirm_unlog_done" value:nil source:nil extraDic:_extraTrackDict];
             }
 
             self.commentViewStrong = self.commentWriteView;
@@ -657,7 +658,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                     }];
                 } else if(type == TTAccountAlertCompletionEventTypeCancel) {
                     [self.commentWriteView.inputTextView becomeFirstResponder];
-                    wrapperTrackEvent(@"auth", @"comment_cancel");
+                    [BDTrackerProtocol event:@"auth" label:@"comment_cancel"];
                 }
                 self.commentViewStrong = nil;
             };
@@ -693,7 +694,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
 }
 
 - (void)commentViewCancelPublish {
-    wrapperTrackEvent(@"comment", @"write_cancel");
+    [BDTrackerProtocol event:@"comment" label:@"write_cancel"];
 }
 
 

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ArticleMobileSettingViewController.m
 //  Article
 //
@@ -151,7 +152,7 @@
         tSheet.delegate = self;
         [tSheet showInView:self.view];
     }
-    wrapperTrackEvent(@"xiangping", @"account_avatar");
+    [BDTrackerProtocol event:@"xiangping" label:@"account_avatar"];
 }
 
 - (BOOL)isContentValid
@@ -162,21 +163,21 @@
 - (void)skipSettingActionFired:(id)sender
 {
     /////// 友盟统计
-    wrapperTrackEvent(@"login_register", @"finish_no_name");
+    [BDTrackerProtocol event:@"login_register" label:@"finish_no_name"];
     TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"系统为您自动分配了一个用户名", nil) message:[NSString stringWithFormat:@"%@", [TTAccountManager userName]] preferredType:TTThemedAlertControllerTypeAlert];
     
     [alert addActionWithTitle:NSLocalizedString(@"就用这个", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
         /// 就用这个
         [self finishUserName];
         /////// 友盟统计
-        wrapperTrackEvent(@"login_register", @"default_name");
+        [BDTrackerProtocol event:@"login_register" label:@"default_name"];
     }];
     [alert addActionWithTitle:NSLocalizedString(@"修改一下", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         if (![self.nameField isFirstResponder]) {
             [self.nameField becomeFirstResponder];
         }
         /////// 友盟统计
-        wrapperTrackEvent(@"login_register", @"amend_name");
+        [BDTrackerProtocol event:@"login_register" label:@"amend_name"];
     }];
     [alert showFrom:self animated:YES];
 }
@@ -227,7 +228,7 @@
         /// 修改成功
         [self finishUserName];
         /////// 友盟统计
-        wrapperTrackEvent(@"login_register", @"register_finish");
+        [BDTrackerProtocol event:@"login_register" label:@"register_finish"];
     }
 }
 
@@ -236,13 +237,13 @@
         /// 就用这个
         [self finishUserName];
         /////// 友盟统计
-        wrapperTrackEvent(@"login_register", @"default_name");
+        [BDTrackerProtocol event:@"login_register" label:@"default_name"];
     } else {
         if (![self.nameField isFirstResponder]) {
             [self.nameField becomeFirstResponder];
         }
         /////// 友盟统计
-        wrapperTrackEvent(@"login_register", @"amend_name");
+        [BDTrackerProtocol event:@"login_register" label:@"amend_name"];
     }
 }
 

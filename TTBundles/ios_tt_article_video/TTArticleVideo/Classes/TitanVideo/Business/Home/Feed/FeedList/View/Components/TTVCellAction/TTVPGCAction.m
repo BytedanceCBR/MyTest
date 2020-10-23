@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVPGCAction.m
 //  Article
 //
@@ -199,18 +200,18 @@
 
     if (self.entity.isSubscribe) {
         [self cancelSubscribArticle:self.entity.userId];
-        wrapperTrackEventWithCustomKeys(@"list_share", @"unconcern",self.entity.groupId, nil, [self extraValueDic]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"list_share" label:@"unconcern" value:self.entity.groupId source:nil extraDic:[self extraValueDic]];
     }
     else {
 //        if ([TTFirstConcernManager firstTimeGuideEnabled]) {
 //            TTFirstConcernManager *manager = [[TTFirstConcernManager alloc] init];
 //            [manager showFirstConcernAlertViewWithDismissBlock:nil];
 //        }
-        wrapperTrackEventWithCustomKeys(@"list_share", @"concern", self.entity.groupId, nil, [self extraValueDic]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"list_share" label:@"concern" value:self.entity.groupId source:nil extraDic:[self extraValueDic]];
         [self subscribArticle:self.entity.userId];
     }
     //统计
-    wrapperTrackEvent(@"xiangping", @"video_list_pgc_button");
+    [BDTrackerProtocol event:@"xiangping" label:@"video_list_pgc_button"];
     NSMutableDictionary * eventContext = [[NSMutableDictionary alloc] init];
     [eventContext setValue:self.entity.groupId forKey:@"group_id"];
     [eventContext setValue:self.entity.itemId forKey:@"item_id"];

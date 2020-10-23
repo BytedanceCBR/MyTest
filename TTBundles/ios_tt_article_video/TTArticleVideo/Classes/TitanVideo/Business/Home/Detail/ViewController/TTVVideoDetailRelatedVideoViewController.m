@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailRelatedVideoViewController.m
 //  Article
 //
@@ -127,10 +128,10 @@
                     if (col_no) {
                         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
                         [dic setValue:media_id forKey:@"media_id"];
-                        wrapperTrackEventWithCustomKeys(@"video", @"detail_album_show", col_no, nil, dic);
+                        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_album_show" value:col_no source:nil extraDic:dic];
                     }
                     else if (!isEmptyString(videoItem.article.videoDetailInfo.videoSubjectId)) {
-                        wrapperTrackEventWithCustomKeys(@"video", @"detail_album_show", nil, nil, @{@"video_subject_id" : videoItem.article.videoDetailInfo.videoSubjectId});
+                        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_album_show" value:nil source:nil extraDic:@{@"video_subject_id" : videoItem.article.videoDetailInfo.videoSubjectId}];
                     }
                 }
             }
@@ -395,7 +396,7 @@
                                dict:@{@"value":fromArticle.groupModel.groupID}];
             }
             else {
-                wrapperTrackEvent(@"detail", label);
+                [BDTrackerProtocol event:@"detail" label:label];
             }
             // CLS_LOG(@"didReceiveMemoryWarning");
             
@@ -419,7 +420,7 @@
                 
                 NSString *value = article.videoItem.relatedVideoExtraInfo.adId;
                 [extra setValue:@"1" forKey:@"is_ad_event"];
-                wrapperTrackEventWithCustomKeys(@"detail_ad_list", @"click", value, nil, extra);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"detail_ad_list" label:@"click" value:value source:nil extraDic:extra];
                 if (!SSIsEmptyArray(article.ad.trackURL.clickTrackURLListArray)) {
                     
                     TTURLTrackerModel *trackModel = [[TTURLTrackerModel alloc] initWithAdId:article.ad.adId logExtra:article.ad.logExtra];
@@ -481,10 +482,10 @@
     if (col_no) {
         NSMutableDictionary *dic = [NSMutableDictionary dictionary];
         [dic setValue:media_id forKey:@"media_id"];
-        wrapperTrackEventWithCustomKeys(@"video", @"detail_click_album", col_no, nil, dic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_click_album" value:col_no source:nil extraDic:dic];
     }
     else if (!isEmptyString(article.videoItem.article.videoDetailInfo.videoSubjectId)) {
-        wrapperTrackEventWithCustomKeys(@"video", @"detail_click_album", nil, nil, @{@"video_subject_id": article.videoItem.article.videoDetailInfo.videoSubjectId});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_click_album" value:nil source:nil extraDic:@{@"video_subject_id": article.videoItem.article.videoDetailInfo.videoSubjectId}];
     }
 }
 
@@ -512,7 +513,7 @@
         [adDict setValue:@"1" forKey:@"is_ad_event"];
         [adDict setValue:@([[TTTrackerProxy sharedProxy] connectionType]) forKey:@"nt"];
         NSString* creativeType = rArticle.videoAdExtra.creative_type;
-        wrapperTrackEventWithCustomKeys(@"detail_ad_list", @"show", value, nil, adDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail_ad_list" label:@"show" value:value source:nil extraDic:adDict];
         TTURLTrackerModel *trackModel = [[TTURLTrackerModel alloc] initWithAdId:relatedAD.adId logExtra:relatedAD.logExtra];
         ttTrackURLsModel(relatedAD.trackURL.trackURLListArray, trackModel);
         

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  FRPhotoBrowserViewController.m
 //  Article
 //
@@ -1132,7 +1133,7 @@ static FRPhotoBrowserViewController *currentController = nil;
                 && [self.targetView respondsToSelector:@selector(photoBrowserWillDisappear)]) {
                 [(id)self.targetView photoBrowserWillDisappear];
             }
-            wrapperTrackEventWithCustomKeys(@"slide_over", @"random_slide_close",nil, nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"slide_over" label:@"random_slide_close" value:nil source:nil extraDic:nil];
             break;
         case TTPreviewAnimateStateWillCancel:
             [[UIApplication sharedApplication] setStatusBarHidden:YES

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTDetailNatantRewardView.m
 //  Article
 //
@@ -146,7 +147,7 @@ static CGFloat const rewardLabelLeftInset = 9;
         if ([self.detailModel.adID longLongValue] > 0) {
             [extDict setValue:self.detailModel.adID forKey:@"aid"];
         }
-        wrapperTrackEventWithCustomKeys(@"detail", @"report_and_dislike_show", @(article.uniqueID).stringValue, nil, extDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"report_and_dislike_show" value:@(article.uniqueID).stringValue source:nil extraDic:extDict];
         self.hasShow = YES;
     }
 }
