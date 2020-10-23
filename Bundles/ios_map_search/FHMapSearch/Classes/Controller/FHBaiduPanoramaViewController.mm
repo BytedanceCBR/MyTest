@@ -615,7 +615,9 @@ static NSInteger overlayIndex = 0;
                 BaiduPanoImageOverlay *overlay = [[BaiduPanoImageOverlay alloc] init];
                 overlay.overlayKey = [@(overlayIndex) stringValue];
                 overlay.type = BaiduPanoOverlayTypeImage;
-                overlay.coordinate = CLLocationCoordinate2DMake(poiInfo.location.latitude, poiInfo.location.longitude);
+                CLLocationCoordinate2D overlaypoint = CLLocationCoordinate2DMake(poiInfo.location.latitude,
+                                                                                 poiInfo.location.longitude);
+                overlay.coordinate = AMapCoordinateConvert(overlaypoint, AMapCoordinateTypeBaidu);
                 overlay.height = 0;
                 overlay.fh_imageName = imageName;
                 overlay.fh_name = poiInfo.name;
