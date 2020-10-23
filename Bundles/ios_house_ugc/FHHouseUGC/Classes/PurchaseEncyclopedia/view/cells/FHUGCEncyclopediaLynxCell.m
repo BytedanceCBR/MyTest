@@ -22,7 +22,7 @@
 #import "FHLynxManager.h"
 #import "IESGeckoKit.h"
 #import "FHIESGeckoManager.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "HMDTTMonitor.h"
 
 @interface FHUGCEncyclopediaLynxCell()<LynxViewClient>
@@ -84,7 +84,7 @@
 - (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",@"ugc_encyclopedia_lynx_item"];
     if (time < 15) {
@@ -96,7 +96,7 @@
 - (void)lynxView:(LynxView*)view didReceiveFirstLoadPerf:(LynxPerformance*)perf{
     
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
         [uploadParams addEntriesFromDictionary:[perf toDictionary]];

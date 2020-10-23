@@ -65,6 +65,7 @@
 
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
 #import "TTActivityShareSequenceManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kCellElementBgColorKey kColorBackground4
 #define kToReplyUserNameIndex 2
@@ -350,7 +351,7 @@ extern CGFloat fr_postCommentButtonHeight(void);
 }
 - (void)handleLongPress:(UIGestureRecognizer*)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        wrapperTrackEvent(@"update_detail", @"replier_longpress");
+        [BDTrackerProtocol event:@"update_detail" label:@"replier_longpress"];
         [self becomeFirstResponder];
         UIMenuController *menu = [UIMenuController sharedMenuController];
         UIMenuItem *copyItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"复制", nil) action:@selector(customCopy:)];
@@ -381,11 +382,11 @@ extern CGFloat fr_postCommentButtonHeight(void);
     self.descLabel.backgroundColor = self.backgroundColor;
 }
 - (void)customCopy:(__unused id)sender {
-    wrapperTrackEvent(@"update_detail", @"replier_longpress_copy");
+    [BDTrackerProtocol event:@"update_detail" label:@"replier_longpress_copy"];
     [[UIPasteboard generalPasteboard] setString:self.descLabel.text];
 }
 - (void)report:(__unused id)sender {
-    wrapperTrackEvent(@"update_detail", @"replier_longpress_report");
+    [BDTrackerProtocol event:@"update_detail" label:@"replier_longpress_report"];
     self.actionSheetController = [[TTActionSheetController alloc] init];
     [self.actionSheetController insertReportArray:[TTReportManager fetchReportUserOptions]];
     WeakSelf;
@@ -454,7 +455,7 @@ extern CGFloat fr_postCommentButtonHeight(void);
     else if (_commentModel.userDigged) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"您已经赞过", nil) indicatorImage:nil autoDismiss:YES dismissHandler:nil];
     }
-    wrapperTrackEvent(@"update_detail", @"replier_digg_click");
+    [BDTrackerProtocol event:@"update_detail" label:@"replier_digg_click"];
     //    wrapperTrackEvent([self umengEventName], @"digg_comment");
 }
 - (void)refreshDigView
@@ -598,16 +599,16 @@ extern CGFloat fr_postCommentButtonHeight(void);
 - (void)avatarButtonClicked
 {
     [ArticleMomentHelper openMomentProfileView:_commentModel.user navigationController:[TTUIResponderHelper topNavigationControllerFor: self] from:kFromFeedDetailComment];
-    wrapperTrackEvent([self umengEventName], @"click_replier_avatar");
+    [BDTrackerProtocol event:[self umengEventName] label:@"click_replier_avatar"];
 }
 - (void)nameButtonClicked
 {
     [ArticleMomentHelper openMomentProfileView:_commentModel.user navigationController:[TTUIResponderHelper topNavigationControllerFor: self] from:kFromFeedDetailComment];
-    wrapperTrackEvent([self umengEventName], @"click_replier_name");
+    [BDTrackerProtocol event:[self umengEventName] label:@"click_replier_name"];
 }
 - (void)deleteButtonClicked:(id)sender
 {
-    wrapperTrackEvent(@"update_detail", @"delete");
+    [BDTrackerProtocol event:@"update_detail" label:@"delete"];
     if (_ssDelegate && [_ssDelegate respondsToSelector:@selector(commentCell:deleteComment:)]) {
         [_ssDelegate commentCell:self deleteComment:_commentModel];
     }
@@ -661,7 +662,7 @@ extern CGFloat fr_postCommentButtonHeight(void);
         if (index == kToReplyUserNameIndex) {
             if (_commentModel.replyUser) {
                 [ArticleMomentHelper openMomentProfileView:_commentModel.replyUser navigationController:[TTUIResponderHelper topNavigationControllerFor: self] from:kFromFeedDetailComment];
-                wrapperTrackEvent([self umengEventName], @"click_replier_name");
+                [BDTrackerProtocol event:[self umengEventName] label:@"click_replier_name"];
             }
         }
     }
@@ -795,7 +796,7 @@ extern CGFloat fr_postCommentButtonHeight(void);
     controller.gid = self.gid;
     controller.momentId = self.momentModel.ID;
     [[TTUIResponderHelper topNavigationControllerFor: self] pushViewController:controller animated:YES];
-    wrapperTrackEvent([self umengEventName], @"enter_diggers");
+    [BDTrackerProtocol event:[self umengEventName] label:@"enter_diggers"];
 }
 - (void)refreshForModels:(ArticleMomentModel *)momentModel
 {
@@ -846,7 +847,7 @@ extern CGFloat fr_postCommentButtonHeight(void);
         if (sender.superview.tag < [_momentModel.diggUsers count]) {
             SSUserModel * model = [_momentModel.diggUsers objectAtIndex:sender.superview.tag];
             [ArticleMomentHelper openMomentProfileView:model navigationController:[TTUIResponderHelper topNavigationControllerFor: self] from:kFromFeedDetailDig];
-            wrapperTrackEvent([self umengEventName], @"click_digger");
+            [BDTrackerProtocol event:[self umengEventName] label:@"click_digger"];
         }
     }
 }
@@ -1035,10 +1036,10 @@ replyMomentCommentModel:(ArticleMomentCommentModel *)replyMomentCommentModel
         self.showWriteComment = show;
 
         if ([TTAccountManager isLogin]) {
-             [TTTrackerWrapper category:@"umeng" event:[self umengEventName] label:@"enter" dict:dict];
+             [BDTrackerProtocol category:@"umeng" event:[self umengEventName] label:@"enter" dict:dict];
         }
         else {
-            [TTTrackerWrapper category:@"umeng" event:[self umengEventName] label:@"enter_logoff" dict:dict];
+            [BDTrackerProtocol category:@"umeng" event:[self umengEventName] label:@"enter_logoff" dict:dict];
         }
         
         self.sourceType = sourceType;
@@ -1463,7 +1464,7 @@ articleMomentManager:(ArticleMomentManager *)manager
     
     __weak typeof(self) weakSelf = self;
     if (self.manager.comments.count){
-        wrapperTrackEvent(@"update_detail", @"replier_loadmore");
+        [BDTrackerProtocol event:@"update_detail" label:@"replier_loadmore"];
     }
     CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent() * 1000.f;
     [_manager startLoadMoreCommentWithCount:kLoadOnceCount width:p_splitViewFrameForView(self).size.width finishBlock:^(NSArray *result, NSArray *hotComments,BOOL hasMore, int totalCount, NSError *error) {
@@ -1489,7 +1490,7 @@ articleMomentManager:(ArticleMomentManager *)manager
     }];
     
     if (_manager.hotComments.count + _manager.comments.count > 0) {
-        wrapperTrackEvent(@"profile", @"more_comment");
+        [BDTrackerProtocol event:@"profile" label:@"more_comment"];
     }
 }
 - (void)themeChanged:(NSNotification *)notification
@@ -1618,7 +1619,7 @@ articleMomentManager:(ArticleMomentManager *)manager
 
 - (void)openForwardView
 {
-    wrapperTrackEvent(self.headerView.header.detailUmengEventName, @"repost");
+    [BDTrackerProtocol event:self.headerView.header.detailUmengEventName label:@"repost"];
     ArticleForwardSourceType sourceType = ArticleForwardSourceTypeOther;
     switch (self.sourceType) {
         case ArticleMomentSourceTypeMoment:
@@ -1802,7 +1803,7 @@ articleMomentManager:(ArticleMomentManager *)manager
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    wrapperTrackEvent(@"update_detail", @"reply_replier_content");
+    [BDTrackerProtocol event:@"update_detail" label:@"reply_replier_content"];
     ArticleMomentCommentModel *model = nil;
     
     if (indexPath.section == 0) {
@@ -1888,21 +1889,21 @@ articleMomentManager:(ArticleMomentManager *)manager
     
     
     if (sender == _postCommonButton.button) {
-        wrapperTrackEvent([self umengEventName], @"comment_box");
+        [BDTrackerProtocol event:[self umengEventName] label:@"comment_box"];
     }
     else {
-        wrapperTrackEvent([self umengEventName], @"comment");
+        [BDTrackerProtocol event:[self umengEventName] label:@"comment"];
     }
 }
 - (void)userInfoDiggButtonClicked:(UIButton *)sender{
     if (![sender isSelected]){
-        wrapperTrackEvent(@"update_detail", @"top_digg_click");
+        [BDTrackerProtocol event:@"update_detail" label:@"top_digg_click"];
     }
     [self diggButtonPressed];
     
 }
 - (void)commentDiggButtonClicked{
-    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
+    [BDTrackerProtocol event:@"update_detail" label:@"bottom_digg_click"];
     [self diggButtonPressed];
 }
 - (void)diggButtonPressed{
@@ -2007,7 +2008,7 @@ articleMomentManager:(ArticleMomentManager *)manager
         }
         _commentView.extraTrackDict = extraDict;
     }
-    wrapperTrackEvent([self umengEventName], @"reply");
+    [BDTrackerProtocol event:[self umengEventName] label:@"reply"];
     //    wrapperTrackEvent([self umengEventName], @"reply_replier_button");
 }
 - (TTShareSourceObjectType)sourceTypeForSharedHeaderItem:(ExploreMomentListCellHeaderItem *)headerItem momentModel:(ArticleMomentModel *)moment
@@ -2030,7 +2031,7 @@ articleMomentManager:(ArticleMomentManager *)manager
     NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:sourceType];
     NSString *label = [TTActivityShareManager labelNameForShareActivityType:itemType];
     NSString *forumId = _momentModel.forumID ? [NSString stringWithFormat:@"%lld", _momentModel.forumID] : nil;
-    wrapperTrackEventWithCustomKeys(tag, label, _momentModel.ID, forumId, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:_momentModel.ID source:forumId extraDic:nil];
 }
 #pragma mark - Helper
 - (UIResponder *)_needResponder
@@ -2087,7 +2088,7 @@ articleMomentManager:(ArticleMomentManager *)manager
         [extra setValue:self.momentModel.user.ID forKey:@"uid"];
         [extra setValue:self.gid forKey:@"gid"];
         
-        [TTTrackerWrapper event:@"update_detail" label:@"reply_media_comment" value:self.commentId extValue:nil extValue2:nil dict:extra];
+        [BDTrackerProtocol event:@"update_detail" label:@"reply_media_comment" value:self.commentId extValue:nil extValue2:nil dict:extra];
     }
     
     if (self.fromVideoDetail) {
@@ -2104,7 +2105,7 @@ articleMomentManager:(ArticleMomentManager *)manager
             }
             [dict setValue:@(_enterFromClickComment) forKey:@"is_click_button"];
             [dict setValue:@"comment" forKey:@"group_type"];
-            wrapperTrackEventWithCustomKeys(@"comment", @"write_confirm_unlog_done", self.groupModel.groupID, nil, dict);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"comment" label:@"write_confirm_unlog_done" value:self.groupModel.groupID source:nil extraDic:dict];
         }
     }
 }
@@ -2120,17 +2121,17 @@ articleMomentManager:(ArticleMomentManager *)manager
         }
         [dict setValue:@(_enterFromClickComment) forKey:@"is_click_button"];
         [dict setValue:@"comment" forKey:@"group_type"];
-        wrapperTrackEventWithCustomKeys(@"comment", @"write_confirm_unlog", self.groupModel.groupID, nil, dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"comment" label:@"write_confirm_unlog" value:self.groupModel.groupID source:nil extraDic:dict];
     }
 }
 - (void) commentViewDidDismiss:(ArticleCommentView *) commentView {
     //    self.commentView = nil;
     if (self.replyMomentCommentModel) {
-        wrapperTrackEvent(@"update_detail", @"reply_replier_cancel");
+        [BDTrackerProtocol event:@"update_detail" label:@"reply_replier_cancel"];
         self.replyMomentCommentModel = nil;
         [self.postCommonButton setPlaceholderContent:[SSCommonLogic exploreDetailToolBarWriteCommentPlaceholderText]];
     }else{
-        wrapperTrackEvent(@"update_detail", @"write_cancel");
+        [BDTrackerProtocol event:@"update_detail" label:@"write_cancel"];
     }
 }
 #pragma mark -- observe
@@ -2187,11 +2188,11 @@ articleMomentManager:(ArticleMomentManager *)manager
                         [[ExploreDeleteManager shareManager] deleteMomentCommentForCommentID:[NSString stringWithFormat:@"%@", model.ID]];
                         if (model) {
                             if (self.sourceType == ArticleMomentSourceTypeMoment) {
-                                wrapperTrackEvent(@"delete", @"reply_update");
+                                [BDTrackerProtocol event:@"delete" label:@"reply_update"];
                             } else if (self.sourceType == ArticleMomentSourceTypeForum) {
-                                wrapperTrackEvent(@"delete", @"reply_post");
+                                [BDTrackerProtocol event:@"delete" label:@"reply_post"];
                             } else if (self.sourceType == ArticleMomentSourceTypeProfile) {
-                                wrapperTrackEvent(@"delete", @"reply_profile");
+                                [BDTrackerProtocol event:@"delete" label:@"reply_profile"];
                             }
                             
                             [_manager deleteComment:model];
@@ -2235,11 +2236,11 @@ articleMomentManager:(ArticleMomentManager *)manager
                 [[ExploreDeleteManager shareManager] deleteMomentCommentForCommentID:[NSString stringWithFormat:@"%@", _needDeleteCommentModel.ID]];
                 if (_needDeleteCommentModel) {
                     if (self.sourceType == ArticleMomentSourceTypeMoment) {
-                        wrapperTrackEvent(@"delete", @"reply_update");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_update"];
                     } else if (self.sourceType == ArticleMomentSourceTypeForum) {
-                        wrapperTrackEvent(@"delete", @"reply_post");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_post"];
                     } else if (self.sourceType == ArticleMomentSourceTypeProfile) {
-                        wrapperTrackEvent(@"delete", @"reply_profile");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_profile"];
                     }
                     
                     [_manager deleteComment:_needDeleteCommentModel];

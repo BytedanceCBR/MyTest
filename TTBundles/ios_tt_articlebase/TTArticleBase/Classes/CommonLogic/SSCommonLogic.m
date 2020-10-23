@@ -15,7 +15,7 @@
 
 #import "TTDeviceHelper.h"
 #import "TTNavigationController.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //#import "TTPLManager.h"
 #import "TTNetworkToutiaoDefine.h"
 #import "TTArticleSearchManager.h"
@@ -346,7 +346,7 @@ static SSCommonLogic * s_manager;
         [extra setObject:url forKey:@"url"];
     }
     
-    NSString *deviceID  = [[TTInstallIDManager sharedInstance] deviceID];
+    NSString *deviceID  = [BDTrackerProtocol deviceID];
     if(!isEmptyString(deviceID)) {
         [extra setObject:deviceID forKey:@"device_id"];
     }

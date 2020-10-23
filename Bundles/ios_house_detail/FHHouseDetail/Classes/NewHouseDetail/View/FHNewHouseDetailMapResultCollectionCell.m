@@ -56,4 +56,8 @@
     return self;
 }
 
+- (void)bindViewModel:(id)viewModel {
+    
+}
+
 @end

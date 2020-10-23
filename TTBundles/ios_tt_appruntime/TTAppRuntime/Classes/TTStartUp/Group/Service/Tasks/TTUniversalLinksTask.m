@@ -21,6 +21,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TTLaunchDefine.h"
+#import "BDUGDeepLinkManager.h"
 
 DEC_TASK("TTUniversalLinksTask",FHTaskTypeService,TASK_PRIORITY_HIGH+7);
 
@@ -34,7 +35,7 @@ DEC_TASK("TTUniversalLinksTask",FHTaskTypeService,TASK_PRIORITY_HIGH+7);
     return YES;
 }
 
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler {
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
 
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
         NSURL *webpageURL = userActivity.webpageURL;
@@ -89,5 +90,4 @@ DEC_TASK("TTUniversalLinksTask",FHTaskTypeService,TASK_PRIORITY_HIGH+7);
     }
     return YES;
 }
-
 @end

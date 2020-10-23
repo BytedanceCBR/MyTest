@@ -8,7 +8,7 @@
 
 #import "ExploreVideoDetailImpressionHelper.h"
 #import "ArticleInfoManager.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation ExploreVideoDetailImpressionHelper
 

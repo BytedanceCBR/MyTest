@@ -8,7 +8,7 @@
 
 #import "SSFetchSettingsManager.h"
 #import "CommonURLSetting.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "SSUserSettingManager.h"
 #import "APNsManager.h"
 #import "SSAPNsAlertManager.h"
@@ -81,10 +81,10 @@ static SSFetchSettingsManager * manager;
     }
     
     NSMutableDictionary * getPara = [NSMutableDictionary dictionaryWithCapacity:10];
-    [getPara setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [getPara setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     [getPara setValue:[TTSandBoxHelper appName] forKey:@"app_name"];
     [getPara setValue:[TTSandBoxHelper ssAppID] forKey:@"aid"];
-    [getPara setValue:[[TTInstallIDManager sharedInstance] installID] forKey:@"iid"];
+    [getPara setValue:[BDTrackerProtocol installID] forKey:@"iid"];
     if (forceRefresh) {
         [getPara setValue:@1 forKey:@"debug"];
     }

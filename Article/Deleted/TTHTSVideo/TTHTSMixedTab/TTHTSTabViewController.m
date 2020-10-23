@@ -27,6 +27,7 @@
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TSVPushLaunchManager.h"
 #import <TSVEnterTabAutoRefreshConfig.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTHTSTabViewController ()<TTHTSHeaderScrollViewDelegate, UIScrollViewDelegate, TTInteractExitProtocol>
 
@@ -276,7 +277,7 @@
 {
     if (_headerView) {
         if (_headerContainerScrollView.contentOffset.y < 0) {
-            [TTTrackerWrapper eventV3:@"huoshan_download_banner_show" params:nil];
+            [BDTrackerProtocol eventV3:@"huoshan_download_banner_show" params:nil];
         }
     }
 }

@@ -12,6 +12,7 @@
 #import "TTViewWrapper.h"
 #import "TTDeviceHelper.h"
 #import "UIImage+TTThemeExtension.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @interface ExploreAddEntryListViewController ()
@@ -88,7 +89,7 @@
 {
     ExploreSearchViewController *controller = [[ExploreSearchViewController alloc] initWithNavigationBar:YES showBackButton:![TTDeviceHelper isPadDevice] queryStr:nil fromType:ListDataSearchFromTypeSubscribe searchType:ExploreSearchViewTypeEntrySearch];
     [self.navigationController pushViewController:controller animated:YES];
-    wrapperTrackEvent(@"subscription", @"search");
+    [BDTrackerProtocol event:@"subscription" label:@"search"];
 }
 #pragma mark - View lifecycle
 

@@ -28,7 +28,6 @@
 #import "ArticleCategoryManagerView.h"
 #import "SSWebViewController.h"
 
-#import "TTInstallIDManager.h"
 #import "TTUISettingHelper.h"
 #import "TTTabbar+Private.h"
 #import "TTTabBarManager.h"
@@ -99,6 +98,7 @@
 #import <TTLaunchTracer.h>
 #import "FHPopupViewManager.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import "TTDialogDirector.h"
 
 extern NSString *const kFRConcernCareActionHadDone;
 extern NSString *const kFRHadShowFirstConcernCareTips;
@@ -660,6 +660,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //        [FHEnvContext showFindTabRedDots];
 //        self.hasShowDots = YES;
 //    }
+    // 应用启动时willFinishLaunchingWithOptions里先设置了[TTDialogDirector setQueueEnabled: NO]
+    // 在首页展示后再设置为YES，确保应用内push推送功能正常工作
+    [TTDialogDirector setQueueEnabled:YES];
 }
 
 - (BOOL)isShowingConcernOrForumTab

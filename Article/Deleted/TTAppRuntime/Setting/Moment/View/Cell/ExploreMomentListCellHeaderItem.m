@@ -32,6 +32,7 @@
 #import "TTActionSheetController.h"
 //#import "TTAddFriendViewController.h"
 #import "TTTabBarProvider.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kActionToSelfSheetTag      1
 #define kActionToBlockingUserSheetTag 2
@@ -123,7 +124,7 @@
             self.timeAndReportItemView = [[ExploreMomentListCellTimeAndReportItem alloc] initWithWidth:width userInfo:self.userInfo];
             __weak typeof(self) wself = self;
             self.timeAndReportItemView.trigReportActionBlock = ^() {
-                wrapperTrackEvent(@"update_detail", @"report");
+                [BDTrackerProtocol event:@"update_detail" label:@"report"];
                 __strong typeof(wself) self = wself;
                 [self presentReportView];
             };
@@ -319,12 +320,12 @@
         NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
         [extra setValue:self.momentModel.ID forKey:@"item_id"];
         [extra setValue:self.momentModel.group.ID forKey:@"value"];
-        [TTTrackerWrapper event:@"micronews_tab" label:@"more" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+        [BDTrackerProtocol event:@"micronews_tab" label:@"more" value:nil extValue:nil extValue2:nil dict:[extra copy]];
     }
     else if (self.listUmengEventName) {
-        wrapperTrackEvent(self.listUmengEventName, @"more");
+        [BDTrackerProtocol event:self.listUmengEventName label:@"more"];
     }else if (self.detailUmengEventName){
-        wrapperTrackEvent(self.detailUmengEventName, @"more");
+        [BDTrackerProtocol event:self.detailUmengEventName label:@"more"];
     }
     
     NSString * destructiveButtonTitle = nil;
@@ -396,9 +397,9 @@
     
     if ([title isEqualToString:ActionTitleAdmin]) {
         if (self.listUmengEventName) {
-            wrapperTrackEvent(self.listUmengEventName, @"manage");
+            [BDTrackerProtocol event:self.listUmengEventName label:@"manage"];
         }else if (self.detailUmengEventName){
-            wrapperTrackEvent(self.detailUmengEventName, @"manage");
+            [BDTrackerProtocol event:self.detailUmengEventName label:@"manage"];
         }
         NSString * str = [NSString stringWithFormat:@"%@%@", [ArticleURLSetting momentAdminURL], self.momentModel.ID];
         ssOpenWebView([TTStringHelper URLWithURLString:str], NSLocalizedString(@"管理", nil), [TTUIResponderHelper topNavigationControllerFor: self], NO, nil);
@@ -408,11 +409,11 @@
     if ([title isEqualToString:ActionTitleDelete]) {
         if (!isEmptyString(self.momentModel.ID)) {
             if (self.sourceType == ArticleMomentSourceTypeMoment) {
-                wrapperTrackEvent(@"delete", @"update");
+                [BDTrackerProtocol event:@"delete" label:@"update"];
             } else if (self.sourceType == ArticleMomentSourceTypeForum) {
-                wrapperTrackEvent(@"delete", @"post");
+                [BDTrackerProtocol event:@"delete" label:@"post"];
             } else if (self.sourceType == ArticleMomentSourceTypeProfile) {
-                wrapperTrackEvent(@"delete", @"profile");
+                [BDTrackerProtocol event:@"delete" label:@"profile"];
             }
             
             //统一由 ExploreDeleteManager发通知 @zengruihuan
@@ -427,9 +428,9 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"report" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"report" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
-        wrapperTrackEvent(@"update_detail", @"report");
+        [BDTrackerProtocol event:@"update_detail" label:@"report"];
         [self presentReportView];
         return;
     }
@@ -443,12 +444,12 @@
                 NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
                 [extra setValue:self.momentModel.ID forKey:@"item_id"];
                 [extra setValue:self.momentModel.group.ID forKey:@"value"];
-                [TTTrackerWrapper event:@"micronews_tab" label:@"follow" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+                [BDTrackerProtocol event:@"micronews_tab" label:@"follow" value:nil extValue:nil extValue2:nil dict:[extra copy]];
             }
             else if (self.listUmengEventName) {
-                wrapperTrackEvent(self.listUmengEventName, @"follow");
+                [BDTrackerProtocol event:self.listUmengEventName label:@"follow"];
             }else if (self.detailUmengEventName){
-                wrapperTrackEvent(self.detailUmengEventName, @"follow");
+                [BDTrackerProtocol event:self.detailUmengEventName label:@"follow"];
             }
             
             [[TTFollowManager sharedManager] startFollowAction:FriendActionTypeFollow userID:self.momentModel.user.ID platform:nil name:self.momentModel.user.name from:nil reason:nil newReason:nil newSource:@(TTFollowNewSourceMomentList) completion:^(FriendActionType type, NSError * _Nullable error, NSDictionary * _Nullable result) {
@@ -489,12 +490,12 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"unfollow" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"unfollow" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
         else if (self.listUmengEventName) {
-            wrapperTrackEvent(self.listUmengEventName, @"unfollow");
+            [BDTrackerProtocol event:self.listUmengEventName label:@"unfollow"];
         }else if (self.detailUmengEventName){
-            wrapperTrackEvent(self.detailUmengEventName, @"unfollow");
+            [BDTrackerProtocol event:self.detailUmengEventName label:@"unfollow"];
         }
         
         [[TTFollowManager sharedManager] startFollowAction:FriendActionTypeUnfollow userID:self.momentModel.user.ID platform:nil name:self.momentModel.user.name from:nil reason:nil newReason:nil newSource:@(TTFollowNewSourceMomentList) completion:^(FriendActionType type, NSError * _Nullable error, NSDictionary * _Nullable result) {
@@ -539,29 +540,29 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"blacklist" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"blacklist" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
         else if (self.listUmengEventName) {
-            wrapperTrackEvent(self.listUmengEventName, @"blacklist");
-            wrapperTrackEvent(@"blacklist", @"click_blacklist");
+            [BDTrackerProtocol event:self.listUmengEventName label:@"blacklist"];
+            [BDTrackerProtocol event:@"blacklist" label:@"click_blacklist"];
         }else if (self.detailUmengEventName){
-            wrapperTrackEvent(self.detailUmengEventName, @"blacklist");
+            [BDTrackerProtocol event:self.detailUmengEventName label:@"blacklist"];
         }
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:@"确定拉黑该用户？" message:@"拉黑后此用户不能关注你，也无法给你发送任何消息" preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
             if (self.listUmengEventName) {
-                wrapperTrackEvent(self.listUmengEventName, @"quit_blacklist");
-                wrapperTrackEvent(@"blacklist", @"quit_blacklist");
+                [BDTrackerProtocol event:self.listUmengEventName label:@"quit_blacklist"];
+                [BDTrackerProtocol event:@"blacklist" label:@"quit_blacklist"];
             }else if (self.detailUmengEventName){
-                wrapperTrackEvent(self.detailUmengEventName, @"quit_blacklist");
+                [BDTrackerProtocol event:self.detailUmengEventName label:@"quit_blacklist"];
             }
         }];
         [alert addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             if (self.listUmengEventName) {
-                wrapperTrackEvent(self.listUmengEventName, @"confirm_blacklist");
-                wrapperTrackEvent(@"blacklist", @"confirm_blacklist");
+                [BDTrackerProtocol event:self.listUmengEventName label:@"confirm_blacklist"];
+                [BDTrackerProtocol event:@"blacklist" label:@"confirm_blacklist"];
             }else if (self.detailUmengEventName){
-                wrapperTrackEvent(self.detailUmengEventName, @"confirm_blacklist");
+                [BDTrackerProtocol event:self.detailUmengEventName label:@"confirm_blacklist"];
             }
             [_blockUserManager blockUser:self.momentModel.user.ID];
         }];
@@ -574,13 +575,13 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"deblacklist" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"deblacklist" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
         else if (self.listUmengEventName) {
-            wrapperTrackEvent(self.listUmengEventName, @"deblacklist");
-            wrapperTrackEvent(@"blacklist", @"click_deblacklist");
+            [BDTrackerProtocol event:self.listUmengEventName label:@"deblacklist"];
+            [BDTrackerProtocol event:@"blacklist" label:@"click_deblacklist"];
         }else if (self.detailUmengEventName){
-            wrapperTrackEvent(self.detailUmengEventName, @"deblacklist");
+            [BDTrackerProtocol event:self.detailUmengEventName label:@"deblacklist"];
         }
         [_blockUserManager unblockUser:self.momentModel.user.ID];
         return;
@@ -677,18 +678,18 @@
     if (buttonIndex != alertView.cancelButtonIndex)
     {
         if (self.listUmengEventName) {
-            wrapperTrackEvent(self.listUmengEventName, @"confirm_blacklist");
-            wrapperTrackEvent(@"blacklist", @"confirm_blacklist");
+            [BDTrackerProtocol event:self.listUmengEventName label:@"confirm_blacklist"];
+            [BDTrackerProtocol event:@"blacklist" label:@"confirm_blacklist"];
         }else if (self.detailUmengEventName){
-            wrapperTrackEvent(self.detailUmengEventName, @"confirm_blacklist");
+            [BDTrackerProtocol event:self.detailUmengEventName label:@"confirm_blacklist"];
         }
         [_blockUserManager blockUser:self.momentModel.user.ID];
     } else {
         if (self.listUmengEventName) {
-            wrapperTrackEvent(self.listUmengEventName, @"quit_blacklist");
-            wrapperTrackEvent(@"blacklist", @"quit_blacklist");
+            [BDTrackerProtocol event:self.listUmengEventName label:@"quit_blacklist"];
+            [BDTrackerProtocol event:@"blacklist" label:@"quit_blacklist"];
         }else if (self.detailUmengEventName){
-            wrapperTrackEvent(self.detailUmengEventName, @"quit_blacklist");
+            [BDTrackerProtocol event:self.detailUmengEventName label:@"quit_blacklist"];
         }
     }
 }

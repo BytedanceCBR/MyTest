@@ -9,9 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <ByteDanceKit/BTDMacros.h>
-#import <TTInstallService/TTInstallSandBoxHelper.h>
-#import <TTInstallService/TTInstallIDManager.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 @interface TTTrackerWrapper : NSObject
 
@@ -110,7 +109,7 @@ static inline void wrapperTrackEvent (NSString * _Nonnull event, NSString * _Non
         return;
     }
     
-    wrapperTrackEventWithOption([TTInstallSandBoxHelper appName], event, label, true);
+    wrapperTrackEventWithOption([TTSandBoxHelper appName], event, label, true);
 }
 
 static inline void wrapperTrackEventWithCustomKeys (NSString * _Nonnull event, NSString * _Nonnull label, NSString * _Nullable value, NSString * _Nullable source, NSDictionary * _Nullable extraDic) {

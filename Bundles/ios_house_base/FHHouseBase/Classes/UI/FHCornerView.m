@@ -34,3 +34,16 @@
 }
 
 @end
+
+@implementation FHCornerCustomLabel
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:self.corners cornerRadii:CGSizeMake(self.cornerRadius, self.cornerRadius)];
+    CAShapeLayer *layer = [[CAShapeLayer alloc]init];
+    layer.frame = self.bounds;
+    layer.path = maskPath.CGPath;
+    self.layer.mask = layer;
+}
+
+@end

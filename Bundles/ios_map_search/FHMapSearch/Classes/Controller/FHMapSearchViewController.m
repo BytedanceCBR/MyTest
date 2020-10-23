@@ -35,7 +35,9 @@
 #import "FHMapSearchInfoTopBar.h"
 #import "FHMapSearchSideBar.h"
 #import <TTReachability/TTReachability.h>
-
+#import "FHCommonDefines.h"
+#import "NSDictionary+BTDAdditions.h"
+#import "UIView+FHTracker.h"
 
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 44
@@ -240,6 +242,8 @@
     __weak typeof(self) wself = self;
     self.simpleNavBar = [[FHMapSimpleNavbar alloc]initWithFrame:frame];
     self.simpleNavBar.houseType = self.configModel.houseType;
+    self.simpleNavBar.fh_pageType = [self fh_pageType];
+    self.simpleNavBar.fh_originFrom = [self fh_originFrom];
     _simpleNavBar.backActionBlock = ^(FHMapSimpleNavbarType type) {
         if (type == FHMapSimpleNavbarTypeClose) {
             [wself.viewModel exitCurrentMode];
@@ -556,5 +560,9 @@
     }
 }
 
+#pragma mark - Tracker相关
+- (NSString *)fh_pageType {
+    return @"mapfind";
+}
 @end
 

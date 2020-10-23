@@ -23,6 +23,7 @@
 #import "TTRoute.h"
 
 #import <objc/runtime.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation TTVideoFloatViewController (Action)
 #pragma mark cell action
@@ -43,7 +44,7 @@
     [string appendFormat:@"&group_id=%@",cellEntity.article.groupModel.groupID];
     [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:string]];
     Article *article = cellEntity.article;
-    wrapperTrackEventWithCustomKeys(@"pgc_profile", @"float_enter", [article.mediaInfo[@"media_id"] stringValue], cellEntity.article.groupModel.itemID, [[self class] baseExtraWithArticle:article]);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"pgc_profile" label:@"float_enter" value:[article.mediaInfo[@"media_id"] stringValue] source:cellEntity.article.groupModel.itemID extraDic:[[self class] baseExtraWithArticle:article]];
     [self leaverPageStay];
 }
 
@@ -54,14 +55,14 @@
     BOOL hasSubscribed = [self.contentInfo ttgc_isSubCribed];
 
     if (hasSubscribed) {
-        wrapperTrackEventWithCustomKeys(@"video", @"float_unsubscribe_pgc", contentID, cellEntity.article.groupModel.itemID, [[self class] baseExtraWithArticle:article]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"float_unsubscribe_pgc" value:contentID source:cellEntity.article.groupModel.itemID extraDic:[[self class] baseExtraWithArticle:article]];
     }
     else {
 //        if ([TTFirstConcernManager firstTimeGuideEnabled]) {
 //            TTFirstConcernManager *manager = [[TTFirstConcernManager alloc] init];
 //            [manager showFirstConcernAlertViewWithDismissBlock:nil];
 //        }
-        wrapperTrackEventWithCustomKeys(@"video", @"float_subscribe_pgc", contentID, cellEntity.article.groupModel.itemID, [[self class] baseExtraWithArticle:article]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"float_subscribe_pgc" value:contentID source:cellEntity.article.groupModel.itemID extraDic:[[self class] baseExtraWithArticle:article]];
     }
     
     cellEntity.startActivity = YES;
@@ -224,8 +225,8 @@
 {
     Article *article = cellEntity.article;
 
-    wrapperTrackEventWithCustomKeys(@"xiangping", @"video_float_enter_comment", article.groupModel.groupID, article.groupModel.itemID, [[self class] baseExtraWithArticle:article]);
-    wrapperTrackEventWithCustomKeys(@"video", @"detail_play",article.groupModel.groupID, article.groupModel.itemID, [[self class] baseExtraWithArticle:article]);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_float_enter_comment" value:article.groupModel.groupID source:article.groupModel.itemID extraDic:[[self class] baseExtraWithArticle:article]];
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_play" value:article.groupModel.groupID source:article.groupModel.itemID extraDic:[[self class] baseExtraWithArticle:article]];
     [self leaverPageStay];
     [self endCellStay:YES];
 }
@@ -265,7 +266,7 @@
             
         }];
         [article save];
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_float_digg",cellEntity.article.groupModel.groupID, cellEntity.article.groupModel.itemID, [[self class] baseExtraWithArticle:article]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_float_digg" value:cellEntity.article.groupModel.groupID source:cellEntity.article.groupModel.itemID extraDic:[[self class] baseExtraWithArticle:article]];
         if (!isNull(callbackBlock)) {
             callbackBlock(YES,nil);
         }
@@ -277,7 +278,7 @@
         [self.itemActionManager sendActionForOriginalData:article adID:nil actionType:DetailActionTypeBury finishBlock:^(id userInfo, NSError *error) {
         }];
         [article save];
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_float_bury",cellEntity.article.groupModel.groupID, cellEntity.article.groupModel.itemID, [[self class] baseExtraWithArticle:article]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_float_bury" value:cellEntity.article.groupModel.groupID source:cellEntity.article.groupModel.itemID extraDic:[[self class] baseExtraWithArticle:article]];
         if (!isNull(callbackBlock)) {
             callbackBlock(YES,nil);
         }

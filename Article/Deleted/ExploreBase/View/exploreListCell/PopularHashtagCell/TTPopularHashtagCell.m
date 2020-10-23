@@ -13,6 +13,7 @@
 #import <TTAlphaThemedButton.h>
 #import <TTRoute/TTRoute.h>
 #import <UIImageView+WebCache.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation TTPopularHashtagCell
 
@@ -176,7 +177,7 @@
 #pragma mark - action
 
 - (void)showMoreButtonClicked:(id)sender {
-    [TTTrackerWrapper eventV3:@"enter_hot_topic_list" params:@{@"category_name":self.orderedData.categoryID?:@""}];
+    [BDTrackerProtocol eventV3:@"enter_hot_topic_list" params:@{@"category_name":self.orderedData.categoryID?:@""}];
     if (!isEmptyString([self.popularData showMoreSchema]) && [[TTRoute sharedRoute] canOpenURL:[NSURL URLWithString:[self.popularData showMoreSchema]]]) {
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[self.popularData showMoreSchema]]];
     }

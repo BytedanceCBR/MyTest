@@ -7,6 +7,7 @@
 
 #import "TTVDetailNatantADPlayerTracker.h"
 #import "TTVPlayerStateStore.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @interface TTVDetailNatantADPlayerTracker ()
@@ -118,7 +119,7 @@
             [dict setValue:[self.playerStateStore.state ttv_position] forKey:@"position"];
             [dict setValue:@(self.playerStateStore.state.playPercent) forKey:@"percent"];
             [dict setValue:@(self.playerStateStore.state.duration * 1000) forKey:@"duration"];
-            [TTTrackerWrapper eventData:dict];
+            [BDTrackerProtocol eventData:dict];
         }
     }else{
         if (!isEmptyString(self.adID)) {
@@ -129,7 +130,7 @@
             [dict setValue:@(self.playerStateStore.state.playPercent) forKey:@"percent"];
             [dict setValue:@(self.playerStateStore.state.totalWatchTime) forKey:@"duration"];
             if ([self ttv_sendEvenWhenPlayActively]) {
-                [TTTrackerWrapper eventData:dict];
+                [BDTrackerProtocol eventData:dict];
             }
         }
     }
@@ -159,7 +160,7 @@
 
 - (void)ttv_sendDetailAdWithlabel:(NSString *)label
 {
-    [TTTrackerWrapper eventData:[self ttv_dictWithEvent:@"detail_ad" label:label]];
+    [BDTrackerProtocol eventData:[self ttv_dictWithEvent:@"detail_ad" label:label]];
 }
 
 @end

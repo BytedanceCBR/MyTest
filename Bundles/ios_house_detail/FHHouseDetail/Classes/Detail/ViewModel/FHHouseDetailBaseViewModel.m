@@ -24,7 +24,7 @@
 #import "FHDetailMediaHeaderCorrectingCell.h"
 #import "FHErrorHubManagerUtil.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import <TTInstallService/TTInstallUtil.h>
+#import <Heimdallr/HeimdallrUtilities.h>
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -732,7 +732,7 @@
             self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
         }
         __block UIApplicationState appState;
-        ttinstall_dispatch_main_sync_safe(^{
+        hmd_dispatch_main_sync_safe(^{
             appState = [UIApplication sharedApplication].applicationState;
         });
         if (self.initTimeInterval > 0 && self.firstReloadInterval > 0) {

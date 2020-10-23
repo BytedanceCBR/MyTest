@@ -37,6 +37,7 @@
 #import "TTUIResponderHelper.h"
 #import <TTNewsAccountBusiness/TTAccountManager.h>
 #import "TTFollowThemeButton.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTWendaCellView ()
 
@@ -687,7 +688,7 @@
     [dict setValue:self.viewModel.wenda.questionEntity.qid forKey:@"qid"];
     [dict setValue:self.viewModel.wenda.questionEntity.allAnsCount forKey:@"t_ans_num"];
     [dict setValue:self.viewModel.wenda.questionEntity.niceAnsCount forKey:@"r_ans_num"];
-    [TTTrackerWrapper eventV3:@"channel_write_answer" params:dict];
+    [BDTrackerProtocol eventV3:@"channel_write_answer" params:dict];
 }
 
 - (void)backgroundViewClick {
@@ -749,7 +750,7 @@
     else{
         [params setValue:self.viewModel.userId forKey:@"user_id"];
     }
-    [TTTrackerWrapper eventV3:event params:params];
+    [BDTrackerProtocol eventV3:event params:params];
 }
 
 #pragma mark - GET/SET

@@ -362,6 +362,19 @@
     return @"be_null";
 }
 
+- (NSString *)fh_pageType {
+    return NSStringFromClass(self.class);
+}
+
+- (NSString *)fh_originFrom {
+    if (!self.tracerDict || ![self.tracerDict isKindOfClass:NSDictionary.class]) return @"be_null";
+    return [self.tracerDict btd_objectForKey:UT_ORIGIN_FROM default:@"be_null"];
+}
+
+- (NSString *)fh_fromPageType {
+    if (!self.tracerDict || ![self.tracerDict isKindOfClass:NSDictionary.class]) return @"be_null";
+    return [self.tracerDict btd_objectForKey:UT_FROM_PAGE_TYPE default:@"be_null"];
+}
 /**
  * 支持禁止Push跳转（与TopVC是同一个VC以及，参数相同的页面），默认是NO（走之前逻辑）
  * 当Push来了后，如果当前顶部VC与Push不是同一个或者参数不同（比如和不同的经纪人聊天），则新建页面

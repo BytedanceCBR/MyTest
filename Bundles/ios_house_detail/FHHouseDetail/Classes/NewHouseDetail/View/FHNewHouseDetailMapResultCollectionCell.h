@@ -6,10 +6,10 @@
 //
 
 #import "FHDetailBaseCell.h"
-
+#import <IGListKit/IGListKit.h>
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHNewHouseDetailMapResultCollectionCell : FHDetailBaseCollectionCell
+@interface FHNewHouseDetailMapResultCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 
 @property (nonatomic, strong) UILabel *titleLabel;
 

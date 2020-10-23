@@ -289,12 +289,8 @@ static TTActionSheetController *sharedInstance;
         if (criticism && criticism.length > 0) {
             [parameters setValue:criticism forKey:@"criticism"];
         }
-        if (self.isCancel) {
-            [parameters setValue:@(1) forKey:@"cancel"];
-        }
-        
-        
-        if (self.completion) {
+
+        if (self.completion && !self.isCancel) {
             self.completion(parameters);
         }
         self.backWindow = nil;
@@ -409,7 +405,7 @@ static TTActionSheetController *sharedInstance;
         self.lastDislikeCount = currentDislikeCount;
         self.lastReportCount = currentReportCount;
     }
-    
+    self.isCancel = NO;
     [self dismissController];
 }
 

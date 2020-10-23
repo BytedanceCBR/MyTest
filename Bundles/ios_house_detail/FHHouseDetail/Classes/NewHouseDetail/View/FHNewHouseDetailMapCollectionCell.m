@@ -236,6 +236,10 @@
     }
 }
 
+- (void)bindViewModel:(id)viewModel {
+    [self refreshWithData:viewModel];
+}
+
 - (void)refreshWithData:(id)data {
     if (![data isKindOfClass:[FHNewHouseDetailMapCellModel class]]) {
         return;
@@ -582,5 +586,13 @@
 @end
 
 @implementation FHNewHouseDetailMapCellModel
+
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
+}
 
 @end

@@ -14,6 +14,7 @@
 @protocol AWEVideoCommentCellOperateDelegate<NSObject>
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickDeleteWithModel:(AWECommentModel *)commentModel;
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickReportWithModel:(AWECommentModel *)commentModel;
+- (void)commentCell:(AWEVideoCommentCell *)cell didClickShieldWithModel:(AWECommentModel *)commentModel;
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickLikeWithModel:(AWECommentModel *)commentModel;
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickUserWithModel:(AWECommentModel *)commentModel;
 - (void)commentCell:(AWEVideoCommentCell *)cell didClickUserNameWithModel:(AWECommentModel *)commentModel;

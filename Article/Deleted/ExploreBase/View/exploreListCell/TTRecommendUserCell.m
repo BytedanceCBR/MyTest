@@ -28,6 +28,7 @@
 #import "TTRoute.h"
 #import "TTPlatformSwitcher.h"
 #import "TTFeedDislikeView.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kHeaderViewHeight 40
 #define kFooterViewHeight 40
@@ -426,7 +427,7 @@
 
 - (void)trackWithLabel:(NSString *)label extraDic:(NSDictionary *)extraDic
 {
-    wrapperTrackEventWithCustomKeys(@"people_cell", label, self.recommendUser.cellID, nil, extraDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"people_cell" label:label value:self.recommendUser.cellID source:nil extraDic:extraDic];
 }
 
 #pragma UICollectionViewDelegate
@@ -554,7 +555,7 @@
         NSURL *openURL = [TTStringHelper URLWithURLString:recommendUser.showMoreJumpURL];
         if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
             [[TTRoute sharedRoute] openURLByPushViewController:openURL];
-            wrapperTrackEventWithCustomKeys(@"people_cell", @"more", recommendUser.cellID, nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"people_cell" label:@"more" value:recommendUser.cellID source:nil extraDic:nil];
         }
     }
 }
