@@ -121,9 +121,9 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
         }
         
         self.backgroundColor = [UIColor themeWhite];
-        self.layer.shadowColor = [UIColor colorWithHexStr:@"#7F7F7F"].CGColor;
-        self.layer.shadowOffset = CGSizeZero;
-        self.layer.shadowOpacity = 0.5;
+        self.layer.shadowColor = [UIColor themeBlack].CGColor;
+        self.layer.shadowOpacity = 0.2;
+        self.layer.shadowOffset = CGSizeMake(0, 4);
         self.layer.shadowRadius = 8;
         self.layer.cornerRadius = 8;
     }
