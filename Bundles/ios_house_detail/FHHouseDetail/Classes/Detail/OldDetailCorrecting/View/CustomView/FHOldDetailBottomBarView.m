@@ -159,12 +159,12 @@ CGFloat const FHBottomBarLeftViewNameLabelLeftMargin = 8;
         }];
         CGSize licenseIconSize = isNewStyle ? CGSizeMake(18, 16) : CGSizeMake(20, 20);
         CGFloat leftMargin = isNewStyle ? 6 : 4;
-        CGFloat rightMargin = ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) ? -2 : -10;//兼容一下5s，否则在5s上两个字的名字都展示不了
+//        CGFloat rightMargin = ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) ? -2 : -10;//兼容一下5s，否则在5s上两个字的名字都展示不了
         [self.licenseIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.nameLabel.mas_right).offset(leftMargin);
             make.size.mas_equalTo(licenseIconSize);
             make.centerY.mas_equalTo(self.nameLabel);
-            make.right.mas_lessThanOrEqualTo(self.imChatBtn.mas_left).offset(rightMargin);
+//            make.right.mas_lessThanOrEqualTo(self.imChatBtn.mas_left).offset(rightMargin);
         }];
         
         if (imageURL) {
@@ -210,7 +210,7 @@ CGFloat const FHBottomBarLeftViewNameLabelLeftMargin = 8;
     }else {
         self.nameLabel.text = @"经纪人";
     }
-    CGFloat nameLabelwidth = [realtorName boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.nameLabel.font} context:nil].size.width + 1;
+    CGFloat nameLabelwidth = [realtorName boundingRectWithSize:CGSizeMake(MAXFLOAT, 22) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.nameLabel.font} context:nil].size.width + 1;
 //    NSMutableArray *licenseViews = @[].mutableCopy;
     BOOL shouldDisplayLicense = contactPhone.businessLicense.length > 0 || contactPhone.certificate.length > 0 || contactPhone.certification.openUrl.length > 0;
     if (shouldDisplayLicense) {
