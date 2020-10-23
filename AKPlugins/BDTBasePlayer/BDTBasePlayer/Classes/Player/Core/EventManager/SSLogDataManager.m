@@ -7,7 +7,6 @@
 //
 
 #import "SSLogDataManager.h"
-#import "TTTrackerProxy.h"
 #import <pthread.h>
 #import <BDTrackerProtocol/BDTrackerProtocol+CustomEvent.h>
 
@@ -58,16 +57,17 @@ static SSLogDataManager * sManager;
         pthread_mutex_init (&_appendDataLock, &appending_attr);
         pthread_mutexattr_destroy (&appending_attr);
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerWillSendNotification:) name:kTrackerCleanerWillStartCleanNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(trackerSentSuccessNotification:)
-                                                     name:kTrackerSentSuccessNotification
-                                                   object:nil];
-    
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(trackerSentFailNotification:)
-                                                     name:kTrackerSentFailNotification
-                                                   object:nil];
+        //升级BDInstall，这三个监听已废弃
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerWillSendNotification:) name:kTrackerCleanerWillStartCleanNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector(trackerSentSuccessNotification:)
+//                                                     name:kTrackerSentSuccessNotification
+//                                                   object:nil];
+//
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector(trackerSentFailNotification:)
+//                                                     name:kTrackerSentFailNotification
+//                                                   object:nil];
 
     }
     return self;
