@@ -972,7 +972,6 @@
     }
     
     NSMutableDictionary *tracerDic = [[NSMutableDictionary alloc] init];
-    tracerDic[@"event_tracking_id"] = @"107645";
     tracerDic[@"event_type"] = @"house_app2c_v2";
     tracerDic[@"enter_type"] = enterType;
     tracerDic[@"tab_name"] = [self getTabNameBySectionType:sectionType];

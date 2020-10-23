@@ -290,7 +290,7 @@
 {
     switch (index) {
         case 0:
-            return [UIColor themeRed1];
+            return [UIColor themeRed4];
             break;
         case 1:
             return [UIColor colorWithHexString:@"#ffc464"];

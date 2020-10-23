@@ -76,7 +76,7 @@
 - (void)collectionCellClick:(NSInteger)index {
     FHNeighborhoodDetailFloorpanCellModel *model = [(FHNeighborhoodDetailFloorpanSM *)self.sectionModel floorpanCellModel];
     if (model.saleHouseInfoModel.neighborhoodSaleHouseList.count > 0 && index >= 0 && index < model.saleHouseInfoModel.neighborhoodSaleHouseList.count){
-        FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel *item = model.saleHouseInfoModel.neighborhoodSaleHouseList[index];
+        FHDetailNeighborhoodSaleHouseInfoItemModel *item = model.saleHouseInfoModel.neighborhoodSaleHouseList[index];
         FHDetailNeighborhoodModel *detailModel = (FHDetailNeighborhoodModel*)self.detailViewController.viewModel.detailData;
         NSString *neighborhood_id = @"be_null";
         if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {

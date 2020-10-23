@@ -18,6 +18,7 @@
 #import "FHDetailCommonDefine.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <FHHouseBase/FHEventShowProtocol.h>
+#import <IGListKit/IGListKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -65,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 // FHDetailBaseCollectionCell
-@interface FHDetailBaseCollectionCell : UICollectionViewCell<FHEventShowProtocol>
+@interface FHDetailBaseCollectionCell : UICollectionViewCell<FHEventShowProtocol,IGListBindable>
 
 // 当前cell的模型数据
 @property (nonatomic, weak , nullable) id currentData;

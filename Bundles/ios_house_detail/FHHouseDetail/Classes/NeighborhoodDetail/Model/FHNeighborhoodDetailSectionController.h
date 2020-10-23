@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)didUpdateToObject:(id)object NS_REQUIRES_SUPER;
 
+- (__kindof UICollectionViewCell *)defaultCellAtIndex:(NSInteger)index;
+
 @property (nonatomic, weak, readonly) NSMutableDictionary *elementShowCaches;
 
 @end
@@ -38,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSDictionary *)subPageParams;
 
 - (void)didUpdateToObject:(id)object NS_REQUIRES_SUPER;
+
+- (__kindof UICollectionViewCell *)defaultCellAtIndex:(NSInteger)index;
 
 @property (nonatomic, weak, readonly) NSMutableDictionary *elementShowCaches;
 

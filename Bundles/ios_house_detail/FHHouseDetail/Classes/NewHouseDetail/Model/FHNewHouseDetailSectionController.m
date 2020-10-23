@@ -8,6 +8,7 @@
 #import "FHNewHouseDetailSectionController.h"
 #import "FHNewHouseDetailSectionModel.h"
 #import "FHNewHouseDetailViewController.h"
+#import "FHDetailBaseCell.h"
 
 @implementation FHNewHouseDetailSectionController
 
@@ -41,6 +42,11 @@
 
 - (NSMutableDictionary *)elementShowCaches {
     return self.detailViewController.elementShowCaches;
+}
+
+- (__kindof UICollectionViewCell *)defaultCellAtIndex:(NSInteger)index {
+    FHDetailBaseCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHDetailBaseCollectionCell class] withReuseIdentifier:NSStringFromClass([self class]) forSectionController:self atIndex:index];
+    return cell;
 }
 
 @end
@@ -80,6 +86,11 @@
 
 - (NSMutableDictionary *)elementShowCaches {
     return self.detailViewController.elementShowCaches;
+}
+
+- (__kindof UICollectionViewCell *)defaultCellAtIndex:(NSInteger)index {
+    FHDetailBaseCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHDetailBaseCollectionCell class] withReuseIdentifier:NSStringFromClass([self class]) forSectionController:self atIndex:index];
+    return cell;
 }
 
 @end
