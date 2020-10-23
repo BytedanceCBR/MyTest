@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHNeighborhoodDetailFloorpanCellModel : NSObject
-@property (nonatomic,strong) FHDetailNeighborhoodSaleHouseInfoModel *saleHouseInfoModel;
+@property (nonatomic,strong) FHDetailNeighborhoodSaleHouseInfoListModel *saleHouseInfoModel;
 @end
 
 NS_ASSUME_NONNULL_END

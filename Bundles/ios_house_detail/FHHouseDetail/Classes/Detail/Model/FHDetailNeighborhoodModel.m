@@ -368,7 +368,7 @@
 
 
 
-@implementation FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel
+@implementation FHDetailNeighborhoodSaleHouseInfoItemModel
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
@@ -387,7 +387,7 @@
 }
 @end
 
-@implementation FHDetailNeighborhoodSaleHouseInfoModel
+@implementation FHDetailNeighborhoodSaleHouseInfoListModel
 + (JSONKeyMapper*)keyMapper
 {
   NSDictionary *dict = @{
