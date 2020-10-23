@@ -9,6 +9,7 @@
 #import "TTVideoEngine+Preload.h"
 #import "TTVVideoURLParser.h"
 #import "FHEnvContext.h"
+#import "TTSandBoxHelper.h"
 
 @interface FHShortVideoPerLoaderManager ()
 @property (strong, nonatomic) NSMutableDictionary *cacheVidWithKeyMap;
@@ -21,7 +22,7 @@
 + (void)startPrefetchShortVideoInDetailWithDataFetchManager:(FHShortVideoDetailFetchManager *)manager
 {
     
-    if (![FHEnvContext isHasPerLoadForVideo]) {
+    if (![TTSandBoxHelper isInHouseApp] || ![FHEnvContext isHasPerLoadForVideo]) {
         return;
     }
     
