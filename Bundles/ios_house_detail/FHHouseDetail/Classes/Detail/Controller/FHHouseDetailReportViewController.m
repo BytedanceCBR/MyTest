@@ -320,7 +320,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         [self.hintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.bottom.equalTo(self.contentArea);
             make.top.equalTo(self.phoneTextField.mas_bottom).offset(10);
-            make.height.mas_equalTo([self.hintLabel.text btd_sizeWithFont:self.hintLabel.font width:SCREEN_WIDTH - 30].height);
+            make.height.mas_equalTo([self.hintLabel.text btd_sizeWithFont:self.hintLabel.font width:SCREEN_WIDTH - 60].height);
         }];
         
         @weakify(self);
@@ -558,7 +558,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         phoneItem.type = FHHouseDetailReportItemType_Phone;
         phoneItem.title = @"请输入手机号";
         phoneItem.phoneNumber = [self phoneNumber];
-        phoneItem.height = 159;
+        phoneItem.height = UITableViewAutomaticDimension;
         
         FHHouseDetailReportItem *extraItem = [[FHHouseDetailReportItem alloc] init];
         extraItem.type = FHHouseDetailReportItemType_Extra;
