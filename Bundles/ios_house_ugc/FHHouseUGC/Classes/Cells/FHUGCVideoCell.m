@@ -303,8 +303,6 @@
 }
 
 - (void)didSelectCell:(TTVFeedCellSelectContext *)context {
-//    [self.videoView.playMovie removeCommodityView];
-    
     TTVVideoArticle *article = self.videoItem.article;
     if ((article.groupFlags & kVideoArticleGroupFlagsOpenUseWebViewInList) > 0 && !isEmptyString(article.articleURL)) {
         [self openWebviewWithItem:self.videoItem context:context];

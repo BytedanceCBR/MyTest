@@ -449,7 +449,7 @@
             if (perloadIndex < self.dataList.count) {
                 [preLoadArr addObject:@(perloadIndex)];
             }else{
-                return;
+                break;
             }
         }
         for (NSNumber *num in preLoadArr) {
@@ -514,47 +514,19 @@
 }
 
 - (void)stopCurrentVideo {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        return;
-    }
-    
     if(self.currentVideoCell){
-        if([self.currentVideoCell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [self.currentVideoCell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)self.currentVideoCell;
-            UIView *view = [vCell cell_movieView];
-            if ([view isKindOfClass:[TTVPlayVideo class]]) {
-                TTVPlayVideo *movieView = (TTVPlayVideo *)view;
-                if (!movieView.player.context.isFullScreen &&
-                    !movieView.player.context.isRotating) {
-                    if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
-                        [movieView stop];
-                    }
-                    [movieView removeFromSuperview];
-                }
-            }
-            [vCell endDisplay];
+        if([self.currentVideoCell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)self.currentVideoCell;
+            [vCell stop];
         }
     }
 }
 
 - (void)pauseCurrentVideo {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        return;
-    }
-    
     if(self.currentVideoCell){
-        if([self.currentVideoCell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [self.currentVideoCell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)self.currentVideoCell;
-            UIView *view = [vCell cell_movieView];
-            if ([view isKindOfClass:[TTVPlayVideo class]]) {
-                TTVPlayVideo *movieView = (TTVPlayVideo *)view;
-                if (!movieView.player.context.isFullScreen &&
-                    !movieView.player.context.isRotating) {
-                    if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
-                        [movieView.player pause];
-                    }
-                }
-            }
+        if([self.currentVideoCell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)self.currentVideoCell;
+            [vCell pause];
         }
     }
 }

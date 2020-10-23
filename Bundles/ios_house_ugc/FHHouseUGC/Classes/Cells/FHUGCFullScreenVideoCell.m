@@ -465,8 +465,6 @@
 }
 
 - (void)didSelectCell:(TTVFeedCellSelectContext *)context {
-//    [self.videoView.playMovie removeCommodityView];
-    
     TTVVideoArticle *article = self.videoItem.article;
     if ((article.groupFlags & kVideoArticleGroupFlagsOpenUseWebViewInList) > 0 && !isEmptyString(article.articleURL)) {
         [self openWebviewWithItem:self.videoItem context:context];
@@ -796,7 +794,28 @@
     self.isStartPlaying = NO;
 }
 
+- (void)pause {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        return;
+    }
+    
+    UIView *view = [self cell_movieView];
+    if ([view isKindOfClass:[TTVPlayVideo class]]) {
+        TTVPlayVideo *movieView = (TTVPlayVideo *)view;
+        if (!movieView.player.context.isFullScreen &&
+            !movieView.player.context.isRotating) {
+            if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
+                [movieView.player pause];
+            }
+        }
+    }
+}
+
 - (void)stop {
+    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        return;
+    }
+    
     UIView *view = [self cell_movieView];
     if ([view isKindOfClass:[TTVPlayVideo class]]) {
         TTVPlayVideo *movieView = (TTVPlayVideo *)view;
@@ -806,9 +825,9 @@
                 [movieView stop];
             }
             [movieView removeFromSuperview];
-            [self endDisplay];
         }
     }
+    [self endDisplay];
 }
 
 - (void)playVideoDidClicked {
