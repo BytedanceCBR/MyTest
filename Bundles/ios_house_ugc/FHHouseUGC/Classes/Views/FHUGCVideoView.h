@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^ttv_playerCurrentPlayBackTimeChangeBlock)(NSTimeInterval currentPlayBackTime,NSTimeInterval duration);
 
 - (void)playButtonClicked;
-- (void)playVideo;
+- (void)play;
 - (void)setMuted:(BOOL)muted;
 - (void)readyToPlay;
 

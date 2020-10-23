@@ -777,20 +777,7 @@
     }
     
     self.isStartPlaying = YES;
-    UIView *view = [self cell_movieView];
-    if(view){
-        if ([view isKindOfClass:[TTVPlayVideo class]]) {
-            TTVPlayVideo *movieView = (TTVPlayVideo *)view;
-            if (!movieView.player.context.isFullScreen &&
-                !movieView.player.context.isRotating) {
-                if (movieView.player.context.playbackState != TTVVideoPlaybackStatePlaying) {
-                    [movieView.player play];
-                }
-            }
-        }
-    }else{
-        [self.videoView playVideo];
-    }
+    [self.videoView play];
     self.isStartPlaying = NO;
 }
 

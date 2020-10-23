@@ -21,7 +21,6 @@
 #import "TSVShortVideoDetailExitManager.h"
 #import "HTSVideoPageParamHeader.h"
 #import "FHUGCVideoCell.h"
-#import "TTVFeedPlayMovie.h"
 #import "TTVPlayVideo.h"
 #import "TTVFeedCellWillDisplayContext.h"
 #import "TTVFeedCellAction.h"
@@ -484,8 +483,8 @@
     NSArray *cells = [self.tableView visibleCells];
     for (NSInteger i = 0; i < cells.count; i++) {
         UITableViewCell *cell = cells[i];
-        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)cell;
+        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
             CGRect frame = [vCell.videoView convertRect:vCell.videoView.bounds toView:self.viewController.view];
             if(frame.origin.y >= CGRectGetMaxY(self.viewController.customNavBarView.frame) && (CGRectGetMaxY(frame) - 50) < maxY){
                 return vCell;
@@ -501,9 +500,9 @@
     for (NSInteger i = 0; i < (cells.count - 1); i++) {
         UITableViewCell *cell = cells[i];
         UITableViewCell *nextCell = cells[i+1];
-        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)] && [nextCell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [nextCell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)cell;
-            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vNextCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)nextCell;
+        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [nextCell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
+            FHUGCFullScreenVideoCell *vNextCell = (FHUGCFullScreenVideoCell *)nextCell;
             CGRect frame = [vCell.videoView convertRect:vCell.videoView.bounds toView:self.viewController.view];
             if(frame.origin.y >= CGRectGetMaxY(self.viewController.customNavBarView.frame) && (CGRectGetMaxY(frame) - 50) < maxY){
                 return vNextCell;
@@ -790,8 +789,8 @@
         return;
     }
 
-    if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-        FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)cell;
+    if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+        FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
         UIView *view = [vCell cell_movieView];
         if ([view isKindOfClass:[TTVPlayVideo class]]) {
             TTVPlayVideo *movieView = (TTVPlayVideo *)view;
