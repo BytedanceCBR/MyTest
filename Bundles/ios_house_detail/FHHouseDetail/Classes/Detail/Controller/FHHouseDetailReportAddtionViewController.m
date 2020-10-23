@@ -511,6 +511,14 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
     self.view.backgroundColor = [UIColor themeWhite];
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = @"房源举报信息补充";
+    [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
+    @weakify(self);
+    [[[RACObserve(self.emptyView, hidden) deliverOnMainThread] distinctUntilChanged] subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        if(![x boolValue]) {
+            [self.view bringSubviewToFront:self.emptyView];
+        }
+    }];
     [self configStatusView];
     
     
@@ -537,7 +545,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
         make.bottom.equalTo(self.submitView.mas_top);
     }];
     
-    @weakify(self);
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:UIKeyboardWillChangeFrameNotification object:nil] deliverOnMainThread] subscribeNext:^(NSNotification * _Nullable notification) {
         @strongify(self);
 
@@ -578,6 +585,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
 
 - (void)loadData {
     
+    [self.emptyView hideEmptyView];
     if(![TTReachability isNetworkConnected]) {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         return;
@@ -591,7 +599,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
         [self endLoading];
         // 处理请求结果
         if(error) {
-            [[ToastManager manager] showToast:@"网络错误，请稍后重试"];
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             return;
         }
         else {
