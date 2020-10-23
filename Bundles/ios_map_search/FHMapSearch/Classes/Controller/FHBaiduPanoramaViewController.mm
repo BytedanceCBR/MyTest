@@ -22,10 +22,10 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import "TTReachability.h"
 #import "ToastManager.h"
+#import <CoreLocation/CLLocation.h>
 
 
-char *const FHBaiduPanoramaPOISearchResultKeyName = "FHBaiduPanoramaPOISearchResultKeyName";
-char *const FHBaiduPanoramaPOISearchResultTypeName = "FHBaiduPanoramaPOISearchResultTypeName";
+char const * FHAmapSearchResultKeyName = "FHBaiduPanoramaPOISearchResultKeyName";
 //高德POI类型 POI相关文档： https://lbs.amap.com/api/ios-sdk/guide/map-data/poi
 NSString * const FHAMapSubwayCode = @"150500";
 NSString * const FHAMapBusCode = @"150700";
@@ -44,11 +44,11 @@ NSString * const FHAMapComplexCode = @"120300";
 @implementation AMapPOISearchBaseRequest (fh_property)
 
 - (void)setFh_keyword:(NSString *)fh_keyword {
-    objc_setAssociatedObject(self, FHBaiduPanoramaPOISearchResultKeyName, fh_keyword, OBJC_ASSOCIATION_COPY);
+    objc_setAssociatedObject(self, FHAmapSearchResultKeyName, fh_keyword, OBJC_ASSOCIATION_COPY);
 }
 
 - (NSString *)fh_keyword {
-    return objc_getAssociatedObject(self, FHBaiduPanoramaPOISearchResultKeyName);
+    return objc_getAssociatedObject(self, FHAmapSearchResultKeyName);
 }
 
 @end
@@ -105,6 +105,7 @@ NSString * const FHAMapComplexCode = @"120300";
 @property (nonatomic) double gaodeLat;
 @property (nonatomic) double gaodeLon;
 
+//均为百度坐标系下的经纬度
 @property (nonatomic) CLLocationCoordinate2D firstLoadPoint;
 @property (nonatomic) CLLocationCoordinate2D point;
 @property (nonatomic) CLLocationCoordinate2D lastPoint;
@@ -259,10 +260,11 @@ NSString * const FHAMapComplexCode = @"120300";
                                                                 CGRectGetWidth(self.view.bounds),
                                                                 120)];
     self.amapView.delegate = self;
-    self.amapView.centerCoordinate = self.point;
+    self.amapView.centerCoordinate =AMapCoordinateConvert(self.point, AMapCoordinateTypeBaidu);
     self.amapView.rotateEnabled = NO;
-    self.amapView.zoomLevel = 18;
+    self.amapView.zoomEnabled = NO;
     self.amapView.showsCompass = NO;
+    self.amapView.zoomLevel = 18;
     [self.amapView setMapType:MAMapTypeStandard];
     self.amapView.layer.masksToBounds = YES;
     self.amapView.layer.cornerRadius = 4.f;
@@ -308,7 +310,6 @@ NSString * const FHAMapComplexCode = @"120300";
     [zoomButton setImage:[UIImage imageNamed:@"baidu_panorama_scale_icon"] forState:UIControlStateNormal];
     [zoomButton addTarget:self action:@selector(zoomButtonAction) forControlEvents:UIControlEventTouchUpInside];
     zoomButton.alpha = 0;
-//    [self.mapView addSubview:zoomButton];
     [self.amapView addSubview:zoomButton];
     self.zoomButton = zoomButton;
     [self.zoomButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -793,23 +794,6 @@ static NSInteger overlayIndex = 0;
     return _gradientImage;
 }
 
-#pragma mark - BMKGeneralDelegate
-/**
- *返回网络错误
- *@param iError 错误号
- */
-- (void)onGetNetworkState:(int)iError {
-    NSLog(@"baidu_onGetNetworkState %d",iError);
-}
-
-/**
- *返回授权验证错误
- *@param iError 错误号 : 为0时验证通过，具体参加BMKPermissionCheckResultCode
- */
-- (void)onGetPermissionState:(int)iError {
-    NSLog(@"baidu_onGetPermissionState %d",iError);
-}
-
 #pragma mark - 全景回调
 /**
  * @abstract 全景图将要加载
@@ -860,7 +844,8 @@ static NSInteger overlayIndex = 0;
                     self.firstLoadPoint = self.point;
                 }
                 self.isZoomMapAnimation = YES;
-                [self.amapView setCenterCoordinate:self.point animated:YES];
+                CLLocationCoordinate2D gaodepoint = AMapCoordinateConvert(self.point, AMapCoordinateTypeBaidu);
+                [self.amapView setCenterCoordinate:gaodepoint animated:YES];
             }
         }
     }
@@ -908,7 +893,7 @@ static NSInteger overlayIndex = 0;
             self.lastPoint = self.point;
             self.point = overlay.coordinate;
             self.isZoomMapAnimation = YES;
-            [self.amapView setCenterCoordinate:self.point animated:YES];
+            [self.amapView setCenterCoordinate:AMapCoordinateConvert(self.point, AMapCoordinateTypeBaidu) animated:YES];
             [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
             break;
         }
@@ -917,11 +902,8 @@ static NSInteger overlayIndex = 0;
 
 //panoEngine
 - (void)panoramaView:(BaiduPanoramaView *)panoramaView didReceivedMessage:(NSDictionary *)dict {
-//    NSLog(@"baidu_panoramaViewdidReceivedMessage:%@",dict);
-    //全景拖动回调
     CGFloat heading = [panoramaView getPanoramaHeading];
     self.headingButton.transform = CGAffineTransformMakeRotation(heading * (M_PI /180.0f));
-//    NSLog(@"baidu_panoramaViewdidReceivedMessage_heading:%f",heading);
 }
 
 #pragma mark - MAMapViewDelegate 高德地图回调
@@ -936,7 +918,9 @@ static NSInteger overlayIndex = 0;
         return;
     }
     self.lastPoint = self.point;
-    [self.panoramaView setPanoramaWithLon:mapView.centerCoordinate.longitude lat:mapView.centerCoordinate.latitude];
+    self.point = [BaiduPanoUtils baiduCoorEncryptLon:mapView.centerCoordinate.longitude lat:mapView.centerCoordinate.latitude coorType:COOR_TYPE_COMMON];
+    
+    [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
 }
 
 #pragma mark - AMapSearchDelegate
@@ -955,12 +939,14 @@ static NSInteger overlayIndex = 0;
  * @param response 响应结果，具体字段参考 AMapReGeocodeSearchResponse 。
  */
 - (void)onReGeocodeSearchDone:(AMapReGeocodeSearchRequest *)request response:(AMapReGeocodeSearchResponse *)response {
+    __block NSString *titleStr = @"";
     dispatch_async(dispatch_get_main_queue(), ^{
-        if (response.regeocode.formattedAddress.length) {
-            self.customNavBarView.title.text = response.regeocode.formattedAddress;
+        if (response.regeocode.addressComponent.streetNumber.street.length) {
+            titleStr = response.regeocode.addressComponent.streetNumber.street;
         } else {
-            self.customNavBarView.title.text = @"未知路段";
+            titleStr = @"未知路段";
         }
+        self.customNavBarView.title.text = titleStr;
     });
 }
 
@@ -981,4 +967,8 @@ static NSInteger overlayIndex = 0;
 //    params[@"event_tracking_id"] = @"70950";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
+
+
 @end
+
+
