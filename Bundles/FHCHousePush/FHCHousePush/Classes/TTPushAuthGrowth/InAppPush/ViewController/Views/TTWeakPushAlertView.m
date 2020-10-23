@@ -226,7 +226,7 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
     CGFloat viewWidth = CGRectGetWidth(self.bounds) > 0 ? CGRectGetWidth(self.bounds) : [self.class defaultViewWidth];
     CGFloat insetLeftOrRight = [TTDeviceUIUtils tt_padding:30.f/2];
     CGFloat insetTopOrBottom = [TTDeviceUIUtils tt_padding:28.f/2];
-    CGFloat titleToDetailLabelInVer = [TTDeviceUIUtils tt_padding:10.f/2];
+    CGFloat titleToDetailLabelInVer = [TTDeviceUIUtils tt_padding:4.f/2];
     CGFloat imageWidthOrHeight = MAX(54.f, [TTDeviceUIUtils tt_padding:108.f/2]);
     CGFloat closeButtonSize = MAX(32.f/2, [TTDeviceUIUtils tt_padding:32.f/2]);
     CGFloat maxTextWidth = viewWidth - insetLeftOrRight * 2 - closeButtonSize - [TTDeviceUIUtils tt_padding:12.f/2];
@@ -826,14 +826,13 @@ static BOOL s_weakPushAlertShowing = NO;
 {
     if (!_detailLabel) {
         _detailLabel = [SSThemedLabel new];
-        _detailLabel.numberOfLines = 2;
+        _detailLabel.numberOfLines = 1;
         _detailLabel.adjustsFontSizeToFitWidth = [TTInAppPushSettings weakAlertAdjustsFontSizeToFitWidth];
         _detailLabel.minimumScaleFactor = 0.8;
         _detailLabel.textAlignment = NSTextAlignmentLeft;
         _detailLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _detailLabel.font = [UIFont themeFontRegular:14];
         _detailLabel.textColor = [UIColor themeGray3];
-        _detailLabel.numberOfLines = 0;
     }
     return _detailLabel;
 }

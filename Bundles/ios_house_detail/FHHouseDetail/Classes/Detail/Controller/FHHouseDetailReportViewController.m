@@ -75,6 +75,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 -(UIImageView *)selectedIconImageView {
     if(!_selectedIconImageView) {
         _selectedIconImageView = [UIImageView new];
+        _selectedIconImageView.userInteractionEnabled = NO;
     }
     return _selectedIconImageView;
 }
@@ -83,6 +84,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         _contentLabel = [UILabel new];
         _contentLabel.textColor = [UIColor themeGray1];
         _contentLabel.font = [UIFont themeFontRegular:14];
+        _contentLabel.numberOfLines = 2;
     }
     return _contentLabel;
 }
@@ -93,14 +95,15 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         
         [self.selectedIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
-            make.left.equalTo(self);
+            make.left.equalTo(self).offset(15);
             make.width.height.mas_equalTo(16);
         }];
         
         [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
             make.left.equalTo(self.selectedIconImageView.mas_right).offset(10);
-            make.top.bottom.right.equalTo(self);
+            make.top.bottom.equalTo(self);
+            make.right.equalTo(self).offset(-15);
         }];
         
         self.isSelected = NO;
@@ -240,6 +243,10 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 - (void)layoutOptions {
     [self removeAllViews];
     
+    [self.contentArea mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self.container);
+    }];
+    
     __block UIView *lastOptionView = nil;
     @weakify(self);
     self.optionViews = [self.item.options btd_map:^id _Nullable(FHHouseDetailReportOption * _Nonnull option) {
@@ -313,7 +320,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         [self.hintLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.bottom.equalTo(self.contentArea);
             make.top.equalTo(self.phoneTextField.mas_bottom).offset(10);
-            make.height.mas_equalTo(17);
+            make.height.mas_equalTo([self.hintLabel.text btd_sizeWithFont:self.hintLabel.font width:SCREEN_WIDTH - 30].height);
         }];
         
         @weakify(self);
@@ -382,6 +389,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         _hintLabel.font = [UIFont themeFontRegular:12];
         _hintLabel.textColor = [UIColor themeGray4];
         _hintLabel.text = @"工作人员将联系您确认房源情况，请保持手机畅通～";
+        _hintLabel.numberOfLines = 0;
     }
     return _hintLabel;
 }
@@ -577,10 +585,13 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
 
 - (NSString *)phoneNumber {
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-    NSString *phoneNumber = (NSString *)[sendPhoneNumberCache objectForKey:kFHPLoginhoneNumberCacheKey];
+    NSString *phoneNumber = (NSString *)[sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
     return phoneNumber;
 }
-
+- (void)savePhoneNumber:(NSString *)phoneNumber {
+    YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+    [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+}
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
         self.houseId = [paramObj.allParams tta_stringForKey:@"house_id"];
@@ -745,6 +756,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         }
         
         if(jsonObj && [jsonObj[@"status"] longValue] == 0) {
+            [self savePhoneNumber:params[@"phone"]];
             [self goBack];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [self showHintView];
