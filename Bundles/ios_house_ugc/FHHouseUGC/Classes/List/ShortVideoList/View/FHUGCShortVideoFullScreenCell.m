@@ -15,7 +15,7 @@
 #import "AWEVideoDetailControlOverlayViewController.h"
 #import "TTAccountManager.h"
 
-@interface FHUGCShortVideoFullScreenCell()<TTVDemandPlayerDelegate,FHShortPlayVideoDelegate>
+@interface FHUGCShortVideoFullScreenCell()<TTVDemandPlayerDelegate>
 @property (nonatomic, strong) TTVPlayerModel *playerModel;
 @property (nonatomic, strong) UIImageView *playImage;
 @end
@@ -66,7 +66,6 @@
     if (!_playerView) {
         FHUGCShortVideoView *playerView = [[FHUGCShortVideoView alloc]init];
         playerView.player.delegate = self;
-        playerView.delegate = self;
         playerView.userInteractionEnabled = NO;;
         [self.contentView addSubview:playerView];
         [playerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -86,18 +85,7 @@
     if(videoAspectRatio >= screenAspectRatio){
         self.playerView.contentMode = UIViewContentModeScaleAspectFill;
     }else{
-//            if ([TTDeviceHelper isIPhoneXDevice]) {
-//                self.videoPlayView.top = self.tt_safeAreaInsets.top;
-//                CGFloat height = CGRectGetHeight(frame) - self.tt_safeAreaInsets.top;
-//                self.videoPlayView.height = ceil(CGRectGetWidth(frame) * 16 / 9);
-//                if(videoAspectRatio >= (16.0 / 9.0)){
-//                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFill;
-//                }else{
-//                    self.videoPlayView.contentMode = UIViewContentModeScaleAspectFit;
-//                }
-//            }else{
             self.playerView.contentMode = UIViewContentModeScaleAspectFit;
-//            }
     }
     
 }
@@ -211,16 +199,6 @@
     self.overlayViewController.playerStateStore = self.playerView.player.playerStateStore;
 }
 
-//- (void)setMovieView:(FHUGCShortVideoView *)movieView
-//{
-//    if (([movieView isKindOfClass:[FHUGCShortVideoView class]] || !movieView)) {
-//        _playerView = movieView;
-//        _playerView.player.delegate = self;
-//        _playerView.delegate = self;
-//        [self settingMovieView:movieView];
-//    }
-//}
-
 - (void)cellWillDisplay {
     
 }
@@ -269,16 +247,6 @@
     }
 }
 
-//- (void)playerOrientationState:(BOOL)isFullScreen {
-//    if(self.cellEntity.hideTitleAndWatchCount){
-//        if(isFullScreen){
-//            [self.movieView.player setVideoTitle:self.cellEntity.originData.title];
-//        }else{
-//            [self.movieView.player setVideoTitle:nil];
-//        }
-//    }
-//}
-
 - (void)actionChangeCallbackWithAction:(TTVPlayerStateAction *)action
 {
     if (![action isKindOfClass:[TTVPlayerStateAction class]]) {
@@ -297,16 +265,11 @@
     }
 }
 
-- (CGRect)ttv_movieViewFrameAfterExitFullscreen {
-//    return self.logo.bounds;
-    return CGRectZero;
-}
 
 - (void)moviePlayFinishedAction{
     if (self.playerView.playerModel.isLoopPlay) {
         [self.playerView.player setLogoImageViewHidden:YES];
         [self.playerView.player play];
-//        self.logo.userInteractionEnabled = NO;
     }
     if ([self.delegate respondsToSelector:@selector(ttv_moviePlayFinished)]) {
         [self.delegate ttv_moviePlayFinished];
