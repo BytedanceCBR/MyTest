@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVCommentViewModel.m
 //  Article
 //
@@ -749,7 +750,7 @@
         label = @"smart_order_comment";
     }
     NSString *tag = [[self getArticle] isImageSubject]?@"slide_detail":@"detail";
-    wrapperTrackEvent(tag, label);
+    [BDTrackerProtocol event:tag label:label];
 }
 
 - (void)sendShowTrackForEmbeddedCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
@@ -775,10 +776,10 @@
     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
     [extra setValue:self.getArticle.itemID forKey:@"item_id"];
     
-    wrapperTrackEventWithCustomKeys(@"fold_comment", @"show", self.getArticle.groupModel.groupID, nil, extra.copy);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment" label:@"show" value:self.getArticle.groupModel.groupID source:nil extraDic:extra.copy];
     
         [extra setValue:@"comment_bottom" forKey:@"position"];
-        wrapperTrackEventWithCustomKeys(@"fold_comment_reason", @"show", self.getArticle.groupModel.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment_reason" label:@"show" value:self.getArticle.groupModel.groupID source:nil extraDic:extra];
 }
 
 @end

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTPhotoDetailViewController.m
 //  Article
 //
@@ -239,7 +240,7 @@
     id value = self.detailModel.article.groupModel.groupID;
     
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        wrapperTrackEventWithCustomKeys(@"go_detail", self.detailModel.clickLabel, value, nil, dic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"go_detail" label:self.detailModel.clickLabel value:value source:nil extraDic:dic];
     }
     
     //log3.0 doubleSending
@@ -994,7 +995,7 @@
     [self.webContainer.webView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
         __unused StrongSelf;
         [wself photoNativeDetailView:nil imagePositionType:TTPhotoDetailImagePositon_NormalImage tapOn:YES];
-        wrapperTrackEvent(@"slide_detail", !wself.tapOn ? @"show_content":@"hide_content");
+        [BDTrackerProtocol event:@"slide_detail" label:!wself.tapOn ? @"show_content":@"hide_content"];
         TTR_CALLBACK_SUCCESS
     } forMethodName:@"toggleGalleryBars"];
 
@@ -1634,7 +1635,7 @@
         NSMutableDictionary *extraDic = [[NSMutableDictionary alloc] initWithCapacity:2];
         [extraDic setValue:@([[TTTrackerProxy sharedProxy] connectionType]) forKey:@"nt"];
         [extraDic setValue:self.detailModel.article.itemID forKey:@"item_id"];
-        wrapperTrackEventWithCustomKeys(@"slide_detail", @"show_follow_button", self.detailModel.article.mediaUserID, nil, extraDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"slide_detail" label:@"show_follow_button" value:self.detailModel.article.mediaUserID source:nil extraDic:extraDic];
     }
 }
 

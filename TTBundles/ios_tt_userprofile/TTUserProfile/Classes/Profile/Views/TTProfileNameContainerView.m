@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTProfileNameContainerView.m
 //  Article
 //
@@ -430,7 +431,7 @@
     // log
     NSArray *logStrings = @[@"enter_mine_followings", @"enter_mine_followers", @"enter_mine_visitor"];
     if (selectedIndex < [logStrings count]) {
-        wrapperTrackEvent(@"mine_tab", [logStrings objectAtIndex:selectedIndex]);
+        [BDTrackerProtocol event:@"mine_tab" label:[logStrings objectAtIndex:selectedIndex]];
     }
 }
 

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ArticleMobileCaptchaViewController.m
 //  Article
 //
@@ -205,13 +206,13 @@
             weakSelf.captchaImage = captchaImage;
             weakSelf.captchaValue = nil;
             if (!error) {
-                wrapperTrackEvent(@"login_register", @"change_mobile_done");
+                [BDTrackerProtocol event:@"login_register" label:@"change_mobile_done"];
                 [weakSelf dismissWaitingIndicatorWithText:NSLocalizedString(@"手机号更换成功", nil)];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [weakSelf backToMainViewControllerAnimated:YES completion:weakSelf.completion];
                 });
             } else {
-                wrapperTrackEvent(@"login_register", @"change_mobile_auth_error");
+                [BDTrackerProtocol event:@"login_register" label:@"change_mobile_auth_error"];
                 
                 if (captchaImage) {
                     [weakSelf dismissWaitingIndicator];

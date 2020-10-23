@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTCategorySelectorView.m
 //  Article
 //
@@ -1292,10 +1293,10 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
 {
     if (_lastContentOffset < scrollView.contentOffset.x) {
         // 导航栏向左拖动
-        wrapperTrackEvent(@"channel_manage", @"flip_left");
+        [BDTrackerProtocol event:@"channel_manage" label:@"flip_left"];
     } else if (_lastContentOffset > scrollView.contentOffset.x) {
         // 导航栏向右拖动
-        wrapperTrackEvent(@"channel_manage", @"flip_right");
+        [BDTrackerProtocol event:@"channel_manage" label:@"flip_right"];
     }
 }
 
@@ -1596,7 +1597,7 @@ static BOOL bNeedTrackFollowCategoryBadgeLog = YES;
         [extra setValue:categoryID forKey:@"category_name"];
         [extra setValue:position forKey:@"position"];
         [extra setValue:style forKey:@"style"];
-        wrapperTrackEventWithCustomKeys(@"tips", label, nil, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"tips" label:label value:nil source:nil extraDic:extra];
     }
 }
 

@@ -255,10 +255,10 @@ static bool isTTCommentPublishing = NO;
 - (void)commentViewShow{
 
     if (!isEmptyString(self.commentSource)) {
-        wrapperTrackEventWithCustomKeys(@"update_detail",  @"comment", nil, self.commentSource, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"comment" value:nil source:self.commentSource extraDic:nil];
     }
     else {
-        wrapperTrackEvent(@"update_detail", @"comment");
+        [BDTrackerProtocol event:@"update_detail" label:@"comment"];
     }
 
 }
@@ -267,10 +267,10 @@ static bool isTTCommentPublishing = NO;
 
     if (self.commentWriteView.emojiInputViewVisible) {
         if (!isEmptyString(self.commentSource)) {
-            wrapperTrackEventWithCustomKeys(@"update_detail",  self.replyCommentModel ? @"reply_replier_cancel" : @"write_cancel", nil, self.commentSource, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:self.replyCommentModel ? @"reply_replier_cancel" : @"write_cancel" value:nil source:self.commentSource extraDic:nil];
         }
         else {
-            wrapperTrackEvent(@"update_detail", self.replyCommentModel ? @"reply_replier_cancel" : @"write_cancel");
+            [BDTrackerProtocol event:@"update_detail" label:self.replyCommentModel ? @"reply_replier_cancel" : @"write_cancel"];
         }
     }
 
@@ -278,11 +278,11 @@ static bool isTTCommentPublishing = NO;
 }
 
 - (void)commentViewCancelPublish {
-    wrapperTrackEvent(@"update_detail", @"reply_replier_cancel");
+    [BDTrackerProtocol event:@"update_detail" label:@"reply_replier_cancel"];
 }
 
 - (void)commentViewClickRepostButton {
-    wrapperTrackEvent(@"update_detail", self.commentWriteView.isCommentRepostedChecked? @"comment_to_article": @"comment_to_article_cancel");
+    [BDTrackerProtocol event:@"update_detail" label:self.commentWriteView.isCommentRepostedChecked? @"comment_to_article": @"comment_to_article_cancel"];
 }
 
 #pragma mark -- private method

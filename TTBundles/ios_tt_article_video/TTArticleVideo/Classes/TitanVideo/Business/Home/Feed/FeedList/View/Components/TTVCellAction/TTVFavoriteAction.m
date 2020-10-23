@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVFavoriteAction.m
 //  Article
 //
@@ -152,7 +153,7 @@
         if (!isEmptyString(tipMsg)) {
             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tipMsg indicatorImage:image autoDismiss:YES dismissHandler:nil];
         }
-        wrapperTrackEvent(@"xiangping", @"video_list_unfavorite");
+        [BDTrackerProtocol event:@"xiangping" label:@"video_list_unfavorite"];
 //        [TTLogManager logEvent:@"click_unfavorite" context:eventContext screenName:screenName];
 
     }
@@ -165,7 +166,7 @@
         if (!isEmptyString(tipMsg)) {
             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tipMsg indicatorImage:image autoDismiss:YES dismissHandler:nil];
         }
-        wrapperTrackEvent(@"xiangping", @"video_list_favorite");
+        [BDTrackerProtocol event:@"xiangping" label:@"video_list_favorite"];
 //        [TTLogManager logEvent:@"click_favorite" context:eventContext screenName:screenName];
     }
 }

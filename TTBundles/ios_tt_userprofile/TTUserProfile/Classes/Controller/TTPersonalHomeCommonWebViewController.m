@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTPersonalHomeCommonWebViewController.m
 //  Article
 //
@@ -161,34 +162,34 @@ extern const CGFloat kSegmentBottomViewHeight;
         if(actionSheet.numberOfButtons == 3) {
             if(buttonIndex == 0 && self.infoModel.is_blocking.integerValue == 1) { //取消拉黑
                 if(self.blockUserBlock) {
-                    wrapperTrackEventWithCustomKeys(@"profile_more", @"deblacklist", self.infoModel.user_id, nil, param);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"profile_more" label:@"deblacklist" value:self.infoModel.user_id source:nil extraDic:param];
                     self.blockUserBlock(NO,self.result);
                 }
             } else if(buttonIndex == 1) { //举报此内容
                 [self.webView report:self.result];
-                wrapperTrackEventWithCustomKeys(@"profile_more", @"report", self.infoModel.user_id, nil, param);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"profile_more" label:@"report" value:self.infoModel.user_id source:nil extraDic:param];
             }
         } else if(actionSheet.numberOfButtons == 4) {
             if(buttonIndex == 0) {
                 if(self.infoModel.is_following.integerValue == 1 && self.actionSheetState == TTPersonalHomeActionSheetStateFollow) {  //取消关注 或者关注
                     if(self.followBlock) {
                         self.followBlock(NO);
-                        wrapperTrackEventWithCustomKeys(@"profile_more", @"update_unfollow", self.infoModel.user_id, nil, param);
+                        [BDTrackerProtocol trackEventWithCustomKeys:@"profile_more" label:@"update_unfollow" value:self.infoModel.user_id source:nil extraDic:param];
                     }
                 } else if(self.infoModel.is_following.integerValue == 0 && self.actionSheetState == TTPersonalHomeActionSheetStateUnFollow){ //关注
                     if(self.followBlock) {
                         self.followBlock(YES);
-                        wrapperTrackEventWithCustomKeys(@"profile_more", @"update_follow", self.infoModel.user_id, nil, param);
+                        [BDTrackerProtocol trackEventWithCustomKeys:@"profile_more" label:@"update_follow" value:self.infoModel.user_id source:nil extraDic:param];
                     }
                 }
             } else if(buttonIndex == 1 && self.infoModel.is_blocking.integerValue == 0) { //拉黑
                 if(self.blockUserBlock) {
-                    wrapperTrackEventWithCustomKeys(@"profile_more", @"click_blacklist", self.infoModel.user_id, nil, param);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"profile_more" label:@"click_blacklist" value:self.infoModel.user_id source:nil extraDic:param];
                     self.blockUserBlock(YES,self.result);
                 }
             } else if(buttonIndex == 2) { //举报此内容
                 [self.webView report:self.result];
-                wrapperTrackEventWithCustomKeys(@"profile_more", @"report", self.infoModel.user_id, nil, param);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"profile_more" label:@"report" value:self.infoModel.user_id source:nil extraDic:param];
             }
         }
     }
