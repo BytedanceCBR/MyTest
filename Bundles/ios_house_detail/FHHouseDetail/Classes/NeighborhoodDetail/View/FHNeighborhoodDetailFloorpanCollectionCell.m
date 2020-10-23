@@ -34,7 +34,7 @@
         self.collectionView.showsHorizontalScrollIndicator = NO;
         self.collectionView.dataSource = self;
         self.collectionView.delegate = self;
-        [self.collectionView registerClass:[FHNeighborhoodDetailFloorpanItemCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel class])];
+        [self.collectionView registerClass:[FHNeighborhoodDetailFloorpanItemCollectionCell class] forCellWithReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodSaleHouseInfoItemModel class])];
 
         [self.contentView addSubview:self.collectionView];
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -79,7 +79,7 @@
             }
         }
     }
-    return [[FHDetailBaseCollectionCell alloc] init];
+    return [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodSaleHouseInfoItemModel class]) forIndexPath:indexPath];
 }
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -164,11 +164,11 @@
 }
 
 -(void)refreshWithData:(id)data {
-    if(self.currentData == data || ![data isKindOfClass:[FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel class]]) {
+    if(self.currentData == data || ![data isKindOfClass:[FHDetailNeighborhoodSaleHouseInfoItemModel class]]) {
         return;
     }
     self.currentData = data;
-    FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel *model =(FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel *) data;
+    FHDetailNeighborhoodSaleHouseInfoItemModel *model =(FHDetailNeighborhoodSaleHouseInfoItemModel *) data;
     
     self.numberLabel.attributedText = nil;
     self.roomLabel.text = nil;
