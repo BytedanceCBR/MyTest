@@ -22,7 +22,6 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import "TTReachability.h"
 #import "ToastManager.h"
-#import <CoreLocation/CLLocation.h>
 
 
 char const * FHAmapSearchResultKeyName = "FHBaiduPanoramaPOISearchResultKeyName";
@@ -334,10 +333,9 @@ NSString * const FHAMapComplexCode = @"120300";
     if (distance < 1.0) {
         return;
     }
-    self.point = [BaiduPanoUtils baiduCoorEncryptLon:self.gaodeLon lat:self.gaodeLat coorType:COOR_TYPE_COMMON];
     self.amapView.zoomLevel = 18;
-    [self.amapView setCenterCoordinate:self.point animated:YES];
-    [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
+    [self.amapView setCenterCoordinate:CLLocationCoordinate2DMake(self.gaodeLat, self.gaodeLon) animated:YES];
+    [self.panoramaView setPanoramaWithLon:self.firstLoadPoint.longitude lat:self.firstLoadPoint.latitude];
 }
 
 - (void)zoomButtonAction {
@@ -869,7 +867,8 @@ static NSInteger overlayIndex = 0;
         self.point = self.lastPoint;
         self.lastPoint = kCLLocationCoordinate2DInvalid;
         self.isZoomMapAnimation = YES;
-        [self.amapView setCenterCoordinate:self.point animated:YES];
+        CLLocationCoordinate2D gaodepoint = AMapCoordinateConvert(self.point, AMapCoordinateTypeBaidu);
+        [self.amapView setCenterCoordinate:gaodepoint animated:YES];
         [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
     }
 }
@@ -913,21 +912,24 @@ static NSInteger overlayIndex = 0;
  * @param animated 是否动画
  */
 - (void)mapView:(MAMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+    NSLog(@"baidu_regionDidChangeAnimated");
     if (self.isZoomMapAnimation) {
         self.isZoomMapAnimation = NO;
         return;
     }
-    self.lastPoint = self.point;
+    
     self.point = [BaiduPanoUtils baiduCoorEncryptLon:mapView.centerCoordinate.longitude lat:mapView.centerCoordinate.latitude coorType:COOR_TYPE_COMMON];
+    NSLog(@"baidu_mapDidMoveByUser");
+    
+    self.lastPoint = self.point;
     
     [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
 }
-
 #pragma mark - AMapSearchDelegate
 
 /**
  * @brief POI查询回调函数
- * @param request  发起的请求，具体字段参考 AMapPOISearchBaseRequest 及其子类。
+ * @param request  发起的请求具体字段参考 AMapPOISearchBaseRequest 及其子类。
  * @param response 响应结果，具体字段参考 AMapPOISearchResponse 。
  */
 - (void)onPOISearchDone:(AMapPOISearchBaseRequest *)request response:(AMapPOISearchResponse *)response {
