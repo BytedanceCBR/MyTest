@@ -225,7 +225,7 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
     
     CGFloat viewWidth = CGRectGetWidth(self.bounds) > 0 ? CGRectGetWidth(self.bounds) : [self.class defaultViewWidth];
     CGFloat insetLeftOrRight = [TTDeviceUIUtils tt_padding:30.f/2];
-    CGFloat insetTopOrBottom = [TTDeviceUIUtils tt_padding:28.f/2];
+    CGFloat insetTopOrBottom = [TTDeviceUIUtils tt_padding:33.f/2];
     CGFloat titleToDetailLabelInVer = [TTDeviceUIUtils tt_padding:4.f/2];
     CGFloat imageWidthOrHeight = MAX(54.f, [TTDeviceUIUtils tt_padding:108.f/2]);
     CGFloat closeButtonSize = MAX(32.f/2, [TTDeviceUIUtils tt_padding:32.f/2]);
