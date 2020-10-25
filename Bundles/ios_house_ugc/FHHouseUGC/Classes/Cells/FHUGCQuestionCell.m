@@ -15,7 +15,7 @@
 
 #define maxLines 3
 #define bottomViewHeight 49
-#define guideViewHeight 27
+#define guideViewHeight 17
 #define topMargin 15
 #define singleImageViewHeight 90
 #define userInfoViewHeight 30

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTMomentProfileShareHelper.m
 //  Article
 //
@@ -84,7 +85,7 @@
                     [[TTThemeManager sharedInstance_tt] switchThemeModeto:TTThemeModeDay];
                     eventID = @"click_to_day";
                 }
-                wrapperTrackEvent(@"profile", eventID);
+                [BDTrackerProtocol event:@"profile" label:eventID];
                 
                 //做一个假的动画效果 让夜间渐变
                 UIView *imageScreenshot = [[TTUIResponderHelper mainWindow] snapshotViewAfterScreenUpdates:NO];

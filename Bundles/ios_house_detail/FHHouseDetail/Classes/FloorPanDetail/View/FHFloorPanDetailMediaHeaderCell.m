@@ -180,6 +180,10 @@
         [weakSelf.headerView scrollToItemAtIndex:currentIndex];
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
     }];
+    [pictureDetailViewController setWillBeginPanBackBlock:^(NSInteger index) {
+        [weakSelf.headerView scrollToItemAtIndex:index];
+    }];
+
     [self trackHeaderViewMediaShowWithIndex:index isLarge:YES];
     self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
     self.pictureDetailVC = pictureDetailViewController;

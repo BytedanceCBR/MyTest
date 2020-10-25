@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ArticleAPNsManager.m
 //  Article
 //
@@ -85,19 +86,19 @@ static ArticleAPNsManager *_sharedManager = nil;
                                 case SSAPNsRelationUpdate:
                                 {
                                     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"profile"] userInfo:TTRouteUserInfoWithDict(@{@"uid" : [userInfo objectForKey:@"uid"]})];
-                                    wrapperTrackEvent(@"apn", @"user_info");
+                                    [BDTrackerProtocol event:@"apn" label:@"user_info"];
                                 }
                                     break;
                                 case SSAPNsRelationRelation:
                                 {
                                     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"relation/follower"]];
-                                    wrapperTrackEvent(@"apn", @"user_follower");
+                                    [BDTrackerProtocol event:@"apn" label:@"user_follower"];
                                 }
                                     break;
                                 case SSAPNsRelationSuggestUsers:
                                 {
                                     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"relation/add_friend"]];
-                                    wrapperTrackEvent(@"apn", @"user_info");
+                                    [BDTrackerProtocol event:@"apn" label:@"user_info"];
                                 }
                                     break;
                                 default:
@@ -117,7 +118,7 @@ static ArticleAPNsManager *_sharedManager = nil;
                                 case SSAPNsActionAccountNotification:
                                 {
                                     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"notification"]];
-                                    wrapperTrackEvent(@"apn", @"comment");
+                                    [BDTrackerProtocol event:@"apn" label:@"comment"];
                                 }
                                     break;
                                     
@@ -171,24 +172,24 @@ static ArticleAPNsManager *_sharedManager = nil;
 {
     // 为了兼容头条之前的统计事件，根据页面优先处理这些page，其他情况下发送event:apn, label:{pageName}
     if ([pageName isEqualToString:@"profile"] || [pageName isEqualToString:@"add_friend"]) {
-        wrapperTrackEvent(@"apn", @"user_info");
+        [BDTrackerProtocol event:@"apn" label:@"user_info"];
     }
     else if ([pageName isEqualToString:@"relation/follower"]) {
-        wrapperTrackEvent(@"apn", @"user_follower");
+        [BDTrackerProtocol event:@"apn" label:@"user_follower"];
     }
     else if ([pageName isEqualToString:@"notification"]) {
         if ([params.allKeys containsObject:@"source"]) {
-            wrapperTrackEvent(@"apn", [params objectForKey:@"source"]);
+            [BDTrackerProtocol event:@"apn" label:[params objectForKey:@"source"]];
         }
         else {
-            wrapperTrackEvent(@"apn", @"comment");
+            [BDTrackerProtocol event:@"apn" label:@"comment"];
         }
     }
     else if ([pageName isEqualToString:@"detail"]) {
         [self sendTrackEvent:@"apn" lable:@"notice" value:[params objectForKey:@"groupid"]];
     }
     else {
-        wrapperTrackEvent(@"apn", pageName);
+        [BDTrackerProtocol event:@"apn" label:pageName];
     }
 }
 

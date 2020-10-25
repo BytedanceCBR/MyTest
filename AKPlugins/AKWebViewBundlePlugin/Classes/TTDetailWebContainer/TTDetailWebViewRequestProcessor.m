@@ -78,19 +78,19 @@
             NSString *action = [parameters objectForKey:@"action"];
             if([action isEqualToString:@"digg"])
             {
-                wrapperTrackEvent(@"detail", @"click_digg_users");
+                [BDTrackerProtocol event:@"detail" label:@"click_digg_users"];
             }
             else if([action isEqualToString:@"bury"])
             {
-                wrapperTrackEvent(@"detail", @"click_bury_users");
+                [BDTrackerProtocol event:@"detail" label:@"click_bury_users"];
             }
             else if([action isEqualToString:@"repin"])
             {
-                wrapperTrackEvent(@"detail", @"click_favorite_users");
+                [BDTrackerProtocol event:@"detail" label:@"click_favorite_users"];
             }
             else if ([action isEqualToString:@"pgc"])
             {
-                wrapperTrackEvent(@"detail", @"click_pgc_user_profile");
+                [BDTrackerProtocol event:@"detail" label:@"click_pgc_user_profile"];
             }
             shouldStartLoad = NO;
         }
@@ -104,7 +104,7 @@
                 [_delegate processRequestOpenWebViewUseURL:[TTStringHelper URLWithURLString:sourceURL] supportRotate:NO];
             }
             shouldStartLoad = NO;
-            wrapperTrackEvent(@"detail", @"click_source");
+            [BDTrackerProtocol event:@"detail" label:@"click_source"];
         }
         else if ([requestURL.host isEqualToString:kDownloadAppHost]) {
             NSDictionary * parameters = [TTStringHelper parametersOfURLString:requestURL.query];
@@ -136,7 +136,7 @@
                 [_delegate processRequestShowPGCProfileWithParams:parameters];
             }
             shouldStartLoad = NO;
-            wrapperTrackEvent(@"detail", @"click_web_header");
+            [BDTrackerProtocol event:@"detail" label:@"click_web_header"];
         }
         else if ([requestURL.host isEqualToString:kKeyWordsHost]) {
             NSDictionary * parameters = [TTStringHelper parametersOfURLString:requestURL.query];

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailNatantPGCAuthorView.m
 //  Article
 //
@@ -371,9 +372,9 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
     NSString *unEvent = [self.viewModel isVideoSourceUGCVideo] ? @"detail_unsubscribe_ugc" : @"detail_unsubscribe_pgc";
     NSString *doEvent = [self.viewModel isVideoSourceUGCVideo] ? @"detail_subscribe_ugc" : @"detail_subscribe_pgc";
     if (hasSubscribed) {
-        wrapperTrackEventWithCustomKeys(@"video", unEvent, contentID, nil, extraDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:unEvent value:contentID source:nil extraDic:extraDic];
     } else {
-        wrapperTrackEventWithCustomKeys(@"video", doEvent, contentID, nil, extraDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:doEvent value:contentID source:nil extraDic:extraDic];
     }
     
     BOOL isRedPacketSender = NO;
@@ -546,12 +547,12 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
     if (self.isSpread) {
         NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
         [extra setValue:self.viewModel.pgcModel.itemId forKey:@"item_id"];
-        wrapperTrackEventWithCustomKeys(@"video_detail", @"click_arrow_up", nil, @"video_detail", extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video_detail" label:@"click_arrow_up" value:nil source:@"video_detail" extraDic:extra];
     }
     else {
         NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
         [extra setValue:self.viewModel.pgcModel.itemId forKey:@"item_id"];
-        wrapperTrackEventWithCustomKeys(@"video_detail", @"click_arrow_down", nil, @"video_detail", extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video_detail" label:@"click_arrow_down" value:nil source:@"video_detail" extraDic:extra];
     }
     [UIView animateWithDuration:0.25f animations:^{
 //        self.arrowTag.alpha = self.isSpread ? 0 : 1;

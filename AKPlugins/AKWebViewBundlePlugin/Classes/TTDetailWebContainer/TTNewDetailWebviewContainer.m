@@ -555,7 +555,7 @@ static CGFloat kProfileFillBubbleHeight = 66.f;
             [_delegate processRequestOpenWebViewUseURL:requestURL supportRotate:NO];
         }
     }
-    wrapperTrackEvent(@"detail", @"open_url");
+    [BDTrackerProtocol event:@"detail" label:@"open_url"];
 }
 
 - (void)DOMContentHeightHasChangedWithRequset:(NSURL *)requestURL {
@@ -637,10 +637,10 @@ static CGFloat kProfileFillBubbleHeight = 66.f;
     
     if (originStatus != _footerStatus) {
         if (_footerStatus == TTDetailWebViewFooterStatusDisplayHalf && originStatus == TTDetailWebViewFooterStatusNoDisplay) {
-            wrapperTrackEvent(@"detail", @"pull_open_drawer");
+            [BDTrackerProtocol event:@"detail" label:@"pull_open_drawer"];
         }
         else if (_footerStatus == TTDetailWebViewFooterStatusNoDisplay && originStatus == TTDetailWebViewFooterStatusDisplayHalf) {
-            wrapperTrackEvent(@"detail", @"pull_close_drawer");
+            [BDTrackerProtocol event:@"detail" label:@"pull_close_drawer"];
         }
     }
     

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ArticleCityViewController.m
 //  Article
 //
@@ -121,7 +122,7 @@
 
 - (void)backButtonClicked:(id)sender
 {
-    wrapperTrackEvent(@"category_nav", @"local_news_setting_cancel");
+    [BDTrackerProtocol event:@"category_nav" label:@"local_news_setting_cancel"];
     UINavigationController *nav = [TTUIResponderHelper topNavigationControllerFor: self];
     [nav popViewControllerAnimated:YES];
 }

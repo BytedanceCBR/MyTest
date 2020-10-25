@@ -517,7 +517,7 @@ UIGestureRecognizerDelegate
     }
     
     if (![smsCodeString tt_isValidSMSCode]) {
-        wrapperTrackEvent(@"login_register", @"binding_login_noauth");
+        [BDTrackerProtocol event:@"login_register" label:@"binding_login_noauth"];
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"友情提示", nil) message:NSLocalizedString(@"请输入正确的验证码", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
             [self.smsCodeTextField becomeFirstResponder];
@@ -538,7 +538,7 @@ UIGestureRecognizerDelegate
             // 绑定成功
             [self dismissWaitingIndicatorWithText:NSLocalizedString(@"手机号绑定成功", nil)];
             
-            wrapperTrackEvent(@"login_register", @"binding_success");
+            [BDTrackerProtocol event:@"login_register" label:@"binding_success"];
             
             // TODO:
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -559,7 +559,7 @@ UIGestureRecognizerDelegate
             // 绑定失败
             [self dismissWaitingIndicatorWithText:NSLocalizedString(@"手机号绑定失败", nil)];
             
-            wrapperTrackEvent(@"login_register", @"binding_login_error");
+            [BDTrackerProtocol event:@"login_register" label:@"binding_login_error"];
             
             if (captchaImage) {
                 [self dismissWaitingIndicator];
@@ -575,7 +575,7 @@ UIGestureRecognizerDelegate
 - (void)switchBindMobile:(NSError *)error
 {
     //绑定手机号时提示已绑定其他账号
-    wrapperTrackEvent(@"login", @"binding_mobile_error");
+    [BDTrackerProtocol event:@"login" label:@"binding_mobile_error"];
     
     WeakSelf;
     TTAccountAlertView *alert = [[TTAccountAlertView alloc] initWithTitle:[error.userInfo objectForKey:@"description"] message:[error.userInfo objectForKey:@"dialog_tips"] cancelBtnTitle:@"取消" confirmBtnTitle:@"放弃原账号" animated:YES tapCompletion:^(TTAccountAlertCompletionEventType type) {
@@ -952,14 +952,14 @@ UIGestureRecognizerDelegate
         __weak typeof(self) weakSelf = self;
         
         _privacyView.viewPrivacyHandler = ^() {
-            wrapperTrackEvent(@"login_register", @"click_privacy");
+            [BDTrackerProtocol event:@"login_register" label:@"click_privacy"];
             
             [UIApplication openPrivacyProtectionFromViewController:weakSelf.navigationController
                                                       useBarHeight:NO];
         };
         
         _privacyView.viewUserAgreementHandler = ^() {
-            wrapperTrackEvent(@"login_register", @"click_agreement");
+            [BDTrackerProtocol event:@"login_register" label:@"click_agreement"];
             
             [UIApplication openUserAgreementFromViewController:weakSelf.navigationController
                                                   useBarHeight:NO];

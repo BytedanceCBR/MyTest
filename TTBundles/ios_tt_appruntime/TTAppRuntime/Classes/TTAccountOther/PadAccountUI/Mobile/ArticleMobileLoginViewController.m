@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ArticleLoginViewController.m
 //  Article
 //
@@ -245,21 +246,21 @@
 - (void)_gotoRetrieveViewControllerWithAlertTitle:(NSString *)alertTitle {
     TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:alertTitle message:nil preferredType:TTThemedAlertControllerTypeAlert];
     [alert addActionWithTitle:NSLocalizedString(@"取消", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-        wrapperTrackEvent(@"login_register", @"login_pop_cancel");
+        [BDTrackerProtocol event:@"login_register" label:@"login_pop_cancel"];
     }];
     [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         ArticleMobileNumberViewController *viewController =
         [[ArticleMobileNumberViewController alloc] initWithMobileNumberUsingType:ArticleMobileNumberUsingTypeRetrieve];
         viewController.mobileNumber = self.mobileField.text;
         [self.navigationController pushViewController:viewController animated:YES];
-        wrapperTrackEvent(@"login_register", @"login_pop_confirm");
+        [BDTrackerProtocol event:@"login_register" label:@"login_pop_confirm"];
     }];
     [alert showFrom:self animated:YES];
 }
 
 - (void)registerActionFired:(id)sender {
     /////// 友盟统计
-    wrapperTrackEvent(@"login_register", @"click_register");
+    [BDTrackerProtocol event:@"login_register" label:@"click_register"];
     NSArray *viewControllers = self.navigationController.viewControllers;
     if (viewControllers.count >= 2) {
         ArticleMobileNumberViewController *viewController = viewControllers[[viewControllers indexOfObject:self] - 1];
@@ -280,7 +281,7 @@
 
 - (void)retrieveActionFired:(id)sender {
     /////// 友盟统计
-    wrapperTrackEvent(@"login_register", @"forget_password");
+    [BDTrackerProtocol event:@"login_register" label:@"forget_password"];
     ArticleMobileNumberViewController *viewController =
     [[ArticleMobileNumberViewController alloc] initWithMobileNumberUsingType:ArticleMobileNumberUsingTypeRetrieve];
     viewController.mobileNumber = self.mobileField.text;

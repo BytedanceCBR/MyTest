@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVFeedListViewController.m
 //  Article
 //
@@ -582,7 +583,7 @@ TTRefreshViewDelegate>
     }
     label = [self modifyEventLabelForRefreshEvent:label categoryModel:category];
 
-    wrapperTrackEvent(event, label);
+    [BDTrackerProtocol event:event label:label];
 }
 
 - (void)clickVideoTabbarWithCategory:(TTCategory *)category hasTip:(BOOL)hasTip
@@ -603,7 +604,7 @@ TTRefreshViewDelegate>
     }
     label = [self modifyEventLabelForRefreshEvent:label categoryModel:category];
 
-    wrapperTrackEvent(event, label);
+    [BDTrackerProtocol event:event label:label];
 
 }
 
@@ -1777,7 +1778,7 @@ TTRefreshViewDelegate>
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setValue:self.categoryID forKey:@"category_id"];
     [dict setValue:[NSNumber numberWithInteger:self.refer] forKey:@"refer"];
-    wrapperTrackEventWithCustomKeys(@"category", label, nil, nil, dict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"category" label:label value:nil source:nil extraDic:dict];
 }
 
 - (BOOL)isCategoryWithHeadInfo
@@ -2219,7 +2220,7 @@ TTRefreshViewDelegate>
             [TTTrackerWrapper eventData:tipRefreshTrackerDic];
         }
     }
-    wrapperTrackEvent(@"category", @"refresh_tip_all");
+    [BDTrackerProtocol event:@"category" label:@"refresh_tip_all"];
 }
 
 - (void)hideRemoteReloadTip {

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTCommentDetailHeader.m
 //  Article
 //
@@ -330,7 +331,7 @@
         self.contentLabel.backgroundColor = [UIColor colorWithHexString:[[TTThemeManager sharedInstance_tt] selectFromDayColorName:@"d4d4d4" nightColorName:@"353535"]];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willHideMenu) name:UIMenuControllerWillHideMenuNotification object:nil];
-        wrapperTrackEvent(@"update_detail", @"longpress");
+        [BDTrackerProtocol event:@"update_detail" label:@"longpress"];
     }
 }
 
@@ -357,18 +358,18 @@
 
 - (void)customCopy:(__unused id)sender {
     [[UIPasteboard generalPasteboard] setString:self.richSpanText.text];
-    wrapperTrackEvent(self.trackTag, @"longpress_copy");
+    [BDTrackerProtocol event:self.trackTag label:@"longpress_copy"];
 }
 
 - (void)avatarViewOnClick:(id)sender {
-    wrapperTrackEvent(self.trackTag, @"click_avatar");
+    [BDTrackerProtocol event:self.trackTag label:@"click_avatar"];
     if (self.delegate && [self.delegate respondsToSelector:@selector(dynamicDetailHeader:avatarViewOnClick:)]) {
         [self.delegate dynamicDetailHeader:self avatarViewOnClick:sender];
     }
 }
 
 - (void)nameViewOnClick:(id)sender {
-    wrapperTrackEvent(self.trackTag, @"click_name");
+    [BDTrackerProtocol event:self.trackTag label:@"click_name"];
     if (self.delegate && [self.delegate respondsToSelector:@selector(dynamicDetailHeader:nameViewOnClick:)]) {
         [self.delegate dynamicDetailHeader:self nameViewOnClick:sender];
     }
@@ -394,21 +395,21 @@
 }
 
 - (void)blockButtonOnClick:(id)sender {
-    wrapperTrackEvent(self.trackTag, @"click_deblacklist");
+    [BDTrackerProtocol event:self.trackTag label:@"click_deblacklist"];
     if (self.delegate && [self.delegate respondsToSelector:@selector(dynamicDetailHeader:blockButtonOnClick:)]) {
         [self.delegate dynamicDetailHeader:self blockButtonOnClick:sender];
     }
 }
 
 - (void)deleteButtonOnClick:(id)sender {
-    wrapperTrackEvent(self.trackTag, @"delete");
+    [BDTrackerProtocol event:self.trackTag label:@"delete"];
     if (self.delegate && [self.delegate respondsToSelector:@selector(dynamicDetailHeader:deleteButtonOnClick:)]) {
         [self.delegate dynamicDetailHeader:self deleteButtonOnClick:sender];
     }
 }
 
 - (void)reportButtonOnClick:(id)sender {
-    wrapperTrackEvent(self.trackTag, @"report");
+    [BDTrackerProtocol event:self.trackTag label:@"report"];
     if (self.delegate && [self.delegate respondsToSelector:@selector(dynamicDetailHeader:reportButtonOnClick:)]) {
         [self.delegate dynamicDetailHeader:self reportButtonOnClick:sender];
     }

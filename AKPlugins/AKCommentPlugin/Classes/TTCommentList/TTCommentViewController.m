@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTCommentViewController.m
 //  Article
 //
@@ -369,7 +370,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
         BOOL success = !error;
         [sself.commentTableView finishPullUpWithSuccess:success];
     }];
-    wrapperTrackEvent(@"detail", @"comment_loadmore");
+    [BDTrackerProtocol event:@"detail" label:@"comment_loadmore"];
 }
 
 - (void)p_reloadCommentTableHeaderView {
@@ -521,7 +522,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     if (!TTNetworkConnected()) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"没有网络连接" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
     } else {
-        wrapperTrackEvent(@"comment", @"delete_confirm");
+        [BDTrackerProtocol event:@"comment" label:@"delete_confirm"];
         
         if (isOtherComment) {
             [[TTCommentDataManager sharedManager] deleteCommentByAuthorWithCommentID:commentID groupID:[self.commentViewModel.dataSource tt_groupModel].groupID finishBlock:^(NSError *error) {
@@ -823,7 +824,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
         if ([model isKindOfClass:[TTCommentModel class]]) {
             TTCommentModel *comment = ((TTCommentModel *)[modelArray objectAtIndex:rightIndex]);
             if (self.commentViewModel.goTopicDetail) {
-                wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", comment.commentID.stringValue, nil, @{@"ext_value": @"3", @"source": @"1"});
+                [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:comment.commentID.stringValue source:nil extraDic:@{@"ext_value": @"3", @"source": @"1"}];
                 [self p_sendEnterCommentDetailTracker:model];
                 if (!_delegate || ![_delegate respondsToSelector:@selector(tt_commentViewController:shouldPresentCommentDetailViewControllerWithCommentModel:indexPath:showKeyBoard:)] || ![_delegate tt_commentViewController:self shouldPresentCommentDetailViewControllerWithCommentModel:comment indexPath:indexPath showKeyBoard:NO]) {
                     //置顶评论 强制弹键盘, 其他 0评时才弹
@@ -840,7 +841,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
                     [self.delegate tt_commentViewController:self didClickCommentCellWithCommentModel:clickCommentModel];
                 }
             }
-            wrapperTrackEvent(@"comment", @"click_comment");
+            [BDTrackerProtocol event:@"comment" label:@"click_comment"];
         }
     }
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -910,8 +911,9 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     if (self.commentViewModel.goTopicDetail) {
         NSIndexPath *indexPath = [self.commentTableView indexPathForCell:view];
         if (indexPath) {
-            wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", model.commentID.stringValue, nil, @{@"ext_value": @"3",
-                                                                                      @"source": @"3"});
+//            wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", model.commentID.stringValue, nil, @{@"ext_value": @"3",
+//                                                                                      @"source": @"3"});
+            [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:model.commentID.stringValue source:nil extraDic:@{@"ext_value": @"3", @"source": @"3"}];
             [self p_sendEnterCommentDetailTracker:model];
             if (!_delegate || ![_delegate respondsToSelector:@selector(tt_commentViewController:shouldPresentCommentDetailViewControllerWithCommentModel:indexPath:showKeyBoard:)] || ![_delegate tt_commentViewController:self shouldPresentCommentDetailViewControllerWithCommentModel:model indexPath:indexPath showKeyBoard:YES]) {
                 [self showMomentDetailViewWithComment:model atIndexPath:indexPath showWriteComment:model.isStick];
@@ -952,8 +954,8 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
 - (void)tt_commentCell:(UITableViewCell *)view replyListClickedWithModel:(id<TTCommentModelProtocol>)model {
     NSIndexPath *indexPath = [_commentTableView indexPathForCell:view];
     if (indexPath) {
-        wrapperTrackEvent(@"comment", @"click_outcomment");
-        wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", model.commentID.stringValue, nil, @{@"ext_value": @"3",@"source": @"2"});
+        [BDTrackerProtocol event:@"comment" label:@"click_outcomment"];
+        [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:model.commentID.stringValue source:nil extraDic:@{@"ext_value": @"3",@"source": @"2"}];
         [self p_sendEnterCommentDetailTracker:model];
         if (!_delegate || ![_delegate respondsToSelector:@selector(tt_commentViewController:shouldPresentCommentDetailViewControllerWithCommentModel:indexPath:showKeyBoard:)] || ![_delegate tt_commentViewController:self shouldPresentCommentDetailViewControllerWithCommentModel:model indexPath:indexPath showKeyBoard:YES]) {
             [self showMomentDetailViewWithComment:model atIndexPath:indexPath showWriteComment:model.isStick];
@@ -1069,7 +1071,7 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
         }
         self.needDeleteCommentModel = nil;
         if (buttonIndex == actionSheet.cancelButtonIndex) {
-            wrapperTrackEvent(@"comment", @"delete_cancel");
+            [BDTrackerProtocol event:@"comment" label:@"delete_cancel"];
         }
     }
 }

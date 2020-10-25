@@ -167,7 +167,7 @@
     } else {
         eventID = fontArray[0];
     }
-    wrapperTrackEvent(@"detail", eventID);
+    [BDTrackerProtocol event:@"detail" label:eventID];
     
     //详情页业务中收到notification后发送
     //    [TTLogManager logEvent:[NSString stringWithFormat:@"set_%@", eventID] context:nil screenName:nil];

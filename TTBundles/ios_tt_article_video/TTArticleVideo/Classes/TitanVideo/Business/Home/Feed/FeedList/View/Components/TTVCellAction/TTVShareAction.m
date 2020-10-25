@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVShareAction.m
 //  Article
 //
@@ -53,7 +54,7 @@ extern BOOL ttvs_isVideoCellShowShareEnabled(void);
     if (ttvs_isVideoCellShowShareEnabled()) {
         extValueDic[@"bar"] = @"button_seat";
     }
-    wrapperTrackEventWithCustomKeys(tag, label, group_id, @"video", extValueDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:group_id source:@"video" extraDic:extValueDic];
 
 }
 
