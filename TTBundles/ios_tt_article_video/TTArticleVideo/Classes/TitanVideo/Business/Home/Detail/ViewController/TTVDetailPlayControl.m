@@ -40,12 +40,12 @@
 #import "TTVVideoInformationResponse+TTVArticleProtocolSupport.h"
 
 #import "TTADVideoMZTracker.h"
-#import "TTVCommodityView.h"
-#import "TTVCommodityButtonView.h"
-#import "TTVCommodityFloatView.h"
-#import "TTVPasterPlayer.h"
-#import "TTVMidInsertADPlayer.h"
-#import "AKAwardCoinVideoMonitorManager.h"
+//#import "TTVCommodityView.h"
+//#import "TTVCommodityButtonView.h"
+//#import "TTVCommodityFloatView.h"
+//#import "TTVPasterPlayer.h"
+//#import "TTVMidInsertADPlayer.h"
+//#import "AKAwardCoinVideoMonitorManager.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <objc/runtime.h>
 
@@ -53,13 +53,13 @@ extern NSInteger ttvs_isVideoShowOptimizeShare(void);
 extern NSInteger ttvs_isVideoShowDirectShare(void);
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
-@interface TTVDetailPlayControl ()<TTVDemandPlayerDelegate, TTVCommodityViewDelegate ,TTVCommodityButtonViewDelegate>
+@interface TTVDetailPlayControl ()<TTVDemandPlayerDelegate>
 @property (nonatomic, assign) BOOL movieViewInitiated;
 @property (nonatomic, assign) BOOL isInactive;
 @property (nonatomic, strong) TTVPlayVideo *movieView;
 @property(nonatomic, strong)TTVDemandPlayerContext *context;
 @property(nonatomic, weak)TTVDetailContentEntity *entity;
-@property (nonatomic, strong) TTVCommodityView *commodityView;
+//@property (nonatomic, strong) TTVCommodityView *commodityView;
 @end
 
 
@@ -385,7 +385,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 - (void)resumeMovie
 {
-    if (self.movieView) {
+    if (self.movieView && !self.movieView.hidden) {
 //        if ([self.movieView.player.pasterPlayer hasPasterAd]) {
 //            [self.movieView.player.pasterPlayer play];
 //        }else{
@@ -399,9 +399,9 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     }
     else
     {
-        if (self.commodityView.superview != self.movieView/* && ![TTRedPacketManager sharedManager].isShowingRedpacketView*/) {
+//        if (self.commodityView.superview != self.movieView/* && ![TTRedPacketManager sharedManager].isShowingRedpacketView*/) {
             [self playButtonClicked];
-        }
+//        }
     }
     
 }
@@ -456,42 +456,42 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     return NO;
 }
 
-- (void)addCommodity
-{
-    if ([TTDeviceHelper isPadDevice]) {
-        return;
-    }
-    [self.commodityView ttv_removeFromSuperview];
-    TTVCommodityView *commodity = nil;
-    if (self.movieView.superview) {
-        commodity = [[TTVCommodityView alloc] initWithFrame:self.movieView.bounds];
-        commodity.videoID = self.videoInfo.videoID;
-        commodity.groupID = self.videoInfo.groupModel.groupID;
-        commodity.position = [self getCommodityPosition];
-        commodity.playVideo = self.movieView;
-//        [self.movieView.player setCommodityView:commodity];
-    }
-    commodity.delegate = self;
-    [commodity setCommoditys:self.videoInfo.commoditys];
+//- (void)addCommodity
+//{
+//    if ([TTDeviceHelper isPadDevice]) {
+//        return;
+//    }
+//    [self.commodityView ttv_removeFromSuperview];
+//    TTVCommodityView *commodity = nil;
+//    if (self.movieView.superview) {
+//        commodity = [[TTVCommodityView alloc] initWithFrame:self.movieView.bounds];
+//        commodity.videoID = self.videoInfo.videoID;
+//        commodity.groupID = self.videoInfo.groupModel.groupID;
+//        commodity.position = [self getCommodityPosition];
+//        commodity.playVideo = self.movieView;
+////        [self.movieView.player setCommodityView:commodity];
+//    }
+//    commodity.delegate = self;
+//    [commodity setCommoditys:self.videoInfo.commoditys];
+//
+//    [commodity showCommodity];
+//    self.commodityView = commodity;
+//}
 
-    [commodity showCommodity];
-    self.commodityView = commodity;
-}
-
-- (NSString *)getCommodityPosition
-{
-    if (self.movieView && [self.movieView.player.context isFullScreen]) {
-        return @"fullscreen";
-    }
-    return @"detail";
-}
+//- (NSString *)getCommodityPosition
+//{
+//    if (self.movieView && [self.movieView.player.context isFullScreen]) {
+//        return @"fullscreen";
+//    }
+//    return @"detail";
+//}
 
 #pragma mark - TTVCommodityViewDelegate
 
-- (void)commodityViewClosed
-{
-    
-}
+//- (void)commodityViewClosed
+//{
+//
+//}
 
 - (void)viewWillAppear
 {
@@ -657,7 +657,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     [self.movieShotView refreshUI];
     [self ttv_configADFinishedView:(TTVPlayerTipAdFinished *)self.movieView.player.tipCreator.tipFinishedView];
     
-    [[AKAwardCoinVideoMonitorManager shareInstance] monitorVideoWith:movie];
+//    [[AKAwardCoinVideoMonitorManager shareInstance] monitorVideoWith:movie];
 }
 
 

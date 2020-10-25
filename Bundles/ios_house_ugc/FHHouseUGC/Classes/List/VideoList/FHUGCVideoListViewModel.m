@@ -537,6 +537,12 @@
     }
 }
 
+- (void)lazyStartVideoPlay {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self startVideoPlay];
+    });
+}
+
 - (void)startVideoPlay {
     if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive || !self.isViewAppear) {
         return;
@@ -559,7 +565,10 @@
     if(videoCell){
         videoCell.contentView.userInteractionEnabled = YES;
         self.currentVideoCell = videoCell;
+        [self lazyStartVideoPlay];
     }
+    
+    
 }
 
 - (void)autoPlayCurrentVideo {

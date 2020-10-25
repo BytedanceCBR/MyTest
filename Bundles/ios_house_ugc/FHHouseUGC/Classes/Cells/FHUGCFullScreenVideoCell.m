@@ -49,7 +49,6 @@
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCToolView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
-@property(nonatomic ,assign) CGFloat videoViewheight;
 @property(nonatomic ,strong) TTVFeedCellMoreActionManager *moreActionMananger;
 @property(nonatomic ,strong) NSTimer *mutedBtnCloseTimer;
 @property(nonatomic ,strong) UIButton *muteBtn;
@@ -123,8 +122,7 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.videoViewheight = (screenWidth - leftMargin - rightMargin) * 188.0/335.0;
-    self.videoView = [[FHUGCVideoView alloc] initWithFrame:CGRectMake(0, 0, screenWidth - leftMargin - rightMargin, self.videoViewheight)];
+    self.videoView = [[FHUGCVideoView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, ceil(screenWidth * 211.0/375.0))];
     _videoView.userInteractionEnabled = NO;
     [self.contentView addSubview:_videoView];
     
@@ -181,14 +179,10 @@
     self.contentLabel.width = screenWidth - 30;
     self.contentLabel.height = 0;
     
-    [self.videoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(ceil(screenWidth * 211.0/375.0));
-    }];
-    
-    [self.videoView layoutIfNeeded];
+    self.videoView.top = self.icon.bottom + 10;
+    self.videoView.left = 0;
+    self.videoView.width = screenWidth;
+    self.videoView.height = ceil(screenWidth * 211.0/375.0);
     
     self.bottomView.left = 0;
     self.bottomView.top = self.videoView.bottom;
@@ -241,15 +235,11 @@
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
         self.contentLabel.height = 0;
-        [self.videoView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.icon.mas_bottom).offset(8);
-        }];
+        self.videoView.top = self.icon.bottom + 8;
     }else{
         self.contentLabel.hidden = NO;
         self.contentLabel.height = cellModel.contentHeight;
-        [self.videoView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.icon.mas_bottom).offset(16 + cellModel.contentHeight);
-        }];
+        self.videoView.top = self.icon.bottom + 16 + cellModel.contentHeight;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     //处理视频
@@ -276,7 +266,6 @@
     //设置底部
     [self.bottomView refreshWithdata:self.cellModel];
     
-    [self layoutIfNeeded];
     self.bottomView.top = self.videoView.bottom;
     self.mutedBgView.top = self.bottomView.top - 34;
     [self updateVideoLeftTime:self.cellModel.videoItem.durationTimeString];
