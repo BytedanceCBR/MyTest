@@ -22,6 +22,7 @@
 #import "TTBusinessManager+StringUtils.h"
 #import "TTUserInfoView.h"
 #import "TTTabBarProvider.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kAvatarViewNormalWidth              36
 #define kAvatarViewHeight                   [TTDeviceUIUtils tt_paddingForMoment:36]
@@ -218,10 +219,10 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"avatar" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"avatar" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
     }
-    wrapperTrackEvent(@"update_detail",@"click_avatar");
+    [BDTrackerProtocol event:@"update_detail" label:@"click_avatar"];
     [self goToUserProfileView];
 }
 
@@ -232,10 +233,10 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"avatar" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"avatar" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
     }
-    wrapperTrackEvent(@"update_detail", @"click_name");
+    [BDTrackerProtocol event:@"update_detail" label:@"click_name"];
     [self goToUserProfileView];
 }
 

@@ -22,6 +22,7 @@
 #import "TTDeviceHelper.h"
 #import "ArticleMomentGroupModel.h"
 #import "TTTabBarProvider.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kNoDiggUsersAndCommentItemBottomPadding 10
 #define KHasCommentItemBottomPadding 10
@@ -190,7 +191,7 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"comment" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"comment" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
     }
     
@@ -287,7 +288,7 @@
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.momentModel.ID forKey:@"item_id"];
             [extra setValue:self.momentModel.group.ID forKey:@"value"];
-            [TTTrackerWrapper event:@"micronews_tab" label:@"reply" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"reply" value:nil extValue:nil extValue2:nil dict:[extra copy]];
         }
     }
     
@@ -316,11 +317,11 @@
             else {
                 if (_needDeleteCommentModel) {
                     if (self.sourceType == ArticleMomentSourceTypeMoment) {
-                        wrapperTrackEvent(@"delete", @"reply_update");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_update"];
                     } else if (self.sourceType == ArticleMomentSourceTypeForum) {
-                        wrapperTrackEvent(@"delete", @"reply_post");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_post"];
                     } else if (self.sourceType == ArticleMomentSourceTypeProfile) {
-                        wrapperTrackEvent(@"delete", @"reply_profile");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_profile"];
                     }
                     
                     [[ExploreDeleteManager shareManager] deleteMomentCommentForCommentID:[NSString stringWithFormat:@"%@", _needDeleteCommentModel.ID]];

@@ -13,6 +13,7 @@
 #import "TTNavigationController.h"
 #import <ExploreAvatarView.h>
 #import <ExploreAvatarView+VerifyIcon.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation TTContactsRedPacketParam
 
@@ -363,7 +364,7 @@
 }
 
 - (void)contactUsersAction:(id)sender {
-    [TTTrackerWrapper eventV3:@"upload_contact_redpacket" params:@{@"action_type": @"click_friends_list"}];
+    [BDTrackerProtocol eventV3:@"upload_contact_redpacket" params:@{@"action_type": @"click_friends_list"}];
 
     TTContactsRedPacketUsersViewController *viewController = [[TTContactsRedPacketUsersViewController alloc] initWithContactUsers:self.contactUsers];
     viewController.delegate = self;

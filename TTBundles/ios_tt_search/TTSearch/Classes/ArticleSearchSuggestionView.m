@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ArticleSearchSuggestionView.m
 //  Article
 //
@@ -82,7 +83,7 @@
     [dic setValue:self.searchText forKey:@"raw_query"];
     [dic setValue:title forKey:@"click_query"];
     TLS_LOG(@"click_query=%@",self.searchText);
-    wrapperTrackEventWithCustomKeys(@"search_tab", [NSString stringWithFormat:@"clicksug_%ld",(long) indexPath.row + 1], nil, nil, dic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"search_tab" label:[NSString stringWithFormat:@"clicksug_%ld",(long) indexPath.row + 1] value:nil source:nil extraDic:dic];
     if (self.selectedHandler) {
         self.selectedHandler(title);
     }

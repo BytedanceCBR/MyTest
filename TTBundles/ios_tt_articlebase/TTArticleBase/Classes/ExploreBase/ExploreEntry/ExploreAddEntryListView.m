@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreAddEntryListView.m
 //  Article
 //
@@ -277,14 +278,14 @@ TTAccountMulticastProtocol
         [_channelListTableView setContentOffset:CGPointMake(0,-_channelListTableView.contentInset.top) animated:NO];
         _currentChannelIndex = indexPath.row;
         [_channelListTableView reloadData];
-        wrapperTrackEvent(@"subscription", @"change_cat");
+        [BDTrackerProtocol event:@"subscription" label:@"change_cat"];
         return;
     }
     if (_currentChannelIndex < [_entryGroups count]) {
         ExploreEntryGroup *group = _entryGroups[_currentChannelIndex];
         if (indexPath.row < [group.entryList count]) {
 
-            wrapperTrackEvent(@"subscription", @"enter_pgc");
+            [BDTrackerProtocol event:@"subscription" label:@"enter_pgc"];
         }
     }
     

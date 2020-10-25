@@ -28,6 +28,7 @@
 #import <TTKitchen/TTKitchenHeader.h>
 #import "Article+TTADComputedProperties.h"
 #import <BDWebImage/SDWebImageAdapter.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 extern NSInteger ttvs_isShareTimelineOptimize(void);
 
@@ -90,7 +91,7 @@ static ArticleShareManager * manager;
     NSString *shareUrl = [NSString stringWithFormat:@"%@?share_ht_uid=%@&did=%@",
                           [huoshan.shareInfo objectForKey:@"source_url"],
                           [TTAccountManager userID],
-                          [[TTInstallIDManager sharedInstance] deviceID]
+                          [BDTrackerProtocol deviceID]
                           ];
     NSString *shareImageUrl = [huoshan.shareInfo objectForKey:@"pic_url"];
     NSString *shareTitle = [huoshan.shareInfo objectForKey:@"title"];

@@ -8,7 +8,7 @@
 
 #import "TTAccountLoggerImp.h"
 #import "TTAccountBusiness.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTAccountTestSettings.h"
 #import "UIAlertView+Blocks.h"
 #import <BDTSharedHeaders/SSCommonDefines.h>
@@ -211,7 +211,7 @@
 - (void)tencentSDKSSOAuthDidFailureWithResp:(NSDictionary *)respContext
 {
     NSMutableDictionary *extraDict = [[NSMutableDictionary alloc] initWithDictionary:respContext];
-    [extraDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [extraDict setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     
     if ([respContext objectForKey:@"error_code"]) {
         NSInteger errCode = [[respContext objectForKey:@"error_code"] integerValue];
@@ -224,7 +224,7 @@
 - (void)weChatSDKSSOAuthDidFailureWithResp:(NSDictionary *)respContext
 {
     NSMutableDictionary *extraDict = [[NSMutableDictionary alloc] initWithDictionary:respContext];
-    [extraDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [extraDict setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     
     if ([respContext objectForKey:@"error_code"]) {
         NSInteger errCode = [[respContext objectForKey:@"error_code"] integerValue];
@@ -237,7 +237,7 @@
 - (void)weiboSDKSSOAuthDidFailureWithResp:(NSDictionary *)respContext
 {
     NSMutableDictionary *extraDict = [[NSMutableDictionary alloc] initWithDictionary:respContext];
-    [extraDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [extraDict setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     
     if ([respContext objectForKey:@"error_code"]) {
         NSInteger errCode = [[respContext objectForKey:@"error_code"] integerValue];
@@ -251,7 +251,7 @@
                                   forPlatform:(TTAccountAuthType)type
 {
     NSString *labelName = selected ? @"auth_recommend_on" : @"auth_recommend_off";
-    wrapperTrackEvent(@"xiangping", labelName);
+    [BDTrackerProtocol event:@"xiangping" label:labelName];
 }
 
 /**
@@ -273,7 +273,7 @@
         }
         NSString *errorCode = [NSString stringWithFormat:@"%zd", error.code];
         [extra setObject:errorCode forKey:@"error_code"];
-        NSString *deviceID  = [[TTInstallIDManager sharedInstance] deviceID];
+        NSString *deviceID  = [BDTrackerProtocol deviceID];
         if(!isEmptyString(deviceID)) {
             [extra setValue:deviceID forKey:@"device_id"];
         }
@@ -289,16 +289,16 @@
 
 - (void)accountAuthPlatformBoundForbidError
 {
-    wrapperTrackEvent(@"login", @"binding_third_error");
+    [BDTrackerProtocol event:@"login" label:@"binding_third_error"];
 }
 
 - (void)dropOriginalAccountAlertViewDidCancel:(BOOL)cancelled
                                   forPlatform:(TTAccountAuthType)type
 {
     if (!cancelled) {
-        wrapperTrackEvent(@"login", @"binding_third_abandon");
+        [BDTrackerProtocol event:@"login" label:@"binding_third_abandon"];
     } else {
-        wrapperTrackEvent(@"login", @"binding_third_cancel");
+        [BDTrackerProtocol event:@"login" label:@"binding_third_cancel"];
     }
 }
 
@@ -306,7 +306,7 @@
                          forPlatform:(TTAccountAuthType)type
 {
     if (!cancelled) {
-        wrapperTrackEvent(@"login", @"binding_third_abandon_confirm");
+        [BDTrackerProtocol event:@"login" label:@"binding_third_abandon_confirm"];
     } else {
         
     }
@@ -314,12 +314,12 @@
 
 - (void)SSOSwitchBindDidCompleteWithError:(NSError *)error
 {
-    wrapperTrackEvent(@"login", @"binding_third_abandon_success");
+    [BDTrackerProtocol event:@"login" label:@"binding_third_abandon_success"];
 }
 
 - (void)customWebSSOSwitchBindDidCompleteWithError:(NSError *)error
 {
-    wrapperTrackEvent(@"login", @"binding_third_abandon_success");
+    [BDTrackerProtocol event:@"login" label:@"binding_third_abandon_success"];
 }
 
 

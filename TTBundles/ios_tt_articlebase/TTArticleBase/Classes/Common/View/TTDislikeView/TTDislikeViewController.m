@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTDislikeViewController.m
 //  Article
 //
@@ -154,7 +155,7 @@
         }
         [extra setValue:@(reportTypes.count) forKey:@"report"];
         [extra setValue:@"report" forKey:@"style"];
-        wrapperTrackEventWithCustomKeys(@"detail", @"report_cancel_click_shadow", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"report_cancel_click_shadow" value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extra];
     }
     else {
         NSMutableArray *dislikeTypes = [[NSMutableArray alloc] init];
@@ -175,7 +176,7 @@
         [extra setValue:@(dislikeTypes.count) forKey:@"dislike"];
         [extra setValue:@(reportTypes.count) forKey:@"report"];
         [extra setValue:@"report_and_dislike" forKey:@"style"];
-        wrapperTrackEventWithCustomKeys(@"detail", @"report_and_dislike_cancel_click_shadow", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"report_and_dislike_cancel_click_shadow" value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extra];
 
     }
 

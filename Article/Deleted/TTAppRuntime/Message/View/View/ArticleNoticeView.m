@@ -34,6 +34,7 @@
 
 
 #import <TTAccountBusiness.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 const NSInteger ArticleNoticePageSize = 20;
@@ -178,7 +179,7 @@ const NSInteger ArticleNoticePageSize = 20;
         return;
     }
     //////////////////TODO:  友盟统计
-    wrapperTrackEvent(@"information", @"more_notify");
+    [BDTrackerProtocol event:@"information" label:@"more_notify"];
     
     [self tt_startUpdate];
     
@@ -242,7 +243,7 @@ const NSInteger ArticleNoticePageSize = 20;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     ArticleNotificationModel * noticeModel = [self.messages objectAtIndex:indexPath.row];
-    wrapperTrackEventWithCustomKeys(@"information", @"system_notification", nil, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"information" label:@"system_notification" value:nil source:nil extraDic:nil];
     //这里优先处理Cell的 schema url 如果有url 走schema 没有的话 按类型跳转 --nick add 4.7
     NSString * linkURLString = noticeModel.openURL;
     if (linkURLString) {
@@ -265,7 +266,7 @@ const NSInteger ArticleNoticePageSize = 20;
             /// 点击头像
             [self.navigationController pushViewController:viewController animated:YES];
             //////////////////TODO:  友盟统计
-            wrapperTrackEvent(@"information", @"click_avatar");
+            [BDTrackerProtocol event:@"information" label:@"click_avatar"];
             return;
         }
         if (noticeModel.type == ArticleNotificationTypeReplyArticle || noticeModel.type == ArticleNotificationTypeHasNewReplies) {
@@ -281,7 +282,7 @@ const NSInteger ArticleNoticePageSize = 20;
         if (noticeModel.type == ArticleNotificationTypeHasNewFans) {
             /// 有N个新粉丝,进入粉丝列表
             //////////////////TODO:  友盟统计
-            wrapperTrackEvent(@"information", @"click_fans");
+            [BDTrackerProtocol event:@"information" label:@"click_fans"];
             TTRelationshipViewController * relationViewController = [[TTRelationshipViewController alloc] initWithAppearType:2 currentUser:[ArticleFriend accountUser]];
             [self.navigationController pushViewController:relationViewController animated:YES];
             return;
@@ -321,7 +322,7 @@ const NSInteger ArticleNoticePageSize = 20;
             [ArticleMomentProfileViewController openWithMediaID:noticeModel.pgcAccount.mediaID enterSource:@"notification" itemID:nil];
             //////////////////TODO:  友盟统计
 
-            wrapperTrackEvent(@"information", @"click_pgc");
+            [BDTrackerProtocol event:@"information" label:@"click_pgc"];
         }
     }
 }

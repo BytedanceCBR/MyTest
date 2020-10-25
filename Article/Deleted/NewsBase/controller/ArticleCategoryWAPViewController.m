@@ -13,6 +13,7 @@
 #import "UIImage+TTThemeExtension.h"
 #import "TTStringHelper.h"
 #import "TTRoute.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @interface ArticleCategoryWAPViewController ()
@@ -41,7 +42,7 @@
         NSDictionary *params = paramObj.allParams;
         NSString *gdExtJson = [params objectForKey:@"gd_ext_json"];
         if (!isEmptyString(gdExtJson)) {
-            [TTTrackerWrapper event:@"all_category" label:@"enter" json:gdExtJson];
+            [BDTrackerProtocol event:@"all_category" label:@"enter" json:gdExtJson];
         }
     }
     

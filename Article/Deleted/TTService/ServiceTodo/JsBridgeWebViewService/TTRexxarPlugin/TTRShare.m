@@ -23,6 +23,7 @@
 #import <TTImage/TTImageDownloader.h>
 
 #import "AKShareManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 //这不是我写的.... 我只是代码的搬运工..
 @interface TTRShare()<SSActivityViewDelegate, TTActivityShareManagerDelegate>
@@ -261,7 +262,7 @@
         [[self shareManager] performActivityActionByType:TTActivityTypeDingTalk inViewController:topVC sourceObjectType:self.curShareSourceType];
     } else if ([platform isEqualToString:@"weitoutiao"]){
         
-        wrapperTrackEventWithCustomKeys(@"wap_share", @"share_weitoutiao", nil, @"public-benefit", nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"wap_share" label:@"share_weitoutiao" value:nil source:@"public-benefit" extraDic:nil];
         if (!isEmptyString(repostSchema)) {
             [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:repostSchema] userInfo:nil];
         }
@@ -350,14 +351,14 @@
 {
     NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:TTShareSourceObjectTypePGC];
     NSString *label = [TTActivityShareManager labelNameForShareActivityType:itemType];
-    wrapperTrackEventWithCustomKeys(tag, label, _mediaID, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:_mediaID source:nil extraDic:nil];
 }
 
 - (void)sendVideoSubjectShareTrackWithItemType:(TTActivityType)itemType
 {
     NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:TTShareSourceObjectTypeVideoSubject];
     NSString *label = [TTActivityShareManager labelNameForShareActivityType:itemType];
-    wrapperTrackEventWithCustomKeys(tag, label, _mediaID, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:_mediaID source:nil extraDic:nil];
 }
 
 - (void)timeoutTimer:(NSTimer*)timer
@@ -423,7 +424,7 @@
                     [[TTThemeManager sharedInstance_tt] switchThemeModeto:TTThemeModeDay];
                     eventID = @"click_to_day";
                 }
-                wrapperTrackEvent(@"profile", eventID);
+                [BDTrackerProtocol event:@"profile" label:eventID];
                 
                 //做一个假的动画效果 让夜间渐变
                 UIView *imageScreenshot = [[TTUIResponderHelper mainWindow] snapshotViewAfterScreenUpdates:NO];
@@ -459,7 +460,7 @@
                     label = @"profile_more_close";
                 }
                 
-                [TTTrackerWrapper event:tag label:label value:self.mediaID extValue:self.userID extValue2:nil];
+                [BDTrackerProtocol event:tag label:label value:self.mediaID extValue:self.userID extValue2:nil];
             }
         } else {
             [[self shareManager] performActivityActionByType:itemType inViewController:self.engine.ttr_sourceController sourceObjectType:self.curShareSourceType uniqueId:self.userID];

@@ -12,7 +12,7 @@
 #import "TTSandBoxHelper.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import "SSCookieManager.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTProjectLogicManager.h"
 #import "SSCommonLogic.h"
 #import "NewsBaseDelegate.h"
@@ -116,8 +116,8 @@ DEC_TASK("TTAccountSDKRegister",FHTaskTypeSerial,TASK_PRIORITY_HIGH+5);
     
     [TTAccount accountConf].appRequiredParamsHandler = ^NSDictionary *() {
         NSMutableDictionary *requiredDict = [NSMutableDictionary dictionaryWithCapacity:4];
-        [requiredDict setValue:[[TTInstallIDManager sharedInstance] installID] forKey:TTAccountInstallIdKey];
-        [requiredDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:TTAccountDeviceIdKey];
+        [requiredDict setValue:[BDTrackerProtocol installID] forKey:TTAccountInstallIdKey];
+        [requiredDict setValue:[BDTrackerProtocol deviceID] forKey:TTAccountDeviceIdKey];
         [requiredDict setValue:nil forKey:TTAccountSessionKeyKey];
         [requiredDict setValue:[TTSandBoxHelper ssAppID] forKey:TTAccountSSAppIdKey];
         return [requiredDict copy];

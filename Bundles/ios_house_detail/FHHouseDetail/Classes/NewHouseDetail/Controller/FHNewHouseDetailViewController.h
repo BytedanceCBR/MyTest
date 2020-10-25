@@ -13,12 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHNewHouseDetailSectionModel;
 @interface FHNewHouseDetailViewController : FHBaseViewController
 
-//是否显示拨打电话
-@property (nonatomic, assign) BOOL isPhoneCallShow;
-//正在拨打电话的经纪人id
-@property (nonatomic, copy, nullable) NSString *phoneCallRealtorId;
-//正在拨打电话对应请求虚拟电话的请求ID
-@property (nonatomic, copy, nullable) NSString *phoneCallRequestId;
 //ViewModel
 @property (nonatomic, strong) FHNewHouseDetailViewModel *viewModel;
 //bizTrace

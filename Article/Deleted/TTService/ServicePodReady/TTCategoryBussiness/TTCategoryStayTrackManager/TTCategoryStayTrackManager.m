@@ -7,6 +7,7 @@
 //
 
 #import "TTCategoryStayTrackManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kMomentListFakeCategoryID @"kMomentListFakeCategoryID"
 
@@ -120,7 +121,7 @@ static TTCategoryStayTrackManager * manager;
         }
     
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTrackerWrapper eventData:dict];
+            [BDTrackerProtocol eventData:dict];
         }
     } else {
         LOGD(@"~~~~~~~~~~~~~~~~~~ignore, %f less than %f", stayTime, [self ignoreMinTime]);
@@ -134,7 +135,7 @@ static TTCategoryStayTrackManager * manager;
         [dict setValue:_trackingCategoryID forKey:@"category_id"];
         [dict setValue:_trackingConcernID forKey:@"concern_id"];
         [dict setValue:_enterType forKey:@"enter_type"];
-        [TTTrackerWrapper eventV3:@"stay_category" params:dict isDoubleSending:YES];
+        [BDTrackerProtocol eventV3:@"stay_category" params:dict isDoubleSending:YES];
     }
 }
 
@@ -158,7 +159,7 @@ static TTCategoryStayTrackManager * manager;
 //    NSMutableDictionary *params = [NSMutableDictionary dictionary];
 //    [params setValue:_trackingCategoryID forKey:@"category_id"];
 //    [params setValue:enterType forKey:@"enter_type"];
-//    [TTTrackerWrapper eventV3:@"enter_category" params:params];
+//    [BDTrackerProtocol eventV3:@"enter_category" params:params];
 }
 
 - (void)endTrackCategory:(NSString *)categoryID

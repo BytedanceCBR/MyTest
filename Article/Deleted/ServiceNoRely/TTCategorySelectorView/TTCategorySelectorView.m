@@ -28,6 +28,7 @@
 #import "ArticleBadgeManager.h"
 
 #import "TTSurfaceManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kFirstLeftMargin    15
 #define kLastRightMargin    68
@@ -1169,11 +1170,11 @@
     NSString * screenName = [NSString stringWithFormat:@"channel_%@",self.currentSelectedCategory.categoryID];
     if (_lastContentOffset < scrollView.contentOffset.x) {
         // 导航栏向左拖动
-        wrapperTrackEvent(@"channel_manage", @"flip_left");
+        [BDTrackerProtocol event:@"channel_manage" label:@"flip_left"];
         [TTLogManager logEvent:@"flip_top_navbar" context:@{@"direction":@"left"} screenName:screenName];
     } else if (_lastContentOffset > scrollView.contentOffset.x) {
         // 导航栏向右拖动
-        wrapperTrackEvent(@"channel_manage", @"flip_right");
+        [BDTrackerProtocol event:@"channel_manage" label:@"flip_right"];
         [TTLogManager logEvent:@"flip_top_navbar" context:@{@"direction":@"right"} screenName:screenName];
     }
 }
@@ -1513,7 +1514,7 @@
         [extra setValue:categoryID forKey:@"category_name"];
         [extra setValue:position forKey:@"position"];
         [extra setValue:style forKey:@"style"];
-        wrapperTrackEventWithCustomKeys(@"tips", label, nil, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"tips" label:label value:nil source:nil extraDic:extra];
     }
 }
 

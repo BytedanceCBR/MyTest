@@ -52,6 +52,7 @@
 //#import "TTAddFriendViewController.h"
 #import "TTActivityShareSequenceManager.h"
 #import "TTTabBarProvider.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kLoadMoreCellLabelTopPadding 14
 
@@ -159,7 +160,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             [wself reloadData];
             if (wself.isUserPull) {
                 if (wself.sourceType == ArticleMomentSourceTypeMoment && [TTTabBarProvider isWeitoutiaoOnTabBar]) {
-                    [TTTrackerWrapper event:@"micronews_tab" label:@"pull_refresh" value:nil extValue:nil extValue2:nil dict:nil];
+                    [BDTrackerProtocol event:@"micronews_tab" label:@"pull_refresh" value:nil extValue:nil extValue2:nil dict:nil];
                 }
                 else {
                     [wself momentTrack:@"pull_refresh"];
@@ -484,7 +485,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 {
     NSString * eventName = [self umentEventName];
     if (!isEmptyString(eventName) && !isEmptyString(label)) {
-        wrapperTrackEvent(eventName, label);
+        [BDTrackerProtocol event:eventName label:label];
     }
 }
 
@@ -661,9 +662,9 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
                 if (model) {
                     if ([model.type isEqualToString:@"app"]) {
                         if ([model.openURL hasSuffix:@"login"]) {
-                            wrapperTrackEvent(@"notify", @"tips1_click");
+                            [BDTrackerProtocol event:@"notify" label:@"tips1_click"];
                         } else if ([model.openURL hasSuffix:@"add_friend"]) {
-                            wrapperTrackEvent(@"notify", @"tips2_click");
+                            [BDTrackerProtocol event:@"notify" label:@"tips2_click"];
                         }
                     }
                     [[SSActionManager sharedManager] actionForModel:model];
@@ -755,13 +756,13 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     if ([[self currentManager] isLoading] || !_isShowing) return;
     
     if (self.sourceType == ArticleMomentSourceTypeForum) {
-        wrapperTrackEvent(@"topic_tab", @"loadmore");
+        [BDTrackerProtocol event:@"topic_tab" label:@"loadmore"];
     } else {
         if (self.sourceType == ArticleMomentSourceTypeMoment && [TTTabBarProvider isWeitoutiaoOnTabBar]) {
-            [TTTrackerWrapper event:@"micronews_tab" label:@"load_more" value:nil extValue:nil extValue2:nil dict:nil];
+            [BDTrackerProtocol event:@"micronews_tab" label:@"load_more" value:nil extValue:nil extValue2:nil dict:nil];
         }
         else {
-            wrapperTrackEvent(@"update_tab", @"loadmore");
+            [BDTrackerProtocol event:@"update_tab" label:@"loadmore"];
         }
     }
     
@@ -896,14 +897,14 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
                 NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
                 [extra setValue:model.ID forKey:@"item_id"];
                 [extra setValue:model.group.ID forKey:@"value"];
-                [TTTrackerWrapper event:@"micronews_tab" label:@"detail" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+                [BDTrackerProtocol event:@"micronews_tab" label:@"detail" value:nil extValue:nil extValue2:nil dict:[extra copy]];
             }
             else {
-                wrapperTrackEventWithCustomKeys(@"update_detail", @"enter", model.ID, nil, @{@"ext_value": model.itemType == MomentItemTypeForum? @"2": @"3"});
+                [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter" value:model.ID source:nil extraDic:@{@"ext_value": model.itemType == MomentItemTypeForum? @"2": @"3"}];
             }
             [self openMomentDetail:model];
         } else if (model.cellType == MomentListCellTypeMomo) {
-            wrapperTrackEvent(@"topic_tab", @"group_cell_click");
+            [BDTrackerProtocol event:@"topic_tab" label:@"group_cell_click"];
             NSURL *URL = [TTStringHelper URLWithURLString:model.url];
             if (URL) {
                 ssOpenWebView(URL, nil, self.navigationController, NO, nil);
@@ -979,7 +980,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
         [extra setValue:moment.ID forKey:@"item_id"];
         [extra setValue:moment.group.ID forKey:@"value"];
-        [TTTrackerWrapper event:@"share_micronews_post" label:@"share_button" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+        [BDTrackerProtocol event:@"share_micronews_post" label:@"share_button" value:nil extValue:nil extValue2:nil dict:[extra copy]];
     }
     else {
         [self sendMomentShareTrackWithItemType:TTActivityTypeShareButton forMoment:moment];
@@ -1032,7 +1033,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:sourceType];
     NSString *label = [TTActivityShareManager labelNameForShareActivityType:itemType];
     NSString *forumId = moment.forumID ? [NSString stringWithFormat:@"%lld", moment.forumID] : nil;
-    wrapperTrackEventWithCustomKeys(tag, label, moment.ID, forumId, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:moment.ID source:forumId extraDic:nil];
 }
 
 #pragma mark - ArticleCommentDelegate
@@ -1107,9 +1108,9 @@ didFinishPublishComment:(ArticleMomentCommentModel *)commentModel {
 {
     self.isUserPull = NO;
     if (self.sourceType == ArticleMomentSourceTypeForum) {
-        wrapperTrackEvent(@"topic_tab", @"refresh_button");
+        [BDTrackerProtocol event:@"topic_tab" label:@"refresh_button"];
     } else {
-        wrapperTrackEvent(@"update_tab", @"refresh_button");
+        [BDTrackerProtocol event:@"update_tab" label:@"refresh_button"];
     }
     [self.listView triggerPullDown];
 }

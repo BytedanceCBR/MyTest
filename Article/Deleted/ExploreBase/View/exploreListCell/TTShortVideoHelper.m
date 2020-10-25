@@ -27,6 +27,7 @@
 #import "TTTabBarProvider.h"
 #import "TTTabBarManager.h"
 #import "ExploreOrderedData+TTAd.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
 static NSString * const kTSVOpenDetailHost = @"ugc_video_recommend";
@@ -230,7 +231,7 @@ static NSString * const kTSVDownloadHost = @"ugc_video_download";
                                                                                          }];
     [logParams setValue:groupSource forKey:@"group_source"];
     
-    [TTTrackerWrapper eventV3:eventName params:logParams];
+    [BDTrackerProtocol eventV3:eventName params:logParams];
 }
 
 + (NSString *)enterFromData:(ExploreOrderedData *)orderedData

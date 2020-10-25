@@ -117,8 +117,8 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
         [dict setValue:@(placemarkItem.coordinate.latitude) forKey:TT_LATITUDE];
         [dict setValue:@(placemarkItem.coordinate.longitude) forKey:TT_LONGITUDE];
         [dict setValue:[TTDeviceHelper idfvString] forKey:TT_IDFV];
-        [dict setValue:[[TTInstallIDManager sharedInstance] installID] forKey:TT_IID];
-        [dict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:TT_DEVICE_ID];
+        [dict setValue:[BDTrackerProtocol installID] forKey:TT_IID];
+        [dict setValue:[BDTrackerProtocol deviceID] forKey:TT_DEVICE_ID];
         
 #ifndef SS_TODAY_EXTENSTION
         [dict setValue:[BDABTestManager ABVersion] forKey:TT_AB_VERSION];
@@ -192,13 +192,13 @@ const static NSInteger splashCallbackPatience = 30000; // 从第三方app召回�
 
 - (NSString *)deviceId
 {
-    return [[TTInstallIDManager sharedInstance] deviceID];
+    return [BDTrackerProtocol deviceID];
 }
 
 
 - (NSString *)installId
 {
-    return [[TTInstallIDManager sharedInstance] installID];
+    return [BDTrackerProtocol installID];
 }
 
 - (NSString *)splashSkipBtnName

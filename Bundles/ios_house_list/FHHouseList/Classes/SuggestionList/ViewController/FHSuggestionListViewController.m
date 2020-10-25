@@ -18,6 +18,9 @@
 #import "FHSuggestionSearchBar.h"
 #import "FHSuggestionCollectionViewCell.h"
 #import "FHSuggestionCollectionView.h"
+#import "FHCommonDefines.h"
+#import "NSDictionary+BTDAdditions.h"
+#import "FHSuggestionListViewController+FHTracker.h"
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -72,6 +75,8 @@
         if (paramObj.allParams[@"search_history_text"]) {
             self.autoFillInputText = paramObj.allParams[@"search_history_text"];
         }
+        
+//        ZWLog(@"%@", [paramObj.allParams[@"tracer"] btd_jsonStringEncoded]);
     }
     return self;
 }
@@ -105,6 +110,8 @@
         [weakSelf.naviBar.searchInput resignFirstResponder];
     };
     self.houseType = self.viewModel.houseType;
+    
+    [self trackPageShow];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -249,12 +256,19 @@
     WeakSelf;
     self.segmentControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
-        if (index >= 0 && index < self.houseTypeArray.count) {
-            self.houseType = [self.houseTypeArray[index] integerValue];
-            
+        [self scrollToIndex:index];
+    };
+}
+
+- (void)scrollToIndex:(NSInteger)index {
+    if (index >= 0 && index < self.houseTypeArray.count) {
+        NSInteger oldHouseType = self.houseType;
+        self.houseType = [self.houseTypeArray[index] integerValue];
+        if (self.houseType != oldHouseType) {
+            [self trackTabIndexChange];
             [self notifyHouseTypeChanged:self.houseType];
         }
-    };
+    }
 }
 
 - (void)notifyHouseTypeChanged:(FHHouseType)houseType {

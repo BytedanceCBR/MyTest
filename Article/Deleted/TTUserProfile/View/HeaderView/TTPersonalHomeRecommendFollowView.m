@@ -12,6 +12,7 @@
 #import "TTIndicatorView.h"
 #import "FRRouteHelper.h"
 #import "TTRoute.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kRecommendCell @"recommendCell"
 
@@ -74,11 +75,11 @@
             [rtFollowDict setValue:[extraDic objectForKey:@"server_extra"] forKey:@"server_extra"];
             if ([event isEqualToString:@"follow"]) {
                 [rtFollowDict setValue:[extraDic objectForKey:@"user_recommend_follow_event"] forKey:@"user_recommend_follow_event"];
-                [TTTrackerWrapper eventV3:@"rt_follow" params:rtFollowDict];
+                [BDTrackerProtocol eventV3:@"rt_follow" params:rtFollowDict];
                 return;
             } else {
                 [rtFollowDict setValue:[extraDic objectForKey:@"user_recommend_unfollow_event"] forKey:@"user_recommend_unfollow_event"];
-                [TTTrackerWrapper eventV3:@"rt_unfollow" params:rtFollowDict];
+                [BDTrackerProtocol eventV3:@"rt_unfollow" params:rtFollowDict];
                 return;
             }
         }
@@ -91,7 +92,7 @@
         [dic addEntriesFromDictionary:extraDic];
     }
     [dic setValue:@"detail_follow_card" forKey:@"source"];
-    [TTTrackerWrapper eventV3:event params:dic];
+    [BDTrackerProtocol eventV3:event params:dic];
 }
 
 - (NSDictionary *)impressionParams {

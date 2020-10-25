@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  SSADSplashView.m
 //  Article
 //
@@ -1132,7 +1133,7 @@ LOGD(@"播放失败 : %@", reason[@"error"]);
     TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
     [extraDict setValue:@(connectionType) forKey:@"nt"];
     [extraDict setValue:@"1" forKey:@"is_ad_event"];
-    wrapperTrackEventWithCustomKeys(@"splash_ad", label, self.model.splashID, nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"splash_ad" label:label value:self.model.splashID source:nil extraDic:extraDict];
 }
 
 - (NSDictionary *)videoInfoAboutPlabackTimeAndPercent

@@ -32,7 +32,6 @@
 #import <TTRoute/TTRoute.h>
 #import <TTServiceKit/TTServiceCenter.h>
 #import <TTThemed/SSThemed.h>
-#import <TTTracker/TTTrackerProxy.h>
 #import <TTUIWidget/TTIndicatorView.h>
 #import <TTUIWidget/TTThemedAlertController.h>
 #import "TTActivityShareSequenceManager.h"
@@ -41,6 +40,7 @@
 #import <TTKitchen/TTKitchenHeader.h>
 #import "TTCopyContentItem.h"
 #define toolBarHeight 40.f
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 const NSInteger SSWebViewMoreActionSheetTag = 1001;
 //#define toolBarHeight 0.f
@@ -235,7 +235,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         tag = [self.ssWebContainer.gdExtJsonDict valueForKey:@"source"];
         extraDict = self.ssWebContainer.gdExtJsonDict;
     }
-    wrapperTrackEventWithCustomKeys(tag, label, nil, nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:nil source:nil extraDic:extraDict];
 }
 
 - (BOOL)clickJumpRecognized
@@ -265,7 +265,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         
         if (itemType == TTActivityTypeWeitoutiao) {
             [self p_forwardToWeitoutiao];
-            wrapperTrackEventWithCustomKeys(@"wap_share", @"share_weitoutiao", nil, @"public-benefit", nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"wap_share" label:@"share_weitoutiao" value:nil source:@"public-benefit" extraDic:nil];
             if (ttvs_isShareIndividuatioEnable()){
                 [[TTActivityShareSequenceManager sharedInstance_tt] instalAllShareActivitySequenceFirstActivity:itemType];
             }
@@ -280,7 +280,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
                 params[@"share_platform"] = label;
                 [self.ssWebContainer.ssWebView ttr_fireEvent:@"page_state_change" data:[params copy]];
             } else {
-                wrapperTrackEventWithCustomKeys(tag, label, nil, nil, nil);
+                [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:nil source:nil extraDic:nil];
             }
             self.navMoreShareView = nil;
         }
@@ -758,7 +758,7 @@ const NSInteger SSWebViewMoreActionSheetTag = 1001;
         [dict setValue:@"" forKey:@"log_extra"];
     }
     [dict setValue:self.ssWebContainer.adID forKey:@"ext_value"];
-    [TTTrackerWrapper eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 @end

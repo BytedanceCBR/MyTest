@@ -22,11 +22,11 @@
 #import "TTPlatformSwitcher.h"
 #import "TTStringHelper.h"
 #import "TTThemedAlertController.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTUIResponderHelper.h"
 #import "UIColor+TTThemeExtension.h"
 #import <TTServiceKit/TTServiceCenter.h>
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTURLUtils.h"
 #import "TTRoute.h"
 #import "TTAdAction.h"

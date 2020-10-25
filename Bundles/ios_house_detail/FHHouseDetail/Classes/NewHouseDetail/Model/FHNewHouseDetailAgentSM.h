@@ -7,9 +7,9 @@
 
 #import "FHNewHouseDetailSectionModel.h"
 #import "FHDetailBaseModel.h"
-
+#import <IGListDiffKit/IGListDiffable.h>
 @class FHHouseDetailPhoneCallViewModel;
-
+@class FHNewHouseDetailReleatorMoreCellModel;
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNewHouseDetailAgentSM : FHNewHouseDetailSectionModel
@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign) BOOL isFold; // 折叠
 
+@property (nonatomic, strong, nullable) FHNewHouseDetailReleatorMoreCellModel *moreModel;
 
 @end
 

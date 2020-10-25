@@ -236,6 +236,10 @@
     }
 }
 
+- (void)bindViewModel:(id)viewModel {
+    [self refreshWithData:viewModel];
+}
+
 - (void)refreshWithData:(id)data {
     if (![data isKindOfClass:[FHNewHouseDetailMapCellModel class]]) {
         return;
@@ -282,10 +286,9 @@
     NSArray *facilities = @[@"traffic", @"education", @"hospital", @"life"];
     if (index >= 0 && index < facilities.count) {
         // click_facilities
-//        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-//        tracerDic[@"element_type"] = [self elementTypeString:self.baseViewModel.houseType];
-//        tracerDic[@"click_position"] = facilities[index];
-//        [FHUserTracker writeEvent:@"click_facilities" params:tracerDic];
+        if (self.clickFacilitiesBlock) {
+            self.clickFacilitiesBlock(facilities[index]);
+        }
     }
 }
 
@@ -582,5 +585,13 @@
 @end
 
 @implementation FHNewHouseDetailMapCellModel
+
+- (id<NSObject>)diffIdentifier {
+    return self;
+}
+
+- (BOOL)isEqualToDiffableObject:(id<IGListDiffable>)object {
+    return self == object;
+}
 
 @end

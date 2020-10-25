@@ -52,7 +52,7 @@
         [cell refreshWithData:model.buildingCellModel];
         return cell;
     }
-    return nil;
+    return [super defaultCellAtIndex:index];
 }
 #pragma mark - IGListSupplementaryViewSource
 - (NSArray<NSString *> *)supportedElementKinds {

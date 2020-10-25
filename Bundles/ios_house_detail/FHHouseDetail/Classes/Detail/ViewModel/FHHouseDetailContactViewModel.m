@@ -65,6 +65,7 @@
 #import "BDABTestManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import "FHNewHouseDetailViewController.h"
+#import "FHNeighborhoodDetailViewController.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -590,12 +591,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if (extraDict[@"position"]) {
             imExtra[@"position"] = extraDict[@"position"];
         }
-        if(extraDict[kFHIMLoginSchema]) {
-            imExtra[kFHIMLoginSchema] = extraDict[kFHIMLoginSchema];
-        }
-        if (extraDict[@"position"]) {
-            imExtra[@"position"] = extraDict[@"position"];
-        }
     }
     [self.phoneCallViewModel imchatActionWithPhone:self.contactPhone realtorRank:@"0" extraDic:imExtra];
 }
@@ -714,7 +709,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     
     // ------------- 房源详情页 --------------------//
     if([self.belongsVC isKindOfClass:FHHouseDetailViewController.class] ||
-       [self.belongsVC isKindOfClass:FHNewHouseDetailViewController.class]) {
+       [self.belongsVC isKindOfClass:FHNewHouseDetailViewController.class] ||
+       [self.belongsVC isKindOfClass:FHNeighborhoodDetailViewController.class]) {
         FHHouseDetailViewController *houseDetailVC = (FHHouseDetailViewController *)self.belongsVC;
         NSObject *detailData  = houseDetailVC.viewModel.detailData;
         switch(houseDetailVC.viewModel.houseType) {
@@ -736,7 +732,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                     FHDetailOldModel *detailOldModel = (FHDetailOldModel *)detailData;
                     if(detailOldModel.data.highlightedRealtorAssociateInfo) {
                         extraDic[kFHAssociateInfo] = detailOldModel.data.highlightedRealtorAssociateInfo;
-                        extraDic[kFHIMLoginSchema] = [BDABTestManager getExperimentValueForKey:@"f_im_login_type" withExposure:YES];
                     }
                 }
             }

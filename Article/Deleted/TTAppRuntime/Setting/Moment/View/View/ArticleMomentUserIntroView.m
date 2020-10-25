@@ -41,6 +41,7 @@
 #import "TTRelationshipDefine.h"
 
 #import <TTInteractExitHelper.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //#import "TTAddFriendViewController.h"
 
 #define kActionButtonLeftPadding    0
@@ -598,15 +599,15 @@ TTBlockManagerDelegate
     
     if (sender == _followedButton.actionButton) {
         appearType = RelationViewAppearTypeFollower;
-        wrapperTrackEvent(@"profile", @"followers_button");
+        [BDTrackerProtocol event:@"profile" label:@"followers_button"];
     }
     else if (sender == _followingButton.actionButton) {
         appearType = RelationViewAppearFollowing;
-        wrapperTrackEvent(@"profile", @"followings_button");
+        [BDTrackerProtocol event:@"profile" label:@"followings_button"];
     }
     else {
         appearType = RelationViewAppearTypePGCLikeUser;
-        wrapperTrackEvent(@"profile", @"subscribers_button");
+        [BDTrackerProtocol event:@"profile" label:@"subscribers_button"];
     }
     
     TTRelationshipViewController *controller = [[TTRelationshipViewController alloc] initWithAppearType:appearType currentUser:_friend];
@@ -809,7 +810,7 @@ TTBlockManagerDelegate
 
 - (void)showEditUserView:(id)sender
 {
-    wrapperTrackEvent(@"profile", @"account");
+    [BDTrackerProtocol event:@"profile" label:@"account"];
     
     if([TTAccountManager isLogin])
     {
@@ -852,11 +853,11 @@ TTBlockManagerDelegate
 
                 }];
                 
-                wrapperTrackEvent(@"profile", @"unfollow");
+                [BDTrackerProtocol event:@"profile" label:@"unfollow"];
             }
             else if ([_friend.isBlocking boolValue]) {
-                wrapperTrackEvent(@"profile", @"deblacklist_button");
-                wrapperTrackEvent(@"blacklist", @"click_deblacklist");
+                [BDTrackerProtocol event:@"profile" label:@"deblacklist_button"];
+                [BDTrackerProtocol event:@"blacklist" label:@"click_deblacklist"];
                 [_blockUserManager unblockUser:_friend.userID];
             }
             else if (![_friend.isFollowing boolValue] && [_friend.isBlocked boolValue]) {
@@ -878,10 +879,10 @@ TTBlockManagerDelegate
                     
                 }];
                 
-                wrapperTrackEvent(@"profile", @"follow");
+                [BDTrackerProtocol event:@"profile" label:@"follow"];
             }
             if (_fromWidget) {
-                wrapperTrackEvent(@"follow_recommend_widget", @"follow_success");
+                [BDTrackerProtocol event:@"follow_recommend_widget" label:@"follow_success"];
             }
         }
         else {

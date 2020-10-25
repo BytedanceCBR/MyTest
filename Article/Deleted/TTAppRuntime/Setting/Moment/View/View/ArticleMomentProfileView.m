@@ -18,6 +18,7 @@
 #import "TTNavigationController.h"
 #import "TTIndicatorView.h"
 #import "UIImage+TTThemeExtension.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 
@@ -87,7 +88,7 @@ TTAccountMulticastProtocol
             
             [TTAccount addMulticastDelegate:self];
 
-            wrapperTrackEvent(@"mine_tab", @"enter_mine");
+            [BDTrackerProtocol event:@"mine_tab" label:@"enter_mine"];
         }
         
         self.introHeaderView = [[ArticleMomentUserIntroView alloc] initWithFrame:CGRectZero extraTracks:extraTracks];
@@ -173,7 +174,7 @@ TTAccountMulticastProtocol
 
 - (void)actionButtonClicked
 {
-    wrapperTrackEvent(@"profile", @"profile_more");
+    [BDTrackerProtocol event:@"profile" label:@"profile_more"];
     UIActionSheet * tSheet = nil;
     if (_isAccountUser) {
         tSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:NSLocalizedString(@"取消", nil) destructiveButtonTitle:nil otherButtonTitles:NSLocalizedString(@"黑名单", nil), nil];
@@ -294,21 +295,21 @@ TTAccountMulticastProtocol
                             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"无网络链接" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
                         } else {
                             if (_userModel.isBlocking) {
-                                wrapperTrackEvent(@"profile_more", @"deblacklist");
-                                wrapperTrackEvent(@"blacklist", @"click_deblacklist");
+                                [BDTrackerProtocol event:@"profile_more" label:@"deblacklist"];
+                                [BDTrackerProtocol event:@"blacklist" label:@"click_deblacklist"];
                                 [self startIndicatorAnimation];
                                 [self.blockUserManager unblockUser:_userModel.ID];
                             } else {
-                                wrapperTrackEvent(@"profile", @"blacklist");
-                                wrapperTrackEvent(@"blacklist", @"click_blacklist");
+                                [BDTrackerProtocol event:@"profile" label:@"blacklist"];
+                                [BDTrackerProtocol event:@"blacklist" label:@"click_blacklist"];
                                 TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:@"确定拉黑该用户？" message:@"拉黑后此用户不能关注你，也无法给你发送任何消息" preferredType:TTThemedAlertControllerTypeAlert];
                                 [alert addActionWithTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-                                    wrapperTrackEvent(@"profile", @"quit_blacklist");
-                                    wrapperTrackEvent(@"blacklist", @"quit_blacklist");
+                                    [BDTrackerProtocol event:@"profile" label:@"quit_blacklist"];
+                                    [BDTrackerProtocol event:@"blacklist" label:@"quit_blacklist"];
                                 }];
                                 [alert addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-                                    wrapperTrackEvent(@"profile", @"confirm_blacklist");
-                                    wrapperTrackEvent(@"blacklist", @"confirm_blacklist");
+                                    [BDTrackerProtocol event:@"profile" label:@"confirm_blacklist"];
+                                    [BDTrackerProtocol event:@"blacklist" label:@"confirm_blacklist"];
                                     [self startIndicatorAnimation];
                                     [self.blockUserManager blockUser:_userModel.ID];
                                 }];
@@ -334,8 +335,8 @@ TTAccountMulticastProtocol
             BlockUsersListViewController *controller = [[BlockUsersListViewController alloc] init];
             UINavigationController *topNav = [TTUIResponderHelper topNavigationControllerFor: self];
             [topNav pushViewController:controller animated:YES];
-            wrapperTrackEvent(@"profile", @"enter_blacklist");
-            wrapperTrackEvent(@"blacklist", @"list_enter_blacklist");
+            [BDTrackerProtocol event:@"profile" label:@"enter_blacklist"];
+            [BDTrackerProtocol event:@"blacklist" label:@"list_enter_blacklist"];
         }
         else{
             switch (buttonIndex){
@@ -439,13 +440,13 @@ TTAccountMulticastProtocol
 {
     if (buttonIndex != alertView.cancelButtonIndex)
     {
-        wrapperTrackEvent(@"profile", @"confirm_blacklist");
-        wrapperTrackEvent(@"blacklist", @"confirm_blacklist");
+        [BDTrackerProtocol event:@"profile" label:@"confirm_blacklist"];
+        [BDTrackerProtocol event:@"blacklist" label:@"confirm_blacklist"];
         [self startIndicatorAnimation];
         [self.blockUserManager blockUser:_userModel.ID];
     } else {
-        wrapperTrackEvent(@"profile", @"quit_blacklist");
-        wrapperTrackEvent(@"blacklist", @"quit_blacklist");
+        [BDTrackerProtocol event:@"profile" label:@"quit_blacklist"];
+        [BDTrackerProtocol event:@"blacklist" label:@"quit_blacklist"];
     }
 }
 

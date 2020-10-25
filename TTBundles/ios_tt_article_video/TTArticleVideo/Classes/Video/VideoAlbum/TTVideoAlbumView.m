@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVideoAlbumView.m
 //  Article
 //
@@ -422,7 +423,7 @@
     NSString *media_id = [self.currentPlayingArticle.mediaInfo valueForKey:@"media_id"];
     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
     [dic setValue:media_id forKey:@"ext_value"];
-    wrapperTrackEventWithCustomKeys(@"video", @"close_album", self.currentPlayingArticle.groupModel.groupID, nil, dic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"close_album" value:self.currentPlayingArticle.groupModel.groupID source:nil extraDic:dic];
 }
 
 - (void)endStayTrack
@@ -433,7 +434,7 @@
         duration = 0;
     }
     duration = duration * 1000;
-    wrapperTrackEventWithCustomKeys(@"stay_category", @"video_album", [[NSNumber numberWithFloat:duration] stringValue], nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"stay_category" label:@"video_album" value:[[NSNumber numberWithFloat:duration] stringValue] source:nil extraDic:nil];
     _startTime = 0;
 }
 

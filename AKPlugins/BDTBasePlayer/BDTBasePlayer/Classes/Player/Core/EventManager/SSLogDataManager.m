@@ -7,9 +7,8 @@
 //
 
 #import "SSLogDataManager.h"
-#import "TTTrackerProxy.h"
-#import "TTLogServer.h"
 #import <pthread.h>
+#import <BDTrackerProtocol/BDTrackerProtocol+CustomEvent.h>
 
 #define kSSLogDataSaveKey @"kSSLogDataSaveKey"
 @interface SSLogDataManager(){
@@ -58,39 +57,32 @@ static SSLogDataManager * sManager;
         pthread_mutex_init (&_appendDataLock, &appending_attr);
         pthread_mutexattr_destroy (&appending_attr);
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerWillSendNotification:) name:kTrackerCleanerWillStartCleanNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(trackerSentSuccessNotification:)
-                                                     name:kTrackerSentSuccessNotification
-                                                   object:nil];
-    
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(trackerSentFailNotification:)
-                                                     name:kTrackerSentFailNotification
-                                                   object:nil];
+        //升级BDInstall，这三个监听已废弃
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(trackerWillSendNotification:) name:kTrackerCleanerWillStartCleanNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector(trackerSentSuccessNotification:)
+//                                                     name:kTrackerSentSuccessNotification
+//                                                   object:nil];
+//
+//        [[NSNotificationCenter defaultCenter] addObserver:self
+//                                                 selector:@selector(trackerSentFailNotification:)
+//                                                     name:kTrackerSentFailNotification
+//                                                   object:nil];
 
     }
     return self;
 }
 
+
 - (void)appendLogData:(NSDictionary *)dict
 {
+    //升级BDInstall后采用新的实现
     if ([dict isKindOfClass:[NSDictionary class]] && [dict count] > 0) {
         NSMutableDictionary * tmpDict = [NSMutableDictionary dictionaryWithDictionary:dict];
         long long uniqueKey = (long long)([[NSDate date] timeIntervalSince1970] * 1000);
         [tmpDict setValue:@(uniqueKey) forKey:@"log_id"];
         NSDictionary * sendDict = [NSDictionary dictionaryWithDictionary:tmpDict];
-        if (_isSending) {
-            pthread_mutex_lock(&_appendDataLock);
-            [self.appendingDatas addObject:sendDict];
-            pthread_mutex_unlock(&_appendDataLock);
-        } else {
-            pthread_mutex_lock(&_logDataLock);
-            [self.logDatas addObject:sendDict];
-            pthread_mutex_unlock(&_logDataLock);
-        }
-        
-        [TTLogServer sendValueToLogServer:sendDict];
+        [BDTrackerProtocol trackLogDataEvent:sendDict];
     }
 }
 

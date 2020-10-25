@@ -20,6 +20,7 @@
 #import "TTContactsRecommendUserTableViewCell.h"
 #import "TTContactsGuideManager.h"
 #import <TTDialogDirector/TTDialogDirector.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 
@@ -58,9 +59,9 @@ static BOOL kHasGuideViewDisplayed = NO;
         __strong typeof(self) sself = wself;
 
         if ([TTAddressBook isAddressBookDenied]) {
-            [TTTrackerWrapper eventV3:@"upload_contact_permission_set" params:@{@"action_type": @"close"}];
+            [BDTrackerProtocol eventV3:@"upload_contact_permission_set" params:@{@"action_type": @"close"}];
         } else {
-            [TTTrackerWrapper eventV3:@"upload_contact_permission_open" params:@{@"action_type": @"close"}];
+            [BDTrackerProtocol eventV3:@"upload_contact_permission_open" params:@{@"action_type": @"close"}];
         }
 
         [sself dismiss];
@@ -70,7 +71,7 @@ static BOOL kHasGuideViewDisplayed = NO;
         __strong typeof(self) sself = wself;
 
         if ([TTAddressBook isAddressBookDenied]) {
-            [TTTrackerWrapper eventV3:@"upload_contact_permission_set" params:@{@"action_type": @"click"}];
+            [BDTrackerProtocol eventV3:@"upload_contact_permission_set" params:@{@"action_type": @"click"}];
 
             // 记录时间 15 min，这个周期内授权返回有效
             [TTContactsUserDefaults setContactsAuthorizationTimestamp:[[NSDate date] timeIntervalSince1970]];
@@ -87,7 +88,7 @@ static BOOL kHasGuideViewDisplayed = NO;
                 }
             }
         } else {
-            [TTTrackerWrapper eventV3:@"upload_contact_permission_open" params:@{@"action_type": @"confirm"}];
+            [BDTrackerProtocol eventV3:@"upload_contact_permission_open" params:@{@"action_type": @"confirm"}];
 
             [sself requestAuthorizationAndUploadContacts];
 
@@ -113,15 +114,15 @@ static BOOL kHasGuideViewDisplayed = NO;
 }
 
 - (void)addressBookRequestAccess:(NSNotification *)notification {
-    [TTTrackerWrapper eventV3:@"upload_contact_contact_access" params:@{@"action_type": @"show"}];
+    [BDTrackerProtocol eventV3:@"upload_contact_contact_access" params:@{@"action_type": @"show"}];
 }
 
 - (void)addressBookRequestAccessGranted:(NSNotification *)notification {
-    [TTTrackerWrapper eventV3:@"upload_contact_contact_access" params:@{@"action_type": @"confirm"}];
+    [BDTrackerProtocol eventV3:@"upload_contact_contact_access" params:@{@"action_type": @"confirm"}];
 }
 
 - (void)addressBookRequestAccessDenied:(NSNotification *)notification {
-    [TTTrackerWrapper eventV3:@"upload_contact_contact_access" params:@{@"action_type": @"refuse"}];
+    [BDTrackerProtocol eventV3:@"upload_contact_contact_access" params:@{@"action_type": @"refuse"}];
 }
 
 - (void)requestAuthorizationAndUploadContacts {
@@ -155,7 +156,7 @@ static BOOL kHasGuideViewDisplayed = NO;
     // 上传通讯录
     TTUploadContactsBlock(^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            [TTTrackerWrapper eventV3:@"upload_contact_sync" params:@{@"action_type": @"show"}];
+            [BDTrackerProtocol eventV3:@"upload_contact_sync" params:@{@"action_type": @"show"}];
             
             // 一直保留显示，直到上传成功或者重试之后
             [[TTContactsGuideManager sharedManager] showIndicatorView:nil];
@@ -170,14 +171,14 @@ static BOOL kHasGuideViewDisplayed = NO;
                     [[TTContactsGuideManager sharedManager] hideIndicatorView];
                     [TTContactsRedPacketGuideViewHelper presentNoContactsRedPacketViewController];
                     
-                    [TTTrackerWrapper eventV3:@"upload_contact_sync" params:@{@"action_type": @"failure"}];
+                    [BDTrackerProtocol eventV3:@"upload_contact_sync" params:@{@"action_type": @"failure"}];
                 }
             });
         }
     }, ^(NSError *error) {
         if (!error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [TTTrackerWrapper eventV3:@"upload_contact_sync" params:@{@"action_type": @"success"}];
+                [BDTrackerProtocol eventV3:@"upload_contact_sync" params:@{@"action_type": @"success"}];
                 
                 [[TTContactsGuideManager sharedManager] hideIndicatorView];
                 
@@ -204,11 +205,11 @@ static BOOL kHasGuideViewDisplayed = NO;
                         isUploadContactsFinished = YES; // 如果未超时，阻止超时策略
                         
                         if (!error2) {
-                            [TTTrackerWrapper eventV3:@"upload_contact_sync" params:@{@"action_type": @"success"}];
+                            [BDTrackerProtocol eventV3:@"upload_contact_sync" params:@{@"action_type": @"success"}];
                             
                             [self requestContactUsers];
                         } else {
-                            [TTTrackerWrapper eventV3:@"upload_contact_sync" params:@{@"action_type": @"failure"}];
+                            [BDTrackerProtocol eventV3:@"upload_contact_sync" params:@{@"action_type": @"failure"}];
                             
                             [TTContactsRedPacketGuideViewHelper presentNoContactsRedPacketViewController];
                         }
@@ -286,9 +287,9 @@ static BOOL kHasGuideViewDisplayed = NO;
             return [self shouldDisplay:context];
         } showMe:^(id  _Nonnull dialogInst) {
             if ([self.guideView isKindOfClass:[TTContactsNotDeterminedRedPacketGuideView class]]) {
-                [TTTrackerWrapper eventV3:@"upload_contact_permission_open" params:@{@"action_type": @"show"}];
+                [BDTrackerProtocol eventV3:@"upload_contact_permission_open" params:@{@"action_type": @"show"}];
             } else if ([self.guideView isKindOfClass:[TTContactsDeniedRedPacketGuideView class]]) {
-                [TTTrackerWrapper eventV3:@"upload_contact_permission_set" params:@{@"action_type": @"show"}];
+                [BDTrackerProtocol eventV3:@"upload_contact_permission_set" params:@{@"action_type": @"show"}];
             }
             
             // 记录此次通讯录弹窗已经弹出过，作为此次的服务端检查数据就此终止

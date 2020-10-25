@@ -11,7 +11,6 @@
 #import "NetworkUtilities.h"
 #import "SSAppStore.h"
 #import "TTRoute.h"
-#import "TTInstallIDManager.h"
 #import <TTImage/TTWebImageManager.h>
 #import "SSAlertCenter.h"
 #import "TTNetworkHelper.h"
@@ -21,6 +20,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTArticleBase/CommonURLSetting.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //#import "TTSingleResponseModel.h"
 
 @interface AppAlertManager ()
@@ -150,7 +150,7 @@ static AppAlertManager *_alertManager = nil;
                                   [TTNetworkHelper connectMethodName], @"access",
                                   carrierName ? carrierName : @"", @"carrier",
                                   [NSString stringWithFormat:@"%@%@", [TTNetworkHelper carrierMCC], [TTNetworkHelper carrierMNC]], @"mcc_mnc", nil];
-    [tDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [tDict setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     return [tDict copy];
 }
 
@@ -272,7 +272,7 @@ static AppAlertManager *_alertManager = nil;
                 if ([openURL length] > 0) {
                     NSInteger count = [[appAlertModel.buttons componentsSeparatedByString:@","] count];
                     NSString * eventString = [NSString stringWithFormat:@"appalert_%@_%@", @(count), @(buttonIndex + 1)];
-                    wrapperTrackerEvent([TTSandBoxHelper appName], eventString, appAlertModel.actions);
+                    [BDTrackerProtocol event:eventString label:appAlertModel.actions];
                     
                     if ([openURL hasPrefix:@"snssdk1370"]) {
                         NSURL *tURL = [NSURL URLWithString:openURL];
@@ -331,7 +331,7 @@ static AppAlertManager *_alertManager = nil;
             
             if(buttonIndex >= 0)
             {
-                wrapperTrackerEvent([TTSandBoxHelper appName], eventString, [actionArray objectAtIndex:buttonIndex]);
+                [BDTrackerProtocol event:eventString label:[actionArray objectAtIndex:buttonIndex]];
             }
         }
     }

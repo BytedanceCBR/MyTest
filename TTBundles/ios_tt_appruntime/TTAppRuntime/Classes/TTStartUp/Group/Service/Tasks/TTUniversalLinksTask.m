@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTUniversalLinksTask.m
 //  Article
 //
@@ -21,6 +22,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import "TTLaunchDefine.h"
+#import "BDUGDeepLinkManager.h"
 
 DEC_TASK("TTUniversalLinksTask",FHTaskTypeService,TASK_PRIORITY_HIGH+7);
 
@@ -34,7 +36,7 @@ DEC_TASK("TTUniversalLinksTask",FHTaskTypeService,TASK_PRIORITY_HIGH+7);
     return YES;
 }
 
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray *))restorationHandler {
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
 
     if ([userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
         NSURL *webpageURL = userActivity.webpageURL;
@@ -43,7 +45,7 @@ DEC_TASK("TTUniversalLinksTask",FHTaskTypeService,TASK_PRIORITY_HIGH+7);
         NSString *url = webpageURL.absoluteString;
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
         [extraDict setValue:url forKey:@"url"];
-        wrapperTrackEventWithCustomKeys(@"activity_type", @"click_wap_browsing_web", nil, nil, extraDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"activity_type" label:@"click_wap_browsing_web" value:nil source:nil extraDic:extraDict];
         
         NSDictionary *queryDict = [TTURLUtils queryItemsForURL:webpageURL];
         
@@ -89,5 +91,4 @@ DEC_TASK("TTUniversalLinksTask",FHTaskTypeService,TASK_PRIORITY_HIGH+7);
     }
     return YES;
 }
-
 @end

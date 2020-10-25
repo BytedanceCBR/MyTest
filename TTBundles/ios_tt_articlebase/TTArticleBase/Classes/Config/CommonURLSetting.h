@@ -146,6 +146,8 @@ NSString * logBaseURL(void);
 + (NSString*)appLogV3ConfigURLString;
 + (NSString*)appLogURLString;
 + (NSString*)rtAppLogURLString;
++ (NSString *)registerDeviceBaseURLString;
++ (NSString *)activateDeviceBaseURLString;
 + (NSString *)trackLogConfigURLString;
 + (NSString*)appLogV2ConfigURLString;
 + (NSString*)appLogV2URLString;

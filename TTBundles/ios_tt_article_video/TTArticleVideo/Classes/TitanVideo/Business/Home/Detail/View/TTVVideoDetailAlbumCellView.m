@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailAlbumCellView.m
 //  Article
 //
@@ -103,9 +104,9 @@ inline CGFloat cellInfoLabelFontSize() {
 {
     if (self.isSubVideoAlbum) {
         if (self.videoAlbumID) {
-            wrapperTrackEventWithCustomKeys(@"video", @"click_album", [@(self.article.uniqueID) stringValue], nil, @{@"ext_value" : self.videoAlbumID});
+            [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"click_album" value:[@(self.article.uniqueID) stringValue] source:nil extraDic:@{@"ext_value" : self.videoAlbumID}];
         } else if ([self.fromArticle hasVideoSubjectID]) {
-            wrapperTrackEventWithCustomKeys(@"video", @"click_album", [@(self.article.uniqueID) stringValue], nil, @{@"video_subject_id" : self.fromArticle.videoSubjectID});
+            [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"click_album" value:[@(self.article.uniqueID) stringValue] source:nil extraDic:@{@"video_subject_id" : self.fromArticle.videoSubjectID}];
         }
         return;
     }

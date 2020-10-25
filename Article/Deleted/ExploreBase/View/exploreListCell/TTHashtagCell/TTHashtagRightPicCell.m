@@ -20,6 +20,7 @@
 #import "ExploreMixListDefine.h"
 #import "ExploreOrderedData+TTAd.h"
 #import <JSONAdditions.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @interface TTHashtagRightPicCell()
@@ -94,7 +95,7 @@
     [extraParams setValue:@(self.hashtagData.uniqueID) forKey:@"group_id"];
     [extraParams setValue:@(100375) forKey:@"demand_id"];
     
-    [TTTrackerWrapper eventV3:@"topic_show" params:extraParams];
+    [BDTrackerProtocol eventV3:@"topic_show" params:extraParams];
 }
 
 - (void)refreshUI {
@@ -199,7 +200,7 @@
     [extraParams setValue:@(self.hashtagData.uniqueID) forKey:@"group_id"];
     [extraParams setValue:@(100375) forKey:@"demand_id"];
 
-    [TTTrackerWrapper eventV3:@"topic_click" params:extraParams];
+    [BDTrackerProtocol eventV3:@"topic_click" params:extraParams];
     
     NSMutableDictionary *routeDict = [NSMutableDictionary dictionary];
     [routeDict setValue:@(self.hashtagData.uniqueID) forKey:@"group_id"];
@@ -220,7 +221,7 @@
     NSMutableDictionary *extraParams = [NSMutableDictionary dictionaryWithCapacity:5];
     [extraParams setValue:self.hashtagData.forumModel.concern_id forKey:@"concern_id"];
     [extraParams setValue:self.hashtagData.forumModel.forum_id forKey:@"forum_id"];
-    wrapperTrackEventWithCustomKeys(@"dislike", @"menu_with_reason", [NSString stringWithFormat:@"%lld", self.hashtagData.uniqueID], nil, extraParams.copy);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"dislike" label:@"menu_with_reason" value:[NSString stringWithFormat:@"%lld", self.hashtagData.uniqueID] source:nil extraDic:extraParams.copy];
 
     TTFeedDislikeView *dislikeView = [[TTFeedDislikeView alloc] init];
     TTFeedDislikeViewModel *viewModel = [[TTFeedDislikeViewModel alloc] init];
@@ -232,7 +233,7 @@
     [dislikeView showAtPoint:point
                     fromView:sender
              didDislikeBlock:^(TTFeedDislikeView * _Nonnull view) {
-                 wrapperTrackEventWithCustomKeys(@"dislike", @"confirm_with_reason", [NSString stringWithFormat:@"%lld", self.hashtagData.uniqueID], nil, extraParams.copy);
+                 [BDTrackerProtocol trackEventWithCustomKeys:@"dislike" label:@"confirm_with_reason" value:[NSString stringWithFormat:@"%lld", self.hashtagData.uniqueID] source:nil extraDic:extraParams.copy];
 
                  [self exploreDislikeViewOKBtnClicked:view];
              }];

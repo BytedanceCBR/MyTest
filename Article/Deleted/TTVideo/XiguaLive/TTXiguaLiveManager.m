@@ -27,6 +27,7 @@
 #import "TTForwardWeitoutiaoContentItem.h"
 #import "TTRepostViewController.h"
 #import "TTRepostOriginModels.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 extern BOOL ttvs_isShareIndividuatioEnable(void);
 
@@ -415,13 +416,13 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     [params setValue:groupID forKey:@"group_id"];
     [params setValue:@"from_group" forKey:@"follow_type"];
     [params addEntriesFromDictionary:extra];
-    [TTTrackerWrapper eventV3:eventName params:params.copy];
+    [BDTrackerProtocol eventV3:eventName params:params.copy];
 }
 
 - (void)trackShareLogV3WithName:(NSString *)name{
     NSMutableDictionary *params = self.extraDic ? [self.extraDic mutableCopy] :[NSMutableDictionary dictionary];
     [params addEntriesFromDictionary:self.shareDicSaved];
-    [TTTrackerWrapper eventV3:name params:params.copy];
+    [BDTrackerProtocol eventV3:name params:params.copy];
     //发送过share_button后，增加icon_seat参数
     [self.shareDicSaved setValue:@"inside" forKey:@"icon_seat"];
 }

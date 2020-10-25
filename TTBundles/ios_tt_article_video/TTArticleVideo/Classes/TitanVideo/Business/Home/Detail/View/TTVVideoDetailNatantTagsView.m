@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailNatantTagsView.m
 //  Article
 //
@@ -78,11 +79,11 @@ static const CGFloat kPadding = 15;
             [self.tagsView refreshWithTagItems:[tags mutableCopy]];
         }
         self.tagsView.hidden = NO;
-        wrapperTrackEvent(@"videotag_searchmore", @"show");
+        [BDTrackerProtocol event:@"videotag_searchmore" label:@"show"];
     } else {
         [self.sourceBtn setTitle:self.viewModel.videoDetailTags.sourceTag.word forState:UIControlStateNormal];
         self.sourceBtn.hidden = NO;
-        wrapperTrackEvent(@"videotag_search", @"show");
+        [BDTrackerProtocol event:@"videotag_search" label:@"show"];
     }
     
     [self refreshUI];
@@ -121,7 +122,7 @@ static const CGFloat kPadding = 15;
         NSString *schema = obj.link;
         if (!isEmptyString(word)) {
             TTTagItem *item = [[TTTagItem alloc] initWithText:word action:^{
-                wrapperTrackEvent(@"videotag_searchmore", @"click");
+                [BDTrackerProtocol event:@"videotag_searchmore" label:@"click"];
                 NSURL *url = [TTStringHelper URLWithURLString:schema];
                 [[TTRoute sharedRoute] openURLByPushViewController:url];
             }];
@@ -151,7 +152,7 @@ static const CGFloat kPadding = 15;
 }
 
 - (void)sourceBtnClicked:(UIButton *)sender {
-    wrapperTrackEvent(@"videotag_search", @"click");
+    [BDTrackerProtocol event:@"videotag_search" label:@"click"];
     NSString *schema = self.viewModel.videoDetailTags.sourceTag.link;
     NSURL *url = [TTStringHelper URLWithURLString:schema];
     [[TTRoute sharedRoute] openURLByPushViewController:url];

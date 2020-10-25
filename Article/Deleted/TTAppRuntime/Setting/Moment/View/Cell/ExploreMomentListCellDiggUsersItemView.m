@@ -19,6 +19,7 @@
 
 #import "TTStringHelper.h"
 #import "TTTabBarProvider.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kBgViewLeftPadding      kMomentCellItemViewLeftPadding
 #define kBgViewRightPadding     kMomentCellItemViewRightPadding
@@ -229,14 +230,14 @@
                 NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
                 [extra setValue:self.momentModel.ID forKey:@"item_id"];
                 [extra setValue:self.momentModel.group.ID forKey:@"value"];
-                [TTTrackerWrapper event:@"micronews_tab" label:@"digger_avatar" value:nil extValue:nil extValue2:nil dict:[extra copy]];
+                [BDTrackerProtocol event:@"micronews_tab" label:@"digger_avatar" value:nil extValue:nil extValue2:nil dict:[extra copy]];
             }
             else {
                 if (![TTAccountManager isLogin]) {
-                    wrapperTrackEvent(_umengEventName, @"logoff_click_digger");
+                    [BDTrackerProtocol event:_umengEventName label:@"logoff_click_digger"];
                 }
                 else {
-                    wrapperTrackEvent(_umengEventName, @"click_digger");
+                    [BDTrackerProtocol event:_umengEventName label:@"click_digger"];
                 }
             }
         }

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTRouteService.m
 //  Article
 //
@@ -77,7 +78,7 @@ SINGLETON_GCD(TTRouteService)
 
 - (void)ttRouteLogic_sendOpenTrackWithFromKey:(NSString *)fromKey
 {
-    wrapperTrackEvent(@"open", fromKey);
+    [BDTrackerProtocol event:@"open" label:fromKey];
 }
 
 - (void)ttRouteLogic_configNavigationController:(UINavigationController *)nav

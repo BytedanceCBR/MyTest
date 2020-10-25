@@ -32,6 +32,7 @@
 #import "TTStringHelper.h"
 
 #import "TTRoute.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 const NSInteger ArticleMessagePageSize = 20;
@@ -180,7 +181,7 @@ const NSInteger ArticleMessagePageSize = 20;
 - (void)loadNextPage {
     
     //////////////////TODO:  友盟统计
-    wrapperTrackEvent(@"information", @"more_message");
+    [BDTrackerProtocol event:@"information" label:@"more_message"];
     
     [self tt_startUpdate];
     
@@ -300,9 +301,9 @@ const NSInteger ArticleMessagePageSize = 20;
         }
     }
     if (label.length > 0) {
-        wrapperTrackEvent(@"information", label);
+        [BDTrackerProtocol event:@"information" label:label];
     }
-    wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_message", messageModel.commentID, nil, dict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_message" value:messageModel.commentID source:nil extraDic:dict];
 }
 
 - (void)goBack:(id) sender {

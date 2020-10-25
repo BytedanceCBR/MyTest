@@ -8,7 +8,7 @@
 
 #import "TTMonitorStartupTask.h"
 #import "TTMonitor.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTDebugRealMonitorManager.h"
 
 #import "NewsBaseDelegate.h"
@@ -17,8 +17,6 @@
 #import "TTMonitorConfiguration.h"
 #import <Heimdallr/HMDInjectedInfo.h>
 #import <Heimdallr/Heimdallr.h>
-#import <TTTracker/TTTrackerSessionHandler.h>
-#import <TTTracker/TTTrackerProxy.h>
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "BDAgileLog.h"
 #import "HMDLogUploader.h"
@@ -118,8 +116,8 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
     [self registerTransferService];
     [[TTMonitor shareManager] startWithAppkey:[SharedAppDelegate appKey] paramsBlock:^NSDictionary *{
         NSMutableDictionary * paramsDict = [[NSMutableDictionary alloc] init];
-        [paramsDict setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
-        [paramsDict setValue:[[TTInstallIDManager sharedInstance] installID] forKey:@"install_id"];
+        [paramsDict setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
+        [paramsDict setValue:[BDTrackerProtocol installID] forKey:@"install_id"];
         return [paramsDict copy];
     }];
     if ([SSCommonLogic enableDebugRealMonitor]) {
@@ -189,25 +187,36 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
     injectedInfo.appID = [TTSandBoxHelper ssAppID];
     injectedInfo.appName = [TTSandBoxHelper appName];
     injectedInfo.channel = [TTSandBoxHelper getCurrentChannel];
-    injectedInfo.deviceID = [TTInstallIDManager sharedInstance].deviceID;
-    injectedInfo.installID = [TTInstallIDManager sharedInstance].installID;
+    injectedInfo.deviceID = BDTrackerProtocol.deviceID;
+    injectedInfo.installID = BDTrackerProtocol.installID;
     injectedInfo.userID = [[TTAccount sharedAccount] userIdString];
     injectedInfo.userName = [[[TTAccount sharedAccount] user] name];
     injectedInfo.commonParams = [TTNetworkManager shareInstance].commonParams;
-    injectedInfo.sessionID = [TTTrackerSessionHandler sharedHandler].sessionID;
+    injectedInfo.sessionID = BDTrackerProtocol.sessionID;
     injectedInfo.buildInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"BuildInfo"];
     injectedInfo.performanceUploadHost = [CommonURLSetting baseURL];
     
     [[Heimdallr shared] setupWithInjectedInfo:injectedInfo];
     
+    //升级BDInstall，替换成新的监听方法
     // 保证 sessionID 唯一
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionIDDidChanged:) name:kTrackerCleanerWillStartCleanNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(sessionIDDidChanged:)
+                                                 name:UIApplicationDidBecomeActiveNotification
+                                               object:nil];
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionIDDidChanged:) name:kTrackerCleanerWillStartCleanNotification object:nil];
 }
 
 - (void)sessionIDDidChanged:(NSNotification *)noti {
-    if ([[noti.userInfo objectForKey:kTrackerCleanerWillStartCleanFromTypeKey] integerValue] == TTTrackerCleanerStartCleanFromAppWillEnterForground) {
-        [HMDInjectedInfo defaultInfo].sessionID = [TTTrackerSessionHandler sharedHandler].sessionID;
-    }
+    /// next run loop
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [HMDInjectedInfo defaultInfo].sessionID = [BDTrackerProtocol sessionID];
+    });
+    
+//    if ([[noti.userInfo objectForKey:kTrackerCleanerWillStartCleanFromTypeKey] integerValue] == TTTrackerCleanerStartCleanFromAppWillEnterForground) {
+//        [HMDInjectedInfo defaultInfo].sessionID = [TTTrackerSessionHandler sharedHandler].sessionID;
+//    }
 }
 
 - (void)dealloc{

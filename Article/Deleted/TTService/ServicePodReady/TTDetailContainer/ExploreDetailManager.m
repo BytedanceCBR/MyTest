@@ -13,7 +13,7 @@
 #import "NewsDetailConstant.h"
 
 #import "TTUIResponderHelper.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "NSDictionary+TTGeneratedContent.h"
 #import "ExploreOrderedData+TTAd.h"
 #import "TTRelevantDurationTracker.h"
@@ -573,7 +573,7 @@
             [dict setValue:@"" forKey:@"log_extra"];
         }
         [dict setValue:self.logPb forKey:@"log_pb"];
-        [TTTrackerWrapper eventData:dict];
+        [BDTrackerProtocol eventData:dict];
     }
     if (!isEmptyString(_eventLabel)) {
         
@@ -640,7 +640,7 @@
 
 //    [[EnvContext shared].tracer writeEvent:@"stay_page" params:params];
     [FHEnvContext recordEvent:params andEventKey:@"stay_page"];
-//    [TTTrackerWrapper eventV3:@"stay_page" params:({
+//    [BDTrackerProtocol eventV3:@"stay_page" params:({
 //        NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:self.gdExtJSONDict];
 //        [params setValue:self.article.groupModel.groupID forKey:@"group_id"];
 //        [params setValue:self.article.groupModel.itemID forKey:@"item_id"];

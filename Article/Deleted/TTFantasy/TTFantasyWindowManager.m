@@ -30,7 +30,7 @@
 #import <TTDeviceHelper.h>
 #import "TTAccountNavigationController.h"
 #import "TTAccountLoginManager.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTVDemandPlayer.h"
 #import "TTVAudioActiveCenter.h"
 #import "TTVVideoPlayerStateStore.h"
@@ -464,7 +464,7 @@
     [self.fantasyWindow makeKeyAndVisible];
     
     self.openTime = [[NSDate date] timeIntervalSince1970];
-    [TTTrackerWrapper eventV3:@"open_fantasy_window" params:@{@"open_time": @(self.openTime)}];
+    [BDTrackerProtocol eventV3:@"open_fantasy_window" params:@{@"open_time": @(self.openTime)}];
     
     [self.fantasyWindow addSubview:_button];
     [self.fantasyWindow addSubview:_imageView];
@@ -513,7 +513,7 @@
         [self.parentKeyWindow makeKeyAndVisible];
         
         self.closeTime = [[NSDate date] timeIntervalSince1970];
-        [TTTrackerWrapper eventV3:@"close_fantasy_window" params:@{@"open_time": @(self.openTime), @"close_time": @(self.closeTime), @"duration": @(self.closeTime - self.openTime)}];
+        [BDTrackerProtocol eventV3:@"close_fantasy_window" params:@{@"open_time": @(self.openTime), @"close_time": @(self.closeTime), @"duration": @(self.closeTime - self.openTime)}];
     }];
 }
 
@@ -565,7 +565,7 @@
         [self.parentKeyWindow makeKeyAndVisible];
         
         self.closeTime = [[NSDate date] timeIntervalSince1970];
-        [TTTrackerWrapper eventV3:@"close_fantasy_window" params:@{@"open_time": @(self.openTime), @"close_time": @(self.closeTime), @"duration": @(self.closeTime - self.openTime)}];
+        [BDTrackerProtocol eventV3:@"close_fantasy_window" params:@{@"open_time": @(self.openTime), @"close_time": @(self.closeTime), @"duration": @(self.closeTime - self.openTime)}];
     }];
 }
 
@@ -799,7 +799,7 @@
             p.view.center = finalPoint;
             self.parentMaskView.center = CGPointMake(finalPoint.x, finalPoint.y + 1);;
         } completion:^(BOOL finished) {
-            [TTTrackerWrapper eventV3:@"drag_fantasy_window" params:@{@"pos_x": @(finalPoint.x), @"pos_y": @(finalPoint.y)}];
+            [BDTrackerProtocol eventV3:@"drag_fantasy_window" params:@{@"pos_x": @(finalPoint.x), @"pos_y": @(finalPoint.y)}];
         }];
     }
 }

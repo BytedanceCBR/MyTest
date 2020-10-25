@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  SSURLTracker.m
 //  Article
 //
@@ -10,7 +11,6 @@
 #import "NetworkUtilities.h"
 
 #import "TTLogClient.h"
-#import "TTInstallIDManager.h"
 
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "TTPersistence.h"
@@ -212,7 +212,7 @@ static NSString *const kTrackFaildURLFileName = @"ssADTrackFailedURLs.plist";
         deviceIdRange = [sendURLStr rangeOfString:@"__DUID__"];
     }
     if (deviceIdRange.location != NSNotFound) {
-        NSString *didStr = [[TTInstallIDManager sharedInstance] deviceID];
+        NSString *didStr = [BDTrackerProtocol deviceID];
         if (!isEmptyString(didStr)) {
             sendURLStr = [sendURLStr stringByReplacingCharactersInRange:deviceIdRange withString:didStr];
         }
@@ -239,7 +239,7 @@ static NSString *const kTrackFaildURLFileName = @"ssADTrackFailedURLs.plist";
         deviceIdRange = [sendURLStr rangeOfString:@"__UID__"];
     }
     if (deviceIdRange.location != NSNotFound) {
-        NSString *didStr = [[TTInstallIDManager sharedInstance] deviceID];
+        NSString *didStr = [BDTrackerProtocol deviceID];
         if (!isEmptyString(didStr)) {
             sendURLStr = [sendURLStr stringByReplacingCharactersInRange:deviceIdRange withString:didStr];
         }
@@ -298,7 +298,9 @@ static NSString *const kTrackFaildURLFileName = @"ssADTrackFailedURLs.plist";
     }
 
     NSString *trackDescription = [NSString stringWithFormat:@"TrackURL:%@", url.absoluteString];
-    [TTLogServer sendValueToLogServer:trackDescription parameters:@{@"color":@"ff0000"}];
+    
+    //使用最新的TTTracker可以去掉下面的代码
+//    [TTLogServer sendValueToLogServer:trackDescription parameters:@{@"color":@"ff0000"}];
 
     [[self.uploadSession dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         NSInteger statusCode = -1;
@@ -456,7 +458,7 @@ static NSString *const kTrackFaildURLFileName = @"ssADTrackFailedURLs.plist";
 
 - (void)sendEventWithURL:(NSURL *)url statusCode:(NSInteger)statusCode
 {
-    wrapperTrackEventWithCustomKeys(@"ad_stat", @"track_url", @(statusCode).stringValue, nil, @{@"url" : url.absoluteString});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"ad_stat" label:@"track_url" value:@(statusCode).stringValue source:nil extraDic:@{@"url" : url.absoluteString}];
 }
 
 //trackUrl之后发送adId
@@ -468,7 +470,7 @@ static NSString *const kTrackFaildURLFileName = @"ssADTrackFailedURLs.plist";
     [dict setValue:@(statusCode).stringValue forKey:@"ext_value"];
     [dict setValue:@(connectionType) forKey:@"nt"];
     [dict setValue:@"1" forKey:@"is_ad_event"];
-    wrapperTrackEventWithCustomKeys(@"embeded_ad", @"track_url",adId, nil, dict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"track_url" value:adId source:nil extraDic:dict];
 }
 
 @end
