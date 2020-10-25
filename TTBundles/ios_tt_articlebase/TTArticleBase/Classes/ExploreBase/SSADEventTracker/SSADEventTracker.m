@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  SSADEventTracker.m
 //  Article
 //
@@ -593,7 +594,6 @@ static SSADEventTracker * sharedManager;
         
         [TTTrackerWrapper eventData:events];
     } else {
-        wrapperTrackEventWithOption([TTSandBoxHelper appName], eventName, label, false);
     }
 }
 

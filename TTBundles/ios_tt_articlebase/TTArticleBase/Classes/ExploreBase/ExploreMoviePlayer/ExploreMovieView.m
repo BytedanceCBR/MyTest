@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreMovieView.m
 //  Article
 //
@@ -1272,7 +1273,7 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
     }
     @catch (NSException *exception) {
         LOGD(@"moviePlayContentForURL: %@", exception);
-        wrapperTrackEvent(@"video", @"play_url_exception");
+        [BDTrackerProtocol event:@"video" label:@"play_url_exception"];
     }
 
     if (playURL == nil) {
@@ -1287,7 +1288,7 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
         }
         @catch (NSException *exception) {
             LOGD(@"playMovie: %@", exception);
-            wrapperTrackEvent(@"video", @"play_movie_exception");
+            [BDTrackerProtocol event:@"video" label:@"play_movie_exception"];
         }
     }
 }
@@ -2764,7 +2765,7 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
                         [self exitFullScreen:YES completion:nil];
                     }
                     //统计
-                    wrapperTrackEventWithCustomKeys(@"live", @"loadingfail", self.gModel.groupID, nil, nil);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"live" label:@"loadingfail" value:self.gModel.groupID source:nil extraDic:nil];
 
                     break;
                 case 1:
@@ -2776,7 +2777,7 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
                     }
                     
                     //统计
-                    wrapperTrackEventWithCustomKeys(@"live",@"over",  self.gModel.groupID, nil, nil);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"live" label:@"over" value:self.gModel.groupID source:nil extraDic:nil];
                     
                     self.tracker.isPlaybackEnded = YES;
                     [self movieAutoPlay];
@@ -2787,14 +2788,14 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
                     [_moviePlayerController showLiveWaitingTipView];
                     
                     //统计
-                    wrapperTrackEventWithCustomKeys(@"live",@"waiting",  self.gModel.groupID, nil, nil);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"live" label:@"waiting" value:self.gModel.groupID source:nil extraDic:nil];
                     break;
                 case 3://直播中
                 default:
                     [self _playContent];
                     
                     //统计
-                    wrapperTrackEventWithCustomKeys(@"live",@"loading",  self.gModel.groupID, nil, nil);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"live" label:@"loading" value:self.gModel.groupID source:nil extraDic:nil];
                     
                     break;
             }
@@ -3051,7 +3052,7 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
             if (status == TTVideoTrafficViewStatusDuring) {
                 isInitial = 0;
             }
-            wrapperTrackEventWithCustomKeys(@"video", @"net_alert_show", self.gModel.groupID, nil, @{@"is_initial":@(isInitial),@"position":position});
+            [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"net_alert_show" value:self.gModel.groupID source:nil extraDic:@{@"is_initial":@(isInitial),@"position":position}];
             
             TTMovieNetTrafficViewModel *viewModel = [[TTMovieNetTrafficViewModel alloc] init];
             viewModel.videoSize = [self.letvVideoModel.videoInfo videoSizeForType:ExploreVideoDefinitionTypeSD];
@@ -3069,7 +3070,7 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
             _trafficView.continuePlayBlock = ^ {
                 StrongSelf;
                 [self p_changeTrafficTipEndCondition];
-                wrapperTrackEventWithCustomKeys(@"video", @"net_alert_confirm", self.gModel.groupID, nil, @{@"is_initial":@(isInitial),@"position":position});
+                [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"net_alert_confirm" value:self.gModel.groupID source:nil extraDic:@{@"is_initial":@(isInitial),@"position":position}];
                 self.trafficView.hidden = YES;
                 [self p_convertVideoToSDAndPlayWithSelectedDefinitionType:ExploreVideoDefinitionTypeSD];
             };
@@ -3170,7 +3171,7 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
     } else {
         NSString *str = [NSString stringWithFormat:@"%@_360p", [self.letvVideoModel.videoInfo definitionStrForType:self.videoModel.currentDefinitionType]];
         str = [str uppercaseString];
-        wrapperTrackEventWithCustomKeys(@"video", @"clarity_auto_select", [self.movieDelegateData ttv_groupModel].groupID, nil, @{@"select_type":str});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"clarity_auto_select" value:[self.movieDelegateData ttv_groupModel].groupID source:nil extraDic:@{@"select_type":str}];
         //需要切换到标清，再继续播放
         [self movieController:_moviePlayerController ResolutionButtonClickedWithType:type typeString:[TTMovieResolutionSelectView typeStringForType:type]];
     }
@@ -3244,7 +3245,7 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
             //统计
         _isPauseOnNetworkChanged = YES;
         [_moviePlayerController moviePause];
-        wrapperTrackEventWithCustomKeys(@"network_hint", @"live", self.gModel.groupID, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"network_hint" label:@"live" value:self.gModel.groupID source:nil extraDic:nil];
         [self.tracker sendNetAlertWithLabel:@"net_alert_show"];
         
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(kAlertTitle, nil) message:nil preferredType:TTThemedAlertControllerTypeAlert];

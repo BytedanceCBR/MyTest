@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreArticleCardCellView.m
 //  Article
 //
@@ -261,7 +262,7 @@
 }
 
 - (void)moreViewClick {
-    wrapperTrackEventWithCustomKeys(@"new_list", @"click_more", [TTActionPopView.shareGroupId stringValue], nil, [self extraValueDic]);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"new_list" label:@"click_more" value:[TTActionPopView.shareGroupId stringValue] source:nil extraDic:[self extraValueDic]];
     
     if (self.orderedData.actionList.count > 0) {
         NSMutableArray *actionItem = [[NSMutableArray alloc] init];
@@ -287,7 +288,7 @@
                     if ([dislikeWords count] > 0) {
                          TTActionListItem *item = [[TTActionListItem alloc] initWithDescription:descrip iconName:iconName hasSub:YES action:^{
                              [[TTActionPopView shareView] showDislikeView:wself.orderedData dislikeWords:dislikeWords groupID:@(self.orderedData.card.uniqueID)];
-                             wrapperTrackEventWithCustomKeys(@"new_list", @"show_dislike_with_reason", [TTActionPopView.shareGroupId stringValue], nil, [self extraValueDic]);
+                             [BDTrackerProtocol trackEventWithCustomKeys:@"new_list" label:@"show_dislike_with_reason" value:[TTActionPopView.shareGroupId stringValue] source:nil extraDic:[self extraValueDic]];
                          }];
                         [actionItem addObject:item];
                     } else {
@@ -332,12 +333,12 @@
     if (selectedWords.count > 0) {
         [userInfo setValue:selectedWords forKey:kExploreMixListNotInterestWordsKey];
         if (onlyOne) {
-            wrapperTrackEventWithCustomKeys(@"new_list", @"confirm_dislike_only_reason", [TTActionPopView.shareGroupId stringValue], nil, [self extraValueDic]);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"new_list" label:@"confirm_dislike_only_reason" value:[TTActionPopView.shareGroupId stringValue] source:nil extraDic:[self extraValueDic]];
         } else {
-            wrapperTrackEventWithCustomKeys(@"new_list", @"confirm_dislike_with_reason", [TTActionPopView.shareGroupId stringValue], nil, [self extraValueDic]);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"new_list" label:@"confirm_dislike_with_reason" value:[TTActionPopView.shareGroupId stringValue] source:nil extraDic:[self extraValueDic]];
         }
     } else {
-        wrapperTrackEventWithCustomKeys(@"new_list", @"confirm_dislike_no_reason", [TTActionPopView.shareGroupId stringValue], nil, [self extraValueDic]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"new_list" label:@"confirm_dislike_no_reason" value:[TTActionPopView.shareGroupId stringValue] source:nil extraDic:[self extraValueDic]];
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kExploreMixListNotInterestNotification object:self userInfo:userInfo];
@@ -837,8 +838,8 @@
 
         NSString *cardId = [NSString stringWithFormat:@"%lld", cardModel.uniqueID];
 
-        wrapperTrackEventWithCustomKeys(@"subscription", @"enter", cardId, nil, @{@"source":@"card"});
-        wrapperTrackEventWithCustomKeys(@"card", eventLabel, cardId, nil, @{@"category_name":[NSString stringWithFormat:@"%@",self.orderedData.categoryID]});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"subscription" label:@"enter" value:cardId source:nil extraDic:@{@"source":@"card"}];
+        [BDTrackerProtocol trackEventWithCustomKeys:@"card" label:eventLabel value:cardId source:nil extraDic:@{@"category_name":[NSString stringWithFormat:@"%@",self.orderedData.categoryID]}];
         
         if (!isEmptyString(self.orderedData.categoryID) ) {
             if ([self.orderedData.categoryID isEqualToString:kTTMainCategoryID]) {
@@ -980,11 +981,11 @@
     
     NSDictionary *extra = @{@"category_name": [NSString stringWithFormat:@"%@", self.orderedData.categoryID]};
     NSString *label = [NSString stringWithFormat:@"click_cell_%ld",(long)cardIndex];
-    wrapperTrackEventWithCustomKeys(@"card", label, [NSString stringWithFormat:@"%lld", cardObj.uniqueID], nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"card" label:label value:[NSString stringWithFormat:@"%lld", cardObj.uniqueID] source:nil extraDic:extra];
     
     if ([selectedOrderedData.originalData isKindOfClass:[Article class]] && cardIndex > 0) {
         // feed流卡片推荐文章
-        wrapperTrackEvent(@"card", [NSString stringWithFormat:@"click_article_%ld", cardIndex]);
+        [BDTrackerProtocol event:@"card" label:[NSString stringWithFormat:@"click_article_%ld", cardIndex]];
     }
     
     if ([selectedCellView respondsToSelector:@selector(didSelectWithContext:)]) {

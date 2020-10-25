@@ -230,7 +230,7 @@ NSString * const kWDWendaListViewControllerUMEventName = @"question";
             self.inviteUserModels = [NSMutableArray arrayWithArray:responseModel.candidate_invite_user];
             [self transNewAnswerModelToEntityAndAppendToList:responseModel.answer_list.data];
             self.offset = [responseModel.answer_list.offset floatValue];
-            self.maxTitleLineCount = [responseModel.header_max_lines integerValue];
+            self.maxTitleLineCount = 3;
             
             self.loadMoreHasMore = [responseModel.answer_list.has_more boolValue];
             _latelyHasException = NO;

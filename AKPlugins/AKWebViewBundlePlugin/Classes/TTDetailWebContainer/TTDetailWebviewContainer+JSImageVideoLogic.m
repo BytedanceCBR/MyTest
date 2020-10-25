@@ -50,7 +50,7 @@
             NSDictionary *parameters = [TTStringHelper parametersOfURLString:requestURL.query];
             if([parameters count] > 0)
             {
-                wrapperTrackEvent(@"detail", @"image_button");
+                [BDTrackerProtocol event:@"detail" label:@"image_button"];
                 int index = [[parameters objectForKey:@"index"] intValue];
                 NSValue * frameValue = nil;
                 if ([parameters objectForKey:@"left"] && [parameters objectForKey:@"top"] && [parameters objectForKey:@"width"] && [parameters objectForKey:@"height"]) {
@@ -89,15 +89,15 @@
             
             TTNetworkTrafficSetting settingType = [TTUserSettingsManager networkTrafficSetting];
             if (settingType == TTNetworkTrafficSave) {
-                wrapperTrackEvent(@"detail", @"show_one_image");
+                [BDTrackerProtocol event:@"detail" label:@"show_one_image"];
             }
             else {
-                wrapperTrackEvent(@"detail", @"enlarger_image");
+                [BDTrackerProtocol event:@"detail" label:@"enlarger_image"];
             }
         }
         else if ([requestURL.host isEqualToString:kWebViewUserClickLoadOriginImg] ) {//一键切换大图 按钮
             
-            wrapperTrackEvent(@"detail", @"show_image");
+            [BDTrackerProtocol event:@"detail" label:@"show_image"];
             
             //[self updateArticleImageMode];
             if ([self.delegate respondsToSelector:@selector(processRequestUpdateArticleImageMode:)]) {

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVCommentListCell.m
 //  Article
 //
@@ -287,7 +288,7 @@
 #pragma mark action
 - (void)avatarViewOnClick:(id)sender {
     if ([self isDetailComment]) {
-        wrapperTrackEvent(@"comment", @"click_avatar");
+        [BDTrackerProtocol event:@"comment" label:@"click_avatar"];
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(commentCell:avatarTappedWithCommentItem:)]) {
         [self.delegate commentCell:self avatarTappedWithCommentItem:self.item];
@@ -296,7 +297,7 @@
 
 - (void)nameViewOnClick:(id)sender {
     if ([self isDetailComment]) {
-        wrapperTrackEvent(@"comment", @"click_name");
+        [BDTrackerProtocol event:@"comment" label:@"click_name"];
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(commentCell:nameViewonClickedWithCommentItem:)]) {
         [self.delegate commentCell:self nameViewonClickedWithCommentItem:self.item];
@@ -310,7 +311,7 @@
 
 - (void)deleteButtonOnClick:(id)sender {
     if ([self isDetailComment]) {
-        wrapperTrackEvent(@"comment", @"delete");
+        [BDTrackerProtocol event:@"comment" label:@"delete"];
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(commentCell:deleteCommentWithCommentItem:)]) {
         [self.delegate commentCell:self deleteCommentWithCommentItem:self.item];
@@ -381,7 +382,7 @@
 
 - (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if ([url.absoluteString isEqualToString:kTTCommentContentLabelTruncationTokenURLString]) {
-        wrapperTrackEvent(@"comment", @"click_allcontent");
+        [BDTrackerProtocol event:@"comment" label:@"click_allcontent"];
         if (self.delegate && [self.delegate respondsToSelector:@selector(commentCell:contentUnfoldWithCommentItem:)]) {
             [self.delegate commentCell:self contentUnfoldWithCommentItem:self.item];
         }
@@ -446,7 +447,7 @@
         [menu setMenuVisible:YES animated:YES];
         [self changeContentLabelBackgroundColor];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willHideMenu) name:UIMenuControllerWillHideMenuNotification object:nil];
-        wrapperTrackEvent([self _trackerSource], [self isDetailComment]? @"longpress" : @"replier_longpress");
+        [BDTrackerProtocol event:[self _trackerSource] label:[self isDetailComment]? @"longpress" : @"replier_longpress"];
     }
 }
 
@@ -477,14 +478,14 @@
 
 - (void)customCopy:(__unused id)sender {
     [[UIPasteboard generalPasteboard] setString:self.layout.contentLayout.richSpanText.text];
-    wrapperTrackEvent([self _trackerSource], [self isDetailComment]? @"longpress_copy" : @"replier_longpress_copy");
+    [BDTrackerProtocol event:[self _trackerSource] label:[self isDetailComment]? @"longpress_copy" : @"replier_longpress_copy"];
 }
 
 - (void)reportComment:(__unused id)sender {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:self.commentModel.commentIDNum.stringValue forKey:@"comment_id"];
     [params setValue:self.commentModel.userID.stringValue forKey:@"user_id"];
-    wrapperTrackEvent([self _trackerSource], [self isDetailComment]? @"longpress_report" : @"replier_longpress_report");
+    [BDTrackerProtocol event:[self _trackerSource] label:[self isDetailComment]? @"longpress_report" : @"replier_longpress_report"];
     
     self.actionSheetController = [[TTActionSheetController alloc] init];
     
@@ -700,7 +701,7 @@
             }
             else {
                 if ([self.delegate respondsToSelector:@selector(commentCell:replyListClickedWithCommentItem:)]) {
-                    wrapperTrackEvent(@"comment", @"enter_detail_comment");
+                    [BDTrackerProtocol event:@"comment" label:@"enter_detail_comment"];
                     [self.delegate commentCell:wself
                         replyListClickedWithCommentItem:wself.item];
                 }

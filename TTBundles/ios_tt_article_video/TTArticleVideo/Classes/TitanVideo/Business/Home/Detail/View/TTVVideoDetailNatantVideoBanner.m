@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailNatantVideoBanner.m
 //  Article
 //
@@ -64,7 +65,7 @@
         {
             [self.viewModel jumpToOtherApp];
             if (self.viewModel.appName) {
-                wrapperTrackEventWithCustomKeys(@"video_banner", @"player_click_jump", self.groupID, nil, @{@"app" : self.viewModel.appName});
+                [BDTrackerProtocol trackEventWithCustomKeys:@"video_banner" label:@"player_click_jump" value:self.groupID source:nil extraDic:@{@"app" : self.viewModel.appName}];
             }
         }
             break;
@@ -72,7 +73,7 @@
         {
             [self.viewModel jumpToAppstore];
             if (self.viewModel.appName) {
-                wrapperTrackEventWithCustomKeys(@"video_banner", @"player_click_download", self.groupID, nil, @{@"app" : self.viewModel.appName});
+                [BDTrackerProtocol trackEventWithCustomKeys:@"video_banner" label:@"player_click_download" value:self.groupID source:nil extraDic:@{@"app" : self.viewModel.appName}];
             }
         }
             break;

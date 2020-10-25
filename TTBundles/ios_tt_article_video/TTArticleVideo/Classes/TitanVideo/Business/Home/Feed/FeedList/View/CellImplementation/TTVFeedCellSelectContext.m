@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVFeedCellSelectContext.m
 //  Article
 //
@@ -100,7 +101,7 @@
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:TTRouteUserInfoWithDict(statParams)];
             //针对广告不能通过sdk打开，但是传的有内部schema的情况
             if(isEmptyString(adid)){
-                wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", adid, nil, applinkParams);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"open_url_h5" value:adid source:nil extraDic:applinkParams];
             }
         }
     }
@@ -222,7 +223,7 @@
             NSMutableDictionary *applinkParams = [NSMutableDictionary dictionary];
             [applinkParams setValue:logExtra forKey:@"log_extra"];
             //针对不能通过sdk和openurl打开的情况
-            wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", adid, nil, applinkParams);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"open_url_h5" value:adid source:nil extraDic:applinkParams];
         }
 
         // 如果是视频cell且正在播放，则detach视频并传入详情页

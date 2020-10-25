@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreSearchViewController.m
 //  Article
 //
@@ -89,7 +90,7 @@ static char keyboardShowingKey;
         
         NSString *growthFrom = [contextInfo tt_stringValueForKey:@"growth_from"];
         if (growthFrom) {
-            wrapperTrackEvent(@"search_detail", growthFrom);
+            [BDTrackerProtocol event:@"search_detail" label:growthFrom];
         }
 
         NSString *apiParam = [contextInfo tt_stringValueForKey:@"api_param"];
@@ -265,10 +266,10 @@ static char keyboardShowingKey;
     switch (_fromType) {
         case ListDataSearchFromTypeContent:
             umengEventString = @"article_keyword_search";
-            wrapperTrackEvent(umengEventString, @"enter");
+            [BDTrackerProtocol event:umengEventString label:@"enter"];
             break;
         case ListDataSearchFromTypeTag:
-            wrapperTrackEvent(umengEventString, @"enter");
+            [BDTrackerProtocol event:umengEventString label:@"enter"];
             break;
         case ListDataSearchFromTypeConcern:
             umengEventString = @"concern_search";
@@ -282,7 +283,7 @@ static char keyboardShowingKey;
     }
     self.searchView.umengEventString = umengEventString;
     // 统计 - 所有入口进入搜索页
-    wrapperTrackEvent(@"search_tab", @"enter");
+    [BDTrackerProtocol event:@"search_tab" label:@"enter"];
     if ([SSCommonLogic useNewSearchTransitionAnimation] && [SSCommonLogic isSearchTransitionEnabled]
          && [TTTopBarManager sharedInstance_tt].topBarConfigValid.boolValue && (ListDataSearchFromTypeTab == _fromType || ListDataSearchFromTypeVideo == _fromType)) {
         CGFloat topInset = 20;

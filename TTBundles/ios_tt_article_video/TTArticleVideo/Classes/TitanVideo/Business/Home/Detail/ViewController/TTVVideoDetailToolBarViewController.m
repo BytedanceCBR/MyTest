@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailToolBarViewController.m
 //  Article
 //
@@ -1131,7 +1132,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     [extraDict setValue:@"click_video" forKey:@"source"];
     [extraDict setValue:@(1) forKey:@"aggr_type"];
     [extraDict setValue:@(1) forKey:@"type"];
-    wrapperTrackEventWithCustomKeys(@"detail_share", @"delete_ugc", [self.detailModel uniqueID], nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail_share" label:@"delete_ugc" value:[self.detailModel uniqueID] source:nil extraDic:extraDict];
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:[[self userInfo] stringValueForKey:@"user_id" defaultValue:nil] forKey:@"user_id"];
     [params setValue:itemID forKey:@"item_id"];

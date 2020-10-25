@@ -97,7 +97,7 @@
     if (self.playerStateStore.state.isInDetail) {
         label = @"detail_continue";
     }
-    wrapperTrackEvent(stopEvent, label);
+    [BDTrackerProtocol event:stopEvent label:label];
 }
 
 - (void)removeCacheForVideoID:(NSString *)videoID

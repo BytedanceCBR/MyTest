@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTArticleDetailMenuController.m
 //  Article
 //
@@ -205,7 +206,7 @@
     [extraDic setObject:self.article.mediaInfo[@"media_id"] forKey:@"card_id"];
     [extraDic setObject:@(indexPath.row) forKey:@"secondmenu_id"];
     [extraDic setObject:self.article.mediaInfo[@"media_id"] forKey:@"card_mid"];
-    wrapperTrackEventWithCustomKeys(@"detail", @"click_card_secondmenu", self.article.groupModel.groupID, nil, extraDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"click_card_secondmenu" value:self.article.groupModel.groupID source:nil extraDic:extraDic];
 }
 
 - (TTArticleDetailMenuTitleView *)titleView {

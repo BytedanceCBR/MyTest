@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTPhotoTabViewController.m
 //  Article
 //
@@ -228,7 +229,7 @@
             self.lastSelectedPageIndex = index;
             
             NSString *label = [NSString stringWithFormat:@"%@_%@", @"enter_click", category.categoryID];
-            wrapperTrackEvent(@"category", label);
+            [BDTrackerProtocol event:@"category" label:label];
         } else {
             //5.7 新增对于图片tab刷新统计
             //针对点击频道名刷新
@@ -257,7 +258,7 @@
                 }
                 label = [self modifyEventLabelForRefreshEvent:label categoryModel:category];
                 
-                wrapperTrackEvent(event, label);
+                [BDTrackerProtocol event:event label:label];
             }
             [self.pageViewController reloadCurrentPage];
         }
@@ -280,7 +281,7 @@
         self.lastSelectedPageIndex = toIndex;
         
         NSString *label = [NSString stringWithFormat:@"%@_%@", @"enter_flip", currCategoryModel.categoryID];
-        wrapperTrackEvent(@"category", label);
+        [BDTrackerProtocol event:@"category" label:label];
     }
 }
 
@@ -305,7 +306,7 @@
     TTCollectionListPageCell *cell = (TTCollectionListPageCell *)[_pageViewController currentCollectionPageCell];
     [cell.listView pullAndRefresh];
     
-    wrapperTrackEvent(@"refresh", [NSString stringWithFormat:@"pic_%@", cell.category.categoryID]);
+    [BDTrackerProtocol event:@"refresh" label:[NSString stringWithFormat:@"pic_%@", cell.category.categoryID]];
 }
 
 - (void)handleRefreshButtonSettingEnabledNotification:(NSNotification *)notification
@@ -372,7 +373,7 @@
         }
         label = [self modifyEventLabelForRefreshEvent:label categoryModel:category];
         
-        wrapperTrackEvent(event, label);
+        [BDTrackerProtocol event:event label:label];
     }
     [self.pageViewController reloadCurrentPage];
 }

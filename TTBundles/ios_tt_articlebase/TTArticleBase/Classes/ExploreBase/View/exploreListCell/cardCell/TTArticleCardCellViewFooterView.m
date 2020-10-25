@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTArticleCardCellViewFooterView.m
 //  Article
 //
@@ -275,7 +276,7 @@
         [TTTrackerWrapper eventV3:@"click_more_news" params:params];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:self.showMoreSchema]];
     }
-    wrapperTrackEventWithCustomKeys(@"card", label, self.cardID, nil, @{@"category_name":self.categoryID});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"card" label:label value:self.cardID source:nil extraDic:@{@"category_name":self.categoryID}];
 }
 
 - (void)setTarget:(id)target selector:(SEL)selector {

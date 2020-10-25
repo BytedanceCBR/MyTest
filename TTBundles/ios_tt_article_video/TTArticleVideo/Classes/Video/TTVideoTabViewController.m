@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVideoTabViewController.m
 //  Article
 //
@@ -353,7 +354,7 @@ TTTopBarDelegate
         }
         label = [self modifyEventLabelForRefreshEvent:label categoryModel:category];
         
-        wrapperTrackEvent(event, label);
+        [BDTrackerProtocol event:event label:label];
     }
     
     [self.pageViewController reloadCurrentPage];
@@ -492,7 +493,7 @@ TTTopBarDelegate
             self.lastSelectedPageIndex = index;
             
             NSString *label = [NSString stringWithFormat:@"%@_%@", @"enter_click", category.categoryID];
-            wrapperTrackEvent(@"category", label);
+            [BDTrackerProtocol event:@"category" label:label];
         } else {
             //5.7 新增对于视频Tab刷新统计
             //针对点击频道名刷新
@@ -521,7 +522,7 @@ TTTopBarDelegate
                 }
                 label = [self modifyEventLabelForRefreshEvent:label categoryModel:category];
                 
-                wrapperTrackEvent(event, label);
+                [BDTrackerProtocol event:event label:label];
             }
             
             [self.pageViewController reloadCurrentPage];
@@ -545,7 +546,7 @@ TTTopBarDelegate
         [((TTNavigationController *)self.navigationController) pushViewControllerByTransitioningAnimation:viewController animated:YES];
         [TTCustomAnimationManager sharedManager].pushSearchVCWithCustomAnimation = YES;
     }
-    wrapperTrackEvent(@"video", @"video_tab_search");
+    [BDTrackerProtocol event:@"video" label:@"video_tab_search"];
 }
 
 #pragma mark -
@@ -564,7 +565,7 @@ TTTopBarDelegate
             categoryID = @"subv_hotsoon";
         }
         NSString *labelString = [NSString stringWithFormat:@"enter_flip_%@",categoryID];
-        wrapperTrackEventWithCustomKeys(@"category", labelString, nil, nil, @{@"category_id":categoryID});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"category" label:labelString value:nil source:nil extraDic:@{@"category_id":categoryID}];
     }
 }
 
@@ -579,7 +580,7 @@ TTTopBarDelegate
         
         TTCategory *currCategoryModel = self.categories[toIndex];
         NSString *label = [NSString stringWithFormat:@"%@_%@", @"enter_flip", currCategoryModel.categoryID];
-        wrapperTrackEvent(@"category", label);
+        [BDTrackerProtocol event:@"category" label:label];
     }
 }
 
@@ -603,7 +604,7 @@ TTTopBarDelegate
     TTCollectionListPageCell *cell = (TTCollectionListPageCell *)[_pageViewController currentCollectionPageCell];
     [cell triggerPullRefresh];
     
-    wrapperTrackEvent(@"refresh", [NSString stringWithFormat:@"video_%@", cell.category.categoryID]);
+    [BDTrackerProtocol event:@"refresh" label:[NSString stringWithFormat:@"video_%@", cell.category.categoryID]];
 }
 
 - (void)handleRefreshButtonSettingEnabledNotification:(NSNotification *)notification

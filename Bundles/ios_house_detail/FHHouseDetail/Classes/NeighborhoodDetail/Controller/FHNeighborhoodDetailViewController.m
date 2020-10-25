@@ -101,9 +101,10 @@
 
 - (void)initMapping {
     
-    NSArray *name = @[@"基础信息",@"小区户型",@"小区点评",@"小区测评",@"周边配套",@"周边配套",@"推荐房源"];
+    NSArray *name = @[@"基础信息",@"小区户型",@"小区户型",@"小区点评",@"小区测评",@"周边配套",@"周边配套",@"推荐房源"];
     NSArray *type = @[@(FHNeighborhoodDetailSectionTypeBaseInfo),
                       @(FHNeighborhoodDetailSectionTypeFloorpan),
+                      @(FHNeighborhoodDetailSectionTypeAgent),
                       @(FHNeighborhoodDetailSectionTypeCommentAndQuestion),
                       @(FHNeighborhoodDetailSectionTypeStrategy),
                       @(FHNeighborhoodDetailSectionTypeSurrounding),
@@ -971,7 +972,6 @@
     }
     
     NSMutableDictionary *tracerDic = [[NSMutableDictionary alloc] init];
-    tracerDic[@"event_tracking_id"] = @"107645";
     tracerDic[@"event_type"] = @"house_app2c_v2";
     tracerDic[@"enter_type"] = enterType;
     tracerDic[@"tab_name"] = [self getTabNameBySectionType:sectionType];
