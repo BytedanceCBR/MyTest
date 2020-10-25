@@ -7,6 +7,7 @@
 
 #import "BDDYCClient.h"
 #import <FHHouseBase/FHURLSettings.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #if __has_include(<TTBaseLib/TTSandBoxHelper.h>)
 #import <TTBaseLib/TTSandBoxHelper.h>
@@ -60,7 +61,7 @@
         
 #if BDDYC_HAS_INSTALL
         conf.getDeviceIdBlock = ^NSString * {
-            return [[TTInstallIDManager sharedInstance] deviceID];
+            return [BDTrackerProtocol deviceID];
         };
 #endif
         
@@ -115,7 +116,7 @@
     
 #if BDDYC_HAS_INSTALL
     conf.getDeviceIdBlock = ^NSString * {
-        return [[TTInstallIDManager sharedInstance] deviceID];
+        return [BDTrackerProtocol deviceID];
     };
 #endif
     

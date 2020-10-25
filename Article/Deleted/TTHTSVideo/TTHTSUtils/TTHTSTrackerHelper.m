@@ -9,17 +9,18 @@
 #import "TTHTSTrackerHelper.h"
 #import "ExploreOrderedData+TTBusiness.h"
 #import "TSVShortVideoOriginalData.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation TTHTSTrackerHelper
 
 + (void)trackUnInterestButtonClickedWithExploreOrderData:(ExploreOrderedData *)orderedData extraParams:(NSDictionary *)extraParams
 {
-    [TTTrackerWrapper eventV3:@"dislike_menu_no_reason" params:[self paramsWithOrderedData:orderedData extraParams:extraParams]];
+    [BDTrackerProtocol eventV3:@"dislike_menu_no_reason" params:[self paramsWithOrderedData:orderedData extraParams:extraParams]];
 }
 
 + (void)trackDislikeViewOKBtnClickedWithExploreOrderData:(ExploreOrderedData *)orderedData extraParams:(NSDictionary *)extraParams
 {
-    [TTTrackerWrapper eventV3:@"rt_dislike" params:[self paramsWithOrderedData:orderedData extraParams:extraParams]];
+    [BDTrackerProtocol eventV3:@"rt_dislike" params:[self paramsWithOrderedData:orderedData extraParams:extraParams]];
 }
 
 + (NSDictionary *)paramsWithOrderedData:(ExploreOrderedData *)orderedData extraParams:(NSDictionary *)extraParams

@@ -16,6 +16,7 @@
 #import "TTDeviceHelper.h"
 #import "TTStringHelper.h"
 #import "TTFollowNotifyServer.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 typedef NS_ENUM(NSInteger, TTArticleCellEntityWordViewType)
 {
@@ -238,7 +239,7 @@ typedef NS_ENUM(NSInteger, TTArticleCellEntityWordViewType)
     // source（category_name）；like（能否关心，1表示可以）；item_id（文章的item_id）；keyword（实体词的名字）
     Article *article = _orderedData.article;
     BOOL isLikeType = [[article.entityWordInfoDict valueForKey:kEntityStyle] integerValue] == TTArticleCellEntityWordViewTypeLike;
-    [TTTrackerWrapper eventData:@{@"category": @"umeng",
+    [BDTrackerProtocol eventData:@{@"category": @"umeng",
                            @"tag":      @"like",
                            @"label":    label,
                            @"value":    @(article.uniqueID) ? : @"",

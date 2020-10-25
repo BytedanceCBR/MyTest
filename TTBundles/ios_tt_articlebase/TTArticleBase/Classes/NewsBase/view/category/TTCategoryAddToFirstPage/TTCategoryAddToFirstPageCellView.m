@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTCategoryAddToFirstPageCellView.m
 //  Article
 //
@@ -339,7 +340,7 @@ NSString * const TTCategoryAddToFirstPageCellIndexPath = @"TTCategoryAddToFirstP
             
             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"已放到首屏", nil) indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
             
-            wrapperTrackEvent(@"channel_detail", @"add");
+            [BDTrackerProtocol event:@"channel_detail" label:@"add"];
         }
         
         

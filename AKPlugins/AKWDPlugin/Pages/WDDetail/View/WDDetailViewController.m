@@ -69,6 +69,9 @@
 #import "UIFont+House.h"
 #import <TTActivityPanelDefine.h>
 #import <TTActivitiesManager.h>
+#import "TTDislikeContentItem.h"
+#import "TTBlockContentItem.h"
+#import "TTReportContentItem.h"
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -1463,10 +1466,10 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)p_sendNatantViewVisableTrack
 {
     if ([self.detailView.detailWebView isNatantViewOnOpenStatus]) {
-        wrapperTrackEvent(kWDDetailViewControllerUMEventName, @"handle_close_drawer");
+        [BDTrackerProtocol event:kWDDetailViewControllerUMEventName label:@"handle_close_drawer"];
     }
     else {
-        wrapperTrackEvent(kWDDetailViewControllerUMEventName, @"handle_open_drawer");
+        [BDTrackerProtocol event:kWDDetailViewControllerUMEventName label:@"handle_open_drawer"];
     }
 }
 
@@ -1610,6 +1613,14 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self.actionManager setContext:context];
     DetailActionRequestType requestType = [WDShareUtilsHelper requestTypeForShareActivityType:activity];
     [self.actionManager startItemActionByType:requestType];
+    
+    id<TTActivityContentItemProtocol> contentItem = [activity contentItem];
+    NSString *contentItemType = [contentItem contentItemType];
+    
+    if (contentItemType == TTActivityContentItemTypeDislike || contentItemType == TTActivityContentItemTypeBlock || contentItemType == TTActivityContentItemTypeReport) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"将减少类似推荐" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
+        return;
+    }
     if (requestType != DetailActionTypeWeixinShare &&
         requestType != DetailActionTypeWeixinFriendShare &&
         requestType != DetailActionTypeQQShare &&
@@ -2071,7 +2082,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 - (void)tt_commentViewControllerFooterCellClicked:(nonnull id<TTCommentViewControllerProtocol>)ttController
 {
     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
-    wrapperTrackEventWithCustomKeys(@"fold_comment", @"click", self.detailModel.answerEntity.ansid, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment" label:@"click" value:self.detailModel.answerEntity.ansid source:nil extraDic:extra];
     NSMutableDictionary *condition = [[NSMutableDictionary alloc] init];
     [condition setValue:self.detailModel.answerEntity.ansid forKey:@"groupID"];
     

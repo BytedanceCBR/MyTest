@@ -21,6 +21,7 @@
 #import "TTRoute.h"
 #import "TTAlphaThemedButton.h"
 #import "SSAvatarView.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define kDislikeButtonWidth 60
@@ -106,7 +107,7 @@
     [dict setValue:self.orderedData.categoryID forKey:@"category_name"];
     [dict setValue:@(friendNumber) forKey:@"show_num"];
     [dict setValue:recommendType forKey:@"recommend_type"];
-    [TTTrackerWrapper eventV3:@"vert_follow_card" params:dict];
+    [BDTrackerProtocol eventV3:@"vert_follow_card" params:dict];
 }
 
 - (void)didDisappear {
@@ -299,7 +300,7 @@
     [dict setValue:@"all_follow_card" forKey:@"source"];
     [dict setValue:@(friendNumber) forKey:@"show_num"];
     [dict setValue:recommendType forKey:@"recommend_type"];
-    [TTTrackerWrapper eventV3:@"all_button_click" params:dict];
+    [BDTrackerProtocol eventV3:@"all_button_click" params:dict];
 
     [self.action presentRecommendUsersViewControllerWithTitle:[self.recommendRedpacketData.friendsListInfo tt_stringValueForKey:@"title"]
                                                  buttonFormat:[self.recommendRedpacketData.friendsListInfo tt_stringValueForKey:@"button_text"]
@@ -384,7 +385,7 @@
     [dict setValue:self.orderedData.categoryID forKey:@"category_name"];
     [dict setValue:@"all_follow_card" forKey:@"source"];
     [dict setValue:@"show" forKey:@"action"];
-    [TTTrackerWrapper eventV3:@"follow_more" params:dict];
+    [BDTrackerProtocol eventV3:@"follow_more" params:dict];
 }
 
 - (void)generateAvatarViews:(NSInteger)numberOfAvatars recommendUsers:(NSArray <FRRecommendUserLargeCardStructModel *> *)recommendUsers {
@@ -433,7 +434,7 @@
     [dict setValue:self.orderedData.categoryID forKey:@"category_name"];
     [dict setValue:@"all_follow_card" forKey:@"source"];
     [dict setValue:@"click" forKey:@"action"];
-    [TTTrackerWrapper eventV3:@"follow_more" params:dict];
+    [BDTrackerProtocol eventV3:@"follow_more" params:dict];
 }
 
 #pragma mark - GET

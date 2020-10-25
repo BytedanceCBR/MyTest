@@ -25,6 +25,7 @@
 #import "TTUGCDefine.h"
 #import "TTKitchenHeader.h"
 #import "TTUGCDefine.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTWendaAnswerCellLayoutModelManager ()<TTAccountMulticastProtocol>
 
@@ -764,7 +765,7 @@
     [params setValue:self.answerId forKey:@"ansid"];
     [params setValue:self.orderedData.logPb forKey:@"log_pb"];
     [params setValue:self.orderedData.categoryID forKey:@"source"];
-    [TTTrackerWrapper eventV3:@"cell_click_picture" params:params];
+    [BDTrackerProtocol eventV3:@"cell_click_picture" params:params];
 }
 
 - (void)eventV3:(NSString *)event extra:(NSDictionary *)extra {
@@ -796,7 +797,7 @@
     else{
         [params setValue:self.userId forKey:@"user_id"];
     }
-    [TTTrackerWrapper eventV3:event params:params];
+    [BDTrackerProtocol eventV3:event params:params];
 }
 
 @end

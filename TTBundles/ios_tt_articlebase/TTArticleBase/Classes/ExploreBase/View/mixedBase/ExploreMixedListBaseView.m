@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreMixedListBaseView.m
 //  Article
 //
@@ -1699,7 +1700,7 @@ TTRefreshViewDelegate
                 Book *book = orderedData.book;
                 if (book && [TTTrackerWrapper isOnlyV3SendingEnable]) {
                 } else {
-                    wrapperTrackEventWithCustomKeys(@"card", @"card_show", [NSString stringWithFormat:@"%lld", cardObj.uniqueID], nil, extra);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"card" label:@"card_show" value:[NSString stringWithFormat:@"%lld", cardObj.uniqueID] source:nil extraDic:extra];
                 }
                 if(book) {
                     [TTTrackerWrapper eventV3:@"show_card" params:@{@"category_name":@"novel_channel"} isDoubleSending:YES];
@@ -3309,14 +3310,14 @@ TTRefreshViewDelegate
 - (void)addLastReadTrackWithLabel:(NSString *)label
 {
     if ([self isNewTab]) {
-        wrapperTrackEvent(@"new_tab", label);
+        [BDTrackerProtocol event:@"new_tab" label:label];
     }
     else {
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
         [dict setValue:self.categoryID forKey:@"category_id"];
         [dict setValue:self.concernID forKey:@"concern_id"];
         [dict setValue:[NSNumber numberWithInteger:self.refer] forKey:@"refer"];
-        wrapperTrackEventWithCustomKeys(@"category", label, nil, nil, dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"category" label:label value:nil source:nil extraDic:dict];
     }
 }
 
@@ -4559,7 +4560,7 @@ TTRefreshViewDelegate
             [TTTrackerWrapper eventData:tipRefreshTrackerDic];
         }
     }
-    wrapperTrackEvent(@"category", @"refresh_tip_all");
+    [BDTrackerProtocol event:@"category" label:@"refresh_tip_all"];
 }
 
 - (void)hideRemoteReloadTip {

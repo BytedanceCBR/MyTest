@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTExploreMainViewController.m
 //  Article
 //
@@ -51,7 +52,6 @@
 #import "TTLaunchTracer.h"
 #import "TTCategoryStayTrackManager.h"
 #import "FHEnvContext.h"
-#import <TTInstallService/TTInstallIDManager.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import <TTArticleBase/ExploreLogicSetting.h>
 #import <TTArticleBase/Log.h>
@@ -353,7 +353,7 @@
     [self.collectionVC viewWillDisappear:NO];
     [self.collectionVC viewDidDisappear:NO];
     
-    wrapperTrackEvent(@"channel_manage", @"open");
+    [BDTrackerProtocol event:@"channel_manage" label:@"open"];
     
     [self showCategoryViewController];
 }
@@ -447,11 +447,11 @@
         
         if ([category.categoryID isEqualToString:kTTSubscribeCategoryID])
         {
-            wrapperTrackEvent(@"subscription", @"tab_refresh");
+            [BDTrackerProtocol event:@"subscription" label:@"tab_refresh"];
         }
         
         NSString *eventStr = @"navigation";
-        wrapperTrackEvent(eventStr, [NSString stringWithFormat:@"click_%@", category.categoryID]);
+        [BDTrackerProtocol event:eventStr label:[NSString stringWithFormat:@"click_%@", category.categoryID]];
     }else
     {
         id<TTFeedCollectionCell> currentCell = self.collectionVC.currentCollectionPageCell;
@@ -552,19 +552,19 @@
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
         if ([category.categoryID isEqualToString:kTTMainCategoryID]) {
             if (hasTip) {
-                wrapperTrackEvent(@"new_tab", @"tab_refresh_tip");
+                [BDTrackerProtocol event:@"new_tab" label:@"tab_refresh_tip"];
             }
             else {
-                wrapperTrackEvent(@"new_tab", @"tab_refresh");
+                [BDTrackerProtocol event:@"new_tab" label:@"tab_refresh"];
             }
         }
         else if(![category.categoryID isEqualToString:kTTUGCVideoCategoryID]){
             TTCategory *ttCategory = (TTCategory *)category;
             if (hasTip) {
-                wrapperTrackEvent(@"category", [self modifyEventLabelForRefreshEvent:@"tab_refresh_tip" categoryModel:ttCategory]);
+                [BDTrackerProtocol event:@"category" label:[self modifyEventLabelForRefreshEvent:@"tab_refresh_tip" categoryModel:ttCategory]];
             }
             else {
-                wrapperTrackEvent(@"category", [self modifyEventLabelForRefreshEvent:@"tab_refresh" categoryModel:ttCategory]);
+                [BDTrackerProtocol event:@"category" label:[self modifyEventLabelForRefreshEvent:@"tab_refresh" categoryModel:ttCategory]];
             }
         }
     }
@@ -757,7 +757,7 @@
         [TTTrackerWrapper eventV3:@"search_tab_click" params:@{@"search_source":@"top_bar",
                                                                @"from_tab_name" : @"home"}];
     }else{
-        wrapperTrackEvent(@"search_tab", @"top_bar_click");
+        [BDTrackerProtocol event:@"search_tab" label:@"top_bar_click"];
     }
     TLS_LOG(@"searchBarButtonActionFired");
     

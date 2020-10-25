@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVideoDetailADContainerView.m
 //  Article
 //
@@ -105,7 +106,7 @@ static NSMutableDictionary *_adClasses;
                 [events setValue:@"1" forKey:@"is_ad_event"];
                 TTInstallNetworkConnection nt = [[TTTrackerProxy sharedProxy] connectionType];
                 [events setValue:@(nt) forKey:@"nt"];
-                wrapperTrackEventWithCustomKeys(@"detail_ad", @"show", obj.mediaID, nil, events);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"detail_ad" label:@"show" value:obj.mediaID source:nil extraDic:events];
             }
             else if (obj.detailADType == ArticleDetailADModelTypeCounsel) {
                 [obj sendTrackEventWithLabel:@"show" eventName:@"detail_counsel"];
@@ -428,7 +429,7 @@ static NSMutableDictionary *_adClasses;
         [events setValue:@"1" forKey:@"is_ad_event"];
         TTInstallNetworkConnection nt = [[TTTrackerProxy sharedProxy] connectionType];
         [events setValue:@(nt) forKey:@"nt"];
-        wrapperTrackEventWithCustomKeys(@"detail_ad", @"click", adModel.mediaID, nil, events);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail_ad" label:@"click" value:adModel.mediaID source:nil extraDic:events];
         [adModel sendTrackEventWithLabel:@"detail_show" eventName:@"detail_ad"];
     } else {
         [adModel sendTrackEventWithLabel:@"click" eventName:@"detail_ad"];
@@ -436,7 +437,7 @@ static NSMutableDictionary *_adClasses;
 
     if (self.isVideoAd) {
         NSString *uniqueID = [NSString stringWithFormat:@"%lld",self.viewModel.article.uniqueID];
-        wrapperTrackEventWithCustomKeys(@"video", @"detail_selfad", uniqueID, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_selfad" value:uniqueID source:nil extraDic:nil];
     }
 }
 

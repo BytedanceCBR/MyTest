@@ -43,7 +43,7 @@
 #import "NewsBaseDelegate.h"
 #import "TTDebugRealMonitorManager.h"
 #import "TTCanvasBundleManager.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTUserSettings/TTUserSettingsManager+FontSettings.h>
 #import <TTUserSettings/TTUserSettingsManager+NetworkTraffic.h>
 #import <TTReachability/TTReachability.h>

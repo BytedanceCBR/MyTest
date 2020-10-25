@@ -25,6 +25,7 @@
 #import "WDInviteOpenService.h"
 #import "TTAdapterManager.h"
 #import "TTRoute.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 @interface ArticleMessageContainerViewController () <TTSwipePageViewControllerDelegate, TTHorizontalCategoryBarDelegate>
@@ -165,18 +166,18 @@
             [self.pageController setSelectedIndex:index animated:YES];
             if (index == 1) {
                 if(self.topTabView.categories[index].badgeNum > 0){
-                    wrapperTrackEvent(@"message_list", @"display_digg_with_badge");
+                    [BDTrackerProtocol event:@"message_list" label:@"display_digg_with_badge"];
                 }
                 else {
-                    wrapperTrackEvent(@"message_list", @"display_digg_without_badge");
+                    [BDTrackerProtocol event:@"message_list" label:@"display_digg_without_badge"];
                 }
             }
             else if(index == 2) {
                 if(self.topTabView.categories[index].badgeNum > 0){
-                    wrapperTrackEvent(@"message_list", @"display_notification_with_badge");
+                    [BDTrackerProtocol event:@"message_list" label:@"display_notification_with_badge"];
                 }
                 else {
-                    wrapperTrackEvent(@"message_list", @"display_notification_without_badge");
+                    [BDTrackerProtocol event:@"message_list" label:@"display_notification_without_badge"];
                 }
             }
         };

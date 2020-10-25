@@ -8,7 +8,7 @@
 
 #import "TTUserConfigReportTask.h"
 #import "TTUserSettingsReporter.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTLocationManager.h"
 #import "TTSettingsManager.h"
 #import <TTThemed/TTThemeManager.h>
@@ -34,8 +34,8 @@ DEC_TASK("TTUserConfigReportTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+4);
     [super startWithApplication:application options:launchOptions];
     [TTUserSettingsReporter startWithConfigParams:^NSDictionary *{
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
-        [params setValue:[[TTInstallIDManager sharedInstance] installID] forKey:@"install_id"];
-        [params setValue:[[TTInstallIDManager sharedInstance] deviceID ] forKey:@"device_id"];
+        [params setValue:[BDTrackerProtocol installID] forKey:@"install_id"];
+        [params setValue:[BDTrackerProtocol deviceID ] forKey:@"device_id"];
         NSMutableDictionary *data = [NSMutableDictionary dictionary];
         NSNumber * nightModeValue = @1;
         if ([[TTThemeManager  sharedInstance_tt] currentThemeMode] == TTThemeModeDay) {

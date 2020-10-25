@@ -39,6 +39,7 @@
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import "SSCommonLogic.h"
 #import <TTNetworkManager/TTNetworkManager.h>
+#import "UIView+FHTracker.h"
 
 NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotification";
 
@@ -259,6 +260,8 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
     
     if (self.isShowTopSearchPanel) {
         _pageSearchPanel = [[FHHomeSearchPanelView alloc] init];
+        _pageSearchPanel.fh_pageType = self.fh_pageType;
+        _pageSearchPanel.fh_originFrom = self.fh_originFrom;
         //    _pageSearchPanel = [[HomePageSearchPanel alloc] init];
         [self.backgroundImageView addSubview:_pageSearchPanel];
     }else

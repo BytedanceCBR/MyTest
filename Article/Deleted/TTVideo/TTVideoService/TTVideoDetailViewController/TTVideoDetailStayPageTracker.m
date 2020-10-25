@@ -7,8 +7,8 @@
 //
 
 #import "TTVideoDetailStayPageTracker.h"
-#import <TTTracker/TTTrackerProxy.h>
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 static NSInteger const vaildStayPageMinInterval = 0;
 static NSInteger const vaildStayPageMaxInterval = 7200;
 
@@ -68,13 +68,13 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     }
     if (self.viewIsAppear) {
         if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTrackerWrapper category:@"umeng"
+            [BDTrackerProtocol category:@"umeng"
                       event:@"stay_page"
                       label:_clickLabel
                        dict:dict];
         }
         
-        [TTTrackerWrapper eventV3:@"stay_page" params:event3Dict isDoubleSending:YES];
+        [BDTrackerProtocol eventV3:@"stay_page" params:event3Dict isDoubleSending:YES];
     }
 }
 
@@ -95,11 +95,9 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
     [dictionary setValue:@(duration) forKey:@"ext_value"];
     [dictionary setValue:logExtra forKey:@"log_extra"];
     [dictionary setValue:@"1" forKey:@"is_ad_event"];
-    TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
-    [dictionary setValue:@(connectionType) forKey:@"nt"];
     
     if (self.viewIsAppear) {
-        [TTTrackerWrapper eventData:dictionary];
+        [BDTrackerProtocol eventData:dictionary];
     }
 }
 

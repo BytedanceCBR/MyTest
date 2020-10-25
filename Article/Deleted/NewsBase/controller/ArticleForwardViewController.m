@@ -19,6 +19,7 @@
 #import "TTThemeManager.h"
 #import "UIColor+TTThemeExtension.h"
 #import "UITextView+TTAdditions.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kMinimumTextViewHeight 100
 
@@ -142,7 +143,7 @@
     self.notifyBarView = [[ArticleListNotifyBarView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navigationBar.frame), self.view.width, [SSCommonLogic articleNotifyBarHeight])];
     [self.view addSubview:_notifyBarView];
     
-    wrapperTrackEvent(self.umengEventString, @"enter");
+    [BDTrackerProtocol event:self.umengEventString label:@"enter"];
 }
 
 - (void)setSourceType:(ArticleForwardSourceType)sourceType {
@@ -209,7 +210,7 @@
     if ([self.textView isFirstResponder]) {
         [self.textView resignFirstResponder];
     }
-    wrapperTrackEvent(self.umengEventString, @"cancel");
+    [BDTrackerProtocol event:self.umengEventString label:@"cancel"];
     [[ArticleForwardManager sharedManager] cancel];
     if (self.navigationController) {
         [self.navigationController dismissViewControllerAnimated:YES completion:NULL];
@@ -224,7 +225,7 @@
         [self.textView resignFirstResponder];
     }
     NSString *label = self.textView.text.length > 0 ? @"repost":@"repost_none";
-    wrapperTrackEvent(self.umengEventString, label);
+    [BDTrackerProtocol event:self.umengEventString label:label];
     if (!TTNetworkConnected()) {
         [self showNotifyBarMsg:NSLocalizedString(@"网络不给力，请稍后重试", nil)];
         return;

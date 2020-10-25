@@ -26,6 +26,7 @@
 #import "TTDeviceHelper.h"
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceUIUtils.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 #define kDurationRightPadding 5
@@ -152,7 +153,7 @@
     [topMost pushViewController:huoShanVC animated:YES];
     //入口需要发送统计
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        wrapperTrackEventWithCustomKeys(@"go_detail", @"click_headline", self.orderedData.huoShan.liveId.stringValue, nil, @{@"room_id":self.orderedData.huoShan.liveId,@"user_id":[self.orderedData.huoShan.userInfo objectForKey:@"user_id"]});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"go_detail" label:@"click_headline" value:self.orderedData.huoShan.liveId.stringValue source:nil extraDic:@{@"room_id":self.orderedData.huoShan.liveId,@"user_id":[self.orderedData.huoShan.userInfo objectForKey:@"user_id"]}];
     }
     
     //log3.0 doubleSending
@@ -161,7 +162,7 @@
     [logv3Dic setValue:[self.orderedData.huoShan.userInfo objectForKey:@"user_id"] forKey:@"user_id"];
     [logv3Dic setValue:@"click_headline" forKey:@"enter_from"];
     [logv3Dic setValue:self.orderedData.logPb forKey:@"log_pb"];
-    [TTTrackerWrapper eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
+    [BDTrackerProtocol eventV3:@"go_detail" params:logv3Dic isDoubleSending:YES];
 }
 
 - (void)didEndDisplaying
@@ -358,7 +359,7 @@
 
 - (void)unInterestButtonClicked:(id)sender
 {
-    wrapperTrackEventWithCustomKeys(@"dislike", @"menu_with_reason", [TTActionPopView.shareGroupId stringValue], nil, [self extraValueDic]);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"dislike" label:@"menu_with_reason" value:[TTActionPopView.shareGroupId stringValue] source:nil extraDic:[self extraValueDic]];
     
     //不感兴趣
     HuoShan *huoShan = self.orderedData.huoShan;
@@ -482,12 +483,12 @@
     if (selectedWords.count > 0) {
         [userInfo setValue:selectedWords forKey:kExploreMixListNotInterestWordsKey];
         if (onlyOne) {
-            wrapperTrackEventWithCustomKeys(@"new_list", @"confirm_dislike_only_reason", [TTActionPopView.shareGroupId stringValue], nil, [self extraValueDic]);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"new_list" label:@"confirm_dislike_only_reason" value:[TTActionPopView.shareGroupId stringValue] source:nil extraDic:[self extraValueDic]];
         } else {
-            wrapperTrackEventWithCustomKeys(@"new_list", @"confirm_dislike_with_reason", [TTActionPopView.shareGroupId stringValue], nil, [self extraValueDic]);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"new_list" label:@"confirm_dislike_with_reason" value:[TTActionPopView.shareGroupId stringValue] source:nil extraDic:[self extraValueDic]];
         }
     } else {
-        wrapperTrackEventWithCustomKeys(@"new_list", @"confirm_dislike_no_reason", [TTActionPopView.shareGroupId stringValue], nil, [self extraValueDic]);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"new_list" label:@"confirm_dislike_no_reason" value:[TTActionPopView.shareGroupId stringValue] source:nil extraDic:[self extraValueDic]];
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kExploreMixListNotInterestNotification object:self userInfo:userInfo];

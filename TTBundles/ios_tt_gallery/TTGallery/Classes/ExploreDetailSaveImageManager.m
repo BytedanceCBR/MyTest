@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreDetailSaveImageManager.m
 //  Article
 //
@@ -80,7 +81,7 @@
         [_assetsLbr tt_saveImage:self.imageData];
     }
     
-    wrapperTrackEvent(@"image", @"download");
+    [BDTrackerProtocol event:@"image" label:@"download"];
 }
 
 - (void)downloadImageWithUrl:(NSString *)url

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTNewDetailWebviewContainer+JSBridge.m
 //  Article
 //
@@ -283,7 +284,7 @@
         [dict setValue:concernType forKey:@"concern_type"];
     }
     
-    wrapperTrackEventWithCustomKeys(@"detail", label, [NSString stringWithFormat:@"%@", self.detailModel.article.mediaInfo[@"media_id"]], nil, dict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:label value:[NSString stringWithFormat:@"%@", self.detailModel.article.mediaInfo[@"media_id"]] source:nil extraDic:dict];
 }
 
 //- (TTFollowNewSource)followNewSource {

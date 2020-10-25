@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVPlayerControlView.m
 //  Article
 //
@@ -1037,7 +1038,7 @@ static const CGFloat kBottomBarHeight = 80;
             }
         }
     }
-    wrapperTrackEvent(event, label);
+    [BDTrackerProtocol event:event label:label];
 }
 
 #pragma mark - getter & setter

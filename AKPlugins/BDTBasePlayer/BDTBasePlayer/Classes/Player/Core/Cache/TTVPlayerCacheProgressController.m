@@ -87,7 +87,6 @@
     if (self.playerStateStore.state.isInDetail) {
         label = @"detail_continue";
     }
-    
     [BDTrackerProtocol event:stopEvent label:label];
 }
 

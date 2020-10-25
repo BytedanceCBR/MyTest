@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTFollowedViewController.m
 //  Article
 //
@@ -108,7 +109,7 @@ TTSocialBaseCellDelegate
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    wrapperTrackEvent(@"followers", @"followers_pull_refresh");
+    [BDTrackerProtocol event:@"followers" label:@"followers_pull_refresh"];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -242,13 +243,13 @@ TTSocialBaseCellDelegate
     NSString *fromString = isMe ? kFromMyFans : kFromOtherFans;
     NSString *umengEventlabelPrefix = @"followers";
     if ([umengEventlabelPrefix length] > 0) {
-        wrapperTrackEvent(self.umengEventName, [NSString stringWithFormat:@"%@_profile", umengEventlabelPrefix]);
+        [BDTrackerProtocol event:self.umengEventName label:[NSString stringWithFormat:@"%@_profile", umengEventlabelPrefix]];
     }
     if (!tmpFriend.isFollowing) {
         // 未关注对方
-        wrapperTrackEvent(@"friends", @"follow_profile");
+        [BDTrackerProtocol event:@"friends" label:@"follow_profile"];
     }
-    wrapperTrackEvent(@"followers", @"enter_followers_profile"); // new
+    [BDTrackerProtocol event:@"followers" label:@"enter_followers_profile"]; // new
     
     ArticleMomentProfileViewController *controller = [[ArticleMomentProfileViewController alloc] initWithFriendModel:[tmpFriend articleFriend]];
     controller.from = fromString;

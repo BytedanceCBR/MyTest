@@ -80,18 +80,6 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
         return nil;
     }];
     [BDABTestManager registerExperiment:exp];
-    
-    //实验地址 https://data.bytedance.net/libra/flight/449156
-    BDABTestBaseExperiment *imLoginTypeExp = [[BDABTestBaseExperiment alloc] initWithKey:@"f_im_login_type" owner:@"zhongxinyuan" description:@"IM 登录路径优化实验(0 - 不自动跳转登录, 1 - 跳转全屏登录, 2 - 跳转弹窗登录)" defaultValue:@{@"value": @(0)} valueType:BDABTestValueTypeDictionary isSticky:YES settingsValueBlock:^id(NSString *key) {
-        if (key.length > 0) {
-            NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
-            if ([archSettings valueForKey:key]) {
-                return archSettings[key];
-            }
-        }
-        return nil;
-    }];
-    [BDABTestManager registerExperiment:imLoginTypeExp];
 }
 
 // 添加客户端实验
@@ -104,6 +92,7 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
 
     [self addVideoPerloadTest];
     
+    [self addHomeHouseCardTest];
     //启动实验引擎，请确保在所有客户端本地分流实验都注册完成后再调用此接口！
     [BDABTestManager launchClientExperimentManager];
     
@@ -116,6 +105,8 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
     id res = [BDABTestManager getExperimentValueForKey:@"discover_type" withExposure:YES];
     NSLog(@"BDClientABTest discover_type is %@",res);
     
+    id res2 = [BDABTestManager getExperimentValueForKey:@"home_recommend_card" withExposure:YES];
+    NSLog(@"BDClientABTest home_recommend_card is %@",res2);
     //queryExposureExperiments决定了你上报到alog的实验数据，如果上报时候没有你的vid，则表示上报的不对
 //    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
 //    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
@@ -124,9 +115,6 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
     NSLog(@"BDClientABTest test_video_perload is %@",videoPerload);
     
 }
-
-
-
 // test 注册字典类型的客户端分层实验
 + (void)addCardStyleTest
 {
@@ -193,6 +181,28 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
 ////    获取曝光结果
 //    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
 //    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
+}
+
+//首页二手房、新房卡片实验，实验地址：https://data.bytedance.net/libra/flight/509105/edit
++ (void)addHomeHouseCardTest {
+    NSInteger count = 2;
+    NSMutableArray *groups = [NSMutableArray arrayWithCapacity:count];
+    for (NSInteger index = 0; index < count; ++index) {
+        NSString *name = [NSString stringWithFormat:@"%ld", 2087053 + index];
+        NSMutableDictionary *params = @{}.mutableCopy;
+        params[@"home_recommend_card"] = @(index);
+        BDClientABTestGroup *group = [[BDClientABTestGroup alloc] initWithName:name minRegion:1000/count*index maxRegion:1000/count*(index + 1) - 1 results:params];
+        if ([group isLegal]) {
+            [groups addObject:group];
+        }
+    }
+    //生成实验层
+    BDClientABTestLayer *clientLayer = [[BDClientABTestLayer alloc] initWithName:@"f_client_layer1" groups:groups];
+    if ([clientLayer isLegal]) {
+        [BDABTestManager registerClientLayer:clientLayer];
+    }
+    BDClientABTestExperiment *clientEXP = [[BDClientABTestExperiment alloc] initWithKey:@"home_recommend_card" owner:@"xubinbin.19971226" description:@"首页推荐列表新房, 二手房卡片样式实验, 命中实验后启用新样式" defaultValue:@(0) valueType:BDABTestValueTypeNumber isSticky:NO clientLayer:clientLayer];
+    [BDABTestManager registerExperiment:clientEXP];
 }
 
 + (void)addSmallVideoListTest

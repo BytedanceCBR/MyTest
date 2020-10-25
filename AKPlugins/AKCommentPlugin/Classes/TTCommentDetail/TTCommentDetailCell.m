@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTCommentDetailCell.m
 //  Article
 //
@@ -29,6 +30,7 @@
 #import "UIColor+Theme.h"
 #import "TTAccountLoginManager.h"
 #import "TTAccountManager.h"
+#import "ToastManager.h"
 
 
 NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifier";
@@ -184,21 +186,21 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 #pragma mark - actions
 
 - (void)avatarViewOnClick:(id)sender {
-    wrapperTrackEventWithCustomKeys([self _trackerSource], @"click_replier_avatar", nil, self.source, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:[self _trackerSource] label:@"click_replier_avatar" value:nil source:self.source extraDic:nil];
     if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentCell:avatarTappedWithCommentModel:)]) {
         [self.delegate tt_commentCell:self avatarTappedWithCommentModel:self.commentModel];
     }
 }
 
 - (void)nameViewOnClick:(id)sender {
-    wrapperTrackEventWithCustomKeys([self _trackerSource], @"click_replier_name", nil, self.source, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:[self _trackerSource] label:@"click_replier_name" value:nil source:self.source extraDic:nil];
     if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentCell:avatarTappedWithCommentModel:)]) {
         [self.delegate tt_commentCell:self nameViewonClickedWithCommentModel:self.commentModel];
     }
 }
 
 - (void)replyButtonOnClick:(id)sender {
-    wrapperTrackEventWithCustomKeys([self _trackerSource], @"reply_replier_button", nil, self.source, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:[self _trackerSource] label:@"reply_replier_button" value:nil source:self.source extraDic:nil];
     if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentCell:replyButtonClickedWithModel:)]) {
         [self.delegate tt_commentCell:self replyButtonClickedWithModel:self.commentModel];
     }
@@ -270,15 +272,16 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
         UIMenuController *menu = [UIMenuController sharedMenuController];
         UIMenuItem *copyItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"复制", nil) action:@selector(customCopy:)];
         UIMenuItem *reportItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"举报", nil) action:@selector(reportComment:)];
+        UIMenuItem *shieldItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"屏蔽", nil) action:@selector(shieldComment:)];
         if (copyItem) {
             self.menuItems = menu.menuItems;
-            menu.menuItems = @[copyItem, reportItem];
+            menu.menuItems = @[copyItem, reportItem, shieldItem];
         }
         [menu setTargetRect:self.contentLabel.frame inView:self.contentLabel.superview];
         [menu setMenuVisible:YES animated:YES];
         [self changeContentLabelBackgroundColor];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willHideMenu) name:UIMenuControllerWillHideMenuNotification object:nil];
-        wrapperTrackEventWithCustomKeys([self _trackerSource], @"replier_longpress", nil, self.source, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:[self _trackerSource] label:@"replier_longpress" value:nil source:self.source extraDic:nil];
     }
 }
 
@@ -298,19 +301,20 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 
 - (BOOL)canPerformAction:(SEL)action withSender:(__unused id)sender {
     return (action == @selector(customCopy:) ||
-            action == @selector(reportComment:));
+            action == @selector(reportComment:)||
+            action == @selector(shieldComment:));
 }
 
 - (void)customCopy:(__unused id)sender {
     [[UIPasteboard generalPasteboard] setString:self.layout.contentLayout.richSpanText.text];
-    wrapperTrackEventWithCustomKeys([self _trackerSource], @"replier_longpress_copy", nil, self.source, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:[self _trackerSource] label:@"replier_longpress_copy" value:nil source:self.source extraDic:nil];
 }
 
 - (void)reportComment:(__unused id)sender {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:self.commentModel.commentID forKey:@"comment_id"];
     [params setValue:self.commentModel.user.ID forKey:@"user_id"];
-    wrapperTrackEventWithCustomKeys([self _trackerSource], @"replier_longpress_report", nil, self.source, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:[self _trackerSource] label:@"replier_longpress_report" value:nil source:self.source extraDic:nil];
 
     self.actionSheetController = [[TTActionSheetController alloc] init];
 
@@ -325,6 +329,10 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
             [[TTReportManager shareInstance] startReportUserWithType:parameters[@"report"] inputText:parameters[@"criticism"] message:nil source:@(TTReportSourceComment).stringValue userModel:model animated:YES];
         }
     }];
+}
+
+- (void)shieldComment:(__unused id)sender {
+    [[ToastManager manager] showToast:@"屏蔽成功"];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {

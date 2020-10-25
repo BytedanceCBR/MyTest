@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTDetailNatantVideoInfoView.m
 //  Article
 //
@@ -380,7 +381,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     __weak typeof(self) wself = self;
     dispatch_block_t block = ^{
         NSData *data = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
-        wrapperTrackEvent(@"video_parse_abstract", @"begin");
+        [BDTrackerProtocol event:@"video_parse_abstract" label:@"begin"];
         NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithData:data
                                                                                           options:@{
                                                                                                     NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
@@ -389,7 +390,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
                                                                                                     }
                                                                                documentAttributes:nil
                                                                                             error:nil];
-        wrapperTrackEvent(@"video_parse_abstract", @"end");
+        [BDTrackerProtocol event:@"video_parse_abstract" label:@"end"];
         
         if (!wself) {
             return ;
@@ -680,10 +681,10 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         self.relayOutBlock(NO);
     }
     if (_contentLabel.hidden) {
-        wrapperTrackEvent(@"detail", @"detail_fold_content");
+        [BDTrackerProtocol event:@"detail" label:@"detail_fold_content"];
     }
     else {
-        wrapperTrackEvent(@"detail", @"detail_unfold_content");
+        [BDTrackerProtocol event:@"detail" label:@"detail_unfold_content"];
     }
 }
 
@@ -730,7 +731,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
         
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_detail_digg",nil,nil,dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_detail_digg" value:nil source:nil extraDic:dict];
 
     } else {
         //取消赞
@@ -805,7 +806,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         [dict setValue:@"video" forKey:@"article_type"];
         [dict setValue:[self.detailModel.article.userInfo ttgc_contentID] forKey:@"author_id"];
         
-        wrapperTrackEventWithCustomKeys(@"xiangping", @"video_detail_bury",nil,nil,dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"xiangping" label:@"video_detail_bury" value:nil source:nil extraDic:dict];
     } else {
         _article.userBury = NO;
         _article.buryCount = MAX(0, _article.buryCount - 1);
@@ -884,7 +885,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     }
     NSString *mediaIdsStr = [mediaIds componentsJoinedByString:@","];
     [extra setValue:mediaIdsStr forKey:@"media_ids"];
-    wrapperTrackEventWithCustomKeys(@"video", @"show_zz_comment", @(self.article.uniqueID).stringValue, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"show_zz_comment" value:@(self.article.uniqueID).stringValue source:nil extraDic:extra];
 }
 
 #pragma mark -- TTTAttributedLabelDelegate

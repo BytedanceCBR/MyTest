@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTArticleSearchViewModel.m
 //  Article
 //
@@ -365,7 +366,7 @@ static const NSInteger kMaxAllHistoryShownCount     = 20;
     if (isEmptyString(eventTag) || isEmptyString(label)) {
         return;
     }
-    wrapperTrackEvent(eventTag, label);
+    [BDTrackerProtocol event:eventTag label:label];
 }
 
 - (void)eventTrackLog3:(NSDictionary *)params {

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTDetailModel+TTVTrackToolbarMode.m
 //  Article
 //
@@ -54,15 +55,15 @@
     NSString *event = @"detail";
     switch ([self currentDetailType]) {
         case TTDetailArchTypeSimple: {
-            wrapperTrackEvent(event, @"simple_mode");
+            [BDTrackerProtocol event:event label:@"simple_mode"];
         }
             break;
         case TTDetailArchTypeNoComment: {
-            wrapperTrackEvent(event, @"no_comments_mode");
+            [BDTrackerProtocol event:event label:@"no_comments_mode"];
         }
             break;
         case TTDetailArchTypeNoToolBar: {
-            wrapperTrackEvent(event, @"hide_mode");
+            [BDTrackerProtocol event:event label:@"hide_mode"];
         }
             break;
         default:

@@ -432,18 +432,15 @@ static NSTimeInterval lastTime;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         for(TTStartupTask *task in self.residentTasks) {
-            if ([task conformsToProtocol:@protocol(UIApplicationDelegate)] && [task respondsToSelector:_cmd] && [[task performSelector:_cmd withObjects:application, url, sourceApplication, annotation, nil] boolValue]) {
+            // JOKER: 改为使用selector的方式，不使用_cmd，防止方法被hook后由于方法名称改变，引起相关方法无法被调用到
+            SEL selector = @selector(application:openURL:sourceApplication:annotation:);
+            if ([task conformsToProtocol:@protocol(UIApplicationDelegate)] && [task respondsToSelector:selector] && [[task performSelector:selector withObjects:application, url, sourceApplication, annotation, nil] boolValue]) {
+                NSLog(@"handle openurl task: %@",task.class);
                 return;
             }
         }
 #pragma clang diagnostic pop
     }];
-    
-//    if ([TTAccountAuthWeibo handleOpenURL:url]) {
-//        return YES;
-//    }
-    
-    [[BDUGDeepLinkManager shareInstance] deepLinkWithType:BDUGDeepLinkTypeScheme uri:[url absoluteString]];
     return YES;
 }
 
@@ -567,7 +564,8 @@ static NSTimeInterval lastTime;
 }
 #endif
 
-- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void(^)(NSArray *restorableObjects))restorationHandler {
+
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler {
     
     if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
         [[FHEnvContext sharedInstance] addContinueActivity:application activity:userActivity restorationHandler:restorationHandler];
@@ -577,13 +575,13 @@ static NSTimeInterval lastTime;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
     for(TTStartupTask *task in self.residentTasks) {
-        if ([task conformsToProtocol:@protocol(UIApplicationDelegate)] && [task respondsToSelector:_cmd]) {
-            [[task performSelector:_cmd withObjects:application, userActivity, restorationHandler, nil] boolValue];
+        // JOKER: 改为使用selector的方式，不使用_cmd，防止方法被hook后由于方法名称改变，引起相关方法无法被调用到
+        SEL selector = @selector(application:continueUserActivity:restorationHandler:);
+         if ([task conformsToProtocol:@protocol(UIApplicationDelegate)] && [task respondsToSelector:selector]) {
+            [[task performSelector:selector withObjects:application, userActivity, restorationHandler, nil] boolValue];
         }
     }
 #pragma clang diagnostic pop
-    NSURL *webpageURL = userActivity.webpageURL;
-    [[BDUGDeepLinkManager shareInstance] deepLinkWithType:BDUGDeepLinkTypeUniversalLink uri:[webpageURL absoluteString]];
     return YES;
 }
 

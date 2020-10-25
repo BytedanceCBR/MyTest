@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTInterestViewController.m
 //  Article
 //
@@ -165,7 +166,7 @@ TTSocialBaseCellDelegate
     NSURL *url = [TTStringHelper URLWithURLString:[aModel urlString]];
     [[TTRoute sharedRoute] openURLByPushViewController:url];
     
-    wrapperTrackEventWithCustomKeys(@"interest_page", @"enter", aModel.concern_id, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"interest_page" label:@"enter" value:aModel.concern_id source:nil extraDic:nil];
 }
 
 - (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {

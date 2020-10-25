@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTUniversalCommentCellLite.m
 //  Article
 //
@@ -31,6 +32,8 @@
 #import "TTIndicatorView.h"
 #import "UIColor+Theme.h"
 #import "TTAccountManager.h"
+#import "ToastManager.h"
+#import "FHHouseUGCAPI.h"
 
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
@@ -263,7 +266,7 @@
 
 - (void)avatarViewOnClick:(id)sender {
     if ([self isDetailComment]) {
-        wrapperTrackEvent(@"comment", @"click_avatar");
+        [BDTrackerProtocol event:@"comment" label:@"click_avatar"];
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentCell:avatarTappedWithCommentModel:)]) {
         [self.delegate tt_commentCell:self avatarTappedWithCommentModel:self.commentModel];
@@ -272,7 +275,7 @@
 
 - (void)nameViewOnClick:(id)sender {
     if ([self isDetailComment]) {
-        wrapperTrackEvent(@"comment", @"click_name");
+        [BDTrackerProtocol event:@"comment" label:@"click_name"];
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentCell:avatarTappedWithCommentModel:)]) {
         [self.delegate tt_commentCell:self nameViewonClickedWithCommentModel:self.commentModel];
@@ -281,7 +284,7 @@
 
 - (void)replyButtonOnClick:(id)sender {
     if ([self isDetailComment]) {
-        wrapperTrackEvent(@"comment", @"click_reply");
+        [BDTrackerProtocol event:@"comment" label:@"click_reply"];
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentCell:replyButtonClickedWithModel:)]) {
         [self.delegate tt_commentCell:self replyButtonClickedWithModel:self.commentModel];
@@ -290,7 +293,7 @@
 
 - (void)deleteButtonOnClick:(id)sender {
     if ([self isDetailComment]) {
-        wrapperTrackEvent(@"comment", @"delete");
+        [BDTrackerProtocol event:@"comment" label:@"delete"];
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentCell:deleteCommentWithCommentModel:)]) {
         [self.delegate tt_commentCell:self deleteCommentWithCommentModel:self.commentModel];
@@ -372,7 +375,7 @@
 
 - (void)attributedLabel:(TTUGCAttributedLabel *)label didSelectLinkWithURL:(NSURL *)url {
     if ([url.absoluteString isEqualToString:kTTCommentContentLabelTruncationTokenURLString]) {
-        wrapperTrackEvent(@"comment", @"click_allcontent");
+        [BDTrackerProtocol event:@"comment" label:@"click_allcontent"];
         if (self.delegate && [self.delegate respondsToSelector:@selector(tt_commentCell:contentUnfoldWithCommentModel:)]) {
             [self.delegate tt_commentCell:self contentUnfoldWithCommentModel:self.commentModel];
         }
@@ -445,15 +448,16 @@
         UIMenuController *menu = [UIMenuController sharedMenuController];
         UIMenuItem *copyItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"复制", nil) action:@selector(customCopy:)];
         UIMenuItem *reportItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"举报", nil) action:@selector(reportComment:)];
+        UIMenuItem *shieldItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"屏蔽", nil) action:@selector(shieldComment:)];
         if (copyItem) {
             self.menuItems = menu.menuItems;
-            menu.menuItems = @[copyItem, reportItem];
+            menu.menuItems = @[copyItem, reportItem, shieldItem];
         }
         [menu setTargetRect:self.contentLabel.frame inView:self.contentLabel.superview];
         [menu setMenuVisible:YES animated:YES];
         [self changeContentLabelBackgroundColor];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willHideMenu) name:UIMenuControllerWillHideMenuNotification object:nil];
-        wrapperTrackEvent([self trackerSource], [self isDetailComment]? @"longpress" : @"replier_longpress");
+        [BDTrackerProtocol event:[self trackerSource] label:[self isDetailComment]? @"longpress" : @"replier_longpress"];
     }
 }
 
@@ -472,7 +476,8 @@
 
 - (BOOL)canPerformAction:(SEL)action withSender:(__unused id)sender {
     if (action == @selector(customCopy:) ||
-        action == @selector(reportComment:)) {
+        action == @selector(reportComment:) ||
+        action == @selector(shieldComment:)) {
         return YES;
     }
     return [super canPerformAction:action withSender:sender];
@@ -480,14 +485,14 @@
 
 - (void)customCopy:(__unused id)sender {
     [[UIPasteboard generalPasteboard] setString:self.layout.contentLayout.richSpanText.text];
-    wrapperTrackEvent([self trackerSource], [self isDetailComment]? @"longpress_copy" : @"replier_longpress_copy");
+    [BDTrackerProtocol event:[self trackerSource] label:[self isDetailComment]? @"longpress_copy" : @"replier_longpress_copy"];
 }
 
 - (void)reportComment:(__unused id)sender {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:self.commentModel.commentID.stringValue forKey:@"comment_id"];
     [params setValue:self.commentModel.userID.stringValue forKey:@"user_id"];
-    wrapperTrackEvent([self trackerSource], [self isDetailComment]? @"longpress_report" : @"replier_longpress_report");
+    [BDTrackerProtocol event:[self trackerSource] label:[self isDetailComment]? @"longpress_report" : @"replier_longpress_report"];
     
     self.actionSheetController = [[TTActionSheetController alloc] init];
     
@@ -504,6 +509,16 @@
         }
     }];
     
+}
+
+- (void)shieldComment:(__unused id)sender {
+//    [FHHouseUGCAPI commentShield:self.commentModel.groupModel.groupID commentId:self.commentModel.commentID.stringValue completion:^(bool success, NSError * _Nonnull error) {
+//        if(success){
+            [[ToastManager manager] showToast:@"屏蔽成功"];
+//        }else{
+//            [[ToastManager manager] showToast:@"屏蔽失败"];
+//        }
+//    }];    
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -735,7 +750,7 @@
             }
             else {
                 if ([self.delegate respondsToSelector:@selector(tt_commentCell:replyListClickedWithModel:)]) {
-                    wrapperTrackEvent(@"comment", @"enter_detail_comment");
+                    [BDTrackerProtocol event:@"comment" label:@"enter_detail_comment"];
                     [self.delegate tt_commentCell:wself replyListClickedWithModel:wself.commentModel];
                 }
             }

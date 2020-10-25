@@ -20,6 +20,7 @@
 #import "TTContactsRedPacketGuideViewHelper.h"
 #import "TTRedPacketDetailBaseView.h"
 #import <TTDialogDirector.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 NSString *const kNotificationFollowAndGainMoneySuccessNotification = @"kNotificationFollowAndGainMoneySuccessNotification";
 
@@ -63,7 +64,7 @@ NSString *const kNotificationFollowAndGainMoneySuccessNotification = @"kNotifica
         navigationController.modalPresentationStyle = UIModalPresentationOverCurrentContext;
 
         if (type == TTContactsRedPacketViewControllerTypeContactsRedpacket) {
-            [TTTrackerWrapper eventV3:@"upload_contact_redpacket" params:@{@"action_type": @"show"}];
+            [BDTrackerProtocol eventV3:@"upload_contact_redpacket" params:@{@"action_type": @"show"}];
         }
         viewController.fromPush = needPush;
 

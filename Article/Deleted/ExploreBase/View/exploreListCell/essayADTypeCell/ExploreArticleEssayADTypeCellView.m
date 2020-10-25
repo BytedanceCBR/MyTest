@@ -14,6 +14,7 @@
 #import "ExploreCellHelper.h"
 #import "TTUISettingHelper.h"
 #import "SSAppStore.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface ExploreArticleEssayADTypeCellView ()
 
@@ -215,7 +216,7 @@
 - (void)didClickADBackgroundView
 {
     if (self.orderedData.uniqueID && self.orderedData.categoryID) {
-        [TTTrackerWrapper eventV3:@"joke_ad_click" params:@{@"card_id" : self.orderedData.uniqueID, @"category_name" : self.orderedData.categoryID, @"click_position" : @"cell"}];
+        [BDTrackerProtocol eventV3:@"joke_ad_click" params:@{@"card_id" : self.orderedData.uniqueID, @"category_name" : self.orderedData.categoryID, @"click_position" : @"cell"}];
     }
     
     [self didSelectWithContext:nil];
@@ -224,7 +225,7 @@
 - (void)didClickJumpURLButton
 {
     if (self.orderedData.uniqueID && self.orderedData.categoryID) {
-        [TTTrackerWrapper eventV3:@"joke_ad_click" params:@{@"card_id" : self.orderedData.uniqueID, @"category_name" : self.orderedData.categoryID, @"click_position" : @"icon"}];
+        [BDTrackerProtocol eventV3:@"joke_ad_click" params:@{@"card_id" : self.orderedData.uniqueID, @"category_name" : self.orderedData.categoryID, @"click_position" : @"icon"}];
     }
     
     [self didSelectWithContext:nil];
@@ -420,7 +421,7 @@
 - (void)didSelectWithContext:(TTFeedCellSelectContext *)context
 {
     if (self.orderedData.uniqueID && self.orderedData.categoryID && context) {
-        [TTTrackerWrapper eventV3:@"joke_ad_click" params:@{@"card_id" : self.orderedData.uniqueID, @"category_name" : self.orderedData.categoryID, @"click_position" : @"all"}];
+        [BDTrackerProtocol eventV3:@"joke_ad_click" params:@{@"card_id" : self.orderedData.uniqueID, @"category_name" : self.orderedData.categoryID, @"click_position" : @"all"}];
     }
     
     EssayADData *essayAD = self.orderedData.essayADData;

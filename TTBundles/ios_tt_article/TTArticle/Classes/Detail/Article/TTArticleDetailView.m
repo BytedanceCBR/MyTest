@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTArticleDetailView.m
 //  Article
 //
@@ -1524,7 +1525,7 @@ static NSInteger const kErrorStatusCode = 400;
 {
     // show photo scroll view
     
-    wrapperTrackEvent(@"image", @"enter_detail");
+    [BDTrackerProtocol event:@"image" label:@"enter_detail"];
     TTPhotoScrollViewController *showImageViewController = [[TTPhotoScrollViewController alloc] init];
     self.photoScrollViewController = showImageViewController;
     showImageViewController.targetView = self.detailWebView.webView.scrollView;

@@ -336,11 +336,14 @@
             [wself setOperationSelfLook:view.selectdWord.serverType];
         }];
         [self trackConfirmPopupShow:@"own_see_popup_show"];
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeShield){
+        [[ToastManager manager] showToast:@"将减少推荐类似内容"];
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeBlackList){
+        [[ToastManager manager] showToast:@"将减少推荐类似内容"];
     }
 }
 
-- (void)showAlert:(NSString *)title cancelTitle:(NSString *)cancelTitle confirmTitle:(NSString *)confirmTitle cancelBlock:(void(^)())cancelBlock confirmBlock:(void(^)())confirmBlock {
-    __weak typeof(self) wself = self;
+- (void)showAlert:(NSString *)title cancelTitle:(NSString *)cancelTitle confirmTitle:(NSString *)confirmTitle cancelBlock:(void(^)(void))cancelBlock confirmBlock:(void(^)(void))confirmBlock {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleAlert];
@@ -419,7 +422,6 @@
 }
 
 - (void)setOperationTop:(BOOL)isTop operationCode:(NSString *)operationCode {
-    __weak typeof(self) wself = self;
     [FHHouseUGCAPI postOperation:self.cellModel.groupId cellType:self.cellModel.cellType socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
@@ -453,7 +455,6 @@
 }
 
 - (void)setOperationGood:(BOOL)isGood operationCode:(NSString *)operationCode {
-    __weak typeof(self) wself = self;
     [FHHouseUGCAPI postOperation:self.cellModel.groupId cellType:self.cellModel.cellType socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){

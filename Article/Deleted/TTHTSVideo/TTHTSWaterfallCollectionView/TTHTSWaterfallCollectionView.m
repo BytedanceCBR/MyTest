@@ -76,6 +76,7 @@
 //#import "Bubble-Swift.h"
 #import "FHEnvContext.h"
 #import "TTCategoryStayTrackManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kDefaultDismissDuration 2.0f
 #define kColumnSpacing 1
@@ -578,7 +579,7 @@ TTAccountMulticastProtocol
          [params setValue:self.categoryID forKey:@"category_name"];
          [params setValue:@"click_category" forKey:@"enter_from"];
          [params setValue:self.listEntrance forKey:@"list_entrance"];
-         [TTTrackerWrapper eventV3:@"auto_load_more" params:params];
+         [BDTrackerProtocol eventV3:@"auto_load_more" params:params];
 
          [self tryPreload];
 
@@ -913,7 +914,7 @@ TTAccountMulticastProtocol
                                                  NSTimeInterval refreshEndTime = [[NSDate date] timeIntervalSince1970];
                                                  CGFloat refreshDuration = ceilf((refreshEndTime - refreshStartTime) * 1000);
                                                  [params setValue:@(refreshDuration) forKey:@"duration"];
-                                                 [TTTrackerWrapper eventV3:@"channel_fetch" params:params];
+                                                 [BDTrackerProtocol eventV3:@"channel_fetch" params:params];
 
                                                  NSDictionary *remoteTipResult = [(NSDictionary *)[(NSDictionary *)[operationContext objectForKey:kExploreFetchListResponseRemoteDataKey] objectForKey:@"result"] objectForKey:@"tips"];
 
@@ -1542,7 +1543,7 @@ TTAccountMulticastProtocol
     [traceParams setValue:dictTraceData.shortVideoOriginalData.shortVideo.groupSource forKey:@"group_source"];
     [traceParams setValue:@(dictTraceData.cellType) ? : @"be_null" forKey:@"cell_type"];
 
-    [TTTracker eventV3:@"client_show" params:traceParams];
+    [BDTrackerProtocol eventV3:@"client_show" params:traceParams];
 }
 
 - (void)eventV3ForRefresh

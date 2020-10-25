@@ -22,6 +22,8 @@ extern NSString *const VCTITLE_KEY ;
 
 -(NSString *)categoryName;
 
+- (NSString *)fh_pageType;
+- (NSString *)fh_originFrom;
 @end
 
 // 页面间数据传递协议

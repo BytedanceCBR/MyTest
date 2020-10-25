@@ -9,7 +9,7 @@
 #import "BDImageView.h"
 #import <TTUIWidget/UIView+Refresh_ErrorHandler.h>
 #import "HMDTTMonitor.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface FHVRDetailWebViewController ()
 @property(nonatomic,strong)BDImageView *maskLoadingView;
@@ -69,7 +69,7 @@
 - (void)sendDurationKey:(NSString *)keyStr withStatus:(NSInteger)status{
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
     NSTimeInterval duration = ([self getCurrentTime] - self.stayTime) * 1000.0;
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
      [uploadParams setValue:@(duration) forKey:@"lynx_page_duration"];
     [[HMDTTMonitor defaultManager] hmdTrackService:keyStr metric:uploadParams category:@{@"status":@(status)} extra:paramsExtra];

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTArticleMomentDigUsersView.m
 //  Article
 //
@@ -308,7 +309,7 @@
             wself.loadOffset += kLoadOnceCount;
         }
     }];
-    wrapperTrackEvent(@"update_detail", @"diggers_loadmore");
+    [BDTrackerProtocol event:@"update_detail" label:@"diggers_loadmore"];
 }
 
 #pragma mark -- UITableViewDelegate & UITableVewDataSource
@@ -409,7 +410,7 @@
         [baseCondition setValue:self.groupId forKey:@"group_id"];
 
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://profile"] userInfo:TTRouteUserInfoWithDict(baseCondition)];
-        wrapperTrackEvent(@"update_detail", @"diggers_profile");
+        [BDTrackerProtocol event:@"update_detail" label:@"diggers_profile"];
     }
 }
 @end

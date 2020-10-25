@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTOrientationTask.m
 //  Article
 //
@@ -93,7 +94,7 @@ DEC_TASK("TTOrientationTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+13);
 
 - (void)application:(UIApplication *)application willChangeStatusBarOrientation:(UIInterfaceOrientation)newStatusBarOrientation duration:(NSTimeInterval)duration {
     NSString *label = UIInterfaceOrientationIsLandscape(newStatusBarOrientation) ? @"landscape": @"portrait";
-    wrapperTrackEvent(@"orientation", label);
+    [BDTrackerProtocol event:@"orientation" label:label];
     
     TLS_LOG(@"willChangeStatusBarOrientation");
 }

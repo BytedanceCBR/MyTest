@@ -21,6 +21,7 @@
 #import "UIImage+TTThemeExtension.h"
 #import "UIScrollView+Refresh.h"
 #import "UIView+Refresh_ErrorHandler.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define SIZE_FIT(size6, size5)
 #define kLoadOnceCount 20
@@ -477,7 +478,7 @@ didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
         [TTUIResponderHelper topNavigationControllerFor:self];
         [topController pushViewController:controller animated:YES];
         
-        [TTTrackerWrapper event:@"talk_detail"
+        [BDTrackerProtocol event:@"talk_detail"
                           label:@"diggers_profile"
                           value:@(self.threadID)
                        extValue:digUser.user_id

@@ -45,6 +45,7 @@
 
     _timeLineListViewModel = [[FHFloorTimeLineViewModel alloc] initWithController:self tableView:_timeLineListTable courtId:_courtId];
     _timeLineListViewModel.navBar = [self getNaviBar];
+    [_timeLineListViewModel.navBar showMessageNumber];
     [self setNavBarTitle:@"楼盘动态"];
     [self.view bringSubviewToFront:[self getNaviBar]];
     if (self.timeLineModel) {

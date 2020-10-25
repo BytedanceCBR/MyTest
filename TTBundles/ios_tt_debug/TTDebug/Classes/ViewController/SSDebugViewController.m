@@ -18,7 +18,6 @@
 #import "SSDebugDNSViewController.h"
 #import "DebugUmengIndicator.h"
 #import "SSDebugUserDefaultsViewController.h"
-#import "TTInstallIDManager.h"
 #import "TTIndicatorView.h"
 #import "TTThemedAlertController.h"
 #import "TTLocationManager.h"
@@ -44,7 +43,7 @@
 #import "TTStringHelper.h"
 
 #import "TTVideoTip.h"
-#import "TTLogServer.h"
+//#import "TTLogServer.h"
 #import "TTUserSettings/TTUserSettingsManager+FontSettings.h"
 #import "TTAccountBusiness.h"
 
@@ -75,7 +74,8 @@
 #import "BDSSOAuthManager.h"
 #import "ToastManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
-#import <TTInstallService/TTInstallUtil.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import <BDInstall/BDInstall+Debug.h>
 #import <MLeaksFinder/MLeaksFinder.h>
 //#import <MLeaksFinder/NSObject+UseCount.h>
 #import <TTRoute/TTRoute.h>
@@ -98,7 +98,7 @@
 #import "FHLynxScanVC.h"
 #import "FHLynxDebugVC.h"
 #import "FIMDebugManager.h"
-
+#import <TTTracker/TTTracker.h>
 
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
@@ -631,7 +631,7 @@ extern NSString *const BOE_OPEN_KEY ;
     {
         STTableViewCellItem *item = [[STTableViewCellItem alloc] initWithTitle:@"Mock新设备ID" target:self action:nil];
         item.switchStyle = YES;
-        item.checked = [TTInstallUtil isResetMode];
+        item.checked = [BDInstall isResetMode];
         item.switchAction = @selector(_newUserSwitch:);
         item.detail = @"点击开关，生成新设备ID，关闭后恢复真实设备ID";
         STTableViewCellItem *item1 = [[STTableViewCellItem alloc] initWithTitle:@"新用户风格" target:self action:nil];
@@ -856,21 +856,23 @@ extern NSString *const BOE_OPEN_KEY ;
 }
 
 - (void)_reloadRightBarItem {
-    if ([TTLogServer logEnable]) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:@"设备信息" target:self action:@selector(_sendDeviceActionFired:)]];
-    }
+    //TODO: 升级BDTracker暂时去掉
+//    if ([TTLogServer logEnable]) {
+//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:[SSNavigationBar navigationButtonOfOrientation:SSNavigationButtonOrientationOfRight withTitle:@"设备信息" target:self action:@selector(_sendDeviceActionFired:)]];
+//    }
 }
 
 - (void)_sendDeviceActionFired:(id)sender {
     NSString *deviceToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"ArticleDeviceToken"];
     NSString *userId = [TTAccountManager userID];
-    NSString *deviceId = [[TTInstallIDManager sharedInstance] deviceID];
+    NSString *deviceId = [BDTrackerProtocol deviceID];
     NSMutableDictionary *logs = [NSMutableDictionary dictionaryWithCapacity:2];
     [logs setValue:deviceToken forKey:@"deviceToken"];
     [logs setValue:userId forKey:@"userId"];
     [logs setValue:deviceId forKey:@"deviceId"];
     
-    [TTLogServer sendValueToLogServer:logs parameters:@{@"font":@(16)}];
+    //使用最新的TTTracker可以去掉下面的代码
+//    [TTLogServer sendValueToLogServer:logs parameters:@{@"font":@(16)}];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -1287,11 +1289,11 @@ extern NSString *const BOE_OPEN_KEY ;
     NSString *title;
     if (isEmptyString(currentUrl)) {
         title = @"已连接到本地统计服务器";
-        [[TTTracker sharedInstance] setDebugLogServerAddress:result];
+//        [[TTTracker sharedInstance] setDebugLogServerAddress:result];
     } else {
         title = @"已断开本地统计服务器链接";
-        [TTLogServer clearLogServer];
-        [TTLogServer stopLogger];
+//        [TTLogServer clearLogServer];
+//        [TTLogServer stopLogger];
     }
     
     TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:title message:nil preferredType:TTThemedAlertControllerTypeAlert];
@@ -1321,10 +1323,11 @@ extern NSString *const BOE_OPEN_KEY ;
                     [alert showFrom:self animated:YES];
                     
                     if (requestURL) {
-                        [[TTTracker sharedInstance] setDebugLogServerAddress:result];
+//                        [[TTTracker sharedInstance] setDebugLogServerAddress:result];
                         
                     } else {
-                        [TTLogServer clearLogServer];
+                        //TODO: 升级BDTracker暂时去掉
+//                        [TTLogServer clearLogServer];
                     }
                     [vc dismissAnimated:YES];
                     [self _reloadRightBarItem];
@@ -1834,9 +1837,9 @@ extern NSString *const BOE_OPEN_KEY ;
         @weakify(self)
         resetPage.okButtonDidClicked = ^(NSString * _Nonnull gender, NSString * _Nonnull ageLevel, BOOL isAutoReset) {
             @strongify(self)
-            [[TTInstallIDManager sharedInstance] setIsInHouseVersion:YES];
-            [TTInstallUtil setAutoReset:isAutoReset];
-            [TTInstallUtil setResetMode:YES];
+            [BDInstall setIsInHouseVersion:YES];
+            [BDInstall setAutoReset:isAutoReset];
+            [BDInstall setResetMode:YES];
             [[NSUserDefaults standardUserDefaults] setObject:gender forKey:@"TTInstallGenderKey"];
             [[NSUserDefaults standardUserDefaults] setObject:ageLevel forKey:@"TTInstallAgeLevelKey"];
             UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"新设备ID重置成功" message:@"请杀死App后，重新冷启动即可生效" preferredStyle:UIAlertControllerStyleAlert];
@@ -1849,8 +1852,8 @@ extern NSString *const BOE_OPEN_KEY ;
         };
         [self presentViewController:resetPage animated:YES completion:nil];
     } else {
-        [[TTInstallIDManager sharedInstance] setIsInHouseVersion:YES];
-        [TTInstallUtil setResetMode:NO];
+        [BDInstall setIsInHouseVersion:YES];
+        [BDInstall setResetMode:NO];
         UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"已关闭Mock新设备ID" message:@"如需再次生成新设备ID，请再次点击开关进行重置" preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
         [alertVC addAction:okAction];

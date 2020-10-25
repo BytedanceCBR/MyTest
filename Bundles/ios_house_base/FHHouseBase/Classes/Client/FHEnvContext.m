@@ -11,7 +11,7 @@
 #import "TTReachability.h"
 #import "YYCache.h"
 #import "FHLocManager.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "ToastManager.h"
@@ -106,7 +106,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
             
             NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
             
-            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
             
             if (isSuccess) {
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
@@ -251,7 +251,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
             
             NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
             
-            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
             
             if (isSuccess) {
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
@@ -1197,7 +1197,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return NO;
 }
 
-
++ (BOOL)isShowHomeHouseCard {
+    id res = [BDABTestManager getExperimentValueForKey:@"home_recommend_card" withExposure:YES];
+    if(res){
+        return [res boolValue];
+    }
+    return NO;
+}
 + (BOOL)isIntroduceOpen {
     return YES;
 }

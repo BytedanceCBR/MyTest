@@ -23,8 +23,6 @@
 
 #import "DetailActionRequestManager.h"
 
-#import "TTInstallIDManager.h"
-
 #import "TTAlphaThemedButton.h"
 #import "TTNavigationController.h"
 #import "TTUISettingHelper.h"

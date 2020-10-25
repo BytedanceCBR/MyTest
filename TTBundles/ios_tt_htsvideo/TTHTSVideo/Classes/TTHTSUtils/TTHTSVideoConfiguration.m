@@ -10,12 +10,12 @@
 //#import <IESVideoPlayer/IESVideoPlayer.h>
 #import "TTDeviceHelper.h"
 #import "TTSandBoxHelper.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTAccountManager.h"
 #import "TTNetworkHelper.h"
 #import "SSLogDataManager.h"
 #import "TTVVideoURLSettingUtility.h"
-#import "TTVPlayerSettingUtility.h"
+#import "TTVPlayerSettingUtility.h"pod
 //#import "AWEVideoDiskCacheConfiguration.h"
 #import "TTSettingsManager.h"
 

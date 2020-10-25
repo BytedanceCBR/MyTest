@@ -37,6 +37,7 @@
 #import "ExploreAvatarView+VerifyIcon.h"
 //#import "TTRedPacketManager.h"
 #import <TTUIResponderHelper.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kPGCViewHeight (([TTDeviceHelper isPadDevice]) ? 84 : 66)
 #define kPGCAvatarSize                      (([TTDeviceHelper isPadDevice]) ? 44 : 36)
@@ -341,15 +342,15 @@ extern BOOL ttvs_enabledVideoNewButton(void);
         openURL = [openURL stringByAppendingString:[NSString stringWithFormat:@"&page_source=%@", @(1)]];
         //增加item_id
         openURL = [NSString stringWithFormat:@"%@&item_id=%@",openURL,self.article.itemID];
-        wrapperTrackEvent(@"detail", @"detail_enter_pgc");
+        [BDTrackerProtocol event:@"detail" label:@"detail_enter_pgc"];
     } else {
         openURL = [NSString stringWithFormat:@"sslocal://pgcprofile?uid=%@&page_source=%@&gd_ext_json=%@&page_type=0", [self.contentInfo ttgc_contentID], @(1), kPGCProfileEnterSourceVideoArticleTopAuthor];
         NSMutableDictionary *extraDict = [[NSMutableDictionary alloc] init];
         [extraDict setValue:@{@"ugc":@(1)} forKey:@"extra"];
         [extraDict setValue:[self.contentInfo ttgc_contentID] forKey:@"ext_value"];
         NSString *uniqueID = [NSString stringWithFormat:@"%lld",_article.uniqueID];
-        wrapperTrackEventWithCustomKeys(@"detail", @"detail_enter_profile", uniqueID, nil, extraDict);
-        wrapperTrackEvent(@"detail", @"detail_enter_ugc");
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"detail_enter_profile" value:uniqueID source:nil extraDic:extraDict];
+        [BDTrackerProtocol event:@"detail" label:@"detail_enter_ugc"];
     }
     [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:openURL]];
 }
@@ -374,7 +375,7 @@ extern BOOL ttvs_enabledVideoNewButton(void);
         self.arrowImage.imageName = @"video_detail_open";
         NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
         [extra setValue:self.article.itemID forKey:@"item_id"];
-        wrapperTrackEventWithCustomKeys(@"video_detail", @"click_arrow_up", nil, @"video_detail", extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video_detail" label:@"click_arrow_up" value:nil source:@"video_detail" extraDic:extra];
     }
     else {
         self.originViewHeight = self.height;
@@ -382,7 +383,7 @@ extern BOOL ttvs_enabledVideoNewButton(void);
         self.arrowImage.imageName = @"video_detail_stop";
         NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
         [extra setValue:self.article.itemID forKey:@"item_id"];
-        wrapperTrackEventWithCustomKeys(@"video_detail", @"click_arrow_down", nil, @"video_detail", extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video_detail" label:@"click_arrow_down" value:nil source:@"video_detail" extraDic:extra];
         [self collectionViewWillDisplayAtIndex:0];
         [self collectionViewWillDisplayAtIndex:1];
         [self collectionViewWillDisplayAtIndex:2];
@@ -635,12 +636,12 @@ extern BOOL ttvs_enabledVideoNewButton(void);
                 if (model.isFollowing) {
                     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
                     [extra setValue:self.article.itemID forKey:@"item_id"];
-                    wrapperTrackEventWithCustomKeys(@"video_detail", @"sub_rec_subscribe", model.userID, @"video_detail", extra);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"video_detail" label:@"sub_rec_subscribe" value:model.userID source:@"video_detail" extraDic:extra];
                 }
                 else {
                     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
                     [extra setValue:self.article.itemID forKey:@"item_id"];
-                    wrapperTrackEventWithCustomKeys(@"video_detail", @"sub_rec_unsubscribe", model.userID, @"video_detail", extra);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"video_detail" label:@"sub_rec_unsubscribe" value:model.userID source:@"video_detail" extraDic:extra];
                 }
                 [wCell.subscribeButton stopLoading:^{
                     if (model.isFollowing) {
@@ -755,7 +756,7 @@ extern BOOL ttvs_enabledVideoNewButton(void);
 
     NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
     [extra setValue:self.article.itemID forKey:@"item_id"];
-    wrapperTrackEventWithCustomKeys(@"video_detail", @"sub_rec_click", model.userID, @"video_detail", extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_detail" label:@"sub_rec_click" value:model.userID source:@"video_detail" extraDic:extra];
 
 }
 
@@ -1004,9 +1005,9 @@ extern BOOL ttvs_enabledVideoNewButton(void);
         [params setValue:@"0" forKey: @"is_redpacket"];
     }
     if ([self.contentInfo ttgc_isSubCribed]){
-        [TTTrackerWrapper eventV3:@"rt_unfollow" params:params];
+        [BDTrackerProtocol eventV3:@"rt_unfollow" params:params];
     }else{
-        [TTTrackerWrapper eventV3:@"rt_follow" params:params];
+        [BDTrackerProtocol eventV3:@"rt_follow" params:params];
     }
     
 }
@@ -1058,9 +1059,9 @@ extern BOOL ttvs_enabledVideoNewButton(void);
         [params setValue:@"0" forKey: @"is_redpacket"];
     }
     if (model.isFollowing){
-        [TTTrackerWrapper eventV3:@"rt_unfollow" params:params];
+        [BDTrackerProtocol eventV3:@"rt_unfollow" params:params];
     }else{
-        [TTTrackerWrapper eventV3:@"rt_follow" params:params];
+        [BDTrackerProtocol eventV3:@"rt_follow" params:params];
     }
 }
 
@@ -1084,7 +1085,7 @@ extern BOOL ttvs_enabledVideoNewButton(void);
         [param setValue:@"video" forKey:@"source"];
         [param setValue:_categoryName forKey:@"category_name"];
         
-        [TTTrackerWrapper eventV3:@"red_button" params:param];
+        [BDTrackerProtocol eventV3:@"red_button" params:param];
     }
 }
 

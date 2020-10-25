@@ -19,6 +19,7 @@
 #import "FHSameHouseTagView.h"
 #import "FHOldDetailMultitemCollectionView.h"
 #import "FHDetailSurroundingAreaCell.h"
+#import "FHNeighborhoodDetailHouseSaleCollectionCell.h"
 @interface FHDetailSameNeighborhoodHouseCell ()
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
 @property (nonatomic, weak) UIImageView *shadowImage;
@@ -78,23 +79,21 @@
     }
     if (model.sameNeighborhoodHouseData) {
         self.headerView.label.text = [NSString stringWithFormat:@"同小区房源 (%@)",model.sameNeighborhoodHouseData.total];
-        self.headerView.isShowLoadMore = model.sameNeighborhoodHouseData.hasMore;
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
+        flowLayout.sectionInset = UIEdgeInsetsMake(0, 16, 0, 16);
         NSMutableArray *dataArr = [[NSMutableArray alloc]initWithArray:model.sameNeighborhoodHouseData.items];
-        if (model.sameNeighborhoodHouseData.hasMore && dataArr.count>3) {
-            FHDetailMoreItemModel *moreItem = [[FHDetailMoreItemModel alloc]init];
+        if (model.sameNeighborhoodHouseData.hasMore) {
+            FHNeighborhoodDetailHouseSaleMoreItemModel *moreItem = [[FHNeighborhoodDetailHouseSaleMoreItemModel alloc] init];
             [dataArr addObject:moreItem];
         }
-        flowLayout.minimumLineSpacing = 0;
-        flowLayout.minimumInteritemSpacing = 0;
+        flowLayout.minimumInteritemSpacing = 10;
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         NSString *identifier = NSStringFromClass([FHSearchHouseDataItemsModel class]);
-        NSString *moreIdentifier = NSStringFromClass([FHDetailMoreItemModel class]);
+        NSString *moreIdentifier = NSStringFromClass([FHNeighborhoodDetailHouseSaleMoreItemModel class]);
 //        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 cellIdentifier:identifier cellCls:[FHDetailSameNeighborhoodHouseCollectionCell class] datas:model.sameNeighborhoodHouseData.items];
-        FHOldDetailMultitemCollectionView *colView = [[FHOldDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 datas:dataArr];
-        [colView registerCell:[FHDetailSameNeighborhoodHouseCollectionCell class] forIdentifier:identifier];
-        [colView registerCell:[FHDetailMoreItemCollectionCell class] forIdentifier:moreIdentifier];
+        FHOldDetailMultitemCollectionView *colView = [[FHOldDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:201 datas:dataArr];
+        [colView registerCell:[FHNeighborhoodDetailHouseSaleItemCollectionCell class] forIdentifier:identifier];
+        [colView registerCell:[FHNeighborhoodDetailHouseSaleMoreItemCollectionCell class] forIdentifier:moreIdentifier];
         [self.containerView addSubview:colView];
         __weak typeof(self) wSelf = self;
         colView.clickBlk = ^(NSInteger index) {
@@ -108,7 +107,7 @@
             [wSelf collectionDisplayCell:index];
         };
         [colView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(10);
+            make.top.mas_equalTo(self.containerView).offset(6);
             make.left.mas_equalTo(self.containerView).offset(15);
             make.right.mas_equalTo(self.containerView).offset(-15);
             make.bottom.mas_equalTo(self.containerView).offset(-10);
@@ -156,14 +155,13 @@
         make.top.mas_equalTo(self.shadowImage).offset(20);
         make.height.mas_equalTo(46);
     }];
-    [self.headerView addTarget:self action:@selector(moreButtonClick) forControlEvents:UIControlEventTouchUpInside];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-30);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
     }];
 }
 
@@ -180,7 +178,7 @@
         }
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"enter_type"] = @"click";
-        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
+        tracerDic[@"log_pb"] = self.baseViewModel.listLogPB;
         tracerDic[@"category_name"] = @"same_neighborhood_list";
         tracerDic[@"element_from"] = @"same_neighborhood";
         tracerDic[@"enter_from"] = @"old_detail";
@@ -225,7 +223,7 @@
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"slide";
-        tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
+        tracerDic[@"log_pb"] = dataItem.logPb;
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
         tracerDic[@"element_from"] = @"same_neighborhood";
         tracerDic[@"enter_from"] = @"old_detail";
@@ -253,7 +251,7 @@
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:self.baseViewModel.houseType];
         tracerDic[@"element_type"] = @"same_neighborhood";
         tracerDic[@"search_id"] = dataItem.searchId.length > 0 ? dataItem.searchId : @"be_null";
-        tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.hid ? dataItem.hid : @"be_null");
+        tracerDic[@"group_id"] = dataItem.groupId.length > 0 ? dataItem.groupId : (dataItem.hid.length > 0  ? dataItem.hid : @"be_null");
         tracerDic[@"impr_id"] = dataItem.imprId.length > 0 ? dataItem.imprId : @"be_null";
         [tracerDic removeObjectsForKeys:@[@"element_from"]];
         [FHUserTracker writeEvent:@"house_show" params:tracerDic];

@@ -7,6 +7,7 @@
 //
 
 #import "ArticleBaseListView.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface ArticleBaseListView()
 @end
@@ -87,7 +88,7 @@
     [dictionary setValue:@(1) forKey:@"refer"];//1表示从首页的频道，2表示关心tab的频道
     
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        [TTTrackerWrapper eventData:dictionary];
+        [BDTrackerProtocol eventData:dictionary];
     }
     
     [self trackRefershEvent3];
@@ -101,7 +102,7 @@
     [dict setValue:self.currentCategory.concernID forKey:@"concern_id"];
     [dict setValue:@(1) forKey:@"refer"];
     [dict setValue:@"pull" forKey:@"refresh_type"];
-    [TTTrackerWrapper eventV3:@"category_refresh" params:dict isDoubleSending:YES];
+    [BDTrackerProtocol eventV3:@"category_refresh" params:dict isDoubleSending:YES];
 }
 
 - (BOOL)needClearRecommendTabBadge{

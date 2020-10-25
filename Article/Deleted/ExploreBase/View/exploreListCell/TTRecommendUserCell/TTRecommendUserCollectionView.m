@@ -22,6 +22,7 @@
 #import "TTAccountManager.h"
 #import "TTAuthorizeManager.h"
 #import "TTRecommendUserCardFlowLayout.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kLeftPadding 15
 #define kRightPadding 15
@@ -181,7 +182,7 @@
         [params setValue:model.user.info.user_id forKey:@"to_user_id"];
         [params setValue:@(indexPath.item+1) forKey:@"order"];
         [params setValue:model.stats_place_holder forKey:@"server_extra"];
-        [TTTrackerWrapper eventV3:@"follow_card" params:params.copy];
+        [BDTrackerProtocol eventV3:@"follow_card" params:params.copy];
         [self.userCardModels replaceObjectAtIndex:indexPath.item withObject:model];
         if ([TTDeviceHelper OSVersionNumber] < 8.0f) { //iOS7 crash 保护 https://fabric.io/news/ios/apps/com.ss.iphone.article.news/issues/59cb056abe077a4dcc4e42e9?time=last-thirty-days
             dispatch_async(dispatch_get_main_queue(), ^{

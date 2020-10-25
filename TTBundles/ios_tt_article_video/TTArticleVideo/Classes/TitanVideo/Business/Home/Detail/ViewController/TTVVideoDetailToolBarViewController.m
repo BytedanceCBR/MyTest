@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailToolBarViewController.m
 //  Article
 //
@@ -1037,6 +1038,8 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
         [self reportAction];
     } else if (itemType == TTActivityTypeDetele) {
         [self deleteAction];
+    }else if (itemType == TTActivityTypeDislike || itemType == TTActivityTypeBlockUser) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"将减少类似推荐" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
     } else  if (itemType == TTActivityTypeDigUp)
     {
         if (self.detailModel.protocoledArticle.userBury) {
@@ -1129,7 +1132,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     [extraDict setValue:@"click_video" forKey:@"source"];
     [extraDict setValue:@(1) forKey:@"aggr_type"];
     [extraDict setValue:@(1) forKey:@"type"];
-    wrapperTrackEventWithCustomKeys(@"detail_share", @"delete_ugc", [self.detailModel uniqueID], nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail_share" label:@"delete_ugc" value:[self.detailModel uniqueID] source:nil extraDic:extraDict];
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:[[self userInfo] stringValueForKey:@"user_id" defaultValue:nil] forKey:@"user_id"];
     [params setValue:itemID forKey:@"item_id"];

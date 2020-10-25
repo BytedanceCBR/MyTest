@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTImageCollectionView.m
 //  Article
 //
@@ -579,7 +580,7 @@ static NSString * const kTTImageRecommendOneSearchWordCellIdentifier = @"kTTImag
         if([[TTRoute sharedRoute] canOpenURL:openURL]){
             [[TTRoute sharedRoute] openURLByPushViewController:openURL];
         }
-        wrapperTrackEvent(@"gallery1", @"click");
+        [BDTrackerProtocol event:@"gallery1" label:@"click"];
         return;
     }
     
@@ -1622,10 +1623,10 @@ static CGFloat maxAnimationHeight = 154;//超过这个高度才做动画
     
     
     if([_recommendSearchWordsArray count] > 1){
-        wrapperTrackEvent(@"gallery2", @"show");
+        [BDTrackerProtocol event:@"gallery2" label:@"show"];
     }
     else if([_recommendSearchWordsArray count] == 1 && [(TTPhotoSearchWordModel *)_recommendSearchWordsArray[0] isValidSingleSearchWord]){
-        wrapperTrackEvent(@"gallery1", @"show");
+        [BDTrackerProtocol event:@"gallery1" label:@"show"];
     }
 }
 

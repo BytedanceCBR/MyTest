@@ -290,6 +290,11 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 
  /*
   
+ 是否开启首页二手房、新房新样式实验、默认为NO
+ */
++ (BOOL)isShowHomeHouseCard;
+
+/*
 判断开启首次安装用户引导，默认YES
  */
 + (BOOL)isIntroduceOpen;
