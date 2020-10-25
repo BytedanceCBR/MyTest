@@ -30,6 +30,7 @@
 #import "UIScrollView+Refresh.h"
 #import "FHHouseListRecommendTipCell.h"
 #import "UIDevice+BTDAdditions.h"
+#import "FHFindResultNewCell.h"
 
 #define kBaseCellId @"kBaseCellId"
 #define kFindNewHouseCellId @"kFindNewHouseCellId"
@@ -272,6 +273,7 @@
     [self.tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:kFindNewHouseCellId];
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFindHouseTitileCellId];
     [self.tableView registerClass:[FHHouseListRecommendTipCell class] forCellReuseIdentifier:kFindNoHouseTitileCellId];
+    [self.tableView registerClass:[FHFindResultNewCell class] forCellReuseIdentifier:NSStringFromClass([FHFindResultNewCell class])];
     
 }
 
@@ -586,6 +588,13 @@
        FHSearchHouseItemModel *cellModel = self.houseList[indexPath.row];
 
        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+           if ([FHEnvContext isDisplayNewCardType]) {
+               FHFindResultNewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHFindResultNewCell class])];
+               if (indexPath.row < _houseList.count) {
+                   [cell refreshWithData:cellModel];
+               }
+               return cell;
+           }
              FHHouseBaseNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:kFindNewHouseCellId];
              if (indexPath.row < _houseList.count) {
 //                 [cell refreshTopMargin:([UIDevice btd_is896Screen]) ? 4 : 0];
@@ -646,6 +655,9 @@
         if(self.houseType == FHHouseTypeNewHouse){
             FHSearchHouseItemModel *cellModel = self.houseList[indexPath.row];
            if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+               if ([FHEnvContext isDisplayNewCardType]) {
+                   return [FHFindResultNewCell heightForData:cellModel];
+               }
                 return [FHHouseBaseNewHouseCell heightForData:cellModel];
             }else if([cellModel isKindOfClass:[FHSearchGuessYouWantContentModel class]]){
                 if (cellModel.cardType == 10) {
