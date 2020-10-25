@@ -44,8 +44,8 @@
 #import "TTAdManagerProtocol.h"
 
 #import "TTActivityShareSequenceManager.h"
-#import "TTTrackerProxy.h"
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 extern BOOL ttvs_isShareIndividuatioEnable(void);
 
@@ -146,7 +146,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     if ([self.orderedData.article hasVideoSubjectID]) {
         extValueDic[@"video_subject_id"] = self.orderedData.article.videoSubjectID;
     }
-    wrapperTrackEventWithCustomKeys(tag, label, uniqueID, @"video", extValueDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:uniqueID source:@"video" extraDic:extValueDic];
 }
 
 
@@ -192,7 +192,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         if (!isEmptyString(tipMsg)) {
             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tipMsg indicatorImage:image autoDismiss:YES dismissHandler:nil];
         }
-        wrapperTrackEvent(@"xiangping", @"video_list_unfavorite");
+        [BDTrackerProtocol event:@"xiangping" label:@"video_list_unfavorite"];
     }
     else {
         __weak __typeof__(self) wself = self;
@@ -208,7 +208,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         if (!isEmptyString(tipMsg)) {
             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:tipMsg indicatorImage:image autoDismiss:YES dismissHandler:nil];
         }
-        wrapperTrackEvent(@"xiangping", @"video_list_favorite");
+        [BDTrackerProtocol event:@"xiangping" label:@"video_list_favorite"];
     }
 }
 
@@ -265,19 +265,17 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 - (void)trackWithTag:(NSString *)tag label:(NSString *)label extra:(NSDictionary *)extra {
     NSCParameterAssert(tag != nil);
     NSCParameterAssert(label != nil);
-    TTInstallNetworkConnection nt = [[TTTrackerProxy sharedProxy] connectionType];
     NSMutableDictionary *events = [NSMutableDictionary dictionaryWithCapacity:10];
     [events setValue:@"umeng" forKey:@"category"];
     [events setValue:tag forKey:@"tag"];
     [events setValue:label forKey:@"label"];
-    [events setValue:@(nt) forKey:@"nt"];
     [events setValue:@"1" forKey:@"is_ad_event"];
     [events setValue:self.orderedData.ad_id forKey:@"value"];
     [events setValue:self.orderedData.log_extra forKey:@"log_extra"];
     if (extra) {
         [events addEntriesFromDictionary:extra];
     }
-    [TTTracker eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 #pragma mark - SSActivityViewDelegate

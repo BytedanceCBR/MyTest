@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTLayOutCellViewBase.m
 //  Article
 //
@@ -1571,7 +1572,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                 [trackExtraDict setValue:@"comment"forKey:@"group_type"];
                 [trackExtraDict setValue:comment.commentID forKey:@"comment_id"];
                 [trackExtraDict setValue:self.orderedData.categoryID forKey:@"category_id"];
-                wrapperTrackEventWithCustomKeys(@"list_comment", @"click", comment.groupID, nil, trackExtraDict);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"list_comment" label:@"click" value:comment.groupID source:nil extraDic:trackExtraDict];
             }
             NSURL *commentURL = [TTStringHelper URLWithURLString:commentOpenURL];
             
@@ -1596,7 +1597,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                 [trackExtraDict setValue:@"video"forKey:@"group_type"];
                 [trackExtraDict setValue:self.orderedData.article.groupModel.itemID forKey:@"item_id"];
                 [trackExtraDict setValue:self.orderedData.categoryID forKey:@"category_id"];
-                wrapperTrackEventWithCustomKeys(@"list_comment", @"click", self.orderedData.article.groupModel.groupID, nil, trackExtraDict);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"list_comment" label:@"click" value:self.orderedData.article.groupModel.groupID source:nil extraDic:trackExtraDict];
             }
         }
         if ([self.orderedData isUGCCell]) {

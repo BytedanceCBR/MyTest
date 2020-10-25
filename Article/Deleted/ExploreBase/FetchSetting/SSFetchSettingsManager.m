@@ -22,6 +22,7 @@
 #import "TTThemeManager.h"
 #import <AKWebViewBundlePlugin/TTJSBAuthManager.h>
 #import <TTNetworkManager/TTNetworkManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define SSFetchSettingsManagerFetchedDefaultInfoKey @"SSFetchSettingsManagerFetchedDefaultInfoKey"
 
@@ -76,10 +77,10 @@ static SSFetchSettingsManager * manager;
     }
     
     NSMutableDictionary * getPara = [NSMutableDictionary dictionaryWithCapacity:10];
-    [getPara setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [getPara setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     [getPara setValue:[TTSandBoxHelper appName] forKey:@"app_name"];
     [getPara setValue:[TTSandBoxHelper ssAppID] forKey:@"aid"];
-    [getPara setValue:[[TTInstallIDManager sharedInstance] installID] forKey:@"iid"];
+    [getPara setValue:[BDTrackerProtocol installID] forKey:@"iid"];
     if (forceRefresh) {
         [getPara setValue:@1 forKey:@"debug"];
     }

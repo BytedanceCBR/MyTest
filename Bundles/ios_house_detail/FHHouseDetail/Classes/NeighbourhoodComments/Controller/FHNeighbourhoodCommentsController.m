@@ -33,6 +33,8 @@
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
 @property(nonatomic, assign) NSInteger currentCityId;
 @property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
+@property(nonatomic, strong) UIView *bottomView;
+@property(nonatomic, strong) UIButton *bottomBtn;
 
 @end
 
@@ -96,6 +98,7 @@
 - (void)initView {
     [self initTableView];
     [self initNotifyBarView];
+    [self initBottomView];
     [self addDefaultEmptyViewFullScreen];
 }
 
@@ -121,10 +124,6 @@
         _tableView.estimatedSectionHeaderHeight = 0;
     }
     
-    if ([TTDeviceHelper isIPhoneXSeries]) {
-        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
-    }
-    
     [self.view addSubview:_tableView];
 }
 
@@ -140,6 +139,31 @@
     [self.view addSubview:self.notifyBarView];
 }
 
+- (void)initBottomView {
+    self.bottomView = [[UIView alloc] init];
+    _bottomView.backgroundColor = [UIColor themeGray7];
+    [self.view addSubview:_bottomView];
+    
+    self.bottomBtn = [[UIButton alloc] init];
+    _bottomBtn.backgroundColor = [UIColor themeOrange4];
+    [_bottomBtn setTitle:@"写点评" forState:UIControlStateNormal];
+    [_bottomBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    _bottomBtn.titleLabel.font = [UIFont themeFontSemibold:16];
+    _bottomBtn.layer.cornerRadius = 22; //4;
+    [_bottomBtn addTarget:self action:@selector(gotoCommentPublish) forControlEvents:UIControlEventTouchUpInside];
+//    house_detail_write_comment
+    _bottomBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#ff9629"].CGColor;
+    _bottomBtn.layer.shadowOffset = CGSizeMake(0, 8);
+    _bottomBtn.layer.shadowOpacity = .2 ;
+    _bottomBtn.layer.shadowRadius = 6;
+    _bottomBtn.imageView.contentMode = UIViewContentModeCenter;
+    [_bottomBtn setImage:[UIImage imageNamed:@"house_detail_write_comment"] forState:UIControlStateNormal];
+    [_bottomBtn setImage:[UIImage imageNamed:@"house_detail_write_comment"] forState:UIControlStateHighlighted];
+    [_bottomBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
+    [_bottomBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
+    [self.bottomView addSubview:_bottomBtn];
+}
+
 - (void)initConstraints {
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         if (@available(iOS 11.0, *)) {
@@ -147,12 +171,30 @@
         } else {
             make.top.mas_equalTo(64);
         }
-        make.left.right.bottom.mas_equalTo(self.view);
+        make.left.right.mas_equalTo(self.view);
+        make.bottom.mas_equalTo(self.bottomView.mas_top);
     }];
     
     [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.tableView);
         make.height.mas_equalTo(32);
+    }];
+    
+    CGFloat bottom = 64;
+    if (@available(iOS 11.0 , *)) {
+        bottom += [[[[UIApplication sharedApplication] delegate] window] safeAreaInsets].bottom;
+    }
+    
+    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.bottom.mas_equalTo(self.view);
+        make.height.mas_equalTo(bottom);
+    }];
+    
+    [self.bottomBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.bottomView).offset(10);
+        make.left.mas_equalTo(self).offset(20);
+        make.right.mas_equalTo(self).offset(-20);
+        make.height.mas_equalTo(44);
     }];
 }
 
@@ -235,6 +277,50 @@
 
 - (void)hideImmediately {
     [self.notifyBarView hideImmediately];
+}
+
+- (void)gotoCommentPublish {
+
+    if ([TTAccountManager isLogin]) {
+        [self gotoCommentVC];
+    } else {
+        [self gotoLogin];
+    }
+}
+
+- (void)gotoCommentVC {
+    NSURLComponents *components = [[NSURLComponents alloc] initWithString:@"sslocal://ugc_post"];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[UT_ENTER_FROM] = self.tracerDict[@"page_type"];
+    tracerDict[UT_LOG_PB] = self.tracerDict[@"log_pb"] ?: @"be_null";
+    dict[TRACER_KEY] = tracerDict;
+    dict[@"neighborhood_id"] = self.neighborhoodId;
+    dict[@"post_content_hint"] = @"说说你对该小区的评价，小区物业、配套、停车、周边学校、邻居关系等方面都可以~最少要写10个字以上哦";
+    dict[@"title"] = @"发布点评";
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+    [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+}
+
+- (void)gotoLogin {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *page_type = self.tracerDict[@"page_type"] ?: @"be_null";
+    [params setObject:page_type forKey:@"enter_from"];
+    [params setObject:@"click_publisher" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf gotoCommentVC];
+                });
+            }
+        }
+    }];
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol

@@ -19,6 +19,7 @@
 #import "UIImage+TTThemeExtension.h"
 #import "TTDeviceHelper.h"
 #import "UIColor+TTThemeExtension.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 
 
@@ -137,7 +138,7 @@
     __weak typeof(self) wSelf = self;
     [_nameView clickTitleWithAction:^(NSString *title) {
         [ArticleMomentHelper openMomentProfileView:userModel navigationController:[TTUIResponderHelper topNavigationControllerFor: wSelf] from:kFromFeedDetailDig];
-        wrapperTrackEvent(@"update_detail", @"diggers_profile");
+        [BDTrackerProtocol event:@"update_detail" label:@"diggers_profile"];
     }];
     _avatarView.left = kCellAvatarViewLeftPadding;
     _avatarView.centerY = self.contentView.centerY;
@@ -308,7 +309,7 @@
             wself.loadOffset += kLoadOnceCount;
         }
     }];
-    wrapperTrackEvent(@"update_detail", @"diggers_loadmore");
+    [BDTrackerProtocol event:@"update_detail" label:@"diggers_loadmore"];
 }
 
 #pragma mark -- UITableViewDelegate & UITableVewDataSource
@@ -393,7 +394,7 @@
     if (indexPath.row < [[self.diggManger diggUsers] count]) {
         SSUserModel * digUser = [[self.diggManger diggUsers] objectAtIndex:indexPath.row];
         [ArticleMomentHelper openMomentProfileView:digUser navigationController:[TTUIResponderHelper topNavigationControllerFor: self] from:kFromFeedDetailDig];
-        wrapperTrackEvent(@"update_detail", @"diggers_profile");
+        [BDTrackerProtocol event:@"update_detail" label:@"diggers_profile"];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }

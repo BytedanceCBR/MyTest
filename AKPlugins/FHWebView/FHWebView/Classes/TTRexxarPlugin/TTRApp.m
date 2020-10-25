@@ -8,7 +8,7 @@
 
 #import "TTRApp.h"
 #import "TTJSBAuthManager.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTRexxar/TTRexxarNotificationCenter.h>
 #import <TTRexxar/TTRJSBForwarding.h>
 #import <TTBaseLib/NetworkUtilities.h>
@@ -103,7 +103,7 @@ extern NSString *const kFHPLoginhoneNumberCacheKey;
     [data setValue:netType forKey:@"netType"];
     
     if([[TTJSBAuthManager sharedManager] engine:webview isAuthorizedMeta:@"device_id" domain:webview.ttr_url.host.lowercaseString]) {
-        [data setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+        [data setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     }
     
     if([[TTJSBAuthManager sharedManager] engine:webview isAuthorizedMeta:@"user_id" domain:webview.ttr_url.host.lowercaseString]) {

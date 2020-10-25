@@ -7,7 +7,6 @@
 //
 
 #import "TTMemoryMonitorTask.h"
-#import "TTInstallIDManager.h"
 #import "TTMemoryMonitor.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #if __has_include(<TTDebugAssistant/TTDebugAssistant.h>)

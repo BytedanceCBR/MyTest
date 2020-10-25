@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTArticleDetailViewController+Report.m
 //  Article
 //
@@ -130,7 +131,7 @@
         NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
         [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
         [extra setValue:style forKey:@"style"];
-        wrapperTrackEventWithCustomKeys(@"detail", trackSource, self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:trackSource value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extra];
         
         if (!self.dislikeContainer) {
             self.dislikeContainer = [[TTDislikeContainer alloc] init];
@@ -213,11 +214,11 @@
             self.actionSheetController.source = self.detailModel.clickLabel;
             self.actionSheetController.trackBlock = ^{
                 StrongSelf;
-                wrapperTrackEventWithCustomKeys(@"detail", @"report_click", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extDict);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"report_click" value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extDict];
             };
         }
         self.actionSheetController.extra = @{@"position": @"detail_mid"};
-        wrapperTrackEventWithCustomKeys(@"detail", trackSource, self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:trackSource value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extDict];
         [self.actionSheetController insertDislikeArray:self.articleInfoManager.dislikeWords reportArray:[TTReportManager fetchReportArticleOptions]];
         
         [self.actionSheetController performWithSource:source completion:^(NSDictionary * _Nonnull parameters) {
@@ -249,7 +250,7 @@
         NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
         [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
         [extra setValue:@"report" forKey:@"style"];
-        wrapperTrackEventWithCustomKeys(@"detail", @"report_click", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"report_click" value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extra];
         
         if (!self.dislikeContainer) {
             self.dislikeContainer = [[TTDislikeContainer alloc] init];
@@ -311,7 +312,7 @@
         NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
         [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
         [extra setValue:@"report" forKey:@"style"];
-        wrapperTrackEventWithCustomKeys(@"detail", @"report_click", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"report_click" value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extra];
         
         if (!self.dislikeContainer) {
             self.dislikeContainer = [[TTDislikeContainer alloc] init];
@@ -583,7 +584,7 @@
     if (!isEmptyString(self.detailModel.orderedData.ad_id)) {
         [extra setValue:self.detailModel.orderedData.ad_id forKey:@"aid"];
     }
-    wrapperTrackEventWithCustomKeys(@"detail", @"report_click", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"report_click" value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extra];
 }
 
 - (void)reportTyposAlertTrack {
@@ -595,7 +596,7 @@
     if (!isEmptyString(self.detailModel.orderedData.ad_id)) {
         [extra setValue:self.detailModel.orderedData.ad_id forKey:@"aid"];
     }
-    wrapperTrackEventWithCustomKeys(@"pop", @"report_pop_show", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"pop" label:@"report_pop_show" value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extra];
 }
 
 #pragma mark - getter & setter

@@ -16,12 +16,12 @@
 #import "TTAdManager.h"
 #import "TTVideoDetailViewController.h"
 #import "TTDetailContainerViewController.h"
-#import "TTTrackerProxy.h"
 #import "TTAdAppointAlertView.h"
 #import "NSDictionary+TTGeneratedContent.h"
 #import "ExploreOrderedData.h"
 #import "ExploreOrderedData+TTAd.h"
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 extern NSInteger ttvs_isVideoShowOptimizeShare(void);
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
 extern BOOL ttvs_isVideoDetailPlayLastEnabled(void);

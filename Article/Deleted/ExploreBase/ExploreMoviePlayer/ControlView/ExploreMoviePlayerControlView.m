@@ -32,6 +32,7 @@
 
 #import "TTMoviePlayerControlFinishShareAction.h"
 #import "TTVPalyerTrafficAlert.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kControlViewAutoHiddenTime 2
 
@@ -1327,7 +1328,7 @@ extern NSInteger ttvs_isVideoShowDirectShare(void);
             }
         }
     }
-    wrapperTrackEvent(event, label);
+    [BDTrackerProtocol event:event label:label];
 }
 
 #pragma mark - finish ad

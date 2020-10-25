@@ -29,7 +29,7 @@
 #import "TTVPlayerSliderMarkPointView.h"
 #import "EXTScope.h"
 #import "EXTKeyPathCoding.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kControlViewAutoHiddenTime 2
 
@@ -900,7 +900,7 @@ static const CGFloat kBottomBarHeight = 80;
     [dic setValue:isSystem ? @"system": @"button" forKey:@"drag_type"];
     [dic setValue:self.playerStateStore.state.isFullScreen ? @"fullscreen" : @"notfullscreen" forKey:@"fullscreen"];
     [dic setValue:[self.playerStateStore.state ttv_position] forKey:@"position"];
-    [TTTrackerWrapper eventV3:@"drag_volume_bar" params:dic isDoubleSending:YES];
+    [BDTrackerProtocol eventV3:@"drag_volume_bar" params:dic isDoubleSending:YES];
 }
 
 - (void)volumeChanged:(NSNotification *)notification
@@ -981,7 +981,7 @@ static const CGFloat kBottomBarHeight = 80;
             }
         }
     }
-    ttTrackEvent(event, label);
+    [BDTrackerProtocol event:event label:label];
 }
 
 #pragma mark - getter & setter

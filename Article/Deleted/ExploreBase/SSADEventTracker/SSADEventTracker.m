@@ -17,11 +17,11 @@
 #import "TTURLTracker.h"
 #import <Foundation/Foundation.h>
 #import <TTBaseLib/JSONAdditions.h>
-#import <TTTracker/TTTrackerProxy.h>
 #import "TTADTrackEventLinkModel.h"
 #import "TTVFeedListItem.h"
 #import "TTADEventTrackerEntity.h"
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 @interface SSADEventTracker()
 @property(nonatomic, strong)NSMutableDictionary * adCellDict;
 //用来记录show与showover的配对关系
@@ -130,13 +130,11 @@ static SSADEventTracker * sharedManager;
         }
     }
     
-    TTInstallNetworkConnection nt = [TTTrackerProxy sharedProxy].connectionType;
     NSMutableDictionary *events = [NSMutableDictionary dictionary];
     [events setValue:@"umeng" forKey:@"category"];
     [events setValue:eventName forKey:@"tag"];
     [events setValue:label forKey:@"label"];
     [events setValue:@"1" forKey:@"is_ad_event"];
-    [events setValue:@(nt) forKey:@"nt"];
     
     [events setValue:orderedData.ad_id forKey:@"value"];
     [events setValue:orderedData.log_extra forKey:@"log_extra"];
@@ -191,7 +189,7 @@ static SSADEventTracker * sharedManager;
     if (duration > 0) {
         [events setValue:[NSNumber numberWithLong:duration*1000] forKey:@"duration"];
     }
-    [TTTrackerWrapper eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 - (void)trackShowWithOrderedData:(ExploreOrderedData *) orderedData
@@ -260,13 +258,11 @@ static SSADEventTracker * sharedManager;
         }
     }
     
-    TTInstallNetworkConnection nt = [TTTrackerProxy sharedProxy].connectionType;
     NSMutableDictionary *events = [NSMutableDictionary dictionary];
     [events setValue:@"umeng" forKey:@"category"];
     [events setValue:eventName forKey:@"tag"];
     [events setValue:label forKey:@"label"];
     [events setValue:@"1" forKey:@"is_ad_event"];
-    [events setValue:@(nt) forKey:@"nt"];
     [events setValue:orderedData.ad_id forKey:@"value"];
     [events setValue:orderedData.log_extra forKey:@"log_extra"];
     
@@ -334,7 +330,7 @@ static SSADEventTracker * sharedManager;
     }
     [events setValue:scene_label forKey:@"scene"];
 
-    [TTTrackerWrapper eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 - (void)sendADWithOrderedData:(ExploreOrderedData *)orderedData event:(NSString *)event label:(NSString *)label extra:(NSDictionary *)extra
@@ -352,15 +348,13 @@ static SSADEventTracker * sharedManager;
     } else {
         [dict setValue:@"0" forKey:@"ext_value"];
     }
-    TTInstallNetworkConnection nt = [TTTrackerProxy sharedProxy].connectionType;
-    [dict setValue:@(nt) forKey:@"nt"];
     [dict setValue:@"1" forKey:@"is_ad_event"];
     
     if (extra) {
         [dict addEntriesFromDictionary:extra];
     }
     
-    [TTTrackerWrapper eventData:dict];
+    [BDTrackerProtocol eventData:dict];
 }
 
 #pragma mark - show_over duration
@@ -503,7 +497,6 @@ static SSADEventTracker * sharedManager;
         }
     }
     if (!isEmptyString(adID)) {
-        TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
         NSMutableDictionary * events = [@{@"category":@"umeng", @"tag":eventName, @"label":label, @"nt":@(connectionType), @"is_ad_event":@"1"} mutableCopy];
         [events setValue:adID forKey:@"value"];
         if (!SSIsEmptyDictionary(extra)) {
@@ -588,9 +581,8 @@ static SSADEventTracker * sharedManager;
             [events setValue:scene_label forKey:@"scene"];
         }
         
-        [TTTrackerWrapper eventData:events];
+        [BDTrackerProtocol eventData:events];
     } else {
-        wrapperTrackEventWithOption([TTSandBoxHelper appName], eventName, label, false);
     }
 }
 
@@ -631,15 +623,13 @@ static SSADEventTracker * sharedManager;
     [events setValue:model.ad_id forKey:@"value"];
     [events setValue:model.log_extra forKey:@"log_extra"];
     
-    TTInstallNetworkConnection nt = [TTTrackerProxy sharedProxy].connectionType;
-    [events setValue:@(nt) forKey:@"nt"];
     [events setValue:@"1" forKey:@"is_ad_event"];
     
     if (extra) {
         [events addEntriesFromDictionary:extra];
     }
     
-    [TTTrackerWrapper eventData:events];
+    [BDTrackerProtocol eventData:events];
 }
 
 @end

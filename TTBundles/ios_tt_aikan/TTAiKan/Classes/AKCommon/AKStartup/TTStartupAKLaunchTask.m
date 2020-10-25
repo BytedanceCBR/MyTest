@@ -11,7 +11,7 @@
 #import "TTRoute.h"
 #import "CommonURLSetting.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
-#import <TTInstallService/TTInstallIDManager.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTLaunchDefine.h"
 #import <CoreLocation/CoreLocation.h>
@@ -152,12 +152,12 @@ void fhPreFcActionAlert(forceCrashMask mask)
 
 + (NSString *)customDeviceID
 {
-    return [[TTInstallIDManager sharedInstance] deviceID];
+    return [BDTrackerProtocol deviceID];
 }
 
 + (NSString *)installID
 {
-    return [[TTInstallIDManager sharedInstance] installID];
+    return [BDTrackerProtocol installID];
 }
 
 + (NSString *)sessionID
@@ -180,7 +180,7 @@ void fhPreFcActionAlert(forceCrashMask mask)
 }
 
 - (nonnull NSString *)sgm_customDeviceID {
-    return [[TTInstallIDManager sharedInstance] deviceID];
+    return [BDTrackerProtocol deviceID];
 }
 
 - (nonnull NSString *)sgm_installChannel {
@@ -188,7 +188,7 @@ void fhPreFcActionAlert(forceCrashMask mask)
 }
 
 - (nonnull NSString *)sgm_installID {
-    return [[TTInstallIDManager sharedInstance] installID];
+    return [BDTrackerProtocol installID];
 }
 
 - (nonnull NSString *)sgm_sessionID {

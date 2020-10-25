@@ -300,7 +300,7 @@
 {
     NSMutableDictionary *extValueDic = [NSMutableDictionary dictionary];
     [extValueDic setValue:self.detailModel.article.groupModel.itemID forKey:@"item_id"];
-    wrapperTrackEventWithCustomKeys(@"detail", @"transcode_start", self.detailModel.article.groupModel.groupID, nil, extValueDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"transcode_start" value:self.detailModel.article.groupModel.groupID source:nil extraDic:extValueDic];
 }
 
 - (void)tt_sendStayTimeImpresssion
@@ -340,7 +340,7 @@
     else {
         source = self.detailModel.clickLabel;
     }
-    wrapperTrackEventWithCustomKeys(tag, label, groupId, source, extValueDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:groupId source:source extraDic:extValueDic];
 }
 
 - (void)tt_sendDetailLoadTimeOffLeave
@@ -363,10 +363,10 @@
 - (void)tt_sendDetailDeallocTrack:(BOOL)fromBackButton
 {
     if (fromBackButton) {
-        wrapperTrackEvent(@"detail", @"back_button");
+        [BDTrackerProtocol event:@"detail" label:@"back_button"];
     }
     else {
-        wrapperTrackEvent(@"detail", @"back_gesture");
+        [BDTrackerProtocol event:@"detail" label:@"back_gesture"];
     }
 }
 
@@ -382,7 +382,7 @@
     if (!isEmptyString(key)) {
         [extDict setValue:extValue forKey:key];
     }
-    wrapperTrackEventWithCustomKeys(tag, label, currentArticle.groupModel.groupID, nil, extDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:currentArticle.groupModel.groupID source:nil extraDic:extDict];
 }
 
 
@@ -391,7 +391,7 @@
                             value:(NSString *)value
                          extraDic:(NSDictionary *)dic
 {
-    wrapperTrackEventWithCustomKeys(tag, label, value, nil, dic);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:value source:nil extraDic:dic];
 }
 
 @end

@@ -8,6 +8,7 @@
 
 #import "ExploreDetailNatantHeaderItemBase.h"
 #import "SSThemed.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @implementation ExploreDetailNatantHeaderItemBase
 
@@ -41,7 +42,7 @@
 {
     if (!_hasShown) {
         if (!isEmptyString(groupID)) {
-            [TTTrackerWrapper category:@"umeng"
+            [BDTrackerProtocol category:@"umeng"
                           event:@"detail"
                           label:label
                            dict:@{@"value":groupID}];

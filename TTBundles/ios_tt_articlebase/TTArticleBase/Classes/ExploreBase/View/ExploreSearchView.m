@@ -28,7 +28,6 @@
 #import <TTNetworkManager/TTNetworkManager.h>
 #import "ArticleURLSetting.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
-#import "TTInstallIDManager.h"
 #import "TTUIResponderHelper.h"
 #import "TTURLUtils.h"
 #import "TTNavigationController.h"
@@ -275,7 +274,7 @@
     self.suggestionView.curTab = self.curTab;
     self.suggestionView.selectedHandler = ^(NSString * title) {
         /////// 友盟统计
-        wrapperTrackEvent(weakSelf.labelString, [NSString stringWithFormat:@"inputsug_%lu", (unsigned long)weakSelf.searchBar.text.length]);
+        [BDTrackerProtocol event:weakSelf.labelString label:[NSString stringWithFormat:@"inputsug_%lu", (unsigned long)weakSelf.searchBar.text.length]];
         weakSelf.searchBar.text = title;
         weakSelf.fromType = ListDataSearchFromTypeSuggestion;
         [weakSelf searchWithLabel:@"sug_keyword_search"];
@@ -561,7 +560,7 @@
         
         if ([self.from isEqualToString:@"search_detail"]) {
             // 点详情页顶部搜索框进入的搜索
-            wrapperTrackEvent(@"search", @"click_search_detail_icon");
+            [BDTrackerProtocol event:@"search" label:@"click_search_detail_icon"];
         }
         
         // 进入页面首次搜索有效
@@ -621,7 +620,7 @@
                                                                      @"from_tab_name" : _fromTabName}];
     }
     else {
-        wrapperTrackEvent(self.labelString, @"hot_keyword_search");
+        [BDTrackerProtocol event:self.labelString label:@"hot_keyword_search"];
     }
 }
 
@@ -749,13 +748,13 @@
     if (!_isOverlayWebViewEnabled && !self.historyView.hidden) {
         [self.contentView bringSubviewToFront:self.historyView];
         if (previousHidden) {
-            wrapperTrackEvent(self.labelString, @"history_explore");
+            [BDTrackerProtocol event:self.labelString label:@"history_explore"];
         }
     }
 }
 
 - (void)searchBarCancelButtonClicked:(TTSearchBarView *)searchBar_ {
-    wrapperTrackEvent(self.labelString, @"cancel_search");
+    [BDTrackerProtocol event:self.labelString label:@"cancel_search"];
     
     
     if ([SSCommonLogic searchCancelClickActionChangeEnable]
@@ -793,7 +792,7 @@
     }
     
     if (_fromType == ListDataSearchFromTypeConcern) {
-        wrapperTrackEvent(_umengEventString, @"search_cancel");
+        [BDTrackerProtocol event:_umengEventString label:@"search_cancel"];
     }
 }
 
@@ -810,7 +809,7 @@
         /////// 友盟统计
         [self.contentView bringSubviewToFront:self.historyView];
         if (!_willDisappear) {
-            wrapperTrackEvent(self.labelString, @"history_explore");
+            [BDTrackerProtocol event:self.labelString label:@"history_explore"];
         }
     }
     else if (searchBar.text.length > 0) {
@@ -967,7 +966,7 @@
     }
 
     if (_isFirstSend) {
-        wrapperTrackEvent(self.labelString, @"search_success");
+        [BDTrackerProtocol event:self.labelString label:@"search_success"];
         _isFirstSend = NO;
     }
     
@@ -1170,7 +1169,7 @@
     }
 
     if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-        wrapperTrackEventWithCustomKeys(@"stay_page_search", @"click_search", [NSString stringWithFormat:@"%.0f", timeInterval*1000], self.from , nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"stay_page_search" label:@"click_search" value:[NSString stringWithFormat:@"%.0f", timeInterval*1000] source:self.from extraDic:nil];
     }
 
     //log3.0
@@ -1197,9 +1196,9 @@
     NSEnumerator *getEnum = [getParameter keyEnumerator];
     NSString *key = nil;
     
-    if(!isEmptyString([[TTInstallIDManager sharedInstance] installID]) && [string rangeOfString:@"iid"].location == NSNotFound)
+    if(!isEmptyString([BDTrackerProtocol installID]) && [string rangeOfString:@"iid"].location == NSNotFound)
     {
-        [string appendFormat:@"%@iid=%@", sep, [[TTInstallIDManager sharedInstance] installID]];
+        [string appendFormat:@"%@iid=%@", sep, [BDTrackerProtocol installID]];
         sep = @"&";
     }
     

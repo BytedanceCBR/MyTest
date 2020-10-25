@@ -9,7 +9,7 @@
 
 #import "SSWebViewController.h"
 #import "SSActivityView.h"
-#import "TTTrackerWrapper.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "SSCommonLogic.h"
 #import "TTActivityShareManager.h"
 //#import "TTRealnameAuthServiceForWebManager.h"
@@ -28,7 +28,6 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <BDWebImage/SDWebImageAdapter.h>
 #import <TTServiceKit/TTServiceCenter.h>
-#import <TTTracker/TTTrackerProxy.h>
 #import "TTAdManagerProtocol.h"
 #import <AKWDPlugin/WDParseHelper.h>
 
@@ -156,7 +155,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             [extraDic setValue:self.adID forKey:@"ext_value"];
             if ([_gd_label isEqualToString:@"enter_click_novel_card"] && [TTTrackerWrapper isOnlyV3SendingEnable]) {
             } else {
-                [TTTrackerWrapper category:@"wap_stat" event:@"wap_enter" label:_gd_label dict:extraDic json:_extJson];
+                [BDTrackerProtocol category:@"wap_stat" event:@"wap_enter" label:_gd_label dict:extraDic json:_extJson];
             }
         }
         
@@ -583,7 +582,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
                 }
             }
         }
-        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_setBrowserOpBtnVisible"}];
+        [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_setBrowserOpBtnVisible"}];
     } forMethodName:@"setBrowserOpBtnVisible"];
     
     [self.ssWebView.ssWebContainer.ssWebView.ttr_staticPlugin registerHandlerBlock:^(NSDictionary *result, TTRJSBResponse callback) {
@@ -630,7 +629,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             [[UIDevice currentDevice] setValue:@(UIInterfaceOrientationPortrait)
                                         forKey:@"orientation"];
         }
-        [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_requestChangeOrientation"}];
+        [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_requestChangeOrientation"}];
     } forMethodName:@"requestChangeOrientation"];
     
     // 控制页面顶部状态条风格和返回按钮颜色
@@ -874,7 +873,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
             break;
         case SSWebViewBackButtonPositionTypeTopRight:
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_tr"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_tr"}];
             [_backButton setImageEdgeInsets:UIEdgeInsetsMake(0, 44, 0, 0)];
             if (_shouldHideNavigationBar) {
                 _backButton.right = frame.size.width - 12;
@@ -883,14 +882,14 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
             }
             break;
         case SSWebViewBackButtonPositionTypeBottomLeft:
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_bl"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_bl"}];
             _backButton.left = 12;
             _backButton.bottom = frame.size.height - 2;
             [_backButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 44)];
             [self.view addSubview:_backButton];
             break;
         case SSWebViewBackButtonPositionTypeBottomRight:
-            [TTTracker eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_br"}];
+            [BDTrackerProtocol eventV3:@"deprecated_feature" params:@{@"name": @"sswebviewvc_backbut_br"}];
             _backButton.right = frame.size.width - 12;
             _backButton.bottom = frame.size.height - 2;
             [_backButton setImageEdgeInsets:UIEdgeInsetsMake(0, 44, 0, 0)];
@@ -1045,7 +1044,7 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
     else {
         [extraDic setValue:@"" forKey:@"log_extra"];
     }
-    [TTTrackerWrapper category:@"wap_stat" event:@"stay_page" label:_gd_label dict:extraDic json:_extJson];
+    [BDTrackerProtocol category:@"wap_stat" event:@"stay_page" label:_gd_label dict:extraDic json:_extJson];
 }
 
 - (void)_sendTemailStayEvent {
@@ -1084,12 +1083,10 @@ NSString *const  SSViewControllerBaseConditionADIDKey = @"SSViewControllerBaseCo
         [dict setValue:self.logExtra forKey:@"log_extra"];
         [dict setValue:@"wap_stat" forKey:@"category"];
         [dict setValue:@"1" forKey:@"is_ad_event"];
-        TTInstallNetworkConnection connectionType = [[TTTrackerProxy sharedProxy] connectionType];
-        [dict setValue:@(connectionType) forKey:@"nt"];
         NSMutableDictionary* extraDict = [NSMutableDictionary dictionary];
         [extraDict setValue:@(timeInterval) forKey:@"dom_complete_time"];
         [dict setValue:[extraDict JSONRepresentation] forKey:@"ad_extra_data"];
-        [TTTrackerWrapper eventData:dict];
+        [BDTrackerProtocol eventData:dict];
         
     }
 }

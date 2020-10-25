@@ -17,6 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHUGCMyInterestedController *)viewController;
 
 - (void)requestData:(BOOL)isHead;
+- (void)updateDataListFollowStatus;
 
 - (void)viewWillAppear;
 - (void)viewWillDisappear;

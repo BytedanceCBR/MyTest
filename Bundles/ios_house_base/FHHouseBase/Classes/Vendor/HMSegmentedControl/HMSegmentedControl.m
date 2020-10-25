@@ -30,6 +30,8 @@
 @property (nonatomic, strong) TTBadgeNumberView *chatTipView;
 @property (nonatomic, strong) TTBadgeNumberView *systemMessageTipView;
 
+@property (nonatomic, strong) NSMutableDictionary *dictM; //修复无限layer bug
+
 @end
 
 @implementation HMScrollView
@@ -215,6 +217,13 @@
     
     [self setNeedsLayout];
     [self setNeedsDisplay];
+}
+
+- (NSMutableDictionary *)dictM {
+    if (!_dictM) {
+        _dictM = [[NSMutableDictionary alloc] init];
+    }
+    return _dictM;
 }
 
 - (void)setSelectionIndicatorLocation:(HMSegmentedControlSelectionIndicatorLocation)selectionIndicatorLocation {
@@ -482,7 +491,7 @@
                 [self.scrollView.layer addSublayer:verticalDividerLayer];
             }
         
-            [self addBackgroundAndBorderLayerWithRect:fullRect];
+            [self addBackgroundAndBorderLayerWithRect:fullRect index:idx];
         }];
     } else if (self.type == HMSegmentedControlTypeImages) {
         [self.sectionImages enumerateObjectsUsingBlock:^(id iconImage, NSUInteger idx, BOOL *stop) {
@@ -517,7 +526,7 @@
                 [self.scrollView.layer addSublayer:verticalDividerLayer];
             }
             
-            [self addBackgroundAndBorderLayerWithRect:rect];
+            [self addBackgroundAndBorderLayerWithRect:rect index:idx];
         }];
     } else if (self.type == HMSegmentedControlTypeTextImages){
 		[self.sectionImages enumerateObjectsUsingBlock:^(id iconImage, NSUInteger idx, BOOL *stop) {
@@ -625,7 +634,7 @@
 			titleLayer.contentsScale = [[UIScreen mainScreen] scale];
             [self.scrollView.layer addSublayer:titleLayer];
 			
-            [self addBackgroundAndBorderLayerWithRect:imageRect];
+            [self addBackgroundAndBorderLayerWithRect:imageRect index:idx];
         }];
 	}
     
@@ -650,11 +659,15 @@
     }
 }
 
-- (void)addBackgroundAndBorderLayerWithRect:(CGRect)fullRect {
+- (void)addBackgroundAndBorderLayerWithRect:(CGRect)fullRect index:(NSUInteger)idx {
     // Background layer
     CALayer *backgroundLayer = [CALayer layer];
     backgroundLayer.frame = fullRect;
-    [self.layer insertSublayer:backgroundLayer atIndex:0];
+    if (self.dictM[@(idx)]) {
+        [self.layer replaceSublayer:self.dictM[@(idx)] with:backgroundLayer];
+    } else {
+        [self.layer insertSublayer:backgroundLayer atIndex:0];
+    }
     
     // Border layer
     if (self.borderType & HMSegmentedControlBorderTypeTop) {
@@ -682,6 +695,7 @@
         borderLayer.backgroundColor = self.borderColor.CGColor;
         [backgroundLayer addSublayer: borderLayer];
     }
+    self.dictM[@(idx)] = backgroundLayer;
 }
 
 - (void)setArrowFrame {

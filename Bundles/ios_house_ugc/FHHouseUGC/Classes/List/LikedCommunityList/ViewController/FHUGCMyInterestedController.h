@@ -10,6 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+static NSString *const kFHMyJoinVCReloadVCNotification = @"k_fh_myjoinvc_reloadvc";
+
 @interface FHUGCMyInterestedController : FHBaseViewController
 
 @property(nonatomic, assign) FHUGCMyInterestedType type;

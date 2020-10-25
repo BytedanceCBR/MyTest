@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTSpotlightTask.m
 //  Article
 //
@@ -36,7 +37,7 @@ DEC_TASK("TTSpotlightTask",FHTaskTypeService,TASK_PRIORITY_HIGH+6);
 #pragma clang diagnostic ignored "-Wunguarded-availability"
     if ([userActivity.activityType isEqualToString:CSSearchableItemActionType]) {
 #pragma clang diagnostic pop
-        [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:TTTrackerLaunchFromSpotlight];
+        [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:BDTrackerLaunchFromSpotlight];
         
         //延迟1秒 要不截图会截黑色
         NSMutableDictionary *statParams = [NSMutableDictionary dictionary];
@@ -54,7 +55,7 @@ DEC_TASK("TTSpotlightTask",FHTaskTypeService,TASK_PRIORITY_HIGH+6);
         
         NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
         [extraDict setValue:detailURL forKey:@"url"];
-        wrapperTrackEventWithCustomKeys(@"activity_type", @"spotlight", nil, nil, extraDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"activity_type" label:@"spotlight" value:nil source:nil extraDic:extraDict];
     }
     return YES;
 }

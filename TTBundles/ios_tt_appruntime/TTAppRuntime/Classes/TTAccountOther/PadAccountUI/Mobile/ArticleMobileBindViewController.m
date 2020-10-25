@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ArticleMobileBindViewController.m
 //  Article
 //
@@ -226,7 +227,7 @@
 - (void) loginButtonActionFired:(id) sender {
     
     if (self.captchaField.text.length == 0) {
-        wrapperTrackEvent(@"login_register", @"binding_login_noauth");
+        [BDTrackerProtocol event:@"login_register" label:@"binding_login_noauth"];
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"友情提示", nil) message:NSLocalizedString(@"请输入验证码", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
             [self.captchaField becomeFirstResponder];
@@ -235,7 +236,7 @@
         return;
     }
     if (self.passwordField.text.length == 0) {
-        wrapperTrackEvent(@"login_register", @"binding_login_nopsw");
+        [BDTrackerProtocol event:@"login_register" label:@"binding_login_nopsw"];
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"友情提示", nil) message:NSLocalizedString(@"请输入密码", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithTitle:NSLocalizedString(@"确定", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
             [self.passwordField becomeFirstResponder];
@@ -253,12 +254,12 @@
             weakSelf.captchaValue = nil;
             if (!error) {
                 [weakSelf dismissWaitingIndicatorWithText:NSLocalizedString(@"手机号绑定成功", nil)];
-                wrapperTrackEvent(@"login_register", @"binding_success");
+                [BDTrackerProtocol event:@"login_register" label:@"binding_success"];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [weakSelf backToMainViewControllerAnimated:YES completion:weakSelf.completion];
                 });
             } else {
-                wrapperTrackEvent(@"login_register", @"binding_login_error");
+                [BDTrackerProtocol event:@"login_register" label:@"binding_login_error"];
                 
                 if (captchaImage) {
                     [weakSelf dismissWaitingIndicator];

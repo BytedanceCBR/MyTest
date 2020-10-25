@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVDemanderPlayerTracker.m
 //  Article
 //
@@ -171,7 +172,7 @@
 {
     if (self.playerStateStore.state.playerModel.enableResolution) {
         NSDictionary *extra = @{@"num" : [@(self.playerStateStore.state.supportedResolutionTypes.count) stringValue]};
-        wrapperTrackEventWithCustomKeys(@"video", @"clarity_show", self.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"clarity_show" value:self.groupID source:nil extraDic:extra];
     }
 
     NSString *type = self.playerStateStore.state.enableRotate ? @"landscape" : @"portrait";
@@ -217,7 +218,7 @@
     [extra setValue:@((int)interval) forKey:@"drag_time"];
     [extra setValue:@((int)(interval / duration * 100)) forKey:@"drag_pct"];
     [extra setValue:[self.playerStateStore.state ttv_position] forKey:@"position"];
-    wrapperTrackEventWithCustomKeys(@"drag_bar", @"video_bar", self.groupID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"drag_bar" label:@"video_bar" value:self.groupID source:nil extraDic:extra];
 }
 
 
@@ -243,9 +244,9 @@
 {
     //主视频发两次,一个浮层一个原有的.
     if (self.playerStateStore.state.isInDetail) {
-        wrapperTrackEvent(@"video", @"detail_click_screen");
+        [BDTrackerProtocol event:@"video" label:@"detail_click_screen"];
     } else{
-        wrapperTrackEvent(@"video", @"feed_click_screen");
+        [BDTrackerProtocol event:@"video" label:@"feed_click_screen"];
     }
 }
 

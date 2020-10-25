@@ -13,7 +13,7 @@
 #import "FHLynxView.h"
 #import "FHLynxManager.h"
 #import "HMDTTMonitor.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <SDWebImage/SDWebImageManager.h>
 #import "UIDevice+BTDAdditions.h"
 #import "IESGeckoKit.h"
@@ -241,7 +241,7 @@
     [BDWebViewBlankDetect detectBlankByOldSnapshotWithView:view CompleteBlock:^(BOOL isBlank, UIImage * _Nonnull image, NSError * _Nonnull error) {
         if (isBlank) {
             NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-            [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+            [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
             NSMutableDictionary *uploadParams = [NSMutableDictionary new];
             [uploadParams setValue:error.description forKey:@"error"];
             [uploadParams setValue:channelName forKey:@"channel"];
@@ -262,7 +262,7 @@
 - (void)sendEvent:(NSString *)statusStr andError:(NSError *)error
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     [uploadParams setValue:error.description forKey:@"error"];
     [uploadParams setValue:statusStr forKey:@"status"];
@@ -272,7 +272,7 @@
 - (void)sendCostTimeEvent:(NSTimeInterval)time andService:(NSString *)sevice
 {
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     NSString *eventServie = [NSString stringWithFormat:@"lynx_page_duration_%@",_channelName];
     if (time < 15) {
@@ -290,7 +290,7 @@
 - (void)lynxView:(LynxView*)view didReceiveFirstLoadPerf:(LynxPerformance*)perf{
     
     NSMutableDictionary * paramsExtra = [NSMutableDictionary new];
-    [paramsExtra setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
      NSMutableDictionary *uploadParams = [NSMutableDictionary new];
     if (perf && [[perf toDictionary] isKindOfClass:[NSDictionary class]]) {
         [uploadParams addEntriesFromDictionary:[perf toDictionary]];
@@ -388,7 +388,7 @@
     [dataCommonparmas setValue:@(top) forKey:@"status_bar_height"];
     NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
     [dataCommonparmas setValue:buildVersionRaw forKey:@"update_version_code"];
-    [dataCommonparmas setValue:[[TTInstallIDManager sharedInstance] deviceID] forKey:@"device_id"];
+    [dataCommonparmas setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
     [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
     [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
     [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];

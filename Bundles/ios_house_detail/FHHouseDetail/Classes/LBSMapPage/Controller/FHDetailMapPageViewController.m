@@ -135,6 +135,7 @@ static MAMapView *kFHPageMapView = nil;
     [_traceDict removeObjectForKey:@"page_type"];
     [_traceDict removeObjectForKey:@"card_type"];
     [_traceDict removeObjectForKey:@"rank"];
+    [_traceDict setObject:@"map_detail" forKey:@"page_type"];
 
     [FHEnvContext recordEvent:_traceDict andEventKey:@"enter_map"];
     // Do any additional setup after loading the view.

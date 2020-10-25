@@ -55,6 +55,7 @@
 #import "TTShareMethodUtil.h"
 #import "ArticleMomentProfileViewController.h"
 #import "ExploreMomentDefine.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 extern BOOL ttvs_isShareIndividuatioEnable(void);
 
@@ -126,7 +127,7 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
     if (self.viewModel.articleInfoManager.promotionModel) {
         TTActivity *proActivity = [TTActivity activityWithModel:self.viewModel.articleInfoManager.promotionModel];
         [activityItems insertObject:proActivity atIndex:0];
-        wrapperTrackEventWithCustomKeys(@"setting_btn", @"show", self.detailModel.article.groupModel.groupID, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"setting_btn" label:@"show" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
     }
     
     if (self.moreSettingActivityView) {
@@ -147,7 +148,7 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
 - (void)_writeCommentActionFired:(id)sender {
     BOOL switchToEmojiInput = (sender == self.toolbarView.emojiButton);
     if (switchToEmojiInput) {
-        [TTTrackerWrapper eventV3:@"emoticon_click" params:@{
+        [BDTrackerProtocol eventV3:@"emoticon_click" params:@{
                                                              @"status" : @"no_keyboard",
                                                              @"source" : @"comment"
                                                              }];
@@ -225,7 +226,7 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
     [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
     [extra setValue:@"pic" forKey:@"source"];
     [extra setValue:@"click" forKey:@"action"];
-    wrapperTrackEventWithCustomKeys(@"enter_comment", [NSString stringWithFormat:@"click_%@",self.detailModel.categoryID], self.detailModel.article.groupModel.groupID, @"click", extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"enter_comment" label:[NSString stringWithFormat:@"click_%@",self.detailModel.categoryID] value:self.detailModel.article.groupModel.groupID source:@"click" extraDic:extra];
     
     [NewsDetailLogicManager trackEventTag:@"slide_detail" label:@"handle_open_drawer" value:@(self.detailModel.article.uniqueID) extValue:self.detailModel.adID fromID:nil params:@{@"location":currentReadPct>1 ? @"related":@"content"} groupModel:self.detailModel.article.groupModel];
     
@@ -287,7 +288,7 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
     if (self.viewModel.articleInfoManager.promotionModel) {
         TTActivity *proActivity = [TTActivity activityWithModel:self.viewModel.articleInfoManager.promotionModel];
         [activityItems insertObject:proActivity atIndex:0];
-        wrapperTrackEventWithCustomKeys(@"share_btn", @"show", self.detailModel.article.groupModel.groupID, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"share_btn" label:@"show" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
     }
     
 //    if ([[TTKitchenMgr sharedInstance] getBOOL:kKCShareBoardDisplayRepost]) {
@@ -485,7 +486,7 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
 //        }
         if (itemType == TTActivityTypePromotion) {
             [TTAdPromotionManager handleModel:self.viewModel.articleInfoManager.promotionModel  condition:nil];
-            wrapperTrackEventWithCustomKeys(@"share_btn", @"click", self.detailModel.article.groupModel.groupID, nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"share_btn" label:@"click" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
         } else {
             NSString *adId = nil;
             if ([self.detailModel.adID longLongValue] > 0) {
@@ -532,14 +533,14 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
             
             
             NSString *tag = [currentArticle isImageSubject]?@"slide_detail":@"detail";
-            wrapperTrackEvent(tag, @"report_button");
+            [BDTrackerProtocol event:tag label:@"report_button"];
         }
         else if (itemType == TTActivityTypeFavorite) {
             [self triggerFavoriteAction];
         }
         else if (itemType == TTActivityTypePromotion) {
             [TTAdPromotionManager handleModel:self.viewModel.articleInfoManager.promotionModel  condition:nil];
-            wrapperTrackEventWithCustomKeys(@"setting_btn", @"click", self.detailModel.article.groupModel.groupID, nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"setting_btn" label:@"click" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
         }
         else { // Share
             NSString *groupId = [NSString stringWithFormat:@"%lld", self.detailModel.article.uniqueID];
@@ -604,7 +605,7 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
     }
 
     [dict setValue:[[self class] sharePlatformByRequestType: itemType] forKey:@"share_platform"];
-    [TTTracker eventV3:@"rt_share_to_platform" params:[dict copy]];
+    [BDTrackerProtocol eventV3:@"rt_share_to_platform" params:[dict copy]];
 }
 
 + (NSString*)sharePlatformByRequestType:(TTActivityType) activityType {
@@ -813,14 +814,14 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
     [extraDic setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
     [extraDic setValue:@"detail_bottom_bar" forKey:@"section"];
     if (activity == nil) {
-        wrapperTrackEventWithCustomKeys(@"slide_detail", [TTShareMethodUtil labelNameForShareActivity:activity], self.detailModel.article.itemID, self.detailModel.clickLabel, extraDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"slide_detail" label:[TTShareMethodUtil labelNameForShareActivity:activity] value:self.detailModel.article.itemID source:self.detailModel.clickLabel extraDic:extraDic];
     } else if ([activity.activityType isEqualToString:TTActivityTypeForwardWeitoutiao]) {
-        wrapperTrackEventWithCustomKeys(@"detail_share", @"share_weitoutiao", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extraDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail_share" label:@"share_weitoutiao" value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extraDic];
 
     } else if ([activity.activityType isEqualToString:TTActivityTypeDirectForwardWeitoutiao]) {
         return;
     } else {
-        wrapperTrackEventWithCustomKeys(@"detail_share", [TTShareMethodUtil labelNameForShareActivity:activity], self.detailModel.article.itemID, self.detailModel.clickLabel, extraDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail_share" label:[TTShareMethodUtil labelNameForShareActivity:activity] value:self.detailModel.article.itemID source:self.detailModel.clickLabel extraDic:extraDic];
 
     }
     
@@ -843,7 +844,7 @@ SYNTHESE_CATEGORY_PROPERTY_STRONG(shareManager, setShareManager, TTShareManager 
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
     [extraDic setValue:self.detailModel.article.itemID forKey:@"item_id"];
     [extraDic setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
-    wrapperTrackEventWithCustomKeys(@"detail_share", label, self.detailModel.article.itemID, self.detailModel.clickLabel, extraDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail_share" label:label value:self.detailModel.article.itemID source:self.detailModel.clickLabel extraDic:extraDic];
 
     //分享成功或失败，触发分享item排序
     if(error) {

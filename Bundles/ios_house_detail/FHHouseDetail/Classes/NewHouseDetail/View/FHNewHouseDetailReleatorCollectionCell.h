@@ -6,12 +6,13 @@
 //
 
 #import "FHDetailBaseCell.h"
+#import <IGListKit/IGListKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class FHDetailContactModel;
 
-@interface FHNewHouseDetailReleatorCollectionCell : FHDetailBaseCollectionCell
+@interface FHNewHouseDetailReleatorCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 
 @property (nonatomic, copy) void (^licenseClickBlock)(FHDetailContactModel *model);
 

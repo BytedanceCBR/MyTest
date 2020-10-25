@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreCollectionCellView.m
 //  Article
 //
@@ -401,7 +402,7 @@ static inline CGFloat bookCellHeight() {
 {
     NSString *schemaUrl = self.showMoreUrl;
     if (!isEmptyString(schemaUrl)) {
-        wrapperTrackEventWithCustomKeys(@"category", @"enter_click_novel_card", [NSString stringWithFormat:@"%@",self.cardId], nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"category" label:@"enter_click_novel_card" value:[NSString stringWithFormat:@"%@",self.cardId] source:nil extraDic:nil];
         [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:schemaUrl]];
     }
 }

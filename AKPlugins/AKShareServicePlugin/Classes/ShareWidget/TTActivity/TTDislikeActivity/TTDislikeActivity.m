@@ -50,7 +50,7 @@ NSString * const TTActivityTypeDislike = @"com.toutiao.UIKit.activity.Dislike";
     if ([self.contentItem respondsToSelector:@selector(contentTitle)]) {
         return [self.contentItem contentTitle];
     } else {
-        return @"不感兴趣";
+        return @"屏蔽";
     }
 }
 

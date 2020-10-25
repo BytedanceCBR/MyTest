@@ -7,6 +7,7 @@
 //
 
 #import "TTPhotoNativeDetailView.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTPhotoNativeDetailView ()
 
@@ -95,17 +96,17 @@
 #pragma mark - ExploreImageCollectionViewDelegate
 
 - (void)imageCollectionView:(ExploreImageCollectionView *)collectionView didChangeNatantVisible:(BOOL)newNatantVisible {
-    wrapperTrackEvent(@"slide_detail", newNatantVisible? @"show_content":@"hide_content");
+    [BDTrackerProtocol event:@"slide_detail" label:newNatantVisible? @"show_content":@"hide_content"];
 }
 
 - (void)imageCollectionView:(ExploreImageCollectionView *)collectionView didScrollToIndex:(NSInteger)index {
-    wrapperTrackEvent(@"slide_detail", @"slide_pic");
+    [BDTrackerProtocol event:@"slide_detail" label:@"slide_pic"];
     self.currentVisibleIndex = index+1;
     self.maximumVisibleIndex = MAX(index+1, self.maximumVisibleIndex);
 }
 
 - (void)imageCollectionView:(ExploreImageCollectionView *)collectionView didScrollTextView:(nonnull UITextView *)textView {
-    wrapperTrackEvent(@"slide_detail", @"slide_content");
+    [BDTrackerProtocol event:@"slide_detail" label:@"slide_content"];
 }
 
 - (void)imageCollectionView:(nonnull ExploreImageCollectionView *)collectionView imagePositionType:(TTPhotoDetailImagePositon)imagePositionType tapOn:(BOOL)tapOn {

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreMovieViewTracker.m
 //  Article
 //
@@ -645,7 +646,7 @@
     }
     [extra setValue:[self positionWithType:type] forKey:@"position"];
 
-    wrapperTrackEventWithCustomKeys(@"drag_bar", @"video_bar", model.groupID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"drag_bar" label:@"video_bar" value:model.groupID source:nil extraDic:extra];
 }
 
 - (NSString *)positionWithType:(ExploreMovieViewType)type
@@ -1059,12 +1060,12 @@ needOneFrameTime:(BOOL)needOneFrameTime
 {
     //主视频发两次,一个浮层一个原有的.
     if (_type == ExploreMovieViewTypeList) {
-        wrapperTrackEvent(@"video", @"feed_click_screen");
+        [BDTrackerProtocol event:@"video" label:@"feed_click_screen"];
     } else if (_type == ExploreMovieViewTypeDetail) {
-        wrapperTrackEvent(@"video", @"detail_click_screen");
+        [BDTrackerProtocol event:@"video" label:@"detail_click_screen"];
     }
     else if (_type == ExploreMovieViewTypeVideoFloat_main || _type == ExploreMovieViewTypeVideoFloat_related) {
-        wrapperTrackEvent(@"video", @"float_click_screen");
+        [BDTrackerProtocol event:@"video" label:@"float_click_screen"];
     }
     else if (_type == ExploreMovieViewTypeLiveChatRoom) {
         [self liveTrackLabel:@"video_click_screen" needPercent:NO duration:NO];
@@ -1117,7 +1118,7 @@ needOneFrameTime:(BOOL)needOneFrameTime
     if (self.type == ExploreMovieViewTypeDetail) {
         label = @"detail_continue";
     }
-    wrapperTrackEvent(@"list_over", label);
+    [BDTrackerProtocol event:@"list_over" label:label];
 }
 
 - (void)sendContinuePlayTrack:(NSString *)stopEvent
@@ -1126,7 +1127,7 @@ needOneFrameTime:(BOOL)needOneFrameTime
     if (self.type == ExploreMovieViewTypeDetail) {
         label = @"detail_continue";
     }
-    wrapperTrackEvent(stopEvent, label);
+    [BDTrackerProtocol event:stopEvent label:label];
 }
 
 - (void)sendVideoFinishUITrackWithEvent:(NSString *)event prefix:(NSString *)prefix

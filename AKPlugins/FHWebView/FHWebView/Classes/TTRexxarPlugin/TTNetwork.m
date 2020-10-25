@@ -11,6 +11,8 @@
 #import <TTNetworkManager/TTNetworkManager.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "FHWebViewConfig.h"
+#import <FHHouseBase/FHCommonDefines.h>
+#import <ByteDanceKit/NSURL+BTDAdditions.h>
 
 typedef enum : NSInteger {
     FHBridgeMsgSuccess = 1,
@@ -33,6 +35,19 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
                constructingBodyBlock:(TTConstructingBodyBlock)bodyBlock
                         commonParams:(NSDictionary *)commonParam
 {
+    NSURL *origURL = [NSURL URLWithString:URL];
+    NSDictionary *allParams = [origURL btd_queryItems];
+    NSMutableDictionary *resultDict = @{}.mutableCopy;
+    [commonParam enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+        if (![allParams.allKeys containsObject:key]) {
+            [resultDict setValue:obj forKey:key];
+        }else {
+            NSLog(@"zjing test replace key:%@, value:%@", key, obj);
+        }
+    }];
+    
+    commonParam = [self commonParams:resultDict byRemoveParams:params];
+    
     TTHttpRequest *request = [super URLRequestWithURL:URL params:params method:method constructingBodyBlock:bodyBlock commonParams:commonParam];
     
     [request setValue:@"application/json; encoding=utf-8" forHTTPHeaderField:@"Content-Type"];
@@ -47,6 +62,31 @@ callback(status, @{@"msg": [NSString stringWithFormat:msg]? [NSString stringWith
     
     
     return request;
+}
+
+
+-(NSDictionary *)commonParams:(NSDictionary *)commonParams byRemoveParams:(NSDictionary *)params
+{
+    if (params.count == 0 || commonParams.count == 0) {
+        return commonParams;
+    }
+    
+    NSSet *commonKeys = [[NSSet alloc] initWithArray:commonParams.allKeys];
+    NSSet *paramKeys = [[NSSet alloc] initWithArray:params.allKeys];
+    
+    if ([commonKeys intersectsSet:paramKeys]) {
+        
+        NSMutableDictionary *mCommonParams = [[NSMutableDictionary alloc] initWithDictionary:commonParams];
+        for (NSString *key in params.allKeys) {
+            if ([commonKeys containsObject:key]) {
+                [mCommonParams removeObjectForKey:key];
+            }
+        }
+        return mCommonParams.copy;
+    }
+    
+    return commonParams;
+    
 }
 
 @end

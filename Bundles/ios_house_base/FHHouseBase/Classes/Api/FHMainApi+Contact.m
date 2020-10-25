@@ -7,7 +7,7 @@
 
 #import "FHMainApi+Contact.h"
 #import <TTAccountSDK/TTAccount.h>
-#import <TTInstallService/TTInstallIDManager.h>
+#import <BDInstall/BDInstall.h>
 #import <TTAccountSDK/TTAccountUserEntity.h>
 #import "FHURLSettings.h"
 #import "TTNetworkManager.h"
@@ -378,7 +378,7 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/call_report"];
-    NSString *userName = [TTAccount sharedAccount].user.name ? : [TTInstallIDManager sharedInstance].deviceID; //如果没有名字，则取did
+    NSString *userName = [TTAccount sharedAccount].user.name ? : [BDInstall sharedInstance].deviceID; //如果没有名字，则取did
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (houseId.length > 0) {
         paramDic[@"house_id"] = houseId;

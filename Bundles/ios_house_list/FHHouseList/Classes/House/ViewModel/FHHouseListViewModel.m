@@ -31,7 +31,6 @@
 #import "FHCityListViewModel.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import "HMDTTMonitor.h"
-#import "TTInstallIDManager.h"
 #import "FHSugSubscribeModel.h"
 #import "FHSuggestionSubscribCell.h"
 #import <FHCommonUI/ToastManager.h>
@@ -127,7 +126,6 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
-@property (nonatomic, assign) BOOL isAbtest;//106二手房、新房UI改版ab实验
 
 @end
 
@@ -171,7 +169,6 @@ extern NSString *const INSTANT_DATA_KEY;
 
     self = [super init];
     if (self) {
-        _isAbtest = NO;
         _canChangeHouseSearchDic = YES;
         self.houseList = [NSMutableArray array];
         self.sugesstHouseList = [NSMutableArray array];
@@ -240,7 +237,7 @@ extern NSString *const INSTANT_DATA_KEY;
                          NSStringFromClass([FHPlaceHolderCell class]),
                          NSStringFromClass([FHHouseListAgencyInfoCell class]),
                          NSStringFromClass([FHHouseListNoHouseCell class]),
-                         NSStringFromClass([FHHouseBaseNewHouseCell class]),
+                         //NSStringFromClass([FHHouseBaseNewHouseCell class]),
                          NSStringFromClass([FHPlaceHolderCell class]),
                          NSStringFromClass([FHHomePlaceHolderCell class]),
                          NSStringFromClass([FHHouseListRedirectTipCell class]),
@@ -257,11 +254,11 @@ extern NSString *const INSTANT_DATA_KEY;
     for (NSString *className in self.cellIdArray) {
         [self registerCellClassBy:className];
     }
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
+    //[_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeRentHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHouseBaseItemCellList"];
-    [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHListSynchysisNewHouseCell"];
+   // [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHListSynchysisNewHouseCell"];
     [_tableView registerClass:[FHFindHouseHelperCell class] forCellReuseIdentifier:@"FHFindHouseHelperCell"];
     [_tableView registerClass:[FHHouseSearchSecondHouseCell class] forCellReuseIdentifier:@"FHHouseSearchSecondHouseCell"];
     [_tableView registerClass:[FHHouseSearchNewHouseCell class] forCellReuseIdentifier:@"FHHouseSearchNewHouseCell"];
@@ -961,9 +958,6 @@ extern NSString *const INSTANT_DATA_KEY;
                         itemModel.topMargin = 10;
                     }
                     theItemModel = itemModel;
-                    if ((itemModel.houseType.integerValue == FHHouseTypeSecondHandHouse && itemModel.cellStyles == 7) || (itemModel.houseType.integerValue == FHHouseTypeNewHouse && itemModel.cellStyles == 8)) {
-                        _isAbtest = YES;
-                    }
                 }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
                     FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
                     if (agencyInfoModel.agencyTotal.integerValue != 0 && agencyInfoModel.houseTotal.integerValue != 0) {
@@ -1055,9 +1049,6 @@ extern NSString *const INSTANT_DATA_KEY;
                     itemModel.isRecommendCell = YES;
                     itemModel.isLastCell = (idx == itemArray.count - 1);
                     theItemModel = itemModel;
-                    if ((itemModel.houseType.integerValue == FHHouseTypeSecondHandHouse && itemModel.cellStyles == 7) || (itemModel.houseType.integerValue == FHHouseTypeNewHouse && itemModel.cellStyles == 8)) {
-                        _isAbtest = YES;
-                    }
                 }
                 if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
                     FHSugListRealHouseTopInfoModel *infoModel = theItemModel;
@@ -1124,9 +1115,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 [self.houseList addObject:cellModel];
                 addNoHouseCell = YES;
             }
-        }
-        if (_isAbtest) {
-            self.tableView.backgroundColor = [UIColor themeGray7];
         }
         [self.tableView reloadData];
         if (isFirstLoadCopy) {
@@ -1319,7 +1307,9 @@ extern NSString *const INSTANT_DATA_KEY;
         return;
     }
 
-    NSDictionary *traceParam = [self.tracerModel toDictionary] ? : @{};
+    NSMutableDictionary *traceParam = [NSMutableDictionary dictionary];
+    [traceParam addEntriesFromDictionary:[self.tracerModel toDictionary] ? : @{}];
+    traceParam[UT_FROM_PAGE_TYPE] = [self pageTypeString];
     //house_search
     NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
     [sugDelegateTable addObject:self];
@@ -1472,6 +1462,10 @@ extern NSString *const INSTANT_DATA_KEY;
         NSHashTable *hashMap = [[NSHashTable alloc]initWithOptions:NSPointerFunctionsWeakMemory capacity:1];
         [hashMap addObject:self];
         dict[OPENURL_CALLBAK] = hashMap;
+        dict[@"tracer"] = @{
+            UT_FROM_PAGE_TYPE: [self pageTypeString],
+            UT_ORIGIN_FROM: self.tracerModel.originFrom ? : @"be_null",
+        };
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
@@ -1632,7 +1626,7 @@ extern NSString *const INSTANT_DATA_KEY;
     __weak typeof(self)wself = self;
     if (identifier.length > 0) {
         FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-        if (_isAbtest) {
+        if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
             cell.backgroundColor = [UIColor themeGray7];
         }
         if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
@@ -1786,7 +1780,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }else {
                 item.topMargin = 0;
             }
-            if (_isAbtest) {
+            if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
                 if (isFirstCell) {
                     item.topMargin = 5;
                 } else {

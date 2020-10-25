@@ -36,6 +36,7 @@
 #import "TTImageView.h"
 
 #import "UIImage+Masking.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 //尺寸
 #define TTLiveTextUmengName                   @"livetext"
@@ -570,7 +571,7 @@ typedef enum {
     [self becomeToShortestAtBottom:NO];
     
     //统计
-    wrapperTrackEventWithCustomKeys(TTLiveTextUmengName , @"write_button", nil, nil, self.ssTrackerDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:TTLiveTextUmengName label:@"write_button" value:nil source:nil extraDic:self.ssTrackerDic];
 }
 
 //清除数据
@@ -633,7 +634,7 @@ typedef enum {
         self.sendTextBtn.highlighted = NO;
         //统计
         if (isCancel) {
-            wrapperTrackEventWithCustomKeys(TTLiveTextUmengName , @"write_cancel", nil, nil, self.ssTrackerDic);
+            [BDTrackerProtocol trackEventWithCustomKeys:TTLiveTextUmengName label:@"write_cancel" value:nil source:nil extraDic:self.ssTrackerDic];
         }
     } else {
         [self onlyShowMediaMessageArea:YES];
@@ -653,7 +654,7 @@ typedef enum {
     self.textFieldButtonView.width = self.width - 30;
 
     //统计
-    wrapperTrackEventWithCustomKeys(TTLiveTextUmengName , @"media", nil, nil, self.ssTrackerDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:TTLiveTextUmengName label:@"media" value:nil source:nil extraDic:self.ssTrackerDic];
 }
 
 //本地相册
@@ -673,7 +674,7 @@ typedef enum {
     [[TTImagePickerTrackManager manager] addTrackDelegate:self];
     
     //统计
-    wrapperTrackEventWithCustomKeys(TTLiveAlbumUmengName, @"open_album", nil, nil, self.ssTrackerDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAlbumUmengName label:@"open_album" value:nil source:nil extraDic:self.ssTrackerDic];
     [self becomeToShortestAtBottom:NO];
 }
 
@@ -713,7 +714,7 @@ typedef enum {
     [topMost presentViewController:cameraVC animated:YES completion:nil];
     
     //统计
-    wrapperTrackEventWithCustomKeys(TTLiveShotUmengName , @"click", nil, nil, self.ssTrackerDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:TTLiveShotUmengName label:@"click" value:nil source:nil extraDic:self.ssTrackerDic];
 }
 
 //按住说话
@@ -755,7 +756,7 @@ typedef enum {
     }
     
     //统计
-    wrapperTrackEventWithCustomKeys(TTLiveAudioUmengName , @"audio_click", nil, nil, self.ssTrackerDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAudioUmengName label:@"audio_click" value:nil source:nil extraDic:self.ssTrackerDic];
 }
 
 - (void)handleAudioRecorderGesture:(UILongPressGestureRecognizer *)gesture
@@ -798,7 +799,7 @@ typedef enum {
         [[NSRunLoop mainRunLoop] addTimer:self.audioPowerTimer  forMode:NSRunLoopCommonModes];
         
         //统计
-        wrapperTrackEventWithCustomKeys(TTLiveAudioUmengName , @"audio_long_click", nil, nil, self.ssTrackerDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAudioUmengName label:@"audio_long_click" value:nil source:nil extraDic:self.ssTrackerDic];
     }
     //结束
     else if(gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateFailed || gesture.state == UIGestureRecognizerStateCancelled){
@@ -821,7 +822,7 @@ typedef enum {
             [self.audioRecorder cancelRecording];
             
             // event track
-            wrapperTrackEventWithCustomKeys(@"liveaudio", @"audio_sent_cancel", nil, nil, self.ssTrackerDic);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"liveaudio" label:@"audio_sent_cancel" value:nil source:nil extraDic:self.ssTrackerDic];
         }
         
     }
@@ -1106,7 +1107,7 @@ typedef enum {
     if (isLess) {
         
         //统计
-        wrapperTrackEventWithCustomKeys(TTLiveAudioUmengName , @"audio_too_short", nil, nil, self.ssTrackerDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAudioUmengName label:@"audio_too_short" value:nil source:nil extraDic:self.ssTrackerDic];
     }
 }
 
@@ -1128,7 +1129,7 @@ typedef enum {
     numLabel.text = @"5";
     
     //统计
-    wrapperTrackEventWithCustomKeys(TTLiveAudioUmengName , @"audio_more_60s", nil, nil, self.ssTrackerDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAudioUmengName label:@"audio_more_60s" value:nil source:nil extraDic:self.ssTrackerDic];
 }
 
 - (void)ttTimer:(TTCommonTimerObj *)timer EachIntervalAction:(float)currentCountTime
@@ -1189,7 +1190,7 @@ typedef enum {
     [self clearPreviousData:NO replyPreviousData:NO];
     
     //统计
-    wrapperTrackEventWithCustomKeys(TTLiveAudioUmengName , @"audio_sent", nil, nil, self.ssTrackerDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAudioUmengName label:@"audio_sent" value:nil source:nil extraDic:self.ssTrackerDic];
 }
 - (void)ttAudioRecorderFailBackError:(NSError *)error
 {
@@ -1282,7 +1283,7 @@ typedef enum {
 
 - (void)ttImagePickerControllerDidCancel:(TTImagePickerController *)picker
 {
-    wrapperTrackEventWithCustomKeys(@"topic_post", @"cancel_album", nil, nil, self.ssTrackerDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"topic_post" label:@"cancel_album" value:nil source:nil extraDic:self.ssTrackerDic];
     if ([self.delegate respondsToSelector:@selector(ttLiveMediaMessageEditDidFinished:)]) {
         [self.delegate ttLiveMediaMessageEditDidFinished:self];
     }
@@ -1326,13 +1327,13 @@ typedef enum {
         
         //统计
         if (hasVideo && !hasPhoto) {
-            wrapperTrackEventWithCustomKeys(TTLiveAlbumUmengName, @"album_video", nil, nil, self.ssTrackerDic);
+            [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAlbumUmengName label:@"album_video" value:nil source:nil extraDic:self.ssTrackerDic];
         }
         else if (!hasVideo && hasPhoto) {
-            wrapperTrackEventWithCustomKeys(TTLiveAlbumUmengName, @"album_photo", nil, nil, self.ssTrackerDic);
+            [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAlbumUmengName label:@"album_photo" value:nil source:nil extraDic:self.ssTrackerDic];
         }
         else if (hasVideo && hasPhoto) {
-            wrapperTrackEventWithCustomKeys(TTLiveAlbumUmengName, @"album_video_photo", nil, nil, self.ssTrackerDic);
+            [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAlbumUmengName label:@"album_video_photo" value:nil source:nil extraDic:self.ssTrackerDic];
         }
         
         if ([self.delegate respondsToSelector:@selector(ttLiveMediaMessageEditDidFinished:)]) {
@@ -1400,17 +1401,17 @@ typedef enum {
 {
     switch (type) {
         case TTImagePickerTrackKeyPhotoVideoPreview:
-            wrapperTrackEventWithCustomKeys(TTLiveAlbumUmengName, @"preview", nil, nil, self.ssTrackerDic);
+            [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAlbumUmengName label:@"preview" value:nil source:nil extraDic:self.ssTrackerDic];
             break;
         case TTImagePickerTrackKeyPhotoVideoPreviewPhoto:
         case TTImagePickerTrackKeyPhotoVideoPreviewVideo:
-            wrapperTrackEventWithCustomKeys(TTLiveAlbumUmengName, @"preview_photo", nil, nil, self.ssTrackerDic);
+            [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAlbumUmengName label:@"preview_photo" value:nil source:nil extraDic:self.ssTrackerDic];
             break;
         case TTImagePickerTrackKeyPreviewFlip:
-            wrapperTrackEventWithCustomKeys(TTLiveAlbumUmengName, @"flip", nil, nil, self.ssTrackerDic);
+            [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAlbumUmengName label:@"flip" value:nil source:nil extraDic:self.ssTrackerDic];
             break;
         case TTImagePickerTrackKeyPhotoVideoClickAlbumList:
-            wrapperTrackEventWithCustomKeys(TTLiveAlbumUmengName, @"album_list", nil, nil, self.ssTrackerDic);
+            [BDTrackerProtocol trackEventWithCustomKeys:TTLiveAlbumUmengName label:@"album_list" value:nil source:nil extraDic:self.ssTrackerDic];
             break;
         default:
             break;
@@ -1551,7 +1552,7 @@ typedef enum {
     }
     
     //统计
-    wrapperTrackEventWithCustomKeys(TTLiveTextUmengName , @"write", nil, nil, self.ssTrackerDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:TTLiveTextUmengName label:@"write" value:nil source:nil extraDic:self.ssTrackerDic];
 }
 
 - (void)growingTextViewDidChange:(HPGrowingTextView *)growingTextView {

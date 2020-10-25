@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  BlockUsersListView.m
 //  Article
 //
@@ -170,7 +171,7 @@ static float const kBlockUserListCellHeight = 66;
     
     if (row < [_blockUsers count]) {
         
-        wrapperTrackEvent(@"blacklist", @"list_click_information");
+        [BDTrackerProtocol event:@"blacklist" label:@"list_click_information"];
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

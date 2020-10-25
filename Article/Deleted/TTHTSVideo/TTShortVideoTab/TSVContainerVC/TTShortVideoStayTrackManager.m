@@ -8,6 +8,7 @@
 
 #import "TTShortVideoStayTrackManager.h"
 #import "TTCategory.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 @interface TTShortVideoStayTrackManager ()
 
@@ -71,7 +72,7 @@ static TTShortVideoStayTrackManager * manager;
     @try {
 #endif
         NSString *stayTimeStr = [NSString stringWithFormat:@"%.0f", stayTime * 1000];
-        [TTTrackerWrapper eventV3:@"stay_category" params:@{
+        [BDTrackerProtocol eventV3:@"stay_category" params:@{
                                                             @"enter_from": @"click_category",
                                                             @"category_name": self.trackingCategory.categoryID,
                                                             @"list_entrance": @"main_tab",

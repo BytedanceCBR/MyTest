@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  FriendListView.m
 //  Article
 //
@@ -506,7 +507,7 @@ typedef enum {
                                                         title:[NSString stringWithFormat:NSLocalizedString(@"推荐应用《%@》给你", nil), [TTSandBoxHelper appDisplayName]]
                                                   description:[NSString stringWithFormat:NSLocalizedString(@"推荐应用《%@》给你，每天看最热门的资讯，最犀利的网友评论，一起来看看吧！", nil), [TTSandBoxHelper appDisplayName]]
                                        customCallbackUserInfo:nil];
-        wrapperTrackEvent(_umengEventName, @"invite_weixin");
+        [BDTrackerProtocol event:_umengEventName label:@"invite_weixin"];
     }
     else if (indexPath.row == _messageIndex) {
         
@@ -518,7 +519,7 @@ typedef enum {
         if (controller) {
             [topNav presentViewController:controller animated:YES completion:NULL];
         }
-        wrapperTrackEvent(_umengEventName, @"invite_sms");
+        [BDTrackerProtocol event:_umengEventName label:@"invite_sms"];
     }
     else if (indexPath.row == _mailIndex) {
         MFMailComposeViewController *controller = [[MFMailComposeViewController alloc] init];
@@ -535,7 +536,7 @@ typedef enum {
         if (controller) {
             [topNav presentViewController:controller animated:YES completion:NULL];
         }
-        wrapperTrackEvent(_umengEventName, @"invite_mail");
+        [BDTrackerProtocol event:_umengEventName label:@"invite_mail"];
     }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

@@ -59,7 +59,7 @@
 
 // 注册cell类型
 - (void)registerCellClasses {
-    //l轮播图
+    //轮播图
     [self.tableView registerClass:[FHDetailNeighborhoodMediaHeaderCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodMediaHeaderModel class])];
     //信息cell
     [self.tableView registerClass:[FHNeighborhoodDetailSubMessageCell class] forCellReuseIdentifier:NSStringFromClass([FHDetailNeighborhoodSubMessageModel class])];

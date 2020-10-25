@@ -69,6 +69,7 @@
 #import "TTCommentDetailModel+TTCommentDetailModelProtocolSupport.h"
 #import "TTCommentDetailReplyCommentModel+TTCommentDetailReplyCommentModelProtocolSupport.h"
 #import "TTActivityShareSequenceManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kCellElementBgColorKey kColorBackground4
 
@@ -220,10 +221,10 @@ replyMomentCommentModel:(ArticleMomentCommentModel *)replyMomentCommentModel
         self.showWriteComment = show;
 
         if ([TTAccountManager isLogin]) {
-            [TTTrackerWrapper category:@"umeng" event:[self umengEventName] label:@"enter" dict:dict];
+            [BDTrackerProtocol category:@"umeng" event:[self umengEventName] label:@"enter" dict:dict];
         }
         else {
-            [TTTrackerWrapper category:@"umeng" event:[self umengEventName] label:@"enter_logoff" dict:dict];
+            [BDTrackerProtocol category:@"umeng" event:[self umengEventName] label:@"enter_logoff" dict:dict];
         }
         
         self.sourceType = sourceType;
@@ -639,7 +640,7 @@ articleMomentManager:(ArticleMomentManager *)manager
     
     __weak typeof(self) weakSelf = self;
     if (self.manager.comments.count){
-        wrapperTrackEvent(@"update_detail", @"replier_loadmore");
+        [BDTrackerProtocol event:@"update_detail" label:@"replier_loadmore"];
     }
     CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent() * 1000.f;
     [_manager fetchCommentDetailListWithCommentID:self.commentId count:kLoadOnceCount width:tt_splitViewFrameForView(self).size.width finishBlock:^(NSArray *result, NSArray *hotComments, BOOL hasMore, NSInteger totalCount, NSError *error) {
@@ -667,7 +668,7 @@ articleMomentManager:(ArticleMomentManager *)manager
     }];
     
     if (_manager.hotComments.count + _manager.comments.count > 0) {
-        wrapperTrackEvent(@"profile", @"more_comment");
+        [BDTrackerProtocol event:@"profile" label:@"more_comment"];
     }
 }
 
@@ -1049,7 +1050,7 @@ articleMomentManager:(ArticleMomentManager *)manager
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    wrapperTrackEvent(@"update_detail", @"reply_replier_content");
+    [BDTrackerProtocol event:@"update_detail" label:@"reply_replier_content"];
     TTCommentDetailReplyCommentModel *model = nil;
     
     if (indexPath.section == 0) {
@@ -1089,7 +1090,7 @@ articleMomentManager:(ArticleMomentManager *)manager
 - (void)commentButtonClicked:(id)sender {
     BOOL switchToEmojiInput = (sender == self.postCommonButton.emojiButton);
     if (switchToEmojiInput) {
-        [TTTrackerWrapper eventV3:@"emoticon_click" params:@{
+        [BDTrackerProtocol eventV3:@"emoticon_click" params:@{
             @"status" : @"no_keyboard",
             @"source" : @"comment"
         }];
@@ -1100,14 +1101,14 @@ articleMomentManager:(ArticleMomentManager *)manager
 
 - (void)userInfoDiggButtonClicked:(UIButton *)sender{
     if (![sender isSelected]){
-        wrapperTrackEvent(@"update_detail", @"top_digg_click");
+        [BDTrackerProtocol event:@"update_detail" label:@"top_digg_click"];
     }
     [self diggButtonPressed];
     
 }
 
 - (void)commentDiggButtonClicked{
-    wrapperTrackEvent(@"update_detail", @"bottom_digg_click");
+    [BDTrackerProtocol event:@"update_detail" label:@"bottom_digg_click"];
     [self diggButtonPressed];
 }
 
@@ -1246,7 +1247,7 @@ articleMomentManager:(ArticleMomentManager *)manager
         }
         _commentView.extraTrackDict = extraDict;
     }
-    wrapperTrackEvent([self umengEventName], @"reply");
+    [BDTrackerProtocol event:[self umengEventName] label:@"reply"];
     //    wrapperTrackEvent([self umengEventName], @"reply_replier_button");
 }
 
@@ -1272,7 +1273,7 @@ articleMomentManager:(ArticleMomentManager *)manager
     NSString *tag = [TTActivityShareManager tagNameForShareSourceObjectType:sourceType];
     NSString *label = [TTActivityShareManager labelNameForShareActivityType:itemType];
     NSString *forumId = _momentModel.forumID ? [NSString stringWithFormat:@"%lld", _momentModel.forumID] : nil;
-    wrapperTrackEventWithCustomKeys(tag, label, _momentModel.ID, forumId, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:tag label:label value:_momentModel.ID source:forumId extraDic:nil];
 }
 
 #pragma mark - Helper
@@ -1315,11 +1316,11 @@ articleMomentManager:(ArticleMomentManager *)manager
                 [[ExploreDeleteManager shareManager] deleteReplyedComment:_needDeleteCommentModel.commentID InHostComment:self.commentId];
                 if (_needDeleteCommentModel) {
                     if (self.sourceType == ArticleMomentSourceTypeMoment) {
-                        wrapperTrackEvent(@"delete", @"reply_update");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_update"];
                     } else if (self.sourceType == ArticleMomentSourceTypeForum) {
-                        wrapperTrackEvent(@"delete", @"reply_post");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_post"];
                     } else if (self.sourceType == ArticleMomentSourceTypeProfile) {
-                        wrapperTrackEvent(@"delete", @"reply_profile");
+                        [BDTrackerProtocol event:@"delete" label:@"reply_profile"];
                     }
                     
                     [self deleteLocalCommentModel:_needDeleteCommentModel];
@@ -1364,7 +1365,7 @@ articleMomentManager:(ArticleMomentManager *)manager
 
 - (void)tt_commentCell:(UITableViewCell *)view deleteCommentWithCommentModel:(TTCommentDetailReplyCommentModel *)model {
     
-    wrapperTrackEvent(@"update_detail", @"delete");
+    [BDTrackerProtocol event:@"update_detail" label:@"delete"];
     
     self.needDeleteCommentModel = model;
     [self p_deleteReplyComment];
@@ -1384,7 +1385,7 @@ articleMomentManager:(ArticleMomentManager *)manager
         NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
         [params setValue:model.commentID forKey:@"comment_id"];
         [params setValue:model.user.ID forKey:@"user_id"];
-        [TTTrackerWrapper eventV3:@"comment_undigg" params:params];
+        [BDTrackerProtocol eventV3:@"comment_undigg" params:params];
     }
     
 }
@@ -1455,7 +1456,7 @@ articleMomentManager:(ArticleMomentManager *)manager
         [params setValue:[self.authorID isEqualToString:[TTAccountManager userID]]? @"1": @"0" forKey:@"author"];
         [params setValue:@(self.fromMessage) forKey:@"message"];
         [params setValue:[self.commentModel groupModel].groupID forKey:@"group_id"];
-        [TTTrackerWrapper eventV3:@"comment_reply" params:[params copy]];
+        [BDTrackerProtocol eventV3:@"comment_reply" params:[params copy]];
         if (replyModel) {
 
             [self insertLocalMomentCommentModel:replyModel];

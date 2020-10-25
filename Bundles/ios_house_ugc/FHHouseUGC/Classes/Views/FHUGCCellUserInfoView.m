@@ -189,7 +189,8 @@
     [self.avatarView updateAvatarWithUGCCellModel:cellModel];
 
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
-    self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
+    
+    [self updateUserAuth];
     [self updateDescLabel];
     [self updateEditState];
     [self updateFrame];
@@ -295,6 +296,34 @@
     if(pageType && [pageType isEqualToString:@"personal_comment_list"]){
         self.moreBtn.hidden = NO;
     }
+}
+
+- (void)updateUserAuth {
+    self.userAuthLabel.hidden = self.userAuthLabel.text.length <= 0;
+    if(self.cellModel.user.userBackgroundColor.length > 0){
+        self.userAuthLabel.backgroundColor = [UIColor colorWithHexStr:self.cellModel.user.userBackgroundColor];
+    }else{
+        self.userAuthLabel.backgroundColor = [UIColor themeGray7];
+    }
+    if(self.cellModel.user.userBorderColor.length > 0){
+        self.userAuthLabel.layer.borderColor = [UIColor colorWithHexStr:self.cellModel.user.userBorderColor].CGColor;
+    }else{
+        self.userAuthLabel.layer.borderColor = [UIColor colorWithHexStr:@"#d6d6d6"].CGColor;
+    }
+    if(self.cellModel.user.userFontColor.length > 0){
+        self.userAuthLabel.textColor = [UIColor colorWithHexStr:self.cellModel.user.userFontColor];
+    }else{
+        self.userAuthLabel.textColor = [UIColor colorWithHexStr:@"#929292"];
+    }
+    
+//    self.userAuthLabel = [self LabelWithFont:[UIFont themeFontRegular:10] textColor:[UIColor colorWithHexStr:@"#929292"]];
+//    self.userAuthLabel.layer.borderWidth = 0.5;
+//    self.userAuthLabel.layer.borderColor = [UIColor colorWithHexStr:@"#d6d6d6"].CGColor;
+//    self.userAuthLabel.layer.cornerRadius = 2;
+//    self.userAuthLabel.layer.masksToBounds = YES;
+//    self.userAuthLabel.backgroundColor = [UIColor themeGray7];
+//    self.userAuthLabel.textAlignment = NSTextAlignmentCenter;
+//    [self addSubview:_userAuthLabel];
 }
 
 - (void)updateDescLabel {
@@ -485,6 +514,10 @@
         [self gotoEditPostVC];
     } else if(view.selectdWord.type == FHFeedOperationWordTypeEditHistory) {
         [self gotoPostHistory:@"edit_record_selection"];
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeShield){
+        [[ToastManager manager] showToast:@"将减少推荐类似内容"];
+    }else if(view.selectdWord.type == FHFeedOperationWordTypeBlackList){
+        [[ToastManager manager] showToast:@"将减少推荐类似内容"];
     }
 }
 

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTCommentViewModel.m
 //  Article
 //
@@ -689,7 +690,7 @@
     [extra setValue:[self tt_groupModel].itemID forKey:@"item_id"];
 
     // TODO 这个埋点的事件看起来有问题
-    wrapperTrackEventWithCustomKeys(@"fold_comment", @"show", [self tt_groupModel].groupID, nil, extra.copy);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment" label:@"show" value:[self tt_groupModel].groupID source:nil extraDic:extra.copy];
 }
 
 @end

@@ -9,9 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <ByteDanceKit/BTDMacros.h>
-#import <TTInstallService/TTInstallSandBoxHelper.h>
-#import <TTInstallService/TTInstallIDManager.h>
-#import <TTTracker/TTTracker.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import <TTBaseLib/TTSandBoxHelper.h>
 
 @interface TTTrackerWrapper : NSObject
 
@@ -86,12 +85,13 @@
 
 @end
 
+//升级BDInstall，去掉这几个静态方法
 // sendTrackerLog: true to send own log()
 static inline void wrapperTrackEventWithOption(NSString * _Nonnull appName, NSString * _Nonnull event, NSString * _Nonnull label, BOOL sendTrackerLog) {
     if(event == nil) {
         return;
     }
-    
+
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
         if(!BTD_isEmptyString(label)) {
             if(sendTrackerLog) {
@@ -109,8 +109,8 @@ static inline void wrapperTrackEvent (NSString * _Nonnull event, NSString * _Non
     if (BTD_isEmptyString(event)) {
         return;
     }
-    
-    wrapperTrackEventWithOption([TTInstallSandBoxHelper appName], event, label, true);
+
+    wrapperTrackEventWithOption([TTSandBoxHelper appName], event, label, true);
 }
 
 static inline void wrapperTrackEventWithCustomKeys (NSString * _Nonnull event, NSString * _Nonnull label, NSString * _Nullable value, NSString * _Nullable source, NSDictionary * _Nullable extraDic) {

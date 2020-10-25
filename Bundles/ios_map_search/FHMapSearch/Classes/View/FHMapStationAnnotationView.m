@@ -67,9 +67,19 @@
     _contentLabel.text = annotation.title;
     [_contentLabel sizeToFit];
     
-    CGFloat maxWidth = MIN(_contentLabel.width, 171);
+//    CGFloat maxWidth = MIN(_contentLabel.width, 171);
+//    CGRect frame = self.frame;
+//    frame.size = CGSizeMake(maxWidth+60, 67);
+//    self.frame = frame;
+//
+//
+//    NSString *content = [NSString stringWithFormat:@"%@ %@",annotation.title,annotation.subtitle];
+//    _contentLabel.text = content;
+//    [_contentLabel sizeToFit];
+    
+    CGFloat maxWidth = MIN(_contentLabel.width, 271);
     CGRect frame = self.frame;
-    frame.size = CGSizeMake(maxWidth+60, 67);
+    frame.size = CGSizeMake(maxWidth+60, 37);
     self.frame = frame;
     
 //    [self changeSelectMode:[(FHHouseAnnotation *)annotation type]];
@@ -97,11 +107,17 @@
 -(void)layoutSubviews
 {
     [super layoutSubviews];
+//    self.backgroundView.frame = self.bounds;
+//    CGFloat arrowWidth = 7;
+//    self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 42-arrowWidth/2, arrowWidth, arrowWidth);
+//    self.contentLabel.frame = CGRectMake(30, 21, self.width-60, 17);
+    
     self.backgroundView.frame = self.bounds;
     CGFloat arrowWidth = 7;
-    self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 42-arrowWidth/2, arrowWidth, arrowWidth);
-    self.contentLabel.frame = CGRectMake(30, 21, self.width-60, 17);
-//    self.stationView.frame = CGRectMake(26, 24, 10, 11);    
+    self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 32.5-arrowWidth/2, arrowWidth, arrowWidth);
+    self.contentLabel.frame = CGRectMake(30, 10, self.width-60, 17);
+    
+//    self.stationView.frame = CGRectMake(26, 24, 10, 11);
 }
 
 /*

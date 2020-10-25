@@ -15,6 +15,7 @@
 #import "ExploreStockCellManager.h"
 #import "TTDeviceHelper.h"
 #import "TTRoute.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 
 #define kSepLineHorizonGap          ([TTDeviceHelper isPadDevice] ? 19.5 : 15.)
 #define kNameAndIDVerticalGap       ([TTDeviceHelper isPadDevice] ? 5 : 4)
@@ -282,7 +283,7 @@
     
     _isCellDisplay = YES;
     
-    wrapperTrackEventWithCustomKeys(@"native_stock", @"show", nil, nil, @{@"stock_id": [NSString stringWithFormat:@"%@", _stockData.stockID]});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"native_stock" label:@"show" value:nil source:nil extraDic:@{@"stock_id": [NSString stringWithFormat:@"%@", _stockData.stockID]}];
     
     [self refreshStockData];
 }

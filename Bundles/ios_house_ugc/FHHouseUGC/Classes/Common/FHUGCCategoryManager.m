@@ -11,7 +11,7 @@
 #import "TTBaseMacro.h"
 #import "TTNetworkManager.h"
 #import "TTURLDomainHelper.h"
-#import "NSDictionary+TTAdditions.h"
+#import "NSDictionary+BTDAdditions.h"
 #import "FHMainApi.h"
 #import "TTSandBoxHelper.h"
 #import "JSONAdditions.h"
@@ -108,11 +108,13 @@
     
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
     extraDic[@"tab_name"] = @"ugc";
-    params[@"client_extra_params"] = [extraDic tt_JSONRepresentation];
+    params[@"client_extra_params"] = [extraDic btd_jsonStringEncoded];
     //是否用户主动修改
     [params setValue:@(userChanged) forKey:@"user_modify"];
     
+    WeakSelf;
     [[TTNetworkManager shareInstance] requestForBinaryWithResponse:[self subscribedCategoryURLString] params:params method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        StrongSelf;
         __block NSError *backError = error;
         NSDate *backDate = [NSDate date];
         NSDate *serDate = [NSDate date];
@@ -145,11 +147,7 @@
 
                 NSString * remoteVersion = categoryModel.data.version;
                 [[self class] setGetCategoryVersion:remoteVersion];
-                
-                if(categoryModel.data.data.count > 0){
-                    [_allCategories removeAllObjects];
-                    [_allCategories addObjectsFromArray:categoryModel.data.data];
-                }
+                [self updateData:categoryModel];
 
                 if (self.completionRequest) {
                     self.completionRequest(YES);
@@ -181,7 +179,17 @@
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kUGCCategoryGotFinishedNotification object:nil];
     }];
+}
 
+- (void)updateData:(FHUGCCategoryModel *)categoryModel {
+    if(categoryModel.data.data.count > 0){
+        [_allCategories removeAllObjects];
+        for (FHUGCCategoryDataDataModel *category in categoryModel.data.data) {
+            if(![category.category isEqualToString:@"fake"] && ![category.category isEqualToString:@"adfake"]){
+                [_allCategories addObject:category];
+            }
+        }
+    }
 }
 
 - (void)startGetCategoryWithCompleticon:(void(^)(BOOL isSuccess))completion

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTFavoriteViewController.m
 //  Article
 //
@@ -186,7 +187,7 @@
                 [extraDict setValue:@(self.deleteView.totalDeletingCount) forKey:@"count"];
                 [extraDict setValue:@(deleteSuccess) forKey:@"success"];
                 
-                wrapperTrackEventWithCustomKeys(@"favorite", @"delete", nil, nil, [extraDict copy]);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"favorite" label:@"delete" value:nil source:nil extraDic:[extraDict copy]];
             }];
         };
         [self.view addSubview:_deleteView];
@@ -288,7 +289,7 @@
             
             [self setHasTipFavlistLoginUserDefaultKey:YES];
             
-            wrapperTrackEvent(@"auth", @"fav_pop");
+            [BDTrackerProtocol event:@"auth" label:@"fav_pop"];
         }
     }
 }
@@ -767,7 +768,7 @@
 {
     /*
     if([[TTLoginDialogStrategyManager sharedInstance] myFavorShouldShowDialogIfNeeded]) {
-        wrapperTrackEvent(@"auth", @"fav_pop");
+        [BDTrackerProtocol event:@"auth" label:@"fav_pop"];
         NSInteger myFavorTotalTime = [[TTLoginDialogStrategyManager sharedInstance] myFavorTotalTime];
         [[TTLoginDialogStrategyManager sharedInstance] setMyFavorTotalTime:++myFavorTotalTime];
         [TTAccountManager showLoginAlertWithType:TTAccountLoginAlertTitleTypeMyFavor source:@"favor_popup" completion:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {

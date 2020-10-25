@@ -1,4 +1,5 @@
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  RelationUserCell.m
 //  Article
 //
@@ -186,19 +187,19 @@
             
             if ((_type == FriendDataListTypeSuggestUser || _type == FriendDataListTypeWidgetSuggestUser)) {
                 if (![self.currentFriend.hasSNS boolValue]) {
-                    wrapperTrackEvent(_umengEventName, @"unfollow_recommended");
+                    [BDTrackerProtocol event:_umengEventName label:@"unfollow_recommended"];
                 }
                 else {
-                    wrapperTrackEvent(_umengEventName, @"unfollow_joined_friends");
+                    [BDTrackerProtocol event:_umengEventName label:@"unfollow_joined_friends"];
                 }
                 from = kAddFriend;
             }
             else if (_type == FriendDataListTypeFollower){
-                wrapperTrackEvent(_umengEventName, @"followers_unfollow");
+                [BDTrackerProtocol event:_umengEventName label:@"followers_unfollow"];
                 from = self.isMyList ? kMyFans : kOtherFans;
             }
             else if (_type == FriendDataListTypeFowllowing) {
-                wrapperTrackEvent(_umengEventName, @"followings_unfollow");
+                [BDTrackerProtocol event:_umengEventName label:@"followings_unfollow"];
                 from = self.isMyList ? kMyFollowers : kOtherFollowers;
             }
             
@@ -215,10 +216,10 @@
             
             if ((_type == FriendDataListTypeSuggestUser || _type == FriendDataListTypeWidgetSuggestUser)) {
                 if (![self.currentFriend.hasSNS boolValue]) {
-                    wrapperTrackEvent(_umengEventName, @"follow_recommended");
+                    [BDTrackerProtocol event:_umengEventName label:@"follow_recommended"];
                 }
                 else {
-                    wrapperTrackEvent(_umengEventName, @"follow_joined_friends");
+                    [BDTrackerProtocol event:_umengEventName label:@"follow_joined_friends"];
                 }
                 from = kAddFriend;
             }

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTDetailNatantRelateReadViewModel.m
 //  Article
 //
@@ -96,7 +97,7 @@
         if ([[UIApplication sharedApplication] canOpenURL:[TTStringHelper URLWithURLString:schema]]) {
             [[UIApplication sharedApplication] openURL:[TTStringHelper URLWithURLString:schema]];
             if ([[self.article groupFlags] intValue] & kArticleGroupFlagsHasVideo) {
-                wrapperTrackEvent(@"detail", @"enter_youku");
+                [BDTrackerProtocol event:@"detail" label:@"enter_youku"];
             }
             return;
         }
@@ -146,9 +147,9 @@
 {
     if (self.isSubVideoAlbum) {
         if (self.videoAlbumID) {
-            wrapperTrackEventWithCustomKeys(@"video", @"click_album", [@(self.article.uniqueID) stringValue], nil, @{@"ext_value" : self.videoAlbumID});
+            [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"click_album" value:[@(self.article.uniqueID) stringValue] source:nil extraDic:@{@"ext_value" : self.videoAlbumID}];
         } else if ([self.fromArticle hasVideoSubjectID]) {
-            wrapperTrackEventWithCustomKeys(@"video", @"click_album", [@(self.article.uniqueID) stringValue], nil, @{@"video_subject_id" : self.fromArticle.videoSubjectID});
+            [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"click_album" value:[@(self.article.uniqueID) stringValue] source:nil extraDic:@{@"video_subject_id" : self.fromArticle.videoSubjectID}];
         }
         return;
     }
@@ -167,7 +168,7 @@
                        dict:@{@"value":self.fromArticle.groupModel.groupID}];
     }
     else {
-        wrapperTrackEvent(@"detail", label);
+        [BDTrackerProtocol event:@"detail" label:label];
     }
     // CLS_LOG(@"didReceiveMemoryWarning");
 
@@ -183,7 +184,7 @@
             value = [[self.article relatedAdId] stringValue];
         }
         [extra setValue:@"1" forKey:@"is_ad_event"];
-        wrapperTrackEventWithCustomKeys(@"detail_ad_list", @"click", value, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail_ad_list" label:@"click" value:value source:nil extraDic:extra];
         if (!SSIsEmptyArray(self.article.videoAdExtra.click_track_url_list)) {
 //            TTAdBaseModel *adBaseModel = [[TTAdBaseModel alloc] init];
 //            adBaseModel.ad_id = self.article.videoAdExtra.ad_id;

@@ -20,7 +20,7 @@
 #import "FHConditionFilterViewModel.h"
 #import "HMDTTMonitor.h"
 #import "FHEnvContext.h"
-#import "TTInstallIDManager.h"
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHHouseListCommuteTipView.h"
 #import "FHCommuteFilterView.h"
 #import "FHCommuteManager.h"
@@ -100,7 +100,7 @@
             // 目前4种房源：1，2，3，4
             NSString *res = [NSString stringWithFormat:@"%ld",self.houseType];
             // device_id
-            NSString *did = [[TTInstallIDManager sharedInstance] deviceID];
+            NSString *did = [BDTrackerProtocol deviceID];
             if (did.length == 0) {
                 did = @"null";
             }
@@ -746,6 +746,9 @@
         if ([UIDevice btd_isIPhoneXSeries]) {
             
             _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+        }
+        if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
+            _tableView.backgroundColor = [UIColor themeGray7];
         }
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _tableView.showsVerticalScrollIndicator = NO;
