@@ -1017,7 +1017,7 @@ extern NSString *const BOE_OPEN_KEY ;
                                                                                                              NULL,
                                                                                                              (CFStringRef)@"!*'();:@&=+$,/?%#[]",
                                                                                                              kCFStringEncodingUTF8));
-             NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?url=%@",encodedString];
+             NSString *urlStr = [NSString stringWithFormat:@"sslocal://webview?gecko_enable=0&url=%@",encodedString];
              
              [FHUtils setContent:stringToSave forKey:@"k_fh_debug_h5_bridge_test"];
              
