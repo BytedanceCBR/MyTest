@@ -46,7 +46,6 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 @property (nonatomic, strong) TTAlphaThemedButton *playButton;
 @property (nonatomic ,strong) NSString *videoLeftTime;
 //下面的分割线
-//@property (nonatomic, strong) UIImageView *topMaskView;
 @property (nonatomic, strong) TTImageView *logo;
 @property (nonatomic ,strong) TTVCellPlayMovie *playMovie;
 @end
@@ -152,7 +151,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 }
 
 - (void)readyToPlay {
-    
+    [_playMovie readyToPlay];
 }
 
 - (void)playButtonClicked
@@ -160,14 +159,12 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
     if(self.ttv_playButtonClickedBlock){
         self.ttv_playButtonClickedBlock();
     }
-    [self playVideo];
+    [self play];
 }
 
-- (void)playVideo {
-//    [self configurePlayMovie];
+- (void)play {
     [_playMovie play];
     self.cellEntity.playVideo = _playMovie.movieView;
-    [self.logo addSubview:[_playMovie currentMovieView]];
     if (self.ttv_playVideoBlock) {
         self.ttv_playVideoBlock();
     }

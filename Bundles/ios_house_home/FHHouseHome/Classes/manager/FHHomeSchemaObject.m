@@ -76,7 +76,6 @@
             for (NSInteger i = 0; i < jumpList.count; i++) {
                 NSString *urlStr = jumpList[i];
                 if(!isEmptyString(urlStr)){
-                    TTRouteUserInfo* userInfo = nil;
                     NSURL *url = [NSURL URLWithString:urlStr];
                     if(i == jumpList.count - 1){
                         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:[self getTracerFromUrl:url withParams:params]];
