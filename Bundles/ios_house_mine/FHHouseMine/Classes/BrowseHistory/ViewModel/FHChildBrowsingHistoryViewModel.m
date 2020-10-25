@@ -25,6 +25,7 @@
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import "UIViewController+TTMovieUtil.h"
+#import "FHBrowsingHistoryNewCell.h"
 
 @interface FHChildBrowsingHistoryViewModel()<FHBrowsingHistoryEmptyViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -81,6 +82,7 @@
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];
     [_tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:@"FHHouseBaseNewHouseCell"];
     [_tableView registerClass:[FHBrowsingHistoryContentCell class] forCellReuseIdentifier:@"FHBrowsingHistoryContentCell"];
+    [_tableView registerClass:[FHBrowsingHistoryNewCell class] forCellReuseIdentifier:NSStringFromClass([FHBrowsingHistoryNewCell class])];
 }
 
 - (void)requestData:(BOOL)isHead {
@@ -197,6 +199,14 @@
 }
 
 - (Class)cellClassForEntity:(id)model {
+    if ([FHEnvContext isDisplayNewCardType]) {
+        if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+            FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
+            if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
+                return [FHBrowsingHistoryNewCell class];
+            }
+        }
+    }
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
         if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
@@ -210,6 +220,14 @@
 }
 
 - (NSString *)cellIdentifierForEntity:(id)model {
+    if ([FHEnvContext isDisplayNewCardType]) {
+        if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+            FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
+            if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
+                return NSStringFromClass([FHBrowsingHistoryNewCell class]);
+            }
+        }
+    }
     if ([model isKindOfClass:[FHBrowseHistoryContentModel class]]) {
         return @"FHBrowsingHistoryContentCell";
     } else if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
@@ -239,6 +257,11 @@
         BOOL isFirstCell = NO;
         id data = _historyList[row];
         NSString *identifier = [self cellIdentifierForEntity:data];
+        if ([identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNewCell class])]) {
+            FHBrowsingHistoryNewCell *cell = (FHBrowsingHistoryNewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            [cell refreshWithData:data];
+            return cell;
+        }
         if (identifier.length > 0) {
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             FHSearchHouseItemModel *houseModel = nil;
