@@ -9,6 +9,7 @@
 #import "FHUserTracker.h"
 #import "FHSuggestionListModel.h"
 #import <objc/runtime.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 static NSString *const TrackEventPageShow = @"go_detail";
 static NSString *const TrackEventSuggestionResultShow = @"sug_word_show";
@@ -127,5 +128,10 @@ static const char tabSwitchedKey;
 
 - (NSString *)fh_pageType {
     return @"search_detail";
+}
+
+- (NSString *)fh_fromPageType {
+    if (!self.tracerDict || ![self.tracerDict isKindOfClass:NSDictionary.class]) return @"be_null";
+    return [self.tracerDict btd_objectForKey:UT_FROM_PAGE_TYPE default:@"be_null"];
 }
 @end

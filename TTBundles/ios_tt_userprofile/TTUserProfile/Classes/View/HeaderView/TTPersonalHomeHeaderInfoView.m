@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTPersonalHomeHeaderInfoView.m
 //  Article
 //
@@ -644,7 +645,7 @@ typedef NS_ENUM(NSInteger, TTPersonalHomeHeaderInfoItemType) {
 {
     NSString *url = [NSString stringWithFormat:@"sslocal://relation/following?uid=%@",self.infoModel.user_id];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url]];
-    wrapperTrackEventWithCustomKeys(@"profile", @"follows_enter", self.infoModel.user_id, nil, @{@"follows_num" : @(self.infoModel.followings_count.integerValue)});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"profile" label:@"follows_enter" value:self.infoModel.user_id source:nil extraDic:@{@"follows_num" : @(self.infoModel.followings_count.integerValue)}];
 }
 
 - (void)likeNumberViewTap
@@ -654,7 +655,7 @@ typedef NS_ENUM(NSInteger, TTPersonalHomeHeaderInfoItemType) {
     } else {
         NSString *url = [NSString stringWithFormat:@"sslocal://relation/follower?uid=%@",self.infoModel.user_id];
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url]];
-        wrapperTrackEventWithCustomKeys(@"profile", @"fans_enter", self.infoModel.user_id, nil, @{@"fans_num" : @(self.infoModel.followers_count.integerValue)});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"profile" label:@"fans_enter" value:self.infoModel.user_id source:nil extraDic:@{@"fans_num" : @(self.infoModel.followers_count.integerValue)}];
     }
 }
 

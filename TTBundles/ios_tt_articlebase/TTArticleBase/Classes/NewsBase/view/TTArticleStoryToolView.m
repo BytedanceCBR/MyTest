@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTArticleStoryToolView.m
 //  Article
 //
@@ -203,7 +204,7 @@ typedef NS_ENUM(NSInteger, ToolItemType)
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [dict setValue:_article.groupModel.itemID forKey:@"item_id"];
-    wrapperTrackEventWithCustomKeys(@"detail", label, _article.groupModel.groupID, nil, dict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:label value:_article.groupModel.groupID source:nil extraDic:dict];
 }
 
 - (NSString *)_jumpSchemaWithToolItemType:(ToolItemType)type

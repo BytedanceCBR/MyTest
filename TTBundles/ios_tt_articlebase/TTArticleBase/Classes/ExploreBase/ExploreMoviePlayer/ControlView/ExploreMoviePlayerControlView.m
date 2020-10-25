@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreMoviePlayerControlView.m
 //  MyPlayer
 //
@@ -1330,7 +1331,7 @@ extern NSInteger ttvs_isVideoShowDirectShare(void);
             }
         }
     }
-    wrapperTrackEvent(event, label);
+    [BDTrackerProtocol event:event label:label];
 }
 
 #pragma mark - finish ad

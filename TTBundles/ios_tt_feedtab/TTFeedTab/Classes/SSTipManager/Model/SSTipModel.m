@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  SSTipModel.m
 //  Article
 //
@@ -84,7 +85,6 @@
             ttTrackURLsModel(self.trackURLs, trackModel);
         }
     } else {
-        wrapperTrackEventWithOption([TTSandBoxHelper appName], eventName, label, false);
     }
 }
 

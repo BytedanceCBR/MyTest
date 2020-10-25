@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTTableViewController.m
 //  Article
 //
@@ -111,7 +112,7 @@ typedef NS_ENUM(NSUInteger, TTNetworkRequestType) {
     if (!self.isFirstAppear) {
         NSString *labelString = [self isRefreshing] ? @"refresh" : ([self isLoadingMore] ? @"load_more" : nil);
         if (!isEmptyString([self eventPageKey]) && !isEmptyString(labelString)) {
-            wrapperTrackEvent([self eventPageKey], labelString);
+            [BDTrackerProtocol event:[self eventPageKey] label:labelString];
         }
     }
 }

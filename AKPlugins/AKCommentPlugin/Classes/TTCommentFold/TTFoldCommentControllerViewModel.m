@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTFoldCommentControllerViewModel.m
 //  Article
 //
@@ -86,7 +87,7 @@
     [extra setValue:self.itemID forKey:@"item_id"];
     [extra setValue:self.forumID forKey:@"forum_id"];
     [extra setValue:@"fold_comment_page" forKey:@"position"];
-    wrapperTrackEventWithCustomKeys(@"fold_comment_reason", @"show", self.groupID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment_reason" label:@"show" value:self.groupID source:nil extraDic:extra];
 }
 
 - (NSArray<id<TTCommentModelProtocol>> *)commentModels {

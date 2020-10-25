@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  SSURLTracker.m
 //  Article
 //
@@ -457,7 +458,7 @@ static NSString *const kTrackFaildURLFileName = @"ssADTrackFailedURLs.plist";
 
 - (void)sendEventWithURL:(NSURL *)url statusCode:(NSInteger)statusCode
 {
-    wrapperTrackEventWithCustomKeys(@"ad_stat", @"track_url", @(statusCode).stringValue, nil, @{@"url" : url.absoluteString});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"ad_stat" label:@"track_url" value:@(statusCode).stringValue source:nil extraDic:@{@"url" : url.absoluteString}];
 }
 
 //trackUrl之后发送adId
@@ -469,7 +470,7 @@ static NSString *const kTrackFaildURLFileName = @"ssADTrackFailedURLs.plist";
     [dict setValue:@(statusCode).stringValue forKey:@"ext_value"];
     [dict setValue:@(connectionType) forKey:@"nt"];
     [dict setValue:@"1" forKey:@"is_ad_event"];
-    wrapperTrackEventWithCustomKeys(@"embeded_ad", @"track_url",adId, nil, dict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"track_url" value:adId source:nil extraDic:dict];
 }
 
 @end

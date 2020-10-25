@@ -177,7 +177,7 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
 //    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
 }
 
-//首页二手房、新房卡片实验
+//首页二手房、新房卡片实验，实验地址：https://data.bytedance.net/libra/flight/509105/edit
 + (void)addHomeHouseCardTest {
     NSInteger count = 2;
     NSMutableArray *groups = [NSMutableArray arrayWithCapacity:count];

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTTabBarController.m
 //  TestUniversaliOS6
 //
@@ -331,7 +332,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     
     [[TTMonitor shareManager] trackService:@"short_video_tab_index" status:htsTabStatus extra:nil];
     
-    wrapperTrackEvent(@"navbar", @"enter_home_launch");
+    [BDTrackerProtocol event:@"navbar" label:@"enter_home_launch"];
     [self initTabbarBadge];
     [self refreshBadge];
     
@@ -758,7 +759,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             //Todo
             StrongSelf;
             if(self.tabbarTipView.type == TTBubbleViewTypeVideoTip){
-                wrapperTrackEvent(@"video", @"video_tip_leave");
+                [BDTrackerProtocol event:@"video" label:@"video_tip_leave"];
             }
         }];
         //隐藏ugc引导
@@ -936,7 +937,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
     } else if (self.tabbarTipView.type == TTBubbleViewTypeVideoTip) {
         [TTVideoTip saveVideoTipShowDate];
         //视频tip统计
-        wrapperTrackEvent(@"video",@"video_tip_show");
+        [BDTrackerProtocol event:@"video" label:@"video_tip_show"];
         [TTVideoTip setHasShownVideoTip:YES];
     } else if (self.tabbarTipView.type == TTBubbleViewTypeMineTopEntranceTip){
         [SSCommonLogic setHTSTabMineIconTipsHasShow:YES];
@@ -958,7 +959,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         if ([[TTBubbleViewManager class] isViewTypeTimer:self.tabbarTipView.type]) {
             [[TTBubbleViewManager shareManager] sendTrackForTipsAutoClose];
         } else if(self.tabbarTipView.type == TTBubbleViewTypeVideoTip){
-            wrapperTrackEvent(@"video", @"video_tip_close");
+            [BDTrackerProtocol event:@"video" label:@"video_tip_close"];
         } else if (self.tabbarTipView.type == TTBubbleViewTypeNightShiftMode){
             NSDate *currentDate = [[NSDate alloc] init];
             NSInteger timeInterval = [currentDate timeIntervalSinceDate:startDate];
@@ -976,7 +977,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             switch (self.tabbarTipView.type) {
                 case TTBubbleViewTypeVideoTip:{
                     //视频tip统计
-                    wrapperTrackEvent(@"video",@"click_video_tip");
+                    [BDTrackerProtocol event:@"video" label:@"click_video_tip"];
                     [self.tabbarTipView hideTipWithAnimation:YES forceHide:YES];
                 }
                     break;
@@ -1149,7 +1150,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kTTTabVideoTabKey];
         TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
         if (badgeView.badgeValue) {
-            wrapperTrackEvent(@"video_redspot", @"click");
+            [BDTrackerProtocol event:@"video_redspot" label:@"click"];
         }
         [SSCommonLogic showedVideoTabSpot];
         [badgeView setBadgeNumber:TTBadgeNumberHidden];
@@ -1222,10 +1223,10 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             // 统计 - 当前在首页点首页刷新
             if (badgeView.hidden) {
                 // 无提醒点首页
-                wrapperTrackEvent(@"navbar", @"click_home");
+                [BDTrackerProtocol event:@"navbar" label:@"click_home"];
             } else {
                 // 有提醒点首页
-                wrapperTrackEvent(@"navbar", @"click_home_tip");
+                [BDTrackerProtocol event:@"navbar" label:@"click_home_tip"];
             }
             eventName = @"click_bottom_home";
         }
@@ -1234,9 +1235,9 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
             [[NSNotificationCenter defaultCenter] postNotificationName:kMomentTabbarKeepClickedNotification object:self userInfo:nil];
             if (badgeView.hidden) {
-                wrapperTrackEvent(@"navbar", @"click_follow");
+                [BDTrackerProtocol event:@"navbar" label:@"click_follow"];
             } else {
-                wrapperTrackEvent(@"navbar", @"click_follow_tip");
+                [BDTrackerProtocol event:@"navbar" label:@"click_follow_tip"];
             }
         }
         else if([[self currentTabIdentifier] isEqualToString:kTTTabWeitoutiaoTabKey]) {
@@ -1247,7 +1248,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             [self keepTapShortVideoTab];
         }
         else if ([[self currentTabIdentifier] isEqualToString:kTTTabVideoTabKey]) {
-            wrapperTrackEvent(@"navbar", @"click_video");
+            [BDTrackerProtocol event:@"navbar" label:@"click_video"];
             eventName = @"click_bottom_video";
             
             NSUInteger index = [[TTTabBarManager sharedTTTabBarManager].tabTags indexOfObject:kTTTabVideoTabKey];
@@ -1331,7 +1332,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //                    wrapperTrackEventWithCustomKeys(@"navbar", @"enter_home_click", nil, nil, @{@"enter_type":@"after_post_auto"});
 //                }
 //                else{
-                    wrapperTrackEvent(@"navbar", @"enter_home_click");
+                    [BDTrackerProtocol event:@"navbar" label:@"enter_home_click"];
 //                }
             }
             
@@ -1343,18 +1344,18 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
             TTBadgeNumberView *badgeView = [((TTTabbar *)self.tabBar).tabItems[index] ttBadgeView];
             if ([TTAccountManager isLogin]) {
                 if (badgeView.hidden) {
-                    wrapperTrackEvent(@"navbar", @"enter_follow");
+                    [BDTrackerProtocol event:@"navbar" label:@"enter_follow"];
                 }
                 else{
-                    wrapperTrackEvent(@"navbar", @"enter_follow_tip");
+                    [BDTrackerProtocol event:@"navbar" label:@"enter_follow_tip"];
                 }
             }
             else {
                 if (badgeView.hidden) {
-                    wrapperTrackEvent(@"navbar", @"enter_follow");
+                    [BDTrackerProtocol event:@"navbar" label:@"enter_follow"];
                 }
                 else{
-                    wrapperTrackEvent(@"navbar", @"enter_follow_tip");
+                    [BDTrackerProtocol event:@"navbar" label:@"enter_follow_tip"];
                 }
             }
         }
@@ -1385,14 +1386,14 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         }
         else if ([[self currentTabIdentifier] isEqualToString:kTTTabVideoTabKey]) {
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                wrapperTrackEvent(@"navbar", @"enter_video_click");
+                [BDTrackerProtocol event:@"navbar" label:@"enter_video_click"];
             }
             eventName = @"click_bottom_video";
         }
         else if ([[self currentTabIdentifier] isEqualToString:kTTTabMineTabKey]) {
             //eventName = @"click_bottom_mine";
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                wrapperTrackEvent(@"navbar", @"enter_mine_click");
+                [BDTrackerProtocol event:@"navbar" label:@"enter_mine_click"];
             }
         }
         else if([[self currentTabIdentifier] isEqualToString:kTTTabHTSTabKey]) {
@@ -1413,7 +1414,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         //切换频道后，底部的视频tipview不显示
         if(![[self lastTabIdentifier] isEqualToString:[self currentTabIdentifier]]){
             [_tabbarTipView hideTipWithAnimation:YES forceHide:YES completionHandle:^{
-                wrapperTrackEvent(@"video", @"video_tip_leave");
+                [BDTrackerProtocol event:@"video" label:@"video_tip_leave"];
             }];
         }
     }
@@ -1646,7 +1647,7 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
         //Todo
         StrongSelf;
         if(self.tabbarTipView.type == TTBubbleViewTypeVideoTip){
-            wrapperTrackEvent(@"video", @"video_tip_leave");
+            [BDTrackerProtocol event:@"video" label:@"video_tip_leave"];
         }
     }];
  

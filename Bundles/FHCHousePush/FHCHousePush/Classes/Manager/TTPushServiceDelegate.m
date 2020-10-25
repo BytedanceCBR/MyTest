@@ -179,13 +179,13 @@ typedef void(^NotificationActionCompletionBlock) (void);
     [BDUGPushService uploadNotificationStatus:[NSString stringWithFormat:@"%d",[TTUserSettingsManager apnsNewAlertClosed]]];
 
     if ([TTAuthorizeManager sharedManager].pushObj.authorizeModel.isPushAuthorizeDetermined == NO) {
-        wrapperTrackEvent(@"pop", @"push_permission_show");
+        [BDTrackerProtocol event:@"pop" label:@"push_permission_show"];
         if (!response.success) {
             [BDTrackerProtocol eventV3:@"push_anthorize_popup" params:@{@"is_anthorized" : @"0"}];
-            wrapperTrackEvent(@"pop", @"push_permission_cancel");
+            [BDTrackerProtocol event:@"pop" label:@"push_permission_cancel"];
         } else {
             [BDTrackerProtocol eventV3:@"push_anthorize_popup" params:@{@"is_anthorized" : @"1"}];
-            wrapperTrackEvent(@"pop", @"push_permission_confirm");
+            [BDTrackerProtocol event:@"pop" label:@"push_permission_confirm"];
         }
         [TTAuthorizeManager sharedManager].pushObj.authorizeModel.isPushAuthorizeDetermined = YES;
         [[TTAuthorizeManager sharedManager].pushObj.authorizeModel saveData];
@@ -264,7 +264,7 @@ API_AVAILABLE(ios(10.0))
 
     if (@available(iOS 10.0, *)) {
         if ([content.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
-            wrapperTrackEvent(@"apn", @"click_notification");
+            [BDTrackerProtocol event:@"apn" label:@"click_notification"];
             [self handleRemoteNotification:content.userInfo];
             !completionHandler ?: completionHandler();
         } else if ([content.actionIdentifier isEqualToString:UNNotificationDismissActionIdentifier]) {
@@ -276,7 +276,7 @@ API_AVAILABLE(ios(10.0))
                 TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:groupID];
                 
                 if ([content.actionIdentifier isEqualToString:kNotificationActionIdentifierDislike]) {
-                    wrapperTrackEvent(@"apn", @"click_dislike");
+                    [BDTrackerProtocol event:@"apn" label:@"click_dislike"];
                     
                     TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
                     context.groupModel = groupModel;
@@ -284,7 +284,7 @@ API_AVAILABLE(ios(10.0))
                     [self.itemActionManager startItemActionByType:DetailActionTypeNewVersionDislike actionSource:DetailActionSourceNotification];
                     self.completionBlock = completionHandler;
                 } else if ([content.actionIdentifier isEqualToString:kNotificationActionIdentifierFavorite]) {
-                    wrapperTrackEvent(@"apn", @"click_favorite");
+                    [BDTrackerProtocol event:@"apn" label:@"click_favorite"];
                     
                     TTDetailActionReuestContext *context = [TTDetailActionReuestContext new];
                     context.groupModel = groupModel;
@@ -292,7 +292,7 @@ API_AVAILABLE(ios(10.0))
                     [self.itemActionManager startItemActionByType:DetailActionTypeFavourite actionSource:DetailActionSourceNotification];
                     self.completionBlock = completionHandler;
                 } else {
-                    wrapperTrackEvent(@"apn", @"click_launch");
+                    [BDTrackerProtocol event:@"apn" label:@"click_launch"];
                     [self handleRemoteNotification:content.userInfo];
                     !completionHandler ?: completionHandler();
                 }

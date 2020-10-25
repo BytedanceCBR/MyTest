@@ -320,7 +320,6 @@
     if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
         //展开，收起
         FHNewHouseDetailReleatorMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorMoreCell class] forSectionController:self atIndex:index];
-        __weak FHNewHouseDetailAgentSM *weakAgentSM = agentSM;
         [cell setFoldButtonActionBlock:^{
             [weakSelf foldAction];
         }];
@@ -341,6 +340,7 @@
         }];
         return cell;
     }
+    return [super defaultCellAtIndex:index];
 }
 
 - (CGSize)sectionController:(IGListBindingSectionController *)sectionController

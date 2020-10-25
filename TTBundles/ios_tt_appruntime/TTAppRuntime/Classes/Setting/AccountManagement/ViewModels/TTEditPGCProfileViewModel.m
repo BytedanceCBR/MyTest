@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTEditPGCProfileViewModel.m
 //  Article
 //
@@ -26,9 +27,9 @@
     
     // log
     if (view.type == TTUserProfileInputViewTypeName) {
-        wrapperTrackEvent(@"account_setting_username", @"cancel");
+        [BDTrackerProtocol event:@"account_setting_username" label:@"cancel"];
     } else if (view.type == TTUserProfileInputViewTypeSign) {
-        wrapperTrackEvent(@"account_setting_signiture", @"cancel");
+        [BDTrackerProtocol event:@"account_setting_signiture" label:@"cancel"];
     }
 }
 
@@ -94,9 +95,9 @@
     
     // log
     if (view.type == TTUserProfileInputViewTypeName) {
-        wrapperTrackEvent(@"account_setting_username", @"confirm");
+        [BDTrackerProtocol event:@"account_setting_username" label:@"confirm"];
     } else if (view.type == TTUserProfileInputViewTypePGCSign) {
-        wrapperTrackEvent(@"account_setting_signiture", @"confirm");
+        [BDTrackerProtocol event:@"account_setting_signiture" label:@"confirm"];
     }
 }
 

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVideoAutoPlayManager.m
 //  Article
 //
@@ -323,7 +324,7 @@ static TTVideoAutoPlayManager *manager = nil;
 
 - (void)trackForFeedAutoPlay:(ExploreOrderedData *)data movieView:(ExploreMovieView*)movieView
 {
-    wrapperTrackEventWithCustomKeys(@"video_play", @"feed_auto_play", [@(data.article.uniqueID) stringValue], nil, @{@"item_id" : data.article.itemID ?: @""});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_play" label:@"feed_auto_play" value:[@(data.article.uniqueID) stringValue] source:nil extraDic:@{@"item_id" : data.article.itemID ?: @""}];
     if (data.ad_id.longLongValue > 0) {
         [self sendADEvent:@"embeded_ad" label:@"feed_auto_play" value:data.ad_id extra:nil logExtra:data.log_extra];
         [movieView.tracker mzTrackVideoUrls:data.adPlayTrackUrls adView:movieView];
@@ -344,7 +345,7 @@ static TTVideoAutoPlayManager *manager = nil;
         [extra setValue:@(self.totalTime - self.lastPlayTime) forKey:@"duration"];
         self.lastPlayTime = self.totalTime;
 
-        wrapperTrackEventWithCustomKeys(@"video_over", [movieView.tracker dataTrackLabel], [@(data.article.uniqueID) stringValue], nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video_over" label:[movieView.tracker dataTrackLabel] value:[@(data.article.uniqueID) stringValue] source:nil extraDic:extra];
         if (data.ad_id.longLongValue > 0) {
             [self sendADEvent:@"embeded_ad" label:@"feed_play_over" value:data.ad_id extra:extra logExtra:data.log_extra];
         }
@@ -370,7 +371,7 @@ static TTVideoAutoPlayManager *manager = nil;
     //同 trackForClickFeedAutoPlay
     [self setDurationWithExtra:extra movieView:movieView];
 
-    wrapperTrackEventWithCustomKeys(@"video_over", @"feed_auto_over", [@(data.article.uniqueID) stringValue], nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_over" label:@"feed_auto_over" value:[@(data.article.uniqueID) stringValue] source:nil extraDic:extra];
     if (data.ad_id.longLongValue > 0) {
         [self sendADEvent:@"embeded_ad" label:@"feed_auto_over" value:data.ad_id extra:extra logExtra:data.log_extra];
         [movieView.tracker mzStopTrack];
@@ -383,7 +384,7 @@ static TTVideoAutoPlayManager *manager = nil;
     NSMutableDictionary *extra = [self commonParams:data movie:movieView];
     [self setDurationWithExtra:extra movieView:movieView];
 
-    wrapperTrackEventWithCustomKeys(@"video_over", @"feed_play_over", [@(data.article.uniqueID) stringValue], nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_over" label:@"feed_play_over" value:[@(data.article.uniqueID) stringValue] source:nil extraDic:extra];
     if (data.ad_id.longLongValue > 0) {
         [self sendADEvent:@"embeded_ad" label:@"feed_play_over" value:data.ad_id extra:extra logExtra:data.log_extra];
         [movieView.tracker mzStopTrack];
@@ -398,7 +399,7 @@ static TTVideoAutoPlayManager *manager = nil;
     self.totalTime = [totalTime doubleValue];
     [extra setValue:@(self.totalTime - self.lastPlayTime) forKey:@"duration"];
     self.lastPlayTime = self.totalTime;
-    wrapperTrackEventWithCustomKeys(@"video_over", @"feed_back_play_over", [@(data.article.uniqueID) stringValue], nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_over" label:@"feed_back_play_over" value:[@(data.article.uniqueID) stringValue] source:nil extraDic:extra];
     if ([data.ad_id longLongValue] > 0) {
         [self sendADEvent:@"embeded_ad" label:@"feed_back_play_over" value:data.ad_id extra:extra logExtra:data.log_extra];
     }
@@ -412,7 +413,7 @@ static TTVideoAutoPlayManager *manager = nil;
     self.totalTime = [totalTime doubleValue];
     [extra setValue:@(self.totalTime - self.lastPlayTime) forKey:@"duration"];
     self.lastPlayTime = self.totalTime;
-    wrapperTrackEventWithCustomKeys(@"video_over", @"auto_detail_play_over", [@(data.article.uniqueID) stringValue], nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_over" label:@"auto_detail_play_over" value:[@(data.article.uniqueID) stringValue] source:nil extraDic:extra];
 }
 
 //列表中播放的时候,点击,进入详情页
@@ -420,7 +421,7 @@ static TTVideoAutoPlayManager *manager = nil;
 {
     NSMutableDictionary *extra = [self commonParams:data movie:movieView];
     [self setDurationWithExtra:extra movieView:movieView];
-    wrapperTrackEventWithCustomKeys(@"enter_detail", @"click_feed_auto_play", [@(data.article.uniqueID) stringValue], nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"enter_detail" label:@"click_feed_auto_play" value:[@(data.article.uniqueID) stringValue] source:nil extraDic:extra];
     if (data.ad_id.longLongValue > 0) {
         [self sendADEvent:@"embeded_ad" label:@"click_feed_auto_play" value:data.ad_id extra:extra logExtra:data.log_extra];
     }

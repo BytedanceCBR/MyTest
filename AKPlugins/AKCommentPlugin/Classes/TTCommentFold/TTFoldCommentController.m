@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTFoldCommentController.m
 //  Article
 //
@@ -211,7 +212,7 @@
     self.header.linkTextOnClicked = ^(){
         NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
         [extra setValue:weakSelf.viewModel.itemID forKey:@"item_id"];
-        wrapperTrackEventWithCustomKeys(@"fold_comment_reason", @"click", weakSelf.viewModel.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment_reason" label:@"click" value:weakSelf.viewModel.groupID source:nil extraDic:extra];
     };
 }
 
