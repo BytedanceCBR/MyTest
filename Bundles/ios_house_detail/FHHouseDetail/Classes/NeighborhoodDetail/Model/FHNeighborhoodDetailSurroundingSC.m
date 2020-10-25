@@ -246,6 +246,12 @@
         [cell setBaiduPanoramaBlock:^{
             [weakSelf baiduPanoramaAction];
         }];
+        [cell setClickFacilitiesBlock:^(NSString * _Nonnull position) {
+            NSMutableDictionary *tracerDic = weakSelf.detailTracerDict.mutableCopy;
+            tracerDic[@"element_type"] = @"map";
+            tracerDic[@"click_position"] = position ?: @"be_null";
+            [FHUserTracker writeEvent:@"click_facilities" params:tracerDic.copy];
+        }];
         return cell;
     } else if ([model.dataItems[index] isKindOfClass:[FHStaticMapAnnotation class]]) {
         FHStaticMapAnnotation *annotation = (FHStaticMapAnnotation *)model.dataItems[index];

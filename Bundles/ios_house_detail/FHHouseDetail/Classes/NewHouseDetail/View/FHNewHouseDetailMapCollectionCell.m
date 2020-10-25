@@ -286,10 +286,9 @@
     NSArray *facilities = @[@"traffic", @"education", @"hospital", @"life"];
     if (index >= 0 && index < facilities.count) {
         // click_facilities
-//        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
-//        tracerDic[@"element_type"] = [self elementTypeString:self.baseViewModel.houseType];
-//        tracerDic[@"click_position"] = facilities[index];
-//        [FHUserTracker writeEvent:@"click_facilities" params:tracerDic];
+        if (self.clickFacilitiesBlock) {
+            self.clickFacilitiesBlock(facilities[index]);
+        }
     }
 }
 
