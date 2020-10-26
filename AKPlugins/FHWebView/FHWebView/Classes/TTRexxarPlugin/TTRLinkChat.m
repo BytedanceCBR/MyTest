@@ -19,12 +19,21 @@
 
 - (void)openPhotoLibraryWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     [self showHint:NSStringFromSelector(_cmd)];
-    callback(TTRJSBMsgSuccess, @{});
-}
 
-- (void)linkchatUploadVideoWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
-    [self showHint:NSStringFromSelector(_cmd)];
     callback(TTRJSBMsgSuccess, @{});
+    
+    
+    [webview ttr_fireEvent:@"linkchatUploadVideo" data:@{
+        @"state": @2,
+        @"success": @"上传成功",
+        @"message": @"",
+        @"data": @{
+                @"videoSrc": @"no valid",
+                @"videoCoverImg": @"none",
+                @"width": @100,
+                @"size": @"大小按什么单位传？"
+        }
+    }];
 }
 
 - (void)showHint:(NSString *)hint {
