@@ -35,7 +35,6 @@
 @property (nonatomic, strong) TTVPlayerModel *playerModel;
 @property (nonatomic, weak) NSObject <TTVDemandPlayerDelegate> *delegate;//始终保持delegate唯一
 @property (nonatomic, strong, readonly) TTVPlayerStateStore *playerStateStore;
-//@property (nonatomic, strong ,readonly) TTVDemanderTrackerManager *commonTracker;
 @property (nonatomic, strong ,readonly) FHDemanderTrackerManager *commonTracker;
 @property (nonatomic, strong) TTVPlayerView *playerView;
 @property (nonatomic, strong ,readonly) TTVDemandPlayerContext *context;
@@ -61,7 +60,6 @@
 - (void)reset;
 - (void)registerDelegate:(NSObject <TTVDemandPlayerDelegate> *)delegate;
 - (void)unregisterDelegate:(NSObject <TTVDemandPlayerDelegate> *)delegate;
-
 
 /**
  第一次调用play之前必需调用readyToPlay

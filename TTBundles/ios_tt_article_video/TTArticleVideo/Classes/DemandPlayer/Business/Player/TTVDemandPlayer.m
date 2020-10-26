@@ -46,7 +46,6 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 @property (nonatomic, strong) TTVPlayerStateStore *playerStateStore;
 @property (nonatomic, assign) TTVPlayerResolutionType currentResolution;
 @property (nonatomic, strong) NSHashTable *delegates;
-//@property (nonatomic, strong) TTVDemanderTrackerManager *commonTracker;//通用的tracker
 @property (nonatomic, strong) FHDemanderTrackerManager *commonTracker;// add by zjing 修改video相关埋点
 
 @property (nonatomic, strong) TTVDemandPlayerContext *context;
@@ -161,7 +160,7 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     if (self.playerModel.enableCommonTracker) {
         [self ttv_addPlayerTracker];
     }
-    _commonTracker.playerStateStore = self.playerStateStore;
+
     [_context setPlayerStateModel:self.playerStateStore.state];
     [self addBackgroundManager];
     [self configureParts];
@@ -249,7 +248,9 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     };
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (_tipView.tipType == TTVPlayerControlTipViewTypeUnknow) {
-            if (!_playerStateStore.state.showVideoFirstFrame && _playerStateStore.state.banLoading){}else{
+            if (!_playerStateStore.state.showVideoFirstFrame && _playerStateStore.state.banLoading){
+                
+            }else{
                 _tipView.tipType = TTVPlayerControlTipViewTypeLoading;
             }
         }
@@ -345,12 +346,11 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 
 - (void)ttv_addTipView
 {
-    if (_tipView) {
-        return;
+    if (!_tipView) {
+        //提示重新加载按钮
+        _tipView = [[TTVPlayerControlTipView alloc] initWithFrame:self.bounds];
+        _tipView.center = CGPointMake(self.controlView.width / 2, self.controlView.height / 2);
     }
-    //提示重新加载按钮
-    _tipView = [[TTVPlayerControlTipView alloc] initWithFrame:self.bounds];
-    _tipView.center = CGPointMake(self.controlView.width / 2, self.controlView.height / 2);
 }
 
 - (void)ttv_addPlayerTracker
@@ -359,16 +359,11 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
     tracker.trackLabel = self.playerModel.trackLabel;
     tracker.itemID = self.playerModel.itemID;
     tracker.groupID = self.playerModel.groupID;
-//    tracker.aggrType = self.playerModel.aggrType;
-//    tracker.adID = self.playerModel.adID;
-//    tracker.logExtra = self.playerModel.logExtra;
     tracker.categoryID = self.playerModel.categoryID;
-//    tracker.videoSubjectID = self.playerModel.videoSubjectID;
     tracker.logPb = self.playerModel.logPb;
     tracker.enterFrom = self.playerModel.enterFrom;
     tracker.categoryName = self.playerModel.categoryName;
     tracker.extraDic = self.playerModel.extraDic;
-//    tracker.authorId = self.playerModel.authorId;
     tracker.playerStateStore = self.playerStateStore;
     [tracker configureData];
 }
