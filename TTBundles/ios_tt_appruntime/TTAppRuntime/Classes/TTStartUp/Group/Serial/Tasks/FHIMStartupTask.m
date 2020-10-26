@@ -366,30 +366,28 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
         [[IMManager shareInstance] startupWithUid:uid];
         
     
-        // 设置摇一摇打开高级调试页面
-        if([[FIMDebugManager shared] isEnableForEntry:FIMDebugOptionEntrySwitchShakeDebug]) {
-            [[FIMDebugManager shared] setupDebugShakeGestureWithEventBlk:^(BOOL isEnable) {
-                
-                if(!isEnable) {
-                    return ;
-                }
-                
-                if (![TTSandBoxHelper isInHouseApp]) {
-                    return;
-                }
-                
-                UIViewController *topVC = [TTUIResponderHelper visibleTopViewController];
-                Class debugVCClass = NSClassFromString(@"SSDebugViewController");
-                if(!debugVCClass || [topVC isKindOfClass:debugVCClass]) {
-                    return;
-                }
-                
-                TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:[debugVCClass new]];
-                navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
-                [topVC presentViewController:navigationController animated:YES completion:NULL];
-                [[FIMMediaTool sharedInstance] shakeOnceTime];
-            }];
-        }
+        // 设置摇一摇打开高级调试页面, 受调试开关FIMDebugOptionEntrySwitchShakeDebug控制
+        [FIMDebugManager shared].shakeToDebugBlock = ^(BOOL isEnable) {
+        
+            if(!isEnable) {
+                return ;
+            }
+            
+            if (![TTSandBoxHelper isInHouseApp]) {
+                return;
+            }
+            
+            UIViewController *topVC = [TTUIResponderHelper visibleTopViewController];
+            Class debugVCClass = NSClassFromString(@"SSDebugViewController");
+            if(!debugVCClass || [topVC isKindOfClass:debugVCClass]) {
+                return;
+            }
+            
+            TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:[debugVCClass new]];
+            navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
+            [topVC presentViewController:navigationController animated:YES completion:NULL];
+            [[FIMMediaTool sharedInstance] shakeOnceTime];
+        };
     }
 }
 
