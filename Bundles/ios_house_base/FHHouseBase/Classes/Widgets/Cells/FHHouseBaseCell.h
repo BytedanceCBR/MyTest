@@ -22,7 +22,7 @@
 #import <HTSVideoPlay/UIView+Yoga.h>
 
 NS_ASSUME_NONNULL_BEGIN
-
+//房源卡片基类
 @interface FHHouseBaseCell : UITableViewCell
 
 @property (nonatomic, strong) UIView *leftInfoView;

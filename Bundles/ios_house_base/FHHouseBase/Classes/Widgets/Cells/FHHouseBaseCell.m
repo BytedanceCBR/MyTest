@@ -31,7 +31,7 @@
 }
 
 - (void)initUI {
-    
+
 }
 
 - (void)refreshWithData:(id)data {
@@ -48,7 +48,7 @@
     NSURL *imgUrl = [NSURL URLWithString:url];
     if (imgUrl) {
         [self.mainImageView bd_setImageWithURL:imgUrl placeholder:[[self class] placeholderImage]];
-    }else{
+    } else {
         self.mainImageView.image = [[self class] placeholderImage];
     }
 }
@@ -71,8 +71,7 @@
     }
 }
 
--(void)hideRecommendReason
-{
+- (void)hideRecommendReason {
     if ( _recReasonView && self.recReasonView.yoga.isIncludedInLayout) {
         [self.recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
             layout.isIncludedInLayout = NO;
@@ -83,7 +82,7 @@
 
 - (UILabel *)mainTitleLabel {
     if (!_mainTitleLabel) {
-        _mainTitleLabel = [[UILabel alloc]init];
+        _mainTitleLabel = [[UILabel alloc] init];
         _mainTitleLabel.font = [UIFont themeFontRegular:16];
         _mainTitleLabel.textColor = [UIColor themeGray1];
     }
@@ -92,7 +91,7 @@
 
 - (UILabel *)subTitleLabel {
     if (!_subTitleLabel) {
-        _subTitleLabel = [[UILabel alloc]init];
+        _subTitleLabel = [[UILabel alloc] init];
         _subTitleLabel.font = [UIFont themeFontRegular:12];
         _subTitleLabel.textColor = [UIColor themeGray1];
     }
@@ -101,7 +100,7 @@
 
 - (YYLabel *)tagLabel {
     if (!_tagLabel) {
-        _tagLabel = [[YYLabel alloc]init];
+        _tagLabel = [[YYLabel alloc] init];
         _tagLabel.font = [UIFont themeFontRegular:12];
         _tagLabel.textColor = [UIColor themeGray3];
     }
@@ -110,7 +109,7 @@
 
 - (UILabel *)pricePerSqmLabel {
     if (!_pricePerSqmLabel) {
-        _pricePerSqmLabel = [[UILabel alloc]init];
+        _pricePerSqmLabel = [[UILabel alloc] init];
         if ([UIDevice btd_isScreenWidthLarge320]) {
             _pricePerSqmLabel.font = [UIFont themeFontRegular:12];
         } else {
@@ -123,7 +122,7 @@
 
 - (UILabel *)priceLabel {
     if (!_priceLabel) {
-        _priceLabel = [[UILabel alloc]init];
+        _priceLabel = [[UILabel alloc] init];
         _priceLabel.font = [UIFont themeFontSemibold:16];
         _priceLabel.textColor = [UIColor themeRed4];
     }
@@ -132,10 +131,10 @@
 
 - (UILabel *)originPriceLabel {
     if (!_originPriceLabel) {
-        _originPriceLabel = [[UILabel alloc]init];
+        _originPriceLabel = [[UILabel alloc] init];
         if ([UIDevice btd_isScreenWidthLarge320]) {
             _originPriceLabel.font = [UIFont themeFontRegular:12];
-        }else {
+        } else {
             _originPriceLabel.font = [UIFont themeFontRegular:10];
         }
         _originPriceLabel.textColor = [UIColor themeGray3];
@@ -155,7 +154,7 @@
 
 - (UIImageView *)mainImageView {
     if (!_mainImageView) {
-        _mainImageView = [[UIImageView alloc]init];
+        _mainImageView = [[UIImageView alloc] init];
         _mainImageView.contentMode = UIViewContentModeScaleAspectFill;
         _mainImageView.layer.cornerRadius = 4;
         _mainImageView.clipsToBounds = YES;
@@ -208,7 +207,7 @@
 
 - (FHCornerView *)imageTagLabelBgView {
     if (!_imageTagLabelBgView) {
-        _imageTagLabelBgView = [[FHCornerView alloc]init];
+        _imageTagLabelBgView = [[FHCornerView alloc] init];
         _imageTagLabelBgView.backgroundColor = [UIColor themeRed3];
         _imageTagLabelBgView.hidden = YES;
     }
@@ -217,7 +216,7 @@
 
 - (UILabel *)imageTagLabel {
     if (!_imageTagLabel) {
-        _imageTagLabel = [[UILabel alloc]init];
+        _imageTagLabel = [[UILabel alloc] init];
         _imageTagLabel.text = @"";
         _imageTagLabel.textAlignment = NSTextAlignmentCenter;
         _imageTagLabel.font = [UIFont themeFontRegular:10];
@@ -228,7 +227,7 @@
 
 - (UIImageView *)houseVideoImageView {
     if (!_houseVideoImageView) {
-        _houseVideoImageView = [[UIImageView alloc]init];
+        _houseVideoImageView = [[UIImageView alloc] init];
         _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video"];
         _houseVideoImageView.backgroundColor = [UIColor clearColor];
     }
@@ -243,7 +242,6 @@
 }
 
 - (FHHouseRecommendReasonView *)recReasonView {
-    
     if (!_recReasonView) {
         _recReasonView = [[FHHouseRecommendReasonView alloc] init];
     }
