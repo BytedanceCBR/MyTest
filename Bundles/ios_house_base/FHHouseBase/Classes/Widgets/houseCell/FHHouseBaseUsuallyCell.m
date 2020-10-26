@@ -72,7 +72,7 @@
 
 - (void)refreshWithData:(id)data {
     self.currentData = data;
-    if([data isKindOfClass:[FHHouseListBaseItemModel class]]){
+    if([data isKindOfClass:[FHHouseListBaseItemModel class]]) {
         FHHouseListBaseItemModel *model = (FHHouseListBaseItemModel *)data;
         FHImageModel *imageModel = model.houseImage.firstObject;
         [self updateMainImageWithUrl:imageModel.url];
@@ -103,7 +103,7 @@
 }
 
 - (void)updateContentWithModel:(FHHouseListBaseItemModel *)model {
-    switch (model.houseType ) {
+    switch (model.houseType) {
         case FHHouseTypeRentHouse:
             self.tagLabel.text = model.addrData;
             self.tagLabel.font = [UIFont themeFontRegular:12];
@@ -122,7 +122,6 @@
 }
 
 - (NSAttributedString *)originPriceAttr:(NSString *)originPrice {
-    
     if (originPrice.length < 1) {
         return nil;
     }
@@ -141,8 +140,7 @@
     return _mainImageView;
 }
 
-- (UILabel *)mainTitleLabel
-{
+- (UILabel *)mainTitleLabel {
     if (!_mainTitleLabel) {
         _mainTitleLabel = [[UILabel alloc] init];
         _mainTitleLabel.font = [UIFont themeFontSemibold:18];
