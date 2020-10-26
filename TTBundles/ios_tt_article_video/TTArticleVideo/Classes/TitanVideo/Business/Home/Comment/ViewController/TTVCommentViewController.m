@@ -554,8 +554,7 @@ TTCommentFooterCellDelegate>
     if (self.commentViewModel.goTopicDetail) {
         NSIndexPath *indexPath = [self.commentTableView indexPathForCell:view];
         if (indexPath) {
-            wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", item.commentModel.commentIDNum.stringValue, nil, @{@"ext_value": @"3",
-                                                                                                              @"source": @"3"});
+            [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:item.commentModel.commentIDNum.stringValue source:nil extraDic:@{@"ext_value": @"3", @"source": @"3"}];
             [self p_sendEnterCommentDetailTracker:item.commentModel];
             if ([self.delegate respondsToSelector:@selector(commentViewController:shouldPresentCommentDetailViewControllerWithCommentModel:indexPath:showKeyBoard:)]) {
                 
@@ -591,8 +590,7 @@ TTCommentFooterCellDelegate>
     NSIndexPath *indexPath = [_commentTableView indexPathForCell:view];
     if (indexPath) {
         [BDTrackerProtocol event:@"comment" label:@"click_outcomment"];
-        wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", item.commentModel.commentIDNum.stringValue, nil, @{@"ext_value": @"3",
-                                                                                                          @"source": @"2"});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:item.commentModel.commentIDNum.stringValue source:nil extraDic:@{@"ext_value": @"3", @"source": @"2"}];
          [self p_sendEnterCommentDetailTracker:item.commentModel];
         if ([self.delegate respondsToSelector:@selector(commentViewController:shouldPresentCommentDetailViewControllerWithCommentModel:indexPath:showKeyBoard:)]) {
             
@@ -906,9 +904,7 @@ TTCommentFooterCellDelegate>
     id <TTVCommentModelProtocol, TTCommentDetailModelProtocol> comment = [commentItems objectAtIndex:rightIndex].commentModel;
     if ([comment conformsToProtocol:@protocol(TTVCommentModelProtocol)]) {
         if (self.commentViewModel.goTopicDetail) {
-            wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", comment.commentIDNum.stringValue, nil, @{@"ext_value": @"3",
-             
-                                                                                                                @"source": @"1"});
+            [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:comment.commentIDNum.stringValue source:nil extraDic:@{@"ext_value": @"3", @"source": @"1"}];
              [self p_sendEnterCommentDetailTracker:comment];
             
             if ([self.delegate respondsToSelector:@selector(commentViewController:shouldPresentCommentDetailViewControllerWithCommentModel:indexPath:showKeyBoard:)]) {
