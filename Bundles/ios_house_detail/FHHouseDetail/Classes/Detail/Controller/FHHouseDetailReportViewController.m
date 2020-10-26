@@ -957,24 +957,25 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
      22         */
     NSString * CT = @"^1((33|53|77|8[09])[0-9]|349)\\d{7}$";
     
-    /**
-     25         * 大陆地区固话及小灵通
-     26         * 区号：010,020,021,022,023,024,025,027,028,029
-     27         * 号码：七位或八位
-     28         */
-    NSString * PHS = @"^0(10|2[0-5789]|\\d{3})\\d{7,8}$";
+//    /**
+//     25         * 大陆地区固话及小灵通
+//     26         * 区号：010,020,021,022,023,024,025,027,028,029
+//     27         * 号码：七位或八位
+//     28         */
+//    NSString * PHS = @"^0(10|2[0-5789]|\\d{3})\\d{7,8}$";
     
     NSPredicate *regextestmobile = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", MOBILE];
     NSPredicate *regextestcm = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", CM];
     NSPredicate *regextestcu = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", CU];
     NSPredicate *regextestct = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", CT];
-    NSPredicate *regextestPHS = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", PHS];
+//    NSPredicate *regextestPHS = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", PHS];
     
     if(([regextestmobile evaluateWithObject:self] == YES)
        || ([regextestcm evaluateWithObject:self] == YES)
        || ([regextestct evaluateWithObject:self] == YES)
        || ([regextestcu evaluateWithObject:self] == YES)
-       || ([regextestPHS evaluateWithObject:self] == YES)){
+//       || ([regextestPHS evaluateWithObject:self] == YES)
+       ){
         return YES;
     }else{
         return NO;
