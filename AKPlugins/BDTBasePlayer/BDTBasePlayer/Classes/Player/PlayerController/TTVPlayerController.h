@@ -75,6 +75,11 @@ typedef void(^TTVStopFinished)(void);
 @property (nonatomic, assign) BOOL banLoading;
 
 /**
+ *播放器屏幕填充方式
+ */
+@property (nonatomic, assign) TTVPlayerScalingMode scaleMode;
+
+/**
  所有的数据准备好后,调用,初始化相关的类,赋值初始化数据
  */
 - (void)readyToPlay;

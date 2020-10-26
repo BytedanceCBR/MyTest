@@ -152,6 +152,8 @@ static NSString *const kvideo_controller_error_domain = @"kvideo_player_controll
     self.videoEngine.cacheEnable = YES;
     self.videoEngine.resolutionServerControlEnabled = YES;
     
+//    self.videoEngine.scaleMode
+    
     if (self.playerStateStore.state.enableSmothlySwitch) {
         self.videoEngine.smoothlySwitching = YES;
         self.videoEngine.smoothDelayedSeconds = 3;
@@ -281,6 +283,11 @@ static NSString *const kvideo_controller_error_domain = @"kvideo_player_controll
             }
         }
     }];
+}
+
+- (void)setScaleMode:(TTVPlayerScalingMode)scaleMode {
+    _scaleMode = scaleMode;
+    self.videoEngine.scaleMode = scaleMode;
 }
 
 #pragma mark TTVideoEngineDataSource

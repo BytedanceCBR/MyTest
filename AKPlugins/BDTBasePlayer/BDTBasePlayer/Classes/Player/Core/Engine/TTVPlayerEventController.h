@@ -21,6 +21,7 @@
 @property (nonatomic, assign) BOOL muted;
 /// 是否在feed内流播放
 @property (nonatomic, assign) BOOL isPlayInDetailFeed;
+@property (nonatomic, assign) TTVPlayerScalingMode scaleMode;
 /**
  请求播放地址url
  */
@@ -36,4 +37,5 @@
 - (void)seekVideoToProgress:(CGFloat)progress complete:(void(^)(BOOL success))finised;
 - (void)saveCacheProgress;
 - (void)changeResolution:(TTVPlayerResolutionType)type;
+
 @end

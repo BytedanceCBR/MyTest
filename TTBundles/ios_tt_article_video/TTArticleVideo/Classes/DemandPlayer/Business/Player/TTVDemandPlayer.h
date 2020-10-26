@@ -13,19 +13,10 @@
 #import "TTVPlayerTracker.h"
 #import "TTVPlayerControllerState.h"
 #import "TTVDemandPlayerContext.h"
-//#import "TTVPlayerDoubleTap666Delegate.h"
 #import "TTVPlayerView.h"
 
 @class TTVPlayerOrientationController;
 @class TTVDemanderTrackerManager;
-//@class TTVCommodityFloatView;
-//@class TTVCommodityView;
-//@class TTVPasterPlayer;
-//@class TTVMidInsertADPlayer;
-//@class TTVDemandPlayerContextVideo;
-//@class TTVCommodityButtonView;
-//@class TTVVideoPlayerModel;
-//@class TTVVideoPlayerStateStore;
 
 @class FHDemanderTrackerManager;
 
@@ -43,11 +34,6 @@
 @interface TTVDemandPlayer : UIView
 @property (nonatomic, strong) TTVPlayerModel *playerModel;
 @property (nonatomic, weak) NSObject <TTVDemandPlayerDelegate> *delegate;//始终保持delegate唯一
-//@property (nonatomic, weak) id<TTVPlayerDoubleTap666Delegate> doubleTap666Delegate;
-//@property (nonatomic, strong ,readonly) TTVPasterPlayer *pasterPlayer;
-//@property (nonatomic, strong ,readonly) TTVMidInsertADPlayer *midInsertADPlayer;
-//@property (nonatomic, strong ,readonly) TTVCommodityFloatView *commodityFloatView;
-//@property (nonatomic, strong ,readonly) TTVCommodityButtonView *commodityButton;
 @property (nonatomic, strong, readonly) TTVPlayerStateStore *playerStateStore;
 //@property (nonatomic, strong ,readonly) TTVDemanderTrackerManager *commonTracker;
 @property (nonatomic, strong ,readonly) FHDemanderTrackerManager *commonTracker;
@@ -103,7 +89,7 @@
 
 - (void)removeControlView;
 - (void)removeBottomBarView;
-//- (void)setCommodityView:(TTVCommodityView *)commodityView;
+
 @end
 
 
@@ -124,6 +110,8 @@
 - (void)setBannerHeight:(float)bannerHeight;
 
 - (void)setEnableRotate:(BOOL)enableRotate;
+
+- (void)setScaleMode:(TTVPlayerScalingMode)scaleMode;
 
 @end
 

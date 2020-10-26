@@ -400,6 +400,12 @@ static __weak TTVPlayerController *currentPlayerController = nil;
     self.playerStateStore.state.banLoading = banLoading;
 }
 
+- (void)setScaleMode:(TTVPlayerScalingMode)scaleMode {
+    _scaleMode = _scaleMode;
+    self.playerStateStore.state.scaleMode = scaleMode;
+    self.eventController.scaleMode = scaleMode;
+}
+
 - (void)showFlowToast {
     if (TTNetworkWifiConnected() || !TTNetworkConnected()) {
         return;

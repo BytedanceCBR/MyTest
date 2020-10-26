@@ -748,17 +748,14 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     FHFeedUGCCellModel *video = self.currentVideoCell.cellModel;
     NSString *enterFrom = video.enterFrom ?: self.commonTrackingParameter[@"enter_from"];
     NSString *categoryName = video.categoryId ?: self.commonTrackingParameter[@"category_name"];
-    [[TTRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:self.currentVideoCell.cellModel.groupId
-                                                                          itemID:self.currentVideoCell.cellModel.groupId
+    if(video.groupId.length > 0){
+        [[TTRelevantDurationTracker sharedTracker] appendRelevantDurationWithGroupID:video.groupId
+                                                                          itemID:video.groupId
                                                                        enterFrom:enterFrom
                                                                     categoryName:categoryName
                                                                         stayTime:[self.tracker timeIntervalForStayPage] * 1000
-                                                                           logPb:self.currentVideoCell.cellModel.logPb];
-    
-    
-    
-
-    
+                                                                           logPb:video.logPb];
+    } 
 }
 
 #pragma mark -

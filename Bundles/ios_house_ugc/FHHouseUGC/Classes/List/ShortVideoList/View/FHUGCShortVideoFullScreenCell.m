@@ -83,9 +83,9 @@
     CGFloat screenAspectRatio = self.height > self.width ? (self.height / self.width) : (self.width / self.height);
 
     if(videoAspectRatio >= screenAspectRatio){
-        self.playerView.contentMode = UIViewContentModeScaleAspectFill;
+        [self.playerView.player setScaleMode:TTVPlayerScalingModeAspectFill];
     }else{
-            self.playerView.contentMode = UIViewContentModeScaleAspectFit;
+        [self.playerView.player setScaleMode:TTVPlayerScalingModeAspectFit];
     }
     
 }
