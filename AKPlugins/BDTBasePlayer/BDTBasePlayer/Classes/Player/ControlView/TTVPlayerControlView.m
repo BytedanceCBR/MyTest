@@ -241,6 +241,9 @@ static const CGFloat kBottomBarHeight = 80;
     //调节亮度相关
     _brightnessView = [[TTMovieBrightnessView alloc] initWithFrame:CGRectMake(0, 0, 155, 155)];
     _brightnessView.hidden = YES;
+//    [_brightnessView mas_makeConstraints:^(MASConstraintMaker *make) {
+//
+//    }];
 
     _adjustView = [[TTMovieAdjustView alloc] initWithFrame:CGRectMake(0, 0, 155, [TTMovieAdjustView heightWithMode:TTMovieAdjustViewModeFullScreen])];
     _adjustView.hidden = YES;
@@ -784,9 +787,6 @@ static const CGFloat kBottomBarHeight = 80;
             view = [UIApplication sharedApplication].keyWindow;
         }
         [view addSubview:_brightnessView];
-        if ([TTDeviceHelper OSVersionNumber] < 8.f && [TTDeviceHelper isPadDevice]) {
-            _brightnessView.transform = [_brightnessView currentTransformInIOS7IPad];
-        }
     }
     _adjustView.mode = TTMovieAdjustViewModeFullScreen;
     _gestureType = ExploreMoviePlayerControlViewGestureTypeNone;
@@ -852,13 +852,14 @@ static const CGFloat kBottomBarHeight = 80;
     _adjustView.centerX = self.width / 2;
     _adjustView.centerY = self.height / 2;
     //亮度布局
-    if ([_brightnessView isIOS7IPad]) {
-        _brightnessView.center = [_brightnessView currentCenterInIOS7IPad];
-    } else {
-        _brightnessView.centerX = _brightnessView.superview.width / 2;
-        CGFloat diff = [self isFullScreen] ? 0 : 5;
-        _brightnessView.centerY = _brightnessView.superview.height / 2 - diff;
-    }
+//    if ([_brightnessView isIOS7IPad]) {
+//        _brightnessView.center = [_brightnessView currentCenterInIOS7IPad];
+//    } else {
+    CGFloat width = self.width > self.height ? self.width : self.height;
+    CGFloat height = self.width > self.height ? self.height : self.width;
+        _brightnessView.centerX = width / 2;
+        _brightnessView.centerY = height / 2;
+//    }
 }
 
 
