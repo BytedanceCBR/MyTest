@@ -55,4 +55,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHRecommendtHeaderViewCell : UITableViewCell
+
+@property (nonatomic, strong)  UILabel       *label;
+
+@end
+
 NS_ASSUME_NONNULL_END
