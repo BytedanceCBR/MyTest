@@ -202,7 +202,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
     if(isRequired) {
         if(![self.titleLabel.text containsString:requiredText]) {
             NSAttributedString *requiredAttributeText = [[NSAttributedString alloc] initWithString:requiredText attributes:@{
-                NSForegroundColorAttributeName: [UIColor themeGray3],
+                NSForegroundColorAttributeName: [UIColor themeGray1],
                 NSFontAttributeName: self.titleLabel.font
             }];
             NSMutableAttributedString *titleAttributeText = [[NSMutableAttributedString alloc] initWithString:self.titleLabel.text attributes:@{
