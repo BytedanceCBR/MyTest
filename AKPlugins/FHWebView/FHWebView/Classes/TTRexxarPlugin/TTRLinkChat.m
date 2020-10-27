@@ -38,15 +38,12 @@
 }
 
 - (TTImagePickerController *)imagePickerController {
-    if(!_imagePickerController) {
-        _imagePickerController = [[TTImagePickerController alloc] initWithDelegate:self];
-        _imagePickerController.imagePickerMode = TTImagePickerModeVideo;
-        _imagePickerController.allowTakePicture = NO;
-        _imagePickerController.isGetOriginResource = NO;
-        _imagePickerController.enableICloud = YES;
-        _imagePickerController.maxVideoCount = 1;
-        //        _imagePickerController.maxVideoDuration =
-    }
+    _imagePickerController = [[TTImagePickerController alloc] initWithDelegate:self];
+    _imagePickerController.imagePickerMode = TTImagePickerModeVideo;
+    _imagePickerController.allowTakePicture = NO;
+    _imagePickerController.isGetOriginResource = NO;
+    _imagePickerController.enableICloud = YES;
+    _imagePickerController.maxVideoCount = 1;
     return _imagePickerController;
 }
 #pragma mark - TTImagePickerControllerDelegate
@@ -73,7 +70,6 @@
             }];
         });
 
-        
         id<TIMFileUploadRequest> request = [[TIMCoreBridgeManager sharedInstance] getInstanceConformsToProtocol:@protocol(TIMFileUploadRequest)];
         request.requestIdentifier = @"";
         request.localFilePath = ((AVURLAsset *)asset).URL;
