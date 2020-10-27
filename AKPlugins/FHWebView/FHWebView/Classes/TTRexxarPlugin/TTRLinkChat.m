@@ -12,9 +12,14 @@
 #import "TTUIResponderHelper.h"
 #import <AVFoundation/AVCaptureDevice.h>
 #import "TTImagePickerController.h"
+#import <TTIMSDK/TIMSMediaFileUploadManager.h>
+#import <TTIMSDK/TIMCoreBridgeManager.h>
+#import "FHAttachmentMessageSender.h"
+#import <TTIMSDK/TIMSMediaFileUploadDefine.h>
+#import <TTIMSDK/TIMMediaFileUploadDefinePrivate.h>
 
 //  内部使用单例
-@interface TTRPhotoLibraryHelper : NSObject<TTImagePickerControllerDelegate>
+@interface TTRPhotoLibraryHelper : NSObject<TTImagePickerControllerDelegate, TIMFileUploadDelegate>
 @property (nonatomic, strong) TTImagePickerController *imagePickerController;
 @property (nonatomic, weak) UIView<TTRexxarEngine> *attachedWebview;
 
@@ -40,35 +45,80 @@
         _imagePickerController.isGetOriginResource = NO;
         _imagePickerController.enableICloud = YES;
         _imagePickerController.maxVideoCount = 1;
-//        _imagePickerController.maxVideoDuration =
+        //        _imagePickerController.maxVideoDuration =
     }
     return _imagePickerController;
 }
 #pragma mark - TTImagePickerControllerDelegate
+
 - (void)ttimagePickerController:(TTImagePickerController *)picker didFinishPickingVideo:(UIImage *)coverImage sourceAsset:(TTAsset *)assetModel {
-    // 处理上传
-    [self processVideoUpload];
-}
-- (void)processVideoUpload {
-    // 上传开始
     
-    // 上传成功
+    NSAssert(assetModel.type == TTAssetMediaTypeVideo, @"只能上传本地视频");
     
-    // 上传失败
-    [self notifyUploadStatus:self.attachedWebview];
-}
-- (void)notifyUploadStatus:(UIView<TTRexxarEngine> *)webview {
-    [webview ttr_fireEvent:@"linkchatUploadVideo" data:@{
-        @"state": @2,
-        @"success": @"上传成功",
-        @"message": @"",
-        @"data": @{
-                @"videoSrc": @"no valid",
-                @"videoCoverImg": @"none",
-                @"width": @100,
-                @"size": @"大小按什么单位传？"
-        }
+    PHVideoRequestOptions *videoOptions = [[PHVideoRequestOptions alloc] init];
+    videoOptions.version = PHVideoRequestOptionsVersionCurrent;
+    videoOptions.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
+    
+    PHImageManager *manager = [PHImageManager defaultManager];
+    [manager requestAVAssetForVideo:assetModel.asset options:videoOptions resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // 开始上传
+            [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:@{
+                @"state": @1,
+                @"success": @(NO),
+                @"message": @"开始上传",
+                @"data": @{
+                }
+            }];
+        });
+
+        
+        id<TIMFileUploadRequest> request = [[TIMCoreBridgeManager sharedInstance] getInstanceConformsToProtocol:@protocol(TIMFileUploadRequest)];
+        request.requestIdentifier = @"";
+        request.localFilePath = ((AVURLAsset *)asset).URL;
+        request.mimeType = @"video/*";
+        request.ext = @{
+            TIM_FILE_EXT_KEY_TYPE:TIM_FILE_EXT_VALUE_TYPE_VIDEO
+        };
+        
+        [TIMSMediaFileUploadManager sharedInstance].delegate = self;
+        [[TIMSMediaFileUploadManager sharedInstance] uploadFileRequest:request config:nil];
     }];
+}
+#pragma mark - TIMFileUploadDelegate
+- (void)uploadRequest:(NSString *)requestIdentifier progressDidUpdate:(float)progress {
+    // DO NOTHING
+}
+- (void)uploadRequest:(NSString *)requestIdentifier didFailedWithError:(NSError *)error {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // 上传失败
+        [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:@{
+            @"state": @2,
+            @"success": @(NO),
+            @"message": error.localizedDescription?:@"上传失败",
+            @"data": @{
+            }
+        }];
+    });
+
+}
+- (void)uploadRequest:(NSString *)requestIdentifier didSuccessWithInfo:(id<TIMFileUploadedInfo>)info {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *videoUrl = info.remotePath;
+        NSString *videoCoverImageUrl = info.ext[TIM_FILE_EXT_KEY_VIDEO_COVER_URL]?:@"";
+        
+        // 上传成功
+        [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:@{
+            @"state": @2,
+            @"success": @(YES),
+            @"message": @"上传成功",
+            @"data": @{
+                    @"videoSrc": videoUrl?:@"",
+                    @"videoCoverImg": videoCoverImageUrl?:@"",
+            }
+        }];
+    });
 }
 @end
 
@@ -179,7 +229,7 @@ typedef void (^FLinkChatPermissionAskActionBlock)(void);
         [TTRPhotoLibraryHelper shared].attachedWebview = webview;
         [[TTRPhotoLibraryHelper shared].imagePickerController presentOn:navVC];
     }
-
+    
     callback(TTRJSBMsgSuccess, @{});
 }
 @end
