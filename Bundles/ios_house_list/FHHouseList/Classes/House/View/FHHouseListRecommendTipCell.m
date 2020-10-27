@@ -11,10 +11,12 @@
 #import "UIColor+Theme.h"
 #import <FHHouseBase/FHSearchHouseModel.h>
 #import <TTBaseLib/TTDeviceHelper.h>
+#import "NSAttributedString+YYText.h"
+#import "YYLabel.h"
 
 @interface FHHouseListRecommendTipCell ()
 
-@property (nonatomic, strong) UILabel *noDataTipLabel;
+@property (nonatomic, strong) YYLabel *noDataTipLabel;
 @property (nonatomic, strong) UIView *leftLine;
 @property (nonatomic, strong) UIView *rightLine;
 
@@ -25,11 +27,8 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.noDataTipLabel = [[UILabel alloc] init];
-        self.noDataTipLabel.textAlignment = NSTextAlignmentCenter;
+        self.noDataTipLabel = [[YYLabel alloc] init];
         [self.contentView addSubview:self.noDataTipLabel];
-        self.noDataTipLabel.font = [UIFont themeFontRegular:14];
-        self.noDataTipLabel.textColor = [UIColor themeGray3];
         [self.contentView addSubview:self.leftLine];
         [self.contentView addSubview:self.rightLine];
         [self initConstraints];
@@ -51,7 +50,18 @@
 {
     if ([data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]) {
         FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
-        self.noDataTipLabel.text = model.text;
+        
+        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:model.text];
+        NSDictionary *commonTextStyle = @{ NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor themeGray3]};
+        [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
+        [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
+        NSRange tapRange = [attrText.string rangeOfString:@"试试吧"];
+        [attrText yy_setTextHighlightRange:tapRange color:[UIColor colorWithHexStr:@"#fe5500"] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+            NSLog(@"xz:hehehehehe");
+        }];
+       
+        self.noDataTipLabel.attributedText = attrText;
+        
     }
 }
 
