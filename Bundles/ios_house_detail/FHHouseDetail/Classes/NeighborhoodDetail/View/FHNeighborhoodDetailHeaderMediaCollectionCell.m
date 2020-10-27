@@ -84,9 +84,6 @@
 }
 
 - (NSString *)elementType {
-    if (self.dataHelper.headerViewData.videoNumer > 0) {
-        return @"video";
-    }
     return @"picture";
 }
 
@@ -207,21 +204,19 @@
     [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
         
         NSInteger currentIndex = weakSelf.currentIndex;
-        if(weakSelf.dataHelper.headerViewData.baiduPanoramaIndex != -1) {
-            if(currentIndex >= weakSelf.dataHelper.headerViewData.baiduPanoramaIndex){
-                currentIndex = currentIndex + 1;
-            }
-        }
-        [weakSelf.headerView scrollToItemAtIndex:currentIndex];
+        
+        NSInteger mediaHeaderIndex = 0;
+        mediaHeaderIndex = [weakSelf.dataHelper getMediaHeaderIndexFromPictureDetailIndex:currentIndex];
+        
+        [weakSelf.headerView scrollToItemAtIndex:mediaHeaderIndex];
         [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
     }];
     [pictureDetailViewController setWillBeginPanBackBlock:^(NSInteger index) {
-        if(weakSelf.dataHelper.headerViewData.baiduPanoramaIndex != -1) {
-            if(index >= weakSelf.dataHelper.headerViewData.baiduPanoramaIndex){
-                index = index + 1;
-            }
-        }
-        [weakSelf.headerView scrollToItemAtIndex:index];
+        
+        NSInteger mediaHeaderIndex = 0;
+        mediaHeaderIndex = [weakSelf.dataHelper getMediaHeaderIndexFromPictureDetailIndex:index];
+        
+        [weakSelf.headerView scrollToItemAtIndex:mediaHeaderIndex];
     }];
 
     pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
@@ -443,22 +438,17 @@
 #pragma mark - FHMultiMediaCorrectingScrollViewDelegate
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
-    if (index >= 0 && index < self.model.medias.count) {
-        // 图片逻辑
-        if (self.dataHelper.headerViewData.baiduPanoramaIndex == -1) {
-            [self showImagesWithCurrentIndex:index];
-            return;
-        } else {
-            if (index < self.dataHelper.headerViewData.baiduPanoramaIndex) {
-                [self showImagesWithCurrentIndex:index];
-                return;
-            } else if (index > self.dataHelper.headerViewData.baiduPanoramaIndex) {
-                [self showImagesWithCurrentIndex:index - 1];
-                return;
-            }
-        }
-        //vr
-        FHMultiMediaItemModel *itemModel = _model.medias[index];
+    if (index < 0 || index >= self.dataHelper.headerViewData.mediaItemArray.count) {
+        return;
+    }
+    FHMultiMediaItemModel *itemModel = self.dataHelper.headerViewData.mediaItemArray[index];
+    
+    if (itemModel.mediaType != FHMultiMediaTypeBaiduPanorama) {
+        
+        NSUInteger detailIndex = 0;
+        detailIndex = [self.dataHelper getPictureDetailIndexFromMediaHeaderIndex:index];
+        [self showImagesWithCurrentIndex:detailIndex];
+    } else {
         if (itemModel.mediaType == FHMultiMediaTypeBaiduPanorama && itemModel.imageUrl.length > 0) {
             //进入百度街景
             //shceme baidu_panorama_detail
@@ -477,9 +467,8 @@
             NSString *gaodeLon = nil;
             // 获取图片需要的房源信息数据
             
-            FHNeighborhoodDetailHeaderMediaModel *model = (FHNeighborhoodDetailHeaderMediaModel *)self.currentData;
-            gaodeLat = model.gaodeLat;
-            gaodeLon = model.gaodeLon;
+            gaodeLat = itemModel.gaodeLat;
+            gaodeLon = itemModel.gaodeLng;
             if (gaodeLat.length && gaodeLon.length) {
                 param[@"gaodeLat"] = gaodeLat;
                 param[@"gaodeLon"] = gaodeLon;
@@ -488,6 +477,7 @@
         }
     }
 }
+
 
 - (void)willDisplayCellForItemAtIndex:(NSInteger)index {
     [self trackHeaderViewMediaShowWithIndex:index isLarge:NO];
