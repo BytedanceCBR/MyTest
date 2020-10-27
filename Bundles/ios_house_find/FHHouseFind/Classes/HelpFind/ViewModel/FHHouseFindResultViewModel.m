@@ -31,6 +31,7 @@
 #import "FHHouseListRecommendTipCell.h"
 #import "UIDevice+BTDAdditions.h"
 #import "FHFindResultNewCell.h"
+#import "FHFindResultSecondCell.h"
 
 #define kBaseCellId @"kBaseCellId"
 #define kFindNewHouseCellId @"kFindNewHouseCellId"
@@ -274,7 +275,7 @@
     [self.tableView registerClass:[FHRecommendSecondhandHouseTitleCell class] forCellReuseIdentifier:kFindHouseTitileCellId];
     [self.tableView registerClass:[FHHouseListRecommendTipCell class] forCellReuseIdentifier:kFindNoHouseTitileCellId];
     [self.tableView registerClass:[FHFindResultNewCell class] forCellReuseIdentifier:NSStringFromClass([FHFindResultNewCell class])];
-    
+    [self.tableView registerClass:[FHFindResultSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHFindResultSecondCell class])];
 }
 
 -(void)requestErshouHouseListData:(BOOL)isRefresh query: (NSString *)query offset: (NSInteger)offset searchId: (NSString *)searchId{
@@ -576,7 +577,16 @@
 //    }
     
     if (self.houseType == FHHouseTypeSecondHandHouse) {
-       FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
+        if ([FHEnvContext isDisplayNewCardType]) {
+            FHFindResultSecondCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHFindResultSecondCell class])];
+            if (indexPath.row < self.houseList.count && indexPath.row >= 0) {
+                FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
+                [cell refreshWithData:cellModel];
+            }
+            return cell;
+        }
+        
+        FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kBaseCellId];
         if (indexPath.row < self.houseList.count) {
             FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
             [cell refreshWithData:cellModel];
