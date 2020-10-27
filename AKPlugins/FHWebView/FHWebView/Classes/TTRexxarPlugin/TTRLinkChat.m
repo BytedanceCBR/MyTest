@@ -11,7 +11,61 @@
 #import <Photos/PHPhotoLibrary.h>
 #import "TTUIResponderHelper.h"
 #import <AVFoundation/AVCaptureDevice.h>
+#import "TTImagePickerController.h"
 
+//  内部使用单例
+@interface TTRPhotoLibraryHelper : NSObject<TTImagePickerControllerDelegate>
+@property (nonatomic, strong) TTImagePickerController *imagePickerController;
+@property (nonatomic, weak) UIView<TTRexxarEngine> *attachedWebview;
+
++ (instancetype)shared;
+@end
+
+@implementation TTRPhotoLibraryHelper
+
++ (instancetype)shared {
+    static TTRPhotoLibraryHelper *_instance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _instance = [[TTRPhotoLibraryHelper alloc] init];
+    });
+    return _instance;
+}
+
+- (TTImagePickerController *)imagePickerController {
+    if(!_imagePickerController) {
+        _imagePickerController = [[TTImagePickerController alloc] initWithDelegate:self];
+        _imagePickerController.imagePickerMode = TTImagePickerModeVideo;
+        _imagePickerController.allowTakePicture = NO;
+        _imagePickerController.isGetOriginResource = NO;
+        _imagePickerController.enableICloud = YES;
+        _imagePickerController.maxVideoCount = 1;
+//        _imagePickerController.maxVideoDuration =
+    }
+    return _imagePickerController;
+}
+#pragma mark - TTImagePickerControllerDelegate
+- (void)ttimagePickerController:(TTImagePickerController *)picker didFinishPickingVideo:(UIImage *)coverImage sourceAsset:(TTAsset *)assetModel {
+    // 处理上传
+    [self processVideoUpload];
+}
+- (void)processVideoUpload {
+    [self notifyUploadStatus:self.attachedWebview];
+}
+- (void)notifyUploadStatus:(UIView<TTRexxarEngine> *)webview {
+    [webview ttr_fireEvent:@"linkchatUploadVideo" data:@{
+        @"state": @2,
+        @"success": @"上传成功",
+        @"message": @"",
+        @"data": @{
+                @"videoSrc": @"no valid",
+                @"videoCoverImg": @"none",
+                @"width": @100,
+                @"size": @"大小按什么单位传？"
+        }
+    }];
+}
+@end
 
 typedef void (^FLinkChatPermissionAskActionBlock)(void);
 
@@ -60,7 +114,7 @@ typedef void (^FLinkChatPermissionAskActionBlock)(void);
                     callback(TTRJSBMsgSuccess, @{@"permissionRes": @"true"});
                 }
                     break;
-                case  AVAuthorizationStatusRestricted:
+                case AVAuthorizationStatusRestricted:
                 case AVAuthorizationStatusDenied:
                 {
                     callback(TTRJSBMsgSuccess, @{@"permissionRes": @"false"});
@@ -115,19 +169,12 @@ typedef void (^FLinkChatPermissionAskActionBlock)(void);
 
 - (void)openPhotoLibraryWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
     
+    UINavigationController *navVC = [TTUIResponderHelper visibleTopViewController].navigationController;
+    if(navVC) {
+        [TTRPhotoLibraryHelper shared].attachedWebview = webview;
+        [[TTRPhotoLibraryHelper shared].imagePickerController presentOn:navVC];
+    }
+
     callback(TTRJSBMsgSuccess, @{});
-    
-    
-    [webview ttr_fireEvent:@"linkchatUploadVideo" data:@{
-        @"state": @2,
-        @"success": @"上传成功",
-        @"message": @"",
-        @"data": @{
-                @"videoSrc": @"no valid",
-                @"videoCoverImg": @"none",
-                @"width": @100,
-                @"size": @"大小按什么单位传？"
-        }
-    }];
 }
 @end
