@@ -94,7 +94,7 @@
             self.houseVideoImageView.hidden = YES;
             self.vrLoadingView.hidden = NO;
             [self.vrLoadingView play];
-        }else {
+        } else {
             self.vrLoadingView.hidden = YES;
             [self.vrLoadingView stop];
         }

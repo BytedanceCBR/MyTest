@@ -11,8 +11,7 @@
 
 @synthesize subTitleLabel = _subTitleLabel;
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -20,8 +19,7 @@
     return self;
 }
 
--(void)initUI
-{
+- (void)initUI {
     [self.contentView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.flexDirection = YGFlexDirectionRow;
@@ -59,7 +57,6 @@
     [self.leftInfoView addSubview:self.imageTagLabelBgView];
     [self.imageTagLabelBgView addSubview:self.imageTagLabel];
     
-    
     [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
         layout.position = YGPositionTypeAbsolute;
@@ -68,7 +65,6 @@
         layout.width = YGPointValue(106 - 6);
         layout.height = YGPointValue(80 - 6);
     }];
-    
     
     [self.mainImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;
@@ -240,7 +236,6 @@
         layout.alignItems = YGAlignFlexStart;
     }];
     
-    
     self.bottomRecommendViewBack = [[UIView alloc] init];
     self.bottomRecommendViewBack.layer.borderWidth = 0.5;
     self.bottomRecommendViewBack.layer.cornerRadius = 2;
@@ -254,7 +249,6 @@
         layout.justifyContent = YGJustifyFlexStart;
         layout.alignItems = YGAlignFlexStart;
     }];
-    
     
     [self.bottomRecommendViewBack addSubview:self.bottomIconImageView];
     [self.bottomIconImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
@@ -278,7 +272,6 @@
         layout.height = YGPointValue(13);
     }];
     
-    
     [self.rightInfoView addSubview:self.recReasonView];
     [self.recReasonView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isIncludedInLayout = NO;
@@ -286,19 +279,16 @@
         layout.height = YGPointValue(16);
     }];
     self.recReasonView.hidden = YES;
-    
 }
 
-- (UIView *)bottomRecommendView
-{
+- (UIView *)bottomRecommendView {
     if (!_bottomRecommendView) {
         _bottomRecommendView = [[UIView alloc] init];
     }
     return _bottomRecommendView;
 }
 
--(UIImageView *)bottomIconImageView
-{
+- (UIImageView *)bottomIconImageView {
     if (!_bottomIconImageView) {
         _bottomIconImageView= [[UIImageView alloc]init];
         _bottomIconImageView.backgroundColor = [UIColor clearColor];
@@ -306,8 +296,7 @@
     return _bottomIconImageView;
 }
 
--(UILabel *)bottomRecommendLabel
-{
+- (UILabel *)bottomRecommendLabel {
     if (!_bottomRecommendLabel) {
         _bottomRecommendLabel = [[UILabel alloc]init];
         _bottomRecommendLabel.font = [UIFont themeFontMedium:12];
@@ -329,8 +318,7 @@
     _subTitleLabel = subTitleLabel;
 }
 
--(CGFloat)contentMaxWidth
-{
+- (CGFloat)contentMaxWidth {
     return  SCREEN_WIDTH - HOR_MARGIN * 2  - 106 - 12 - 7; //根据UI图 直接计算出来
 }
 
