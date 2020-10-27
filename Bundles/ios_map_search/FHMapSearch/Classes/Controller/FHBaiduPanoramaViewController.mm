@@ -267,6 +267,15 @@ NSString * const FHAMapComplexCode = @"120300";
     [self.amapView setMapType:MAMapTypeStandard];
     self.amapView.layer.masksToBounds = YES;
     self.amapView.layer.cornerRadius = 4.f;
+    //hide amap logo
+    [self.amapView.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj,
+                                                         NSUInteger idx,
+                                                         BOOL * _Nonnull stop) {
+        if ([obj isKindOfClass:[UIImageView class]]) {
+            UIImageView *logo = obj;
+            logo.image = [UIImage new];
+        }
+    }];
     [self.view addSubview:self.amapView];
     [self.amapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
