@@ -627,6 +627,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     [super viewWillDisappear:animated];
 
     [self.currentVideoCell pause];
+    [self sendVideoOverTracking];
     [self endLastImpression];
     
     [self sendStayPageTracking];
@@ -635,8 +636,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 - (void)didMoveToParentViewController:(UIViewController *)parent
 {
     if (!parent) {
-//        [self.currentVideoCell reset];
-        [self sendVideoOverTracking];
         [TSVPrefetchVideoManager cancelPrefetchShortVideoInDetail];
     }
 }
