@@ -50,6 +50,11 @@
     [self processVideoUpload];
 }
 - (void)processVideoUpload {
+    // 上传开始
+    
+    // 上传成功
+    
+    // 上传失败
     [self notifyUploadStatus:self.attachedWebview];
 }
 - (void)notifyUploadStatus:(UIView<TTRexxarEngine> *)webview {
