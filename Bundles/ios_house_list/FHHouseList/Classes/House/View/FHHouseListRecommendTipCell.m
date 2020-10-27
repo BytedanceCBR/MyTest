@@ -32,7 +32,7 @@
         [self.contentView addSubview:self.leftLine];
         [self.contentView addSubview:self.rightLine];
         [self initConstraints];
-        self.userInteractionEnabled = NO;
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
 }
@@ -61,7 +61,6 @@
         }];
        
         self.noDataTipLabel.attributedText = attrText;
-        
     }
 }
 
