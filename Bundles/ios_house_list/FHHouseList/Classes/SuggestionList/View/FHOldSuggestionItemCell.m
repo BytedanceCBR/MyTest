@@ -9,6 +9,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "masonry.h"
+#import "TTDeviceHelper.h"
 @interface FHOldSuggestionItemCell ()
 @property (weak, nonatomic) UIView *zoneTypeView;
 @property (weak, nonatomic) UILabel *zoneTypeLab;
@@ -17,6 +18,7 @@
 @property (weak, nonatomic) UILabel *regionLab;
 @property (weak, nonatomic) UILabel *villageLab;
 @property (weak, nonatomic) UILabel *amountLab;
+@property (weak, nonatomic) UIView *topLine;
 
 @end
 
@@ -32,7 +34,7 @@
 
 - (void)createUI {
     [self.zoneTypeView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.contentView).offset(17);
+        make.top.equalTo(self.contentView).offset(14);
         make.left.equalTo(self.contentView).offset(15);
         make.height.mas_offset(18);
     }];
@@ -46,7 +48,7 @@
         make.left.equalTo(self.zoneTypeView.mas_right).offset(15);
     }];
     [self.amountLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.zoneTypeView);
+        make.centerY.equalTo(self.regionLab);
         make.right.equalTo(self.contentView).offset(-15);
     }];
     [self.subTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -62,6 +64,12 @@
         make.left.equalTo(self.regionLab.mas_right).offset(5);
         make.top.equalTo(self.titleLab.mas_bottom).offset(3);
         make.right.equalTo(self.amountLab.mas_right);
+    }];
+    [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(15);
+            make.right.mas_equalTo(-15);
+            make.bottom.mas_equalTo(0);
+            make.height.mas_equalTo([TTDeviceHelper ssOnePixel]);
     }];
     [self.regionLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     [self.villageLab setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
@@ -140,13 +148,23 @@
 - (UILabel *)amountLab {
     if (!_amountLab) {
         UILabel *amountLab = [[UILabel alloc]init];
-        amountLab.textColor = [UIColor themeGray1];
+        amountLab.textColor = [UIColor themeGray3];
         amountLab.font = [UIFont themeFontRegular:14];
         amountLab.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:amountLab];
         _amountLab = amountLab;
     }
     return _amountLab;
+}
+
+- (UIView *)topLine{
+    if(!_topLine){
+        UILabel *topLine = [[UILabel alloc]init];
+        _topLine=topLine;
+        _topLine.backgroundColor = [UIColor colorWithHexString:@"#e7e7e7"];
+        [self.contentView addSubview:_topLine];
+    }
+    return _topLine;
 }
 
 - (void)setModel:(FHSuggestionResponseDataModel *)model {
@@ -168,6 +186,9 @@
         }];
         self.regionLab.text = model.tag;
         self.villageLab.text = model.tag2;
+        if([model.countDisplay length] == 0){
+            model.countDisplay = @"暂无房源";
+        }
         self.amountLab.text = model.countDisplay;
     }
 }

@@ -925,7 +925,7 @@
             return 67;
         } else  if (self.houseType == FHHouseTypeSecondHandHouse) {
             // 二手房
-            return 76;
+            return 68;
         }else {
             if (indexPath.row == self.sugListData.count - 1) {
                 return 61;
