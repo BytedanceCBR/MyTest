@@ -6,6 +6,7 @@
 //
 
 #import "FHMyFavoriteRentCell.h"
+#import "FHHouseListBaseItemModel.h"
 
 @implementation FHMyFavoriteRentCell
 
@@ -19,6 +20,12 @@
 
 - (void)refreshWithData:(id)data {
     [super refreshWithData:data];
+    if([data isKindOfClass:[FHHouseListBaseItemModel class]]) {
+        FHHouseListBaseItemModel *model = (FHHouseListBaseItemModel *)data;
+        self.tagLabel.text = model.addrData;
+        self.tagLabel.font = [UIFont themeFontRegular:12];
+        [self.tagLabel setTextColor:[UIColor themeGray2]];
+    }
 }
 
 @end

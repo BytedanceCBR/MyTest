@@ -90,7 +90,6 @@
         }else {
             self.tagLabel.attributedText = model.tagString;
         }
-        [self updateContentWithModel:model];
         if (model.vrInfo.hasVr) {
             self.houseVideoImageView.hidden = YES;
             self.vrLoadingView.hidden = NO;
@@ -100,25 +99,6 @@
             [self.vrLoadingView stop];
         }
     };
-}
-
-- (void)updateContentWithModel:(FHHouseListBaseItemModel *)model {
-    switch (model.houseType) {
-        case FHHouseTypeRentHouse:
-            self.tagLabel.text = model.addrData;
-            self.tagLabel.font = [UIFont themeFontRegular:12];
-            [self.tagLabel setTextColor:[UIColor themeGray2]];
-            break;
-        case FHHouseTypeNeighborhood:
-            self.tagLabel.text = model.salesInfo;
-            self.tagLabel.font = [UIFont themeFontRegular:12];
-            [self.tagLabel setTextColor:[UIColor themeGray2]];
-        case FHHouseTypeNewHouse:
-
-        default:
-            break;
-    }
-    
 }
 
 - (NSAttributedString *)originPriceAttr:(NSString *)originPrice {
@@ -171,7 +151,8 @@
     if (!_tagLabel) {
         _tagLabel = [[YYLabel alloc] init];
         _tagLabel.font = [UIFont themeFontRegular:12];
-        _tagLabel.textColor = [UIColor themeOrange1];
+        _tagLabel.textColor = [UIColor themeGray3];
+        _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     }
     return _tagLabel;
 }
