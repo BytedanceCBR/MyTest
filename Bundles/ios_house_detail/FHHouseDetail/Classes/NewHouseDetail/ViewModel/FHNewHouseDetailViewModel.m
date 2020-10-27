@@ -56,32 +56,29 @@
 - (void)startLoadData {
     // sub implements.........
     // Donothing
-    __weak typeof(self) wSelf = self;
+    __weak typeof(self) weakSelf = self;
     [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB ridcode:self.ridcode realtorId:self.realtorId extraInfo:self.extraInfo completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             if (model.data) {
-                wSelf.detailController.hasValidateData = YES;
-                [wSelf.detailController.emptyView hideEmptyView];
-                wSelf.bottomBar.hidden = NO;
-                [wSelf processDetailData:model];
-                [wSelf.navBar showMessageNumber];
+                weakSelf.detailController.hasValidateData = YES;
+                [weakSelf.detailController.emptyView hideEmptyView];
+                weakSelf.bottomBar.hidden = NO;
+                [weakSelf processDetailData:model];
+                [weakSelf.navBar showMessageNumber];
             }else {
-                wSelf.detailController.isLoadingData = NO;
-                wSelf.detailController.hasValidateData = NO;
-                wSelf.bottomBar.hidden = YES;
-                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
+                weakSelf.detailController.isLoadingData = NO;
+                weakSelf.detailController.hasValidateData = NO;
+                weakSelf.bottomBar.hidden = YES;
+                [weakSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [weakSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         }else {
-            wSelf.detailController.isLoadingData = NO;
-            //            if (wSelf.detailController.instantData) {
-            //                SHOW_TOAST(@"请求失败");
-            //            }else{
-            wSelf.detailController.hasValidateData = NO;
-            wSelf.bottomBar.hidden = YES;
-            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
-            //            }
+            weakSelf.detailController.isLoadingData = NO;
+            weakSelf.detailController.hasValidateData = NO;
+            weakSelf.bottomBar.hidden = YES;
+            [weakSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [weakSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
