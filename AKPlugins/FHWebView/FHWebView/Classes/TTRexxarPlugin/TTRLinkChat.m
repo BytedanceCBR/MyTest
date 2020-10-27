@@ -86,13 +86,13 @@ typedef void (^FLinkChatPermissionAskActionBlock)(void);
             switch (status) {
                 case PHAuthorizationStatusAuthorized:
                 {
-                    callback(TTRJSBMsgSuccess, @{@"permissionRes": @"true"});
+                    callback(TTRJSBMsgSuccess, @{@"permissionRes": @(YES)});
                 }
                     break;
                 case PHAuthorizationStatusDenied:
                 case PHAuthorizationStatusRestricted:
                 {
-                    callback(TTRJSBMsgSuccess, @{@"permissionRes": @"false"});
+                    callback(TTRJSBMsgSuccess, @{@"permissionRes": @(NO)});
                     
                     [self guideUserToAllowPermissionWithTitle:nil message:@"此功能需要您开启相册权限,请前往设置中开启" cancelTitle:nil cancelBlk:nil confirmTitle:nil confirmBlk:nil];
                 }
@@ -102,7 +102,7 @@ typedef void (^FLinkChatPermissionAskActionBlock)(void);
                     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             BOOL isAuthed = (status == PHAuthorizationStatusAuthorized);
-                            callback(TTRJSBMsgSuccess, @{@"permissionRes": isAuthed?@"true":@"false"});
+                            callback(TTRJSBMsgSuccess, @{@"permissionRes": isAuthed?@(YES):@(NO)});
                         });
                     }];
                 }
@@ -116,13 +116,13 @@ typedef void (^FLinkChatPermissionAskActionBlock)(void);
             switch (status) {
                 case AVAuthorizationStatusAuthorized:
                 {
-                    callback(TTRJSBMsgSuccess, @{@"permissionRes": @"true"});
+                    callback(TTRJSBMsgSuccess, @{@"permissionRes": @(YES)});
                 }
                     break;
                 case AVAuthorizationStatusRestricted:
                 case AVAuthorizationStatusDenied:
                 {
-                    callback(TTRJSBMsgSuccess, @{@"permissionRes": @"false"});
+                    callback(TTRJSBMsgSuccess, @{@"permissionRes": @(NO)});
                     [self guideUserToAllowPermissionWithTitle:nil message:@"此功能需要您开启相机权限,请前往设置中开启" cancelTitle:nil cancelBlk:nil confirmTitle:nil confirmBlk:nil];
                 }
                     break;
@@ -130,7 +130,7 @@ typedef void (^FLinkChatPermissionAskActionBlock)(void);
                 {
                     [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            callback(TTRJSBMsgSuccess, @{@"permissionRes": granted?@"true":@"false"});
+                            callback(TTRJSBMsgSuccess, @{@"permissionRes": granted?@(YES):@(NO)});
                         });
                     }];
                 }
