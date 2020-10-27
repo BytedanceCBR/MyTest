@@ -14,7 +14,6 @@
 #import "TTReachability.h"
 #import "FHDetailNavBar.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import "FHDetailHalfPopLayer.h"
 #import "FHDetailSocialEntranceView.h"
 #import "FHDetailBottomBar.h"
 #import "FHDetailNewModel.h"
@@ -35,7 +34,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) FHDetailNavBar *navBar;
 @property (nonatomic, weak) UILabel *bottomStatusBar;
 @property(nonatomic , weak) UITableView *tableView;
-@property(nonatomic , weak) FHNewHouseDetailViewController *detailController;
 @property (nonatomic, strong)   FHDetailNewModel       *detailData; // 详情页数据：FHDetailOldDataModel等
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, strong) NSDictionary *extraInfo;
@@ -43,21 +41,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   NSString* houseInfoOriginBizTrace; // 房源详情原始bizTrace
 @property (nonatomic, copy) NSString *trackingId;
 
+@property (nonatomic, assign) BOOL isShowEmpty;
+@property (nonatomic, copy) void (^updateLayout)(void);
+
 - (void)startLoadData;
-
-// 刷新数据
-//- (void)reloadData;
-
-// 是否弹出ugc表单
-// FHHouseFillFormConfigModel
-// FHHouseContactConfigModel
-- (BOOL)needShowSocialInfoForm:(id)model;
-
-// 显示新房UGC填留资弹窗
-- (void)showUgcSocialEntrance:(FHDetailNoticeAlertView *)alertView;
-
-//-(void)scrollViewDidScroll:(UIScrollView *)scrollView;
-//-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
 
 // 二级页所需数据
 - (NSDictionary *)subPageParams;
@@ -74,11 +61,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isMissImage;
 - (BOOL)isMissCoreInfo;
 - (void)addDetailRequestFailedLog:(NSInteger)status message:(NSString *)message;
-
-
-- (void)enableController:(BOOL)enabled;
-- (void)popLayerReport:(id)model;
-- (void)poplayerFeedBack:(id)model type:(NSInteger)type completion:(void (^)(BOOL success))completion;
 
 /**
  1.0.4 版本统计二手房详情页加载总时长
