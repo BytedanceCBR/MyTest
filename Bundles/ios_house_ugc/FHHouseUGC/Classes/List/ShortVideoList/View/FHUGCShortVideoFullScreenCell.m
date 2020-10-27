@@ -267,6 +267,12 @@
 
 
 - (void)moviePlayFinishedAction{
+    NSTimeInterval totalPlayTime = self.playerView.player.playerStateStore.state.currentPlaybackTime;
+    if (totalPlayTime > 0  ){
+        NSString *duration = [NSString stringWithFormat:@"%.0f", totalPlayTime * 1000];
+        NSInteger rank = [self.cellModel.tracerDic btd_integerValueForKey:@"rank" default:0];
+        [FHShortVideoTracerUtil videoOverWithModel:self.cellModel eventIndex:rank forStayTime:duration];
+    }
     if (self.playerView.playerModel.isLoopPlay) {
         [self.playerView.player setLogoImageViewHidden:YES];
         [self.playerView.player play];
