@@ -106,7 +106,7 @@ NSString * const FHAMapComplexCode = @"120300";
 
 //均为百度坐标系下的经纬度
 @property (nonatomic) CLLocationCoordinate2D firstLoadPoint;
-@property (nonatomic) CLLocationCoordinate2D point;
+@property (nonatomic) CLLocationCoordinate2D baiduPoint;
 @property (nonatomic) CLLocationCoordinate2D lastPoint;
 
 @property (nonatomic, strong) UIImage *gradientImage;
@@ -158,7 +158,7 @@ NSString * const FHAMapComplexCode = @"120300";
         }
         
         self.firstLoadPoint = kCLLocationCoordinate2DInvalid;
-        self.point = [BaiduPanoUtils baiduCoorEncryptLon:self.gaodeLon lat:self.gaodeLat coorType:COOR_TYPE_COMMON];
+        self.baiduPoint = [BaiduPanoUtils baiduCoorEncryptLon:self.gaodeLon lat:self.gaodeLat coorType:COOR_TYPE_COMMON];
         self.serialQueue = dispatch_queue_create("baidu_pano_serial_queue", DISPATCH_QUEUE_SERIAL);
         [self addGoDetailLog];
     }
@@ -259,7 +259,7 @@ NSString * const FHAMapComplexCode = @"120300";
                                                                 CGRectGetWidth(self.view.bounds),
                                                                 120)];
     self.amapView.delegate = self;
-    self.amapView.centerCoordinate =AMapCoordinateConvert(self.point, AMapCoordinateTypeBaidu);
+    self.amapView.centerCoordinate =AMapCoordinateConvert(self.baiduPoint, AMapCoordinateTypeBaidu);
     self.amapView.rotateEnabled = NO;
     self.amapView.zoomEnabled = YES;
     self.amapView.showsCompass = NO;
@@ -331,7 +331,7 @@ NSString * const FHAMapComplexCode = @"120300";
     self.panoramaView = [[BaiduPanoramaView alloc] initWithFrame:self.view.bounds key:[self.class baiduAK]];
     self.panoramaView.delegate = self;
     [self.view addSubview:self.panoramaView];
-    [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
+    [self.panoramaView setPanoramaWithLon:self.baiduPoint.longitude lat:self.baiduPoint.latitude];
     [self.panoramaView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
@@ -339,7 +339,7 @@ NSString * const FHAMapComplexCode = @"120300";
 
 #pragma mark - Action
 - (void)originPositionButtonAction {
-    double distance = [self distanceBetweenOrderBy:self.firstLoadPoint other:self.point];
+    double distance = [self distanceBetweenOrderBy:self.firstLoadPoint other:self.baiduPoint];
     if (distance < 1.0) {
         return;
     }
@@ -430,7 +430,8 @@ NSString * const FHAMapComplexCode = @"120300";
         AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
         requestPoi.fh_keyword = keyword;
         requestPoi.keywords = keyword;
-        AMapGeoPoint *apoint = [AMapGeoPoint locationWithLatitude:self.point.latitude longitude:self.point.longitude];
+        CLLocationCoordinate2D gaodepoint = AMapCoordinateConvert(self.baiduPoint, AMapCoordinateTypeBaidu);
+        AMapGeoPoint *apoint = [AMapGeoPoint locationWithLatitude:gaodepoint.latitude longitude:gaodepoint.longitude];
         requestPoi.location = apoint;
         requestPoi.radius = 1000;
         requestPoi.requireExtension = YES;
@@ -440,7 +441,7 @@ NSString * const FHAMapComplexCode = @"120300";
     
     if (!self.selectOverlay) {
         AMapReGeocodeSearchRequest *geoSearch = [[AMapReGeocodeSearchRequest alloc] init];
-        geoSearch.location = [AMapGeoPoint locationWithLatitude:self.point.latitude longitude:self.point.longitude];
+        geoSearch.location = [AMapGeoPoint locationWithLatitude:self.baiduPoint.latitude longitude:self.baiduPoint.longitude];
         [self.searchApi AMapReGoecodeSearch:geoSearch];
     }
 }
@@ -653,12 +654,12 @@ static NSInteger overlayIndex = 0;
         overlay.image = image;
         overlay.size = image.size;
         
-        double overlayAngle = [self computeAzimuthBy:self.point other:overlay.coordinate];
+        double overlayAngle = [self computeAzimuthBy:self.baiduPoint other:overlay.coordinate];
         for (BaiduPanoImageOverlay *item in self.overlays) {
-            double itemAngle = [self computeAzimuthBy:self.point other:item.coordinate];
+            double itemAngle = [self computeAzimuthBy:self.baiduPoint other:item.coordinate];
             if (abs(overlayAngle - itemAngle) < 20) {
-                double distance = [self distanceBetweenOrderBy:self.point other:overlay.coordinate];
-                double itemDistance = [self distanceBetweenOrderBy:self.point other:item.coordinate];
+                double distance = [self distanceBetweenOrderBy:self.baiduPoint other:overlay.coordinate];
+                double itemDistance = [self distanceBetweenOrderBy:self.baiduPoint other:item.coordinate];
                 if (abs(overlay.height - item.height * distance/itemDistance) < 20) {
                     CGFloat heightRate = distance/1000.0 * 200;
                     overlay.height += heightRate;
@@ -831,7 +832,7 @@ static NSInteger overlayIndex = 0;
         if (jsonDict[@"X"] && jsonDict[@"Y"]) {
             double lon = [jsonDict btd_doubleValueForKey:@"X"]/100.0;
             double lat = [jsonDict btd_doubleValueForKey:@"Y"]/100.0;
-            self.point = [BaiduPanoUtils baiduCoorEncryptLon:lon lat:lat coorType:COOR_TYPE_BDMC];
+            self.baiduPoint = [BaiduPanoUtils baiduCoorEncryptLon:lon lat:lat coorType:COOR_TYPE_BDMC];
             if (self.selectOverlay) {
                 self.customNavBarView.title.text = self.selectOverlay.fh_name;
                 BaiduPanoImageOverlay *overlay = [[BaiduPanoImageOverlay alloc] init];
@@ -843,20 +844,20 @@ static NSInteger overlayIndex = 0;
                 overlay.fh_name = self.selectOverlay.fh_name;
                 overlay.fh_distance = self.selectOverlay.fh_distance;
                 overlay.size = self.selectOverlay.size;
-                overlay.image = [self imageWithName:self.selectOverlay.fh_name icon:[UIImage imageNamed:self.selectOverlay.fh_imageName] distance:[self distanceBetweenOrderBy:self.point other:self.selectOverlay.coordinate]];
+                overlay.image = [self imageWithName:self.selectOverlay.fh_name icon:[UIImage imageNamed:self.selectOverlay.fh_imageName] distance:[self distanceBetweenOrderBy:self.baiduPoint other:self.selectOverlay.coordinate]];
                 [self.overlays addObject:overlay];
                 [self.panoramaView addOverlay:overlay];
                 self.selectOverlay = nil;
                 
-                double overlayHeading = [self computeAzimuthBy:self.point other:overlay.coordinate];
+                double overlayHeading = [self computeAzimuthBy:self.baiduPoint other:overlay.coordinate];
                 [self.panoramaView setPanoramaHeading:overlayHeading];
             }
-            if (CLLocationCoordinate2DIsValid(self.point)) {
+            if (CLLocationCoordinate2DIsValid(self.baiduPoint)) {
                 if (!CLLocationCoordinate2DIsValid(self.firstLoadPoint)) {
-                    self.firstLoadPoint = self.point;
+                    self.firstLoadPoint = self.baiduPoint;
                 }
                 self.isZoomMapAnimation = YES;
-                CLLocationCoordinate2D gaodepoint = AMapCoordinateConvert(self.point, AMapCoordinateTypeBaidu);
+                CLLocationCoordinate2D gaodepoint = AMapCoordinateConvert(self.baiduPoint, AMapCoordinateTypeBaidu);
                 [self.amapView setCenterCoordinate:gaodepoint animated:YES];
             }
         }
@@ -878,12 +879,12 @@ static NSInteger overlayIndex = 0;
         [[ToastManager manager] showToast:@"该地区不支持全景信息，请重新选择" style:FHToastViewStyleDefault position:FHToastViewPositionBottom verticalOffset:-20];
     }
     if (CLLocationCoordinate2DIsValid(self.lastPoint)) {
-        self.point = self.lastPoint;
+        self.baiduPoint = self.lastPoint;
         self.lastPoint = kCLLocationCoordinate2DInvalid;
         self.isZoomMapAnimation = YES;
-        CLLocationCoordinate2D gaodepoint = AMapCoordinateConvert(self.point, AMapCoordinateTypeBaidu);
+        CLLocationCoordinate2D gaodepoint = AMapCoordinateConvert(self.baiduPoint, AMapCoordinateTypeBaidu);
         [self.amapView setCenterCoordinate:gaodepoint animated:YES];
-        [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
+        [self.panoramaView setPanoramaWithLon:self.baiduPoint.longitude lat:self.baiduPoint.latitude];
     }
 }
 
@@ -903,11 +904,11 @@ static NSInteger overlayIndex = 0;
 //            double itemAngle = [self computeAzimuthBy:self.point other:overlay.coordinate];
 //            NSLog(@"itemAngle %f",itemAngle);
             self.selectOverlay = overlay;
-            self.lastPoint = self.point;
-            self.point = overlay.coordinate;
+            self.lastPoint = self.baiduPoint;
+            self.baiduPoint = overlay.coordinate;
             self.isZoomMapAnimation = YES;
-            [self.amapView setCenterCoordinate:AMapCoordinateConvert(self.point, AMapCoordinateTypeBaidu) animated:YES];
-            [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
+            [self.amapView setCenterCoordinate:AMapCoordinateConvert(self.baiduPoint, AMapCoordinateTypeBaidu) animated:YES];
+            [self.panoramaView setPanoramaWithLon:self.baiduPoint.longitude lat:self.baiduPoint.latitude];
             break;
         }
     }
@@ -931,13 +932,10 @@ static NSInteger overlayIndex = 0;
         self.isZoomMapAnimation = NO;
         return;
     }
-    
-    self.point = [BaiduPanoUtils baiduCoorEncryptLon:mapView.centerCoordinate.longitude lat:mapView.centerCoordinate.latitude coorType:COOR_TYPE_COMMON];
+    self.baiduPoint = [BaiduPanoUtils baiduCoorEncryptLon:mapView.centerCoordinate.longitude lat:mapView.centerCoordinate.latitude coorType:COOR_TYPE_COMMON];
     NSLog(@"baidu_mapDidMoveByUser");
-    
-    self.lastPoint = self.point;
-    
-    [self.panoramaView setPanoramaWithLon:self.point.longitude lat:self.point.latitude];
+    self.lastPoint = self.baiduPoint;
+    [self.panoramaView setPanoramaWithLon:self.baiduPoint.longitude lat:self.baiduPoint.latitude];
 }
 #pragma mark - AMapSearchDelegate
 
