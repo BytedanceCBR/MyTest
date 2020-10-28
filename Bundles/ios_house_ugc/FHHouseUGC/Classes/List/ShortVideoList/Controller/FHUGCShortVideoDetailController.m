@@ -129,6 +129,7 @@
 #import "NSDictionary+BTDAdditions.h"
 #import "FHShortVideoPerLoaderManager.h"
 #import "FHHouseUGCAPI.h"
+#import "FHUtils.h"
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
 @import AVFoundation;
@@ -307,6 +308,12 @@ static const CGFloat kFloatingViewOriginY = 230;
             if ([self.dataFetchManager respondsToSelector:@selector(dataDidChangeBlock)]) {
                 self.dataFetchManager.dataDidChangeBlock = ^{
                     @strongify(self);
+                    if ([self.dataFetchManager numberOfShortVideoItems] == 0) {
+                        [self.emptyView showEmptyWithTip:@"数据走丢了" errorImageName:@"short_video_nodata" showRetry:YES];
+                        return;
+                    }else {
+                        self.emptyView.hidden = YES;
+                    }
                     [self updateData];
                 };
             }
@@ -626,7 +633,18 @@ static const CGFloat kFloatingViewOriginY = 230;
     RAC(self, viewModel.dataFetchManager) = RACObserve(self, dataFetchManager);
     RAC(self, viewModel.commonTrackingParameter) = RACObserve(self, commonTrackingParameter);
     RAC(self, videoContainerViewController.viewModel) = RACObserve(self, viewModel);
+    
+    [self addDefaultEmptyViewFullScreen];
+    self.emptyView.backgroundColor = [UIColor clearColor];
+    self.emptyView.retryBlock = ^{
+        @strongify(self);
+        [self loadMoreAutomatically:YES];
+    };
+    [self.emptyView.retryButton setBackgroundImage:[FHUtils createImageWithColor:[UIColor clearColor]] forState:UIControlStateNormal];
+    [self.emptyView.retryButton setBackgroundImage:[FHUtils createImageWithColor:[UIColor clearColor]] forState:UIControlStateHighlighted];
+    [self.emptyView.retryButton setTitle:@"重新加载" forState:UIControlStateNormal];
 }
+
 
 - (void)handleCloseClick:(UIButton *)btn {
       [self dismissByClickingCloseButton];
@@ -826,27 +844,10 @@ static const CGFloat kFloatingViewOriginY = 230;
         @strongify(self);
 
         if (error || increaseCount == 0) {
-            NSMutableDictionary *params = [NSMutableDictionary dictionary];
-            [params setValue:self.commonTrackingParameter[@"enter_from"] forKey:@"enter_from"];
-            [params setValue:self.categoryName forKey:@"category_name"];
-            FHFeedUGCCellModel *videoDetail = nil;
-            if ([self.dataFetchManager numberOfShortVideoItems]) {
-                videoDetail = [self.dataFetchManager itemAtIndex:[self.dataFetchManager numberOfShortVideoItems] - 1];//取最后一个
-                [params setValue:videoDetail.groupId forKey:@"from_group_id"];
-                [params setValue:videoDetail.groupSource forKey:@"from_group_source"];
-                if (videoDetail.categoryId) {
-                    [params setValue:videoDetail.categoryId forKey:@"category_name"];
-                }
-                if (videoDetail.enterFrom) {
-                    [params setValue:videoDetail.enterFrom forKey:@"enter_from"];
-                }
-            }else{
-                [params setValue:self.groupID forKey:@"from_group_id"];
-                [params setValue:self.groupSource forKey:@"from_group_source"];
-            }
-//            [AWEVideoPlayTrackerBridge trackEvent : @"video_draw_fail"
-//                                           params : params];
+//
             return;
+        }else {
+//
         }
 
         [self updateData];
