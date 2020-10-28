@@ -13,6 +13,7 @@
 #import "BDWebImage.h"
 #import "FHExtendHotAreaButton.h"
 #import "UILabel+BTDAdditions.h"
+#import "YYLabel.h"
 
 @interface FHSuggestionItemCell ()
 
@@ -192,20 +193,25 @@
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(20);
         make.top.mas_equalTo(11);
-        make.width.mas_greaterThanOrEqualTo(240);
+        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 73);
     }];
+
+    
     // secondaryLabel
-    _secondaryLabel = [[UILabel alloc] init];
+    _secondaryLabel = [[YYLabel alloc] init];
     _secondaryLabel.font = [UIFont themeFontRegular:13];
     _secondaryLabel.textColor = [UIColor themeGray3];
-    _secondaryLabel.textAlignment = NSTextAlignmentRight;
+    _secondaryLabel.layer.masksToBounds = YES;
+    _secondaryLabel.layer.cornerRadius = 2;
+//    _secondaryLabel.textAlignment = NSTextAlignmentCenter;
     [self.contentView addSubview:_secondaryLabel];
     [_secondaryLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.label.mas_right).offset(5);
         make.top.mas_equalTo(12);
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.width.mas_greaterThanOrEqualTo(63).priorityHigh();
+//        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.width.mas_lessThanOrEqualTo(63).priorityHigh();
     }];
+
     [_secondaryLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_secondaryLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     

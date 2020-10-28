@@ -805,13 +805,18 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             if (indexPath.row < self.sugListData.count) {
                 FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
-                NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
-                NSAttributedString *text2 = [self processHighlightedDefault:model.text2 textColor:[UIColor themeGray3] fontSize:12.0];
+                NSAttributedString *text1 = [self processHighlightedDefault:model.text font:[UIFont themeFontSemibold:16] textColor:[UIColor themeGray1]];
+                NSAttributedString *text2 = [self processHighlightedDefault:model.text2 font:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
                 
                 cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1] fontSize:15.0];
                 cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1] fontSize:12.0];
-                
                 cell.secondaryLabel.text = model.tips;
+                cell.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:@"#f70000"];
+                cell.secondaryLabel.textColor = [UIColor colorWithHexStr:@"#ffffff"];
+                [cell.secondaryLabel setNeedsLayout];
+                [cell.secondaryLabel layoutIfNeeded];
+                
+                cell.secondaryLabel.textContainerInset = UIEdgeInsetsMake(0, 5, 0, 5);
                 cell.secondarySubLabel.text = model.tips2;
             }
             return cell;
@@ -833,7 +838,7 @@
             if (indexPath.row < self.sugListData.count) {
                 FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
                 NSString *originText = model.text;
-                NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
+                NSAttributedString *text1 = [self processHighlightedDefault:model.text font:[UIFont themeFontRegular:15.0] textColor:[UIColor themeGray1]];
                 NSMutableAttributedString *resultText = [[NSMutableAttributedString alloc] initWithAttributedString:text1];
                 if (model.text2.length > 0) {
                     originText = [NSString stringWithFormat:@"%@ (%@)", originText, model.text2];
@@ -1041,8 +1046,8 @@
 
 
 // 1、默认
-- (NSAttributedString *)processHighlightedDefault:(NSString *)text textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
-    NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};
+- (NSAttributedString *)processHighlightedDefault:(NSString *)text font:(UIFont *)textFont textColor:(UIColor *)textColor {
+    NSDictionary *attr = @{NSFontAttributeName:textFont,NSForegroundColorAttributeName:textColor};
     NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
     
     return attrStr;
@@ -1060,7 +1065,7 @@
 // 3、高亮
 - (NSAttributedString *)processHighlighted:(NSAttributedString *)text originText:(NSString *)originText textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
     if (self.highlightedText.length > 0) {
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:fontSize],NSForegroundColorAttributeName:textColor};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontSemibold:fontSize],NSForegroundColorAttributeName:textColor};
         NSMutableAttributedString * tempAttr = [[NSMutableAttributedString alloc] initWithAttributedString:text];
 
         NSMutableString *string = [NSMutableString stringWithString:self.highlightedText];
