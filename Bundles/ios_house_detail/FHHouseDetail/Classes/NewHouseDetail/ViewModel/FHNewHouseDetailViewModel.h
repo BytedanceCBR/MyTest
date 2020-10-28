@@ -14,7 +14,6 @@
 #import "TTReachability.h"
 #import "FHDetailNavBar.h"
 #import <Heimdallr/HMDTTMonitor.h>
-#import "FHDetailSocialEntranceView.h"
 #import "FHDetailBottomBar.h"
 #import "FHDetailNewModel.h"
 @class FHNewHouseDetailViewController;
