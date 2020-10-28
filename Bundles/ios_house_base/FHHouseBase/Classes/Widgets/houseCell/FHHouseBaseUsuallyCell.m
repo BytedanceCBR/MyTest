@@ -141,7 +141,7 @@
 - (UILabel *)priceLabel {
     if (!_priceLabel) {
         _priceLabel = [[UILabel alloc] init];
-        _priceLabel.font = [UIFont themeFontSemibold:16];
+        _priceLabel.font = [UIFont themeFontMedium:16];
         _priceLabel.textColor = [UIColor themeOrange1];
     }
     return _priceLabel;
@@ -151,7 +151,7 @@
     if (!_tagLabel) {
         _tagLabel = [[YYLabel alloc] init];
         _tagLabel.font = [UIFont themeFontRegular:12];
-        _tagLabel.textColor = [UIColor themeGray3];
+        _tagLabel.textColor = [UIColor themeOrange1];
         _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     }
     return _tagLabel;

@@ -30,6 +30,7 @@
 #import "FHMyFavoriteSecondCell.h"
 #import "FHMyFavoriteRentCell.h"
 #import "FHMyFavoriteNeighborhoodCell.h"
+#import "FHMyFavoriteNewCell.h"
 #import "FHEnvContext.h"
 
 extern NSString *const kFHDetailFollowUpNotification;
@@ -107,6 +108,9 @@ extern NSString *const kFHDetailFollowUpNotification;
             break;
         case FHHouseTypeSecondHandHouse:
             [tableView registerClass:[FHMyFavoriteSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHMyFavoriteSecondCell class])];
+            break;
+        case FHHouseTypeNewHouse:
+            [tableView registerClass:[FHMyFavoriteNewCell class] forCellReuseIdentifier:NSStringFromClass([FHMyFavoriteNewCell class])];
             break;
         default:
             break;
@@ -547,6 +551,9 @@ extern NSString *const kFHDetailFollowUpNotification;
                     break;;
                 case FHHouseTypeSecondHandHouse:
                     identifier = NSStringFromClass([FHMyFavoriteSecondCell class]);
+                    break;
+                case FHHouseTypeNewHouse:
+                    identifier = NSStringFromClass([FHMyFavoriteNewCell class]);
                     break;
                 default:
                     break;
