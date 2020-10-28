@@ -190,6 +190,21 @@
             model.countDisplay = @"暂无房源";
         }
         self.amountLab.text = model.countDisplay;
+        
+        [self.zoneTypeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView).offset(14);
+            make.left.equalTo(self.titleLab.mas_right).offset(6);
+            make.height.mas_offset(18);
+        }];
+        
+        [self.titleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.zoneTypeView);
+            make.left.equalTo(self.contentView).offset(15);
+        }];
+        
+        
+        
+        
     }
 }
 
