@@ -144,6 +144,7 @@ static MAMapView *kFHPageMapView = nil;
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+//    [self.poiAnnotations removeAllObjects];
     [self addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
 }

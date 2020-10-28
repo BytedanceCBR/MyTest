@@ -261,8 +261,9 @@ NSString * const FHAMapComplexCode = @"120300";
     self.amapView.delegate = self;
     self.amapView.centerCoordinate =AMapCoordinateConvert(self.point, AMapCoordinateTypeBaidu);
     self.amapView.rotateEnabled = NO;
-    self.amapView.zoomEnabled = NO;
+    self.amapView.zoomEnabled = YES;
     self.amapView.showsCompass = NO;
+    self.amapView.rotateCameraEnabled = NO;
     self.amapView.zoomLevel = 18;
     [self.amapView setMapType:MAMapTypeStandard];
     self.amapView.layer.masksToBounds = YES;
@@ -424,8 +425,9 @@ NSString * const FHAMapComplexCode = @"120300";
     
     self.searchApi = [[AMapSearchAPI alloc] init];
     self.searchApi.delegate = self;
-    AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
+
     for (NSString *keyword in @[@"公交",@"地铁",@"教育",@"医院",@"商场",@"小区"]) {
+        AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
         requestPoi.fh_keyword = keyword;
         requestPoi.keywords = keyword;
         AMapGeoPoint *apoint = [AMapGeoPoint locationWithLatitude:self.point.latitude longitude:self.point.longitude];
@@ -624,9 +626,10 @@ static NSInteger overlayIndex = 0;
                 BaiduPanoImageOverlay *overlay = [[BaiduPanoImageOverlay alloc] init];
                 overlay.overlayKey = [@(overlayIndex) stringValue];
                 overlay.type = BaiduPanoOverlayTypeImage;
-                CLLocationCoordinate2D overlaypoint = CLLocationCoordinate2DMake(poiInfo.location.latitude,
-                                                                                 poiInfo.location.longitude);
-                overlay.coordinate = AMapCoordinateConvert(overlaypoint, AMapCoordinateTypeBaidu);
+//                CLLocationCoordinate2D overlaypoint = CLLocationCoordinate2DMake(poiInfo.location.latitude,
+//                                                                                 poiInfo.location.longitude);
+//                overlay.coordinate = AMapCoordinateConvert(overlaypoint, AMapCoordinateTypeBaidu);
+                overlay.coordinate = [BaiduPanoUtils baiduCoorEncryptLon:poiInfo.location.longitude lat:poiInfo.location.latitude coorType:COOR_TYPE_COMMON];
                 overlay.height = 0;
                 overlay.fh_imageName = imageName;
                 overlay.fh_name = poiInfo.name;
