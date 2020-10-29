@@ -102,7 +102,7 @@
         FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
         if (imageModel) {
             NSArray *urls = [FHUGCCellHelper convertToImageUrls:imageModel];
-            [self.bgView fh_setImageWithURLs:urls placeholder:nil reSize:self.bgView.size];
+            [self.bgView bd_setImageWithURLs:urls placeholder:nil options:BDImageRequestDefaultPriority transformer:nil progress:nil completion:nil];
         }else{
             self.bgView.image = nil;
         }
