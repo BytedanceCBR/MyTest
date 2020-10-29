@@ -42,9 +42,9 @@
 #import "NSString+BTDAdditions.h"
 extern NSString *const INSTANT_DATA_KEY;
 
-static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
-static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
-static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
+NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
+NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
+NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate, FHHouseSearchSecondHouseCellDelegate>
 
@@ -1025,7 +1025,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     if (indexPath.section == kFHHomeHouseTypeBannerViewSection) {
         if (self.houseType == _listModel.houseType && ![self.traceRecordDict objectForKey:@(self.houseType)] && [self checkIsHaveEntrancesList]) {
-            [self.traceRecordDict setValue:@"" forKey:@(self.houseType)];
+            [self.traceRecordDict setValue:@"" forKey:@(self.houseType).stringValue];
             [FHHomeCellHelper sendBannerTypeCellShowTrace:_houseType];
         }
         return ;
@@ -1044,7 +1044,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if (cellModel.idx) {
             [self.traceRecordDict setValue:@"" forKey:cellModel.idx];
             
-            NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
+//            NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
             
             NSMutableDictionary *tracerDict = [NSMutableDictionary new];
             tracerDict[@"house_type"] = cellModel.houseType.integerValue == FHHouseTypeNewHouse?@"new":([self houseTypeString] ? : @"be_null");
