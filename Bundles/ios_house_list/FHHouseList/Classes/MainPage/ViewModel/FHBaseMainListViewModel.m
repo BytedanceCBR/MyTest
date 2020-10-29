@@ -1843,9 +1843,9 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
         if (model.houseType.integerValue != FHHouseTypeNewHouse) {
-              if (self.houseType == FHHouseTypeSecondHandHouse) {
-                      [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
-                  }
+            if (self.houseType == FHHouseTypeSecondHandHouse) {
+                [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+            }
         }
     }
 }
@@ -1989,10 +1989,10 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(void)showHouseDetail:(id)cellModel atIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *logPb = @"";
+    NSDictionary *logPb = @{};
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
-        logPb = model.logPb;
+        logPb = model.logPbWithTags;
     }
     id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
     NSMutableDictionary *tracerParam = [NSMutableDictionary dictionary];
@@ -2376,7 +2376,8 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         tracerDict[@"group_id"] = houseModel.id ? : @"be_null";
         tracerDict[@"impr_id"] = houseModel.imprId ? : @"be_null";
-        tracerDict[@"log_pb"] = houseModel.logPb ? : @"be_null";
+        tracerDict[@"log_pb"] = houseModel.logPbWithTags ? : @"be_null";
+        
         tracerDict[@"biz_trace"] = [houseModel bizTrace] ? : @"be_null";
         tracerDict[@"house_type"] = houseModel.houseType.integerValue == FHHouseTypeNewHouse?@"new": ([self houseTypeString] ? : @"be_null");
         tracerDict[@"card_type"] = @"left_pic";

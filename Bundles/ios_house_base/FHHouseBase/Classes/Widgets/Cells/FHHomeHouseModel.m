@@ -9,6 +9,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "YYText.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @implementation FHHomeHouseImageTagModel
 
@@ -516,6 +517,32 @@
 - (CGFloat)tagShowMaxWidth {
     //屏幕宽度-视图左右间距-mainImage-mainImageLeftMargin-rightMargin
     return [UIScreen mainScreen].bounds.size.width - 30 - 85 - 12  - 50;
+}
+
+- (NSDictionary *)logPbWithTags {
+    if (self.logPb && [self.logPb isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *mutablLogPb = self.logPb.mutableCopy;
+        if (self.tags) {
+            mutablLogPb[@"app_house_tags"] = [self.tags btd_map:^id _Nullable(id  _Nonnull obj) {
+                if (obj && [obj isKindOfClass:[FHHouseTagsModel class]]) {
+                    FHHouseTagsModel *tagModel = (FHHouseTagsModel *)obj;
+                    return tagModel.content;
+                }
+                return @"";
+            }];
+        }
+        if (self.titleTags) {//FHSearchHouseItemTitleTagModel
+            mutablLogPb[@"app_marketing_tags"] = [self.titleTags btd_map:^id _Nullable(id  _Nonnull obj) {
+                if (obj && [obj isKindOfClass:[FHHomeHouseItemTitleTagModel class]]) {
+                    FHHomeHouseItemTitleTagModel *tagModel = (FHHomeHouseItemTitleTagModel *)obj;
+                    return tagModel.text;
+                }
+                return @"";
+            }];
+        }
+        return mutablLogPb.copy;
+    }
+    return self.logPb;
 }
 @end
 

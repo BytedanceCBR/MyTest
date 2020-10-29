@@ -1084,8 +1084,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if (cellModel.idx) {
             [self.traceRecordDict setValue:@"" forKey:cellModel.idx];
             
-            NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
-            
+//            NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
             NSMutableDictionary *tracerDict = [NSMutableDictionary new];
             tracerDict[@"house_type"] = cellModel.houseType.integerValue == FHHouseTypeNewHouse?@"new":([self houseTypeString] ? : @"be_null");
             tracerDict[@"card_type"] = @"left_pic";
@@ -1097,7 +1096,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             tracerDict[@"rank"] = [self getRankFromHouseId:cellModel.idx indexPath:indexPath];
             tracerDict[@"origin_from"] = [self pageTypeString];
             tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
-            tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+            tracerDict[@"log_pb"] = [cellModel logPbWithTags] ? : @"be_null";
             tracerDict[@"biz_trace"] = [cellModel bizTrace] ? : @"be_null";
             [tracerDict removeObjectForKey:@"element_from"];
             
@@ -1143,9 +1142,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         [self jumpToDetailPage:indexPath];
         if(self.houseDataItemsModel.count > indexPath.row){
             FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
-                if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse && [theModel.cardType integerValue] != kFHHomeAgentCardType) {
-                    [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
-             }
+            if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse && [theModel.cardType integerValue] != kFHHomeAgentCardType) {
+                [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+            }
         }
     }
 }
@@ -1171,7 +1170,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = [self pageTypeString];
-        traceParam[@"log_pb"] = theModel.logPb;
+        traceParam[@"log_pb"] = theModel.logPbWithTags;
         traceParam[@"origin_from"] = [self pageTypeString];
         traceParam[@"card_type"] = @"left_pic";
         traceParam[@"rank"] = [self getRankFromHouseId:theModel.idx indexPath:indexPath];

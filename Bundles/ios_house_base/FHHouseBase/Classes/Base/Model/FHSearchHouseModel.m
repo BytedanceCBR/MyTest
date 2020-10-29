@@ -10,6 +10,8 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "YYText.h"
+#import <ByteDanceKit/ByteDanceKit.h>
+
 @implementation  FHSearchHouseDataItemsBaseInfoMapModel
 
 + (JSONKeyMapper*)keyMapper
@@ -782,6 +784,32 @@
             break;
     }
     return @"FHHouseBaseItemCellList";
+}
+
+- (NSDictionary *)logPbWithTags {
+    if (self.logPb && [self.logPb isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *mutablLogPb = self.logPb.mutableCopy;
+        if (self.tags) {
+            mutablLogPb[@"app_house_tags"] = [self.tags btd_map:^id _Nullable(id  _Nonnull obj) {
+                if (obj && [obj isKindOfClass:[FHHouseTagsModel class]]) {
+                    FHHouseTagsModel *tagModel = (FHHouseTagsModel *)obj;
+                    return tagModel.content;
+                }
+                return @"";
+            }];
+        }
+        if (self.titleTags) {//FHSearchHouseItemTitleTagModel
+            mutablLogPb[@"app_marketing_tags"] = [self.titleTags btd_map:^id _Nullable(id  _Nonnull obj) {
+                if (obj && [obj isKindOfClass:[FHSearchHouseItemTitleTagModel class]]) {
+                    FHSearchHouseItemTitleTagModel *tagModel = (FHSearchHouseItemTitleTagModel *)obj;
+                    return tagModel.text;
+                }
+                return @"";
+            }];
+        }
+        return mutablLogPb.copy;
+    }
+    return self.logPb;
 }
 
 - (void)setTags:(NSArray<FHHouseTagsModel> *)tags {
