@@ -272,7 +272,7 @@
             
             if(type == FHMessageTypeHouseReport) {
                 // 房源举报反馈列表
-                tracerDict[UT_ORIGIN_FROM] = @"messagetab";
+                tracerDict[UT_ORIGIN_FROM] = @"messagetab_feedback";
                 tracerDict[UT_ENTER_FROM] = @"message_notice";
                 tracerDict[UT_ELEMENT_FROM] = @"feedback";
             }
