@@ -17,6 +17,18 @@
 #import "FHAttachmentMessageSender.h"
 #import <TTIMSDK/TIMSMediaFileUploadDefine.h>
 #import <TTIMSDK/TIMMediaFileUploadDefinePrivate.h>
+#import <FHCommonUI/ToastManager.h>
+#import <TTAccountSDK/TTAccount.h>
+
+typedef void (^FLinkChatPermissionAskActionBlock)(void);
+
+
+typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
+    TTRLinkChatVideoUploadState_UnStart = 0, // 上传未开始
+    TTRLinkChatVideoUploadState_Start = 1,   // 上传开始
+    TTRLinkChatVideoUploadState_End = 2,     // 上传结束
+};
+
 
 //  内部使用单例
 @interface TTRPhotoLibraryHelper : NSObject<TTImagePickerControllerDelegate, TIMFileUploadDelegate>
@@ -44,6 +56,7 @@
     _imagePickerController.isGetOriginResource = NO;
     _imagePickerController.enableICloud = YES;
     _imagePickerController.maxVideoCount = 1;
+    _imagePickerController.maxVideoDuration = 2  * 60; //最长2分钟
     return _imagePickerController;
 }
 #pragma mark - TTImagePickerControllerDelegate
@@ -58,29 +71,61 @@
     
     PHImageManager *manager = [PHImageManager defaultManager];
     [manager requestAVAssetForVideo:assetModel.asset options:videoOptions resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
-        
         dispatch_async(dispatch_get_main_queue(), ^{
-            // 开始上传
-            [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:@{
-                @"state": @1,
-                @"success": @(NO),
-                @"message": @"开始上传",
-                @"data": @{
-                }
-            }];
+            if([self checkIfCanUploadForAsset:asset]) {
+                // 开始上传
+                [self updateVideoUploadState:TTRLinkChatVideoUploadState_Start data:@{
+                    @"state": @(TTRLinkChatVideoUploadState_Start),
+                    @"success": @(NO),
+                    @"message": @"开始上传",
+                    @"data": @{
+                    }
+                }];
+                
+                id<TIMFileUploadRequest> request = [[TIMCoreBridgeManager sharedInstance] getInstanceConformsToProtocol:@protocol(TIMFileUploadRequest)];
+                request.requestIdentifier = @"";
+                request.localFilePath = ((AVURLAsset *)asset).URL;
+                request.mimeType = @"video/*";
+                request.ext = @{
+                    TIM_FILE_EXT_KEY_TYPE:TIM_FILE_EXT_VALUE_TYPE_VIDEO
+                };
+                
+                [TIMSMediaFileUploadManager sharedInstance].delegate = self;
+                [[TIMSMediaFileUploadManager sharedInstance] uploadFileRequest:request config:nil];
+            }
         });
-
-        id<TIMFileUploadRequest> request = [[TIMCoreBridgeManager sharedInstance] getInstanceConformsToProtocol:@protocol(TIMFileUploadRequest)];
-        request.requestIdentifier = @"";
-        request.localFilePath = ((AVURLAsset *)asset).URL;
-        request.mimeType = @"video/*";
-        request.ext = @{
-            TIM_FILE_EXT_KEY_TYPE:TIM_FILE_EXT_VALUE_TYPE_VIDEO
-        };
-        
-        [TIMSMediaFileUploadManager sharedInstance].delegate = self;
-        [[TIMSMediaFileUploadManager sharedInstance] uploadFileRequest:request config:nil];
     }];
+}
+
+- (BOOL)checkIfCanUploadForAsset:(AVAsset *)asset {
+    if(![TTAccount sharedAccount].isLogin) {
+        [self updateVideoUploadState:TTRLinkChatVideoUploadState_End data:@{
+            @"state": @(TTRLinkChatVideoUploadState_End),
+            @"success": @(NO),
+            @"message": @"未登录不支持上传视频",
+            @"data": @{
+            }
+        }];
+        return  NO;
+    }
+    
+    return YES;
+}
+
+- (void)updateVideoUploadState:(TTRLinkChatVideoUploadState)state data:(NSDictionary *)data {
+    switch (state) {
+        case TTRLinkChatVideoUploadState_Start:
+        {
+            [[ToastManager manager] showCustomLoading:@"正在上传..." isUserInteraction:YES];
+        }
+            break;
+        default:
+        {
+            [[ToastManager manager] dismissCustomLoading];
+        }
+            break;
+    }
+    [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:data];
 }
 #pragma mark - TIMFileUploadDelegate
 - (void)uploadRequest:(NSString *)requestIdentifier progressDidUpdate:(float)progress {
@@ -89,8 +134,8 @@
 - (void)uploadRequest:(NSString *)requestIdentifier didFailedWithError:(NSError *)error {
     dispatch_async(dispatch_get_main_queue(), ^{
         // 上传失败
-        [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:@{
-            @"state": @2,
+        [self updateVideoUploadState:TTRLinkChatVideoUploadState_End data:@{
+            @"state": @(TTRLinkChatVideoUploadState_End),
             @"success": @(NO),
             @"message": error.localizedDescription?:@"上传失败",
             @"data": @{
@@ -105,8 +150,8 @@
         NSString *videoCoverImageUrl = info.ext[TIM_FILE_EXT_KEY_VIDEO_COVER_URL]?:@"";
         
         // 上传成功
-        [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:@{
-            @"state": @2,
+        [self updateVideoUploadState:TTRLinkChatVideoUploadState_End data:@{
+            @"state": @(TTRLinkChatVideoUploadState_End),
             @"success": @(YES),
             @"message": @"上传成功",
             @"data": @{
@@ -117,8 +162,6 @@
     });
 }
 @end
-
-typedef void (^FLinkChatPermissionAskActionBlock)(void);
 
 @implementation TTRLinkChat
 
