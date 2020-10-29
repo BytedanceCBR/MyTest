@@ -12,89 +12,17 @@
 #import "TTUIResponderHelper.h"
 #import <AVFoundation/AVCaptureDevice.h>
 #import "TTImagePickerController.h"
+#import <TTIMSDK/TIMSMediaFileUploadManager.h>
+#import <TTIMSDK/TIMCoreBridgeManager.h>
 #import "FHAttachmentMessageSender.h"
-#import <TTFileUploadClient/TTVideoUploadClient.h>
-#import <TTNetworkManager/TTNetworkManager.h>
-#import <ReactiveObjC/ReactiveObjC.h>
-#import "FHMainApi.h"
-#import "FHIMConfigManager.h"
-
-@interface TTRVideoUploader : NSObject
-+ (instancetype)shared;
-- (void)uploadWithLocalFilePath:(NSString *)localFilePath delegate:(id<TTVideoUploadClientProtocol>) delegate;
-@end
-@interface TTRVideoUploader()
-@property (nonatomic, strong) TTVideoUploadClient *videoUploadClient;
-@end
-@implementation TTRVideoUploader
-+ (instancetype)shared {
-    static TTRVideoUploader *_instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _instance = [[TTRVideoUploader alloc] init];
-    });
-    return _instance;
-}
-- (void)uploadWithLocalFilePath:(NSString *)localFilePath delegate:(id<TTVideoUploadClientProtocol>)delegate {
-    @weakify(self);
-    [self fetchAuthorization:^(NSString *authorization, NSString *username, NSError *error) {
-        @strongify(self);
-        if(error) {
-            if(delegate && [delegate respondsToSelector:@selector(uploadVideoDidFinish:error:)]) {
-                [delegate uploadVideoDidFinish:nil error:error];
-            }
-            return;;
-        }
-        
-        if(authorization.length == 0 || username.length == 0) {
-            NSError *error = [[NSError alloc] initWithDomain:JSONModelErrorDomain code:-1 userInfo:nil];
-            if(delegate && [delegate respondsToSelector:@selector(uploadVideoDidFinish:error:)]) {
-                [delegate uploadVideoDidFinish:nil error:error];
-            }
-            return;
-        }
-        
-        NSString *hostName = @"vas-lf-x.snssdk.com";
-        self.videoUploadClient = [[TTVideoUploadClient alloc] initWithFilePath:localFilePath username:username fileUploadProcessType:TTFileUploadProcessTypeOrigina fileType:TTFileUploadFileTypeVideo];
-        [self.videoUploadClient setVideoHostname:hostName];
-        [self.videoUploadClient setAuthorization:authorization];
-        self.videoUploadClient.delegate = delegate;
-        [self.videoUploadClient start];
-    }];
-}
-- (void)fetchAuthorization:(void (^)(NSString *authorization, NSString *username, NSError *error))completion {
-    
-    NSString *path = @"/f101/api/tos_uploader_auth";
-    NSString *url = [[FHMainApi host] stringByAppendingString:path];
-    
-    NSMutableDictionary *param = [NSMutableDictionary dictionary];
-    param[@"scene_type"] = @"house_appeal";
-    [[TTNetworkManager shareInstance] requestForJSONWithResponse:url params:param method:@"GET" needCommonParams:NO callback:^(NSError *error, id obj, TTHttpResponse *response) {
-        if (!error) {
-            if ([obj isKindOfClass:[NSDictionary class]]) {
-                NSDictionary *jsonObj = (NSDictionary *)obj;
-                NSDictionary *data = [jsonObj objectForKey:@"data"];
-                if ([data isKindOfClass:[NSDictionary class]]) {
-                    NSString *token = [data objectForKey:@"token"];
-                    NSString *username = [data objectForKey:@"access_key"];
-                    if (completion) {
-                        completion(token, username, nil);
-                    }
-                }
-            }
-        } else {
-            completion(nil, nil, error);
-        }
-    }];
-}
-@end
-
+#import <TTIMSDK/TIMSMediaFileUploadDefine.h>
+#import <TTIMSDK/TIMMediaFileUploadDefinePrivate.h>
 
 //  内部使用单例
-@interface TTRPhotoLibraryHelper : NSObject<TTImagePickerControllerDelegate, TTVideoUploadClientProtocol>
+@interface TTRPhotoLibraryHelper : NSObject<TTImagePickerControllerDelegate, TIMFileUploadDelegate>
 @property (nonatomic, strong) TTImagePickerController *imagePickerController;
 @property (nonatomic, weak) UIView<TTRexxarEngine> *attachedWebview;
-@property (nonatomic, strong) TTVideoUploadClient *videoUploadClient;
+
 + (instancetype)shared;
 @end
 
@@ -118,14 +46,6 @@
     _imagePickerController.maxVideoCount = 1;
     return _imagePickerController;
 }
-
-- (TTVideoUploadClient *)videoUploadClient {
-    if(!_videoUploadClient) {
-        _videoUploadClient = [[TTVideoUploadClient alloc] init];
-    }
-    return _videoUploadClient;
-}
-
 #pragma mark - TTImagePickerControllerDelegate
 
 - (void)ttimagePickerController:(TTImagePickerController *)picker didFinishPickingVideo:(UIImage *)coverImage sourceAsset:(TTAsset *)assetModel {
@@ -138,6 +58,7 @@
     
     PHImageManager *manager = [PHImageManager defaultManager];
     [manager requestAVAssetForVideo:assetModel.asset options:videoOptions resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             // 开始上传
             [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:@{
@@ -147,14 +68,25 @@
                 @"data": @{
                 }
             }];
-            
-            NSString *localFilePath = ((AVURLAsset *)asset).URL.path;
-            [[TTRVideoUploader shared] uploadWithLocalFilePath:localFilePath delegate:self];
         });
+
+        id<TIMFileUploadRequest> request = [[TIMCoreBridgeManager sharedInstance] getInstanceConformsToProtocol:@protocol(TIMFileUploadRequest)];
+        request.requestIdentifier = @"";
+        request.localFilePath = ((AVURLAsset *)asset).URL;
+        request.mimeType = @"video/*";
+        request.ext = @{
+            TIM_FILE_EXT_KEY_TYPE:TIM_FILE_EXT_VALUE_TYPE_VIDEO
+        };
+        
+        [TIMSMediaFileUploadManager sharedInstance].delegate = self;
+        [[TIMSMediaFileUploadManager sharedInstance] uploadFileRequest:request config:nil];
     }];
 }
-
-- (void)notifyUploadFailedWithError:(NSError *)error {
+#pragma mark - TIMFileUploadDelegate
+- (void)uploadRequest:(NSString *)requestIdentifier progressDidUpdate:(float)progress {
+    // DO NOTHING
+}
+- (void)uploadRequest:(NSString *)requestIdentifier didFailedWithError:(NSError *)error {
     dispatch_async(dispatch_get_main_queue(), ^{
         // 上传失败
         [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:@{
@@ -165,46 +97,24 @@
             }
         }];
     });
+
 }
-
-#pragma mark - TTVideoUploadClientProtocol
-
-- (void)uploadVideoProgressDidUpdate:(NSInteger)progress {
-    
-}
-
-- (void)uploadVideoDidFinish:(TTUploadVideoInfo *)videoInfo error:(NSError *)error {
-    
-    if(error) {
-        [self notifyUploadFailedWithError:error];
-    }
-    else {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            // TODO: 向服务端要拼接好的url
-            
-            NSString *videoUrl = videoInfo.tosKey;
-            NSString *videoCoverImageUrl = videoInfo.coverURL?:@"";
-
-            // 上传成功
-            [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:@{
-                @"state": @2,
-                @"success": @(YES),
-                @"message": @"上传成功",
-                @"data": @{
-                        @"videoSrc": videoUrl?:@"",
-                        @"videoCoverImg": videoCoverImageUrl?:@"",
-                }
-            }];
-        });
-    }
-}
-
-- (int)uploadVideoCheckIfNeedTry:(NSInteger)errCode tryCount:(NSInteger)tryCount {
-    if(tryCount <= 3) {
-        return 1;
-    }
-    return 0;
+- (void)uploadRequest:(NSString *)requestIdentifier didSuccessWithInfo:(id<TIMFileUploadedInfo>)info {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *videoUrl = info.remotePath;
+        NSString *videoCoverImageUrl = info.ext[TIM_FILE_EXT_KEY_VIDEO_COVER_URL]?:@"";
+        
+        // 上传成功
+        [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:@{
+            @"state": @2,
+            @"success": @(YES),
+            @"message": @"上传成功",
+            @"data": @{
+                    @"videoSrc": videoUrl?:@"",
+                    @"videoCoverImg": videoCoverImageUrl?:@"",
+            }
+        }];
+    });
 }
 @end
 
