@@ -33,6 +33,7 @@
 
 @interface TTVDemandPlayer : UIView
 @property (nonatomic, strong) TTVPlayerModel *playerModel;
+@property (nonatomic, strong) TTVPlayerControlTipView *tipView;
 @property (nonatomic, weak) NSObject <TTVDemandPlayerDelegate> *delegate;//始终保持delegate唯一
 @property (nonatomic, strong, readonly) TTVPlayerStateStore *playerStateStore;
 @property (nonatomic, strong ,readonly) FHDemanderTrackerManager *commonTracker;

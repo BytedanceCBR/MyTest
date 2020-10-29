@@ -117,6 +117,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 {
     if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skStoreViewDidAppear:) name:@"SKStoreProductViewDidAppearKey" object:nil];
@@ -139,6 +140,13 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     _collectionView.delegate = nil;
 }
 
+- (void)applicationWillEnterBackground:(id)object
+{
+    if (self.viewLoaded && [self.view window]) {
+        [self.currentVideoCell pause];
+        [self sendStayPageTracking];
+    }
+}
 - (void)applicationWillResignActive:(id)object
 {
     if (self.viewLoaded && [self.view window]) {
@@ -370,7 +378,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)refreshCurrentModel
 {
-    
     [self.currentVideoCell stop];
     [self.currentVideoCell reset];
     [self.currentVideoCell resetPlayerModel];
