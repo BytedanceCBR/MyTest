@@ -1273,7 +1273,7 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
     }
     @catch (NSException *exception) {
 //        LOGD(@"moviePlayContentForURL: %@", exception);
-        wrapperTrackEvent(@"video", @"play_url_exception");
+//        wrapperTrackEvent(@"video", @"play_url_exception");
         [BDTrackerProtocol event:@"video" label:@"play_url_exception"];
     }
 
@@ -1289,7 +1289,7 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
         }
         @catch (NSException *exception) {
 //            LOGD(@"playMovie: %@", exception);
-            wrapperTrackEvent(@"video", @"play_movie_exception");
+//            wrapperTrackEvent(@"video", @"play_movie_exception");
             [BDTrackerProtocol event:@"video" label:@"play_movie_exception"];
         }
     }
