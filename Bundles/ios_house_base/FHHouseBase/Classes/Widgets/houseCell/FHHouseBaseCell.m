@@ -148,6 +148,7 @@
         NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
         _vrLoadingView = [LOTAnimationView animationWithFilePath:path];
         _vrLoadingView.loopAnimation = YES;
+        _vrLoadingView.hidden = YES;
     }
     return _vrLoadingView;
 }
@@ -167,6 +168,7 @@
 - (UIImageView *)videoImageView {
     if (!_videoImageView) {
         _videoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_image"]];
+        _videoImageView.hidden = YES;
     }
     return _videoImageView;
 }
@@ -230,6 +232,7 @@
         _houseVideoImageView = [[UIImageView alloc] init];
         _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video"];
         _houseVideoImageView.backgroundColor = [UIColor clearColor];
+        _houseVideoImageView.hidden = YES;
     }
     return _houseVideoImageView;
 }
@@ -257,6 +260,13 @@
         _tagTitleLabel.frame = CGRectMake(0, 0, 16, 16);
     }
     return _tagTitleLabel;
+}
+
+- (UIImageView *)topLeftTagImageView {
+    if (!_topLeftTagImageView) {
+        _topLeftTagImageView = [[UIImageView alloc] init];
+    }
+    return _topLeftTagImageView;
 }
 
 @end

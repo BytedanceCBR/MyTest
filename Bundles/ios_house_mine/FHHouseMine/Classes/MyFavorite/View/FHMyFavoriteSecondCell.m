@@ -17,8 +17,22 @@
     return self;
 }
 
-- (void)refreshWithData:(id)data {
-    [super refreshWithData:data];
+- (void)initUI {
+    [super initUI];
+    [self.contentView addSubview:self.topLeftTagImageView];
+    [self.topLeftTagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(self.mainImageView);
+        make.size.mas_equalTo(CGSizeMake(48, 18));
+    }];
 }
 
+- (void)refreshWithData:(id)data {
+    [super refreshWithData:data];
+    [self configTopLeftTagWithTagImages:data];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self layoutTopLeftTagImageView];
+}
 @end

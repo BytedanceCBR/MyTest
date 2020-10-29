@@ -21,17 +21,17 @@
 
 - (void)initUI {
     [self.contentView addSubview:self.houseMainImageBackView];
+    [self.contentView addSubview:self.mainImageView];
     [self.houseMainImageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.mainImageView);
         make.left.top.equalTo(self.mainImageView);
         make.size.mas_equalTo(CGSizeMake(107, 81));
     }];
-    [self.contentView addSubview:self.mainImageView];
     [self.mainImageView mas_makeConstraints:^(MASConstraintMaker *make) {
          make.centerY.equalTo(self.contentView);
          make.left.equalTo(self.contentView).offset(15);
          make.size.mas_equalTo(CGSizeMake(106, 80));
-     }];
+    }];
     [self.contentView addSubview:self.vrLoadingView];
     [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainImageView).offset(12);
@@ -57,8 +57,8 @@
         make.top.equalTo(self.pricePerSqmLabel.mas_bottom);
         make.right.equalTo(self.contentView).offset(-15);
     }];
-    [self.contentView addSubview:self.tagLabel];
-    [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.contentView addSubview:self.tagInformation];
+    [self.tagInformation mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainTitleLabel);
         make.top.equalTo(self.subTitleLabel.mas_bottom).offset(5);
         make.right.equalTo(self.contentView).offset(-15);

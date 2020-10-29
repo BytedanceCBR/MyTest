@@ -6,21 +6,20 @@
 //
 
 #import "FHHouseBaseUsuallyCell.h"
-#import "FHHouseListBaseItemModel.h"
 
 @implementation FHHouseBaseUsuallyCell
 
-@synthesize mainImageView = _mainImageView, mainTitleLabel = _mainTitleLabel, pricePerSqmLabel = _pricePerSqmLabel, priceLabel = _priceLabel, tagLabel = _tagLabel;
+@synthesize mainImageView = _mainImageView, mainTitleLabel = _mainTitleLabel, pricePerSqmLabel = _pricePerSqmLabel, priceLabel = _priceLabel, houseMainImageBackView = _houseMainImageBackView;
 
 - (void)initUI {
     [self.contentView addSubview:self.houseMainImageBackView];
+    [self.contentView addSubview:self.mainImageView];
     [self.houseMainImageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.mainImageView);
         make.left.top.equalTo(self.mainImageView);
         make.bottom.equalTo(self.mainImageView).offset(-1);
         make.right.equalTo(self.mainImageView).offset(-1);
     }];
-    [self.contentView addSubview:self.mainImageView];
     [self.mainImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.contentView).offset(10);
         make.left.equalTo(self.contentView).offset(15);
@@ -58,8 +57,8 @@
     }];
     [self.pricePerSqmLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.pricePerSqmLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [self.contentView addSubview:self.tagLabel];
-    [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.contentView addSubview:self.tagInformation];
+    [self.tagInformation mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainTitleLabel);
         make.top.equalTo(self.subTitleLabel.mas_bottom).offset(7);
     }];
@@ -86,9 +85,9 @@
         self.priceLabel.text = model.displayPrice;
         self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
         if (model.reasonTags.count>0) {
-            self.tagLabel.attributedText = model.recommendReasonStr;
+            self.tagInformation.attributedText = model.recommendReasonStr;
         }else {
-            self.tagLabel.attributedText = model.tagString;
+            self.tagInformation.attributedText = model.tagString;
         }
         if (model.vrInfo.hasVr) {
             self.houseVideoImageView.hidden = YES;
@@ -99,6 +98,49 @@
             [self.vrLoadingView stop];
         }
     };
+}
+
+- (void)configTopLeftTagWithTagImages:(id)data {
+    if(![data isKindOfClass:[FHHouseListBaseItemModel class]]) {
+        return;
+    }
+    FHHouseListBaseItemModel *model = (FHHouseListBaseItemModel *)data;
+    NSArray<FHImageModel> *tagImages = model.tagImage;
+    if (tagImages.count > 0) {
+        FHImageModel *tagImageModel = tagImages.firstObject;
+        if (!tagImageModel.url.length) {
+            return;
+        }
+        NSURL *imageUrl = [NSURL URLWithString:tagImageModel.url];
+        [self.topLeftTagImageView bd_setImageWithURL:imageUrl];
+        CGFloat width = [tagImageModel.width floatValue];
+        CGFloat height = [tagImageModel.height floatValue];
+        [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(width > 0.0 ? width : 48);
+        }];
+        [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(height > 0.0 ? height : 18);
+        }];
+        self.topLeftTagImageView.hidden = NO;
+        [self layoutIfNeeded];
+    } else {
+        self.topLeftTagImageView.hidden = YES;
+    }
+}
+
+- (void)layoutTopLeftTagImageView {
+    //图片圆角
+    if (!CGRectEqualToRect(self.topLeftTagImageView.frame, CGRectZero)) {
+        if (!_topLeftTagMaskLayer || !CGSizeEqualToSize(_topLeftTagMaskLayer.frame.size, self.topLeftTagImageView.frame.size)) {
+            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.topLeftTagImageView.bounds
+                                                           byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight
+                                                                 cornerRadii:CGSizeMake(4, 4)];
+            _topLeftTagMaskLayer = [[CAShapeLayer alloc] init];
+            _topLeftTagMaskLayer.frame = self.topLeftTagImageView.bounds;
+            _topLeftTagMaskLayer.path = maskPath.CGPath;
+            self.topLeftTagImageView.layer.mask = _topLeftTagMaskLayer;
+        }
+    }
 }
 
 - (NSAttributedString *)originPriceAttr:(NSString *)originPrice {
@@ -147,14 +189,25 @@
     return _priceLabel;
 }
 
-- (YYLabel *)tagLabel {
-    if (!_tagLabel) {
-        _tagLabel = [[YYLabel alloc] init];
-        _tagLabel.font = [UIFont themeFontRegular:12];
-        _tagLabel.textColor = [UIColor themeOrange1];
-        _tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+- (YYLabel *)tagInformation {
+    if (!_tagInformation) {
+        _tagInformation = [[YYLabel alloc] init];
+        _tagInformation.font = [UIFont themeFontRegular:12];
+        _tagInformation.textColor = [UIColor themeOrange1];
     }
-    return _tagLabel;
+    return _tagInformation;
+}
+
+- (UIView *)houseMainImageBackView {
+    if (!_houseMainImageBackView) {
+        _houseMainImageBackView = [[UIView alloc] init];
+        CALayer * layer = _houseMainImageBackView.layer;
+        layer.shadowOffset = CGSizeMake(0, 4);
+        layer.shadowRadius = 6;
+        layer.shadowColor = [UIColor blackColor].CGColor;;
+        layer.shadowOpacity = 0.2;
+    }
+    return _houseMainImageBackView;
 }
 
 @end
