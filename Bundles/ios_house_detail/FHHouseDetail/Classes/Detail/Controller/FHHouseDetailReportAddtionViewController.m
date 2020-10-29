@@ -990,7 +990,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
                 return;
             }
             if(jsonObj && [jsonObj[@"status"] longValue] == 0) {
-                [[ToastManager manager] showToast:@"提交成功"];
+                [[ToastManager manager] showToast:@"信息补充完成"];
                 [self goBack];
             }
             else {
@@ -1065,3 +1065,4 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
     return  UITableViewAutomaticDimension;
 }
 @end
+
