@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void(^mapBtnClickBlock)(NSString *);
 @property (nonatomic, copy) void(^categoryChangeBlock)(NSString *);
 @property (nonatomic, copy) void (^baiduPanoramaBlock)(void);
+@property (nonatomic, copy) void (^clickFacilitiesBlock)(NSString *);
 @end
 
 @interface FHNewHouseDetailMapCellModel : NSObject<IGListDiffable>
