@@ -116,7 +116,7 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
     switch (state) {
         case TTRLinkChatVideoUploadState_Start:
         {
-            [[ToastManager manager] showCustomLoading:@"正在上传..." isUserInteraction:YES];
+            [[ToastManager manager] showCustomLoading:@"正在上传..."];
         }
             break;
         default:
