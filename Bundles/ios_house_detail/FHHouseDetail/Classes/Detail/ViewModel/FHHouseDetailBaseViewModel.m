@@ -846,7 +846,7 @@
 - (void)gotoReportVC:(id)model
 {
     BOOL isJumpToNative = [SSCommonLogic isEnableHouseDetailNativeReport];
-    if(isJumpToNative) {
+    if(isJumpToNative && self.houseType == FHHouseTypeSecondHandHouse) {
         [self gotoReportNativePage:model];
     }
     else {
