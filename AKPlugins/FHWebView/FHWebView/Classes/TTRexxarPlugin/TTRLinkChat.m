@@ -21,7 +21,7 @@
 #import <TTAccountSDK/TTAccount.h>
 #import <AVKit/AVPlayerViewController.h>
 #import <ByteDanceKit.h>
-
+#import <ios_house_im/FHIMConfigManager.h>
 typedef void (^FLinkChatPermissionAskActionBlock)(void);
 
 
@@ -93,7 +93,9 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
                 };
                 
                 [TIMSMediaFileUploadManager sharedInstance].delegate = self;
-                [[TIMSMediaFileUploadManager sharedInstance] uploadFileRequest:request config:nil];
+                TIMSMediaFileUploadBaseConfig *config = [[TIMSMediaFileUploadBaseConfig alloc] init];
+                config.enableBOE = [FHIMConfigManager shareInstance].isBOE;
+                [[TIMSMediaFileUploadManager sharedInstance] uploadFileRequest:request config:config];
             }
         });
     }];
