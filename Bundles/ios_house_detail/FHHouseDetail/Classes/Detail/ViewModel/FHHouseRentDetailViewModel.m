@@ -119,12 +119,11 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     if (status == 1) {
         self.bottomStatusBar.hidden = NO;
         [self.navBar showRightItems:YES];
-        //        self.
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
-                [self.navBar showMessageNumber];
-        self.bottomStatusBar.text = @"该房源已停止出租";
+        [self.navBar showMessageNumber];
+        self.bottomStatusBar.text = @"该房源已下架";
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:NO];
@@ -135,11 +134,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }else if (status == 2) {
         self.bottomStatusBar.hidden = NO;
         [self.navBar showRightItems:YES];
-        //        self.
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
-                [self.navBar showMessageNumber];
+        [self.navBar showMessageNumber];
         self.bottomStatusBar.text = @"该房源已出租";
     }else {
         [self.navBar showMessageNumber];

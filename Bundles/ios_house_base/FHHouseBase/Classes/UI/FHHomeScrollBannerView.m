@@ -442,13 +442,13 @@
 
 - (void)setViewSelect:(UIView *)v {
     if (v) {
-        v.backgroundColor = [UIColor colorWithHexString:@"#ffffff" alpha:1.0];
+        v.backgroundColor = [UIColor colorWithHexString:@"#ff9629"];
     }
 }
 
 - (void)setViewUnSelect:(UIView *)v {
     if (v) {
-        v.backgroundColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.6];
+        v.backgroundColor = [UIColor colorWithHexString:@"#bbbbbb"];
     }
 }
 
