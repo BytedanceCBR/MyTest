@@ -42,7 +42,6 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
 @interface TTVDemandPlayer ()<TTVPlayerControllerDataSource ,TTVPlayerControlViewDelegate ,TTVPlayerControllerDelegate ,TTSharePanelTransformMessage>
 
 @property (nonatomic, strong) TTVPlayerController *playerController;
-@property (nonatomic, strong) TTVPlayerControlTipView *tipView;
 @property (nonatomic, strong) TTVPlayerStateStore *playerStateStore;
 @property (nonatomic, assign) TTVPlayerResolutionType currentResolution;
 @property (nonatomic, strong) NSHashTable *delegates;

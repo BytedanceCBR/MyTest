@@ -267,8 +267,9 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
 }
 
 - (void)readyToPlay {
-        [self.player setBanLoading:YES];
-        [self.player readyToPlay];
+    self.player.tipView.tipType = TTVPlayerControlTipViewTypeUnknow;
+    [self.player setBanLoading:YES];
+    [self.player readyToPlay];
 }
 
 - (void)reset {

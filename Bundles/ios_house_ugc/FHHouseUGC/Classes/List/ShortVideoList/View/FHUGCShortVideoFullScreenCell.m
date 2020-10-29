@@ -66,7 +66,6 @@
     if (!_playerView) {
         FHUGCShortVideoView *playerView = [[FHUGCShortVideoView alloc]init];
         playerView.player.delegate = self;
-        playerView.userInteractionEnabled = NO;;
         [self.contentView addSubview:playerView];
         [playerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.equalTo(self.contentView);
@@ -235,6 +234,7 @@
         [self moviePlayFinishedAction];
     }
     if (state == TTVVideoPlaybackStatePlaying) {
+        self.playImage.hidden = YES;
         if (self.videoDidStartPlay) {
             self.videoDidStartPlay();
         }
