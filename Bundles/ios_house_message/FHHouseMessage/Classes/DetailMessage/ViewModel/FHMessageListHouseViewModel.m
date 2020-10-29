@@ -19,6 +19,7 @@
 #import <FHHouseBase/FHHouseTypeManager.h>
 #import "FHFeedbackMsgCell.h"
 #import "FHFeedbackMsgHeaderView.h"
+#import <ReactiveObjC/ReactiveObjC.h>
 
 @interface FHMessageListHouseViewModel()<UITableViewDelegate,UITableViewDataSource>
 
@@ -250,7 +251,9 @@
         FHFeedbackMsgCell *msgCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHFeedbackMsgCell class]) forIndexPath:indexPath];
         msgCell.selectionStyle = UITableViewCellSelectionStyleNone;
         [msgCell updateWithModel:model];
+        @weakify(self);
         [msgCell setPushURLBlock:^(NSString * _Nonnull URLString) {
+            @strongify(self);
             NSDictionary *logPb = model.logPb;
             NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
             tracerDict[@"card_type"] = @"left_pic";
