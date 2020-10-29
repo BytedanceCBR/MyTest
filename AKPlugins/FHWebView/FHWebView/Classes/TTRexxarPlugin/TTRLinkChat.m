@@ -19,6 +19,8 @@
 #import <TTIMSDK/TIMMediaFileUploadDefinePrivate.h>
 #import <FHCommonUI/ToastManager.h>
 #import <TTAccountSDK/TTAccount.h>
+#import <AVKit/AVPlayerViewController.h>
+#import <ByteDanceKit.h>
 
 typedef void (^FLinkChatPermissionAskActionBlock)(void);
 
@@ -36,6 +38,7 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
 @property (nonatomic, weak) UIView<TTRexxarEngine> *attachedWebview;
 
 + (instancetype)shared;
+- (void)playVideo:(NSString *)videoUrl;
 @end
 
 @implementation TTRPhotoLibraryHelper
@@ -159,7 +162,19 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
                     @"videoCoverImg": videoCoverImageUrl?:@"",
             }
         }];
+        
+        [self playVideo:videoUrl];
     });
+}
+// Native 播放视频兜底方案
+- (void)playVideo:(NSString *)videoUrl {
+    NSString *webVideoPath = videoUrl;
+    NSURL *webVideoUrl = [NSURL URLWithString:webVideoPath];
+    AVPlayer *avPlayer = [[AVPlayer alloc] initWithURL:webVideoUrl];
+    AVPlayerViewController *avPlayerVC =[[AVPlayerViewController alloc] init];
+    avPlayerVC.allowsPictureInPicturePlayback = NO;
+    avPlayerVC.player = avPlayer;
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:avPlayerVC animated:YES completion:nil];
 }
 @end
 
@@ -269,6 +284,14 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
         [[TTRPhotoLibraryHelper shared].imagePickerController presentOn:navVC];
     }
     
+    callback(TTRJSBMsgSuccess, @{});
+}
+- (void)linkChatPlayVideoWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
+    // 暂未实现
+    NSString *urlStr = [param btd_stringValueForKey:@"video_url"];
+    if(urlStr.length > 0) {
+        [[TTRPhotoLibraryHelper shared] playVideo:urlStr];
+    }
     callback(TTRJSBMsgSuccess, @{});
 }
 @end
