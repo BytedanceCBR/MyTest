@@ -440,22 +440,22 @@
     }
     
     FHUGCFullScreenVideoCell *cell = [self getFitableVideoCell];
-    if ([cell.currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
-        NSInteger index = [self getCellIndex:(FHFeedUGCCellModel*)cell.currentData];
-        NSMutableArray *preLoadArr = [[NSMutableArray alloc]init];
-        for (int m = 0; m <5; m ++) {
-            NSInteger perloadIndex = index + m ;
-            if (perloadIndex < self.dataList.count) {
-                [preLoadArr addObject:@(perloadIndex)];
-            }else{
-                break;
-            }
-        }
-        for (NSNumber *num in preLoadArr) {
-            FHFeedUGCCellModel *model = self.dataList[num.integerValue];
-            [FHShortVideoPerLoaderManager preloadWithVideoModel:model isFromShortVideo:NO];
-        }
-    }
+//    if ([cell.currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
+//        NSInteger index = [self getCellIndex:(FHFeedUGCCellModel*)cell.currentData];
+//        NSMutableArray *preLoadArr = [[NSMutableArray alloc]init];
+//        for (int m = 0; m <5; m ++) {
+//            NSInteger perloadIndex = index + m ;
+//            if (perloadIndex < self.dataList.count) {
+//                [preLoadArr addObject:@(perloadIndex)];
+//            }else{
+//                break;
+//            }
+//        }
+//        for (NSNumber *num in preLoadArr) {
+//            FHFeedUGCCellModel *model = self.dataList[num.integerValue];
+//            [FHShortVideoPerLoaderManager preloadWithVideoModel:model isFromShortVideo:NO];
+//        }
+//    }
     
     if(!cell){
         [self pauseCurrentVideo];
@@ -471,10 +471,10 @@
     if(![self.currentVideoCell cell_isPlaying]){
         [cell play];
         
-        FHUGCFullScreenVideoCell *nextCell = [self getNextFitableVideoCell];
-        if(nextCell){
-            [nextCell readyToPlay];
-        }
+//        FHUGCFullScreenVideoCell *nextCell = [self getNextFitableVideoCell];
+//        if(nextCell){
+//            [nextCell readyToPlay];
+//        }
     }
 }
 
