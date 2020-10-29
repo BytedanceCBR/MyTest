@@ -41,13 +41,13 @@
 - (void)prepareLayout {
     [super prepareLayout];
     
+    [self.attrsArray removeAllObjects];
+    self.contentHeight = 0;
+    
     NSInteger itemCount = [self.collectionView numberOfItemsInSection:0];
     if(itemCount <= 0){
         return;
     }
-    
-    [self.attrsArray removeAllObjects];
-    self.contentHeight = 0;
     
     for (NSInteger i = 0; i < [self.collectionView numberOfItemsInSection:0]; i++) {
         // 创建位置
