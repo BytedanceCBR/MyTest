@@ -66,7 +66,7 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
     NSAssert(assetModel.type == TTAssetMediaTypeVideo, @"只能上传本地视频");
     
     PHVideoRequestOptions *videoOptions = [[PHVideoRequestOptions alloc] init];
-    videoOptions.version = PHVideoRequestOptionsVersionCurrent;
+    videoOptions.version = PHVideoRequestOptionsVersionOriginal;
     videoOptions.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
     
     PHImageManager *manager = [PHImageManager defaultManager];
