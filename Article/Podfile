@@ -67,7 +67,6 @@ def fhPods
     
 #    pod 'ios_house_im' , :path => '../../../im/bugfix', :inhibit_warnings => false
      pod 'ios_house_im' ,'0.9.0.14', :inhibit_warnings => false
->>>>>>> alpha
 
 end
 
