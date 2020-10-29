@@ -37,12 +37,15 @@
 #import "FHMainListTopView.h"
 #import "FHMainRentTopView.h"
 #import "FHMainOldTopView.h"
+#import "FHHouseNewTopContainer.h"
+#import "FHHouseNewTopContainerViewModel.h"
 
 #import <FHHouseBase/FHHouseRentFilterType.h>
 #import <BDWebImage/BDWebImage.h>
 #import "FHBaseMainListViewModel+Internal.h"
 #import "FHBaseMainListViewModel+Old.h"
 #import "FHBaseMainListViewModel+Rent.h"
+#import "FHBaseMainListViewModel+New.h"
 
 #import "FHSugSubscribeModel.h"
 #import "FHSuggestionSubscribCell.h"
@@ -103,6 +106,8 @@ extern NSString *const INSTANT_DATA_KEY;
 //预约以后的状态暂存
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
+
+@property (nonatomic, strong) FHHouseNewTopContainerViewModel *houseNewTopViewModel;
 
 @end
 
@@ -371,6 +376,19 @@ extern NSString *const INSTANT_DATA_KEY;
             topView.backgroundColor = [UIColor whiteColor];
             self.topBannerView = topView;
         }
+    }else if (_houseType == FHHouseTypeNewHouse) {
+        self.houseNewTopViewModel = [[FHHouseNewTopContainerViewModel alloc] init];
+        CGFloat height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
+        FHHouseNewTopContainer *topView = [[FHHouseNewTopContainer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)];
+        topView.viewModel = self.houseNewTopViewModel;
+        WeakSelf;
+        topView.onStateChanged = ^{
+            StrongSelf;
+            self.topView.height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
+        };
+        topView.clipsToBounds = YES;
+        [self.houseNewTopViewModel startLoading];
+        self.topBannerView = topView;
     }else {
         UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
         topView.backgroundColor = [UIColor whiteColor];
@@ -633,7 +651,11 @@ extern NSString *const INSTANT_DATA_KEY;
             [wself processData:model error:error isRefresh:isHead isRecommendSearch:NO];
         }];
         
-    }else{
+    }else if (self.houseType == FHHouseTypeNewHouse) {
+        self.requestTask = [self loadData:isHead query:query completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+            [wself processData:model error:error isRefresh:isHead isRecommendSearch:self.fromRecommend];
+        }];
+    }else {
         NSString *channelId = _mainListPage ? CHANNEL_ID_SEARCH_HOUSE_WITH_BANNER : CHANNEL_ID_SEARCH_HOUSE;
         if (self.fromRecommend) {
             channelId = CHANNEL_ID_RECOMMEND_SEARCH;
@@ -925,6 +947,10 @@ extern NSString *const INSTANT_DATA_KEY;
                 cellModel.cellHeight = self.tableView.height - self.topView.height - 121;
                 [self.houseList addObject:cellModel];
             }
+        }
+        if (self.houseType == FHHouseTypeNewHouse) {
+            FHCourtBillboardPreviewModel *billboardModel = ((FHListSearchHouseModel *)model).data.courtBillboardPreview;
+            [self.houseNewTopViewModel loadFinishWithData:billboardModel];
         }
         [self.tableView reloadData];
         

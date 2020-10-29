@@ -11,11 +11,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHCourtBillboardPreviewModel;
+
 @interface FHHouseNewTopContainerViewModel : FHHouseNewComponentViewModel
 
 @property (nonatomic, strong, readonly) FHHouseNewEntrancesViewModel *entrancesViewModel;
 
 @property (nonatomic, strong, readonly) FHHouseNewBillboardViewModel *billboardViewModel;
+
+- (void)startLoading;
+- (void)loadFinishWithData:(FHCourtBillboardPreviewModel *)data;
+- (void)loadFailed;
 
 @end
 

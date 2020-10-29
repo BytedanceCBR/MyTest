@@ -29,4 +29,16 @@
     return [self.entrancesViewModel isValid] || [self.billboardViewModel isValid];
 }
 
+- (void)startLoading {
+    self.billboardViewModel.loading = YES;
+}
+
+- (void)loadFinishWithData:(FHCourtBillboardPreviewModel *)data {
+    [self.billboardViewModel loadFinishWithData:data];
+}
+
+- (void)loadFailed {
+    self.billboardViewModel.loading = NO;
+}
+
 @end

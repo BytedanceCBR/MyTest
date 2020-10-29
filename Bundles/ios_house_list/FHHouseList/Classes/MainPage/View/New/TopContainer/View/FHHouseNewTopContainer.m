@@ -10,6 +10,7 @@
 #import "FHHouseNewBillboardView.h"
 #import "FHHouseNewTopContainerViewModel.h"
 #import "Masonry.h"
+#import "FHFakeInputNavbar.h"
 #import <TTBaseLib/TTBaseMacro.h>
 
 @interface FHHouseNewTopContainer()
@@ -24,7 +25,7 @@
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (!viewModel || ![viewModel isKindOfClass:FHHouseNewTopContainerViewModel.class] || ![viewModel isValid]) return 0.0f;
     FHHouseNewTopContainerViewModel *containerViewModel = (FHHouseNewTopContainerViewModel *)viewModel;
-    CGFloat height = 0.0f;
+    CGFloat height = [FHFakeInputNavbar perferredHeight];
     if ([containerViewModel.entrancesViewModel isValid]) {
         height += [FHHouseNewEntrancesView viewHeightWithViewModel:containerViewModel.entrancesViewModel];
     }
@@ -60,11 +61,12 @@
 }
 
 - (void)refreshConstraints {
-    CGFloat topY = 0.0f;
+    CGFloat topY = [FHFakeInputNavbar perferredHeight];
     if (!self.entrancesView.hidden) {
         CGFloat height = [FHHouseNewEntrancesView viewHeightWithViewModel:self.containerViewModel.entrancesViewModel];
         [self.entrancesView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.left.right.top.mas_equalTo(0);
+            make.left.right.mas_equalTo(0);
+            make.top.mas_equalTo(topY);
             make.height.mas_equalTo(height);
         }];
         

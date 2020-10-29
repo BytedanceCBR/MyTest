@@ -525,6 +525,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *text;
 @end
 
+@protocol FHCourtBillboardPreviewItemModel <NSObject>
+
+@end
+
 @interface FHCourtBillboardPreviewItemModel : JSONModel
 @property (nonatomic, copy , nullable) NSString *courtId;
 @property (nonatomic, copy , nullable) NSString *openUrl;
@@ -536,7 +540,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCourtBillboardPreviewModel : JSONModel
 @property (nonatomic, copy , nullable) NSString *title;
-@property (nonatomic, copy , nullable) NSArray<FHCourtBillboardPreviewItemModel *> *items;
+@property (nonatomic, strong , nullable) NSArray<FHCourtBillboardPreviewItemModel> *items;
 @property (nonatomic, strong , nullable) FHCourtBillboardPreviewButtonModel *button;
 @end
 

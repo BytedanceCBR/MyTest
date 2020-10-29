@@ -19,6 +19,7 @@
 #import "FHMainOldTopView.h"
 #import "FHMainRentTopView.h"
 #import "FHMainListTableView.h"
+#import "FHHouseNewTopContainer.h"
 
 #define TOP_HOR_PADDING 3
 
@@ -299,6 +300,8 @@
             alpha = (offsetY - notiBarHeight) / offset;
         }
         bgColor = [UIColor themeGray8];
+    }else if ([self.viewModel.topBannerView isKindOfClass:[FHHouseNewTopContainer class]]) {
+        //TOOD: 修改alpha值
     }
     [self.navbar refreshAlpha:alpha];
     self.navbar.backgroundColor = bgColor;
