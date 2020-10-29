@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHBaseMainListViewModel (New)
 
-- (TTHttpTask *)loadData:(BOOL)isRefresh query:(NSString *)query completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion;
+- (TTHttpTask *)requestNewData:(BOOL)isRefresh query:(NSString *)query completion:(void (^)(id<FHBaseModelProtocol> model ,NSError *error))completion;
 
 @end
 

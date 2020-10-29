@@ -39,6 +39,7 @@
 }
 
 - (void)setupUI {
+    self.backgroundColor = [UIColor whiteColor];
     [self addSubview:self.placeholderView];
     [self addSubview:self.contentView];
 }

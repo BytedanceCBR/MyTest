@@ -652,7 +652,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }];
         
     }else if (self.houseType == FHHouseTypeNewHouse) {
-        self.requestTask = [self loadData:isHead query:query completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        self.requestTask = [self requestNewData:isHead query:query completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
             [wself processData:model error:error isRefresh:isHead isRecommendSearch:self.fromRecommend];
         }];
     }else {
