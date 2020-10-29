@@ -490,6 +490,66 @@
 @end
 
 
+@implementation FHCourtBillboardPreviewButtonModel
+
++ (JSONKeyMapper*)keyMapper {
+    NSDictionary *dict = @{
+       @"openUrl": @"open_url",
+       @"text": @"text",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
+@implementation FHCourtBillboardPreviewItemModel : JSONModel
+
++ (JSONKeyMapper*)keyMapper {
+    NSDictionary *dict = @{
+       @"courtId": @"court_id",
+       @"openUrl": @"open_url",
+       @"title": @"title",
+       @"subtitle": @"subtitle",
+       @"pricingPerSqm": @"pricing_per_sqm",
+       @"img": @"img",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
+@implementation FHCourtBillboardPreviewModel
+
++ (JSONKeyMapper*)keyMapper {
+    NSDictionary *dict = @{
+       @"title": @"title",
+       @"button": @"button",
+       @"items": @"items",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
+
 #pragma mark - 新model
 
 @implementation  FHListSearchHouseModel
@@ -519,6 +579,7 @@
                            @"agencyInfo": @"agency_info",
                            @"topTip":@"top_tip",
                            @"bottomTip":@"bottom_tip",
+                           @"courtBillboardPreview": @"court_billboard_preview",
                            //                           @"currentItems":@"items",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
