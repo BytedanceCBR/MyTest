@@ -12,6 +12,7 @@
 #import "SSImpressionManager.h"
 #import "ArticleImpressionHelper.h"
 #import "FHHouseUGCAPI.h"
+#import "FHUGCShortVideoFlowLayout.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -36,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 //页面打开速度
 @property(nonatomic, assign) NSTimeInterval startMonitorTime;
 @property(nonatomic, assign) BOOL alreadyReportPageMonitor;
+@property(nonatomic, strong) FHUGCShortVideoFlowLayout *flowLayout;
 
 - (void)showNotify:(NSString *)message ;
 - (void)showNotify:(NSString *)message completion:(nullable void(^)(void))completion;
@@ -53,6 +55,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)viewAppearForEnterType:(NSInteger)enterType;
 
 - (void)viewDisAppearForEnterType:(NSInteger)enterType;
+
+- (void)reloadData;
 
 @end
 
