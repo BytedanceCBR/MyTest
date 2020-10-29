@@ -56,6 +56,8 @@
             NSString *host = paramObj.sourceURL.host;
             if ([host hasPrefix:@"rent"]) {
                 _houseType = FHHouseTypeRentHouse;
+            } else if ([host isEqualToString:@"new_house_main"]) {
+                _houseType = FHHouseTypeNewHouse;
             }
         }
         
