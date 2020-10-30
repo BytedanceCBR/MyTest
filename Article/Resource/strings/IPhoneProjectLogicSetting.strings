@@ -8,7 +8,6 @@
 */
 
 // f100
-"house_list_test"            = "FHHouseListTestViewController";
 "house_list"            = "FHHouseListViewController";
 "neighborhood_deal_list"            = "FHHouseListViewController"; // 查成交列表页
 "flogin"                = "FHLoginViewController";

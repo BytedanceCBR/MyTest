@@ -101,7 +101,6 @@ static UIEdgeInsets const Insets = {12, 20, 12, 20};
 - (UIImageView *)iconImageView {
     if (!_iconImageView) {
         _iconImageView = [[UIImageView alloc] init];
-        _iconImageView.backgroundColor = [UIColor lightGrayColor];
     }
     return _iconImageView;
 }
@@ -151,6 +150,9 @@ static UIEdgeInsets const Insets = {12, 20, 12, 20};
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
     [self refreshUI];
+    if ([self.itemViewModel respondsToSelector:@selector(onShowView)]) {
+        [self.itemViewModel onShowView];
+    }
 }
 
 - (void)refreshUI {

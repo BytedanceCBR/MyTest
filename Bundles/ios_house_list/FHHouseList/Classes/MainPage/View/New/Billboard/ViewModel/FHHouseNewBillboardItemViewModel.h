@@ -14,12 +14,15 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseNewBillboardItemViewModel : FHHouseNewComponentViewModel
 
 @property (nonatomic, assign) BOOL isLastItem;
+@property (nonatomic, assign) NSInteger itemIndex;
 @property (nonatomic, copy, readonly) NSString *title;
 @property (nonatomic, copy, readonly) NSString *subtitle;
 @property (nonatomic, copy, readonly) NSString *detail;
 @property (nonatomic, strong, readonly) FHImageModel *img;
 
 - (instancetype)initWithModel:(FHCourtBillboardPreviewItemModel *)model;
+
+- (void)onShowView;
 
 - (void)onClickView;
 

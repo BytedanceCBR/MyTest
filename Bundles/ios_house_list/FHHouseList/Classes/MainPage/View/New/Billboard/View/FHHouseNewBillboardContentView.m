@@ -116,6 +116,9 @@ static NSInteger const ButtonBottomMargin = 16.0f;
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
     [self refreshUI];
+    if ([self.contentViewModel respondsToSelector:@selector(onShowView)]) {
+        [self.contentViewModel onShowView];
+    }
 }
 
 - (void)refreshUI {

@@ -6,6 +6,8 @@
 //
 
 #import "FHHouseOpenURLUtil.h"
+#import "FHCommuteManager.h"
+#import "TTRoute.h"
 
 @implementation FHHouseOpenURLUtil
 
@@ -42,6 +44,19 @@
     
     return dict;
     
+}
+
++ (void)openUrl:(NSString *)openUrl logParams:(NSDictionary *)logParams {
+    if (!openUrl || !openUrl.length || ![openUrl isKindOfClass:[NSString class]]) return;
+    NSURL *url = [NSURL URLWithString:openUrl];
+    if ([openUrl containsString:@"://commute_list"]){
+        //通勤找房
+        [[FHCommuteManager sharedInstance] tryEnterCommutePage:openUrl logParam:logParams];
+    } else {
+        NSDictionary *userInfoDict = @{@"tracer":logParams};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
 }
 
 @end

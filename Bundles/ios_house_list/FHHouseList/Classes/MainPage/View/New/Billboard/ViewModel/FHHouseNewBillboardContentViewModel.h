@@ -8,7 +8,7 @@
 #import "FHHouseNewComponentViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+@class FHTracerModel;
 @class FHHouseNewBillboardItemViewModel;
 @class FHCourtBillboardPreviewModel;
 @interface FHHouseNewBillboardContentViewModel : FHHouseNewComponentViewModel
@@ -17,7 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSString *buttonText;
 @property (nonatomic, copy, readonly) NSArray<FHHouseNewBillboardItemViewModel *> *items;
 
-- (instancetype)initWithModel:(FHCourtBillboardPreviewModel *)model;
+- (instancetype)initWithModel:(FHCourtBillboardPreviewModel *)model tracerModel:(FHTracerModel *)tracerModel;
+
+- (void)onShowView;
 
 - (void)onClickButton;
 
