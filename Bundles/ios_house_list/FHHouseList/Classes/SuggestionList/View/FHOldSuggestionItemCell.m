@@ -161,7 +161,7 @@
             self.zoneTypeView.hidden = NO;
         };
         if (model.oldName.length > 0) {
-            NSAttributedString *text1 = [self processHighlightedDefault:model.oldName textColor:[UIColor themeGray1] fontSize:14.0];
+            NSAttributedString *text1 = [self processHighlightedDefault:model.oldName textColor:[UIColor themeGray1] fontSize:16.0];
             self.subTitleLab.attributedText = [self processHighlighted:text1 originText:model.oldName textColor:[UIColor themeOrange1] fontSize:16.0];
         }
         self.zoneTypeLab.text = model.recallType;
