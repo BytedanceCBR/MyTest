@@ -518,6 +518,7 @@
        @"subtitle": @"subtitle",
        @"pricingPerSqm": @"pricing_per_sqm",
        @"img": @"img",
+       @"logPb": @"log_pb",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

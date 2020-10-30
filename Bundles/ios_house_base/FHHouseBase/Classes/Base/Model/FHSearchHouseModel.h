@@ -536,6 +536,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *subtitle;
 @property (nonatomic, copy , nullable) NSString *pricingPerSqm;
 @property (nonatomic, strong , nullable) FHImageModel *img;
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
 @end
 
 @interface FHCourtBillboardPreviewModel : JSONModel

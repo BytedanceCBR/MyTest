@@ -2294,8 +2294,9 @@ extern NSString *const INSTANT_DATA_KEY;
 
 #pragma mark category log
 -(void)addEnterCategoryLog {
-
-    [FHUserTracker writeEvent:@"enter_category" params:[self categoryLogDict]];
+    NSMutableDictionary *logParams = [NSMutableDictionary dictionaryWithDictionary:[self categoryLogDict]];
+    logParams[UT_ENTER_TYPE] = @"click";
+    [FHUserTracker writeEvent:@"enter_category" params:logParams];
 }
 
 -(void)addCategoryRefreshLog {

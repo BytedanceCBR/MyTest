@@ -8,6 +8,7 @@
 #import "FHHouseNewBillboardViewModel.h"
 #import "FHHouseNewBillboardContentViewModel.h"
 #import "FHSearchHouseModel.h"
+#import "NSObject+FHTracker.h"
 
 @interface FHHouseNewBillboardViewModel()
 @property (nonatomic, strong, readwrite) FHHouseNewBillboardContentViewModel *contentViewModel;
@@ -34,7 +35,7 @@
 - (void)loadFinishWithData:(FHCourtBillboardPreviewModel *)data {
     if (data) {
         _loading = NO;
-        _contentViewModel = [[FHHouseNewBillboardContentViewModel alloc] initWithModel:data];
+        _contentViewModel = [[FHHouseNewBillboardContentViewModel alloc] initWithModel:data tracerModel:self.fh_trackModel];
         [self fireObservers];
     }
 }

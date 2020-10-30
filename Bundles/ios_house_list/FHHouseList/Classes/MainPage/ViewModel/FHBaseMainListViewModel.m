@@ -80,6 +80,7 @@
 #import "FHHouseSearchNewHouseCell.h"
 #import "FHDynamicLynxCell.h"
 #import "NSArray+BTDAdditions.h"
+#import "NSObject+FHTracker.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -123,7 +124,7 @@ extern NSString *const INSTANT_DATA_KEY;
     return _bottomLine;
 }
 
--(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj
+-(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj viewController:(FHBaseMainListViewController *)viewController
 {
     self = [super init];
     if (self) {
@@ -140,6 +141,7 @@ extern NSString *const INSTANT_DATA_KEY;
         self.tableView = tableView;
         self.houseType = houseType;
         self.isShowSubscribeCell = NO;
+        self.viewController = viewController;
 
         tableView.delegate = self;
         tableView.dataSource = self;
@@ -377,7 +379,18 @@ extern NSString *const INSTANT_DATA_KEY;
             self.topBannerView = topView;
         }
     }else if (_houseType == FHHouseTypeNewHouse) {
+        FHTracerModel *tracerModel = [[FHTracerModel alloc] init];
+        tracerModel.originSearchId = self.originSearchId;
+        tracerModel.searchId = self.searchId;
+        tracerModel.pageType = [self pageTypeString];
+        tracerModel.categoryName = [self categoryName];
+        tracerModel.originFrom = self.tracerModel.originFrom;
+        tracerModel.enterFrom = self.tracerModel.enterFrom;
+        tracerModel.elementFrom = self.tracerModel.elementFrom;
+        
         self.houseNewTopViewModel = [[FHHouseNewTopContainerViewModel alloc] init];
+        self.houseNewTopViewModel.fh_trackModel = tracerModel;
+        
         CGFloat height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
         FHHouseNewTopContainer *topView = [[FHHouseNewTopContainer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)];
         topView.viewModel = self.houseNewTopViewModel;
@@ -2161,14 +2174,26 @@ extern NSString *const INSTANT_DATA_KEY;
     if (_mainListPage && _houseType == FHHouseTypeRentHouse) {
         return @"renting";
     }
+    
+    if (_houseType == FHHouseTypeNewHouse) {
+        return @"new_kind_list";
+    }
+    
     return @"old_kind_list";
 }
 
 -(NSString *)categoryName
 {
     if (_mainListPage) {
-        if (_houseType == FHHouseTypeRentHouse) {
-            return @"renting";
+        switch (_houseType) {
+            case FHHouseTypeRentHouse:
+                return @"renting";
+                break;
+            case FHHouseTypeNewHouse:
+                return @"new_kind_list";
+                break;
+            default:
+                break;
         }
         return @"old_kind_list";
     }

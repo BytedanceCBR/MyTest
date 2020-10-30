@@ -7,9 +7,8 @@
 
 #import "FHHouseNewEntrancesViewModel.h"
 #import "FHEnvContext.h"
-#import "TTRoute.h"
+#import "FHHouseOpenURLUtil.h"
 #import "FHUserTracker.h"
-#import "FHCommuteManager.h"
 #import "NSObject+FHTracker.h"
 #import "NSDictionary+BTDAdditions.h"
 
@@ -39,44 +38,23 @@
 
 - (void)onClickItem:(FHConfigDataOpDataItemsModel *)item {
     NSString *openUrl = item.openUrl;
-    if (!openUrl || !openUrl.length || ![openUrl isKindOfClass:[NSString class]]) return;
-
     NSDictionary *logPbParams = [FHTracerModel getLogPbParams:item.logPb];
-    NSString *originFrom = [logPbParams btd_stringValueForKey:UT_ORIGIN_FROM];
-    if (!originFrom) {
-        originFrom = self.fh_trackModel.originFrom;
-    }
-    NSString *elementFrom = [logPbParams btd_stringValueForKey:@"icon_name"];
-    if (!elementFrom) {
-        elementFrom = self.fh_trackModel.elementFrom;
-    }
+    NSString *icon_name = [logPbParams btd_stringValueForKey:@"icon_name"];
     
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[UT_ENTER_FROM] = self.fh_trackModel.pageType ? : @"be_null";
-    dict[UT_ORIGIN_FROM] = originFrom ? : @"be_null";
-    dict[UT_ELEMENT_FROM] = elementFrom ? : @"be_null";
-    dict[UT_LOG_PB] = logPbParams ? : @"be_null";
+    dict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : @"be_null";
+    dict[UT_ELEMENT_FROM] = icon_name ? : @"be_null";
+    dict[UT_LOG_PB] = item.logPb ? : @"be_null";
 
-    NSURL *url = [NSURL URLWithString:openUrl];
-    if ([openUrl containsString:@"://commute_list"]){
-        //通勤找房
-        [[FHCommuteManager sharedInstance] tryEnterCommutePage:openUrl logParam:dict];
-    } else {
-        NSDictionary *userInfoDict = @{@"tracer":dict};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    }
+    [FHHouseOpenURLUtil openUrl:openUrl logParams:dict];
     
-    [self trackerClickIcon:logPbParams];
-}
-
-- (void)trackerClickIcon:(NSDictionary *)logPbParams {
-    NSMutableDictionary *logParams = [NSMutableDictionary dictionary];
-    if (logPbParams) {
-        [logParams addEntriesFromDictionary:logPbParams];
+    {
+        NSMutableDictionary *logParams = [NSMutableDictionary dictionary];
+        logParams[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : @"be_null";
+        logParams[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : @"be_null";
+        logParams[@"icon_name"] = icon_name ? : @"be_null";
+        [FHUserTracker writeEvent:@"click_icon" params:logParams];
     }
-    
-    logParams[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : @"be_null";
-    [FHUserTracker writeEvent:@"click_icon" params:logParams];
 }
 @end

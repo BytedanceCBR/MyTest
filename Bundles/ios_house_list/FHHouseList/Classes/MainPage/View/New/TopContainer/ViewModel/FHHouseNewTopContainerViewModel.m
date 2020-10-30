@@ -6,6 +6,7 @@
 //
 
 #import "FHHouseNewTopContainerViewModel.h"
+#import "NSObject+FHTracker.h"
 
 @interface FHHouseNewTopContainerViewModel()
 
@@ -16,13 +17,20 @@
 
 @implementation FHHouseNewTopContainerViewModel
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
+- (FHHouseNewEntrancesViewModel *)entrancesViewModel {
+    if (!_entrancesViewModel) {
         _entrancesViewModel = [[FHHouseNewEntrancesViewModel alloc] init];
-        _billboardViewModel = [[FHHouseNewBillboardViewModel alloc] init];
+        _entrancesViewModel.fh_trackModel = self.fh_trackModel;
     }
-    return self;
+    return _entrancesViewModel;
+}
+
+- (FHHouseNewBillboardViewModel *)billboardViewModel {
+    if (!_billboardViewModel) {
+        _billboardViewModel = [[FHHouseNewBillboardViewModel alloc] init];
+        _billboardViewModel.fh_trackModel = self.fh_trackModel;
+    }
+    return _billboardViewModel;
 }
 
 - (BOOL)isValid {

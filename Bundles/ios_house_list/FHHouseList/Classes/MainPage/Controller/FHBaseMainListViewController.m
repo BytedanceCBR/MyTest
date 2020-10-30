@@ -153,7 +153,7 @@
     [self.view addSubview:_containerView];
     [self.view addSubview:_topContainerView];
     
-    _viewModel = [[FHBaseMainListViewModel alloc] initWithTableView:self.tableView houseType:_houseType routeParam:self.paramObj];
+    _viewModel = [[FHBaseMainListViewModel alloc] initWithTableView:self.tableView houseType:_houseType routeParam:self.paramObj viewController:self];
     
     [_viewModel addNotiWithNaviBar:self.navbar];
     _topView = [[FHMainListTopView alloc] initWithBannerView:self.viewModel.topBannerView filterView:self.viewModel.filterPanel filterTagsView:self.viewModel.topTagsView];
