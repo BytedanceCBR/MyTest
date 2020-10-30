@@ -160,7 +160,10 @@
         if (model.recallType.length > 0) {
             self.zoneTypeView.hidden = NO;
         };
-        self.subTitleLab.text = model.oldName;
+        if (model.oldName.length > 0) {
+            NSAttributedString *text1 = [self processHighlightedDefault:model.oldName textColor:[UIColor themeGray1] fontSize:14.0];
+            self.subTitleLab.attributedText = [self processHighlighted:text1 originText:model.oldName textColor:[UIColor themeOrange1] fontSize:16.0];
+        }
         self.zoneTypeLab.text = model.recallType;
             CGFloat zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
         [self.zoneTypeView mas_updateConstraints:^(MASConstraintMaker *make) {
