@@ -22,6 +22,9 @@
 #import <AVKit/AVPlayerViewController.h>
 #import <ByteDanceKit.h>
 #import <ios_house_im/FHIMConfigManager.h>
+#import <ios_house_im/FHAttachmentMessageSender.h>
+#import <ios_house_im/FHIMDefaultEventLogMonitor+FIMTrackEvent.h>
+
 typedef void (^FLinkChatPermissionAskActionBlock)(void);
 
 
@@ -38,6 +41,7 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
 @property (nonatomic, weak) UIView<TTRexxarEngine> *attachedWebview;
 
 + (instancetype)shared;
+- (void)playVideo:(NSString *)videoUrl;
 @end
 
 @implementation TTRPhotoLibraryHelper
@@ -49,6 +53,25 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
         _instance = [[TTRPhotoLibraryHelper alloc] init];
     });
     return _instance;
+}
+
+- (void)playVideo:(NSString *)videoUrl {
+    
+    if(videoUrl.length == 0) {
+        return;
+    }
+    
+    NSURL *url = [NSURL URLWithString:videoUrl];
+    if(!url) {
+        return;
+    }
+    
+    AVPlayerItem *playItem = [[AVPlayerItem alloc] initWithURL:url];
+    AVPlayer *player = [[AVPlayer alloc] initWithPlayerItem:playItem];
+    AVPlayerViewController *playerVC = [[AVPlayerViewController alloc] init];
+    playerVC.player = player;
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:playerVC animated:YES completion:nil];
+    
 }
 
 - (TTImagePickerController *)imagePickerController {
@@ -73,29 +96,77 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
     
     PHImageManager *manager = [PHImageManager defaultManager];
     [manager requestAVAssetForVideo:assetModel.asset options:videoOptions resultHandler:^(AVAsset * _Nullable asset, AVAudioMix * _Nullable audioMix, NSDictionary * _Nullable info) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if([self checkIfCanUploadForAsset:asset]) {
-                // 开始上传
-                [self updateVideoUploadState:TTRLinkChatVideoUploadState_Start data:@{
-                    @"state": @(TTRLinkChatVideoUploadState_Start),
-                    @"success": @(NO),
-                    @"message": @"开始上传",
-                    @"data": @{
-                    }
-                }];
-                
-                id<TIMFileUploadRequest> request = [[TIMCoreBridgeManager sharedInstance] getInstanceConformsToProtocol:@protocol(TIMFileUploadRequest)];
-                request.requestIdentifier = @"";
-                request.localFilePath = ((AVURLAsset *)asset).URL;
-                request.mimeType = @"video/*";
-                request.ext = @{
-                    TIM_FILE_EXT_KEY_TYPE:TIM_FILE_EXT_VALUE_TYPE_VIDEO
-                };
-                
-                [TIMSMediaFileUploadManager sharedInstance].delegate = self;
-                [[TIMSMediaFileUploadManager sharedInstance] uploadFileRequest:request config:nil];
+        
+        // 转码MP4后上传，兼容Android播放
+        AVAssetExportSession *exportSession = [[AVAssetExportSession alloc] initWithAsset:asset presetName:AVAssetExportPresetHighestQuality];
+        FHAttachmentMessageSender *attachementSender = [[FHAttachmentMessageSender alloc] init];
+        NSString *mp4OutputPath = [attachementSender createAttachmentLocalPathWithExtType:@"mp4"];
+        exportSession.outputURL = [NSURL URLWithString:mp4OutputPath];
+        exportSession.outputFileType = AVFileTypeMPEG4;
+        exportSession.shouldOptimizeForNetworkUse= YES;
+        
+        
+        [self updateVideoUploadState:TTRLinkChatVideoUploadState_Start data:@{
+            @"state": @(TTRLinkChatVideoUploadState_Start),
+            @"success": @(NO),
+            @"message": @"开始转码",
+            @"data": @{
             }
-        });
+        }];
+
+        [exportSession exportAsynchronouslyWithCompletionHandler:^{
+            switch (exportSession.status) {
+                case AVAssetExportSessionStatusCompleted:
+                {
+                    if([self checkIfCanUploadForAsset:asset]) {
+                        // 开始上传
+                        [self updateVideoUploadState:TTRLinkChatVideoUploadState_Start data:@{
+                            @"state": @(TTRLinkChatVideoUploadState_Start),
+                            @"success": @(NO),
+                            @"message": @"开始上传",
+                            @"data": @{
+                            }
+                        }];
+                        
+                        id<TIMFileUploadRequest> request = [[TIMCoreBridgeManager sharedInstance] getInstanceConformsToProtocol:@protocol(TIMFileUploadRequest)];
+                        request.requestIdentifier = @"";
+                        request.localFilePath = exportSession.outputURL;
+                        request.mimeType = @"video/mp4";
+                        request.ext = @{
+                            TIM_FILE_EXT_KEY_TYPE:TIM_FILE_EXT_VALUE_TYPE_VIDEO
+                        };
+                        
+                        [TIMSMediaFileUploadManager sharedInstance].delegate = self;
+                        [[TIMSMediaFileUploadManager sharedInstance] uploadFileRequest:request config:nil];
+                    }
+                }
+                    break;
+                case AVAssetExportSessionStatusFailed:
+                {
+                    [self updateVideoUploadState:TTRLinkChatVideoUploadState_End data:@{
+                        @"state": @(TTRLinkChatVideoUploadState_End),
+                        @"success": @(NO),
+                        @"message": @"转码MP4失败",
+                        @"data": @{
+                        }
+                    }];
+                }
+                    break;
+                case AVAssetExportSessionStatusCancelled:
+                {
+                    [self updateVideoUploadState:TTRLinkChatVideoUploadState_End data:@{
+                        @"state": @(TTRLinkChatVideoUploadState_End),
+                        @"success": @(NO),
+                        @"message": @"取消转码MP4",
+                        @"data": @{
+                        }
+                    }];
+                }
+                    break;
+                default:
+                    break;
+            }
+        }];
     }];
 }
 
@@ -115,7 +186,10 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
 }
 
 - (void)updateVideoUploadState:(TTRLinkChatVideoUploadState)state data:(NSDictionary *)data {
-    [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:data];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [FHIMDefaultEventLogMonitor trackService:@"link_chat_kefu" name:@"upload_video" data:data]; // 添加监控日志
+        [self.attachedWebview ttr_fireEvent:@"linkchatUploadVideo" data:data];
+    });
 }
 #pragma mark - TIMFileUploadDelegate
 - (void)uploadRequest:(NSString *)requestIdentifier progressDidUpdate:(float)progress {
@@ -259,6 +333,11 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
         [[TTRPhotoLibraryHelper shared].imagePickerController presentOn:navVC];
     }
     
+    callback(TTRJSBMsgSuccess, @{});
+}
+- (void)linkChatPlayVideoWithParam:(NSDictionary *)param callback:(TTRJSBResponse)callback webView:(UIView<TTRexxarEngine> *)webview controller:(UIViewController *)controller {
+    NSString *videoUrl = [param btd_stringValueForKey:@"video_url"];
+    [[TTRPhotoLibraryHelper shared] playVideo:videoUrl];
     callback(TTRJSBMsgSuccess, @{});
 }
 @end
