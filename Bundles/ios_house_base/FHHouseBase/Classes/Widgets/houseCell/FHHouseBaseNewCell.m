@@ -19,6 +19,24 @@
     return self;
 }
 
++ (UIImage *)placeholderImage {
+    static UIImage *placeholderImage = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        placeholderImage = [UIImage imageNamed: @"house_cell_placeholder"];
+    });
+    return placeholderImage;
+}
+
+- (void)updateMainImageWithUrl:(NSString *)url {
+    NSURL *imgUrl = [NSURL URLWithString:url];
+    if (imgUrl) {
+        [self.mainImageView bd_setImageWithURL:imgUrl placeholder:[[self class] placeholderImage]];
+    } else {
+        self.mainImageView.image = [[self class] placeholderImage];
+    }
+}
+
 - (void)initUI {
     [self.contentView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;

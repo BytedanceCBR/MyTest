@@ -12,6 +12,7 @@
 @synthesize mainImageView = _mainImageView, mainTitleLabel = _mainTitleLabel, pricePerSqmLabel = _pricePerSqmLabel, priceLabel = _priceLabel, houseMainImageBackView = _houseMainImageBackView;
 
 - (void)initUI {
+    [self.contentView addSubview:self.houseCellBackView];
     [self.contentView addSubview:self.houseMainImageBackView];
     [self.contentView addSubview:self.mainImageView];
     [self.houseMainImageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -26,7 +27,6 @@
         make.size.mas_equalTo(CGSizeMake(85, 64));
     }];
     [self.contentView addSubview:self.houseVideoImageView];
-    self.houseVideoImageView.hidden = YES;
     [self.houseVideoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainImageView).offset(12);
         make.bottom.equalTo(self.mainImageView).offset(-10);

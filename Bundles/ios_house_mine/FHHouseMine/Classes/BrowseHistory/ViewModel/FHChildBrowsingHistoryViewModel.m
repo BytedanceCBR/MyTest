@@ -26,6 +26,7 @@
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import "UIViewController+TTMovieUtil.h"
 #import "FHBrowsingHistoryNewCell.h"
+#import "FHHouseListRentCell.h"
 
 @interface FHChildBrowsingHistoryViewModel()<FHBrowsingHistoryEmptyViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -83,6 +84,7 @@
     [_tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:@"FHHouseBaseNewHouseCell"];
     [_tableView registerClass:[FHBrowsingHistoryContentCell class] forCellReuseIdentifier:@"FHBrowsingHistoryContentCell"];
     [_tableView registerClass:[FHBrowsingHistoryNewCell class] forCellReuseIdentifier:NSStringFromClass([FHBrowsingHistoryNewCell class])];
+    [_tableView registerClass:[FHHouseListRentCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListRentCell class])];
 }
 
 - (void)requestData:(BOOL)isHead {
@@ -205,6 +207,9 @@
             if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
                 return [FHBrowsingHistoryNewCell class];
             }
+            if (houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
+                return [FHHouseListRentCell class];
+            }
         }
     }
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
@@ -225,6 +230,9 @@
             FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
             if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
                 return NSStringFromClass([FHBrowsingHistoryNewCell class]);
+            }
+            if (houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
+                return NSStringFromClass([FHHouseListRentCell class]);
             }
         }
     }
@@ -253,12 +261,10 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger row = indexPath.row;
     if (row >= 0 && row < _historyList.count) {
-        BOOL isLastCell = NO;
-        BOOL isFirstCell = NO;
         id data = _historyList[row];
         NSString *identifier = [self cellIdentifierForEntity:data];
-        if ([identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNewCell class])]) {
-            FHBrowsingHistoryNewCell *cell = (FHBrowsingHistoryNewCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+        if ([identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNewCell class])] || [identifier isEqualToString:NSStringFromClass([FHHouseListRentCell class])]) {
+            FHHouseBaseUsuallyCell *cell = (FHHouseBaseUsuallyCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             [cell refreshWithData:data];
             return cell;
         }

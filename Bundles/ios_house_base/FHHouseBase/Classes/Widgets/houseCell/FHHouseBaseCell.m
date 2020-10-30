@@ -190,6 +190,7 @@
 - (UIView *)houseCellBackView {
     if (!_houseCellBackView) {
         _houseCellBackView = [[UIView alloc] init];
+        _houseCellBackView.backgroundColor = [UIColor clearColor];
     }
     return _houseCellBackView;
 }

@@ -66,6 +66,7 @@
 #import "FHDynamicLynxCell.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "NSArray+BTDAdditions.h"
+#import "FHHouseListRentCell.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -263,6 +264,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [_tableView registerClass:[FHHouseSearchSecondHouseCell class] forCellReuseIdentifier:@"FHHouseSearchSecondHouseCell"];
     [_tableView registerClass:[FHHouseSearchNewHouseCell class] forCellReuseIdentifier:@"FHHouseSearchNewHouseCell"];
     [_tableView registerClass:[FHDynamicLynxCell class] forCellReuseIdentifier:@"FHDynamicLynxCell"];
+    [_tableView registerClass:[FHHouseListRentCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListRentCell class])];
 
     if(self.commute){  
         [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
@@ -280,6 +282,11 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
+        if ([FHEnvContext isDisplayNewCardType]) {
+            if (self.houseType == FHHouseTypeRentHouse) {
+                return [FHHouseListRentCell class];
+            }
+        }
         if (self.commute) {
             return [FHHouseBaseItemCell class];
         }else if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
@@ -338,6 +345,11 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
+        if ([FHEnvContext isDisplayNewCardType]) {
+            if (self.houseType == FHHouseTypeRentHouse) {
+                return NSStringFromClass([FHHouseListRentCell class]);
+            }
+        }
         if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
             if (houseModel.cellStyles == 6) {
                 return @"FHListSynchysisNewHouseCell";
@@ -1594,14 +1606,6 @@ extern NSString *const INSTANT_DATA_KEY;
             return cell;
         }
     }
-    
-    CGFloat topMargin = 10;
-    if (self.isCommute) {
-        //通勤找房 筛选器没有底部线
-        if(indexPath.row != 0){
-            topMargin = 20;
-        }
-    }
     BOOL isLastCell = NO;
     BOOL isFirstCell = NO;
     if (indexPath.row == 0) {
@@ -1622,9 +1626,15 @@ extern NSString *const INSTANT_DATA_KEY;
     if (data) {
         identifier = [self cellIdentifierForEntity:data];
     }
-
     __weak typeof(self)wself = self;
     if (identifier.length > 0) {
+        if ([FHEnvContext isDisplayNewCardType]) {
+            if (self.houseType == FHHouseTypeRentHouse) {
+                FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+                [cell refreshWithData:data];
+                return cell;
+            }
+        }
         FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
         if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
             cell.backgroundColor = [UIColor themeGray7];
