@@ -179,6 +179,9 @@
         } else {
             [cell updateWithChat:model];
             cell.isCanGesture = YES;
+            if([[FIMDebugManager shared] isEnableForEntry:FIMDebugOptionEntrySwitchShowDebugInfo]) {
+                cell.indexLabel.text = [NSString stringWithFormat:@"%@/%@", @(indexPath.row), @(self.items.count)];
+            }
         }
         __weak typeof(self)wself = self;
         cell.deleteConversation = ^(NSInteger index) {
