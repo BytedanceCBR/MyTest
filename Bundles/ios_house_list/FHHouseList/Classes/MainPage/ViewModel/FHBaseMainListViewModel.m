@@ -377,18 +377,25 @@ extern NSString *const INSTANT_DATA_KEY;
             self.topBannerView = topView;
         }
     }else if (_houseType == FHHouseTypeNewHouse) {
-        self.houseNewTopViewModel = [[FHHouseNewTopContainerViewModel alloc] init];
-        CGFloat height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
-        FHHouseNewTopContainer *topView = [[FHHouseNewTopContainer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)];
-        topView.viewModel = self.houseNewTopViewModel;
-        WeakSelf;
-        topView.onStateChanged = ^{
-            StrongSelf;
-            self.topView.height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
-        };
-        topView.clipsToBounds = YES;
-        [self.houseNewTopViewModel startLoading];
-        self.topBannerView = topView;
+        if (dataModel.courtOpData.items.count > 0) {
+            self.houseNewTopViewModel = [[FHHouseNewTopContainerViewModel alloc] init];
+            CGFloat height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
+            FHHouseNewTopContainer *topView = [[FHHouseNewTopContainer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)];
+            topView.viewModel = self.houseNewTopViewModel;
+            WeakSelf;
+            topView.onStateChanged = ^{
+                StrongSelf;
+                self.topBannerView.top = 0;
+                self.topBannerView.height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
+            };
+            topView.clipsToBounds = YES;
+            [self.houseNewTopViewModel startLoading];
+            self.topBannerView = topView;
+        }else {
+            UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
+            topView.backgroundColor = [UIColor whiteColor];
+            self.topBannerView = topView;
+        }
     }else {
         UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
         topView.backgroundColor = [UIColor whiteColor];
@@ -948,10 +955,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 [self.houseList addObject:cellModel];
             }
         }
-        if (self.houseType == FHHouseTypeNewHouse) {
-            FHCourtBillboardPreviewModel *billboardModel = ((FHListSearchHouseModel *)model).data.courtBillboardPreview;
-            [self.houseNewTopViewModel loadFinishWithData:billboardModel];
-        }
         [self.tableView reloadData];
         
         if (isFirstLoadCopy) {
@@ -987,6 +990,37 @@ extern NSString *const INSTANT_DATA_KEY;
         } else {
             [self showErrorMask:NO tip:FHEmptyMaskViewTypeNoData enableTap:NO ];
             self.tableView.scrollEnabled = YES;
+        }
+        
+        if (self.houseType == FHHouseTypeNewHouse && isRefresh) {
+            FHCourtBillboardPreviewModel *billboardModel = ((FHListSearchHouseModel *)model).data.courtBillboardPreview;
+            [self.houseNewTopViewModel loadFinishWithData:billboardModel];
+            if (self.topView.superview == self.tableView) {
+                if (self.houseType == FHHouseTypeNewHouse) {
+                    CGFloat height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
+                    height += [self.topView filterHeight];
+                    CGFloat deltaH = height - self.tableView.contentInset.top;
+                    UIEdgeInsets insets = self.tableView.contentInset;
+                    insets.top = height;
+                    self.tableView.contentInset = insets;
+                    CGPoint offset = self.tableView.contentOffset;
+                    offset.y -= deltaH;
+                    self.tableView.contentOffset = offset;
+                    
+                    [self.topView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                        make.top.mas_equalTo(-height);
+                        make.width.mas_equalTo(SCREEN_WIDTH);
+                        make.height.mas_equalTo(height);
+                    }];
+                    
+                    [self.tableView layoutIfNeeded];
+                    
+                    if ([self.topView respondsToSelector:@selector(relayout)]) {
+                        [self.topView relayout];
+                        [self.tableView scrollsToTop];
+                    }
+                }
+            }
         }
     } else {
         [self showErrorMask:YES tip:FHEmptyMaskViewTypeNoData enableTap:YES ];
