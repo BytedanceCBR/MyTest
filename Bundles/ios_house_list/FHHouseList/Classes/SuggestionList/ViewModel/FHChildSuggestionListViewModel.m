@@ -811,8 +811,8 @@
                 cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1] fontSize:15.0];
                 cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1] fontSize:12.0];
                 cell.secondaryLabel.text = model.tips;
-                cell.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:@"#f70000"];
-                cell.secondaryLabel.textColor = [UIColor colorWithHexStr:@"#ffffff"];
+                cell.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:@"#ffeee5"];
+                cell.secondaryLabel.textColor = [UIColor colorWithHexStr:@"#fe5500"];
                 [cell.secondaryLabel setNeedsLayout];
                 [cell.secondaryLabel layoutIfNeeded];
                 
