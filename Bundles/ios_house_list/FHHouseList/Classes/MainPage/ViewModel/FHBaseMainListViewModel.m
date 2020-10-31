@@ -108,8 +108,6 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
 
-@property (nonatomic, strong) FHHouseNewTopContainerViewModel *houseNewTopViewModel;
-
 @end
 
 
@@ -341,7 +339,6 @@ extern NSString *const INSTANT_DATA_KEY;
     }];
 }
 
-
 -(void)initTopBanner
 {
     FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -354,9 +351,7 @@ extern NSString *const INSTANT_DATA_KEY;
             topView.delegate = self;
             self.topBannerView = topView;
         }else {
-            UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
-            topView.backgroundColor = [UIColor whiteColor];
-            self.topBannerView = topView;
+            [self addDefaultTopView];
         }
     }else if (_houseType == FHHouseTypeSecondHandHouse){
         if (dataModel.houseOpData2.items.count > 0) {
@@ -374,46 +369,28 @@ extern NSString *const INSTANT_DATA_KEY;
             }
             [self.showCache removeAllObjects];
         }else {
-            UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
-            topView.backgroundColor = [UIColor whiteColor];
-            self.topBannerView = topView;
+            [self addDefaultTopView];
         }
     }else if (_houseType == FHHouseTypeNewHouse) {
         if (dataModel.courtOpData.items.count > 0) {
-            FHTracerModel *tracerModel = [[FHTracerModel alloc] init];
-            tracerModel.originSearchId = self.originSearchId;
-            tracerModel.searchId = self.searchId;
-            tracerModel.pageType = [self pageTypeString];
-            tracerModel.categoryName = [self categoryName];
-            tracerModel.originFrom = self.tracerModel.originFrom;
-            tracerModel.enterFrom = self.tracerModel.enterFrom;
-            tracerModel.elementFrom = self.tracerModel.elementFrom;
-            
-            self.houseNewTopViewModel = [[FHHouseNewTopContainerViewModel alloc] init];
-            self.houseNewTopViewModel.fh_trackModel = tracerModel;
-            CGFloat height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
-            FHHouseNewTopContainer *topView = [[FHHouseNewTopContainer alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, height)];
-            topView.viewModel = self.houseNewTopViewModel;
-            WeakSelf;
-            topView.onStateChanged = ^{
-                StrongSelf;
-                self.topBannerView.top = 0;
-                self.topBannerView.height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
-            };
-            topView.clipsToBounds = YES;
-            [self.houseNewTopViewModel startLoading];
-            self.topBannerView = topView;
+            FHTracerModel *tracerModel = [self prepareForTracerModel];
+            [self addNewHouseTopViewWithTracerModel:tracerModel];
         }else {
-            UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
-            topView.backgroundColor = [UIColor whiteColor];
-            self.topBannerView = topView;
+            [self addDefaultTopView];
         }
     }else {
-        UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
-        topView.backgroundColor = [UIColor whiteColor];
-        self.topBannerView = topView;
+        [self addDefaultTopView];
     }
     
+}
+
+/**
+ 没有数据时展示空白的topView
+ */
+- (void)addDefaultTopView {
+    UIView *topView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, [FHFakeInputNavbar perferredHeight])];
+    topView.backgroundColor = [UIColor whiteColor];
+    self.topBannerView = topView;
 }
 
 - (void)setupTopTagsView
@@ -989,6 +966,12 @@ extern NSString *const INSTANT_DATA_KEY;
 //            self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
 //        }
         
+        ///新房大类页头部需要更新
+        if (self.houseType == FHHouseTypeNewHouse && isRefresh) {
+            FHCourtBillboardPreviewModel *billboardModel = ((FHListSearchHouseModel *)model).data.courtBillboardPreview;
+            [self updateNewHouseWithModel:billboardModel];
+        }
+        
         if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
             if (!_showFilter && !hideRefreshTip) {
                 [self showNotifyMessage:refreshTip];
@@ -1003,37 +986,7 @@ extern NSString *const INSTANT_DATA_KEY;
             [self showErrorMask:NO tip:FHEmptyMaskViewTypeNoData enableTap:NO ];
             self.tableView.scrollEnabled = YES;
         }
-        
-        if (self.houseType == FHHouseTypeNewHouse && isRefresh) {
-            FHCourtBillboardPreviewModel *billboardModel = ((FHListSearchHouseModel *)model).data.courtBillboardPreview;
-            [self.houseNewTopViewModel loadFinishWithData:billboardModel];
-            if (self.topView.superview == self.tableView) {
-                if (self.houseType == FHHouseTypeNewHouse) {
-                    CGFloat height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
-                    height += [self.topView filterHeight];
-                    CGFloat deltaH = height - self.tableView.contentInset.top;
-                    UIEdgeInsets insets = self.tableView.contentInset;
-                    insets.top = height;
-                    self.tableView.contentInset = insets;
-                    CGPoint offset = self.tableView.contentOffset;
-                    offset.y -= deltaH;
-                    self.tableView.contentOffset = offset;
-                    
-                    [self.topView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                        make.top.mas_equalTo(-height);
-                        make.width.mas_equalTo(SCREEN_WIDTH);
-                        make.height.mas_equalTo(height);
-                    }];
-                    
-                    [self.tableView layoutIfNeeded];
-                    
-                    if ([self.topView respondsToSelector:@selector(relayout)]) {
-                        [self.topView relayout];
-                        [self.tableView scrollsToTop];
-                    }
-                }
-            }
-        }
+
     } else {
         [self showErrorMask:YES tip:FHEmptyMaskViewTypeNoData enableTap:YES ];
     }
@@ -1130,6 +1083,45 @@ extern NSString *const INSTANT_DATA_KEY;
         dict[@"tracer"] = tracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
+    }
+}
+
+/**
+ 更新新房大类页头部
+ 新房大类页头部包含榜单/banner等内容，其高度是动态计算的，依赖接口返回的数据
+ 因此需要对新房大类页头部内容及其高度进行更新
+ */
+- (void)updateNewHouseWithModel:(FHCourtBillboardPreviewModel *)model {
+    if (!model || ![model isKindOfClass:[FHCourtBillboardPreviewModel class]]) {
+        return;
+    }
+    
+    FHCourtBillboardPreviewModel *billboardModel = model;
+    [self.houseNewTopViewModel loadFinishWithData:billboardModel];
+    if (self.topView.superview == self.tableView) {
+        if (self.houseType == FHHouseTypeNewHouse) {
+            ///根据model计算新房大类页头部高度
+            CGFloat height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
+            height += [self.topView filterHeight];
+            ///保存contentInset高度变化值
+            CGFloat deltaH = height - self.tableView.contentInset.top;
+            ///更新tableView的contentInset
+            UIEdgeInsets insets = self.tableView.contentInset;
+            insets.top = height;
+            self.tableView.contentInset = insets;
+            ///更新tableView的contentOffset
+            CGPoint offset = self.tableView.contentOffset;
+            offset.y -= deltaH;
+            self.tableView.contentOffset = offset;
+            ///更新topView的高度和y值
+            self.topView.height = height;
+            self.topView.top = -height;
+            
+            if ([self.topView respondsToSelector:@selector(relayout)]) {
+                [self.topView relayout];
+                [self.tableView scrollsToTop];
+            }
+        }
     }
 }
 
@@ -2088,7 +2080,7 @@ extern NSString *const INSTANT_DATA_KEY;
             FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
             urlStr = [NSString stringWithFormat:@"fschema://rent_detail?house_id=%@", model.id];
         }
-    }else if (self.houseType == FHHouseTypeSecondHandHouse){
+    }else if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNewHouse){
         
         NSInteger rank = indexPath.row;
         if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
