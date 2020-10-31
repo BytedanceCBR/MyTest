@@ -11,6 +11,7 @@
 #import "NSObject+FHTracker.h"
 #import "FHHouseOpenURLUtil.h"
 #import "NSString+BTDAdditions.h"
+#import "NSURL+BTDAdditions.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "FHHouseNewBillboardTrackDefines.h"
 #import "FHUserTracker.h"
@@ -83,14 +84,14 @@
         
         logParams[UT_ELEMENT_FROM] = UT_ELEMENT_TYPE_BILLBOARD;
         
-        NSMutableDictionary *params = [[openUrl btd_queryParamDict] mutableCopy];
-        NSString *urlStr = [[params btd_stringValueForKey:@"url"] btd_stringByURLDecode];
-        urlStr = [[urlStr btd_urlStringByAddingParameters:logParams] btd_stringByURLEncode];
-        if (urlStr) {
-            params[@"url"] = urlStr;
+        NSDictionary *params = [openUrl btd_queryParamDict];
+        NSString *urlValue = [params btd_stringValueForKey:@"url"];
+        if (urlValue) {
+            NSString *finalUrlValue = [[[urlValue btd_stringByURLDecode] btd_urlStringByAddingParameters:logParams] btd_stringByURLEncode];
+            if (finalUrlValue) {
+                openUrl = [openUrl stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"url=%@", urlValue] withString:[NSString stringWithFormat:@"url=%@", finalUrlValue]];
+            }
         }
-        
-        openUrl = [@"sslocal://webview" btd_urlStringByAddingParameters:params];
     }
     
     [FHHouseOpenURLUtil openUrl:openUrl logParams:dict];
