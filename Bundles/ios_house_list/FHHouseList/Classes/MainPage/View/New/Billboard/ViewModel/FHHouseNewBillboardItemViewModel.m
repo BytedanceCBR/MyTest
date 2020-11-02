@@ -69,7 +69,7 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[UT_ENTER_FROM] = self.fh_trackModel.pageType ? : @"be_null";
     dict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : @"be_null";
-    dict[UT_ELEMENT_FROM] = self.fh_trackModel.elementFrom ? : @"be_null";
+    dict[UT_ELEMENT_FROM] = UT_ELEMENT_TYPE_BILLBOARD;
     [FHHouseOpenURLUtil openUrl:openUrl logParams:dict];
 }
 

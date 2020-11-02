@@ -8,6 +8,9 @@
 #import "FHHouseOpenURLUtil.h"
 #import "FHCommuteManager.h"
 #import "TTRoute.h"
+#import "NSString+BTDAdditions.h"
+#import "NSURL+BTDAdditions.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @implementation FHHouseOpenURLUtil
 
@@ -49,6 +52,19 @@
 + (void)openUrl:(NSString *)openUrl logParams:(NSDictionary *)logParams {
     if (!openUrl || !openUrl.length || ![openUrl isKindOfClass:[NSString class]]) return;
     NSURL *url = [NSURL URLWithString:openUrl];
+    NSString *host = url.host;
+    if ([host isEqualToString:@"webview"]) {
+        NSDictionary *params = [openUrl btd_queryParamDict];
+        NSString *urlValue = [params btd_stringValueForKey:@"url"];
+        if (urlValue) {
+            NSString *finalUrlValue = [[[urlValue btd_stringByURLDecode] btd_urlStringByAddingParameters:logParams] btd_stringByURLEncode];
+            if (finalUrlValue) {
+                openUrl = [openUrl stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"url=%@", urlValue] withString:[NSString stringWithFormat:@"url=%@", finalUrlValue]];
+                url = [NSURL URLWithString:openUrl];
+            }
+        }
+    }
+    
     if ([openUrl containsString:@"://commute_list"]){
         //通勤找房
         [[FHCommuteManager sharedInstance] tryEnterCommutePage:openUrl logParam:logParams];

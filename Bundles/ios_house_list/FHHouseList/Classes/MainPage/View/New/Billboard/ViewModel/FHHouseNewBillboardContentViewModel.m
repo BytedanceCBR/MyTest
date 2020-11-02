@@ -70,30 +70,7 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[UT_ENTER_FROM] = self.fh_trackModel.pageType ? : @"be_null";
     dict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : @"be_null";
-    dict[UT_ELEMENT_FROM] = self.fh_trackModel.elementFrom ? : @"be_null";
-    
-    if ([openUrl hasPrefix:@"sslocal://webview"]) {
-        NSMutableDictionary *logParams = [NSMutableDictionary dictionary];
-        if (self.fh_trackModel.pageType) {
-            logParams[UT_ENTER_FROM] = self.fh_trackModel.pageType;
-        }
-        
-        if (self.fh_trackModel.originFrom) {
-            logParams[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom;
-        }
-        
-        logParams[UT_ELEMENT_FROM] = UT_ELEMENT_TYPE_BILLBOARD;
-        
-        NSDictionary *params = [openUrl btd_queryParamDict];
-        NSString *urlValue = [params btd_stringValueForKey:@"url"];
-        if (urlValue) {
-            NSString *finalUrlValue = [[[urlValue btd_stringByURLDecode] btd_urlStringByAddingParameters:logParams] btd_stringByURLEncode];
-            if (finalUrlValue) {
-                openUrl = [openUrl stringByReplacingOccurrencesOfString:[NSString stringWithFormat:@"url=%@", urlValue] withString:[NSString stringWithFormat:@"url=%@", finalUrlValue]];
-            }
-        }
-    }
-    
+    dict[UT_ELEMENT_FROM] = UT_ELEMENT_TYPE_BILLBOARD;
     [FHHouseOpenURLUtil openUrl:openUrl logParams:dict];
 }
 
