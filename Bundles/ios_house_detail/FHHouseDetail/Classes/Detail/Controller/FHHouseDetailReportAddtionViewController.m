@@ -570,6 +570,40 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
     [self adddGoDetail];
 }
 
+- (BOOL)checkIfExitPage {
+    BOOL ret = YES;
+    ret = (self.additionCell.inputTextView.text.length == 0) && (self.imagesCell.imagesView.selectedImages.count == 0);
+    return ret;
+}
+
+- (void)goBack {
+    
+    
+    UIResponder *firstResponder = nil;
+    if(self.additionCell.inputTextView.isFirstResponder) {
+        firstResponder = self.additionCell.inputTextView;
+    }
+    
+    [self.view endEditing:YES];
+    if([self checkIfExitPage]) {
+        [super goBack];
+    }
+    else {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"是否确认返回" message:@"返回后编辑的内容将不被保存" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"继续编辑" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [firstResponder becomeFirstResponder];
+        }];
+        UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"返回" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [super goBack];
+        }];
+
+        [alertController addAction:confirmAction];
+        [alertController addAction:cancelAction];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
+}
+
 - (void)adddGoDetail {
     NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
     reportParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
