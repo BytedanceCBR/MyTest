@@ -348,11 +348,13 @@
     NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",jumpHouseTpye,placeHolderStr,placeHolderStr];
     if (self.suggestDelegate != NULL) {
         NSDictionary *infos = @{
-                                @"houseSearch":houseSearchParams
+                                @"houseSearch":houseSearchParams,
+                                @"pre_house_type":@(self.houseType),
                                 };
         if (self.tracerDict.count > 0) {
             infos = @{
                       @"houseSearch":houseSearchParams,
+                      @"pre_house_type":@(self.houseType),
                       @"tracer": self.tracerDict
                       };
         }
@@ -360,7 +362,8 @@
     } else {
         self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
         NSDictionary *infos = @{@"houseSearch":houseSearchParams,
-                               @"tracer": self.tracerDict
+                               @"tracer": self.tracerDict,
+                                @"pre_house_type":@(self.houseType),
                                };
         [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
     }
