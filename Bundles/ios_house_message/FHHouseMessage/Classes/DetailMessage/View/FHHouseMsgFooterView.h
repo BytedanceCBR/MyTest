@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseMsgFooterView : UIView
+@interface FHHouseMsgFooterView : UITableViewHeaderFooterView
 
 @property(nonatomic, strong) UILabel *contentLabel;
 
