@@ -57,13 +57,13 @@
     [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainTitleLabel);
         make.top.equalTo(self.subTitleLabel.mas_bottom).offset(7);
-        make.right.mas_equalTo(-15);
+        make.right.mas_lessThanOrEqualTo(self.priceLabel.mas_left).offset(-2);
     }];
     [self.contentView addSubview:self.distanceLabel];
     [self.distanceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainTitleLabel);
         make.top.equalTo(self.subTitleLabel.mas_bottom).offset(7);
-        make.right.mas_equalTo(-15);
+        make.right.mas_lessThanOrEqualTo(self.priceLabel.mas_left).offset(-2);
     }];
     self.distanceLabel.hidden = YES;
 }

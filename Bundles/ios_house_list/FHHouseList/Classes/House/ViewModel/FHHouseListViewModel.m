@@ -55,7 +55,6 @@
 #import "FHHouseListRecommendTipCell.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <TTBaseLib/UIViewAdditions.h>
-#import "FHHouseBaseNewHouseCell.h"
 #import "FHMainOldTopTagsView.h"
 #import "FHHouseListRedirectTipCell.h"
 #import <FHHouseBase/FHRelevantDurationTracker.h>
@@ -238,7 +237,6 @@ extern NSString *const INSTANT_DATA_KEY;
                          NSStringFromClass([FHPlaceHolderCell class]),
                          NSStringFromClass([FHHouseListAgencyInfoCell class]),
                          NSStringFromClass([FHHouseListNoHouseCell class]),
-                         //NSStringFromClass([FHHouseBaseNewHouseCell class]),
                          NSStringFromClass([FHPlaceHolderCell class]),
                          NSStringFromClass([FHHomePlaceHolderCell class]),
                          NSStringFromClass([FHHouseListRedirectTipCell class]),
@@ -290,13 +288,9 @@ extern NSString *const INSTANT_DATA_KEY;
         if (self.commute) {
             return [FHHouseBaseItemCell class];
         }else if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
-            if (houseModel.cellStyles == 6) {
-                     return [FHHouseListBaseItemCell class];
-                }
-            else if (houseModel.cellStyles == 8) {
+            if (houseModel.cellStyles == 8) {
                 return [FHHouseSearchNewHouseCell class];
             }
-            return [FHHouseBaseNewHouseCell class];
         }else {
             if (houseModel.cellStyles == 7) {
                 return [FHHouseSearchSecondHouseCell class];
@@ -1646,11 +1640,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 [newHousecell updateSynchysisNewHouseCellWithSearchHouseModel:item];
                 return newHousecell;
             }
-        }
-        if ([cell isKindOfClass:[FHHouseBaseNewHouseCell class]]) {
-            FHHouseBaseNewHouseCell *theCell = (FHHouseBaseNewHouseCell *)cell;
-            [theCell updateHouseListNewHouseCellModel:data];
-            [theCell updateVrInfo:data];
         }
         
         if ([cell isKindOfClass:[FHFindHouseHelperCell class]]) {
