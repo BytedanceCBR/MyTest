@@ -40,18 +40,26 @@
 - (void)setupUI {
     
     self.iconView = [[UIView alloc] init];
+    self.iconView.layer.cornerRadius = 4;
+    self.iconView.layer.masksToBounds = YES;
     self.iconView.backgroundColor = PlaceholderColor;
     [self addSubview:self.iconView];
     
     self.titleView = [[UIView alloc] init];
+    self.titleView.layer.cornerRadius = 4;
+    self.titleView.layer.masksToBounds = YES;
     self.titleView.backgroundColor = PlaceholderColor;
     [self addSubview:self.titleView];
     
     self.subtitleView = [[UIView alloc] init];
+    self.subtitleView.layer.cornerRadius = 4;
+    self.subtitleView.layer.masksToBounds = YES;
     self.subtitleView.backgroundColor = PlaceholderColor;
     [self addSubview:self.subtitleView];
     
     self.detailView = [[UIView alloc] init];
+    self.detailView.layer.cornerRadius = 4;
+    self.detailView.layer.masksToBounds = YES;
     self.detailView.backgroundColor = PlaceholderColor;
     [self addSubview:self.detailView];
 }
