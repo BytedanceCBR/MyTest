@@ -33,9 +33,12 @@
 }
 
 - (void)loadFinishWithData:(FHCourtBillboardPreviewModel *)data {
-    if (data) {
+    if (data && [data isKindOfClass:FHCourtBillboardPreviewModel.class]) {
         _loading = NO;
         _contentViewModel = [[FHHouseNewBillboardContentViewModel alloc] initWithModel:data tracerModel:self.fh_trackModel];
+        [self fireObservers];
+    } else {
+        _loading = NO;
         [self fireObservers];
     }
 }

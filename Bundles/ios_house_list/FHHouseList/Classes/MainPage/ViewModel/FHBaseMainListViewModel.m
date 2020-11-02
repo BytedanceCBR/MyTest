@@ -969,7 +969,7 @@ extern NSString *const INSTANT_DATA_KEY;
         ///新房大类页头部需要更新
         if (self.houseType == FHHouseTypeNewHouse && isRefresh) {
             FHCourtBillboardPreviewModel *billboardModel = ((FHListSearchHouseModel *)model).data.courtBillboardPreview;
-            [self updateNewHouseWithModel:billboardModel];
+            [self.houseNewTopViewModel loadFinishWithData:billboardModel];
         }
         
         if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
@@ -1083,45 +1083,6 @@ extern NSString *const INSTANT_DATA_KEY;
         dict[@"tracer"] = tracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }
-}
-
-/**
- 更新新房大类页头部
- 新房大类页头部包含榜单/banner等内容，其高度是动态计算的，依赖接口返回的数据
- 因此需要对新房大类页头部内容及其高度进行更新
- */
-- (void)updateNewHouseWithModel:(FHCourtBillboardPreviewModel *)model {
-    if (!model || ![model isKindOfClass:[FHCourtBillboardPreviewModel class]]) {
-        return;
-    }
-    
-    FHCourtBillboardPreviewModel *billboardModel = model;
-    [self.houseNewTopViewModel loadFinishWithData:billboardModel];
-    if (self.topView.superview == self.tableView) {
-        if (self.houseType == FHHouseTypeNewHouse) {
-            ///根据model计算新房大类页头部高度
-            CGFloat height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
-            height += [self.topView filterHeight];
-            ///保存contentInset高度变化值
-            CGFloat deltaH = height - self.tableView.contentInset.top;
-            ///更新tableView的contentInset
-            UIEdgeInsets insets = self.tableView.contentInset;
-            insets.top = height;
-            self.tableView.contentInset = insets;
-            ///更新tableView的contentOffset
-            CGPoint offset = self.tableView.contentOffset;
-            offset.y -= deltaH;
-            self.tableView.contentOffset = offset;
-            ///更新topView的高度和y值
-            self.topView.height = height;
-            self.topView.top = -height;
-            
-            if ([self.topView respondsToSelector:@selector(relayout)]) {
-                [self.topView relayout];
-                [self.tableView scrollsToTop];
-            }
-        }
     }
 }
 

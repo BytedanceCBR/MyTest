@@ -85,6 +85,7 @@ static NSInteger const ButtonBottomMargin = 16.0f;
         _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:18];
         _titleLabel.textColor = [UIColor colorWithHexStr:@"#333333"];
         _titleLabel.textAlignment = NSTextAlignmentLeft;
+        _titleLabel.hidden = YES;
     }
     return _titleLabel;
 }
@@ -92,6 +93,7 @@ static NSInteger const ButtonBottomMargin = 16.0f;
 - (UIView *)itemsContainerView {
     if (!_itemsContainerView) {
         _itemsContainerView = [[UIView alloc] init];
+        _itemsContainerView.hidden = YES;
     }
     return _itemsContainerView;
 }
@@ -105,6 +107,7 @@ static NSInteger const ButtonBottomMargin = 16.0f;
         [_moreButton setTitleColor:[UIColor colorWithHexStr:@"#fe5500"] forState:UIControlStateNormal];
         _moreButton.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Regular" size:16];
         [_moreButton addTarget:self action:@selector(onMoreButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        _moreButton.hidden = YES;
     }
     return _moreButton;
 }
@@ -122,6 +125,9 @@ static NSInteger const ButtonBottomMargin = 16.0f;
 }
 
 - (void)refreshUI {
+    self.titleLabel.hidden = !self.contentViewModel.items.count;
+    self.moreButton.hidden = !self.contentViewModel.items.count;
+    self.itemsContainerView.hidden = !self.contentViewModel.items.count;
     self.titleLabel.text = self.contentViewModel.title;
     [self.moreButton setTitle:self.contentViewModel.buttonText forState:UIControlStateNormal];
     NSArray *items = self.contentViewModel.items;
