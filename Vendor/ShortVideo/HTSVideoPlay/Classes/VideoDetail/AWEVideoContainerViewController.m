@@ -220,6 +220,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         view.showsHorizontalScrollIndicator = NO;
         view.showsVerticalScrollIndicator = NO;
         view.pagingEnabled = YES;
+        view.scrollsToTop = NO;
         view.backgroundColor = [UIColor clearColor];
         [view registerClass:[FHUGCShortVideoFullScreenCell class] forCellWithReuseIdentifier:videoCellReuseIdentifier];
         [view registerClass:[AWEVideoLoadingCollectionViewCell class] forCellWithReuseIdentifier:loadingCellReuseIdentifier];
