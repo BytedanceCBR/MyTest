@@ -50,6 +50,7 @@
     [self.playImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.equalTo(self);
     }];
+    self.clipsToBounds = YES;
 }
 
 - (UIImageView *)playImage {
