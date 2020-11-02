@@ -49,18 +49,19 @@
 - (void)updateTopViewLayoutIfNeed {
     if (self.topView.superview == self.tableView) {
         if (self.houseType == FHHouseTypeNewHouse) {
+            ///保存变化前的状态
+            CGFloat originOffsetY = self.tableView.contentOffset.y;
+            CGFloat originContentInsetsTop = self.tableView.contentInset.top;
             ///根据model计算新房大类页头部高度
             CGFloat height = [FHHouseNewTopContainer viewHeightWithViewModel:self.houseNewTopViewModel];
             height += [self.topView filterHeight];
-            ///保存contentInset高度变化值
-            CGFloat deltaH = height - self.tableView.contentInset.top;
             ///更新tableView的contentInset
             UIEdgeInsets insets = self.tableView.contentInset;
             insets.top = height;
             self.tableView.contentInset = insets;
             ///更新tableView的contentOffset
             CGPoint offset = self.tableView.contentOffset;
-            offset.y -= deltaH;
+            offset.y = originOffsetY + originContentInsetsTop - height;
             self.tableView.contentOffset = offset;
             ///更新topView的高度和y值
             self.topView.height = height;
