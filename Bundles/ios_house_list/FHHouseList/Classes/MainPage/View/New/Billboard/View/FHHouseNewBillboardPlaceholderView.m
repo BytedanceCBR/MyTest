@@ -123,6 +123,8 @@ static CGFloat const TitleWidth = 90;
 - (void)setupUI {
     self.titleView = [[UIView alloc] init];
     self.titleView.backgroundColor = PlaceholderColor;
+    self.titleView.layer.cornerRadius = 4;
+    self.titleView.layer.masksToBounds = YES;
     [self addSubview:self.titleView];
     
     self.itemView = [[FHHouseNewBillboardPlaceholderItemView alloc] init];
