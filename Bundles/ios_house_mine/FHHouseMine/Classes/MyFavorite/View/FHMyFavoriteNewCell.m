@@ -57,8 +57,9 @@
         make.top.equalTo(self.pricePerSqmLabel.mas_bottom);
         make.right.equalTo(self.contentView).offset(-15);
     }];
-    [self.contentView addSubview:self.tagInformation];
-    [self.tagInformation mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.contentView addSubview:self.tagLabel];
+    self.tagLabel.textColor = [UIColor themeOrange1];
+    [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainTitleLabel);
         make.top.equalTo(self.subTitleLabel.mas_bottom).offset(5);
         make.right.equalTo(self.contentView).offset(-15);

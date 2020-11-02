@@ -57,15 +57,16 @@
     }];
     [self.pricePerSqmLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.pricePerSqmLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [self.contentView addSubview:self.tagInformation];
-    [self.tagInformation mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.mainTitleLabel);
-        make.top.equalTo(self.subTitleLabel.mas_bottom).offset(7);
-    }];
     [self.contentView addSubview:self.priceLabel];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self.pricePerSqmLabel.mas_right);
         make.top.equalTo(self.pricePerSqmLabel.mas_bottom).offset(4);
+    }];
+    [self.contentView addSubview:self.tagLabel];
+    [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.mainTitleLabel);
+        make.top.equalTo(self.subTitleLabel.mas_bottom).offset(7);
+        make.right.mas_lessThanOrEqualTo(self.priceLabel.mas_left).offset(-2);
     }];
 }
 
@@ -85,9 +86,9 @@
         self.priceLabel.text = model.displayPrice;
         self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
         if (model.reasonTags.count>0) {
-            self.tagInformation.attributedText = model.recommendReasonStr;
+            self.tagLabel.attributedText = model.recommendReasonStr;
         }else {
-            self.tagInformation.attributedText = model.tagString;
+            self.tagLabel.attributedText = model.tagString;
         }
         if (model.vrInfo.hasVr) {
             self.houseVideoImageView.hidden = YES;
@@ -97,7 +98,7 @@
             self.vrLoadingView.hidden = YES;
             [self.vrLoadingView stop];
         }
-    };
+    }
 }
 
 - (void)configTopLeftTagWithTagImages:(id)data {
@@ -187,15 +188,6 @@
         _priceLabel.textColor = [UIColor themeOrange1];
     }
     return _priceLabel;
-}
-
-- (YYLabel *)tagInformation {
-    if (!_tagInformation) {
-        _tagInformation = [[YYLabel alloc] init];
-        _tagInformation.font = [UIFont themeFontRegular:12];
-        _tagInformation.textColor = [UIColor themeOrange1];
-    }
-    return _tagInformation;
 }
 
 - (UIView *)houseMainImageBackView {

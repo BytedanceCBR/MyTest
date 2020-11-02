@@ -24,6 +24,7 @@
         make.left.top.equalTo(self.mainImageView);
         make.size.mas_equalTo(CGSizeMake(48, 18));
     }];
+    self.tagLabel.textColor = [UIColor themeOrange1];
 }
 
 - (void)refreshWithData:(id)data {

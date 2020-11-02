@@ -22,9 +22,9 @@
     [super refreshWithData:data];
     if([data isKindOfClass:[FHHouseListBaseItemModel class]]) {
         FHHouseListBaseItemModel *model = (FHHouseListBaseItemModel *)data;
-        self.tagInformation.text = model.salesInfo;
-        self.tagInformation.font = [UIFont themeFontRegular:12];
-        [self.tagInformation setTextColor:[UIColor themeGray2]];
+        self.tagLabel.text = model.salesInfo;
+        self.tagLabel.font = [UIFont themeFontRegular:12];
+        [self.tagLabel setTextColor:[UIColor themeGray2]];
     }
 }
 
