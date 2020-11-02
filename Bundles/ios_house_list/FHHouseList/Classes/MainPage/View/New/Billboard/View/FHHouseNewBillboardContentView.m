@@ -98,7 +98,7 @@ static NSInteger const ButtonBottomMargin = 16.0f;
 
 - (UIButton *)moreButton {
     if (!_moreButton) {
-        _moreButton = [[UIButton alloc] init];
+        _moreButton = [UIButton buttonWithType:UIButtonTypeSystem];
         _moreButton.backgroundColor = [UIColor colorWithHexStr:@"#ffeee5"];
         _moreButton.layer.cornerRadius = ButtonHeight / 2;
         _moreButton.layer.masksToBounds = YES;
