@@ -137,7 +137,9 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
                         };
                         
                         [TIMSMediaFileUploadManager sharedInstance].delegate = self;
-                        [[TIMSMediaFileUploadManager sharedInstance] uploadFileRequest:request config:nil];
+                        TIMSMediaFileUploadVideoConfig *config = [TIMSMediaFileUploadVideoConfig new];
+                        config.enableBOE = [FHIMConfigManager shareInstance].isBOE;
+                        [[TIMSMediaFileUploadManager sharedInstance] uploadFileRequest:request config:config];
                     }
                 }
                     break;
