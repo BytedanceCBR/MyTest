@@ -18,6 +18,7 @@
 @interface FHUGCShortVideoFullScreenCell()<TTVDemandPlayerDelegate>
 @property (nonatomic, strong) TTVPlayerModel *playerModel;
 @property (nonatomic, strong) UIImageView *playImage;
+@property (nonatomic, strong) UIView *doubleTapMaskView;
 @end
 @implementation FHUGCShortVideoFullScreenCell
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -31,10 +32,10 @@
 
 - (void)initView {
     [self playerView];
-    UIView *doubleTapMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), CGRectGetHeight(self.contentView.bounds) - 50 - 25)];
-    doubleTapMaskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    doubleTapMaskView.backgroundColor = [UIColor clearColor];
-    [self.contentView addSubview:doubleTapMaskView];
+    _doubleTapMaskView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), CGRectGetHeight(self.contentView.bounds) - 50 - 25)];
+    _doubleTapMaskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _doubleTapMaskView.backgroundColor = [UIColor clearColor];
+    [self.contentView addSubview:_doubleTapMaskView];
 
     UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_onPlayerDoubleTap:)];
     doubleTap.numberOfTapsRequired = 2;
@@ -42,8 +43,8 @@
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_onPlayerSingleTap:)];
     singleTap.numberOfTapsRequired = 1;
     
-    [doubleTapMaskView addGestureRecognizer:doubleTap];
-    [doubleTapMaskView addGestureRecognizer:singleTap];
+    [_doubleTapMaskView addGestureRecognizer:doubleTap];
+    [_doubleTapMaskView addGestureRecognizer:singleTap];
 
     [singleTap requireGestureRecognizerToFail:doubleTap];
     [self.playImage mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -238,6 +239,11 @@
         if (self.videoDidStartPlay) {
             self.videoDidStartPlay();
         }
+    }
+    if (state == TTVVideoPlaybackStateError) {
+        self.doubleTapMaskView.userInteractionEnabled = NO;
+    }else {
+        self.doubleTapMaskView.userInteractionEnabled = YES;
     }
 }
 
