@@ -55,6 +55,18 @@
     return self.model.button.text;
 }
 
+- (BOOL)canShowTitle {
+    return [self isValid] && self.title.length > 0;
+}
+
+- (BOOL)canShowButton {
+    return [self isValid] && self.buttonText.length > 0;
+}
+
+- (BOOL)canShowItems {
+    return [self isValid] && self.items.count > 0;
+}
+
 - (void)onShowView {
     if (!self.showed) {
         self.showed = YES;
@@ -75,7 +87,7 @@
 }
 
 - (BOOL)isValid {
-    return (self.title.length > 0 && self.buttonText.length > 0 && self.items.count > 0);
+    return self.items.count > 0;
 }
 
 @end

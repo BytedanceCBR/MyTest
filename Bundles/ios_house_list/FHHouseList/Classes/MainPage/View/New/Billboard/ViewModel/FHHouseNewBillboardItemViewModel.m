@@ -74,7 +74,7 @@
 }
 
 - (BOOL)isValid {
-    return (self.title.length > 0 && self.subtitle.length > 0 && self.detail.length > 0);
+    return YES;
 }
 
 @end

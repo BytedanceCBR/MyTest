@@ -32,11 +32,20 @@ static NSInteger const ButtonBottomMargin = 16.0f;
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (!viewModel || ![viewModel isKindOfClass:FHHouseNewBillboardContentViewModel.class] || ![viewModel isValid]) return 0.0f;
     FHHouseNewBillboardContentViewModel *contentViewModel = (FHHouseNewBillboardContentViewModel *)viewModel;
-    NSArray<FHHouseNewBillboardItemViewModel *> *items = contentViewModel.items;
-    if (!items || !items.count) return 0.0f;
-    CGFloat height = TitleHeight + TitleTopMargin + ButtonHeight + ButtonBottomMargin;
-    for (FHHouseNewBillboardItemViewModel *item in items) {
-        height += [FHHouseNewBillboardItemView viewHeightWithViewModel:item];
+    CGFloat height = 0.0f;
+    if ([contentViewModel canShowTitle]) {
+        height += (TitleTopMargin + TitleHeight);
+    }
+    
+    if ([contentViewModel canShowItems]) {
+        NSArray<FHHouseNewBillboardItemViewModel *> *items = contentViewModel.items;
+        for (FHHouseNewBillboardItemViewModel *item in items) {
+            height += [FHHouseNewBillboardItemView viewHeightWithViewModel:item];
+        }
+    }
+
+    if ([contentViewModel canShowButton]) {
+        height += ButtonHeight + ButtonBottomMargin;
     }
     return height;
 }
@@ -77,6 +86,41 @@ static NSInteger const ButtonBottomMargin = 16.0f;
         make.top.mas_equalTo(self.titleLabel.mas_bottom);
         make.bottom.mas_equalTo(self.moreButton.mas_top);
     }];
+}
+
+- (void)refreshConstraints {
+    CGFloat topY = 0.0f;
+    CGFloat bottomY = 0.0f;
+    if (!self.titleLabel.hidden) {
+        [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(20);
+            make.right.mas_equalTo(-20);
+            make.top.mas_equalTo(topY + TitleTopMargin);
+            make.height.mas_equalTo(TitleHeight);
+        }];
+        
+        topY += TitleTopMargin + TitleHeight;
+    }
+    
+    if (!self.moreButton.hidden) {
+        [self.moreButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(20);
+            make.right.mas_equalTo(-20);
+            make.bottom.mas_equalTo(-(bottomY + ButtonBottomMargin));
+            make.height.mas_equalTo(ButtonHeight);
+        }];
+        
+        bottomY += ButtonBottomMargin + ButtonHeight;
+    }
+    
+    
+    if (!self.itemsContainerView.hidden) {
+        [self.itemsContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(0);
+            make.top.mas_equalTo(topY);
+            make.bottom.mas_equalTo(bottomY);
+        }];
+    }
 }
 
 - (UILabel *)titleLabel {
@@ -125,39 +169,49 @@ static NSInteger const ButtonBottomMargin = 16.0f;
 }
 
 - (void)refreshUI {
-    self.titleLabel.hidden = !self.contentViewModel.items.count;
-    self.moreButton.hidden = !self.contentViewModel.items.count;
-    self.itemsContainerView.hidden = !self.contentViewModel.items.count;
-    self.titleLabel.text = self.contentViewModel.title;
-    [self.moreButton setTitle:self.contentViewModel.buttonText forState:UIControlStateNormal];
-    NSArray *items = self.contentViewModel.items;
-    FHHouseNewBillboardItemView *lastItemView = nil;
-    for (NSInteger index = 0; index < items.count; index++) {
-        FHHouseNewBillboardItemViewModel *item = [items objectAtIndex:index];
-        FHHouseNewBillboardItemView *itemView = nil;
-        if (_itemViewList.count > index) {
-            itemView = [_itemViewList objectAtIndex:index];
-        } else {
-            itemView = [[FHHouseNewBillboardItemView alloc] init];
-            [self.itemsContainerView addSubview:itemView];
-            [_itemViewList addObject:itemView];
-        }
-        
-        item.isLastItem = (index == items.count - 1);
-        itemView.viewModel = item;
-        CGFloat height = [FHHouseNewBillboardItemView viewHeightWithViewModel:item];
-        itemView.frame = CGRectMake(0, lastItemView.bottom, self.itemsContainerView.width, height);
-        
-        lastItemView = itemView;
+    self.titleLabel.hidden = ![self.contentViewModel canShowTitle];
+    if (!self.titleLabel.hidden) {
+        self.titleLabel.text = self.contentViewModel.title;
     }
     
-    if (_itemViewList.count > items.count) {
-        for (NSInteger index = _itemViewList.count - 1; index >= items.count; index--) {
-            FHHouseNewBillboardItemView *itemView = [_itemViewList objectAtIndex:index];
-            [itemView removeFromSuperview];
-            [_itemViewList removeObject:itemView];
+    self.moreButton.hidden = ![self.contentViewModel canShowButton];
+    if (!self.moreButton.hidden) {
+        [self.moreButton setTitle:self.contentViewModel.buttonText forState:UIControlStateNormal];
+    }
+    
+    self.itemsContainerView.hidden = ![self.contentViewModel canShowItems];
+    if (!self.itemsContainerView.hidden) {
+        NSArray *items = self.contentViewModel.items;
+        FHHouseNewBillboardItemView *lastItemView = nil;
+        for (NSInteger index = 0; index < items.count; index++) {
+            FHHouseNewBillboardItemViewModel *item = [items objectAtIndex:index];
+            FHHouseNewBillboardItemView *itemView = nil;
+            if (_itemViewList.count > index) {
+                itemView = [_itemViewList objectAtIndex:index];
+            } else {
+                itemView = [[FHHouseNewBillboardItemView alloc] init];
+                [self.itemsContainerView addSubview:itemView];
+                [_itemViewList addObject:itemView];
+            }
+            
+            item.isLastItem = (index == items.count - 1);
+            itemView.viewModel = item;
+            CGFloat height = [FHHouseNewBillboardItemView viewHeightWithViewModel:item];
+            itemView.frame = CGRectMake(0, lastItemView.bottom, self.itemsContainerView.width, height);
+            
+            lastItemView = itemView;
+        }
+        
+        if (_itemViewList.count > items.count) {
+            for (NSInteger index = _itemViewList.count - 1; index >= items.count; index--) {
+                FHHouseNewBillboardItemView *itemView = [_itemViewList objectAtIndex:index];
+                [itemView removeFromSuperview];
+                [_itemViewList removeObject:itemView];
+            }
         }
     }
+    
+    [self refreshConstraints];
 }
 
 - (void)onMoreButtonClicked:(id)sender {

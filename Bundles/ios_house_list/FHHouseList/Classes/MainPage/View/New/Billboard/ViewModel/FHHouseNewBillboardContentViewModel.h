@@ -19,6 +19,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithModel:(FHCourtBillboardPreviewModel *)model tracerModel:(FHTracerModel *)tracerModel;
 
+- (BOOL)canShowTitle;
+
+- (BOOL)canShowButton;
+
+- (BOOL)canShowItems;
+
 - (void)onShowView;
 
 - (void)onClickButton;
