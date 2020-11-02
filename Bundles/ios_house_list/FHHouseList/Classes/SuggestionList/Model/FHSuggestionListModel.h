@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 // FHSuggestionResponseModel
-@protocol FHSuggestionResponseDataModel<NSObject>
+@protocol FHSuggestionResponseitemModel<NSObject>
 
 @end
 
@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface  FHSuggestionResponseDataModel  : JSONModel
+@interface  FHSuggestionResponseitemModel  : JSONModel
 
 @property (nonatomic, strong , nullable) FHSuggestionResponseDataInfoModel *info ;
 @property (nonatomic, copy , nullable) NSString *count;
@@ -79,16 +79,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *buttonText;
 @property (nonatomic, assign) BOOL setHistory;
 @property (nonatomic, copy , nullable) NSDictionary *tipsstyle;
-@property (nonatomic, assign) NSInteger jumphousetype;
 
 @end
 
+@interface FHSuggestionResponseDataModel : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray<FHSuggestionResponseitemModel> *items;
+@property (nonatomic, copy , nullable) NSString *jumpHouseType;
+
+@end
 
 @interface  FHSuggestionResponseModel  : JSONModel  <FHBaseModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
-@property (nonatomic, strong , nullable) NSArray<FHSuggestionResponseDataModel> *data;
+@property (nonatomic, strong , nullable) FHSuggestionResponseDataModel *data;
 
 @end
 
