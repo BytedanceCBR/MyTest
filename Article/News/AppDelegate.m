@@ -17,6 +17,7 @@
 #import "FHEnvContext.h"
 #import "TTAppLogStartupTask.h"
 #import "revision.h"
+#import "HMDLaunchTracingTracker.h"
 
 #define APPSEE_ENABLE 0
 
@@ -96,6 +97,8 @@ extern NSString *const kTTAppseeEnableKey;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    //开始启动时间tracer，新的，by xsm
+    [[HMDLaunchTracingTracker sharedTracker] startWithCustomFinish:NO];
     /// 注意，这里必须初始化这个Manager.勿删
     [self initWebViewCommonQueryStatus];
     [[TTLaunchTracer shareInstance] setLaunchFrom:TTAPPLaunchFromInitialState];
