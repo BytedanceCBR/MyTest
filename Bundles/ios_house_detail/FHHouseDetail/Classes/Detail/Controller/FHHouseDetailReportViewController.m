@@ -642,7 +642,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         @strongify(self);
     
         CGRect rect = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-        CGFloat keyboardOriginY = rect.origin.y;
+        CGFloat keyboardOriginY = ceilf(rect.origin.y);
         CGFloat keyboardHeight = rect.size.height;
         BOOL isShow = keyboardOriginY < SCREEN_HEIGHT;
         CGFloat duration = [notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue];
