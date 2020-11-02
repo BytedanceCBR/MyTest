@@ -27,7 +27,6 @@
 typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
     FHHouseDetailReportAdditionItemType_Problem,
     FHHouseDetailReportAdditionItemType_Name,
-    FHHouseDetailReportAdditionItemType_PhoneNumber,
     FHHouseDetailReportAdditionItemType_AdditionContent,
     FHHouseDetailReportAdditionItemType_ReportImages,
     FHHouseDetailReportAdditionItemType_Hint,
@@ -307,31 +306,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
             self.detailLabel.text = self.item.detail;
         }
             break;
-        case FHHouseDetailReportAdditionItemType_PhoneNumber:
-        {
-            [self.contentView addSubview:self.titleLabel];
-            [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.equalTo(self.contentView).offset(20);
-                make.centerY.equalTo(self.contentView);
-                make.top.bottom.equalTo(self.contentView);
-                make.height.mas_equalTo(self.item.height);
-            }];
-            
-            [self.contentView addSubview:self.phoneTextField];
-            [self.phoneTextField mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.centerY.equalTo(self.contentView);
-                make.left.equalTo(self.titleLabel.mas_right).offset(15);
-                make.right.equalTo(self.contentView).offset(-20);
-                make.top.bottom.equalTo(self.contentView);
-            }];
-            
-            [self.titleLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
-            
-            self.titleLabel.text = self.item.title;
-            self.phoneTextField.text = self.item.detail;
-            self.bottomLine.hidden = NO;
-        }
-            break;
         case FHHouseDetailReportAdditionItemType_AdditionContent:
         {
             [self.contentView addSubview:self.titleLabel];
@@ -406,7 +380,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportAdditionItemType) {
 #pragma mark - FRAddMultiImagesViewDelegate
 
 - (void)addMultiImagesView:(FRAddMultiImagesView *)addMultiImagesView changeToSize:(CGSize)size {
-    if(size.height > 0 && self.item.height != size.height) {
+    if(size.height > 0 && self.item.height != size.height && size.height < 4 * addMultiImagesView.imageSize) {
         self.item.height = size.height;
         if(self.delegate && [self.delegate respondsToSelector:@selector(reloadSection:)]) {
             [self.delegate reloadSection:self.indexPath];
@@ -477,7 +451,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
 @property (nonatomic, strong) UIButton *submitButton;
 @property (nonatomic, strong) FHHouseDetailReportAdditionCell *problemCell;
 @property (nonatomic, strong) FHHouseDetailReportAdditionCell *nameCell;
-@property (nonatomic, strong) FHHouseDetailReportAdditionCell *phoneCell;
 @property (nonatomic, strong) FHHouseDetailReportAdditionCell *additionCell;
 @property (nonatomic, strong) FHHouseDetailReportAdditionCell *imagesCell;
 @property (nonatomic, strong) FHHouseDetailReportAdditionCell *hintCell;
@@ -665,12 +638,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
                         nameItem.title = @"房源名称:";
                         nameItem.detail = model.data.houseName;
                         
-//                        FHHouseDetailReportAdditionItem *phoneItem = [FHHouseDetailReportAdditionItem new];
-//                        phoneItem.type = FHHouseDetailReportAdditionItemType_PhoneNumber;
-//                        phoneItem.height = 50;
-//                        phoneItem.title = @"联系电话";
-//                        phoneItem.detail = @"";
-                        
                         FHHouseDetailReportAdditionItem *additionItem = [FHHouseDetailReportAdditionItem new];
                         additionItem.type = FHHouseDetailReportAdditionItemType_AdditionContent;
                         additionItem.height = 190;
@@ -820,8 +787,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
         
         self.problemCell = [FHHouseDetailReportAdditionCell createCell];
         self.nameCell = [FHHouseDetailReportAdditionCell createCell];
-        self.phoneCell = [FHHouseDetailReportAdditionCell createCell];
-        self.phoneCell.delegate = self;
         self.additionCell = [FHHouseDetailReportAdditionCell createCell];
         self.additionCell.delegate = self;
         self.imagesCell = [FHHouseDetailReportAdditionCell createCell];
@@ -896,10 +861,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
 
 - (void)checkIfCanSubmit {
     
-//    BOOL isPhoneValid = [self.phoneCell.item.detail validateContactNumber];
-//    if(!isPhoneValid && self.phoneCell.item.detail.length == FHHouseDetailReportItemPhoneNumberDigitCount) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kFHHouseDetailReportPhoneNumberStatusNotification object:nil];
-//    }
     BOOL isAdditionContentValid = self.additionCell.item.detail.length > 0;
     BOOL isImagesValid = self.imagesCell.imagesView.selectedImageCacheTasks.count > 0;
 
@@ -1046,7 +1007,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
     return rows * 122 + (rows - 1) * 2;
 }
 - (void)reloadSection:(NSIndexPath *)indexPath {
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadData];
 }
 #pragma mark UITableViewDataSource
 
@@ -1067,9 +1028,6 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportInfoState) {
             break;
         case FHHouseDetailReportAdditionItemType_Name:
             cell = self.nameCell;
-            break;
-        case FHHouseDetailReportAdditionItemType_PhoneNumber:
-            cell = self.phoneCell;
             break;
         case FHHouseDetailReportAdditionItemType_AdditionContent:
             cell = self.additionCell;
