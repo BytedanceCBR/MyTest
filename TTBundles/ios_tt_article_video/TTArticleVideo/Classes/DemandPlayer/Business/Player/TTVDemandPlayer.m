@@ -245,15 +245,15 @@ extern BOOL ttvs_isDoubleTapForDiggEnabled(void);
             return;
         }
     };
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (_tipView.tipType == TTVPlayerControlTipViewTypeUnknow) {
-            if (!_playerStateStore.state.showVideoFirstFrame && _playerStateStore.state.banLoading){
-                
-            }else{
-                _tipView.tipType = TTVPlayerControlTipViewTypeLoading;
-            }
-        }
-    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        if (_tipView.tipType == TTVPlayerControlTipViewTypeUnknow) {
+//            if (!_playerStateStore.state.showVideoFirstFrame && _playerStateStore.state.banLoading){
+//
+//            }else{
+//                _tipView.tipType = TTVPlayerControlTipViewTypeLoading;
+//            }
+//        }
+//    });
 }
 
 - (void)ttv_addPlayerController

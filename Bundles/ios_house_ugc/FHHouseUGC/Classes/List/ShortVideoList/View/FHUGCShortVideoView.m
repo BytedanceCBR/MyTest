@@ -172,9 +172,8 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
 
 - (void)resetPlayerModel:(TTVPlayerModel *)playerModel
 {
-    self.playerModel = playerModel;
+//    self.playerModel = playerModel;
     [self.player reset];
-    [self.player readyToPlay];
 }
 
 - (void)ttv_addPlayer
@@ -267,13 +266,13 @@ static __weak FHUGCShortVideoView *currentTTVPlayVideo_ = nil;
 }
 
 - (void)readyToPlay {
-    self.player.tipView.tipType = TTVPlayerControlTipViewTypeUnknow;
     [self.player setBanLoading:YES];
     [self.player readyToPlay];
 }
 
 - (void)reset {
     [self.player reset];
+    self.player.tipView.tipType = TTVPlayerControlTipViewTypeUnknow;
 }
 
 - (void)pause {

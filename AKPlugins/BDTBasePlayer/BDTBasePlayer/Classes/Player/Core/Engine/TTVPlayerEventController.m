@@ -326,7 +326,6 @@ static NSString *const kvideo_controller_error_domain = @"kvideo_player_controll
 }
 
 - (void)videoEngine:(TTVideoEngine *)videoEngine mdlKey:(NSString *)key hitCacheSze:(NSInteger)cacheSize {
-//    NSLog(@"666");
 }
 
 /**
