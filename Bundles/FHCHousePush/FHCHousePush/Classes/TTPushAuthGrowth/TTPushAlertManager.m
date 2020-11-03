@@ -16,6 +16,7 @@
 #import <FHHouseDetail/FHDetailPictureViewController.h>
 #import <TTArticleBase/ExploreMovieView.h>
 #import <TTArticleVideo/TTVPlayVideo.h>
+#import <ios_house_im/FHBubbleTipManager.h>
 
 NSString * const TTStrongPushHideOnlyResultKey = @"hide_result";
 NSString * const TTStrongPushNotificationWillShowNotification = @"TTStrongPushNotificationWillShowNotification";
@@ -152,11 +153,9 @@ static TTPushWeakAlertPageType s_currentPageType = TTPushWeakAlertPageTypeNone;
         }
         return meetCondition;
     } showMe:^(id  _Nonnull dialogInst) {
-        if ([self.class isKeyboardShowing])  {
-            weakAlertView.slipIntoDirection = TTWeakPushSlideDirectionFromTop;
-        } else {
-            weakAlertView.slipIntoDirection = [TTInAppPushSettings weakAlertAnimationSlideIntoDirection];
-        }
+        // 通知优先于IM消息banner
+        [[FHBubbleTipManager shareInstance] removeWindow];
+        weakAlertView.slipIntoDirection = TTWeakPushSlideDirectionFromTop;
         [weakAlertView show];
     } hideForcedlyMe:^(id  _Nonnull dialogInst) {
         [weakAlertView hide];

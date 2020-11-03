@@ -9,7 +9,7 @@
 #import "UIFont+House.h"
 #import "Masonry.h"
 #import "UIColor+Theme.h"
-#import "TTDeviceHelper.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHHouseMsgFooterView()
 
@@ -23,48 +23,39 @@
 @implementation FHHouseMsgFooterView
 
 - (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    
-    if(self){
-        self.backgroundColor = [UIColor whiteColor];
+    if(self = [super initWithFrame:frame]){
         [self initViews];
-        [self initConstraints];
+    }
+    return self;
+}
+
+- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithReuseIdentifier:reuseIdentifier]) {
+        [self initViews];
     }
     return self;
 }
 
 - (void)initViews {
+    self.contentView.backgroundColor = [UIColor themeWhite];
     self.openAllBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_openAllBtn addTarget:self action:@selector(openAll) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_openAllBtn];
-    
-    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
-    [self addSubview:_contentLabel];
-    
-    self.settingArrowImageView = [[UIImageView alloc] init];
-    _settingArrowImageView.image = [UIImage imageNamed:@"arrowicon-msseage"];
-    [self addSubview:_settingArrowImageView];
-    
-    self.topLine = [[UIView alloc] init];
-    _topLine.backgroundColor = [UIColor themeGray6];
-    [self addSubview:_topLine];
-    
-    self.bottomLine = [[UIView alloc] init];
-    _bottomLine.backgroundColor = [UIColor themeGray6];
-    [self addSubview:_bottomLine];
-}
-
-- (void)initConstraints {
+    [self.contentView addSubview:_openAllBtn];
     [self.openAllBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self);
     }];
     
+    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
+    [self.contentView addSubview:_contentLabel];
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).offset(20);
         make.right.mas_equalTo(self.settingArrowImageView.mas_left).offset(-20);
         make.centerY.mas_equalTo(self);
     }];
     
+    self.settingArrowImageView = [[UIImageView alloc] init];
+    _settingArrowImageView.image = [UIImage imageNamed:@"arrowicon-msseage"];
+    [self.contentView addSubview:_settingArrowImageView];
     [self.settingArrowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self).offset(-14);
         make.centerY.mas_equalTo(self);
@@ -72,14 +63,20 @@
         make.height.mas_equalTo(18);
     }];
     
+    self.topLine = [[UIView alloc] init];
+    _topLine.backgroundColor = [UIColor themeGray6];
+    [self.contentView addSubview:_topLine];
     [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self);
-        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+        make.height.mas_equalTo([UIDevice btd_onePixel]);
     }];
     
+    self.bottomLine = [[UIView alloc] init];
+    _bottomLine.backgroundColor = [UIColor themeGray6];
+    [self.contentView addSubview:_bottomLine];
     [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(self);
-        make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+        make.height.mas_equalTo([UIDevice btd_onePixel]);
     }];
 }
 
