@@ -70,6 +70,10 @@
     dict[UT_ENTER_FROM] = self.fh_trackModel.pageType ? : @"be_null";
     dict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : @"be_null";
     dict[UT_ELEMENT_FROM] = UT_ELEMENT_TYPE_BILLBOARD;
+    dict[UT_SEARCH_ID] = self.fh_trackModel.searchId ? : @"be_null";
+    dict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : @"be_null";
+    dict[UT_LOG_PB] = self.model.logPb ? : @"be_null";
+    dict[UT_KEY_RANK] = @(self.itemIndex);
     [FHHouseOpenURLUtil openUrl:openUrl logParams:dict];
 }
 

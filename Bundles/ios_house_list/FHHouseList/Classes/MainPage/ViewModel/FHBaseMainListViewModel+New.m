@@ -79,16 +79,9 @@
  准备新房大类页埋点参数
  */
 - (FHTracerModel *)prepareForTracerModel {
-    FHTracerModel *tracerModel = [[FHTracerModel alloc] init];
-    tracerModel.originSearchId = self.originSearchId;
-    tracerModel.searchId = self.searchId;
-    tracerModel.pageType = [self pageTypeString];
-    tracerModel.categoryName = [self categoryName];
-    tracerModel.originFrom = self.tracerModel.originFrom;
-    tracerModel.enterFrom = self.tracerModel.enterFrom;
-    tracerModel.elementFrom = self.tracerModel.elementFrom;
-    
-    return tracerModel;
+    self.tracerModel.pageType = [self pageTypeString];
+    self.tracerModel.categoryName = [self categoryName];
+    return self.tracerModel;
 }
 
 #pragma mark - 网络接口
