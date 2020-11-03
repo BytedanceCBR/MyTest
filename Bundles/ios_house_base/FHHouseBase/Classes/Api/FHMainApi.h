@@ -174,6 +174,23 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
 
 +(void)addUserOpenVCDurationLog:(NSString *)vcKey resultType:(FHNetworkMonitorType)type duration:(CGFloat)duration;
 
+
+/// 举报房源表单提交
+/// @param params 请求参数
+/// @param completion 回调
++ (TTHttpTask *)requestHouseFeedbackReport:(NSDictionary *)params completion:(void(^)(NSError *error, id jsonObj))completion;
+
+
+/// 举报房源表单补充信息提交
+/// @param params 请求参数
+/// @param completion 回调
++ (TTHttpTask *)requestHouseFeedbackAddition:(NSDictionary *)params completion:(void(^)(NSError *error, id jsonObj))completion;
+
+
+/// 请求房源反馈工单信息接口
+/// @param params 请求参数
+/// @param completion 回调
++ (TTHttpTask *)requestHouseFeedbackInfo:(NSDictionary *)params completion:(void(^)(NSError *error, id jsonObj))completion;
 @end
 
 NS_ASSUME_NONNULL_END

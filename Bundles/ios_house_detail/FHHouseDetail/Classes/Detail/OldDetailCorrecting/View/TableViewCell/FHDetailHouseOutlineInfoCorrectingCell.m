@@ -14,7 +14,6 @@
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "FHDetailHeaderView.h"
-#import "FHExtendHotAreaButton.h"
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"
@@ -79,7 +78,7 @@
     }
     _infoButton.hidden = model.hideReport;
     FHDetailOldDataModel *ershouData = [(FHDetailOldModel *)model.baseViewModel.detailData data];
-    [self.infoButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB houseData:ershouData reportUrl:model.houseOverreview.reportUrl];
+    [self.infoButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB houseData:ershouData houseType:FHHouseTypeSecondHandHouse reportUrl:model.houseOverreview.reportUrl];
     _contentHeight = 70; //header高度
     __block UIView *lastView = self.containerView;
     if (model.houseOverreview.list.count > 0) {

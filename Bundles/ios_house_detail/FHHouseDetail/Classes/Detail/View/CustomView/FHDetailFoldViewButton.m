@@ -14,7 +14,6 @@
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "FHDetailHeaderView.h"
-#import "FHExtendHotAreaButton.h"
 #import "UIColor+Theme.h"
 
 @interface FHDetailFoldViewButton ()

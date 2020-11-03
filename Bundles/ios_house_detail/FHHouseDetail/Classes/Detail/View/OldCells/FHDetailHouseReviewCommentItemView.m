@@ -5,7 +5,6 @@
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import "FHDetailHouseReviewCommentItemView.h"
-#import "FHExtendHotAreaButton.h"
 #import "MASConstraintMaker.h"
 #import "UILabel+House.h"
 #import "FHDetailOldModel.h"
@@ -67,7 +66,7 @@
     _realtorLabelContainer = [[UIControl alloc] init];
     [self.realtorInfoContainerView addSubview:_realtorLabelContainer];
 
-    _licenceIcon = [[FHExtendHotAreaButton alloc] init];
+    _licenceIcon = [[UIButton alloc] init];
     [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
     [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateSelected];
     [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];
@@ -92,13 +91,13 @@
     _houseReviewView.textAlignment = NSTextAlignmentLeft;
     [self.realtorLabelContainer addSubview:_houseReviewView];
 
-    _callBtn = [[FHExtendHotAreaButton alloc] init];
+    _callBtn = [[UIButton alloc] init];
     [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal_new"] forState:UIControlStateNormal];
     [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateSelected];
     [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateHighlighted];
     [self.realtorInfoContainerView addSubview:_callBtn];
 
-    _imBtn = [[FHExtendHotAreaButton alloc] init];
+    _imBtn = [[UIButton alloc] init];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateSelected];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateHighlighted];

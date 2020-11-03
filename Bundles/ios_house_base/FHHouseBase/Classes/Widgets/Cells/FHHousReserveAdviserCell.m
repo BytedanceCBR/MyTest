@@ -12,7 +12,6 @@
 #import "FHDetailBaseModel.h"
 #import <BDWebImage/BDWebImage.h>
 #import "FHDetailAgentListCell.h"
-#import "FHExtendHotAreaButton.h"
 #import "FHShadowView.h"
 #import "FHHousePhoneCallUtils.h"
 #import "UIColor+Theme.h"
