@@ -20,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) FHHouseNewBillboardViewModel *billboardViewModel;
 
 - (void)startLoading;
-- (void)loadFinishWithData:(FHCourtBillboardPreviewModel *)data;
-- (void)loadFailed;
+- (void)loadFinishWithData:(nullable FHCourtBillboardPreviewModel *)data;
+- (void)loadFailedWithError:(nullable NSError *)error;
 
 @end
 

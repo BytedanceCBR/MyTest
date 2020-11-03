@@ -372,12 +372,8 @@ extern NSString *const INSTANT_DATA_KEY;
             [self addDefaultTopView];
         }
     }else if (_houseType == FHHouseTypeNewHouse) {
-        if (dataModel.courtOpData.items.count > 0) {
-            FHTracerModel *tracerModel = [self prepareForTracerModel];
-            [self addNewHouseTopViewWithTracerModel:tracerModel];
-        }else {
-            [self addDefaultTopView];
-        }
+        FHTracerModel *tracerModel = [self prepareForTracerModel];
+        [self addNewHouseTopViewWithTracerModel:tracerModel];
     }else {
         [self addDefaultTopView];
     }
@@ -633,6 +629,9 @@ extern NSString *const INSTANT_DATA_KEY;
     if (![TTReachability isNetworkConnected]) {
         if (isHead) {
             self.showPlaceHolder = NO;
+            if (self.houseType == FHHouseTypeNewHouse) {
+                [self.houseNewTopViewModel loadFailedWithError:nil];
+            }
             [self showErrorMask:YES tip:FHEmptyMaskViewTypeNoNetWorkAndRefresh enableTap:YES ];
         }else{
             [[FHMainManager sharedInstance] showToast:@"网络异常" duration:1];
@@ -689,6 +688,9 @@ extern NSString *const INSTANT_DATA_KEY;
 - (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRefresh:(BOOL)isRefresh isRecommendSearch:(BOOL)isRecommendSearch
 {
     if (error) {
+        if (self.houseType == FHHouseTypeNewHouse && isRefresh) {
+            [self.houseNewTopViewModel loadFailedWithError:error];
+        }
         [self processError:error isRefresh:isRefresh];
         return;
     }
@@ -988,6 +990,9 @@ extern NSString *const INSTANT_DATA_KEY;
         }
 
     } else {
+        if (self.houseType == FHHouseTypeNewHouse && isRefresh) {
+            [self.houseNewTopViewModel loadFinishWithData:nil];
+        }
         [self showErrorMask:YES tip:FHEmptyMaskViewTypeNoData enableTap:YES ];
     }
 }

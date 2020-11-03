@@ -41,12 +41,12 @@
     self.billboardViewModel.loading = YES;
 }
 
-- (void)loadFinishWithData:(FHCourtBillboardPreviewModel *)data {
+- (void)loadFinishWithData:(nullable FHCourtBillboardPreviewModel *)data {
     [self.billboardViewModel loadFinishWithData:data];
 }
 
-- (void)loadFailed {
-    self.billboardViewModel.loading = NO;
+- (void)loadFailedWithError:(nullable NSError *)error {
+    [self loadFinishWithData:nil];
 }
 
 @end
