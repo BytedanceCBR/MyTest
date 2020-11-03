@@ -168,8 +168,6 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         [playVideo.player setVideoWatchCount:article.videoDetailInfo.videoWatchCount playText:@"次播放"];
     }
     self.logo.userInteractionEnabled = ![feedItem couldAutoPlay];
-    [self.logo addSubview:self.movieView];
-    self.movieView.hidden = YES;
 }
 
 - (void)play
@@ -178,7 +176,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         [self readyToPlay];
     }
 
-    if(!self.movieView.hidden){
+    if(self.movieView.superview && self.movieView.superview == self.logo){
         if (!self.movieView.player.context.isFullScreen &&
             !self.movieView.player.context.isRotating) {
             if (self.movieView.player.context.playbackState != TTVVideoPlaybackStatePlaying) {
@@ -187,8 +185,8 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         }
     }else{
         [ExploreMovieView removeAllExceptExploreMovieView:self.movieView];
+        [self.logo addSubview:self.movieView];
         [self.movieView.player play];
-        self.movieView.hidden = NO;
     }
 }
 

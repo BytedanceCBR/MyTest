@@ -148,11 +148,11 @@ static NSString *const kvideo_controller_error_domain = @"kvideo_player_controll
     [self.videoEngine.playerView removeFromSuperview];
     
     self.videoEngine = [[TTVideoEngine alloc] initWithOwnPlayer:YES];
-//    self.videoEngine.startTime = [[TTVPlayerCacheProgressController sharedInstance] playTimeForVideoID:self.playerModel.videoID];
-    self.videoEngine.cacheEnable = YES;
+    if(self.playerModel.enableCache){
+        self.videoEngine.startTime = [[TTVPlayerCacheProgressController sharedInstance] playTimeForVideoID:self.playerModel.videoID];
+        self.videoEngine.cacheEnable = YES;
+    }
     self.videoEngine.resolutionServerControlEnabled = YES;
-    
-//    self.videoEngine.scaleMode
     
     if (self.playerStateStore.state.enableSmothlySwitch) {
         self.videoEngine.smoothlySwitching = YES;
@@ -563,9 +563,9 @@ static NSString *const kvideo_controller_error_domain = @"kvideo_player_controll
     }
     if ([action isKindOfClass:[TTVPlayerStateAction class]]) {
         if (action.actionType == TTVPlayerEventTypeShowVideoFirstFrame) {
-            if(self.playerModel.enableCache){
-                [self _showVideoFirstFrame];
-            }
+//            if(self.playerModel.enableCache){
+//                [self _showVideoFirstFrame];
+//            }
         } else if (action.actionType == TTVPlayerEventTypeSwitchResolution) {
             NSMutableDictionary *dic = action.payload;
             if (!dic) {
