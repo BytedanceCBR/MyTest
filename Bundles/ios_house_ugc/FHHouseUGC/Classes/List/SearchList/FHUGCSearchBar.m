@@ -10,7 +10,6 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
-#import "FHExtendHotAreaButton.h"
 #define MIN_HEIGHT    44
 
 #define SEARCH_AREA_PANEL_HEIGHT 34
@@ -56,7 +55,7 @@
     [_searchAreaPanel addSubview:_leftView];
 
     // backBtn
-    _backBtn = [[FHExtendHotAreaButton alloc] init];
+    _backBtn = [[UIButton alloc] init];
     [_backBtn setTitle:@"取消" forState:UIControlStateNormal];
     [_backBtn setTitle:@"取消" forState:UIControlStateHighlighted];
     _backBtn.titleLabel.font = [UIFont themeFontRegular:16];

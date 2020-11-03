@@ -14,7 +14,6 @@
 #import "FHURLSettings.h"
 #import "TTRoute.h"
 #import "FHDetailHeaderView.h"
-#import "FHExtendHotAreaButton.h"
 #import "UILabel+House.h"
 #import "FHEnvContext.h"
 #import "TTAccountManager.h"

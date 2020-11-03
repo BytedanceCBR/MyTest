@@ -38,11 +38,11 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 45;
 
 - (instancetype)initWithViewController:(UITableView *)tableView andViewController:(FHHomeViewController *)homeVC andPanelVM:(FHHomeSearchPanelViewModel *)panelVM;
 
-- (void)reloadHomeTableHeaderSection;
+//- (void)reloadHomeTableHeaderSection;
 
-- (void)requestRecommendHomeList;
+//- (void)requestRecommendHomeList;
 
-- (void)requestOriginData:(BOOL)isFirstChange;
+//- (void)requestOriginData:(BOOL)isFirstChange;
 
 - (void)sendTraceEvent:(FHHomeCategoryTraceType)traceType;
 
