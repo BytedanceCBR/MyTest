@@ -231,10 +231,6 @@
         experiments[@"show_house"] = fhSettings[@"show_house"];
     }
     
-    if ([fhSettings valueForKey:@"discover_type"]) {
-        experiments[@"discover_type"] = @([fhSettings[@"discover_type"] integerValue]);
-    }
-    
     if ([fhSettings valueForKey:@"is_video_perload"]) {
         experiments[@"is_video_perload"] = @([fhSettings[@"is_video_perload"] integerValue]);
     }
