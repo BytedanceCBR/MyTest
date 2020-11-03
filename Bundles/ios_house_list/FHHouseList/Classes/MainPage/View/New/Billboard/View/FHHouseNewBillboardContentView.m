@@ -118,7 +118,7 @@ static NSInteger const ButtonBottomMargin = 16.0f;
         [self.itemsContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.mas_equalTo(0);
             make.top.mas_equalTo(topY);
-            make.bottom.mas_equalTo(bottomY);
+            make.bottom.mas_equalTo(-bottomY);
         }];
     }
 }
