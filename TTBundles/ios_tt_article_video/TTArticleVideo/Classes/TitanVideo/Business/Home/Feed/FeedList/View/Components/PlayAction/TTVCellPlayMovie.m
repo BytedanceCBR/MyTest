@@ -118,6 +118,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     model.categoryName = self.cellEntity.categoryId;
     model.authorId = article.userId;
     model.extraDic = self.cellEntity.extraDic;
+    model.enableCommonTracker = YES;
     
 //    if (feedItem.isVideoSourceUGCVideo) {
 //        model.defaultResolutionType = TTVPlayerResolutionTypeHD;
@@ -172,11 +173,12 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 - (void)play
 {
-    if(!self.movieView){
+    if(!self.movieView || self.movieView.hidden){
         [self readyToPlay];
     }
 
     if(self.movieView.superview && self.movieView.superview == self.logo){
+        self.movieView.hidden = NO;
         if (!self.movieView.player.context.isFullScreen &&
             !self.movieView.player.context.isRotating) {
             if (self.movieView.player.context.playbackState != TTVVideoPlaybackStatePlaying) {

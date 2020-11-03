@@ -243,7 +243,7 @@
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     //处理视频
-    [self stop];
+    [self reset];
     self.videoItem = cellModel.videoItem;
     self.videoView.cellEntity = self.videoItem;
 //    self.videoView.forbidVideoClick = cellModel.forbidVideoClick;
@@ -785,6 +785,12 @@
             }
         }
     }
+}
+
+- (void)reset {
+    UIView *view = [self cell_movieView];
+    view.hidden = YES;
+    [self pause];
 }
 
 - (void)stop {

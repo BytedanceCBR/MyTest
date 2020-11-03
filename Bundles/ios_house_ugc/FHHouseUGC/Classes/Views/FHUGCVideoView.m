@@ -86,10 +86,8 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _logo = [[TTImageView alloc] initWithFrame:CGRectZero];
+        _logo = [[TTImageView alloc] initWithFrame:self.bounds];
         _logo.imageContentMode = TTImageViewContentModeScaleAspectFill;
-//        _logo.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_logo];
         
         _videoTitleLabel = [[SSThemedLabel alloc] initWithFrame:CGRectZero];
