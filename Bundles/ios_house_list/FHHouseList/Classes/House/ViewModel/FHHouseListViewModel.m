@@ -1918,7 +1918,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         theModel = (FHSearchHouseItemModel *)cellModel;
-        logPb = theModel.logPb;
+        logPb = theModel.logPbWithTags;
         if (theModel.isRecommendCell) {
             traceParam[@"search_id"] = self.recommendSearchId;
             elementFrom = @"search_related";

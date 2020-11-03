@@ -10,6 +10,7 @@
 #import "UIFont+House.h"
 #import "YYText.h"
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "FHSingleImageInfoCellModel.h"
 
 @implementation FHHomeHouseImageTagModel
 
@@ -392,6 +393,14 @@
 }
 @end
 
+
+@interface FHHomeHouseDataItemsModel ()
+
+@property (nonatomic, copy, nullable, readwrite) NSDictionary *logPbWithTags;
+
+@end
+
+
 @implementation  FHHomeHouseDataItemsModel
 
 + (JSONKeyMapper*)keyMapper
@@ -520,30 +529,46 @@
 }
 
 - (NSDictionary *)logPbWithTags {
-    if (self.logPb && [self.logPb isKindOfClass:[NSDictionary class]]) {
-        NSMutableDictionary *mutablLogPb = self.logPb.mutableCopy;
-        if (self.tags) {
-            mutablLogPb[@"app_house_tags"] = [self.tags btd_map:^id _Nullable(id  _Nonnull obj) {
-                if (obj && [obj isKindOfClass:[FHHouseTagsModel class]]) {
-                    FHHouseTagsModel *tagModel = (FHHouseTagsModel *)obj;
-                    return tagModel.content;
-                }
-                return @"";
-            }];
+    if (!_logPbWithTags) {
+        if (self.logPb && [self.logPb isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *mutablLogPb = self.logPb.mutableCopy;
+            if (self.tags) {
+                NSAttributedString *tagsString = [FHSingleImageInfoCellModel tagsStringWithTagList:self.tags];
+                mutablLogPb[@"app_house_tags"] = [[self.tags btd_filter:^BOOL(id  _Nonnull obj) {
+                    if (obj && [obj isKindOfClass:[FHHouseTagsModel class]]) {
+                        FHHouseTagsModel *tagModel = (FHHouseTagsModel *)obj;
+                        if (tagModel.content && [tagsString.string containsString:tagModel.content]) {
+                            return YES;
+                        }
+                    }
+                    return NO;
+                }] btd_map:^id _Nullable(id  _Nonnull obj) {
+                    if (obj && [obj isKindOfClass:[FHHouseTagsModel class]]) {
+                        FHHouseTagsModel *tagModel = (FHHouseTagsModel *)obj;
+                        return tagModel.content;
+                    }
+                    return @"";
+                }];
+                
+
+            }
+            if (self.titleTags) {//FHSearchHouseItemTitleTagModel
+                mutablLogPb[@"app_marketing_tags"] = [self.titleTags btd_map:^id _Nullable(id  _Nonnull obj) {
+                    if (obj && [obj isKindOfClass:[FHSearchHouseItemTitleTagModel class]]) {
+                        FHSearchHouseItemTitleTagModel *tagModel = (FHSearchHouseItemTitleTagModel *)obj;
+                        return tagModel.text;
+                    }
+                    return @"";
+                }];
+            }
+            _logPbWithTags = mutablLogPb.copy;
+            return _logPbWithTags;
         }
-        if (self.titleTags) {//FHSearchHouseItemTitleTagModel
-            mutablLogPb[@"app_marketing_tags"] = [self.titleTags btd_map:^id _Nullable(id  _Nonnull obj) {
-                if (obj && [obj isKindOfClass:[FHHomeHouseItemTitleTagModel class]]) {
-                    FHHomeHouseItemTitleTagModel *tagModel = (FHHomeHouseItemTitleTagModel *)obj;
-                    return tagModel.text;
-                }
-                return @"";
-            }];
-        }
-        return mutablLogPb.copy;
+        return self.logPb;
     }
-    return self.logPb;
+    return _logPbWithTags;
 }
+
 @end
 
 

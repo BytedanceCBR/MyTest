@@ -479,7 +479,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)cellIdentifierByHouseType:(FHHouseType)houseType;
 
-- (NSDictionary *)logPbWithTags;
+@property (nonatomic, copy, nullable, readonly) NSDictionary *logPbWithTags;
 
 @end
 
