@@ -780,7 +780,7 @@
         TTVPlayVideo *movieView = (TTVPlayVideo *)view;
         if (!movieView.player.context.isFullScreen &&
             !movieView.player.context.isRotating) {
-            if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
+            if (movieView.player.context.playbackState == TTVVideoPlaybackStatePlaying && movieView.player.playerStateStore.state.showVideoFirstFrame) {
                 [movieView.player pause];
             }
         }
