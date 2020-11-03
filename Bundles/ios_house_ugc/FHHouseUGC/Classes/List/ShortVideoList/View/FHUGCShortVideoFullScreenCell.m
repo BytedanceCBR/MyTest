@@ -165,7 +165,7 @@
     model.extraDic = self.cellModel.tracerDic;
     model.defaultResolutionType = TTVPlayerResolutionTypeFullHD;
     _playerModel = model;
-    [_playerView resetPlayerModel:_playerModel];
+    [_playerView setPlayerModel:_playerModel];
     // 滑动切换视频时，背景图使用首帧图
     if ([self.cellModel.imageList count] > 0) {
         FHFeedContentImageListModel *urlContent = [self.cellModel.imageList firstObject];
