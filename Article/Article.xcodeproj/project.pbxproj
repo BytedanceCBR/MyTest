@@ -818,6 +818,7 @@
 			buildConfigurationList = 619867822223E8EF0056B2EF /* Build configuration list for PBXNativeTarget "serviceNofExtension" */;
 			buildPhases = (
 				F421BB65275360314908FDDB /* [CP] Check Pods Manifest.lock */,
+				BC7515710699428465FEB6C1 /* [CP-User] bits_injection */,
 				619867752223E8EE0056B2EF /* Sources */,
 				619867762223E8EE0056B2EF /* Frameworks */,
 				619867772223E8EE0056B2EF /* Resources */,
@@ -836,6 +837,7 @@
 			buildConfigurationList = 619867942223E9A70056B2EF /* Build configuration list for PBXNativeTarget "com.f100.client.FHNotificationServiceExtension" */;
 			buildPhases = (
 				0326D622A704A3AC9E730DF8 /* [CP] Check Pods Manifest.lock */,
+				F7C1EAE9E06D8EC29B359DAD /* [CP-User] bits_injection */,
 				619867872223E9A70056B2EF /* Sources */,
 				619867882223E9A70056B2EF /* Frameworks */,
 				619867892223E9A70056B2EF /* Resources */,
@@ -856,6 +858,7 @@
 				976D5763629DDEEC7079A3CA /* [CP] Check Pods Manifest.lock */,
 				B373C7FB2174587A008F9905 /* Run Script - build revision */,
 				8A87010F8505BD8913E88E0F /* [CP-User] sgmpreaction */,
+				4BDC025C002F7D5D14452767 /* [CP-User] bits_injection */,
 				B373C7FC2174587A008F9905 /* Sources */,
 				B373CE862174587A008F9905 /* Run Script - delete revision */,
 				B373CE872174587A008F9905 /* Resources */,
@@ -885,6 +888,7 @@
 				FC43609B9C36F3E4F3B44A8D /* [CP] Check Pods Manifest.lock */,
 				FEFA525B205FB1A8001F50D8 /* Run Script - build revision */,
 				4F33401AD6D0132A00D64D8E /* [CP-User] sgmpreaction */,
+				64FF2069D63C5673F988B0BA /* [CP-User] bits_injection */,
 				FEFA525C205FB1A8001F50D8 /* Sources */,
 				FEFA59C0205FB1A8001F50D8 /* Run Script - delete revision */,
 				FEFA59C1205FB1A8001F50D8 /* Resources */,
@@ -1222,6 +1226,16 @@
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n#/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\necho \"========= upload =========\"\n/bin/sh ${SRCROOT}/dSYMUpload.sh\necho \"========= upload done =======\"\n";
 		};
+		4BDC025C002F7D5D14452767 /* [CP-User] bits_injection */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] bits_injection";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
+		};
 		4F33401AD6D0132A00D64D8E /* [CP-User] sgmpreaction */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1231,6 +1245,16 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
+		};
+		64FF2069D63C5673F988B0BA /* [CP-User] bits_injection */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] bits_injection";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
 		};
 		8A87010F8505BD8913E88E0F /* [CP-User] sgmpreaction */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1307,6 +1331,16 @@
 			shellScript = "#change Pods-NewsInHouse-resources.sh source code\nsed -i '' 's/OTHER_XCASSETS=\\$(find \\\"\\$PWD\\\" -iname \\\"\\*.xcassets\\\" -type d)/OTHER_XCASSETS=\\$(ruby get_all_xcassets.rb \\${SRCROOT} \\${TARGETNAME})/g' \"${SRCROOT}/Pods/Target Support Files/Pods-f100/Pods-f100-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		BC7515710699428465FEB6C1 /* [CP-User] bits_injection */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] bits_injection";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
+		};
 		CBA2ACD886711DCF32B0F286 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1379,6 +1413,16 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		F7C1EAE9E06D8EC29B359DAD /* [CP-User] bits_injection */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] bits_injection";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
 		};
 		FC43609B9C36F3E4F3B44A8D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
