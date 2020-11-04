@@ -799,14 +799,8 @@
         }
         
         // 联想词列表
-        if(indexPath.row >= self.sugListData.count || indexPath.row <0){
-            return [[UITableViewCell alloc] init];
-        }
-        FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
-        if(model.cardType != 16){
-            return [[UITableViewCell alloc] init];
-        }
-        if ([model.houseType  intValue] == FHHouseTypeNewHouse) {
+        if (self.houseType == FHHouseTypeNewHouse) {
+            // 新房
             FHSuggestionNewHouseItemCell *cell = (FHSuggestionNewHouseItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestNewItemCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             if (indexPath.row < self.sugListData.count) {
@@ -826,35 +820,43 @@
                 cell.secondarySubLabel.text = model.tips2;
             }
             return cell;
-        } else if([model.houseType  intValue] == FHHouseTypeSecondHandHouse) {
+        } else if(_houseType == FHHouseTypeSecondHandHouse) {
+            
+            // 二手房
             FHOldSuggestionItemCell *cell = (FHOldSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"FHOldSuggestionItemCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            cell.highlightedText = self.highlightedText;
-            cell.model = model;
+            if (indexPath.row < self.sugListData.count) {
+                FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+                cell.highlightedText = self.highlightedText;
+                cell.model = model;
+            }
             return cell;
+            
         }else  {
             FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            
-            NSString *originText = model.text;
-            NSAttributedString *text1 = [self processHighlightedDefault:model.text font:[UIFont themeFontRegular:15.0] textColor:[UIColor themeGray1]];
-            NSMutableAttributedString *resultText = [[NSMutableAttributedString alloc] initWithAttributedString:text1];
-            if (model.text2.length > 0) {
-                originText = [NSString stringWithFormat:@"%@ (%@)", originText, model.text2];
-                NSAttributedString *text2 = [self processHighlightedGray:model.text2];
-                [resultText appendAttributedString:text2];
-            }
-            cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeOrange1] fontSize:15.0];
-            cell.secondaryLabel.text = model.tips;
-            if (indexPath.row == self.sugListData.count - 1) {
-                // 末尾
-                [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.bottom.mas_equalTo(cell.contentView).offset(-20);
-                }];
-            } else {
-                [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.bottom.mas_equalTo(cell.contentView).offset(0);
-                }];
+            if (indexPath.row < self.sugListData.count) {
+                FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+                NSString *originText = model.text;
+                NSAttributedString *text1 = [self processHighlightedDefault:model.text font:[UIFont themeFontRegular:15.0] textColor:[UIColor themeGray1]];
+                NSMutableAttributedString *resultText = [[NSMutableAttributedString alloc] initWithAttributedString:text1];
+                if (model.text2.length > 0) {
+                    originText = [NSString stringWithFormat:@"%@ (%@)", originText, model.text2];
+                    NSAttributedString *text2 = [self processHighlightedGray:model.text2];
+                    [resultText appendAttributedString:text2];
+                }
+                cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeOrange1] fontSize:15.0];
+                cell.secondaryLabel.text = model.tips;
+                if (indexPath.row == self.sugListData.count - 1) {
+                    // 末尾
+                    [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.bottom.mas_equalTo(cell.contentView).offset(-20);
+                    }];
+                } else {
+                    [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.bottom.mas_equalTo(cell.contentView).offset(0);
+                    }];
+                }
             }
             return cell;
         }

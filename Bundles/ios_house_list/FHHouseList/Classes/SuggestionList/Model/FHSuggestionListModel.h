@@ -78,8 +78,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *buttonText;
 @property (nonatomic, assign) BOOL setHistory;
-@property (nonatomic, copy , nullable) NSDictionary *tipsstyle;
-@property (nonatomic, assign) NSInteger jumphousetype;
 
 @end
 

@@ -77,8 +77,6 @@
                            @"cardType": @"card_type",
                            @"buttonText": @"button_text",
                            @"setHistory":@"set_history",
-                           @"tipsstyle": @"tips_style",
-                           @"jumphousetype": @"jump_house_type",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
