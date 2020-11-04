@@ -138,4 +138,33 @@
     
 }
 
++ (NSCache *)fh_appImageGeneratorCache {
+    static NSCache *_appImageGeneratorCache = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _appImageGeneratorCache = [[NSCache alloc] init];
+    });
+    return _appImageGeneratorCache;
+}
+
++ (UIImage *)fh_roundRectMaskImageWithCornerRadius:(CGFloat)cornerRadius color:(UIColor *)color size:(CGSize)size {
+    NSString *cacheKey = [NSString stringWithFormat:@"radius:%@,color:%@,size:%@",@(cornerRadius).stringValue,@(color.hash).stringValue,NSStringFromCGSize(size)];
+    UIImage *image = [[self fh_appImageGeneratorCache] objectForKey:cacheKey];
+    if (!image) {
+        CGRect rect = CGRectMake(0.0f, 0.0f, size.width, size.height);
+        UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextSetFillColorWithColor(context, [color CGColor]);
+        UIBezierPath *outterRect = [UIBezierPath bezierPathWithRect:rect];
+        CGContextAddPath(context, outterRect.CGPath);
+        UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:cornerRadius];
+        path.usesEvenOddFillRule = YES;
+        [path fill];
+        image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        [[self fh_appImageGeneratorCache] setObject:image forKey:cacheKey];
+    }
+    return image;
+}
+
 @end
