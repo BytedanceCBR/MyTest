@@ -23,7 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   FHEnterSuggestionType       fromPageType;
 @property (nonatomic, copy)     NSString       *pageTypeStr;
 @property (nonatomic, assign)   BOOL isAssociatedCanTrack;
-@property (nonatomic, assign)   NSInteger       jumpHouseType;
 
 - (NSString *)pageTypeString;
 - (NSString *)categoryNameByHouseType;

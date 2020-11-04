@@ -137,7 +137,7 @@
 
             FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            FHSuggestionResponseitemModel *model  = self.sugListData[indexPath.row];
+            FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
             NSString *originText = model.text;
             NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
             NSMutableAttributedString *resultText = [[NSMutableAttributedString alloc] initWithAttributedString:text1];
@@ -162,7 +162,7 @@
         } else if (self.searchType == FHSugListSearchTypePriceValuation) {
             FHPriceValuationNSCell *cell = (FHPriceValuationNSCell *)[tableView dequeueReusableCellWithIdentifier:@"FHPriceValuationNSCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            FHSuggestionResponseitemModel *model  = self.sugListData[indexPath.row];
+            FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
             NSString *originText = model.text;
             NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
             NSMutableAttributedString *resultText = [[NSMutableAttributedString alloc] initWithAttributedString:text1];
@@ -184,8 +184,8 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     // 联想词
     if (indexPath.row < self.sugListData.count) {
-        FHSuggestionResponseitemModel *model  = self.sugListData[indexPath.row];
-        if (model && [model isKindOfClass:[FHSuggestionResponseitemModel class]]) {
+        FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+        if (model && [model isKindOfClass:[FHSuggestionResponseDataModel class]]) {
             if (self.searchType == FHSugListSearchTypePriceValuation) {
                 
                 NSString *originText = model.text;
@@ -330,8 +330,8 @@
         }else if (self.searchType == FHSugListSearchTypePriceValuation && self.supportConfirmReturn){
             if(result.length > 0){
                 // 联想词
-                for (FHSuggestionResponseitemModel *model in self.sugListData) {
-                    if (model && [model isKindOfClass:[FHSuggestionResponseitemModel class]]) {
+                for (FHSuggestionResponseDataModel *model in self.sugListData) {
+                    if (model && [model isKindOfClass:[FHSuggestionResponseDataModel class]]) {
                         NSString *originText = model.text;
                         NSString *neigbordId = model.info.neigbordId;
                         if([result isEqualToString:originText]){

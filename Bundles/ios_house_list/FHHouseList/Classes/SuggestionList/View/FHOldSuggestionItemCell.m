@@ -167,7 +167,7 @@
     return _topLine;
 }
 
-- (void)setModel:(FHSuggestionResponseitemModel *)model {
+- (void)setModel:(FHSuggestionResponseDataModel *)model {
     if (model) {
         _model = model;
         if(model.name.length>0){

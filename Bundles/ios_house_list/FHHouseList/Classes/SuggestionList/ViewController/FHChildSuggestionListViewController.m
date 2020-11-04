@@ -344,8 +344,8 @@
     // 拼接URL
     NSString * fullText = [userInputText stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
     NSString * placeHolderStr = (fullText.length > 0 ? fullText : userInputText);
-    NSInteger jumpHouseTpye = self.viewModel.jumpHouseType ?: self.houseType;
-    NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",jumpHouseTpye,placeHolderStr,placeHolderStr];
+    
+    NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
     if (self.suggestDelegate != NULL) {
         NSDictionary *infos = @{
                                 @"houseSearch":houseSearchParams

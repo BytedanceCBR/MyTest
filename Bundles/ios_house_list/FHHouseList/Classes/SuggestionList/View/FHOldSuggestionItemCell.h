@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHOldSuggestionItemCell : UITableViewCell
-@property (strong, nonatomic) FHSuggestionResponseitemModel* model;
+@property (strong, nonatomic) FHSuggestionResponseDataModel* model;
 @property (nonatomic, copy) NSString *highlightedText;
 @end
 
