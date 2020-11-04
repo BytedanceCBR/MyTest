@@ -17,6 +17,10 @@
 #import "UILabel+SizeToTextParagraphStyle.h"
 #import <FHCommonUI/UIView+House.h>
 #import <TTBaseLib/UIButton+TTAdditions.h>
+#import "UIFont+House.h"
+#import "UIColor+Theme.h"
+#import "UIImage+FIconFont.h"
+#import <ByteDanceKit.h>
 
 #define kTTWeakPushAlertViewToMarginBottom      (44 + [TTDeviceUIUtils tt_padding:8])
 #define kTTWeakPushAlertViewHorZoomBoundary     (10.f)
@@ -79,7 +83,7 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
         
         _containsIndicatorHome = YES;
         
-        if ([TTDeviceHelper isPadDevice]) {
+        if ([UIDevice btd_isPadDevice]) {
             self.shouldAutorotate = YES;
         } else {
             self.shouldAutorotate = NO;
@@ -116,11 +120,12 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
             }
         }
         
-        self.backgroundColorThemeKey = kColorBackground4;
-        self.layer.shadowColor = [UIColor blackColor].CGColor;
-        self.layer.shadowOffset = CGSizeMake(0, 2);
-        self.layer.shadowOpacity = 0.5;
-        self.layer.shadowRadius = 4;
+        self.backgroundColor = [UIColor themeWhite];
+        self.layer.shadowColor = [UIColor themeBlack].CGColor;
+        self.layer.shadowOpacity = 0.2;
+        self.layer.shadowOffset = CGSizeMake(0, 4);
+        self.layer.shadowRadius = 8;
+        self.layer.cornerRadius = 8;
     }
     return self;
 }
@@ -191,7 +196,7 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
         CGFloat curSuperViewWidth = CGRectGetWidth(self.superview.bounds) - 2 * [self.class leftOrRightScreenMarign];
         BOOL superViewRotated = fabs(curSuperViewWidth - CGRectGetWidth(self.bounds)) > FLT_EPSILON;
         
-        if ([TTDeviceHelper isPadDevice]) {
+        if ([UIDevice btd_isPadDevice]) {
             [UIView animateWithDuration:0.25 animations:^{
                 self.frame = [self endFrameDidShowAnimation];
             }];
@@ -219,11 +224,11 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
     [super layoutSubviews];
     
     CGFloat viewWidth = CGRectGetWidth(self.bounds) > 0 ? CGRectGetWidth(self.bounds) : [self.class defaultViewWidth];
-    CGFloat insetLeftOrRight = [TTDeviceUIUtils tt_padding:20.f/2];
-    CGFloat insetTopOrBottom = [TTDeviceUIUtils tt_padding:20.f/2];
-    CGFloat titleToDetailLabelInVer = [TTDeviceUIUtils tt_padding:10.f/2];
+    CGFloat insetLeftOrRight = [TTDeviceUIUtils tt_padding:30.f/2];
+    CGFloat insetTopOrBottom = [TTDeviceUIUtils tt_padding:33.f/2];
+    CGFloat titleToDetailLabelInVer = [TTDeviceUIUtils tt_padding:4.f/2];
     CGFloat imageWidthOrHeight = MAX(54.f, [TTDeviceUIUtils tt_padding:108.f/2]);
-    CGFloat closeButtonSize = MAX(28.f/2, [TTDeviceUIUtils tt_padding:28.f/2]);
+    CGFloat closeButtonSize = MAX(32.f/2, [TTDeviceUIUtils tt_padding:32.f/2]);
     CGFloat maxTextWidth = viewWidth - insetLeftOrRight * 2 - closeButtonSize - [TTDeviceUIUtils tt_padding:12.f/2];
     CGFloat offsetX = insetLeftOrRight;
     
@@ -490,7 +495,7 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
 - (CGFloat)iphoneXBottomOffset
 {
     if (!_containsIndicatorHome) return 0;
-    return [TTDeviceHelper isIPhoneXDevice] ? 34 : 0;
+    return [UIDevice btd_isIPhoneXSeries] ? 34 : 0;
 }
 
 - (CGRect)initialFrameWillShowAnimationInSuperView:(UIView *)view
@@ -679,8 +684,8 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
             self.alpha = 0.f;
             [self removeFromSuperview];
             
-            if (_didHideHandler) {
-                _didHideHandler(hideReason);
+            if (self.didHideHandler) {
+                self.didHideHandler(hideReason);
             }
         }];
     } else {
@@ -702,7 +707,7 @@ typedef NS_ENUM(NSInteger, TTPanGestureMoveDirection) {
     _countdownTiming = 0;
     
     __weak typeof(self) weakSelf = self;
-    _timer = [NSTimer tt_timerWithTimeInterval:1 repeats:YES block:^(NSTimer *timer) {
+    _timer = [NSTimer btd_timerWithTimeInterval:1 repeats:YES block:^(NSTimer *timer) {
         
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
@@ -780,7 +785,9 @@ static BOOL s_weakPushAlertShowing = NO;
         _closeButton.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         _closeButton.hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
         _closeButton.clipsToBounds = YES;
-        _closeButton.imageName = @"push_close_popups";
+        UIImage *closeImage = ICON_FONT_IMG(16, @"\U0000E678", [UIColor themeGray5]);
+        [_closeButton setImage:closeImage forState:UIControlStateNormal];
+//        _closeButton.imageName = @"push_close_popups";
         [_closeButton addTarget:self
                          action:@selector(actionForDidTapCloseButton:)
                forControlEvents:UIControlEventTouchUpInside];
@@ -808,8 +815,8 @@ static BOOL s_weakPushAlertShowing = NO;
         _titleLabel.numberOfLines = 1;
         _titleLabel.textAlignment = NSTextAlignmentLeft;
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        _titleLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:12.f]];
-        _titleLabel.textColorThemeKey = kColorText3;
+        _titleLabel.font = [UIFont themeFontSemibold:14];
+        _titleLabel.textColor = [UIColor themeGray1];
         _titleLabel.text = @"即时推送";
     }
     return _titleLabel;
@@ -819,13 +826,13 @@ static BOOL s_weakPushAlertShowing = NO;
 {
     if (!_detailLabel) {
         _detailLabel = [SSThemedLabel new];
-        _detailLabel.numberOfLines = 2;
+        _detailLabel.numberOfLines = 1;
         _detailLabel.adjustsFontSizeToFitWidth = [TTInAppPushSettings weakAlertAdjustsFontSizeToFitWidth];
         _detailLabel.minimumScaleFactor = 0.8;
         _detailLabel.textAlignment = NSTextAlignmentLeft;
         _detailLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        _detailLabel.font = [UIFont systemFontOfSize:[TTDeviceUIUtils tt_newFontSize:15.f]];
-        _detailLabel.textColorThemeKey = kColorText1;
+        _detailLabel.font = [UIFont themeFontRegular:14];
+        _detailLabel.textColor = [UIColor themeGray3];
     }
     return _detailLabel;
 }
@@ -843,7 +850,7 @@ static BOOL s_weakPushAlertShowing = NO;
 
 + (CGFloat)defaultViewHeight
 {
-    return MAX(148.f/2, [TTDeviceUIUtils tt_padding:148.f/2]);
+    return MAX(140.f/2, [TTDeviceUIUtils tt_padding:140.f/2]);
 }
 
 + (CGFloat)defaultViewWidth

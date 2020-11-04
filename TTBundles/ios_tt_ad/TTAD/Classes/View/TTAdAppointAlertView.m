@@ -458,7 +458,7 @@ NSString* const TTAdAppointAlertViewCloseKey = @"TTAdAppointAlertViewCloseKey";
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    LOGD(@"[TTAdAppointAlertView]connection:didFailWithError - %@", error);
+//    LOGD(@"[TTAdAppointAlertView]connection:didFailWithError - %@", error);
     [self.loadingView stopAnimating];
     self.loadingView.hidden = YES;
     self.retryView.hidden = NO;

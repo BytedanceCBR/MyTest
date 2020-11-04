@@ -9,7 +9,6 @@
 #import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
-#import "FHExtendHotAreaButton.h"
 
 @interface FHSuggestionSearchBar()
 
@@ -77,7 +76,7 @@
     }];
     
     // backBtn
-    _backBtn = [[FHExtendHotAreaButton alloc] init];
+    _backBtn = [[UIButton alloc] init];
     [_backBtn setTitle:@"取消" forState:UIControlStateNormal];
     [_backBtn setTitle:@"取消" forState:UIControlStateHighlighted];
     _backBtn.titleLabel.font = [UIFont themeFontRegular:16];

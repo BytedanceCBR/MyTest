@@ -330,6 +330,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *reasonTags;
 @property (nonatomic, copy , nullable) NSString *addrData;
 
+@property (nonatomic, copy, nullable, readonly) NSDictionary *logPbWithTags;
+
 @end
 
 

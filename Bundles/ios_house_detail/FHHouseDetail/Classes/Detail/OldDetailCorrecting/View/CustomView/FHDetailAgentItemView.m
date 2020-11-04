@@ -11,7 +11,6 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UILabel+House.h>
 #import <BDWebImage/BDWebImage.h>
-#import "FHExtendHotAreaButton.h"
 
 @interface FHDetailAgentItemTagsViewCell: UICollectionViewCell
 
@@ -490,7 +489,7 @@
         make.height.mas_equalTo(22);
     }];
     
-    self.callBtn = [[FHExtendHotAreaButton alloc] init];
+    self.callBtn = [[UIButton alloc] init];
     [self.callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal_new"] forState:UIControlStateNormal];
     [self.callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateSelected];
     [self.callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateHighlighted];
@@ -501,7 +500,7 @@
         make.top.mas_equalTo(self.avatorView.mas_top);
     }];
     
-    self.imBtn = [[FHExtendHotAreaButton alloc] init];
+    self.imBtn = [[UIButton alloc] init];
     [self.imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
     [self.imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateSelected];
     [self.imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateHighlighted];
@@ -512,7 +511,7 @@
         make.top.mas_equalTo(self.callBtn.mas_top);
     }];
 
-    self.licenseIcon = [[FHExtendHotAreaButton alloc] init];
+    self.licenseIcon = [[UIButton alloc] init];
     [self.licenseIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
     [self.licenseIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateSelected];
     [self.licenseIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];

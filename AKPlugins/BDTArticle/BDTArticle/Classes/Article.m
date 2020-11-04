@@ -71,7 +71,7 @@
                 [self deleteObjectsWhere:@"WHERE (updateTime <= ?)" arguments:@[@(detail.updateTime)]];
                 
                 NSNumber *countAfterClean = [self aggregate:@"count(*)" where:nil arguments:nil];
-                LOGD(@"%@ : %@ -> %@", NSStringFromClass(self), countBeforeClean, countAfterClean);
+//                LOGD(@"%@ : %@ -> %@", NSStringFromClass(self), countBeforeClean, countAfterClean);
                 
                 NSTimeInterval t2 = CFAbsoluteTimeGetCurrent();
                 
@@ -80,7 +80,7 @@
     }
     else {
 #if DEBUG
-        LOGD(@"%@ : %@", NSStringFromClass(self), countBeforeClean);
+//        LOGD(@"%@ : %@", NSStringFromClass(self), countBeforeClean);
 #endif
     }
 }

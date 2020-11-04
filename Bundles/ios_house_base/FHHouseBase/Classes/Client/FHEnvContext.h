@@ -283,6 +283,13 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 + (BOOL)isHasShortVideoList;
 
 /*
+ 
+ 是否开启视频预加载实验，默认NO
+  */
+ + (BOOL)isHasPerLoadForVideo;
+
+ /*
+  
  是否开启首页二手房、新房新样式实验、默认为NO
  */
 + (BOOL)isShowHomeHouseCard;

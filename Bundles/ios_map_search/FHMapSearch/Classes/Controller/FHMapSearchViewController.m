@@ -37,7 +37,7 @@
 #import <TTReachability/TTReachability.h>
 #import "FHCommonDefines.h"
 #import "NSDictionary+BTDAdditions.h"
-#import "UIView+FHTracker.h"
+#import "NSObject+FHTracker.h"
 
 #define kTapDistrictZoomLevel  16
 #define kFilterBarHeight 44

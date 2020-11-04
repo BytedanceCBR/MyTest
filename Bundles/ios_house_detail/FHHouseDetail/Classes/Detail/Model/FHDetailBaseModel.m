@@ -435,6 +435,25 @@
 
 @end
 
+@implementation FHDetailPanoramaInfo
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"gaodeLng": @"gaode_lng",
+                           @"gaodeLat": @"gaode_lat",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHHouseDetailImageListDataModel
 + (JSONKeyMapper*)keyMapper
 {
@@ -534,6 +553,7 @@
     NSDictionary *dict = @{
         @"desc": @"desc",
         @"videoInfo": @"video_info",
+        @"panoramaInfo": @"panorama_info",
         @"vrInfo": @"vr_info",
         @"image": @"image",
         @"smallImage": @"small_image"

@@ -6,17 +6,15 @@
 //
 
 #import "FHDetailMapPageNaviBarView.h"
-#import "FHExtendHotAreaButton.h"
 #import "Masonry.h"
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
-#import "FHExtendHotAreaButton.h"
 #import "UIImage+FIconFont.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHDetailMapPageNaviBarView ()
 
-@property(nonatomic,strong) FHExtendHotAreaButton *backBtn;
+@property(nonatomic,strong) UIButton *backBtn;
 @property(nonatomic,strong) UILabel *titleLabel;
 @property(nonatomic,strong) UIButton *rightBtn;
 @property(nonatomic,strong) UIView *seperatorLine;
@@ -43,7 +41,7 @@
         iphoneXPading = 0;
     }
     
-    _backBtn = [[FHExtendHotAreaButton alloc] init];
+    _backBtn = [[UIButton alloc] init];
     [_backBtn setImage:FHBackBlackImage forState:UIControlStateNormal];
     [_backBtn setImage:FHBackBlackImage forState:UIControlStateHighlighted];
     [self addSubview:_backBtn];

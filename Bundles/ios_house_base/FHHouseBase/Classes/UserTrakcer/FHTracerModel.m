@@ -6,6 +6,7 @@
 //
 
 #import "FHTracerModel.h"
+#import "NSString+BDTracker.h"
 
 @interface FHTracerModel ()
 
@@ -93,6 +94,8 @@
         model.categoryName = dicParams[@"category_name"];
         model.searchId = dicParams[@"search_id"];
         model.originSearchId = dicParams[@"origin_search_id"];
+        model.pageType = dicParams[UT_PAGE_TYPE];
+        model.elementType = dicParams[UT_ELEMENT_TYPE];
         
         // log_pb特殊处理
         if (model) {
@@ -134,5 +137,14 @@
     }
 }
 
++ (NSDictionary *)getLogPbParams:(id)logPb {
+    if ([logPb isKindOfClass:NSDictionary.class]) {
+        return logPb;
+    } else if ([logPb isKindOfClass:NSString.class]) {
+        return [(NSString *)logPb bdtracker_jsonDictionary];
+    }
+    
+    return nil;
+}
 
 @end

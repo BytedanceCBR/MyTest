@@ -29,11 +29,11 @@ static const unsigned char g_client_nacl_ec_asymmetric_public_key2[32] = {0x1b,0
     std::map<std::string, tfcc_handler_t> handlerMap;
 }
 
-+ (void)load {
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self checkTfccStabilityIfNeed];
-    });
-}
+//+ (void)load {
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [self checkTfccStabilityIfNeed];
+//    });
+//}
 
 + (instancetype)sharedInstance {
     static TTSecurityUtil *security;
@@ -52,103 +52,103 @@ static const unsigned char g_client_nacl_ec_asymmetric_public_key2[32] = {0x1b,0
     return self;
 }
 
-- (NSString *)encrypt:(NSString *)str token:(NSString *)token {
-    if (isEmptyString(str) || isEmptyString(token)) {
-        return nil;
-    }
-    
-    BOOL enable = [[[TTSettingsManager sharedManager] settingForKey:@"tt_tfcc_cfg" defaultValue:@{} freeze:NO] tt_boolValueForKey:@"enable"];
-    if (!enable) {
-        return nil;
-    }
-    
-    std::string key = [token UTF8String];
-    tfcc_handler_t h;
-    if (handlerMap.find(key) == handlerMap.end()) {
-        tfcc_handler_t nh = tfcc_create_handler();
-        modp::b64_decode(key);
-        tfcc_add_public_key(nh, 1, key.c_str(), nonce.data());
-        handlerMap.insert(std::make_pair([token UTF8String], nh));
-        h = nh;
-    } else {
-        h = handlerMap[key];
-    }
-    
-    std::string *d = new std::string([str UTF8String]);
-    std::string encrypted = tfcc::build_request(h, d->data(), d->size());
-    modp::b64_encode(encrypted);
-    
-    
-    NSString *base64 = [NSString stringWithUTF8String:encrypted.c_str()];
-    return base64;
-}
+//- (NSString *)encrypt:(NSString *)str token:(NSString *)token {
+//    if (isEmptyString(str) || isEmptyString(token)) {
+//        return nil;
+//    }
+//
+//    BOOL enable = [[[TTSettingsManager sharedManager] settingForKey:@"tt_tfcc_cfg" defaultValue:@{} freeze:NO] tt_boolValueForKey:@"enable"];
+//    if (!enable) {
+//        return nil;
+//    }
+//
+//    std::string key = [token UTF8String];
+//    tfcc_handler_t h;
+//    if (handlerMap.find(key) == handlerMap.end()) {
+//        tfcc_handler_t nh = tfcc_create_handler();
+//        modp::b64_decode(key);
+//        tfcc_add_public_key(nh, 1, key.c_str(), nonce.data());
+//        handlerMap.insert(std::make_pair([token UTF8String], nh));
+//        h = nh;
+//    } else {
+//        h = handlerMap[key];
+//    }
+//
+//    std::string *d = new std::string([str UTF8String]);
+//    std::string encrypted = tfcc::build_request(h, d->data(), d->size());
+//    modp::b64_encode(encrypted);
+//
+//
+//    NSString *base64 = [NSString stringWithUTF8String:encrypted.c_str()];
+//    return base64;
+//}
+//
+//- (NSString *)decrypt:(NSString *)str token:(NSString *)token {
+//
+//    if (isEmptyString(str) || isEmptyString(token)) {
+//        return nil;
+//    }
+//
+//    BOOL enable = [[[TTSettingsManager sharedManager] settingForKey:@"tt_tfcc_cfg" defaultValue:@{} freeze:NO]  tt_boolValueForKey:@"enable"];
+//    if (!enable) {
+//        return nil;
+//    }
+//
+//    NSData *data = [[NSData alloc] initWithBase64EncodedString:str options:0];
+//
+//    std::string key = [token UTF8String];
+//    tfcc_handler_t h;
+//    if (handlerMap.find(key) == handlerMap.end()) {
+//        tfcc_handler_t nh = tfcc_create_handler();
+//        modp::b64_decode(key);
+//        tfcc_add_public_key(nh, 1, key.c_str(), nonce.data());
+//        handlerMap.insert(std::make_pair([token UTF8String], nh));
+//        h = nh;
+//    } else {
+//        h = handlerMap[key];
+//    }
+//
+//    std::string decrypted = tfcc::parse_response(h, data.bytes, data.length); //解密
+//    modp::b64_encode(decrypted); //在C层面base64
+//
+//    NSString *base64 = [NSString stringWithUTF8String:decrypted.c_str()];
+//
+//    return base64;
+//}
 
-- (NSString *)decrypt:(NSString *)str token:(NSString *)token {
-    
-    if (isEmptyString(str) || isEmptyString(token)) {
-        return nil;
-    }
-    
-    BOOL enable = [[[TTSettingsManager sharedManager] settingForKey:@"tt_tfcc_cfg" defaultValue:@{} freeze:NO]  tt_boolValueForKey:@"enable"];
-    if (!enable) {
-        return nil;
-    }
-    
-    NSData *data = [[NSData alloc] initWithBase64EncodedString:str options:0];
-    
-    std::string key = [token UTF8String];
-    tfcc_handler_t h;
-    if (handlerMap.find(key) == handlerMap.end()) {
-        tfcc_handler_t nh = tfcc_create_handler();
-        modp::b64_decode(key);
-        tfcc_add_public_key(nh, 1, key.c_str(), nonce.data());
-        handlerMap.insert(std::make_pair([token UTF8String], nh));
-        h = nh;
-    } else {
-        h = handlerMap[key];
-    }
-    
-    std::string decrypted = tfcc::parse_response(h, data.bytes, data.length); //解密
-    modp::b64_encode(decrypted); //在C层面base64
-    
-    NSString *base64 = [NSString stringWithUTF8String:decrypted.c_str()];
-    
-    return base64;
-}
-
-+ (void)checkTfccStabilityIfNeed {
-    BOOL enable = [[[TTSettingsManager sharedManager] settingForKey:@"tt_tfcc_cfg" defaultValue:@{} freeze:NO] tt_boolValueForKey:@"enable"];
-    if (!enable) {
-        return;
-    }
-    
-    NSString *encryptStr = [[TTSecurityUtil sharedInstance] encrypt:@"{}" token:@"Gy3Zm+Ne85NTP7YG/LJEFLdi863cXTHbzEC+PhXEYCM="];
-    [[TTMonitor shareManager] trackService:@"tfcc_encrypt" status:0 extra:@{}];
-    if (!encryptStr) {
-        return;
-    }
-    
-    NSMutableURLRequest *request =[NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://i.snssdk.com/caijing/pay/router"]];
-    request.HTTPMethod = @"POST";
-    request.HTTPBody = [[@{@"data": encryptStr} JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding];
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *sessionDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (error) {
-            [[TTMonitor shareManager] trackService:@"tfcc_decrypt" status:0 extra:@{@"errMsg": error.localizedDescription? :@""}];
-            return;
-        }
-        NSDictionary *json = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] JSONValue];
-        NSString *base64Data = [json tt_stringValueForKey:@"data"];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSString *decrypt = [[[TTSecurityUtil sharedInstance] decrypt:base64Data token:@"Gy3Zm+Ne85NTP7YG/LJEFLdi863cXTHbzEC+PhXEYCM="] base64DecodedString];
-            NSString *correct = @"{\"status\":\"OK\"}\"";
-            if ([decrypt isEqualToString:correct]) {
-                [[TTMonitor shareManager] trackService:@"tfcc_decrypt" status:1 extra:@{}];
-            } else {
-                [[TTMonitor shareManager] trackService:@"tfcc_decrypt" status:0 extra:@{@"errMsg": @"解密失败"}];
-            }
-        });
-    }];
-    [sessionDataTask resume];
-}
+//+ (void)checkTfccStabilityIfNeed {
+//    BOOL enable = [[[TTSettingsManager sharedManager] settingForKey:@"tt_tfcc_cfg" defaultValue:@{} freeze:NO] tt_boolValueForKey:@"enable"];
+//    if (!enable) {
+//        return;
+//    }
+//    
+//    NSString *encryptStr = [[TTSecurityUtil sharedInstance] encrypt:@"{}" token:@"Gy3Zm+Ne85NTP7YG/LJEFLdi863cXTHbzEC+PhXEYCM="];
+//    [[TTMonitor shareManager] trackService:@"tfcc_encrypt" status:0 extra:@{}];
+//    if (!encryptStr) {
+//        return;
+//    }
+//    
+//    NSMutableURLRequest *request =[NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://i.snssdk.com/caijing/pay/router"]];
+//    request.HTTPMethod = @"POST";
+//    request.HTTPBody = [[@{@"data": encryptStr} JSONRepresentation] dataUsingEncoding:NSUTF8StringEncoding];
+//    NSURLSession *session = [NSURLSession sharedSession];
+//    NSURLSessionDataTask *sessionDataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//        if (error) {
+//            [[TTMonitor shareManager] trackService:@"tfcc_decrypt" status:0 extra:@{@"errMsg": error.localizedDescription? :@""}];
+//            return;
+//        }
+//        NSDictionary *json = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] JSONValue];
+//        NSString *base64Data = [json tt_stringValueForKey:@"data"];
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            NSString *decrypt = [[[TTSecurityUtil sharedInstance] decrypt:base64Data token:@"Gy3Zm+Ne85NTP7YG/LJEFLdi863cXTHbzEC+PhXEYCM="] base64DecodedString];
+//            NSString *correct = @"{\"status\":\"OK\"}\"";
+//            if ([decrypt isEqualToString:correct]) {
+//                [[TTMonitor shareManager] trackService:@"tfcc_decrypt" status:1 extra:@{}];
+//            } else {
+//                [[TTMonitor shareManager] trackService:@"tfcc_decrypt" status:0 extra:@{@"errMsg": @"解密失败"}];
+//            }
+//        });
+//    }];
+//    [sessionDataTask resume];
+//}
 @end
