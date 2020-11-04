@@ -1057,7 +1057,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             tracerDict[@"rank"] = [self getRankFromHouseId:cellModel.idx indexPath:indexPath];
             tracerDict[@"origin_from"] = [self pageTypeString];
             tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
-            tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+            tracerDict[@"log_pb"] = [cellModel logPbWithTags] ? : @"be_null";
             tracerDict[@"biz_trace"] = [cellModel bizTrace] ? : @"be_null";
             [tracerDict removeObjectForKey:@"element_from"];
             
@@ -1110,7 +1110,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = [self pageTypeString];
-        traceParam[@"log_pb"] = theModel.logPb;
+        traceParam[@"log_pb"] = theModel.logPbWithTags;
         traceParam[@"origin_from"] = [self pageTypeString];
         traceParam[@"card_type"] = @"left_pic";
         traceParam[@"rank"] = [self getRankFromHouseId:theModel.idx indexPath:indexPath];

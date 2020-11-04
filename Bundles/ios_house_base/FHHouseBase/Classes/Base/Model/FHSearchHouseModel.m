@@ -10,6 +10,9 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "YYText.h"
+#import <ByteDanceKit/ByteDanceKit.h>
+#import "FHSingleImageInfoCellModel.h"
+
 @implementation  FHSearchHouseDataItemsBaseInfoMapModel
 
 + (JSONKeyMapper*)keyMapper
@@ -668,6 +671,12 @@
 
 #pragma mark - 后续统一用FHSearchBaseItemModel 和 FHSearchHouseItemModel
 
+@interface FHSearchHouseItemModel ()
+
+@property (nonatomic, copy, nullable, readwrite) NSDictionary *logPbWithTags;
+
+@end
+
 @implementation  FHSearchHouseItemModel
 
 - (instancetype)init
@@ -782,6 +791,46 @@
             break;
     }
     return @"FHHouseBaseItemCellList";
+}
+
+- (NSDictionary *)logPbWithTags {
+    if (!_logPbWithTags) {
+        if (self.logPb && [self.logPb isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *mutablLogPb = self.logPb.mutableCopy;
+            if (self.tags) {
+                NSAttributedString *tagsString = [FHSingleImageInfoCellModel tagsStringWithTagList:self.tags];
+                mutablLogPb[@"app_house_tags"] = [[self.tags btd_filter:^BOOL(id  _Nonnull obj) {
+                    if (obj && [obj isKindOfClass:[FHHouseTagsModel class]]) {
+                        FHHouseTagsModel *tagModel = (FHHouseTagsModel *)obj;
+                        if (tagModel.content && [tagsString.string containsString:tagModel.content]) {
+                            return YES;
+                        }
+                    }
+                    return NO;
+                }] btd_map:^id _Nullable(id  _Nonnull obj) {
+                    if (obj && [obj isKindOfClass:[FHHouseTagsModel class]]) {
+                        FHHouseTagsModel *tagModel = (FHHouseTagsModel *)obj;
+                        return tagModel.content;
+                    }
+                    return @"";
+                }];
+                
+            }
+            if (self.titleTags) {//FHSearchHouseItemTitleTagModel
+                mutablLogPb[@"app_marketing_tags"] = [self.titleTags btd_map:^id _Nullable(id  _Nonnull obj) {
+                    if (obj && [obj isKindOfClass:[FHSearchHouseItemTitleTagModel class]]) {
+                        FHSearchHouseItemTitleTagModel *tagModel = (FHSearchHouseItemTitleTagModel *)obj;
+                        return tagModel.text;
+                    }
+                    return @"";
+                }];
+            }
+            _logPbWithTags = mutablLogPb.copy;
+            return _logPbWithTags;
+        }
+        return self.logPb;
+    }
+    return _logPbWithTags;
 }
 
 - (void)setTags:(NSArray<FHHouseTagsModel> *)tags {
