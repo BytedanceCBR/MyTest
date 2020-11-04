@@ -63,17 +63,17 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     };
     [TTNetworkManager setMonitorBlock:block];
 
-    GetDomainblock GetDomainblock = ^(NSData* data) {
-        NSError *jsonError = nil;
+//    GetDomainblock GetDomainblock = ^(NSData* data) {
+//        NSError *jsonError = nil;
 //        LOGD(@"%s GetDomainblock is %@", __FUNCTION__, data);
-        id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-
-        if ([SSCommonLogic isRefactorGetDomainsEnabled]) {
-            [[CommonURLSetting sharedInstance] refactorHandleResult:(NSDictionary *)jsonDict error:jsonError];
-        } else {
-            [[CommonURLSetting sharedInstance] handleResult_:(NSDictionary *)jsonDict error:jsonError];
-        }
-    };
+//        id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+//
+//        if ([SSCommonLogic isRefactorGetDomainsEnabled]) {
+//            [[CommonURLSetting sharedInstance] refactorHandleResult:(NSDictionary *)jsonDict error:jsonError];
+//        } else {
+//            [[CommonURLSetting sharedInstance] handleResult_:(NSDictionary *)jsonDict error:jsonError];
+//        }
+//    };
 //    [TTNetworkManager setGetDomainBlock:GetDomainblock];
 
     NSString *city = [TTLocationManager sharedManager].city;
@@ -188,6 +188,9 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     [TTNetworkManager shareInstance].ServerConfigHostFirst = @"dm.haoduofangs.com";
     [TTNetworkManager shareInstance].ServerConfigHostSecond = @"dm-lq.haoduofangs.com";
     [TTNetworkManager shareInstance].ServerConfigHostThird = @"dm-hl.haoduofangs.com";
+//    [TTNetworkManager shareInstance].ServerConfigHostFirst = @"tnc3-bjlgy.snssdk.com";
+//    [TTNetworkManager shareInstance].ServerConfigHostSecond = @"tnc3-alisc1.snssdk.com";
+//    [TTNetworkManager shareInstance].ServerConfigHostThird = @"tnc3-aliec2.snssdk.com";
 
     [[TTNetworkManager shareInstance] setDomainBase:@"i.haoduofangs.com"];
     [[TTNetworkManager shareInstance] setDomainLog:@"log.haoduofangs.com"];

@@ -11,11 +11,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCityListLocationBar : UIView
 
-@property (nonatomic, strong)   UIButton       *cityNameBtn;
-@property (nonatomic, strong)   UIButton       *reLocationBtn;
+@property (nonatomic, strong) UIControl *cityNameBtn;
+@property (nonatomic, strong) UIButton *reLocationBtn;
 
-@property (nonatomic, copy)     NSString       *cityName;
-@property (nonatomic, assign)   BOOL       isLocationSuccess;
+@property (nonatomic, copy) NSString *cityName;
+@property (nonatomic, assign) BOOL isLocationSuccess;
 
 @end
 
