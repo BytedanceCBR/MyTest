@@ -1152,7 +1152,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"detail_button";
     tracerDic[@"realtor_logpb"] = contactPhone.realtorLogpb;
-    tracerDic[@"biz_trace"] = self.houseInfoBizTrace;
+    tracerDic[@"biz_trace"] = contactPhone.bizTrace;
     [tracerDic setValue:_contactPhone.enablePhone? @"1" : @"0" forKey:@"phone_show"];
     if (!isEmptyString(_contactPhone.imOpenUrl)) {
         [tracerDic setValue:@"1" forKey:@"im_show"];

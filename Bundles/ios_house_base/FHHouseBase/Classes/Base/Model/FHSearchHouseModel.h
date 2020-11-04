@@ -479,6 +479,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)cellIdentifierByHouseType:(FHHouseType)houseType;
 
+@property (nonatomic, copy, nullable, readonly) NSDictionary *logPbWithTags;
+
 @end
 
 @interface FHSearchHouseItemModel (RecommendReason)
