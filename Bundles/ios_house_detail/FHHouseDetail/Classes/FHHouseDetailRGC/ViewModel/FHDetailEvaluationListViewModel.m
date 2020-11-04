@@ -24,6 +24,8 @@
 #import "FHUserTracker.h"
 #import "TTStringHelper.h"
 #import "FHHouseDetailRealtorTabListModel.h"
+#import <ByteDanceKit/ByteDanceKit.h>
+
 @interface FHDetailEvaluationListViewModel()<UITableViewDelegate,UITableViewDataSource>
 @property (nonatomic, strong)UITableView *tableView;
 @property (nonatomic, weak)FHDetailEvaluationListViewController *listController;
@@ -399,8 +401,11 @@
     associatePhone.reportParams = extraDict;
     associatePhone.associateInfo = associateInfoDict;
     associatePhone.realtorId = cellModel.realtor.realtorId;
-    associatePhone.searchId = self.tracerDic[@"log_pb"][@"search_id"];
-    associatePhone.imprId = self.tracerDic[@"log_pb"][@"impr_id"];
+    NSDictionary *logPb = [self.tracerDic btd_dictionaryValueForKey:@"log_pb" default:@{}];
+    if (logPb) {
+        associatePhone.searchId = [logPb btd_stringValueForKey:@"search_id"];
+        associatePhone.imprId = [logPb btd_stringValueForKey:@"impr_id"];
+    }
     associatePhone.houseType =self.houseType.integerValue;
     associatePhone.houseId = self.houseId;
     associatePhone.showLoading = NO;

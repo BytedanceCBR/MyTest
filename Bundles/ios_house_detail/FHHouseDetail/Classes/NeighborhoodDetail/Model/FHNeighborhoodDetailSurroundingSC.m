@@ -64,7 +64,7 @@
     FHNewHouseDetailMapCellModel *dataModel = [model mapCellModel];
     NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
     tracerDict[@"element_from"] = @"map";
-    tracerDict[@"enter_from"] = @"new_detail";
+    tracerDict[@"enter_from"] = @"neighborhood_detail";
     param[TRACER_KEY] = tracerDict.copy;
     if (dataModel.gaodeLat.length && dataModel.gaodeLng.length) {
         param[@"gaodeLat"] = dataModel.gaodeLat;
@@ -225,6 +225,7 @@
     }
     return CGSizeZero;
 }
+
 - (nonnull UICollectionViewCell<IGListBindable> *)sectionController:(nonnull IGListBindingSectionController *)sectionController cellForViewModel:(nonnull id)viewModel atIndex:(NSInteger)index {
     __weak typeof(self) weakSelf = self;
     FHNeighborhoodDetailSurroundingSM *model = (FHNeighborhoodDetailSurroundingSM *)self.sectionModel;
@@ -244,6 +245,12 @@
         }];
         [cell setBaiduPanoramaBlock:^{
             [weakSelf baiduPanoramaAction];
+        }];
+        [cell setClickFacilitiesBlock:^(NSString * _Nonnull position) {
+            NSMutableDictionary *tracerDic = weakSelf.detailTracerDict.mutableCopy;
+            tracerDic[@"element_type"] = @"map";
+            tracerDic[@"click_position"] = position ?: @"be_null";
+            [FHUserTracker writeEvent:@"click_facilities" params:tracerDic.copy];
         }];
         return cell;
     } else if ([model.dataItems[index] isKindOfClass:[FHStaticMapAnnotation class]]) {
@@ -296,7 +303,7 @@
         }];
         return cell;
     }
-    return nil;
+    return [super defaultCellAtIndex:index];
 }
 
 - (CGSize)sectionController:(nonnull IGListBindingSectionController *)sectionController sizeForViewModel:(nonnull id)viewModel atIndex:(NSInteger)index {

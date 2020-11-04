@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailNatantInfoViewModel.m
 //  Article
 //
@@ -120,7 +121,7 @@ inline CGFloat kVideoTitleLineHeight() {
             return ;
         }
         NSData *data = [htmlString dataUsingEncoding:NSUTF8StringEncoding];
-        wrapperTrackEvent(@"video_parse_abstract", @"begin");
+        [BDTrackerProtocol event:@"video_parse_abstract" label:@"begin"];
         NSMutableAttributedString *attributeStr = [[NSMutableAttributedString alloc] initWithData:data
                                                                                           options:@{
                                                                                                     NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
@@ -129,7 +130,7 @@ inline CGFloat kVideoTitleLineHeight() {
                                                                                                     }
                                                                                documentAttributes:nil
                                                                                             error:nil];
-        wrapperTrackEvent(@"video_parse_abstract", @"end");
+        [BDTrackerProtocol event:@"video_parse_abstract" label:@"end"];
         
         NSRange range = [attributeStr.string  rangeOfString:@"(\\n){2,}" options:NSRegularExpressionSearch];
         if (range.location != NSNotFound) {
@@ -252,7 +253,7 @@ inline CGFloat kVideoTitleLineHeight() {
     }
     NSString *mediaIdsStr = [mediaIds componentsJoinedByString:@","];
     [extra setValue:mediaIdsStr forKey:@"media_ids"];
-    wrapperTrackEventWithCustomKeys(@"video", @"show_zz_comment", self.uniqueID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"show_zz_comment" value:self.uniqueID source:nil extraDic:extra];
 }
 
 #pragma mark - dig/bury Action

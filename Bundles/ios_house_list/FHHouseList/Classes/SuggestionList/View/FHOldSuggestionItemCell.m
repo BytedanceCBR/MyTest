@@ -160,7 +160,10 @@
         if (model.recallType.length > 0) {
             self.zoneTypeView.hidden = NO;
         };
-        self.subTitleLab.text = model.oldName;
+        if (model.oldName.length > 0) {
+            NSAttributedString *text1 = [self processHighlightedDefault:model.oldName textColor:[UIColor themeGray1] font:[UIFont themeFontRegular:14]];
+            self.subTitleLab.attributedText = [self processHighlighted:text1 originText:model.oldName textColor:[UIColor themeOrange1] font:[UIFont themeFontRegular:14]];
+        }
         self.zoneTypeLab.text = model.recallType;
             CGFloat zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
         [self.zoneTypeView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -170,6 +173,47 @@
         self.villageLab.text = model.tag2;
         self.amountLab.text = model.countDisplay;
     }
+}
+
+- (NSAttributedString *)processHighlightedDefault:(NSString *)text textColor:(UIColor *)textColor font:(UIFont *)font {
+    NSDictionary *attr = @{NSFontAttributeName:font,NSForegroundColorAttributeName:textColor};
+    NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
+    
+    return attrStr;
+}
+
+- (NSAttributedString *)processHighlighted:(NSAttributedString *)text originText:(NSString *)originText textColor:(UIColor *)textColor font:(UIFont *)font {
+    if (self.highlightedText.length > 0) {
+        NSDictionary *attr = @{NSFontAttributeName:font,NSForegroundColorAttributeName:textColor};
+        NSMutableAttributedString * tempAttr = [[NSMutableAttributedString alloc] initWithAttributedString:text];
+        
+        NSMutableString *string = [NSMutableString stringWithString:self.highlightedText];
+        
+        //左括号
+        NSRange rangeLeft = [string rangeOfString:@"("];
+        if (rangeLeft.location != NSNotFound) {
+            [string insertString:@"[" atIndex:rangeLeft.location];
+            [string insertString:@"]" atIndex:rangeLeft.location + 2];
+        }
+        
+        //右括号
+        NSRange rangeRight = [string rangeOfString:@")"];
+        if (rangeRight.location != NSNotFound) {
+            [string insertString:@"[" atIndex:rangeRight.location];
+            [string insertString:@"]" atIndex:rangeRight.location + 2];
+        }
+        
+        //()在正则表达式有特殊意义——子表达式
+        NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:[NSString stringWithFormat:@"%@",string] options:NSRegularExpressionCaseInsensitive error:nil];
+        
+        [regex enumerateMatchesInString:originText options:NSMatchingReportProgress range:NSMakeRange(0, originText.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
+            [tempAttr addAttributes:attr range:result.range];
+        }];
+        return tempAttr;
+    } else {
+        return text;
+    }
+    return text;
 }
 
 // 1、默认

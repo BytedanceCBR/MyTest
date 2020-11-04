@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTEditUserProfileViewController.m
 //  Article
 //
@@ -240,7 +241,7 @@ NSString *const kTTUserEditableInfoKey = @"user_info";
         if ([pgcViewModel hasModifiedUserAuditInfo]) {
             [self showSavingPGCInfoViewForBack:NO];
             
-            wrapperTrackEvent(@"edit_profile", @"submit");
+            [BDTrackerProtocol event:@"edit_profile" label:@"submit"];
         }
     }
 }
@@ -253,14 +254,14 @@ NSString *const kTTUserEditableInfoKey = @"user_info";
 - (void)showSavingPGCInfoViewForBack:(BOOL)backOrSave {
     TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:NSLocalizedString(@"每个月只能修改一次，确认保\n存修改后的资料吗？", nil) preferredType:TTThemedAlertControllerTypeAlert];
     [alert addActionWithTitle:NSLocalizedString(@"取消", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-        wrapperTrackEvent(@"pgc_profile_confirm", @"cancel");
+        [BDTrackerProtocol event:@"pgc_profile_confirm" label:@"cancel"];
         
         if (backOrSave) {
             [self popViewController];
         }
     }];
     [alert addActionWithTitle:NSLocalizedString(@"保存", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-        wrapperTrackEvent(@"pgc_profile_confirm", @"confirm");
+        [BDTrackerProtocol event:@"pgc_profile_confirm" label:@"confirm"];
         
         [self uploadPGCAuditInfo];
     }];

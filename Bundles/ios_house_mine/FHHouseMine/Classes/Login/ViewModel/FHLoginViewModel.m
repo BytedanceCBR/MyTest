@@ -1016,7 +1016,7 @@ static FHLoginSharedModel *_sharedModel = nil;
             [FHMonitor hmdTrackService:@"account_logout" status:1 extra:extra];
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                wrapperTrackerEvent([TTSandBoxHelper appName], @"xiangping", @"account_setting_signout");
+                [BDTrackerProtocol event:@"xiangping" label:@"account_setting_signout"];
             }
             // LogV3
             [FHUserTracker writeEvent:@"login_account_exit" params:nil];

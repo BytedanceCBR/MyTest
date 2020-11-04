@@ -272,7 +272,7 @@ static AppAlertManager *_alertManager = nil;
                 if ([openURL length] > 0) {
                     NSInteger count = [[appAlertModel.buttons componentsSeparatedByString:@","] count];
                     NSString * eventString = [NSString stringWithFormat:@"appalert_%@_%@", @(count), @(buttonIndex + 1)];
-                    wrapperTrackerEvent([TTSandBoxHelper appName], eventString, appAlertModel.actions);
+                    [BDTrackerProtocol event:eventString label:appAlertModel.actions];
                     
                     if ([openURL hasPrefix:@"snssdk1370"]) {
                         NSURL *tURL = [NSURL URLWithString:openURL];
@@ -331,7 +331,7 @@ static AppAlertManager *_alertManager = nil;
             
             if(buttonIndex >= 0)
             {
-                wrapperTrackerEvent([TTSandBoxHelper appName], eventString, [actionArray objectAtIndex:buttonIndex]);
+                [BDTrackerProtocol event:eventString label:[actionArray objectAtIndex:buttonIndex]];
             }
         }
     }

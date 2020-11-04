@@ -228,7 +228,7 @@
         return cell;
         
     }
-    return nil;
+    return [super defaultCellAtIndex:index];
 }
 
 - (CGSize)sectionController:(nonnull IGListBindingSectionController *)sectionController sizeForViewModel:(nonnull id)viewModel atIndex:(NSInteger)index {

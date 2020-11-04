@@ -8,6 +8,7 @@
 #import "FHNeighborhoodDetailSectionController.h"
 #import "FHNeighborhoodDetailSectionModel.h"
 #import "FHNeighborhoodDetailViewController.h"
+#import "FHDetailBaseCell.h"
 
 @implementation FHNeighborhoodDetailSectionController
 
@@ -41,6 +42,11 @@
 
 - (NSMutableDictionary *)elementShowCaches {
     return self.detailViewController.elementShowCaches;
+}
+
+- (__kindof UICollectionViewCell *)defaultCellAtIndex:(NSInteger)index {
+    FHDetailBaseCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHDetailBaseCollectionCell class] withReuseIdentifier:NSStringFromClass([self class]) forSectionController:self atIndex:index];
+    return cell;
 }
 
 @end
@@ -78,6 +84,11 @@
 
 - (NSMutableDictionary *)elementShowCaches {
     return self.detailViewController.elementShowCaches;
+}
+
+- (__kindof UICollectionViewCell *)defaultCellAtIndex:(NSInteger)index {
+    FHDetailBaseCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHDetailBaseCollectionCell class] withReuseIdentifier:NSStringFromClass([self class]) forSectionController:self atIndex:index];
+    return cell;
 }
 
 @end

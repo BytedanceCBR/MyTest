@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTHistoryViewController.m
 //  Article
 //
@@ -172,7 +173,7 @@
                 if (clearAll) {
                     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:1];
                     [extraDict setValue:@(deleteSuccess) forKey:@"success"];
-                    wrapperTrackEventWithCustomKeys(tagString, @"delete_all", nil, nil, [extraDict copy]);
+                    [BDTrackerProtocol trackEventWithCustomKeys:tagString label:@"delete_all" value:nil source:nil extraDic:[extraDict copy]];
                     
                 } else {
                     NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
@@ -186,7 +187,7 @@
                     }
                     [extraDict setValue:@(hasBatchDeletingGroup) forKey:@"batch_delete"];
                     [extraDict setValue:@(deleteSuccess) forKey:@"success"];
-                    wrapperTrackEventWithCustomKeys(tagString, @"delete", nil, nil, [extraDict copy]);
+                    [BDTrackerProtocol trackEventWithCustomKeys:tagString label:@"delete" value:nil source:nil extraDic:[extraDict copy]];
                 }
                 
                 if (!error && [((NSDictionary *)jsonObj) tt_boolValueForKey:@"result"]) {

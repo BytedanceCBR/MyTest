@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  FRAddMultiImagesView.m
 //  Article
 //
@@ -36,9 +37,6 @@
 #define kImageHeightInterval 4.f
 
 @interface FRAddMultiImagesView() <FRPostAssetViewColumnDelegate, UIActionSheetDelegate,TTImagePickerControllerDelegate,TTImagePreviewViewControllerDelegate>
-{
-    CGFloat _imageSize;
-}
 
 @property (nonatomic, strong) NSMutableArray *selectedImageViews;
 
@@ -358,7 +356,7 @@
     NSUInteger index = [self.selectedImageViews indexOfObject:sender];
     if (index != NSNotFound)
     {
-        wrapperTrackEventWithCustomKeys(self.eventName, @"preview_photo", nil, nil, self.ssTrackDict);
+        [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"preview_photo" value:nil source:nil extraDic:self.ssTrackDict];
         
         if (_delegate && [_delegate respondsToSelector:@selector(addMultiImagesView:clickedImageAtIndex:)]) {
             [_delegate addMultiImagesView:self clickedImageAtIndex:index];
@@ -398,7 +396,7 @@
 }
 
 - (void)didDeleteAssetViewColumn:(FRPostAssetViewColumn *)sender {
-    wrapperTrackEventWithCustomKeys(self.eventName, @"post_photo_delete", nil, nil, self.ssTrackDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"post_photo_delete" value:nil source:nil extraDic:self.ssTrackDict];
     [self removeAssetViewColumn:sender];
 }
 

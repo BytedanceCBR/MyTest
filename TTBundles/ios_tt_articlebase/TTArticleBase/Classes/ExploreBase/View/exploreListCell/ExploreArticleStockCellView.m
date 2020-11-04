@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreArticleStockCellView.m
 //  Article
 //
@@ -285,7 +286,7 @@
     
     _isCellDisplay = YES;
     
-    wrapperTrackEventWithCustomKeys(@"native_stock", @"show", nil, nil, @{@"stock_id": [NSString stringWithFormat:@"%@", _stockData.stockID]});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"native_stock" label:@"show" value:nil source:nil extraDic:@{@"stock_id": [NSString stringWithFormat:@"%@", _stockData.stockID]}];
     
     [self refreshStockData];
 }

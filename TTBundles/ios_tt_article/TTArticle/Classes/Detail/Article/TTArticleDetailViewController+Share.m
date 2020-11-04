@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTArticleDetailViewController+Share.m
 //  Article
 //
@@ -74,7 +75,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         if (self.articleInfoManager.promotionModel) {
             TTActivity *promtionActivity = [TTActivity activityWithModel:self.articleInfoManager.promotionModel];
             [activityItems addObject:promtionActivity];
-            wrapperTrackEventWithCustomKeys(@"setting_btn", @"show",self.detailModel.article.groupModel.groupID, nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"setting_btn" label:@"show" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
         }
         
         if ([self.detailView.detailViewModel tt_articleDetailType] == TTDetailArchTypeNoComment ||
@@ -108,7 +109,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         [actionSheet showInView:self.view];
     }
     self.activityActionManager.copyText = self.detailModel.article.shareURL;
-    wrapperTrackEvent(@"detail", @"preferences");
+    [BDTrackerProtocol event:@"detail" label:@"preferences"];
     TLS_LOG(@"click_preference");
 }
 
@@ -134,7 +135,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     if (self.articleInfoManager.promotionModel) {
         TTActivity *proActivity = [TTActivity activityWithModel:self.articleInfoManager.promotionModel];
         [activityItems insertObject:proActivity atIndex:0];
-        wrapperTrackEventWithCustomKeys(@"share_btn", @"show", self.detailModel.article.groupModel.groupID, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"share_btn" label:@"show" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
     }
     
 //    if ([[TTKitchenMgr sharedInstance] getBOOL:kKCShareBoardDisplayRepost]) {
@@ -219,7 +220,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
         }
         else if (itemType == TTActivityTypePromotion) {
             [TTAdPromotionManager handleModel:self.articleInfoManager.promotionModel  condition:nil];
-            wrapperTrackEventWithCustomKeys(@"share_btn", @"click", self.detailModel.article.groupModel.groupID, nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"share_btn" label:@"click" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
         }
         else {
             if ([AKAwardCoinManager isShareTypeWithActivityType:itemType]) {
@@ -261,7 +262,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             
             NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
             [extra setValue:self.detailModel.article.itemID forKey:@"item_id"];
-            wrapperTrackEventWithCustomKeys(@"detail", @"pgc_button", mediaID, nil, extra);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:@"pgc_button" value:mediaID source:nil extraDic:extra];
         }
         else if (itemType == TTActivityTypeNightMode){
             BOOL isDayMode = ([[TTThemeManager sharedInstance_tt] currentThemeMode] == TTThemeModeDay);
@@ -274,7 +275,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
                 [[TTThemeManager sharedInstance_tt] switchThemeModeto:TTThemeModeDay];
                 eventID = @"click_to_day";
             }
-            wrapperTrackEvent(@"detail", eventID);
+            [BDTrackerProtocol event:@"detail" label:eventID];
             //做一个假的动画效果 让夜间渐变
             UIView * imageScreenshot = [self.view.window snapshotViewAfterScreenUpdates:NO];
             [self.view.window addSubview:imageScreenshot];
@@ -291,14 +292,14 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
             [self.navMoreShareView cancelButtonClicked];
             
             [self report_showReportOnTopSharePannel];
-            wrapperTrackEvent(@"detail", @"report_button");
+            [BDTrackerProtocol event:@"detail" label:@"report_button"];
         }
         else if (itemType == TTActivityTypeFavorite) {
             [self p_willChangeArticleFavoriteState];
         }
         else if (itemType == TTActivityTypePromotion) {
             [TTAdPromotionManager handleModel:self.articleInfoManager.promotionModel condition:nil];
-            wrapperTrackEventWithCustomKeys(@"setting_btn", @"click", self.detailModel.article.groupModel.groupID, nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"setting_btn" label:@"click" value:self.detailModel.article.groupModel.groupID source:nil extraDic:nil];
         }
         else if (itemType == TTActivityTypeDislike) {
             [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"将减少类似推荐" indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
@@ -1019,13 +1020,13 @@ static char kCurShareSourceTypeKey;
     [extraDic setValue:@"detail_bottom_bar" forKey:@"section"];
     NSString *tag = @"detail_share";
     if (activity == nil) {
-        wrapperTrackEventWithCustomKeys(@"detail", [TTShareMethodUtil labelNameForShareActivity:activity], self.detailModel.article.itemID, self.detailModel.clickLabel, extraDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail" label:[TTShareMethodUtil labelNameForShareActivity:activity] value:self.detailModel.article.itemID source:self.detailModel.clickLabel extraDic:extraDic];
     } else if ([activity.activityType isEqualToString:TTActivityTypeForwardWeitoutiao]) {
-        wrapperTrackEventWithCustomKeys(@"detail_share", @"share_weitoutiao", self.detailModel.article.groupModel.groupID, self.detailModel.clickLabel, extraDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail_share" label:@"share_weitoutiao" value:self.detailModel.article.groupModel.groupID source:self.detailModel.clickLabel extraDic:extraDic];
     } else if ([activity.activityType isEqualToString:TTActivityTypeDirectForwardWeitoutiao]) {
         return;
     } else {
-        wrapperTrackEventWithCustomKeys(tag, [TTShareMethodUtil labelNameForShareActivity:activity], self.detailModel.article.itemID, self.detailModel.clickLabel, extraDic);
+        [BDTrackerProtocol trackEventWithCustomKeys:tag label:[TTShareMethodUtil labelNameForShareActivity:activity] value:self.detailModel.article.itemID source:self.detailModel.clickLabel extraDic:extraDic];
     }
     
 }
@@ -1044,7 +1045,7 @@ static char kCurShareSourceTypeKey;
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
     [extraDic setValue:self.detailModel.article.itemID forKey:@"item_id"];
     [extraDic setValue:self.detailModel.article.aggrType forKey:@"aggr_type"];
-    wrapperTrackEventWithCustomKeys(@"detail_share", label, self.detailModel.article.itemID, self.detailModel.clickLabel, extraDic);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"detail_share" label:label value:self.detailModel.article.itemID source:self.detailModel.clickLabel extraDic:extraDic];
     
     //分享成功或失败，触发分享item排序
     if(error) {

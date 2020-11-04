@@ -403,7 +403,7 @@ TTCommentFooterCellDelegate>
         [self.ttvContainerScrollView finishPullUpWithSuccess:success];
     }];
     
-    wrapperTrackEvent(@"detail", @"comment_loadmore");
+    [BDTrackerProtocol event:@"detail" label:@"comment_loadmore"];
 }
 
 - (void)p_reloadCommentTableHeaderView
@@ -493,7 +493,7 @@ TTCommentFooterCellDelegate>
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"没有网络连接" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
     }
     else {
-        wrapperTrackEvent(@"comment", @"delete_confirm");
+        [BDTrackerProtocol event:@"comment" label:@"delete_confirm"];
         [[ExploreDeleteManager shareManager] deleteArticleCommentForCommentID:commentID isAnswer:NO isNewComment:YES];
         if (_needDeleteItem) {
             [self.commentViewModel removeCommentItem:_needDeleteItem];
@@ -554,8 +554,7 @@ TTCommentFooterCellDelegate>
     if (self.commentViewModel.goTopicDetail) {
         NSIndexPath *indexPath = [self.commentTableView indexPathForCell:view];
         if (indexPath) {
-            wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", item.commentModel.commentIDNum.stringValue, nil, @{@"ext_value": @"3",
-                                                                                                              @"source": @"3"});
+            [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:item.commentModel.commentIDNum.stringValue source:nil extraDic:@{@"ext_value": @"3", @"source": @"3"}];
             [self p_sendEnterCommentDetailTracker:item.commentModel];
             if ([self.delegate respondsToSelector:@selector(commentViewController:shouldPresentCommentDetailViewControllerWithCommentModel:indexPath:showKeyBoard:)]) {
                 
@@ -590,9 +589,8 @@ TTCommentFooterCellDelegate>
 {
     NSIndexPath *indexPath = [_commentTableView indexPathForCell:view];
     if (indexPath) {
-        wrapperTrackEvent(@"comment", @"click_outcomment");
-        wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", item.commentModel.commentIDNum.stringValue, nil, @{@"ext_value": @"3",
-                                                                                                          @"source": @"2"});
+        [BDTrackerProtocol event:@"comment" label:@"click_outcomment"];
+        [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:item.commentModel.commentIDNum.stringValue source:nil extraDic:@{@"ext_value": @"3", @"source": @"2"}];
          [self p_sendEnterCommentDetailTracker:item.commentModel];
         if ([self.delegate respondsToSelector:@selector(commentViewController:shouldPresentCommentDetailViewControllerWithCommentModel:indexPath:showKeyBoard:)]) {
             
@@ -679,7 +677,7 @@ TTCommentFooterCellDelegate>
     if (type == TTCommentFooterCellTypeFold || type == TTCommentFooterCellTypeFoldLeft) {
         NSMutableDictionary *extra = [[NSMutableDictionary alloc] init];
         [extra setValue:self.commentViewModel.getArticle.itemID forKey:@"item_id"];
-        wrapperTrackEventWithCustomKeys(@"fold_comment", @"click", self.commentViewModel.getArticle.groupModel.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"fold_comment" label:@"click" value:self.commentViewModel.getArticle.groupModel.groupID source:nil extraDic:extra];
         NSMutableDictionary *condition = [[NSMutableDictionary alloc] init];
         [condition setValue:self.commentViewModel.getArticle.groupModel.groupID forKey:@"groupID"];
         [condition setValue:self.commentViewModel.getArticle.itemID forKey:@"itemID"];
@@ -737,7 +735,7 @@ TTCommentFooterCellDelegate>
         }
         self.needDeleteItem = nil;
         if (buttonIndex == actionSheet.cancelButtonIndex) {
-            wrapperTrackEvent(@"comment", @"delete_cancel");
+            [BDTrackerProtocol event:@"comment" label:@"delete_cancel"];
         }
     }
 }
@@ -906,9 +904,7 @@ TTCommentFooterCellDelegate>
     id <TTVCommentModelProtocol, TTCommentDetailModelProtocol> comment = [commentItems objectAtIndex:rightIndex].commentModel;
     if ([comment conformsToProtocol:@protocol(TTVCommentModelProtocol)]) {
         if (self.commentViewModel.goTopicDetail) {
-            wrapperTrackEventWithCustomKeys(@"update_detail", @"enter_detail", comment.commentIDNum.stringValue, nil, @{@"ext_value": @"3",
-             
-                                                                                                                @"source": @"1"});
+            [BDTrackerProtocol trackEventWithCustomKeys:@"update_detail" label:@"enter_detail" value:comment.commentIDNum.stringValue source:nil extraDic:@{@"ext_value": @"3", @"source": @"1"}];
              [self p_sendEnterCommentDetailTracker:comment];
             
             if ([self.delegate respondsToSelector:@selector(commentViewController:shouldPresentCommentDetailViewControllerWithCommentModel:indexPath:showKeyBoard:)]) {

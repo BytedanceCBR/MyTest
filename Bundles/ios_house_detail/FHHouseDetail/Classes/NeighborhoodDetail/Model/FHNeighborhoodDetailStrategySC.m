@@ -69,8 +69,7 @@
         [cell refreshWithData:cellModel];
         return cell;
     }
-    
-    return nil;
+    return [super defaultCellAtIndex:index];
 }
 
 

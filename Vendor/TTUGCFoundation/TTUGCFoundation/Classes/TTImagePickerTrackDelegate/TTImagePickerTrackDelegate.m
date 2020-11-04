@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTImagePickerTrackDelegate.m
 //  Article
 //
@@ -38,81 +39,81 @@
     switch (type) {
         //图片选择、预览类
         case TTImagePickerTrackKeyDidEnter:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"local_album", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"local_album" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyDidEnterNone:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"local_album_none", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"local_album_none" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyShoot:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"shoot", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"shoot" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyCancelShoot:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"cancel_shoot", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"cancel_shoot" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyConfirmShoot:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"confirm_shoot", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"confirm_shoot" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyClickAlbumList:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"album_list", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"album_list" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyAlbumChanged:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"album_list_changed", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"album_list_changed" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyAlbumUnchanged:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"album_list_unchanged", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"album_list_unchanged" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyListFinished:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"finish", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"finish" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyPreview:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"preview", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"preview" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyPreviewPhoto:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"preview_photo", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"preview_photo" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyPreviewFlip:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"flip", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"flip" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyPreviewFinished:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"preview_photo_finish", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"preview_photo_finish" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyPreviewPostEnter:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"post_photo_preview", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"post_photo_preview" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyPreviewPostDelete:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"post_photo_preview_delete", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"post_photo_preview_delete" value:nil source:nil extraDic:self.ssTrackDict];
             break;
             
         //视频选择、预览类
         case TTImagePickerTrackKeyVideoDidEnter:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"enter", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"enter" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyVideoClickClose:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"video_click_close", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"video_click_close" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyVideoGestureClose:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"video_flick_close", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"video_flick_close" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyVideoClickAlbumList:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"video_local_album", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"video_local_album" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyVideoAlbumChanged:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"video_album_changed", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"video_album_changed" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyVideoAlbumUnchanged:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"video_album_unchanged", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"video_album_unchanged" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyVideoPreview:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"video_preview", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"video_preview" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyVideoPreviewPlay:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"video_play", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"video_play" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyVideoPreviewPause:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"video_pause", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"video_pause" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         case TTImagePickerTrackKeyVideoPreviewFinish:
-            wrapperTrackEventWithCustomKeys(self.eventName, @"video_finish", nil, nil, self.ssTrackDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:self.eventName label:@"video_finish" value:nil source:nil extraDic:self.ssTrackDict];
             break;
         default:
             break;

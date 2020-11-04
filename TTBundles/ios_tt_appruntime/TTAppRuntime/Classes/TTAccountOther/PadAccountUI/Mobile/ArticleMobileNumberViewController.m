@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ArticleMobileNumberViewController.m
 //  Article
 //
@@ -226,7 +227,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    wrapperTrackEvent(@"login_register", @"mobile_register_enter");
+    [BDTrackerProtocol event:@"login_register" label:@"mobile_register_enter"];
     [self.mobileField becomeFirstResponder];
 }
 
@@ -262,7 +263,7 @@
 - (void)termButtonActionFired:(id)sender
 {
     /////// 友盟统计
-    wrapperTrackEvent(@"login_register", @"click_agreement");
+    [BDTrackerProtocol event:@"login_register" label:@"click_agreement"];
     SSWebViewController *webViewController = [[SSWebViewController alloc] initWithSupportIPhoneRotate:NO];
     [webViewController setTitleText:NSLocalizedString(@"幸福里用户协议", nil)];
     [webViewController requestWithURLString:[ArticleURLSetting userProtocolURLString]];
@@ -276,7 +277,7 @@
 
 - (void)_goLoginViewController
 {
-    wrapperTrackEvent(@"login_register", @"click_login");
+    [BDTrackerProtocol event:@"login_register" label:@"click_login"];
     NSArray *viewControllers = self.navigationController.viewControllers;
     if (viewControllers.count >= 2) {
         ArticleMobileLoginViewController *viewController = viewControllers[[viewControllers indexOfObject:self] - 1];
@@ -680,7 +681,7 @@
 - (void)switchBind:(NSError*)error
 {
     //绑定手机号时提示已绑定其他账号
-    wrapperTrackEvent(@"login", @"binding_mobile_error");
+    [BDTrackerProtocol event:@"login" label:@"binding_mobile_error"];
     __weak typeof(self) wself = self;
     TTAccountAlertView *alert = [[TTAccountAlertView alloc] initWithTitle:[error.userInfo objectForKey:@"description"] message:[error.userInfo objectForKey:@"dialog_tips"] cancelBtnTitle:@"取消" confirmBtnTitle:@"放弃原账号" animated:YES tapCompletion:^(TTAccountAlertCompletionEventType type) {
         if (type == TTAccountAlertCompletionEventTypeDone) {

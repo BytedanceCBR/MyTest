@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTMomentProfileBaseView.m
 //  Article
 //
@@ -540,7 +541,7 @@ TTActivityShareManagerDelegate
                 tmpParam[@"gtype"] = gType;
             }
             if(tmpParam.count > 0) {
-                wrapperTrackEventWithCustomKeys(@"profile_more", @"confirm_report", user_id, nil,tmpParam);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"profile_more" label:@"confirm_report" value:user_id source:nil extraDic:tmpParam];
             }
             TTReportUserModel *model = [[TTReportUserModel alloc] init];
             model.userID = user_id;
@@ -571,16 +572,16 @@ TTActivityShareManagerDelegate
         } else {
             if (!isBlock) {
                 [self.blockUserManager unblockUser:userID];
-                wrapperTrackEvent(@"profile_more", @"deblacklist");
+                [BDTrackerProtocol event:@"profile_more" label:@"deblacklist"];
             } else {
-                wrapperTrackEvent(@"profile_more", @"click_blacklist");
+                [BDTrackerProtocol event:@"profile_more" label:@"click_blacklist"];
                 
                 TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:@"确定拉黑该用户？" message:@"拉黑后此用户不能关注你，也无法给你发送任何消息" preferredType:TTThemedAlertControllerTypeAlert];
                 [alert addActionWithTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
-                    wrapperTrackEvent(@"blacklist", @"quit_blacklist");
+                    [BDTrackerProtocol event:@"blacklist" label:@"quit_blacklist"];
                 }];
                 [alert addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-                    wrapperTrackEvent(@"blacklist", @"confirm_blacklist");
+                    [BDTrackerProtocol event:@"blacklist" label:@"confirm_blacklist"];
                     
                     [self.blockUserManager blockUser:userID];
                 }];
