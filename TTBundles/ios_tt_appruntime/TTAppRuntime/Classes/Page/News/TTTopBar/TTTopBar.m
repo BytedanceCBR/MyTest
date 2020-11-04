@@ -39,7 +39,7 @@
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import "SSCommonLogic.h"
 #import <TTNetworkManager/TTNetworkManager.h>
-#import "UIView+FHTracker.h"
+#import "NSObject+FHTracker.h"
 
 NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotification";
 

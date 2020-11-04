@@ -157,5 +157,8 @@
     return frame;
 }
 
+- (CGFloat)filterHeight {
+    return self.filterView.height;
+}
 
 @end

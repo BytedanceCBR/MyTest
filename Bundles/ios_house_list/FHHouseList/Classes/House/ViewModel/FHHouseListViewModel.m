@@ -2191,6 +2191,11 @@ extern NSString *const INSTANT_DATA_KEY;
         tracerDict[@"house_type"] = houseModel.houseType.integerValue == FHHouseTypeNewHouse?@"new":([self houseTypeString] ? : @"be_null");
         tracerDict[@"biz_trace"] = [houseModel bizTrace] ? : @"be_null";
         tracerDict[@"card_type"] = @"left_pic";
+        
+        if (self.tracerModel.elementFrom && ![self.tracerModel.elementFrom isEqualToString:@"be_null"]) {
+            tracerDict[UT_ELEMENT_FROM] = self.tracerModel.elementFrom;
+        }
+        
         [FHUserTracker writeEvent:@"house_show" params:tracerDict];
     } else if ([cellModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
         
@@ -2231,6 +2236,11 @@ extern NSString *const INSTANT_DATA_KEY;
         tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
         tracerDict[@"log_pb"] = agencyCM.logPb ? : @"be_null";
         tracerDict[@"realtor_logpb"] = agencyCM.contactModel.realtorLogpb ? : @"be_null";
+        
+        if (self.tracerModel.elementFrom && ![self.tracerModel.elementFrom isEqualToString:@"be_null"]) {
+            tracerDict[UT_ELEMENT_FROM] = self.tracerModel.elementFrom;
+        }
+        
         [FHUserTracker writeEvent:@"house_show" params:tracerDict];
     }else if ([cellModel isKindOfClass:[FHSearchHouseDataRedirectTipsModel class]]) {
         NSDictionary *params = @{@"page_type":@"city_switch",
@@ -2284,8 +2294,9 @@ extern NSString *const INSTANT_DATA_KEY;
 
 #pragma mark category log
 -(void)addEnterCategoryLog {
-
-    [FHUserTracker writeEvent:@"enter_category" params:[self categoryLogDict]];
+    NSMutableDictionary *logParams = [NSMutableDictionary dictionaryWithDictionary:[self categoryLogDict]];
+    logParams[UT_ENTER_TYPE] = @"click";
+    [FHUserTracker writeEvent:@"enter_category" params:logParams];
 }
 
 -(void)addCategoryRefreshLog {
