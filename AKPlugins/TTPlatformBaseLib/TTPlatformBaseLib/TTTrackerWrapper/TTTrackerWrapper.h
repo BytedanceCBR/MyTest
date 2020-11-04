@@ -87,32 +87,32 @@
 
 //升级BDInstall，去掉这几个静态方法
 // sendTrackerLog: true to send own log()
-static inline void wrapperTrackEventWithOption(NSString * _Nonnull appName, NSString * _Nonnull event, NSString * _Nonnull label, BOOL sendTrackerLog) {
-    if(event == nil) {
-        return;
-    }
-
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        if(!BTD_isEmptyString(label)) {
-            if(sendTrackerLog) {
-                [BDTrackerProtocol event:event label:label];
-            }
-        }
-    });
-}
-
-static inline void wrapperTrackerEvent (NSString * _Nonnull appName, NSString * _Nonnull event, NSString * _Nonnull label) {
-    wrapperTrackEventWithOption(appName, event, label, true);
-}
-
-static inline void wrapperTrackEvent (NSString * _Nonnull event, NSString * _Nonnull label) {
-    if (BTD_isEmptyString(event)) {
-        return;
-    }
-
-    wrapperTrackEventWithOption([TTSandBoxHelper appName], event, label, true);
-}
-
-static inline void wrapperTrackEventWithCustomKeys (NSString * _Nonnull event, NSString * _Nonnull label, NSString * _Nullable value, NSString * _Nullable source, NSDictionary * _Nullable extraDic) {
-    [BDTrackerProtocol trackEventWithCustomKeys:event label:label value:value source:source extraDic:extraDic];
-}
+//static inline void wrapperTrackEventWithOption(NSString * _Nonnull appName, NSString * _Nonnull event, NSString * _Nonnull label, BOOL sendTrackerLog) {
+//    if(event == nil) {
+//        return;
+//    }
+//
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
+//        if(!BTD_isEmptyString(label)) {
+//            if(sendTrackerLog) {
+//                [BDTrackerProtocol event:event label:label];
+//            }
+//        }
+//    });
+//}
+//
+//static inline void wrapperTrackerEvent (NSString * _Nonnull appName, NSString * _Nonnull event, NSString * _Nonnull label) {
+//    wrapperTrackEventWithOption(appName, event, label, true);
+//}
+//
+//static inline void wrapperTrackEvent (NSString * _Nonnull event, NSString * _Nonnull label) {
+//    if (BTD_isEmptyString(event)) {
+//        return;
+//    }
+//
+//    wrapperTrackEventWithOption([TTSandBoxHelper appName], event, label, true);
+//}
+//
+//static inline void wrapperTrackEventWithCustomKeys (NSString * _Nonnull event, NSString * _Nonnull label, NSString * _Nullable value, NSString * _Nullable source, NSDictionary * _Nullable extraDic) {
+//    [BDTrackerProtocol trackEventWithCustomKeys:event label:label value:value source:source extraDic:extraDic];
+//}

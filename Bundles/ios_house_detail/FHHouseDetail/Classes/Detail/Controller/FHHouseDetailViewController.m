@@ -29,8 +29,6 @@
 #import <ios_house_im/FHIMConfigManager.h>
 #import <TTSettingsManager/TTSettingsManager.h>
 #import <FHHouseBase/FHRelevantDurationTracker.h>
-#import <CallKit/CXCallObserver.h>
-#import <CallKit/CXCall.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
@@ -57,7 +55,6 @@
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
 //@property (nonatomic, strong) id instantData;
 @property (nonatomic, strong) CTCallCenter *callCenter;
-@property (nonatomic, strong) CXCallObserver *callObserver;
 //是否拨打电话已接通
 @property (nonatomic, assign) BOOL isPhoneCallPickUp;
 //是否拨打电话（不区分是否接通）
@@ -450,55 +447,14 @@
 }
 
 - (void)setupCallCenter {
-    if (@available(iOS 10.0 , *)) {
-        _callObserver = [[CXCallObserver alloc]init];
-        [_callObserver setDelegate:(id)self queue:dispatch_get_main_queue()];
-    }else {
-        @weakify(self);
-        _callCenter = [[CTCallCenter alloc] init];
-        _callCenter.callEventHandler = ^(CTCall* call){
-            @strongify(self);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self callHandlerWith:call];
-            });
-        };
-    }
-}
-
-- (void)callObserver:(CXCallObserver *)callObserver callChanged:(CXCall *)call API_AVAILABLE(ios(10.0)){
-    
-    if (![self isTopestViewController]) {
-        return ;
-    }
-//    NSLog(@"outgoing :%d  onHold :%d   hasConnected :%d   hasEnded :%d",call.outgoing,call.onHold,call.hasConnected,call.hasEnded);
-    /** 以下为我手动测试 如有错误欢迎指出
-      拨通:  outgoing :1  onHold :0   hasConnected :0   hasEnded :0
-      拒绝:  outgoing :1  onHold :0   hasConnected :0   hasEnded :1
-      链接:  outgoing :1  onHold :0   hasConnected :1   hasEnded :0
-      挂断:  outgoing :1  onHold :0   hasConnected :1   hasEnded :1
-     
-      新来电话:    outgoing :0  onHold :0   hasConnected :0   hasEnded :0
-      保留并接听:  outgoing :1  onHold :1   hasConnected :1   hasEnded :0
-      另一个挂掉:  outgoing :0  onHold :0   hasConnected :1   hasEnded :0
-      保持链接:    outgoing :1  onHold :0   hasConnected :1   hasEnded :1
-      对方挂掉:    outgoing :0  onHold :0   hasConnected :1   hasEnded :1
-     */
-    //接通
-    if (call.outgoing) {
-        self.isPhoneCalled = YES;
-    }
-    if (call.outgoing && call.hasConnected) {
-        //通话中
-        self.isPhoneCallPickUp = YES;
-    }
-    //挂断
-    if (call.hasEnded) {
-        if (self.isPhoneCalled && self.isPhoneCallPickUp) {
-            [self checkShowFeedbackView];
-        }
-        [self checkShowSocialAlert];
-        self.isPhoneCalled = NO;
-    }
+    @weakify(self);
+    _callCenter = [[CTCallCenter alloc] init];
+    _callCenter.callEventHandler = ^(CTCall* call){
+        @strongify(self);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self callHandlerWith:call];
+        });
+    };
 }
 
 - (void)callHandlerWith:(CTCall*)call
@@ -952,11 +908,7 @@
 
 - (void)dealloc
 {
-    if (@available(iOS 10.0 , *)) {
-        _callObserver = nil;
-    }else {
-        _callCenter = nil;
-    }
+    _callCenter = nil;
 }
 
 @end

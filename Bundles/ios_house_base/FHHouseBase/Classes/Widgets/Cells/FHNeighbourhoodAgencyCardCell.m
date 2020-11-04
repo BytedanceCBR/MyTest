@@ -9,7 +9,6 @@
 #import "FHDetailBaseModel.h"
 #import <BDWebImage/BDWebImage.h>
 #import "FHDetailAgentListCell.h"
-#import "FHExtendHotAreaButton.h"
 #import "FHShadowView.h"
 #import "FHHousePhoneCallUtils.h"
 #import "UIColor+Theme.h"
@@ -119,19 +118,19 @@
     self.avatarView = [[FHRealtorAvatarView alloc] init];
     [self.bottomInfoView addSubview:self.avatarView];
 
-    _licenceIcon = [[FHExtendHotAreaButton alloc] init];
+    _licenceIcon = [[UIButton alloc] init];
     [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
     [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateSelected];
     [_licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];
     [self.bottomInfoView addSubview:_licenceIcon];
 
-    _callBtn = [[FHExtendHotAreaButton alloc] init];
+    _callBtn = [[UIButton alloc] init];
     [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal_new"] forState:UIControlStateNormal];
     [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateSelected];
     [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateHighlighted];
     [self.bottomInfoView addSubview:_callBtn];
 
-    _imBtn = [[FHExtendHotAreaButton alloc] init];
+    _imBtn = [[UIButton alloc] init];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateSelected];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateHighlighted];

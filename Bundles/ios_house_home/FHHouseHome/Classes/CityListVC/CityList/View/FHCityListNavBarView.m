@@ -10,7 +10,6 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
-#import "FHExtendHotAreaButton.h"
 #import "UIImage+FIconFont.h"
 
 @interface FHCityListNavBarView ()
@@ -34,7 +33,7 @@
 //    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
 //    CGFloat statusBarHeight = (isIphoneX ? 44 : 20);
     // backBtn
-    _backBtn = [[FHExtendHotAreaButton alloc] init];
+    _backBtn = [[UIButton alloc] init];
     [_backBtn setImage:FHBackBlackImage forState:UIControlStateNormal];
     [_backBtn setImage:FHBackBlackImage forState:UIControlStateHighlighted];
     [self addSubview:_backBtn];
