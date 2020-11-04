@@ -344,24 +344,28 @@
     // 拼接URL
     NSString * fullText = [userInputText stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
     NSString * placeHolderStr = (fullText.length > 0 ? fullText : userInputText);
-    
-    NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
+    NSInteger jumpHouseTpye = self.viewModel.jumpHouseType ?: self.houseType;
+    NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",jumpHouseTpye,placeHolderStr,placeHolderStr];
     if (self.suggestDelegate != NULL) {
         NSDictionary *infos = @{
-                                @"houseSearch":houseSearchParams
+                                @"houseSearch":houseSearchParams,
+                                @"pre_house_type":@(self.houseType),
                                 };
         if (self.tracerDict.count > 0) {
             infos = @{
                       @"houseSearch":houseSearchParams,
-                      @"tracer": self.tracerDict
+                      @"tracer": self.tracerDict,
+                      @"pre_house_type":@(self.houseType),
                       };
         }
         [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
     } else {
         self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
-        NSDictionary *infos = @{@"houseSearch":houseSearchParams,
-                               @"tracer": self.tracerDict
-                               };
+        NSDictionary *infos = @{
+            @"houseSearch":houseSearchParams,
+            @"tracer": self.tracerDict,
+            @"pre_house_type":@(self.houseType),
+        };
         [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
     }
 }
