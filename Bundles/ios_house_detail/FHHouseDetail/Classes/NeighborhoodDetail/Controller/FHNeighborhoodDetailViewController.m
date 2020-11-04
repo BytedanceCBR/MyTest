@@ -705,16 +705,6 @@
     [self.collectionView endEditing:YES];
 }
 
-- (void)addRealtorEvaluatePopupShowLog:(NSDictionary *)params
-{
-    [FHUserTracker writeEvent:@"realtor_evaluate_popup_show" params:params];
-}
-
-- (void)addRealtorEvaluatePopupClickLog:(NSDictionary *)params
-{
-    [FHUserTracker writeEvent:@"realtor_evaluate_popup_click" params:params];
-}
-
 #pragma mark - TTUIViewControllerTrackProtocol
 - (void)trackEndedByAppWillEnterBackground
 {

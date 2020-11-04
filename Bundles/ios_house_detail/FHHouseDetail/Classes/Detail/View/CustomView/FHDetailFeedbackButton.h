@@ -6,12 +6,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FHHouseType.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @class FHDetailOldDataModel;
 @interface FHDetailFeedbackButton : UIButton
 //埋点需要
-- (void)updateWithDetailTracerDic:(NSDictionary *)detailTracerDic listLogPB:(NSDictionary *)listLogPB houseData:(FHDetailOldDataModel *)houseData reportUrl:(NSString *)reportUrl;
+- (void)updateWithDetailTracerDic:(NSDictionary *)detailTracerDic listLogPB:(NSDictionary *)listLogPB houseData:(FHDetailOldDataModel *)houseData houseType:(FHHouseType)type reportUrl:(NSString *)reportUrl;
 
 @end
 

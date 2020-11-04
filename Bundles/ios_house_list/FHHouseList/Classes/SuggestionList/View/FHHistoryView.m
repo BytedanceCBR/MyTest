@@ -13,14 +13,13 @@
 #import "FHUserTracker.h"
 #import "BDImageView.h"
 #import "UIImageView+BDWebImage.h"
-#import "FHExtendHotAreaButton.h"
 #import "UIImage+FIconFont.h"
 
 @interface FHHistoryView ()
 
 @property (nonatomic, strong)   UILabel       *label;
 @property (nonatomic, strong)   NSMutableArray       *tempViews;
-@property (nonatomic, strong)   FHExtendHotAreaButton *deleteBtn;
+@property (nonatomic, strong)   UIButton *deleteBtn;
 @property (nonatomic, assign)   BOOL isLimited;
 @property (nonatomic, strong) NSMutableDictionary *dict;
 @property (nonatomic, strong) NSMutableDictionary *isTractedDict;
@@ -56,7 +55,7 @@
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(10);
     }];
-    _deleteBtn = [[FHExtendHotAreaButton alloc] init];
+    _deleteBtn = [[UIButton alloc] init];
     [_deleteBtn setImage:[UIImage imageNamed:@"delete"] forState:UIControlStateNormal];
     [self addSubview:_deleteBtn];
     [_deleteBtn mas_makeConstraints:^(MASConstraintMaker *make) {

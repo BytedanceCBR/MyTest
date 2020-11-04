@@ -251,8 +251,10 @@
                 cell.unreadView.badgeNumber = TTBadgeNumberHidden;
             }
             NSURL *url = [NSURL URLWithString:[theModel.openUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            
+            FHMessageType type = [theModel.id integerValue];
             //ugc 消息列表
-            if([theModel.id isEqualToString:@"309"]){
+            if(type == FHMessageTypeHouseRent){
                 NSMutableDictionary *tracerDictForUgc = [NSMutableDictionary dictionary];
                 tracerDictForUgc[@"origin_from"] = @"interactive_messages";
                 tracerDictForUgc[@"enter_from"] = @"message_list";
@@ -263,10 +265,18 @@
                 return;
             }
 
-            NSDictionary *dict = @{
-                    @"typeId": theModel.id
-            };
-
+            NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+            dict[@"typeId"] = theModel.id;
+            
+            NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+            
+            if(type == FHMessageTypeHouseReport) {
+                // 房源举报反馈列表
+                tracerDict[UT_ORIGIN_FROM] = @"messagetab_feedback";
+                tracerDict[UT_ENTER_FROM] = @"message_notice";
+                tracerDict[UT_ELEMENT_FROM] = @"feedback";
+            }
+            dict[TRACER_KEY] = tracerDict;
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
             

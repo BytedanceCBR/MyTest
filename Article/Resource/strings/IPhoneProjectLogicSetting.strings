@@ -21,6 +21,8 @@
 
 "message_detail_list"   = "FHMessageListViewController";
 "message_system_list"   = "FHMessageListViewController";
+//109新增用户举报反馈消息列表
+"house_report_list"   = "FHMessageListViewController";
 "house_list_in_neighborhood" = "FHNeighborListViewController";
 "house_list_related_house" = "FHNeighborListViewController";
 "house_list_same_neighborhood" = "FHNeighborListViewController";
@@ -251,3 +253,5 @@
 
 // linkChat客服页面
 "linkchat_customer_service" = "FHCustomerServicePage";
+"house_detail_report_page" = "FHHouseDetailReportViewController";
+"house_report_additional" = "FHHouseDetailReportAddtionViewController";

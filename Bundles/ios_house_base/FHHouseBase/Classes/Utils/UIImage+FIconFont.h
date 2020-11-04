@@ -38,6 +38,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (UIImage *)imageWithIconFontName:(NSString *)iconFontName fontSize:(CGFloat)fontSize text:(NSString *)text color:(UIColor * _Nullable)color;
 
+
+/// 通过代码画一个圆角进行覆盖
+/// @param cornerRadius 圆角大小
+/// @param color 颜色，注意是外部圆角的颜色，中间为透明
+/// @param size 尺寸大小
++ (UIImage *)fh_roundRectMaskImageWithCornerRadius:(CGFloat)cornerRadius color:(UIColor *)color size:(CGSize)size;
+
 @end
 
 NS_ASSUME_NONNULL_END
