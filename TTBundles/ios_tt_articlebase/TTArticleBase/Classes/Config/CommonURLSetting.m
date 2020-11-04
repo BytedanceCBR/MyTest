@@ -199,10 +199,11 @@ static CommonURLSetting *_sharedInstance = nil;
 {
     
 //    NSArray *requestDomainURLs = @[@"https://dm.toutiao.com/get_domains/v4/", @"https://dm.bytedance.com/get_domains/v4/", @"https://dm.pstatp.com/get_domains/v4/"];
-    NSArray *requestDomainURLs = @[
-        [NSString stringWithFormat:@"https://%@/get_domains/v4/",[TTNetworkManager shareInstance].ServerConfigHostFirst],
-        [NSString stringWithFormat:@"https://%@/get_domains/v4/",[TTNetworkManager shareInstance].ServerConfigHostSecond],
-        [NSString stringWithFormat:@"https://%@/get_domains/v4/",[TTNetworkManager shareInstance].ServerConfigHostThird]];
+    NSArray *requestDomainURLs = @[@"https://dm.haoduofangs.com/get_domains/v4/"];
+//    NSArray *requestDomainURLs = @[
+//        [NSString stringWithFormat:@"https://%@/get_domains/v4/",[TTNetworkManager shareInstance].ServerConfigHostFirst],
+//        [NSString stringWithFormat:@"https://%@/get_domains/v4/",[TTNetworkManager shareInstance].ServerConfigHostSecond],
+//        [NSString stringWithFormat:@"https://%@/get_domains/v4/",[TTNetworkManager shareInstance].ServerConfigHostThird]];
 
     if (_repeatCount < [requestDomainURLs count]) {
         NSString *tURL = [requestDomainURLs objectAtIndex:_repeatCount];

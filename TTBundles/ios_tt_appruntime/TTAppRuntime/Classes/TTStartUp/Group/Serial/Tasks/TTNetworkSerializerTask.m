@@ -182,9 +182,12 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     [TTNetworkManager shareInstance].isEncryptQuery = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isEncryptQuery;
     [TTNetworkManager shareInstance].isKeepPlainQuery = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isKeepPlainQuery;
 
-    [TTNetworkManager shareInstance].ServerConfigHostFirst = @"tnc3-bjlgy.snssdk.com";
-    [TTNetworkManager shareInstance].ServerConfigHostSecond = @"tnc3-alisc1.snssdk.com";
-    [TTNetworkManager shareInstance].ServerConfigHostThird = @"tnc3-aliec2.snssdk.com";
+    [TTNetworkManager shareInstance].ServerConfigHostFirst = @"dm.haoduofangs.com";
+    [TTNetworkManager shareInstance].ServerConfigHostSecond = @"dm-lq.haoduofangs.com";
+    [TTNetworkManager shareInstance].ServerConfigHostThird = @"dm-hl.haoduofangs.com";
+//    [TTNetworkManager shareInstance].ServerConfigHostFirst = @"tnc3-bjlgy.snssdk.com";
+//    [TTNetworkManager shareInstance].ServerConfigHostSecond = @"tnc3-alisc1.snssdk.com";
+//    [TTNetworkManager shareInstance].ServerConfigHostThird = @"tnc3-aliec2.snssdk.com";
 
     [[TTNetworkManager shareInstance] setDomainBase:@"i.haoduofangs.com"];
     [[TTNetworkManager shareInstance] setDomainLog:@"log.haoduofangs.com"];
