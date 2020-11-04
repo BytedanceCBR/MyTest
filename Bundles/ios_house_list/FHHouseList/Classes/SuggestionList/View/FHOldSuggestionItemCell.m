@@ -191,9 +191,12 @@
         }
         self.amountLab.text = model.countDisplay;
         
+        UILabel *leftLab = [model.oldName length] > 0 ? self.subTitleLab:self.titleLab;
+        float margin = [model.oldName length] > 0 ? 1:6;
+        
         [self.zoneTypeView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.contentView).offset(14);
-            make.left.equalTo(self.titleLab.mas_right).offset(6);
+            make.left.equalTo(leftLab.mas_right).offset(margin);
             make.height.mas_offset(18);
         }];
         
@@ -201,9 +204,6 @@
             make.centerY.equalTo(self.zoneTypeView);
             make.left.equalTo(self.contentView).offset(15);
         }];
-        
-        
-        
         
     }
 }
