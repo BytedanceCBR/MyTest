@@ -396,7 +396,12 @@ extern NSString *const INSTANT_DATA_KEY;
         BOOL hasTagData = [self.topTagsView hasTagData];
         CGFloat tagHeight = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? kFilterTagsViewHeight : 0;
         self.topTagsView.frame = CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, tagHeight);
-        self.topTagsView.hidden = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? NO : YES;
+        BOOL shouldHideOldTagsView = (hasTagData && self.houseType == FHHouseTypeSecondHandHouse) ? NO : YES;
+        if (self.houseType == FHHouseTypeNewHouse) {
+            ///新房大类页不展示tagsView
+            shouldHideOldTagsView = YES;
+        }
+        self.topTagsView.hidden = shouldHideOldTagsView;
         __weak typeof(self) weakSelf = self;
         self.topTagsView.itemClickBlk = ^{
             __block NSString *value_id = nil;
@@ -475,7 +480,12 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     self.errorMaskView.hidden = !show;
     if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
-        self.topTagsView.hidden = show;
+        if (self.houseType == FHHouseTypeNewHouse) {
+            ///新房大类页不展示tagsView，更新时直接隐藏
+            self.topTagsView.hidden = YES;
+        } else {
+            self.topTagsView.hidden = show;
+        }
     }
 }
 
