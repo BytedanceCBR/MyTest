@@ -58,8 +58,8 @@ static const char xorStr[] = "x1yNd0a2Z";
         requestParam[@"f_memory"] = @(f_memory);
     }
     
-    
-    NSDictionary *locationParams = [self generateLocationParams];
+    CLLocationCoordinate2D coordinate = [FHLocManager sharedInstance].currentLocaton.coordinate;
+    NSDictionary *locationParams = [self generateLocationParams:coordinate];
     if (locationParams) {
         [requestParam addEntriesFromDictionary:locationParams];
     }
@@ -78,10 +78,9 @@ static const char xorStr[] = "x1yNd0a2Z";
 }
 
 
-+ (NSDictionary *)generateLocationParams {
++ (NSDictionary *)generateLocationParams:(CLLocationCoordinate2D)coordinate {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    
-    CLLocationCoordinate2D coordinate = [FHLocManager sharedInstance].currentLocaton.coordinate;
+
     double longitude = coordinate.longitude;
     double latitude = coordinate.latitude;
     
@@ -151,6 +150,43 @@ static const char xorStr[] = "x1yNd0a2Z";
         NSLog(@"zwlog check as_id is error");
     }
 #endif
+}
+
+@end
+
+
+#import "TTAdSplashStore.h"
+#import <RSSwizzle/RSSwizzle.h>
+#import "NSDictionary+BTDAdditions.h"
+
+@interface TTAdSplashStore(FHCommonParams)
+
+@end
+
+@implementation TTAdSplashStore(FHCommonParams)
+
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        RSSwizzleInstanceMethod(self.class, @selector(splashCommonParams), RSSWReturnType(NSDictionary *), RSSWArguments(), RSSWReplacement({
+        
+            NSDictionary *params = RSSWCallOriginal();
+            double longitude = [params btd_doubleValueForKey:TT_LONGITUDE default:0];
+            double latitude = [params btd_doubleValueForKey:TT_LATITUDE default:0];
+            CLLocationCoordinate2D coordinate;
+            coordinate.longitude = longitude;
+            coordinate.latitude = latitude;
+            NSDictionary *locationParams = [FHCommonParamHelper generateLocationParams:coordinate];
+            if (locationParams) {
+                NSMutableDictionary *finalParams = [params mutableCopy];
+                [finalParams removeObjectForKey:TT_LONGITUDE];
+                [finalParams removeObjectForKey:TT_LATITUDE];
+                [finalParams addEntriesFromDictionary:locationParams];
+                params = [finalParams copy];
+            }
+            return params;
+        }), RSSwizzleModeAlways, NULL);
+    });
 }
 
 @end
