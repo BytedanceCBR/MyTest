@@ -1907,7 +1907,6 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     if (toTableView) {
         
-        [self.topView showFilterCorner:YES];
         if (!self.topBannerView) {
             return;
         }
@@ -1924,7 +1923,6 @@ extern NSString *const INSTANT_DATA_KEY;
         
     }else{
         
-        [self.topView showFilterCorner:NO];
         if (self.topView.superview == self.topContainerView){
             return;
         }

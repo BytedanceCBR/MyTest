@@ -157,6 +157,7 @@
     
     [_viewModel addNotiWithNaviBar:self.navbar];
     _topView = [[FHMainListTopView alloc] initWithBannerView:self.viewModel.topBannerView filterView:self.viewModel.filterPanel filterTagsView:self.viewModel.topTagsView];
+    [_topView showFilterCorner:NO];
     UIEdgeInsets insets = self.tableView.contentInset;
     insets.top = CGRectGetHeight(_topView.bounds);
     self.tableView.contentInset = insets;
