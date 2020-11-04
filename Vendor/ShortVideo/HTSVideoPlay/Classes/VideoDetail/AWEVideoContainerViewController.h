@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class TSVVideoDetailPromptManager;
 @class AWEVideoDetailSecondUsePromptManager;
 
-@class TSVDetailViewModel, AWEVideoDetailControlOverlayViewController, AWEVideoContainerCollectionViewCell;
+@class TSVDetailViewModel, AWEVideoDetailControlOverlayViewController;
 
 @interface AWEVideoContainerViewController : UIViewController
 

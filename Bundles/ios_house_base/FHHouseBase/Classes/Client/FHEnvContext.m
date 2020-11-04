@@ -1125,7 +1125,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isHasShortVideoList {
-    id res = [BDABTestManager getExperimentValueForKey:@"discover_type" withExposure:YES];
+    return YES;
+}
+
++ (BOOL)isHasPerLoadForVideo {
+    id res = [BDABTestManager getExperimentValueForKey:@"is_video_perload" withExposure:YES];
     if(res){
         return [res boolValue];
     }
@@ -1139,7 +1143,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     return NO;
 }
-
 + (BOOL)isIntroduceOpen {
     return YES;
 }

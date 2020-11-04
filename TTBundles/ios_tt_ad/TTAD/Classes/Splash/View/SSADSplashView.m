@@ -84,7 +84,7 @@ typedef NS_ENUM(NSUInteger, SSADSplashVideoBreakReason) {
 
 - (void)dealloc
 {
-    LOGD(@"AD: SSADSplashView DEALLOC Called !!");
+//    LOGD(@"AD: SSADSplashView DEALLOC Called !!");
     
     if (_needNotifyOthersOnDeactivationForAudioSession) {
         [[AVAudioSession sharedInstance] setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:nil];
@@ -210,7 +210,7 @@ typedef NS_ENUM(NSUInteger, SSADSplashVideoBreakReason) {
     _hasAppear = YES;
     
     if ([self isVideoAD]) {
-        LOGD(@"AD: SplashView VideoAD maxDisplayTime : %@", @(_model.maxDisplayTime));
+//        LOGD(@"AD: SplashView VideoAD maxDisplayTime : %@", @(_model.maxDisplayTime));
         NSTimeInterval duration = _model.maxDisplayTime;
         if (duration <= 0) {
             duration = 1;
@@ -593,7 +593,7 @@ typedef NS_ENUM(NSUInteger, SSADSplashVideoBreakReason) {
         duration = 1;
     }
     [self performSelector:@selector(showedTimeOut) withObject:nil afterDelay:duration];
-    LOGD(@"AD: SplashView ImageAD maxDisplayTime : %@", @(_model.maxDisplayTime));
+//    LOGD(@"AD: SplashView ImageAD maxDisplayTime : %@", @(_model.maxDisplayTime));
     
     // 开始计时， 广告倒计时
     self.startDate = [NSDate date];
@@ -641,7 +641,7 @@ typedef NS_ENUM(NSUInteger, SSADSplashVideoBreakReason) {
     
     // 第三方监控: 视频开始播放
     if (self.model.videoPlayTrackURLArray.count > 0) {
-LOGD(@">>>>>>>>>>>>>>>>>>>> 第三方监控: 视频开始播放.");
+//LOGD(@">>>>>>>>>>>>>>>>>>>> 第三方监控: 视频开始播放.");
         ttTrackURLsModel(self.model.videoPlayTrackURLArray, self.trackUrlModel);
     }
 }
@@ -731,7 +731,7 @@ LOGD(@">>>>>>>>>>>>>>>>>>>> 第三方监控: 视频开始播放.");
         if (sender == self.viewButton) { // 点击了交互按钮
             // event track : 点击交互按钮
             [self eventTrack4VideoADWithLabel:@"button_click"];
-LOGD(@">>>>>>>>>>>>>>>>>>> Touched ViewButton.");
+//LOGD(@">>>>>>>>>>>>>>>>>>> Touched ViewButton.");
             
         } else if (sender == self.bgButton) { // 点击了交互按钮外的其余区域
             
@@ -748,14 +748,14 @@ LOGD(@">>>>>>>>>>>>>>>>>>> Touched ViewButton.");
                     touchedVideo = YES;
                     
                 } else {
-LOGD(@">>>>>>>>>>>>>>>>>>> Touched OUTSide Movie view.");
+//LOGD(@">>>>>>>>>>>>>>>>>>> Touched OUTSide Movie view.");
                     // event track : 点击底图
                     [self eventTrack4VideoADWithLabel:@"banner_click"];
                 }
             }
             
             if (touchedVideo) {
-LOGD(@">>>>>>>>>>>>>>>>>>> Touched Movie view.");
+//LOGD(@">>>>>>>>>>>>>>>>>>> Touched Movie view.");
                 // event track : 点击视频
                 [self eventTrack4VideoADWithLabel:@"click"];
             }
@@ -766,7 +766,7 @@ LOGD(@">>>>>>>>>>>>>>>>>>> Touched Movie view.");
         
         // 第三方监控: 进广告详情页
         if (self.model.videoActionTrackURLArray.count > 0) {
-LOGD(@">>>>>>>>>>>>>>>>>>>> 第三方监控: 进广告详情页.");
+//LOGD(@">>>>>>>>>>>>>>>>>>>> 第三方监控: 进广告详情页.");
             ttTrackURLsModel(self.model.videoActionTrackURLArray, self.trackUrlModel);
 //            ssTrackURLsModel(self.model.videoActionTrackURLArray,self.trackUrlModel);
         }
@@ -956,11 +956,11 @@ LOGD(@">>>>>>>>>>>>>>>>>>>> 第三方监控: 进广告详情页.");
             // event track : 播放完成
             [self eventTrack4VideoADWithLabel:@"play_over"
                                     extraInfo:[self videoInfoAboutPlabackTimeAndPercent]];
-LOGD(@">>>>>>>> 播放结束 -- paly info : %@.", [self videoInfoAboutPlabackTimeAndPercent]);
+//LOGD(@">>>>>>>> 播放结束 -- paly info : %@.", [self videoInfoAboutPlabackTimeAndPercent]);
             
             // 第三方监控: 视频播放结束
             if (self.model.videoPlayOverTrackURLArray.count > 0) {
-LOGD(@">>>>>>>>>>>>>>>>>>>> 第三方监控: 视频播放结束.");
+//LOGD(@">>>>>>>>>>>>>>>>>>>> 第三方监控: 视频播放结束.");
                 ttTrackURLsModel(self.model.videoPlayOverTrackURLArray, self.trackUrlModel);
 //                ssTrackURLsModel(self.model.videoPlayOverTrackURLArray,self.adBaseModel);
             }
@@ -971,7 +971,7 @@ LOGD(@">>>>>>>>>>>>>>>>>>>> 第三方监控: 视频播放结束.");
             
         case TTMovieFinishReasonPlaybackError: // 播放失败
             
-LOGD(@"播放失败 : %@", reason[@"error"]);
+//LOGD(@"播放失败 : %@", reason[@"error"]);
             
             // event track : 播放失败
             [self eventTrack4VideoADWithLabel:@"play_fail"];

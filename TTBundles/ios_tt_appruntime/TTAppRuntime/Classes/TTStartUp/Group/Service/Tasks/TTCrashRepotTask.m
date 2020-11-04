@@ -28,7 +28,7 @@ static void handleRootException(NSException* exception) {
         [ strSymbols appendString: item ];
         [ strSymbols appendString: @"\r\n" ];
     }
-    LOGD(@"Exception: %@, %@, \r\n%@", name, reason, strSymbols);
+//    LOGD(@"Exception: %@, %@, \r\n%@", name, reason, strSymbols);
     NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
     [formatter setLocale:[[NSLocale alloc]initWithLocaleIdentifier:@"zh_CN"]];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];

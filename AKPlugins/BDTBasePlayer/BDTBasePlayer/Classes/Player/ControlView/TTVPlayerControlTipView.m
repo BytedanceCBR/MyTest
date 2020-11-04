@@ -117,6 +117,7 @@
         switch (state) {
             case TTVPlayerLoadStateStalled:{
                 //首祯没有播放前 & 禁止loading, 则不出loading
+//                if(!self.playerStateStore.state.showVideoFirstFrame && self.playerStateStore.state.banLoading){
                 if(!self.playerStateStore.state.showVideoFirstFrame && self.playerStateStore.state.banLoading){
                 }else{
                     [self showTipView:TTVPlayerControlTipViewTypeLoading];

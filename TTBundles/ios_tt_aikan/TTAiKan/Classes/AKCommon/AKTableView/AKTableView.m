@@ -14,7 +14,7 @@
 
 - (void)dealloc
 {
-    LOGD(@"-----[AKTableView] instance deallocated-----");
+//    LOGD(@"-----[AKTableView] instance deallocated-----");
 //    [self.KVOController removeObserver:_tableViewModel forKeyPath:@"datasourceArray"];
 }
 

@@ -92,7 +92,7 @@
         if (interval > 0) {
             NSString *intervalString = [NSString stringWithFormat:@"%.1f", interval];
             [[TTMonitor shareManager] trackService:WDDetailCDNTimeService value:intervalString extra:[WDMonitorManager extraDicWithError:error]];
-            LOGD(@"serviceName is %@, intervalString is %@", WDDetailCDNService, intervalString);
+//            LOGD(@"serviceName is %@, intervalString is %@", WDDetailCDNService, intervalString);
         }
     }
     self.cdnRequestTime = 0;

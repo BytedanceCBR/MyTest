@@ -161,6 +161,8 @@ typedef void(^TTVWillResumePlay)(BOOL *shouldPlay);
  */
 @property (nonatomic, assign) BOOL banLoading;
 
+@property (nonatomic, assign) TTVPlayerScalingMode scaleMode;
+
 /**
  始终hidden titlebar 例如在详情页的时候
  */

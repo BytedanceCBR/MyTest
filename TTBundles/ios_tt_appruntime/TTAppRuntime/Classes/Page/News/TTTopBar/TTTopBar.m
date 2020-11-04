@@ -477,7 +477,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         CGRect actionBounds = CGRectMake(self.touchOffset, 0, CGRectGetWidth(self.backgroundImageView.bounds), CGRectGetHeight(self.backgroundImageView.bounds));
         if (CGRectContainsPoint(actionBounds, location)) {
             return YES;
-            LOGD(@"searchFieldClick");
+//            LOGD(@"searchFieldClick");
         }
         
         return NO;
