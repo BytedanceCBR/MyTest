@@ -676,7 +676,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 }
 
 - (void)updateBottomTitleLabel {
-    if (self.currentIndex < 0 && self.currentIndex >= self.detailPictureModel.itemList.count) {
+    if (self.currentIndex < 0 || self.currentIndex >= self.detailPictureModel.itemList.count) {
         return;
     }
     FHDetailPictureItemModel *itemModel = self.detailPictureModel.itemList[self.currentIndex];
