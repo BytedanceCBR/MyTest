@@ -15,6 +15,7 @@
 #import <mach/mach.h>
 #import "SSCommonLogic.h"
 #import "NSDictionary+TTAdditions.h"
+#import "HMDLaunchTracingTracker.h"
 
 static NSDate *preMainDate = nil;
 
@@ -23,6 +24,7 @@ static NSDate *preMainDate = nil;
     task_header_info *_header_info;
 }
 @property(nonatomic , strong) NSMutableDictionary *lauchGroupsDict;
+@property(nonatomic , strong) HMDOTSpan *span;
 
 @end
 
@@ -140,17 +142,20 @@ static NSDate *preMainDate = nil;
     
     NSMutableArray *taskList = [NSMutableArray new];
     
+    HMDOTSpan *launchToRenderSpan = [[HMDLaunchTracingTracker sharedTracker] didFinishLaunchToRenderSpan];
+    
     for (NSInteger type = 0 ; type <= FHTaskTypeAfterLaunch ; type++) {
 #ifndef DEBUG
         if (type == FHTaskTypeDebug) {
             continue;
         }
 #endif
-        
+        self.span = [HMDOTSpan startSpan:[self taskTypeToString:type] childOf:launchToRenderSpan];
         NSArray *tasks = self.lauchGroupsDict[@(type)];
         if (tasks.count > 0) {
             for (NSValue *taskValue in tasks) {
                 [taskValue getValue:&taskInfo];
+                
                 TTStartupTask *task = [self startTask:&taskInfo withApplication:application andOptions:options];
                 if(task){
                     [taskList addObject:task];
@@ -177,6 +182,7 @@ static NSDate *preMainDate = nil;
     }
      
     TTStartupTask *task = [[taskClass alloc] init];
+    HMDOTSpan *subSpan = [HMDOTSpan startSpan:[task taskIdentifier] childOf:self.span];
     if ([task shouldExecuteForApplication:application options:options]) {
         if ([self isConcurrentFotType:headerInfo->type] || [task isConcurrent]) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -201,6 +207,7 @@ static NSDate *preMainDate = nil;
         [SharedAppDelegate trackCurrentIntervalInMainThreadWithTag:[task taskIdentifier]];
     }
     [SharedAppDelegate addResidentTaskIfNeeded:task];
+    [subSpan finish];
     return task;
 }
 
@@ -275,6 +282,46 @@ static NSDate *preMainDate = nil;
     } else {
         return nil;
     }
+}
+
+- (NSString *)taskTypeToString:(FHTaskType)type {
+    NSString *taskType = @"other";
+    switch (type) {
+        case FHTaskTypeSerial:
+            taskType = @"Serial";
+            break;
+        case FHTaskTypeUI:
+            taskType = @"UI";
+            break;
+        case FHTaskTypeNotification:
+            taskType = @"Notification";
+            break;
+        case FHTaskTypeSDKs:
+            taskType = @"SDKs";
+            break;
+        case FHTaskTypeService:
+            taskType = @"Service";
+            break;
+        case FHTaskTypeInterface:
+            taskType = @"Interface";
+            break;
+        case FHTaskTypeOpenURL:
+            taskType = @"OpenURL";
+            break;
+        case FHTaskTypeAD:
+            taskType = @"AD";
+            break;
+        case FHTaskTypeDebug:
+            taskType = @"Debug";
+            break;
+        case FHTaskTypeAfterLaunch:
+            taskType = @"AfterLaunch";
+            break;
+            
+        default:
+            break;
+    }
+    return taskType;
 }
 
 @end

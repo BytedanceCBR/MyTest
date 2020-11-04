@@ -816,6 +816,7 @@
 			buildConfigurationList = 619867822223E8EF0056B2EF /* Build configuration list for PBXNativeTarget "serviceNofExtension" */;
 			buildPhases = (
 				F421BB65275360314908FDDB /* [CP] Check Pods Manifest.lock */,
+				87289AB49AEF2F68CF1F6B7B /* [CP-User] bits_injection */,
 				619867752223E8EE0056B2EF /* Sources */,
 				619867762223E8EE0056B2EF /* Frameworks */,
 				619867772223E8EE0056B2EF /* Resources */,
@@ -834,6 +835,7 @@
 			buildConfigurationList = 619867942223E9A70056B2EF /* Build configuration list for PBXNativeTarget "com.f100.client.FHNotificationServiceExtension" */;
 			buildPhases = (
 				0326D622A704A3AC9E730DF8 /* [CP] Check Pods Manifest.lock */,
+				7920ED61A511038B60E306BB /* [CP-User] bits_injection */,
 				619867872223E9A70056B2EF /* Sources */,
 				619867882223E9A70056B2EF /* Frameworks */,
 				619867892223E9A70056B2EF /* Resources */,
@@ -854,6 +856,7 @@
 				976D5763629DDEEC7079A3CA /* [CP] Check Pods Manifest.lock */,
 				B373C7FB2174587A008F9905 /* Run Script - build revision */,
 				8A87010F8505BD8913E88E0F /* [CP-User] sgmpreaction */,
+				59107F1163F2D55098057338 /* [CP-User] bits_injection */,
 				B373C7FC2174587A008F9905 /* Sources */,
 				B373CE862174587A008F9905 /* Run Script - delete revision */,
 				B373CE872174587A008F9905 /* Resources */,
@@ -883,6 +886,7 @@
 				FC43609B9C36F3E4F3B44A8D /* [CP] Check Pods Manifest.lock */,
 				FEFA525B205FB1A8001F50D8 /* Run Script - build revision */,
 				4F33401AD6D0132A00D64D8E /* [CP-User] sgmpreaction */,
+				90489C0D492C29312C03FA6C /* [CP-User] bits_injection */,
 				FEFA525C205FB1A8001F50D8 /* Sources */,
 				FEFA59C0205FB1A8001F50D8 /* Run Script - delete revision */,
 				FEFA59C1205FB1A8001F50D8 /* Resources */,
@@ -1230,6 +1234,36 @@
 			shellPath = /bin/sh;
 			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
 		};
+		59107F1163F2D55098057338 /* [CP-User] bits_injection */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] bits_injection";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
+		};
+		7920ED61A511038B60E306BB /* [CP-User] bits_injection */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] bits_injection";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
+		};
+		87289AB49AEF2F68CF1F6B7B /* [CP-User] bits_injection */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] bits_injection";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
+		};
 		8A87010F8505BD8913E88E0F /* [CP-User] sgmpreaction */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1239,6 +1273,16 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
+		};
+		90489C0D492C29312C03FA6C /* [CP-User] bits_injection */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] bits_injection";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
 		};
 		976D5763629DDEEC7079A3CA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
