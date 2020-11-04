@@ -37,9 +37,6 @@
 #define kImageHeightInterval 4.f
 
 @interface FRAddMultiImagesView() <FRPostAssetViewColumnDelegate, UIActionSheetDelegate,TTImagePickerControllerDelegate,TTImagePreviewViewControllerDelegate>
-{
-    CGFloat _imageSize;
-}
 
 @property (nonatomic, strong) NSMutableArray *selectedImageViews;
 

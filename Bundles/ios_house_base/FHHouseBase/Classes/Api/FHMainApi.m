@@ -91,8 +91,6 @@
     if (longitude != 0 && longitude != 0) {
         requestParam[@"gaode_lng"] = @(longitude);
         requestParam[@"gaode_lat"] = @(latitude);
-        requestParam[@"longitude"] = @(longitude);
-        requestParam[@"latitude"] = @(latitude);
     }
     
     if ([gCityId isKindOfClass:[NSString class]]) {
@@ -1229,6 +1227,37 @@
                 completion(model,backError);
             });
         });
+    }];
+}
+
++ (TTHttpTask *)requestHouseFeedbackReport:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
+    
+    NSString *url = QURL(@"/f100/api/house_feedback/report");
+    
+    return [[TTNetworkManager shareInstance] requestForJSONWithURL:url params:params method:POST needCommonParams:YES  requestSerializer:[FHJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id jsonObj) {
+        if(completion) {
+            completion(error,jsonObj);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestHouseFeedbackAddition:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
+    NSString *url = QURL(@"/f100/api/house_feedback/addition");
+    
+    return [[TTNetworkManager shareInstance] requestForJSONWithURL:url params:params method:POST needCommonParams:YES requestSerializer:[FHJSONHTTPRequestSerializer class] responseSerializer:nil autoResume:YES callback:^(NSError *error, id jsonObj) {
+        if(completion) {
+            completion(error,jsonObj);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestHouseFeedbackInfo:(NSDictionary *)params completion:(void (^)(NSError * _Nonnull, id _Nonnull))completion {
+    NSString *url = QURL(@"/f100/api/house_feedback/info");
+    
+    return [[TTNetworkManager shareInstance] requestForJSONWithURL:url params:params method:GET needCommonParams:YES  callback:^(NSError *error, id jsonObj) {
+        if(completion) {
+            completion(error,jsonObj);
+        }
     }];
 }
 @end

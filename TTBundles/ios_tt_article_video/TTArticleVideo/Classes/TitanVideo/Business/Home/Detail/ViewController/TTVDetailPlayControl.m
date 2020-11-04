@@ -40,12 +40,12 @@
 #import "TTVVideoInformationResponse+TTVArticleProtocolSupport.h"
 
 #import "TTADVideoMZTracker.h"
-#import "TTVCommodityView.h"
-#import "TTVCommodityButtonView.h"
-#import "TTVCommodityFloatView.h"
-#import "TTVPasterPlayer.h"
-#import "TTVMidInsertADPlayer.h"
-#import "AKAwardCoinVideoMonitorManager.h"
+//#import "TTVCommodityView.h"
+//#import "TTVCommodityButtonView.h"
+//#import "TTVCommodityFloatView.h"
+//#import "TTVPasterPlayer.h"
+//#import "TTVMidInsertADPlayer.h"
+//#import "AKAwardCoinVideoMonitorManager.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <objc/runtime.h>
 
@@ -53,13 +53,13 @@ extern NSInteger ttvs_isVideoShowOptimizeShare(void);
 extern NSInteger ttvs_isVideoShowDirectShare(void);
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
-@interface TTVDetailPlayControl ()<TTVDemandPlayerDelegate, TTVCommodityViewDelegate ,TTVCommodityButtonViewDelegate>
+@interface TTVDetailPlayControl ()<TTVDemandPlayerDelegate>
 @property (nonatomic, assign) BOOL movieViewInitiated;
 @property (nonatomic, assign) BOOL isInactive;
 @property (nonatomic, strong) TTVPlayVideo *movieView;
 @property(nonatomic, strong)TTVDemandPlayerContext *context;
 @property(nonatomic, weak)TTVDetailContentEntity *entity;
-@property (nonatomic, strong) TTVCommodityView *commodityView;
+//@property (nonatomic, strong) TTVCommodityView *commodityView;
 @end
 
 
@@ -91,7 +91,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 - (void)setDoubleTap666Delegate:(id<TTVPlayerDoubleTap666Delegate>)doubleTap666Delegate {
     _doubleTap666Delegate = doubleTap666Delegate;
-    self.movieView.player.doubleTap666Delegate = doubleTap666Delegate;
+//    self.movieView.player.doubleTap666Delegate = doubleTap666Delegate;
 }
 
 - (void)setDetailStateStore:(TTVDetailStateStore *)detailStateStore
@@ -139,28 +139,28 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     if (state == TTVVideoPlaybackStatePlaying) {
         self.movieBanner.hidden = YES;
         [self ttv_showPrePlayBtnWithBannerHeight:0];
-        if ([self.movieView isAdMovie] && self.enableTrackSDK == 1) {
-            if (self.detailStateStore.state.videoProgress > 0) {
-                //这里判断是否要根据跳转的参数seek到一个进度
-                [self.movieView.player seekVideoToProgress:self.detailStateStore.state.videoProgress complete:^(BOOL success) {
-                }];
-                self.detailStateStore.state.videoProgress = 0;
-            }
-            [[TTADVideoMZTracker sharedManager] mzTrackVideoUrls:orderData.adPlayTrackUrls adView:self.movieView];
-        }
+//        if ([self.movieView isAdMovie] && self.enableTrackSDK == 1) {
+//            if (self.detailStateStore.state.videoProgress > 0) {
+//                //这里判断是否要根据跳转的参数seek到一个进度
+//                [self.movieView.player seekVideoToProgress:self.detailStateStore.state.videoProgress complete:^(BOOL success) {
+//                }];
+//                self.detailStateStore.state.videoProgress = 0;
+//            }
+//            [[TTADVideoMZTracker sharedManager] mzTrackVideoUrls:orderData.adPlayTrackUrls adView:self.movieView];
+//        }
     } else if (state == TTVVideoPlaybackStateFinished) {
         self.movieBanner.hidden = NO;
         [self.movieBanner sendShowEvent];
-        if ([self.movieView isAdMovie]) {
-            if (self.enableTrackSDK == 1 && [TTADVideoMZTracker sharedManager].trackSDKView) {
-                [[TTADVideoMZTracker sharedManager] mzStopTrack];
-            }
-            if (self.movieView.playerModel.isLoopPlay) {
-                //广告视频自动播放
-                [self.movieView.player setLogoImageViewHidden:YES];
-                [self.movieView.player play];
-            }
-        }
+//        if ([self.movieView isAdMovie]) {
+//            if (self.enableTrackSDK == 1 && [TTADVideoMZTracker sharedManager].trackSDKView) {
+//                [[TTADVideoMZTracker sharedManager] mzStopTrack];
+//            }
+//            if (self.movieView.playerModel.isLoopPlay) {
+//                //广告视频自动播放
+//                [self.movieView.player setLogoImageViewHidden:YES];
+//                [self.movieView.player play];
+//            }
+//        }
         // 播放上一个按钮
         [self ttv_showPrePlayBtnWithBannerHeight:(self.movieBanner.hidden)? 0: self.movieBanner.height];
     }
@@ -353,7 +353,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
  */
 - (BOOL)shouldAutoPlay
 {
-    return (self.context.tipType != TTVPlayerControlTipViewTypeFinished && !self.context.isShowingTrafficAlert && !self.movieView.player.context.midADIsPlaying);
+    return (self.context.tipType != TTVPlayerControlTipViewTypeFinished && !self.context.isShowingTrafficAlert);
 }
 
 - (void)rebindToMovieShotView:(BOOL)rebindToMovieShotView
@@ -385,23 +385,23 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 - (void)resumeMovie
 {
-    if (self.movieView) {
-        if ([self.movieView.player.pasterPlayer hasPasterAd]) {
-            [self.movieView.player.pasterPlayer play];
-        }else{
-            if (self.commodityView.superview != self.movieView) {
-                if (![TTDeviceHelper isPadDevice]) {
-                    [self.movieView.player.commodityFloatView setCommoditys:self.videoInfo.commoditys];
-                    self.movieView.player.commodityButton.delegate = self;
-                }
-            }
-        }
+    if (self.movieView && !self.movieView.hidden) {
+//        if ([self.movieView.player.pasterPlayer hasPasterAd]) {
+//            [self.movieView.player.pasterPlayer play];
+//        }else{
+//            if (self.commodityView.superview != self.movieView) {
+//                if (![TTDeviceHelper isPadDevice]) {
+//                    [self.movieView.player.commodityFloatView setCommoditys:self.videoInfo.commoditys];
+//                    self.movieView.player.commodityButton.delegate = self;
+//                }
+//            }
+//        }
     }
     else
     {
-        if (self.commodityView.superview != self.movieView/* && ![TTRedPacketManager sharedManager].isShowingRedpacketView*/) {
+//        if (self.commodityView.superview != self.movieView/* && ![TTRedPacketManager sharedManager].isShowingRedpacketView*/) {
             [self playButtonClicked];
-        }
+//        }
     }
     
 }
@@ -456,42 +456,42 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     return NO;
 }
 
-- (void)addCommodity
-{
-    if ([TTDeviceHelper isPadDevice]) {
-        return;
-    }
-    [self.commodityView ttv_removeFromSuperview];
-    TTVCommodityView *commodity = nil;
-    if (self.movieView.superview) {
-        commodity = [[TTVCommodityView alloc] initWithFrame:self.movieView.bounds];
-        commodity.videoID = self.videoInfo.videoID;
-        commodity.groupID = self.videoInfo.groupModel.groupID;
-        commodity.position = [self getCommodityPosition];
-        commodity.playVideo = self.movieView;
-        [self.movieView.player setCommodityView:commodity];
-    }
-    commodity.delegate = self;
-    [commodity setCommoditys:self.videoInfo.commoditys];
+//- (void)addCommodity
+//{
+//    if ([TTDeviceHelper isPadDevice]) {
+//        return;
+//    }
+//    [self.commodityView ttv_removeFromSuperview];
+//    TTVCommodityView *commodity = nil;
+//    if (self.movieView.superview) {
+//        commodity = [[TTVCommodityView alloc] initWithFrame:self.movieView.bounds];
+//        commodity.videoID = self.videoInfo.videoID;
+//        commodity.groupID = self.videoInfo.groupModel.groupID;
+//        commodity.position = [self getCommodityPosition];
+//        commodity.playVideo = self.movieView;
+////        [self.movieView.player setCommodityView:commodity];
+//    }
+//    commodity.delegate = self;
+//    [commodity setCommoditys:self.videoInfo.commoditys];
+//
+//    [commodity showCommodity];
+//    self.commodityView = commodity;
+//}
 
-    [commodity showCommodity];
-    self.commodityView = commodity;
-}
-
-- (NSString *)getCommodityPosition
-{
-    if (self.movieView && [self.movieView.player.context isFullScreen]) {
-        return @"fullscreen";
-    }
-    return @"detail";
-}
+//- (NSString *)getCommodityPosition
+//{
+//    if (self.movieView && [self.movieView.player.context isFullScreen]) {
+//        return @"fullscreen";
+//    }
+//    return @"detail";
+//}
 
 #pragma mark - TTVCommodityViewDelegate
 
-- (void)commodityViewClosed
-{
-    
-}
+//- (void)commodityViewClosed
+//{
+//
+//}
 
 - (void)viewWillAppear
 {
@@ -506,14 +506,14 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 - (void)viewDidDisappear
 {
     [self.movieView.player sendAction:TTVPlayerEventTypeVirtualStackValuePause payload:nil];
-    [self.movieView.player.midInsertADPlayer pause];
-    [self.movieView.player.pasterPlayer pause];
+//    [self.movieView.player.midInsertADPlayer pause];
+//    [self.movieView.player.pasterPlayer pause];
 }
 
 - (void)viewDidAppear
 {
-    [self.movieView.player.midInsertADPlayer play];
-    [self.movieView.player.pasterPlayer play];
+//    [self.movieView.player.midInsertADPlayer play];
+//    [self.movieView.player.pasterPlayer play];
     
     BOOL iOS8 = kCFCoreFoundationVersionNumber < kCFCoreFoundationVersionNumber_iOS_9_0;
     if (iOS8) {
@@ -636,7 +636,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.movieView.player.enableRotate = ![self.videoInfo detailShowPortrait];
     [self addUrlTracker];
     _movieView.player.delegate = self;
-    self.movieView.player.doubleTap666Delegate = self.doubleTap666Delegate;
+//    self.movieView.player.doubleTap666Delegate = self.doubleTap666Delegate;
     NSDictionary *videoLargeImageDict = self.videoInfo.largeImageDict;
     if (!videoLargeImageDict) {
         videoLargeImageDict = [self.videoInfo.videoDetailInfo objectForKey:VideoInfoImageDictKey];
@@ -648,16 +648,16 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         [self configMovieView];
         [self.movieView.player play];
     }
-    if (![TTDeviceHelper isPadDevice]) {
-        [self.movieView.player.commodityFloatView setCommoditys:self.videoInfo.commoditys];
-        self.movieView.player.commodityButton.delegate = self;
-    }
+//    if (![TTDeviceHelper isPadDevice]) {
+//        [self.movieView.player.commodityFloatView setCommoditys:self.videoInfo.commoditys];
+//        self.movieView.player.commodityButton.delegate = self;
+//    }
     [self.movieView.player setVideoTitle:self.videoInfo.title];
     [self.movieView.player setVideoWatchCount:[[self.videoInfo.videoDetailInfo valueForKey:@"video_watch_count"] doubleValue] playText:@"次播放"];
     [self.movieShotView refreshUI];
     [self ttv_configADFinishedView:(TTVPlayerTipAdFinished *)self.movieView.player.tipCreator.tipFinishedView];
     
-    [[AKAwardCoinVideoMonitorManager shareInstance] monitorVideoWith:movie];
+//    [[AKAwardCoinVideoMonitorManager shareInstance] monitorVideoWith:movie];
 }
 
 

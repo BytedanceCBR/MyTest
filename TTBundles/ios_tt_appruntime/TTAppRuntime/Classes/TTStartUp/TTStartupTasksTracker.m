@@ -135,11 +135,11 @@
     if (self.tasksIntervalDic) {
         [self.tasksIntervalDic setValue:@(YES) forKey:@"isRefactored"];
         [self.tasksIntervalDic setValue:@(status) forKey:@"status"];
-        LOGD(@"启动项耗时上报\n%@", self.tasksIntervalDic);
+//        LOGD(@"启动项耗时上报\n%@", self.tasksIntervalDic);
         [[TTMonitor shareManager] trackService:@"startup_tasks_interval" value:self.tasksIntervalDic extra:nil];
     }
     if (self.tasksIntervalDicInThread) {
-        LOGD(@"启动项耗时上报2\n%@", self.tasksIntervalDicInThread);
+//        LOGD(@"启动项耗时上报2\n%@", self.tasksIntervalDicInThread);
         [self.tasksIntervalDicInThread setValue:@(status) forKey:@"status"];
         [[TTMonitor shareManager] trackService:@"startup_tasks_interval_in_thread" value:self.tasksIntervalDicInThread extra:nil];
     }

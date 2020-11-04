@@ -446,7 +446,7 @@ static NSInteger const kErrorStatusCode = 400;
 {
     if(!_detailModel.article.managedObjectContext)
     {
-        LOGD(@"%s, error: article is removed", __PRETTY_FUNCTION__);
+//        LOGD(@"%s, error: article is removed", __PRETTY_FUNCTION__);
         return;
     }
     
@@ -939,7 +939,7 @@ static NSInteger const kErrorStatusCode = 400;
     NSString *execJs = [NSString stringWithFormat:@"window._toutiao_param_groupid = '%@'; \
                         window._toutiao_param_itemid = '%@';", self.detailModel.article.groupModel.groupID, itemID];
     [_detailWebView.webView stringByEvaluatingJavaScriptFromString:execJs completionHandler:nil];
-    LOGD(@"webView response redirect has reported to url %@", _webViewRedirectToURL);
+//    LOGD(@"webView response redirect has reported to url %@", _webViewRedirectToURL);
 }
 
 - (void)p_addNotiCenterObservers
@@ -997,7 +997,7 @@ static NSInteger const kErrorStatusCode = 400;
     __weak typeof(self) wself = self;
     [self.detailWebView.webView stringByEvaluatingJavaScriptFromString:@";window.getElementPosition && getElementPosition(\".serial\");" completionHandler:^(NSString * _Nullable result, NSError * _Nullable error) {
         __strong typeof(wself) self = wself;
-        LOGD(@"storyToolView add location is %@, error is %@", result, error);
+//        LOGD(@"storyToolView add location is %@, error is %@", result, error);
         if (!isEmptyString(result)) {
             CGRect frame = CGRectFromString(result);
             if (!CGRectIsEmpty(frame)) {
@@ -1074,7 +1074,7 @@ static NSInteger const kErrorStatusCode = 400;
     NSError *error = nil;
     BOOL res = [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
     if (!res) {
-        LOGD(@"webView audio session set category error : %@", error);
+//        LOGD(@"webView audio session set category error : %@", error);
     }
     else {
         _webViewAudioSessionCategorySet = YES;
@@ -1091,7 +1091,7 @@ static NSInteger const kErrorStatusCode = 400;
     };";
     [self.detailWebView.webView stringByEvaluatingJavaScriptFromString:script completionHandler:^(id _Nullable instance, NSError * _Nullable error) {
         if (error) {
-            LOGD(@"error occured when stop page audios %@", error.localizedDescription);
+//            LOGD(@"error occured when stop page audios %@", error.localizedDescription);
         }
     }];
 }
@@ -1216,7 +1216,7 @@ static NSInteger const kErrorStatusCode = 400;
             [mutableRequest setValue:[SSWebViewUtil userAgentString:YES] forHTTPHeaderField:@"User-Agent"];
             NSURLConnection *connection = [NSURLConnection connectionWithRequest:[mutableRequest copy] delegate:self];
             if (!connection) {
-                LOGD(@"cannot create webTypeContent httpHeader check connection");
+//                LOGD(@"cannot create webTypeContent httpHeader check connection");
             }
             else {
                 return NO;
@@ -1616,7 +1616,7 @@ static NSInteger const kErrorStatusCode = 400;
     NSURLRequest *newRequest = request;
     if (response) {
         //发生重定向则reject，此时request为重定向后的新请求。当前request下放到didReceiveResponse回调中截获处理
-        LOGD(@"webView redirect to url %@", request.URL.absoluteString);
+//        LOGD(@"webView redirect to url %@", request.URL.absoluteString);
         _webViewRedirectToURL = request.URL.absoluteString;
         newRequest = nil;
     }
@@ -1627,7 +1627,7 @@ static NSInteger const kErrorStatusCode = 400;
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    LOGD(@"[TTArticleDetail]webTypeContent connection:didReceiveResponse");
+//    LOGD(@"[TTArticleDetail]webTypeContent connection:didReceiveResponse");
     if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSInteger status = [httpResponse statusCode];
@@ -1635,16 +1635,16 @@ static NSInteger const kErrorStatusCode = 400;
         BOOL shouldLoadNativeTypeContent = NO;
         if (status == kRedirectStatusCode) {
             //302页面记录跳转前的url
-            LOGD(@"[TTArticleDetail]webTypeContent 302 redirectStatusCode found");
+//            LOGD(@"[TTArticleDetail]webTypeContent 302 redirectStatusCode found");
             _webViewURLBeforeRedirection = response.URL.absoluteString;
         }
         else if (status >= kErrorStatusCode) {
             //404页面尝试加载转码页
-            LOGD(@"[TTArticleDetail]webTypeContent 404 fileNotFoundStatusCode found, will load nativeType content");
+//            LOGD(@"[TTArticleDetail]webTypeContent 404 fileNotFoundStatusCode found, will load nativeType content");
             shouldLoadNativeTypeContent = YES;
         }
         else {
-            LOGD(@"[TTArticleDetail]webTypeContent http status code: %ld", status);
+//            LOGD(@"[TTArticleDetail]webTypeContent http status code: %ld", status);
         }
         
         [[TTMonitor shareManager] trackService:@"web_http_status" status:status extra:({
@@ -1673,12 +1673,12 @@ static NSInteger const kErrorStatusCode = 400;
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
 {
-    LOGD(@"[TTArticleDetail]webTypeContent connection:didReceiveData");
+//    LOGD(@"[TTArticleDetail]webTypeContent connection:didReceiveData");
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
-    LOGD(@"[TTArticleDetail]webTypeContentconnection:didFailWithError - %@", error);
+//    LOGD(@"[TTArticleDetail]webTypeContentconnection:didFailWithError - %@", error);
     if (error) {
         //connection请求错误，通常webView请求也会有问题，优先加载转码页，如果开关禁止，则加载web
         _webTypeContentStatusCodeChecked = YES;
@@ -1695,7 +1695,7 @@ static NSInteger const kErrorStatusCode = 400;
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    LOGD(@"[TTArticleDetail]webTypeContent connectionDidFinishLoading");
+//    LOGD(@"[TTArticleDetail]webTypeContent connectionDidFinishLoading");
 }
 
 #pragma mark - sharedWebView

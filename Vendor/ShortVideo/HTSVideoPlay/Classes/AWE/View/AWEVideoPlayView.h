@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ExploreMovieMiniSliderView.h"
 #import "FHFeedUGCCellModel.h"
-#import "IESVideoPlayerProtocol.h"
+//#import "IESVideoPlayerProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) FHFeedUGCCellModel *model;
 // 视频播放器
-@property (nonatomic, strong) id<IESVideoPlayerProtocol> playerController;
+//@property (nonatomic, strong) id<IESVideoPlayerProtocol> playerController;
 @property (nonatomic, assign, readonly) BOOL isPlaying;
 @property (nonatomic, copy, nullable) NSDictionary *commonTrackingParameter;
 @property (nonatomic, readonly, assign) NSTimeInterval videoDuration;

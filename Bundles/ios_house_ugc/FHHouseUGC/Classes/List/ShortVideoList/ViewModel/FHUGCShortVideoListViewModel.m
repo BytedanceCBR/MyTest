@@ -237,7 +237,7 @@
                         wself.refreshFooter.hidden = YES;
                     }
                     
-                    [wself.viewController reloadData];
+                    [wself.collectionView reloadData];
 
                     NSString *refreshTip = feedListModel.tips.displayInfo;
                     if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){

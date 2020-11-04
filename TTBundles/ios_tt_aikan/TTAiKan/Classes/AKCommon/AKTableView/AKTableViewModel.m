@@ -22,7 +22,7 @@
 
 - (void)dealloc
 {
-    LOGD(@"-----[AKTableViewModel] instance deallocated-----");
+//    LOGD(@"-----[AKTableViewModel] instance deallocated-----");
 }
 
 + (instancetype)instanceServeForTableView:(__kindof UITableView *)tableView

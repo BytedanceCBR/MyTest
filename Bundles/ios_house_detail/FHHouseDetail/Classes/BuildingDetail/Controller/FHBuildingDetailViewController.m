@@ -360,6 +360,7 @@
     [UIView setAnimationsEnabled:NO];
     [self.collectionView performBatchUpdates:^{
         [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:self.viewModel.items.count - 2]];
+        [self.collectionView reloadSections:[NSIndexSet indexSetWithIndex:self.viewModel.items.count - 1]];
     } completion:^(BOOL finished) {
         [UIView setAnimationsEnabled:YES];
     }];

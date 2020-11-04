@@ -31,8 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^ttv_moreButtonOnMovieTopViewDidPressBlock)(void);
 @property (nonatomic, copy) void (^ttv_DirectShareOnMovieFinishViewDidPressBlock)(NSString *activityType);
 @property (nonatomic, copy) void (^ttv_DirectShareOnMovieViewDidPressBlock)(NSString *activityType);
-@property (nonatomic, copy) void (^ttv_commodityViewClosedBlock)(void);
-@property (nonatomic, copy) void (^ttv_commodityViewShowedBlock)(void);
 @property (nonatomic, copy) void (^ttv_playVideoBlock)(void);
 @property (nonatomic, copy ,nullable) void (^ttv_videoPlayFinishedBlock)(void);
 @property (nonatomic, copy) void (^ttv_videoReplayActionBlock)(void);
@@ -40,11 +38,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^ttv_playerPlaybackStateBlock)(TTVVideoPlaybackState state);
 @property (nonatomic, copy) void (^ttv_playerCurrentPlayBackTimeChangeBlock)(NSTimeInterval currentPlayBackTime,NSTimeInterval duration);
 
-+ (CGFloat)obtainHeightForFeed:(TTVFeedListItem *)cellEntity cellWidth:(CGFloat)width;
 - (void)playButtonClicked;
-- (void)playVideo;
-- (void)addCommodity;
+- (void)play;
 - (void)setMuted:(BOOL)muted;
+- (void)readyToPlay;
 
 @end
 

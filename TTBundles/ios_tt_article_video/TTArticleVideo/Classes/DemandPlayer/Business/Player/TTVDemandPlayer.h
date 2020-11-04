@@ -12,20 +12,11 @@
 #import "TTVPlayerControlView.h"
 #import "TTVPlayerTracker.h"
 #import "TTVPlayerControllerState.h"
-#import "TTVDemandPlayerContextVideo.h"
-#import "TTVPlayerDoubleTap666Delegate.h"
-#import "TTVVideoPlayerView.h"
+#import "TTVDemandPlayerContext.h"
+#import "TTVPlayerView.h"
 
 @class TTVPlayerOrientationController;
 @class TTVDemanderTrackerManager;
-@class TTVCommodityFloatView;
-@class TTVCommodityView;
-@class TTVPasterPlayer;
-@class TTVMidInsertADPlayer;
-@class TTVDemandPlayerContextVideo;
-@class TTVCommodityButtonView;
-@class TTVVideoPlayerModel;
-@class TTVVideoPlayerStateStore;
 
 @class FHDemanderTrackerManager;
 
@@ -41,18 +32,13 @@
 @end
 
 @interface TTVDemandPlayer : UIView
-@property (nonatomic, strong) TTVVideoPlayerModel *playerModel;
+@property (nonatomic, strong) TTVPlayerModel *playerModel;
+@property (nonatomic, strong) TTVPlayerControlTipView *tipView;
 @property (nonatomic, weak) NSObject <TTVDemandPlayerDelegate> *delegate;//始终保持delegate唯一
-@property (nonatomic, weak) id<TTVPlayerDoubleTap666Delegate> doubleTap666Delegate;
-@property (nonatomic, strong ,readonly) TTVPasterPlayer *pasterPlayer;
-@property (nonatomic, strong ,readonly) TTVMidInsertADPlayer *midInsertADPlayer;
-@property (nonatomic, strong ,readonly) TTVCommodityFloatView *commodityFloatView;
-@property (nonatomic, strong ,readonly) TTVCommodityButtonView *commodityButton;
-@property (nonatomic, strong, readonly) TTVVideoPlayerStateStore *playerStateStore;
-//@property (nonatomic, strong ,readonly) TTVDemanderTrackerManager *commonTracker;
+@property (nonatomic, strong, readonly) TTVPlayerStateStore *playerStateStore;
 @property (nonatomic, strong ,readonly) FHDemanderTrackerManager *commonTracker;
-@property (nonatomic, strong) TTVVideoPlayerView *playerView;
-@property (nonatomic, strong ,readonly) TTVDemandPlayerContextVideo *context;
+@property (nonatomic, strong) TTVPlayerView *playerView;
+@property (nonatomic, strong ,readonly) TTVDemandPlayerContext *context;
 @property (nonatomic, weak) UIView *rotateView;//真实做旋转的view
 /**
  tip工厂  默认 TTVPlayerTipCreator
@@ -75,7 +61,6 @@
 - (void)reset;
 - (void)registerDelegate:(NSObject <TTVDemandPlayerDelegate> *)delegate;
 - (void)unregisterDelegate:(NSObject <TTVDemandPlayerDelegate> *)delegate;
-
 
 /**
  第一次调用play之前必需调用readyToPlay
@@ -103,7 +88,7 @@
 
 - (void)removeControlView;
 - (void)removeBottomBarView;
-- (void)setCommodityView:(TTVCommodityView *)commodityView;
+
 @end
 
 
@@ -124,6 +109,8 @@
 - (void)setBannerHeight:(float)bannerHeight;
 
 - (void)setEnableRotate:(BOOL)enableRotate;
+
+- (void)setScaleMode:(TTVPlayerScalingMode)scaleMode;
 
 @end
 
