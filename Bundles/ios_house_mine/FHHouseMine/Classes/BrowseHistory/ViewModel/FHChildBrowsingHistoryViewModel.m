@@ -14,7 +14,7 @@
 #import "FHBrowseHistoryAPI.h"
 #import "FHBrowseHistoryHouseDataModel.h"
 #import "FHDetailNeighborhoodModel.h"
-#import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import <NSDictionary+BTDAdditions.h>
 #import "FHSearchBaseItemModel.h"
 #import "FHHouseBaseItemCell.h"
 #import "FHBrowsingHistoryContentCell.h"
@@ -26,7 +26,8 @@
 #import <FHHouseBase/FHUserTrackerDefine.h>
 #import "UIViewController+TTMovieUtil.h"
 #import "FHBrowsingHistoryNewCell.h"
-#import "FHHouseListRentCell.h"
+#import "FHBrowsingHistoryRentCell.h"
+#import "FHBrowsingHistoryNeighborhoodCell.h"
 
 @interface FHChildBrowsingHistoryViewModel()<FHBrowsingHistoryEmptyViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -84,7 +85,8 @@
     [_tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:@"FHHouseBaseNewHouseCell"];
     [_tableView registerClass:[FHBrowsingHistoryContentCell class] forCellReuseIdentifier:@"FHBrowsingHistoryContentCell"];
     [_tableView registerClass:[FHBrowsingHistoryNewCell class] forCellReuseIdentifier:NSStringFromClass([FHBrowsingHistoryNewCell class])];
-    [_tableView registerClass:[FHHouseListRentCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListRentCell class])];
+    [_tableView registerClass:[FHBrowsingHistoryRentCell class] forCellReuseIdentifier:NSStringFromClass([FHBrowsingHistoryRentCell class])];
+    [_tableView registerClass:[FHBrowsingHistoryNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHBrowsingHistoryNeighborhoodCell class])];
 }
 
 - (void)requestData:(BOOL)isHead {
@@ -172,9 +174,9 @@
 
 - (id)historyItemModelByDict:(NSDictionary *)itemDict {
     NSInteger cardType = -1;
-    cardType = [itemDict tt_integerValueForKey:@"card_type"];
+    cardType = [itemDict btd_integerValueForKey:@"card_type"];
     if (cardType == 0 || cardType == -1) {
-        cardType = [itemDict tt_integerValueForKey:@"house_type"];
+        cardType = [itemDict btd_integerValueForKey:@"house_type"];
     }
     id itemModel = nil;
     NSError *jerror = nil;
@@ -208,7 +210,10 @@
                 return [FHBrowsingHistoryNewCell class];
             }
             if (houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
-                return [FHHouseListRentCell class];
+                return [FHBrowsingHistoryRentCell class];
+            }
+            if (houseModel.houseType.integerValue == FHHouseTypeNeighborhood) {
+                return [FHBrowsingHistoryNeighborhoodCell class];
             }
         }
     }
@@ -232,7 +237,10 @@
                 return NSStringFromClass([FHBrowsingHistoryNewCell class]);
             }
             if (houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
-                return NSStringFromClass([FHHouseListRentCell class]);
+                return NSStringFromClass([FHBrowsingHistoryRentCell class]);
+            }
+            if (houseModel.houseType.integerValue == FHHouseTypeNeighborhood) {
+                return NSStringFromClass([FHBrowsingHistoryNeighborhoodCell class]);
             }
         }
     }
@@ -263,8 +271,8 @@
     if (row >= 0 && row < _historyList.count) {
         id data = _historyList[row];
         NSString *identifier = [self cellIdentifierForEntity:data];
-        if ([identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNewCell class])] || [identifier isEqualToString:NSStringFromClass([FHHouseListRentCell class])]) {
-            FHHouseBaseUsuallyCell *cell = (FHHouseBaseUsuallyCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+        if ([identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNewCell class])] || [identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryRentCell class])] || [identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNeighborhoodCell class])]) {
+            FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             [cell refreshWithData:data];
             return cell;
         }

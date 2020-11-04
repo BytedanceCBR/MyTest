@@ -118,8 +118,6 @@
         CGFloat height = [tagImageModel.height floatValue];
         [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(width > 0.0 ? width : 48);
-        }];
-        [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(height > 0.0 ? height : 18);
         }];
         self.topLeftTagImageView.hidden = NO;

@@ -1,34 +1,25 @@
 //
-//  FHHouseListRentCell.m
-//  FHHouseList
+//  FHBrowsingHistoryRentCell.m
+//  FHHouseMine
 //
-//  Created by xubinbin on 2020/10/28.
+//  Created by xubinbin on 2020/11/4.
 //
 
-#import "FHHouseListRentCell.h"
+#import "FHBrowsingHistoryRentCell.h"
 #import "FHSingleImageInfoCellModel.h"
 #import "FHCommonDefines.h"
 #import <UIDevice+BTDAdditions.h>
 
-@interface FHHouseListRentCell()
+@interface FHBrowsingHistoryRentCell()
 
-@property (nonatomic, strong) UILabel *distanceLabel; // 30 分钟到达
 @property (nonatomic, strong) UIView *opView; //蒙层
 @property (nonatomic, strong) UILabel *offShelfLabel; //下架
 
 @end
 
-@implementation FHHouseListRentCell
+@implementation FHBrowsingHistoryRentCell
 
 @synthesize mainImageView = _mainImageView;
-
-- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        [self initUI];
-    }
-    return self;
-}
 
 + (CGFloat)recommendReasonHeight {
     return 22;
@@ -45,6 +36,14 @@
     return 88;
 }
 
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self initUI];
+    }
+    return self;
+}
+
 - (void)initUI {
     [super initUI];
     [self.mainImageView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -57,13 +56,27 @@
         make.right.mas_equalTo(self.mainImageView).offset(-3);
         make.bottom.mas_equalTo(self.mainImageView).offset(-3);
     }];
-    [self.contentView addSubview:self.distanceLabel];
-    [self.distanceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.mainTitleLabel);
-        make.top.equalTo(self.subTitleLabel.mas_bottom).offset(7);
-        make.right.mas_lessThanOrEqualTo(self.priceLabel.mas_left).offset(-2);
+    self.opView = [[UIView alloc] init];
+    [self.opView setBackgroundColor:[UIColor colorWithRed:170.0/255 green:170.0/255 blue:170.0/255 alpha:0.8]];
+    self.opView.layer.shadowOffset = CGSizeMake(4, 6);
+    self.opView.layer.cornerRadius = 4;
+    self.opView.clipsToBounds = YES;
+    self.opView.layer.shadowColor = [[UIColor colorWithRed:0 green:0 blue:0 alpha:0.1] CGColor];
+    [self.mainImageView addSubview:_opView];
+    [self.opView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(0);
     }];
-    self.distanceLabel.hidden = YES;
+    self.opView.hidden = YES;
+    
+    self.offShelfLabel = [[UILabel alloc] init];
+    self.offShelfLabel.text = @"已下架";
+    self.offShelfLabel.font = [UIFont themeFontSemibold:14];
+    self.offShelfLabel.textColor = [UIColor whiteColor];
+    [self.mainImageView addSubview:_offShelfLabel];
+    [self.offShelfLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.center.equalTo(self.mainImageView);
+    }];
+    self.offShelfLabel.hidden = YES;
 }
 
 - (void)refreshWithData:(id)data {
@@ -88,63 +101,23 @@
     }
     self.tagLabel.attributedText = attributeString;
     self.priceLabel.font = [UIFont themeFontSemibold:[UIDevice btd_isScreenWidthLarge320] ? 16 : 15];
-    
-    NSArray *firstRow = [model.bottomText firstObject];
-    NSDictionary *bottomText = nil;
-    if ([firstRow isKindOfClass:[NSArray class]]) {
-        NSDictionary *info = [firstRow firstObject];
-        if ([info isKindOfClass:[NSDictionary class]]) {
-            bottomText = info;
-        }
-    }
     if (model.addrData.length > 0) {
         self.tagLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         attributeString = [FHSingleImageInfoCellModel createTagAttrString:model.addrData textColor:[UIColor themeGray2] backgroundColor:[UIColor whiteColor]];
         self.tagLabel.attributedText =  attributeString;
     }
-    [self updateBottomText:bottomText];
     self.mainTitleLabel.text = model.title;
     self.subTitleLabel.text = model.subtitle;
     self.pricePerSqmLabel.attributedText = [[NSMutableAttributedString alloc] initWithString:@" " attributes:@{}];
     self.priceLabel.text = model.pricing;
     FHImageModel *imageModel = [model.houseImage firstObject];
     [self updateMainImageWithUrl:imageModel.url];
-}
-
-- (void)updateBottomText:(NSDictionary *)bottomText {
-    if (![bottomText isKindOfClass:[NSDictionary class]]) {
-        return;
-    }
-    NSString *infoText = bottomText[@"text"];
-    if (bottomText && bottomText[@"color"] && !IS_EMPTY_STRING(infoText)) {
-        NSMutableAttributedString *commuteAttr = [[NSMutableAttributedString alloc]init];
-        UIImage *clockImg =  SYS_IMG(@"clock_small");
-        NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
-        attachment.image = clockImg;
-        attachment.bounds = CGRectMake(0, -1.5, 12, 12);
-        NSAttributedString *clockAttr = [NSAttributedString attributedStringWithAttachment:attachment];
-        [commuteAttr appendAttributedString:clockAttr];
-        UIColor *textColor = [UIColor colorWithHexStr:bottomText[@"color"]]?:[UIColor themeGray3];
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:textColor};
-        NSAttributedString *timeAttr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",infoText] attributes:attr];
-        [commuteAttr appendAttributedString:timeAttr];
-        self.distanceLabel.attributedText = commuteAttr;
-        self.distanceLabel.hidden = NO;
-    } else {
-        self.distanceLabel.hidden = YES;
-    }
+    self.opView.hidden = (model.houseStatus.integerValue == 0) ? YES : NO;
+    self.offShelfLabel.hidden = (model.houseStatus.integerValue == 0) ? YES : NO;
 }
 
 - (CGFloat)contentSmallImageMaxWidth {
     return  SCREEN_WIDTH + 40 - 72 - 90; //根据UI图 直接计算出来
-}
-
-- (UILabel *)distanceLabel {
-    if (!_distanceLabel) {
-        _distanceLabel = [[UILabel alloc] init];
-        _distanceLabel.textAlignment = NSTextAlignmentLeft;
-    }
-    return _distanceLabel;
 }
 
 - (UIImageView *)mainImageView {

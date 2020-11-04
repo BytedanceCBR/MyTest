@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *houseCellBackView; //背景
 @property (nonatomic, strong) FHHouseRecommendReasonView *recReasonView; //榜单
 @property (nonatomic, strong) FHCornerItemLabel *tagTitleLabel; //降 新 榜等标签
-@property (nonatomic, strong) UIImageView *topLeftTagImageView;  //企业担保图标
+@property (nonatomic, strong) UIImageView *topLeftTagImageView;
 @property (nonatomic, strong) id currentData;
 
 - (void)refreshWithData:(id)data;

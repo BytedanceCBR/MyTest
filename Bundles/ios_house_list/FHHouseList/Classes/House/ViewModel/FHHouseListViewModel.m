@@ -66,6 +66,7 @@
 #import "NSDictionary+BTDAdditions.h"
 #import "NSArray+BTDAdditions.h"
 #import "FHHouseListRentCell.h"
+#import "FHHouseListNeighborhoodCell.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -263,7 +264,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [_tableView registerClass:[FHHouseSearchNewHouseCell class] forCellReuseIdentifier:@"FHHouseSearchNewHouseCell"];
     [_tableView registerClass:[FHDynamicLynxCell class] forCellReuseIdentifier:@"FHDynamicLynxCell"];
     [_tableView registerClass:[FHHouseListRentCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListRentCell class])];
-
+    [_tableView registerClass:[FHHouseListNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListNeighborhoodCell class])];
     if(self.commute){  
         [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHHouseListPlaceholderCellId];
     }else{
@@ -283,6 +284,9 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([FHEnvContext isDisplayNewCardType]) {
             if (self.houseType == FHHouseTypeRentHouse) {
                 return [FHHouseListRentCell class];
+            }
+            if (self.houseType == FHHouseTypeNeighborhood) {
+                return [FHHouseListNeighborhoodCell class];
             }
         }
         if (self.commute) {
@@ -342,6 +346,9 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([FHEnvContext isDisplayNewCardType]) {
             if (self.houseType == FHHouseTypeRentHouse) {
                 return NSStringFromClass([FHHouseListRentCell class]);
+            }
+            if (self.houseType == FHHouseTypeNeighborhood) {
+                return NSStringFromClass([FHHouseListNeighborhoodCell class]);
             }
         }
         if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
@@ -1624,6 +1631,11 @@ extern NSString *const INSTANT_DATA_KEY;
     if (identifier.length > 0) {
         if ([FHEnvContext isDisplayNewCardType]) {
             if (self.houseType == FHHouseTypeRentHouse) {
+                FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+                [cell refreshWithData:data];
+                return cell;
+            }
+            if (self.houseType == FHHouseTypeNeighborhood) {
                 FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
                 [cell refreshWithData:data];
                 return cell;
