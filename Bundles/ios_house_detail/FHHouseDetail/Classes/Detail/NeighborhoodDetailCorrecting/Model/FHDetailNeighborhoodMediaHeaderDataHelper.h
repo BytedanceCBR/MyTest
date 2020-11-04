@@ -10,7 +10,7 @@
 #import "FHDetailPictureModel.h"
 @class FHMultiMediaItemModel,FHDetailNeighborhoodMediaHeaderDataHelperHeaderViewData,FHDetailNeighborhoodMediaHeaderDataHelperPictureDetailData,FHDetailNeighborhoodMediaHeaderDataHelperPhotoAlbumData;
 NS_ASSUME_NONNULL_BEGIN
-@class FHDetailNewMediaHeaderDataHelperData,FHDetailNeighborhoodMediaHeaderModel,FHHouseDetailImageGroupModel;
+@class FHDetailNewMediaHeaderDataHelperData,FHNeighborhoodDetailHeaderMediaModel,FHHouseDetailImageGroupModel;
 @class FHFloorPanPicShowModel;
 
 
@@ -23,12 +23,16 @@ NS_ASSUME_NONNULL_BEGIN
 //提供给图片相册的数据
 @property (nonatomic, strong, readonly) FHDetailNeighborhoodMediaHeaderDataHelperPhotoAlbumData *photoAlbumData;
 
-@property (nonatomic, strong) FHDetailNeighborhoodMediaHeaderModel *mediaHeaderModel;
+@property (nonatomic, strong) FHNeighborhoodDetailHeaderMediaModel *mediaHeaderModel;
+
+- (NSInteger) getPictureDetailIndexFromMediaHeaderIndex:(NSInteger)index;
+
+- (NSInteger) getMediaHeaderIndexFromPictureDetailIndex:(NSInteger)index;
 
 
-+ (FHDetailNeighborhoodMediaHeaderDataHelperHeaderViewData *)generateMediaHeaderViewData:(FHDetailNeighborhoodMediaHeaderModel *)newMediaHeaderModel;
-+ (FHDetailNeighborhoodMediaHeaderDataHelperPictureDetailData *)generatePictureDetailData:(FHDetailNeighborhoodMediaHeaderModel *)newMediaHeaderModel;
-+ (FHDetailNeighborhoodMediaHeaderDataHelperPhotoAlbumData *)generatePhotoAlbumData:(FHDetailNeighborhoodMediaHeaderModel *)newMediaHeaderModel;
++ (FHDetailNeighborhoodMediaHeaderDataHelperHeaderViewData *)generateMediaHeaderViewData:(FHNeighborhoodDetailHeaderMediaModel *)newMediaHeaderModel;
++ (FHDetailNeighborhoodMediaHeaderDataHelperPictureDetailData *)generatePictureDetailData:(FHNeighborhoodDetailHeaderMediaModel *)newMediaHeaderModel;
++ (FHDetailNeighborhoodMediaHeaderDataHelperPhotoAlbumData *)generatePhotoAlbumData:(FHNeighborhoodDetailHeaderMediaModel *)newMediaHeaderModel;
 
 @end
 
