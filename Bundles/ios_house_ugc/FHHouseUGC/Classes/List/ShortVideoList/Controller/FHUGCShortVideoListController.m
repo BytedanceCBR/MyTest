@@ -20,7 +20,6 @@
 #import "ToastManager.h"
 #import "FHFeedCustomHeaderView.h"
 #import "UIDevice+BTDAdditions.h"
-#import "FHUGCShortVideoFlowLayout.h"
 #import "FHBaseCollectionView.h"
 #import "UIViewController+Track.h"
 #import "ExploreLogicSetting.h"
@@ -34,7 +33,6 @@
 @property(nonatomic, assign) UIEdgeInsets originContentInset;
 @property(nonatomic, assign) BOOL alreadySetContentInset;
 @property(nonatomic ,strong) FHBaseCollectionView *collectionView;
-@property(nonatomic, strong) FHUGCShortVideoFlowLayout *flowLayout;
 
 @end
 
@@ -143,6 +141,16 @@
     if ([UIDevice btd_isIPhoneXSeries]) {
         _collectionView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
+}
+
+- (void)reloadData {
+    self.flowLayout = [[FHUGCShortVideoFlowLayout alloc] init];
+    _flowLayout.sectionInset = UIEdgeInsetsMake(10, 15, 10, 15);
+    _flowLayout.minimumLineSpacing = 12;
+    _flowLayout.minimumInteritemSpacing = 9;
+    _flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    self.collectionView.collectionViewLayout = self.flowLayout;
+    [self.collectionView reloadData];
 }
 
 - (void)initNotifyBarView {
