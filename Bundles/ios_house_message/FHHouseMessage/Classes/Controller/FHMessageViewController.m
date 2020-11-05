@@ -52,7 +52,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self checkShouldShowEmptyMaskView];
+    if(self.dataType == FHMessageRequestDataTypeIM) {
+        [self checkShouldShowEmptyMaskView];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
