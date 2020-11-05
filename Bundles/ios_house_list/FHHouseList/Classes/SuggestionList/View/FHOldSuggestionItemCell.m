@@ -18,7 +18,6 @@
 @property (weak, nonatomic) UILabel *regionLab;
 @property (weak, nonatomic) UILabel *villageLab;
 @property (weak, nonatomic) UILabel *amountLab;
-@property (weak, nonatomic) UIView *topLine;
 
 @end
 
@@ -167,7 +166,7 @@
     return _topLine;
 }
 
-- (void)setModel:(FHSuggestionResponseDataModel *)model {
+- (void)setModel:(FHSuggestionResponseItemModel *)model {
     if (model) {
         _model = model;
         if(model.name.length>0){

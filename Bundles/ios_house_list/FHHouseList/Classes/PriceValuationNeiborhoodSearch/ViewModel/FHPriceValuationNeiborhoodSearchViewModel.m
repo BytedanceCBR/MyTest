@@ -18,7 +18,7 @@
 
 @property(nonatomic , weak) FHPriceValuationNeiborhoodSearchController *listController;
 @property(nonatomic , weak) TTHttpTask *sugHttpTask;
-@property (nonatomic, strong , nullable) NSArray<FHSuggestionResponseDataModel> *sugListData;
+@property (nonatomic, strong , nullable) NSArray<FHSuggestionResponseItemModel> *sugListData;
 @property (nonatomic, copy)     NSString       *highlightedText;
 
 @end
@@ -47,7 +47,7 @@
     if (indexPath.row < self.sugListData.count) {
         FHPriceValuationNSCell *cell = (FHPriceValuationNSCell *)[tableView dequeueReusableCellWithIdentifier:@"FHPriceValuationNSCell" forIndexPath:indexPath];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+        FHSuggestionResponseItemModel *model  = self.sugListData[indexPath.row];
         NSString *originText = model.text;
         NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:15.0];
         NSMutableAttributedString *resultText = [[NSMutableAttributedString alloc] initWithAttributedString:text1];
@@ -68,8 +68,8 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     // 联想词
     if (indexPath.row < self.sugListData.count) {
-        FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
-        if (model && [model isKindOfClass:[FHSuggestionResponseDataModel class]]) {
+        FHSuggestionResponseItemModel *model  = self.sugListData[indexPath.row];
+        if (model && [model isKindOfClass:[FHSuggestionResponseItemModel class]]) {
             NSString *originText = model.text;
             NSString *neigbordId = model.info.neigbordId;
             [self.listController cellDidClick:originText neigbordId:neigbordId];
@@ -148,7 +148,7 @@
         wself.sugListData = nil;
         if (model != NULL && error == NULL) {
             // 构建数据源
-            wself.sugListData = model.data;
+            wself.sugListData = model.data.item;
             wself.listController.hasValidateData = YES;
             [wself reloadSugTableView];
         } else {

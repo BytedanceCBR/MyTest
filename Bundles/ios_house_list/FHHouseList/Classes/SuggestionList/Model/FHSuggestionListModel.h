@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 // FHSuggestionResponseModel
-@protocol FHSuggestionResponseDataModel<NSObject>
+@protocol FHSuggestionResponseItemModel<NSObject>
 
 @end
 
@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@interface  FHSuggestionResponseDataModel  : JSONModel
+@interface  FHSuggestionResponseItemModel  : JSONModel
 
 @property (nonatomic, strong , nullable) FHSuggestionResponseDataInfoModel *info ;
 @property (nonatomic, copy , nullable) NSString *count;
@@ -71,6 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, copy , nullable) NSString *countDisplay;
 @property (nonatomic, copy , nullable) NSString *tips;
+@property (nonatomic, copy , nullable) NSDictionary *newtip;
 @property (nonatomic, copy , nullable) NSString *id;
 
 //XXX: 为了支持1.0.1版本帮我找房卡片临时加入几个字段，之后需要支持混排
@@ -81,12 +82,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface  FHSuggestionResponseDataModel  : JSONModel
+
+@property (nonatomic, strong , nullable) NSArray <FHSuggestionResponseItemModel> *item;
+@property (nonatomic, strong , nullable) NSArray <FHSuggestionResponseItemModel> *otherItem;
+@property (nonatomic, assign) NSInteger jumpHouseType;
+
+@end
 
 @interface  FHSuggestionResponseModel  : JSONModel  <FHBaseModelProtocol>
 
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
-@property (nonatomic, strong , nullable) NSArray<FHSuggestionResponseDataModel> *data;
+@property (nonatomic, strong , nullable) FHSuggestionResponseDataModel *data;
 
 @end
 

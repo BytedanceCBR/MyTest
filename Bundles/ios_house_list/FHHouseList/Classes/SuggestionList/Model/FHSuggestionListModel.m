@@ -63,7 +63,7 @@
 @end
 
 
-@implementation  FHSuggestionResponseDataModel
+@implementation  FHSuggestionResponseItemModel
 
 + (JSONKeyMapper*)keyMapper
 {
@@ -77,6 +77,7 @@
                            @"cardType": @"card_type",
                            @"buttonText": @"button_text",
                            @"setHistory":@"set_history",
+                           @"newtip":@"new_tip",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -91,6 +92,25 @@
 @end
 
 
+@implementation  FHSuggestionResponseDataModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"otherItem": @"other_item",
+                           @"jumpHouseType": @"jump_house_type",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
 
 
 //for implementation

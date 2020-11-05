@@ -53,11 +53,11 @@ static const char tabSwitchedKey;
     if (self.houseType != houseType || !word || !word.length) return;
     
     NSString *tagsStr = @"{}";
-    NSInteger count = result.data.count;
+    NSInteger count = result.data.item.count;
     if (count) {
-        NSArray *filteredResultArray = [result.data filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
-            if (![object isKindOfClass:FHSuggestionResponseDataModel.class]) return NO;
-            FHSuggestionResponseDataModel *item = (FHSuggestionResponseDataModel *)object;
+        NSArray *filteredResultArray = [result.data.item filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
+            if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;
+            FHSuggestionResponseItemModel *item = (FHSuggestionResponseItemModel *)object;
             return item.cardType == 16;
         }]];
         
@@ -83,7 +83,7 @@ static const char tabSwitchedKey;
     NSMutableString *tagStr = [NSMutableString string];
     [tagStr appendString:@"{"];
     BOOL firstTag = YES;
-    for (FHSuggestionResponseDataModel *item in resultArray) {
+    for (FHSuggestionResponseItemModel *item in resultArray) {
         if (!firstTag) {
             [tagStr appendFormat:@","];
         }

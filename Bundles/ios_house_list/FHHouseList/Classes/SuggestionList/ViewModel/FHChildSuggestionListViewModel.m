@@ -33,7 +33,8 @@
 @property(nonatomic , weak) TTHttpTask *sugSubscribeTask;
 @property(nonatomic , weak) TTHttpTask *delHistoryHttpTask;
 
-@property (nonatomic, strong , nullable) NSArray<FHSuggestionResponseDataModel> *sugListData;
+@property (nonatomic, strong , nullable) NSMutableArray<FHSuggestionResponseItemModel> *sugListData;
+@property (nonatomic, strong , nullable) NSMutableArray<FHSuggestionResponseItemModel> *othersugListData;
 @property (nonatomic, strong , nullable) NSArray<FHSuggestionSearchHistoryResponseDataDataModel> *historyData;
 @property (nonatomic, strong , nullable) NSMutableArray<FHGuessYouWantResponseDataDataModel> *guessYouWantData;
 @property (nonatomic, strong , nullable) FHGuessYouWantExtraInfoModel *guessYouWantExtraInfo;  //帮我找房入口信息
@@ -72,7 +73,7 @@
         self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
         self.isFirstShow = YES;
         self.isUploadedPss = NO;
-
+        
         [self setupSubscribeView];
         [self setupHistoryView];
         [self initNotification];
@@ -229,6 +230,19 @@
     _houseType = houseType;
     self.subscribeView.houseType = houseType;
 }
+- (NSMutableArray<FHSuggestionResponseItemModel> *)sugListData{
+    if(_sugListData == nil){
+        _sugListData = [NSMutableArray<FHSuggestionResponseItemModel> new];
+    }
+    return _sugListData;
+}
+
+- (NSMutableArray<FHSuggestionResponseItemModel> *)othersugListData{
+    if(_othersugListData == nil){
+        _othersugListData = [NSMutableArray<FHSuggestionResponseItemModel> new];
+    }
+    return _othersugListData;
+}
 
 - (void)setupSubscribeView {
     self.subscribeView = [[FHSugHasSubscribeView alloc] init];
@@ -272,7 +286,7 @@
     NSDictionary * infos = @{@"title":@"我订阅的搜索",
                              @"subscribe_delegate":subscribeDelegateTable,
                              @"tracer":tracer
-                             };
+    };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     
     NSURL *url = [NSURL URLWithString:openUrl];
@@ -332,14 +346,14 @@
         NSString *pageType = [self pageTypeString];
         // 特殊埋点需求，此处enter_query和search_query都埋:be_null
         NSDictionary *houseSearchParams = @{
-                                            @"enter_query":@"be_null",
-                                            @"search_query":@"be_null",
-                                            @"page_type":pageType.length > 0 ? pageType : @"be_null",
-                                            @"query_type":queryType
-                                            };
+            @"enter_query":@"be_null",
+            @"search_query":@"be_null",
+            @"page_type":pageType.length > 0 ? pageType : @"be_null",
+            @"query_type":queryType
+        };
         NSMutableDictionary *infos = [NSMutableDictionary new];
         infos[@"houseSearch"] = houseSearchParams;
-    
+        
         NSMutableDictionary *tracer = [NSMutableDictionary new];
         tracer[@"enter_type"] = @"click";
         tracer[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
@@ -348,7 +362,7 @@
             tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
         }
         infos[@"tracer"] = tracer;
-
+        
         // 参数都在jumpUrl中
         [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:nil placeholder:nil infoDict:infos isGoDetail:NO];
     }
@@ -358,11 +372,11 @@
 {
     // 点击埋点
     NSDictionary *tracerDic = @{
-                                @"word":model.text.length > 0 ? model.text : @"be_null",
-                                @"history_id":model.historyId.length > 0 ? model.historyId : @"be_null",
-                                @"rank":@(index),
-                                @"show_type":@"list"
-                                };
+        @"word":model.text.length > 0 ? model.text : @"be_null",
+        @"history_id":model.historyId.length > 0 ? model.historyId : @"be_null",
+        @"rank":@(index),
+        @"show_type":@"list"
+    };
     [FHUserTracker writeEvent:@"search_history_click" params:tracerDic];
     
     NSString *jumpUrl = model.openUrl;
@@ -376,11 +390,11 @@
     NSString *pageType = [self pageTypeString];
     NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
     NSDictionary *houseSearchParams = @{
-                                        @"enter_query":queryText,
-                                        @"search_query":queryText,
-                                        @"page_type":pageType.length > 0 ? pageType : @"be_null",
-                                        @"query_type":queryType
-                                        };
+        @"enter_query":queryText,
+        @"search_query":queryText,
+        @"page_type":pageType.length > 0 ? pageType : @"be_null",
+        @"query_type":queryType
+    };
     
     NSMutableDictionary *infos = [NSMutableDictionary new];
     infos[@"houseSearch"] = houseSearchParams;
@@ -436,11 +450,11 @@
         NSString *pageType = [self pageTypeString];
         NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
         NSDictionary *houseSearchParams = @{
-                                            @"enter_query":queryText,
-                                            @"search_query":queryText,
-                                            @"page_type":pageType.length > 0 ? pageType : @"be_null",
-                                            @"query_type":queryType
-                                            };
+            @"enter_query":queryText,
+            @"search_query":queryText,
+            @"page_type":pageType.length > 0 ? pageType : @"be_null",
+            @"query_type":queryType
+        };
         NSMutableDictionary *infos = [NSMutableDictionary new];
         infos[@"houseSearch"] = houseSearchParams;
         if (model.extinfo) {
@@ -474,20 +488,20 @@
 
 
 // 联想词Cell点击
-- (void)associateWordCellClick:(FHSuggestionResponseDataModel *)model rank:(NSInteger)rank {
+- (void)associateWordCellClick:(FHSuggestionResponseItemModel *)model rank:(NSInteger)rank {
     
     // 点击埋点
     NSString *impr_id = [model.logPb btd_stringValueForKey:@"impr_id" default:@"be_null"];
     
     NSDictionary *tracerDic = @{
-                                @"word_text":model.text.length > 0 ? model.text : @"be_null",
-                                @"associate_cnt":@(self.associatedCount),
-                                @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
-                                @"word_id":model.info.wordid.length > 0 ? model.info.wordid : @"be_null",
-                                @"element_type":@"search",
-                                @"impr_id":impr_id ?: @"be_null",
-                                @"rank":@(rank)
-                                };
+        @"word_text":model.text.length > 0 ? model.text : @"be_null",
+        @"associate_cnt":@(self.associatedCount),
+        @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
+        @"word_id":model.info.wordid.length > 0 ? model.info.wordid : @"be_null",
+        @"element_type":@"search",
+        @"impr_id":impr_id ?: @"be_null",
+        @"rank":@(rank)
+    };
     [FHUserTracker writeEvent:@"associate_word_click" params:tracerDic];
     
     NSString *jumpUrl = model.openUrl;
@@ -502,11 +516,11 @@
     NSString *inputStr = self.highlightedText.length > 0 ? self.highlightedText : @"be_null";
     NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
     NSDictionary *houseSearchParams = @{
-                                        @"enter_query":inputStr,
-                                        @"search_query":queryText,
-                                        @"page_type":pageType.length > 0 ? pageType : @"be_null",
-                                        @"query_type":queryType
-                                        };
+        @"enter_query":inputStr,
+        @"search_query":queryText,
+        @"page_type":pageType.length > 0 ? pageType : @"be_null",
+        @"query_type":queryType
+    };
     
     NSMutableDictionary *infos = [NSMutableDictionary new];
     infos[@"houseSearch"] = houseSearchParams;
@@ -551,12 +565,12 @@
         return;
     }
     for (NSInteger index = 0; index < self.sugListData.count; index ++) {
-        FHSuggestionResponseDataModel *item = self.sugListData[index];
+        FHSuggestionResponseItemModel *item = self.sugListData[index];
         NSDictionary *dic = @{
-                              @"text":item.text.length > 0 ? item.text : @"be_null",
-                              @"word_id":item.info.wordid.length > 0 ? item.info.wordid : @"be_null",
-                              @"rank":@(index)
-                              };
+            @"text":item.text.length > 0 ? item.text : @"be_null",
+            @"word_id":item.info.wordid.length > 0 ? item.info.wordid : @"be_null",
+            @"rank":@(index)
+        };
         [wordList addObject:dic];
     }
     NSError *error = NULL;
@@ -567,19 +581,19 @@
     }
     NSString *impr_id = @"be_null";
     if (self.sugListData.count > 0) {
-        FHSuggestionResponseDataModel *item = self.sugListData[0];
+        FHSuggestionResponseItemModel *item = self.sugListData[0];
         impr_id = [item.logPb btd_stringValueForKey:@"impr_id" default:@"be_null"];
     }
     
     NSDictionary *tracerDic = @{
-                                @"word_list":wordListStr.length > 0 ? wordListStr : @"be_null",
-                                @"associate_cnt":@(self.associatedCount),
-                                @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
-                                @"word_cnt":@(wordList.count),
-                                @"element_type":@"search",
-                                @"impr_id":impr_id ?: @"be_null",
-                                };
-
+        @"word_list":wordListStr.length > 0 ? wordListStr : @"be_null",
+        @"associate_cnt":@(self.associatedCount),
+        @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
+        @"word_cnt":@(wordList.count),
+        @"element_type":@"search",
+        @"impr_id":impr_id ?: @"be_null",
+    };
+    
     if (_isAssociatedCanTrack) {
         [FHUserTracker writeEvent:@"associate_word_show" params:tracerDic];
     }
@@ -626,7 +640,7 @@
                     retPageTypeStr = @"findtab_rent";
                     break;
                 default:
-                     retPageTypeStr = @"findtab_old";
+                    retPageTypeStr = @"findtab_old";
                     break;
             }
             break;
@@ -729,7 +743,7 @@
 #pragma mark - tableview delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 1 + (self.othersugListData.count > 0);
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -741,7 +755,12 @@
         if (self.sugListData.count == 0 && !self.listController.isLoadingData && self.listController.fatherVC.naviBar.searchInput.text.length != 0) {
             return 1;
         }
-        return self.sugListData.count;
+        if(section == 0){
+            return self.sugListData.count;
+        }
+        else if(section == 1){
+            return self.othersugListData.count;
+        }
     }
     return 0;
 }
@@ -774,69 +793,68 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             return cell;
         }
-        
-        //服务端会同时下发cardType=9和cardType=16两种类型的卡片数据
-        if (self.sugListData.count <= 2) {
-            //TODO: 为支持1.0.1版本帮我找房需求，暂时根据model.cardType字段区分cell，后期需支持混排
-            FHSuggestionResponseDataModel *model = self.sugListData[indexPath.row];
-            if (model.cardType == 9) {
-                FHHouseListRecommendTipCell *tipCell = (FHHouseListRecommendTipCell *)[tableView dequeueReusableCellWithIdentifier:@"tipcell" forIndexPath:indexPath];
-                FHSearchGuessYouWantTipsModel *tipModel = [[FHSearchGuessYouWantTipsModel alloc] init];
-                tipModel.text = model.text;
-                [tipCell refreshWithData:tipModel];
-                
-                return tipCell;
-            } else if (model.cardType == 15) {
-                __weak typeof(self) weakSelf = self;
-                FHFindHouseHelperCell *helperCell = (FHFindHouseHelperCell *)[tableView dequeueReusableCellWithIdentifier:@"helperCell" forIndexPath:indexPath];
-                helperCell.cellTapAction = ^(NSString *url) {
-                    [weakSelf jump2HouseFindPageWithUrl:url from:@"driving_find_house_card"];
-                };
-                [helperCell updateWithData:model];
-                
-                return helperCell;;
-            }
+        NSMutableArray<FHSuggestionResponseItemModel>  *nowsugListData = indexPath.section == 0 ?self.sugListData:self.othersugListData;
+        if(nowsugListData.count <= indexPath.row || nowsugListData.count <0){
+            return [[UITableViewCell alloc] init];
         }
-        
-        // 联想词列表
-        if (self.houseType == FHHouseTypeNewHouse) {
-            // 新房
-            FHSuggestionNewHouseItemCell *cell = (FHSuggestionNewHouseItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestNewItemCell" forIndexPath:indexPath];
+        //服务端会同时下发cardType=9和cardType=16两种类型的卡片数据
+        //TODO: 为支持1.0.1版本帮我找房需求，暂时根据model.cardType字段区分cell，后期需支持混排
+        FHSuggestionResponseItemModel *model = nowsugListData[indexPath.row];
+        if(model.cardType == 18){
+            FHRecommendtHeaderViewCell *cell = (FHRecommendtHeaderViewCell *)[tableView dequeueReusableCellWithIdentifier:@"RecommendtHeaderCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            if (indexPath.row < self.sugListData.count) {
-                FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+            cell.label.text = model.text;
+        }else if (model.cardType == 9) {
+            FHHouseListRecommendTipCell *tipCell = (FHHouseListRecommendTipCell *)[tableView dequeueReusableCellWithIdentifier:@"tipcell" forIndexPath:indexPath];
+            FHSearchGuessYouWantTipsModel *tipModel = [[FHSearchGuessYouWantTipsModel alloc] init];
+            tipModel.text = model.text;
+            [tipCell refreshWithData:tipModel];
+            
+            return tipCell;
+        } else if (model.cardType == 15) {
+            __weak typeof(self) weakSelf = self;
+            FHFindHouseHelperCell *helperCell = (FHFindHouseHelperCell *)[tableView dequeueReusableCellWithIdentifier:@"helperCell" forIndexPath:indexPath];
+            helperCell.cellTapAction = ^(NSString *url) {
+                [weakSelf jump2HouseFindPageWithUrl:url from:@"driving_find_house_card"];
+            };
+            [helperCell updateWithData:model];
+            
+            return helperCell;
+        }else if(model.cardType == 16) {
+            // 新房
+            if (model.houseType.intValue == 1) {
+                FHSuggestionNewHouseItemCell *cell = (FHSuggestionNewHouseItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestNewItemCell" forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 NSAttributedString *text1 = [self processHighlightedDefault:model.text font:[UIFont themeFontSemibold:16] textColor:[UIColor themeGray1]];
                 NSAttributedString *text2 = [self processHighlightedDefault:model.text2 font:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
                 
                 cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1] fontSize:15.0];
                 cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1] fontSize:12.0];
-                cell.secondaryLabel.text = model.tips;
-                cell.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:@"#ffeee5"];
-                cell.secondaryLabel.textColor = [UIColor colorWithHexStr:@"#fe5500"];
-                [cell.secondaryLabel setNeedsLayout];
-                [cell.secondaryLabel layoutIfNeeded];
-                
-                cell.secondaryLabel.textContainerInset = UIEdgeInsetsMake(0, 5, 0, 5);
-                cell.secondarySubLabel.text = model.tips2;
-            }
-            return cell;
-        } else if(_houseType == FHHouseTypeSecondHandHouse) {
-            
-            // 二手房
-            FHOldSuggestionItemCell *cell = (FHOldSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"FHOldSuggestionItemCell" forIndexPath:indexPath];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            if (indexPath.row < self.sugListData.count) {
-                FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+                if(indexPath.row == nowsugListData.count - 1){
+                    cell.sepLine.hidden =YES;
+                }
+                if(model.newtip){
+                    cell.secondaryLabel.text = model.newtip[@"content"];
+                    cell.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:model.newtip[@"background_color"]];
+                    cell.secondaryLabel.textColor = [UIColor colorWithHexStr:model.newtip[@"text_color"]];
+                    [cell.secondaryLabel setNeedsLayout];
+                    [cell.secondaryLabel layoutIfNeeded];
+                    cell.secondaryLabel.textContainerInset = UIEdgeInsetsMake(0, 5, 0, 5);
+                    cell.secondarySubLabel.text = model.tips2;
+                }
+                return cell;
+            }else if(model.houseType.intValue == FHHouseTypeSecondHandHouse) {// 二手房
+                FHOldSuggestionItemCell *cell = (FHOldSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"FHOldSuggestionItemCell" forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.highlightedText = self.highlightedText;
+                if(indexPath.row == nowsugListData.count - 1){
+                    cell.topLine.hidden =YES;
+                }
                 cell.model = model;
-            }
-            return cell;
-            
-        }else  {
-            FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-            if (indexPath.row < self.sugListData.count) {
-                FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
+                return cell;
+            }else {
+                FHSuggestionItemCell *cell = (FHSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestItemCell" forIndexPath:indexPath];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 NSString *originText = model.text;
                 NSAttributedString *text1 = [self processHighlightedDefault:model.text font:[UIFont themeFontRegular:15.0] textColor:[UIColor themeGray1]];
                 NSMutableAttributedString *resultText = [[NSMutableAttributedString alloc] initWithAttributedString:text1];
@@ -857,8 +875,8 @@
                         make.bottom.mas_equalTo(cell.contentView).offset(0);
                     }];
                 }
+                return cell;
             }
-            return cell;
         }
     }
     
@@ -878,8 +896,10 @@
     } else if (tableView.tag == 2) {
         // 联想词
         if (indexPath.row < self.sugListData.count) {
-            FHSuggestionResponseDataModel *model  = self.sugListData[indexPath.row];
-            [self associateWordCellClick:model rank:indexPath.row];
+            FHSuggestionResponseItemModel *model  = self.sugListData[indexPath.row];
+            if(model.cardType == 16){
+                [self associateWordCellClick:model rank:indexPath.row];
+            }
         }
     }
 }
@@ -914,32 +934,33 @@
         // 联想词
         if (self.sugListData.count == 0) {
             return self.listController.suggestTableView.frame.size.height;
-        } else if (self.sugListData.count <= 2) {
-            NSInteger row = indexPath.row;
-            if (row < self.sugListData.count) {
-                FHSuggestionResponseDataModel *model = self.sugListData[row];
-                if (model.cardType == 9) {
-                    return 60;
-                } else if (model.cardType == 15) {  //帮我找房卡片高度
-                    return 93;
+        }else {
+            NSMutableArray<FHSuggestionResponseItemModel>  *nowsugListData = indexPath.section == 0 ? self.sugListData:self.othersugListData;
+            if(nowsugListData.count <= indexPath.row || nowsugListData.count < 0){
+                return 0;
+            }
+            FHSuggestionResponseItemModel *model = nowsugListData[indexPath.row];
+            if(model.cardType == 18){
+                return 42;
+            }else if (model.cardType == 9) {
+                return 60;
+            }else if (model.cardType == 15) {  //帮我找房卡片高度
+                return 93;
+            }else if (model.houseType.intValue == FHHouseTypeNewHouse) {
+                // 新房
+                return 67;
+            } else  if (model.houseType.intValue == FHHouseTypeSecondHandHouse) {
+                // 二手房
+                return 68;
+            }else {
+                if (indexPath.row == self.sugListData.count - 1) {
+                    return 61;
+                } else {
+                    return 41;
                 }
             }
         }
-        if (self.houseType == FHHouseTypeNewHouse) {
-            // 新房
-            return 67;
-        } else  if (self.houseType == FHHouseTypeSecondHandHouse) {
-            // 二手房
-            return 68;
-        }else {
-            if (indexPath.row == self.sugListData.count - 1) {
-                return 61;
-            } else {
-                return 41;
-            }
-        }
     }
-    
     return 41;
 }
 
@@ -1003,7 +1024,7 @@
             if (!self.guessYouWantExtraInfo || self.hasExposedHouseFindFloatButton) {
                 return;
             }
-
+            
             //帮我找房浮动按钮埋点值上报一次
             self.hasExposedHouseFindFloatButton = YES;
             
@@ -1012,7 +1033,7 @@
                 @"page_type": @"search_detail",
                 @"element_type": @"driving_find_house_float",
             };
-
+            
             [FHUserTracker writeEvent:@"element_show" params:tracerDict];
         }
     } else if (tableView.tag == 2) {
@@ -1067,23 +1088,23 @@
     if (self.highlightedText.length > 0) {
         NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontSemibold:fontSize],NSForegroundColorAttributeName:textColor};
         NSMutableAttributedString * tempAttr = [[NSMutableAttributedString alloc] initWithAttributedString:text];
-
+        
         NSMutableString *string = [NSMutableString stringWithString:self.highlightedText];
-
+        
         //左括号
         NSRange rangeLeft = [string rangeOfString:@"("];
         if (rangeLeft.location != NSNotFound) {
             [string insertString:@"[" atIndex:rangeLeft.location];
             [string insertString:@"]" atIndex:rangeLeft.location + 2];
         }
-
+        
         //右括号
         NSRange rangeRight = [string rangeOfString:@")"];
         if (rangeRight.location != NSNotFound) {
             [string insertString:@"[" atIndex:rangeRight.location];
             [string insertString:@"]" atIndex:rangeRight.location + 2];
         }
-
+        
         //()在正则表达式有特殊意义——子表达式
         NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:[NSString stringWithFormat:@"%@",string] options:NSRegularExpressionCaseInsensitive error:nil];
         
@@ -1156,9 +1177,9 @@
             [self.subscribeView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(self.subscribeView.hasSubscribeViewHeight);
             }];
-             self.subscribeView.hidden = NO;
+            self.subscribeView.hidden = NO;
         } else {
-             self.subscribeView.hidden = YES;
+            self.subscribeView.hidden = YES;
             [self.subscribeView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(0);
             }];
@@ -1201,7 +1222,7 @@
     }
     
     [FHHouseListAPI requestAddHistory:paramDic.copy completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-
+        
     }];
 }
 
@@ -1300,9 +1321,17 @@
     self.associatedCount += 1;
     __weak typeof(self) wself = self;
     self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
-        if (model != NULL && error == NULL) {
-            // 构建数据源
-            wself.sugListData = model.data;
+        if (model != NULL && error == NULL) {            // 构建数据源
+            [wself.sugListData removeAllObjects];
+            [wself.othersugListData removeAllObjects];
+            [wself.sugListData addObjectsFromArray:model.data.item];
+            if(model.data.otherItem.count > 0){
+                FHSuggestionResponseItemModel *tepmodel= [[FHSuggestionResponseItemModel alloc] init];
+                tepmodel.cardType = 18;
+                tepmodel.text = self.houseType == 1? @"相关二手房推荐":@"相关新房推荐";
+                [wself.othersugListData addObject:tepmodel];
+                [wself.othersugListData addObjectsFromArray:model.data.otherItem];
+            }
             [wself.listController.emptyView hideEmptyView];
             [wself reloadSugTableView];
             [wself.listController.fatherVC trackSuggestionWithWord:query houseType:houseType result:model];

@@ -168,7 +168,6 @@
 // --
 @interface FHSuggestionNewHouseItemCell ()
 
-@property (nonatomic, strong)   UIView       *sepLine;
 
 @end
 

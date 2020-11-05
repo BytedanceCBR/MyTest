@@ -102,11 +102,11 @@
 
 //Sug页面使用（model类型不同）
 - (void)updateWithData:(id)data {
-    if (!data || ![data isKindOfClass:[FHSuggestionResponseDataModel class]]) {
+    if (!data || ![data isKindOfClass:[FHSuggestionResponseItemModel class]]) {
         return;
     }
     
-    FHSuggestionResponseDataModel *model = (FHSuggestionResponseDataModel *)data;
+    FHSuggestionResponseItemModel *model = (FHSuggestionResponseItemModel *)data;
     
     _titleLabel.text = model.title ?: @"";
     _subTitleLabel.text = model.text ?: @"";

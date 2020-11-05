@@ -243,12 +243,13 @@
     tableView.dataSource = self.viewModel;
     [tableView registerClass:[FHSuggestionItemCell class] forCellReuseIdentifier:@"suggestItemCell"];
     [tableView registerClass:[FHSuggestionNewHouseItemCell class] forCellReuseIdentifier:@"suggestNewItemCell"];
-        [tableView registerClass:[FHOldSuggestionItemCell class] forCellReuseIdentifier:@"FHOldSuggestionItemCell"];
+    [tableView registerClass:[FHOldSuggestionItemCell class] forCellReuseIdentifier:@"FHOldSuggestionItemCell"];
     [tableView registerClass:[FHSuggestHeaderViewCell class] forCellReuseIdentifier:@"suggestHeaderCell"];
     [tableView registerClass:[FHGuessYouWantCell class] forCellReuseIdentifier:@"guessYouWantCell"];
     [tableView registerClass:[FHSuggestionEmptyCell class] forCellReuseIdentifier:@"suggetEmptyCell"];
     [tableView registerClass:[FHFindHouseHelperCell class] forCellReuseIdentifier:@"helperCell"];
     [tableView registerClass:[FHHouseListRecommendTipCell class] forCellReuseIdentifier:@"tipcell"];
+    [tableView registerClass:[FHRecommendtHeaderViewCell class] forCellReuseIdentifier:@"RecommendtHeaderCell"];
 
     if (@available(iOS 11.0 , *)) {
         tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   YYLabel       *secondaryLabel;
 @property (nonatomic, strong)   UILabel       *subLabel;
 @property (nonatomic, strong)   UILabel       *secondarySubLabel;
+@property (nonatomic, strong)   UIView        *sepLine;
 
 @end
 
