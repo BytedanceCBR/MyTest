@@ -162,6 +162,7 @@ static NSDate *preMainDate = nil;
                 }
             }
         }
+        [self.span finish];
     }
     
     BOOL startupOptimizeClose = ![[self fhSettings] tt_boolValueForKey:@"f_startup_optimize_open"];
