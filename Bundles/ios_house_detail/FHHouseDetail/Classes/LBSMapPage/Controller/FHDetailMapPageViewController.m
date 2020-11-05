@@ -11,7 +11,6 @@
 #import <AMapLocationKit/AMapLocationKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
 #import <AMapFoundationKit/AMapFoundationKit.h>
-#import <MAMapKit/MAMapKit.h>
 #import <YYText/YYLabel.h>
 #import "TTDeviceHelper.h"
 #import "TTUIResponderHelper.h"
@@ -116,6 +115,9 @@ static MAMapView *kFHPageMapView = nil;
     _keyWordArray = [NSArray arrayWithObjects:@"bank",@"bus",@"subway",@"scholl",@"hospital",@"entertainment",@"shopping",@"gym",@"food", nil];
     _iconImageArray = [NSArray arrayWithObjects:@"icon-bank",@"icon-bus",@"icon-subway",@"icon_education",@"icon_hospital",@"icon-relaxation",@"icon-mall",@"icon_swim",@"icon-restaurant", nil];
     
+    self.baiduPanoAnnotation = [[FHMyMAAnnotation alloc] init];
+    self.pointCenterAnnotation = [[FHMyMAAnnotation alloc] init];
+    
     //修复外部没有传入searchCategory的情况下
     if (!self.searchCategory.length) {
         self.searchCategory = self.nameArray.firstObject;
@@ -145,6 +147,7 @@ static MAMapView *kFHPageMapView = nil;
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+//    [self.poiAnnotations removeAllObjects];
     [self addStayPageLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
 }
@@ -622,6 +625,7 @@ static MAMapView *kFHPageMapView = nil;
     _mapView.zoomEnabled = YES;
     _mapView.scrollEnabled = YES;
     _mapView.showsUserLocation = NO;
+    _mapView.runLoopMode = NSDefaultRunLoopMode;
     _mapView.rotateCameraEnabled = NO;
     _mapView.customizeUserLocationAccuracyCircleRepresentation = YES;
     _mapView.rotateEnabled = NO;
@@ -748,21 +752,29 @@ static MAMapView *kFHPageMapView = nil;
         [self.mapView addAnnotation:self.poiAnnotations[i]];
     }
     
-    FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
-    userAnna.type = @"user";
-    userAnna.coordinate = self.centerPoint;
-    
-    userAnna.title = self.titleStr;
-    
-    [self.mapView addAnnotation:userAnna];
-    self.pointCenterAnnotation = userAnna;
+//    FHMyMAAnnotation *userAnna = [[FHMyMAAnnotation alloc] init];
+//    userAnna.type = @"user";
+//    userAnna.coordinate = self.centerPoint;
+//
+//    userAnna.title = self.titleStr;
+//
+//    [self.mapView addAnnotation:userAnna];
+//    self.pointCenterAnnotation = userAnna;
+    self.pointCenterAnnotation.type = @"user";
+    self.pointCenterAnnotation.coordinate = self.centerPoint;
+    self.pointCenterAnnotation.title = self.titleStr;
+    [self.mapView addAnnotation:self.pointCenterAnnotation];
     
     if (self.baiduPanoramaUrl.length) {
-        FHMyMAAnnotation *baiduPanoAnnotation = [[FHMyMAAnnotation alloc] init];
-        baiduPanoAnnotation.type = @"baiduPano";
-        baiduPanoAnnotation.coordinate = self.centerPoint;
-        [self.mapView addAnnotation:baiduPanoAnnotation];
-        self.baiduPanoAnnotation = baiduPanoAnnotation;
+//        FHMyMAAnnotation *baiduPanoAnnotation = [[FHMyMAAnnotation alloc] init];
+//        baiduPanoAnnotation.type = @"baiduPano";
+//        baiduPanoAnnotation.coordinate = self.centerPoint;
+//        [self.mapView addAnnotation:baiduPanoAnnotation];
+//        self.baiduPanoAnnotation = baiduPanoAnnotation;
+        
+        self.baiduPanoAnnotation.type = @"baiduPano";
+        self.baiduPanoAnnotation.coordinate = self.centerPoint;
+        [self.mapView addAnnotation:self.baiduPanoAnnotation];
     }
     
     // PM 确认 不进行缩放

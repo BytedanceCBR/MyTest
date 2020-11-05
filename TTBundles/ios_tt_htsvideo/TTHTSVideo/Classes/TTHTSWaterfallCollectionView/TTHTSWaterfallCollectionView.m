@@ -35,7 +35,7 @@
 #import "ExploreListHelper.h"
 #import "AWEVideoConstants.h"
 #import "TTSettingsManager.h"
-#import "IESVideoPlayer.h"
+//#import "IESVideoPlayer.h"
 #import "AWEVideoConstants.h"
 #import "TSVPrefetchVideoManager.h"
 #import "TTHTSVideoConfiguration.h"

@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHVideoCoverView : UIView
 
 @property(nonatomic, strong) UIImageView *coverView;
-@property(nonatomic, strong) UIButton *startBtn;
+@property(nonatomic, strong) UIImageView *startBtn;
 @property(nonatomic, copy) NSString *imageUrl;
 @property(nonatomic , weak) id<FHVideoCoverViewDelegate> delegate;
 @property (nonatomic, strong) UIView *loadingView;

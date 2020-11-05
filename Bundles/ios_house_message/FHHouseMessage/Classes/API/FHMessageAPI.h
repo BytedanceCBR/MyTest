@@ -20,6 +20,7 @@ typedef NS_ENUM(NSInteger, FHMessageType) {
     FHMessageTypeHouseOld = 307, //房源推荐-二手房
     FHMessageTypeSystem = 308, //系统消息
     FHMessageTypeHouseRent = 309, //房源推荐-租房
+    FHMessageTypeHouseReport = 312, //房源举报
 };
 
 @interface FHMessageAPI : NSObject

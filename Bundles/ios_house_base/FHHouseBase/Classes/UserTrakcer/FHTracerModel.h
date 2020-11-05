@@ -6,6 +6,7 @@
 //
 
 #import "JSONModel.h"
+#import "FHUserTrackerDefine.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,6 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 /*
  * 当前页面
  */
+@property (nonatomic, copy) NSString *pageType; //当前页面名称
+@property (nonatomic, copy) NSString *elementType; //当前页面 组件名称
 @property(nonatomic , copy) NSString *categoryName; //当前页面名称
 @property(nonatomic , strong) NSDictionary *logPb;
 @property(nonatomic , copy) NSString *searchId;
@@ -47,6 +50,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSMutableDictionary *)logDict;
 
 -(NSDictionary *)neatLogDict;
+
++ (NSDictionary *)getLogPbParams:(id)logPb;
 
 @end
 

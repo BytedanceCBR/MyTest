@@ -27,7 +27,7 @@
 #import "TTUserSettingsManager+FontSettings.h"
 #import "TTVFeedListItem.h"
 #import "TTVFeedItem+ComputedProperties.h"
-#import <BDTBasePlayer/TTVOwnPlayerPreloaderWrapper.h>
+//#import <BDTBasePlayer/TTVOwnPlayerPreloaderWrapper.h>
 #import "TTVSettingsConfiguration.h"
 #import "TTASettingConfiguration.h"
 #import <TTBaseLib/TTStringHelper.h>
@@ -368,18 +368,18 @@ typedef void(^Finished)();
 
 - (void)prefetchAutoPlayVideoWithFeedItems:(NSArray *)feedItems
 {
-    if (!ttas_isAutoPlayVideoPreloadEnable()) {
-        return;
-    }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        for (TTVFeedItem *item in feedItems) {
-            if ([item couldAutoPlay] && !isEmptyString(item.article.videoId)) {
-                HandleType handler = [[TTVOwnPlayerPreloaderWrapper sharedPreloader] preloadVideoID:item.article.videoId];
-                TTAdPlayerPreloadModel *preloadModel = [[TTAdPlayerPreloadModel alloc] initWithAdId:item.adIDStr logExtra:item.logExtra handleType:handler];
-                [[TTVOwnPlayerPreloaderWrapper sharedPreloader] addAdPreloadItem:preloadModel];
-            }
-        }
-    });
+//    if (!ttas_isAutoPlayVideoPreloadEnable()) {
+//        return;
+//    }
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        for (TTVFeedItem *item in feedItems) {
+//            if ([item couldAutoPlay] && !isEmptyString(item.article.videoId)) {
+//                HandleType handler = [[TTVOwnPlayerPreloaderWrapper sharedPreloader] preloadVideoID:item.article.videoId];
+//                TTAdPlayerPreloadModel *preloadModel = [[TTAdPlayerPreloadModel alloc] initWithAdId:item.adIDStr logExtra:item.logExtra handleType:handler];
+//                [[TTVOwnPlayerPreloaderWrapper sharedPreloader] addAdPreloadItem:preloadModel];
+//            }
+//        }
+//    });
 }
 
 - (Class)cellActionClassWithItem:(TTVFeedItem *)item

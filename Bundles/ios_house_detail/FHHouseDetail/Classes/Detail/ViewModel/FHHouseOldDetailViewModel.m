@@ -191,6 +191,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
             make.height.mas_equalTo(30);
         }];
         [self.navBar showMessageNumber];
+        self.bottomStatusBar.text = @"该房源已停售";
     }else if (status == -1) {
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:NO];
@@ -198,6 +199,14 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
             make.height.mas_equalTo(0);
         }];
         [self.detailController.emptyView showEmptyWithTip:@"该房源已下架" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+    }else if (status == 2) {
+        self.bottomStatusBar.hidden = NO;
+        [self.navBar showRightItems:YES];
+        [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(30);
+        }];
+        [self.navBar showMessageNumber];
+        self.bottomStatusBar.text = @"该房源已成交";
     }else {
         self.bottomStatusBar.hidden = YES;
         [self.navBar showRightItems:YES];

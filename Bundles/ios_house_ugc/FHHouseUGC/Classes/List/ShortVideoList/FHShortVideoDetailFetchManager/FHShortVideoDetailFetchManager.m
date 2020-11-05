@@ -117,6 +117,9 @@
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         if (error) {
             wself.isLoadingMoreData = NO;
+            if (wself.dataDidChangeBlock) {
+                wself.dataDidChangeBlock();
+            }
             return;
         }
         if(model){
