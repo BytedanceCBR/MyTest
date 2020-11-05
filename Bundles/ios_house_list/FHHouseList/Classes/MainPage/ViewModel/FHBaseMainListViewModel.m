@@ -479,14 +479,6 @@ extern NSString *const INSTANT_DATA_KEY;
         self.tableView.scrollEnabled = NO;
     }
     self.errorMaskView.hidden = !show;
-    if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
-        if (self.houseType == FHHouseTypeNewHouse) {
-            ///新房大类页不展示tagsView，更新时直接隐藏
-            self.topTagsView.hidden = YES;
-        } else {
-            self.topTagsView.hidden = show;
-        }
-    }
 }
 
 - (void)requestAddSubScribe:(NSString *)text
