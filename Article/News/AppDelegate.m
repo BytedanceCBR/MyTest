@@ -97,11 +97,11 @@ extern NSString *const kTTAppseeEnableKey;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    //开始启动时间tracer，新的，by xsm
-    [[HMDLaunchTracingTracker sharedTracker] startWithCustomFinish:NO];
     /// 注意，这里必须初始化这个Manager.勿删
     [self initWebViewCommonQueryStatus];
     [[TTLaunchTracer shareInstance] setLaunchFrom:TTAPPLaunchFromInitialState];
+    //开始启动时间tracer，新的，by xsm
+    [[HMDLaunchTracingTracker sharedTracker] startWithCustomFinish:NO];
 
 #if APPSEE_ENABLE
     //越狱渠道开启Appsee监控初始化
