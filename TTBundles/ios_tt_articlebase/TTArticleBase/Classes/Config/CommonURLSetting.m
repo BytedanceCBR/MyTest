@@ -855,6 +855,11 @@ static CommonURLSetting *_sharedInstance = nil;
     return [NSString stringWithFormat:@"%@/2/data/v4/post_message/", [self baseURL]];
 }
 
++ (NSString*)postMessageURLStringV3
+{
+    return [NSString stringWithFormat:@"%@/2/data/v3/post_message/", [self baseURL]];
+}
+
 + (NSString*)userInfoURLString
 {
     return [NSString stringWithFormat:@"%@/passport/user/info/", [self baseURL]];
