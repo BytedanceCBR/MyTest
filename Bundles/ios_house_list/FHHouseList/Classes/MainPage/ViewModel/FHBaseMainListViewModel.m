@@ -479,14 +479,6 @@ extern NSString *const INSTANT_DATA_KEY;
         self.tableView.scrollEnabled = NO;
     }
     self.errorMaskView.hidden = !show;
-    if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
-        if (self.houseType == FHHouseTypeNewHouse) {
-            ///新房大类页不展示tagsView，更新时直接隐藏
-            self.topTagsView.hidden = YES;
-        } else {
-            self.topTagsView.hidden = show;
-        }
-    }
 }
 
 - (void)requestAddSubScribe:(NSString *)text
@@ -1590,6 +1582,11 @@ extern NSString *const INSTANT_DATA_KEY;
     self.showFilter = NO;
     if (!self.errorMaskView.isHidden) {
         //显示无网或者无结果view
+        self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
+    }
+    
+    if (self.tableView.height > self.tableView.contentSize.height) {
+        //内容不足时回到顶部
         self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
     }
     [self scrollViewDidScroll:self.tableView];
