@@ -1592,6 +1592,11 @@ extern NSString *const INSTANT_DATA_KEY;
         //显示无网或者无结果view
         self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
     }
+    
+    if (self.tableView.height > self.tableView.contentSize.height) {
+        //内容不足时回到顶部
+        self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
+    }
     [self scrollViewDidScroll:self.tableView];
 }
 
