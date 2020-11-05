@@ -161,6 +161,7 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, strong) id<TSVShortVideoDataFetchManagerProtocol> originalDataFetchManager;
 @property (nonatomic, copy) NSDictionary *pageParams;
 @property (nonnull, copy) NSString *groupID;
+@property (nonnull, copy) NSString *topID;
 @property (nonatomic, copy) NSString *groupSource;
 @property (nonatomic, copy) NSString *categoryName;
 @property (nonatomic, strong) NSNumber *showComment;//0不弹，1弹起评论浮层，2弹输入框
@@ -268,6 +269,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         _pageParams = paramObj.allParams.copy;
 
         _groupID = [params[AWEVideoGroupId] copy] ?: @"";
+        _topID =  [params[AWEVideocTopId] copy] ?: @"";
         _originalGroupID = [params[AWEVideoGroupId] copy] ?: @"";
         _ruleID = [params[AWEVideoRuleId] copy];
         _groupSource = [params[VideoGroupSource] copy] ?: @"";
@@ -300,6 +302,7 @@ static const CGFloat kFloatingViewOriginY = 230;
             self.dataFetchManager.tracerDic = self.extraDic;
           }
         self.dataFetchManager.groupID = self.groupID;
+        self.dataFetchManager.topID = self.topID;
         self.dataFetchManager.currentShortVideoModel = extraParams[@"current_video"];
         self.dataFetchManager.otherShortVideoModels = extraParams[@"other_videos"];
         @weakify(self);
@@ -332,7 +335,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         
         TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.groupID itemID:self.groupID impressionID:nil aggrType:1];
         self.groupModel = groupModel;
-        
     }
     return self;
 }
