@@ -197,7 +197,7 @@ static NSMutableDictionary *_adClasses;
             [self addSubview:adView];
             
         } else {
-            LOGE(@"文章详情页下发了不支持的广告类型");
+//            LOGE(@"文章详情页下发了不支持的广告类型");
         }
     }];
     [self sizeToFit];

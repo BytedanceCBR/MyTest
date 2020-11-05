@@ -85,7 +85,7 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHShortVideoTracerUtil.h"
 #import "TTAccountManager.h"
-#import "IESOwnPlayerWrapper.h"
+//#import "IESOwnPlayerWrapper.h"
 #import "NSDictionary+BTDAdditions.h"
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
@@ -188,13 +188,11 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     });
 }
 
-
 - (void)getVideoTimers {
-      IESOwnPlayerWrapper *player = (IESOwnPlayerWrapper *)self.playerController;
-    if (player.currPlaybackTime) {
-        CGFloat watch = (player.currPlaybackTime/player.videoDuration)*100;
-        [self.miniSlider setWatchedProgress:(player.currPlaybackTime/player.videoDuration) *100];
-        [self.miniSlider setCacheProgress:(player.currPlayableDuration/player.videoDuration) *100];
+//      IESOwnPlayerWrapper *player = (IESOwnPlayerWrapper *)self.playerController;
+    if (self.playerStateStore) {
+        [self.miniSlider setWatchedProgress:self.playerStateStore.state.watchedProgress];
+        [self.miniSlider setCacheProgress:self.playerStateStore.state.cacheProgress];
 
     };
 }

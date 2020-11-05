@@ -93,6 +93,13 @@ typedef NS_ENUM(NSUInteger, TTVPlayerControlViewToolBarState)
     TTVPlayerControlViewToolBarStateDidHidden
 };
 
+typedef NS_ENUM(NSInteger, TTVPlayerScalingMode) {
+    TTVPlayerScalingModeNone,       // No scaling
+    TTVPlayerScalingModeAspectFit,  // Uniform scale until one dimension fits
+    TTVPlayerScalingModeAspectFill, // Uniform scale until the movie fills the visible bounds. One dimension may have clipped contents
+    TTVPlayerScalingModeFill        // Non-uniform scale. Both render dimensions will exactly match the visible bounds
+};
+
 //typedef enum : NSUInteger {
 //    TTVPlayActionDefault,
 //    TTVPlayActionFromUIFinished,

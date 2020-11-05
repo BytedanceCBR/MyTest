@@ -50,7 +50,6 @@
 @property(nonatomic, weak) FHMessageViewController *viewController;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) id <FHMessageBridgeProtocol> messageBridge;
-@property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) NSString *pageType;
 @property (nonatomic, copy)     NSString       *enterFrom;
 @property(nonatomic, strong) DeleteAlertDelegate *deleteAlertDelegate;
@@ -62,7 +61,6 @@
 - (instancetype)initWithTableView:(UITableView *)tableView controller:(FHMessageViewController *)viewController {
     self = [super init];
     if (self) {
-        _isFirstLoad = NO;
         self.tableView = tableView;
 
         [tableView registerClass:[FHMessageCell class] forCellReuseIdentifier:kCellId];
@@ -85,9 +83,7 @@
 
 - (void)requestData {
     [self.requestTask cancel];
-    if (self.isFirstLoad) {
-        [self.viewController startLoading];
-    }
+    [self.viewController startLoading];
     WeakSelf;
     self.requestTask = [FHMessageAPI requestMessageListWithCompletion:^(id <FHBaseModelProtocol> _Nonnull model, NSError *_Nonnull error) {
         StrongSelf;
@@ -114,13 +110,8 @@
         NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
         [self.viewController.fatherVC.combiner resetConversations:allConversations];
     };
+    [self.viewController endLoading];
     
-    if (self.isFirstLoad) {
-        [self.viewController endLoading];
-    }
-
-    self.isFirstLoad = NO;
-
     if (error && [self.viewController.fatherVC.combiner allItems].count == 0) {
         //TODO: show handle error
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];

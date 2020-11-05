@@ -9,7 +9,7 @@
 #import "FHDetailBaseModel.h"
 
 typedef NS_ENUM(NSUInteger, FHMultiMediaType) {
-    FHMultiMediaTypeVideo, //视频
+    FHMultiMediaTypeVideo = 100, //视频
     FHMultiMediaTypePicture, //图片
     FHMultiMediaTypeVRPicture, //VR图片
     FHMultiMediaTypeBaiduPanorama, //百度街景
@@ -44,8 +44,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *infoSubTitle;
 @property (nonatomic, copy , nullable) NSString *infoTitle;
 @property(nonatomic, copy) NSString *instantImageUrl;
+@property (nonatomic, copy) NSString *gaodeLng; // 街景的经纬度
+@property (nonatomic, copy) NSString *gaodeLat;
 
++ (NSArray<FHMultiMediaItemModel> *)getMultiMediaItem:(FHHouseDetailMediaTabInfo *)tabInfo rootName:(NSString *)rootName;
 
+- (BOOL)isEqualWithOtherMediaItemModel:(FHMultiMediaItemModel *)other;
 @end
 
 @interface FHMultiMediaModel : NSObject

@@ -8,7 +8,7 @@
 #import "TSVPrefetchVideoManager.h"
 #import "TSVPrefetchVideoConfig.h"
 #import "TTShortVideoModel.h"
-#import "IESVideoPlayer.h"
+//#import "IESVideoPlayer.h"
 #import "AWEVideoConstants.h"
 #import "TTHTSVideoConfiguration.h"
 
@@ -29,13 +29,13 @@ NSString * const TSVVideoPrefetchDetailGroup = @"com.shortvideo.detail";
     if (model) {
         NSString *urlStr = [model.video.playAddr.urlList firstObject];
         NSString *videoID = model.video.videoId;
-        [[IESVideoPreloader preloaderWithType:IESVideoPlayerTypeSpecify] preloadVideoID:videoID andVideoURL:urlStr preloadSize:[TSVPrefetchVideoConfig prefetchSize] group:group];
+//        [[IESVideoPreloader preloaderWithType:IESVideoPlayerTypeSpecify] preloadVideoID:videoID andVideoURL:urlStr preloadSize:[TSVPrefetchVideoConfig prefetchSize] group:group];
     }
 }
 
 + (void)cancelPrefetchShortVideoForGroup:(NSString *)group
 {
-    [[IESVideoPreloader preloaderWithType:IESVideoPlayerTypeSpecify] cancelGroup:group];
+//    [[IESVideoPreloader preloaderWithType:IESVideoPlayerTypeSpecify] cancelGroup:group];
 }
 
 + (void)startPrefetchShortVideoInDetailWithDataFetchManager:(id<TSVShortVideoDataFetchManagerProtocol>)manager

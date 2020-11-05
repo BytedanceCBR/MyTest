@@ -162,11 +162,11 @@ static CGFloat multiplier = 2;
 - (void)setCellHouseType:(FHMultiMediaCellHouseType)cellHouseType {
     _cellHouseType = cellHouseType;
     if (_cellHouseType == FHMultiMediaCellHouseSecond)  {
-        [self.vrLoadingView  mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.width.height.mas_equalTo(60);
-            make.top.mas_equalTo([UIDevice btd_isScreenWidthLarge320] ? 110 : 86);
-            make.centerX.mas_equalTo(self);
-        }];
+//        [self.vrLoadingView  mas_remakeConstraints:^(MASConstraintMaker *make) {
+//            make.width.height.mas_equalTo(60);
+//            make.top.mas_equalTo([UIDevice btd_isScreenWidthLarge320] ? 110 : 86);
+//            make.centerX.mas_equalTo(self);
+//        }];
     }
 }
 

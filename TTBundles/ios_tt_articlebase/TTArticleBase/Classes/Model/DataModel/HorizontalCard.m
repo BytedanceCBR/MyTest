@@ -153,12 +153,12 @@ NSString *const kHorizontalCardCategoryID  =   @"kHorizontalCardCategoryID";
         ExploreOrderedData *orderedData = [ExploreOrderedData objectForPrimaryKey:primaryID];
         
         if (orderedData) {
-            LOGD(@"...got %@", uniqueID);
+//            LOGD(@"...got %@", uniqueID);
             if (![orderedData.originalData.notInterested boolValue]) {
                 result = orderedData;
             }
         } else {
-            LOGD(@"...lost");
+//            LOGD(@"...lost");
         }
     }
     
