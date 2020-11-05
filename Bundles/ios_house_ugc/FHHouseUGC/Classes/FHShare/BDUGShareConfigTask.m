@@ -11,7 +11,8 @@
 #import <BDUGLoggerInterface.h>
 #import <BDUGShareManager.h>
 #import "FHUGLoggerManager.h"
-
+#import <BDUGShareAdapterSetting.h>
+#import <TTActivityPanelController.h>
 DEC_TASK("BDUGShareConfigTask",FHTaskTypeSDKs,TASK_PRIORITY_HIGH+2);
 @implementation BDUGShareConfigTask
 
@@ -24,5 +25,6 @@ DEC_TASK("BDUGShareConfigTask",FHTaskTypeSDKs,TASK_PRIORITY_HIGH+2);
     BDUGShareConfiguration *config = [BDUGShareConfiguration defaultConfiguration];
     config.localMode = YES;
     [BDUGShareManager initializeShareSDKWithConfiguration:config];
+//    [[BDUGShareAdapterSetting sharedService] setPanelClassName:NSStringFromClass([TTActivityPanelController class])];
 }
 @end

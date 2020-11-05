@@ -73,9 +73,7 @@
 #import "TTBlockContentItem.h"
 #import "TTReportContentItem.h"
 #import "BDUGShareManager.h"
-#import "BDUGWeChatShare.h"
-#import "BDUGWechatContentItem.h"
-#import <TTActivityPanelController.h>
+#import <FHShareManager.h>
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -1459,14 +1457,18 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     if (self.detailModel.answerEntity.answerDeleted) {
         return;
     }
-//    [self p_removeIndicatorPolicyView];
-//
-//    NSMutableArray *contentItems = @[].mutableCopy;
-//    [contentItems addObject:[self.natantViewModel wd_shareItems]];
-//    [self.shareManager displayActivitySheetWithContent:[contentItems copy]];
+    [self p_removeIndicatorPolicyView];
+    
+    if([[FHShareManager shareInstance] isShareOptimization]){
+        [self.bdShareManager displayPanelWithContent:[[BDUGSharePanelContent alloc] init]];
+        return;
+    }
 
-    [self.bdShareManager displayPanelWithContent:[[BDUGSharePanelContent alloc] init]];
+    NSMutableArray *contentItems = @[].mutableCopy;
+    [contentItems addObject:[self.natantViewModel wd_shareItems]];
+    [self.shareManager displayActivitySheetWithContent:[contentItems copy]];
 }
+
 
 -(BDUGShareManager *)bdShareManager {
     if(!_bdShareManager) {
@@ -1478,9 +1480,22 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 }
 
 -(NSArray *)resetPanelItems:(NSArray *)array panelContent:(BDUGSharePanelContent *)panelContent {
-    BDUGWechatContentItem *item = [[BDUGWechatContentItem alloc] initWithTitle:@"幸福里" desc:@"幸福里-100" webPageUrl:@"https://bytedance.net/" thumbImage:nil defaultShareType:BDUGWechatShareTypeSDK];
-    item.activityImageName = @"weixin_allshare";
-    return @[item];
+    FHShareBaseModel *dataModel = [[FHShareBaseModel alloc] init];
+    dataModel.title = [self.natantViewModel shareTitle];
+    dataModel.desc = [self.natantViewModel shareDesc];
+    dataModel.imageUrl = [self.natantViewModel shareImgUrl];
+    dataModel.thumbImage = [self.natantViewModel shareImage];
+    dataModel.shareUrl = [self.natantViewModel shareUrl];
+    dataModel.shareType = BDUGShareWebPage;
+    
+    NSArray *contentItemArray = @[
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeQQ)]
+    ];
+    
+    FHShareContentModel *model = [[FHShareContentModel alloc] init];
+    model.dataModel = dataModel;
+    model.contentItemArray = contentItemArray;
+    return [[FHShareManager shareInstance] createContentItemsWithModel:model];
 }
 
 
