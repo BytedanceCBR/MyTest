@@ -199,8 +199,8 @@ def appPods
     ]
     pod_binary 'BDTFactoryConfigurator', '0.1.0'
 
-    pod_binary 'TencentQQSDK','1.0.0' #QQ SDK降级 iOS13有问题
-    pod        'WechatSDK','0.3.0'
+    pod 'TencentQQSDK', '1.1.0-rc.0'
+    pod 'WechatSDK', '0.3.2'
 
     #-----免流量统计-----
     pod_binary 'TTFlowStatisticsManager', '0.2.1'
@@ -441,9 +441,9 @@ def appPods
     'TTAwemeAccount',
     'AppleAccount'
     ]
-    pod 'BDUGContainer', '1.1.2'
-    pod 'BDUGTrackerInterface', '1.1.1'
-    pod 'BDUGMonitorInterface', '1.0.0'
+    pod 'BDUGContainer' , '1.1.2'
+    pod 'BDUGTrackerInterface' , '1.1.3'
+    pod 'BDUGMonitorInterface', '1.4.1'
     pod 'BDUGAccountOnekeyLogin', '1.1.8-rc.0'
     pod 'TYRZApiSDK' , '1.2.2-rc.0'
     pod 'EAccountApiSDK', '1.2.0-alpha.0'
@@ -589,6 +589,25 @@ def appPods
     pod_binary 'BDXElement', '1.0.0', :subspecs=> ['Core', 'ScrollView', 'ImpressionView']
     #头条连续点赞组件
     pod_binary 'TTMultiDiggManager', '0.1.18-rc.5'
+    #分享sdk
+    pod 'BDUGShare', '2.1.6-rc.3' , :subspecs =>[
+      'BDUGShareBasic/BDUGUtil',
+      'BDUGShareBasic/BDUGSystemShare',
+      'BDUGShareBasic/BDUGQQShare',
+      'BDUGShareBasic/BDUGWeChatShare',
+      'BDUGShareBasic/BDUGTokenShare',
+      'BDUGShareBasic/BDUGImageShare',
+      'BDUGShareBasic/BDUGImageAnalysis',
+      'BDUGShareBasic/BDUGVideoImageShare',
+      'BDUGShareBusiness/BDUGActivity',
+      'BDUGShareBusiness/BDUGShareQQBusiness',
+      'BDUGShareBusiness/BDUGShareWeChatBusiness',
+      'BDUGShareBusiness/BDUGShareSystemBusiness',
+      'BDUGShareUI/Core',
+      'BDUGShareUI/Panel',
+    ]
+    pod 'BDUGImageMark', '1.0.2'
+    pod 'BDUGLoggerInterface', '1.0.3'
 end
 
 

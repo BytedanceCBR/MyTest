@@ -72,13 +72,17 @@
 #import "TTDislikeContentItem.h"
 #import "TTBlockContentItem.h"
 #import "TTReportContentItem.h"
+#import "BDUGShareManager.h"
+#import "BDUGWeChatShare.h"
+#import "BDUGWechatContentItem.h"
+#import <TTActivityPanelController.h>
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
 static NSString * const kHasShownComentPolicyIndicatorViewKey = @"HasShownComentPolicyIndicatorViewKey";
 static NSUInteger const kOldAnimationViewTag = 20161221;
 
-@interface WDDetailViewController () <TTDetailViewController, WDDetailViewDelegate, TTCommentDataSource, TTCommentViewControllerDelegate, TTCommentWriteManagerDelegate, UIViewControllerErrorHandler, TTUIViewControllerTrackProtocol, UIActionSheetDelegate, WDBottomToolViewDelegate, TTShareManagerDelegate, TTInteractExitProtocol, WDDetailHeaderViewDelegate>
+@interface WDDetailViewController () <TTDetailViewController, WDDetailViewDelegate, TTCommentDataSource, TTCommentViewControllerDelegate, TTCommentWriteManagerDelegate, UIViewControllerErrorHandler, TTUIViewControllerTrackProtocol, UIActionSheetDelegate, WDBottomToolViewDelegate, TTShareManagerDelegate, TTInteractExitProtocol, WDDetailHeaderViewDelegate,BDUGShareManagerDataSource,BDUGShareManagerDelegate>
 {
     BOOL _backButtonTouched;
     BOOL _closeButtonTouched;
@@ -118,6 +122,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 @property (nonatomic, strong) DetailActionRequestManager *actionManager;
 
 @property (nonatomic, strong) TTShareManager *shareManager;
+@property (nonatomic, strong) BDUGShareManager *bdShareManager;
 
 @property (nonatomic, assign) CGFloat enterHalfFooterStatusContentOffset;
 
@@ -1454,12 +1459,30 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     if (self.detailModel.answerEntity.answerDeleted) {
         return;
     }
-    [self p_removeIndicatorPolicyView];
-    
-    NSMutableArray *contentItems = @[].mutableCopy;
-    [contentItems addObject:[self.natantViewModel wd_shareItems]];
-    [self.shareManager displayActivitySheetWithContent:[contentItems copy]];
+//    [self p_removeIndicatorPolicyView];
+//
+//    NSMutableArray *contentItems = @[].mutableCopy;
+//    [contentItems addObject:[self.natantViewModel wd_shareItems]];
+//    [self.shareManager displayActivitySheetWithContent:[contentItems copy]];
+
+    [self.bdShareManager displayPanelWithContent:[[BDUGSharePanelContent alloc] init]];
 }
+
+-(BDUGShareManager *)bdShareManager {
+    if(!_bdShareManager) {
+        _bdShareManager = [[BDUGShareManager alloc] init];
+        _bdShareManager.dataSource = self;
+        _bdShareManager.delegate = self;
+    }
+    return _bdShareManager;
+}
+
+-(NSArray *)resetPanelItems:(NSArray *)array panelContent:(BDUGSharePanelContent *)panelContent {
+    BDUGWechatContentItem *item = [[BDUGWechatContentItem alloc] initWithTitle:@"幸福里" desc:@"幸福里-100" webPageUrl:@"https://bytedance.net/" thumbImage:nil defaultShareType:BDUGWechatShareTypeSDK];
+    item.activityImageName = @"weixin_allshare";
+    return @[item];
+}
+
 
 #pragma mark - Tracker
 
