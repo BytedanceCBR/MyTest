@@ -10,6 +10,7 @@
 #import "FHPlaceHolderCell.h"
 #import "FHHouseSelectedItemCell.h"
 #import "RXCollection.h"
+#import "FHIMFavoriteNewCell.h"
 @interface FHIMFavoriteSharePageViewModel1 ()
 @property (nonatomic, strong) NSMutableOrderedSet<NSIndexPath*>* selected;
 @end
@@ -54,6 +55,14 @@
         } else {
             [theCell setDisable:YES];
         }
+    } else if ([cell isKindOfClass:[FHHouseBaseSelectedCell class]]) {
+        FHHouseBaseSelectedCell *theCell = (FHHouseBaseSelectedCell *)cell;
+        [theCell setItemSelected:[_selected containsObject:indexPath]];
+        if ((![_selected containsObject:indexPath] && [_selected count] < 9) || [_selected containsObject:indexPath]) {
+            [theCell setDisable:NO];
+        } else {
+            [theCell setDisable:YES];
+        }
     }
     return cell;
 }
@@ -61,6 +70,7 @@
 - (void)registerCell:(UITableView *)tableView {
     [tableView registerClass:[FHHouseSelectedItemCell class] forCellReuseIdentifier:kCellId];
     [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:@"FHIMFavoriteListPlaceholderCellId"];
+    [tableView registerClass:[FHIMFavoriteNewCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteNewCell class])];
 }
 
 -(void)cleanSelects {

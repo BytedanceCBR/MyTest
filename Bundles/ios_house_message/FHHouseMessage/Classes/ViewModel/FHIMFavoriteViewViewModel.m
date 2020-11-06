@@ -22,6 +22,8 @@
 #import "FHRefreshCustomFooter.h"
 #import <FHHouseBase/FHMainApi+Contact.h>
 #import "IFHMyFavoriteController.h"
+#import "FHEnvContext.h"
+#import "FHIMFavoriteNewCell.h"
 
 extern NSString *const kFHDetailFollowUpNotification;
 
@@ -84,6 +86,7 @@ extern NSString *const kFHDetailFollowUpNotification;
 -(void)registerCell:(UITableView*)tableView {
     [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
     [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:@"FHIMFavoriteListPlaceholderCellId"];
+    [tableView registerClass:[FHIMFavoriteNewCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteNewCell class])];
 }
 
 - (void)dealloc {
@@ -489,6 +492,24 @@ extern NSString *const kFHDetailFollowUpNotification;
         FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHIMFavoriteListPlaceholderCellId"];
         return cell;
     }else{
+        
+        if (indexPath.row < self.dataList.count && [FHEnvContext isDisplayNewCardType]) {
+            FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
+            NSString *identifier = @"";
+            switch (cellModel.houseType) {
+                case FHHouseTypeNewHouse:
+                    identifier = NSStringFromClass([FHIMFavoriteNewCell class]);
+                    break;
+                default:
+                    break;
+            }
+            if ([identifier length] > 0) {
+                FHHouseBaseSelectedCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+                [cell refreshWithData:cellModel];
+                return  cell;
+            }
+        }
+        
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
 //        BOOL isFirstCell = (indexPath.row == 0);
 //        BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
