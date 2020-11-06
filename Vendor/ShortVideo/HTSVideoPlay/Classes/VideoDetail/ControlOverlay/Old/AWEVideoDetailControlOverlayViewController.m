@@ -188,6 +188,10 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     });
 }
 
+- (void)beginTimers {
+    self.videoTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(getVideoTimers) userInfo:nil repeats:YES];
+}
+
 - (void)getVideoTimers {
 //      IESOwnPlayerWrapper *player = (IESOwnPlayerWrapper *)self.playerController;
     if (self.playerStateStore) {
@@ -589,17 +593,20 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.videoTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(getVideoTimers) userInfo:nil repeats:YES];
 //    if (!isEmptyString(self.viewModel.musicLabelString)) {
 //        [self.musicInfoView startAnimation];
 //    }
 }
 
+- (void)stopTimers {
+    [self.videoTimer invalidate];
+    self.videoTimer = nil;
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self.videoTimer invalidate];
-    self.videoTimer = nil;
+    [self stopTimers];
 //
 //    if (!isEmptyString(self.viewModel.musicLabelString)) {
 //        [self.musicInfoView stopAnimation];

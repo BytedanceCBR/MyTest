@@ -31,6 +31,9 @@ NS_ASSUME_NONNULL_BEGIN;
 
 - (void)tapToFoldRecCard;
 
+- (void)stopTimers;
+
+- (void)beginTimers;
 @end
 
 NS_ASSUME_NONNULL_END;
