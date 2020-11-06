@@ -465,8 +465,8 @@
         qparam[@"suggestion_params"] = sugParam;
     }
     
-    NSString *searchID = [param btd_stringValueForKey:CHANNEL_ID];
-    qparam[CHANNEL_ID] = searchID ?: CHANNEL_ID_SEARCH_COURT;
+    NSString *channelID = [param btd_stringValueForKey:CHANNEL_ID];
+    qparam[CHANNEL_ID] = channelID ?: CHANNEL_ID_SEARCH_COURT;
     if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
         return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
     }

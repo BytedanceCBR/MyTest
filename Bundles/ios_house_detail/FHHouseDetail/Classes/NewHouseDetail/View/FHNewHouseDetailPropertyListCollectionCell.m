@@ -60,7 +60,7 @@
         __block CGFloat topOffset = 2;// 高度
         __block CGFloat listRowHeight = 28;//  原来间距是10 现在调整为8,文字距离item的顶部10,文字高20
         __block CGFloat lastTopOffset = 20;
-        CGFloat viewWidth = (self.contentView.bounds.size.width - 30 - 24) / 2;
+        CGFloat viewWidth = (self.contentView.bounds.size.width - 30) / 2;
         
 //        __weak typeof(self) weakSelf = self;
         [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
