@@ -124,7 +124,7 @@
         
         for(NSInteger j = 0; j < items.count; j++){
             FHActivityButton *itemButton = [[FHActivityButton alloc] initWithFrame:CGRectMake(j * itemWidth, 0, itemWidth, singleRowHeight) item:items[j]];
-            [itemButton addTarget:self action:@selector(hide) forControlEvents:UIControlEventTouchUpInside];
+            [itemButton addTarget:self action:@selector(completeWithActivity:) forControlEvents:UIControlEventTouchUpInside];
             [scrollView addSubview:itemButton];
             [itemViewArray addObject:itemButton];
         }
@@ -179,18 +179,27 @@
     }
 }
 
--(void)hideWithActivity:(FHActivityButton *)activityButton {
+-(void)completeWithActivity:(FHActivityButton *)activityButton {
     [UIView animateWithDuration:0.3 delay:0 usingSpringWithDamping:1.0 initialSpringVelocity:10 options:UIViewAnimationOptionCurveEaseInOut animations:^{
         self.sharePanelView.bottom = self.maskView.bottom + self.sharePanelView.height;
         self.shareWindow.alpha = 0;
     } completion:^(BOOL finished) {
         [self.originWindow makeKeyAndVisible];
         self.shareWindow.hidden = YES;
+        
+        activityButton.activity.dataSource = nil;
+        WeakSelf;
+        [activityButton.activity performActivityWithCompletion:^(id<BDUGActivityProtocol> activity, NSError *error, NSString *desc) {
+            StrongSelf;
+            if ([self.delegate respondsToSelector:@selector(activityPanel:completedWith:error:desc:)]) {
+                [self.delegate activityPanel:self completedWith:activity error:error desc:desc];
+            }
+        }];
     }];
 }
 
 -(void)hide {
-    [self hideWithActivity:nil];
+    [self completeWithActivity:nil];
 }
 @end
 
