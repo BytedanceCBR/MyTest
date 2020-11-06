@@ -63,11 +63,15 @@
 
 -(BDUGWechatContentItem *)createWechatItemWithModel:(FHShareBaseModel *)model {
     BDUGWechatContentItem *item = [[BDUGWechatContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage defaultShareType:model.shareType];
+    item.activityImageName = @"weixin_allshare";
+    item.contentTitle = @"微信";
     return item;
 }
 
 -(BDUGQQFriendContentItem *)createQQFriendItemWithModel:(FHShareBaseModel *)model {
     BDUGQQFriendContentItem *item = [[BDUGQQFriendContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage imageUrl:model.imageUrl shareTye:model.shareType];
+    item.activityImageName = @"qq_allshare";
+    item.contentTitle = @"QQ";
     return item;
 }
 
