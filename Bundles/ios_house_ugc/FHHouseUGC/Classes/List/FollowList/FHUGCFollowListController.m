@@ -128,7 +128,7 @@
 
 - (void)startLoadData {
     if(![TTReachability isNetworkConnected]){
-        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         self.showenRetryButton = YES;
         return;
     }
