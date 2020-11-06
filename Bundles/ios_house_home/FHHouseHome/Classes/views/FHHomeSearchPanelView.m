@@ -18,7 +18,7 @@
 #import "UIImage+FIconFont.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
-#import "UIView+FHTracker.h"
+#import "NSObject+FHTracker.h"
 
 @interface FHHomeSearchPanelView()
 {

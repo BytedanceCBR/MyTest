@@ -102,7 +102,7 @@
         if (cardArticles.count > 0) {
             NSArray *insertedCardArticles =
             [ExploreOrderedData insertObjectsWithDataArray:cardArticles];
-            LOGD(@"insertedCardArticles %ld", (long)(insertedCardArticles.count));
+//            LOGD(@"insertedCardArticles %ld", (long)(insertedCardArticles.count));
             [objectsToBeSaved addObjectsFromArray:insertedCardArticles];
         }
         

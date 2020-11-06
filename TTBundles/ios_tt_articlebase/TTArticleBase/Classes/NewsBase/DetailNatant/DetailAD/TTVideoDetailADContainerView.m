@@ -187,7 +187,7 @@ static NSMutableDictionary *_adClasses;
             [self.adViews addObject:adView];
             [self addSubview:adView];
         } else {
-            LOGE(@"视频详情页下发不支持的广告类型 %@", obj.key);
+//            LOGE(@"视频详情页下发不支持的广告类型 %@", obj.key);
         }
     }];
     [self sizeToFit];

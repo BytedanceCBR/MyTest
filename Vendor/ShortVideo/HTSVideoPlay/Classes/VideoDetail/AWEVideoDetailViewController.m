@@ -327,44 +327,50 @@ static const CGFloat kFloatingViewOriginY = 230;
         if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
                self.extraDic = paramObj.allParams[@"extraDic"];
            }
-        if (extraParams[HTSVideoListFetchManager]) {
-            self.dataFetchManager = extraParams[HTSVideoListFetchManager];
-        } else if ([params[@"load_more"] integerValue] == 1) {
-            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
-                                                                             loadMoreType:TSVShortVideoListLoadMoreTypePersonalHome];
-            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
-        } else if ([params[@"load_more"] integerValue] == 2) {
-            self.dataFetchManager = [[TSVShortVideoCategoryFetchManager alloc] init];
-        } else if ([params[@"load_more"] integerValue] == 3) {
-            NSString *forumID = [params tt_stringValueForKey:@"forum_id"];
-            NSString *topCursor = [params tt_stringValueForKey:@"top_cursor"];
-            NSString *cursor = [params tt_stringValueForKey:@"cursor"];
-            NSString *seq = [params tt_stringValueForKey:@"seq"];
-            NSString *sortType = [params tt_stringValueForKey:@"sort_type"];
-            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
-                                                                                loadMoreType:TSVShortVideoListLoadMoreTypeActivity
-                                                                             activityForumID:forumID
-                                                                           activityTopCursor:topCursor
-                                                                              activityCursor:cursor
-                                                                                 activitySeq:seq
-                                                                            activitySortType:sortType];
-            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
-        } else if ([params[@"load_more"] integerValue] == 4) {
-            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
-                                                                                loadMoreType:TSVShortVideoListLoadMoreTypeWeiTouTiao];
-            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
-        } else if ([params[@"load_more"] integerValue] == 5) {
-            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
-                                                                                loadMoreType:TSVShortVideoListLoadMoreTypePush];
-            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
-        } else {
-            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
-                                                                             loadMoreType:TSVShortVideoListLoadMoreTypeNone];
-            self.dataFetchManager.shouldShowNoMoreVideoToast = NO;
-            if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
-                self.dataFetchManager.tracerDic = paramObj.allParams[@"extraDic"];
-            };
-        }
+//        if (extraParams[HTSVideoListFetchManager]) {
+//            self.dataFetchManager = extraParams[HTSVideoListFetchManager];
+//        } else if ([params[@"load_more"] integerValue] == 1) {
+//            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
+//                                                                             loadMoreType:TSVShortVideoListLoadMoreTypePersonalHome];
+//            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
+//        } else if ([params[@"load_more"] integerValue] == 2) {
+//            self.dataFetchManager = [[TSVShortVideoCategoryFetchManager alloc] init];
+//        } else if ([params[@"load_more"] integerValue] == 3) {
+//            NSString *forumID = [params tt_stringValueForKey:@"forum_id"];
+//            NSString *topCursor = [params tt_stringValueForKey:@"top_cursor"];
+//            NSString *cursor = [params tt_stringValueForKey:@"cursor"];
+//            NSString *seq = [params tt_stringValueForKey:@"seq"];
+//            NSString *sortType = [params tt_stringValueForKey:@"sort_type"];
+//            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
+//                                                                                loadMoreType:TSVShortVideoListLoadMoreTypeActivity
+//                                                                             activityForumID:forumID
+//                                                                           activityTopCursor:topCursor
+//                                                                              activityCursor:cursor
+//                                                                                 activitySeq:seq
+//                                                                            activitySortType:sortType];
+//            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
+//        } else if ([params[@"load_more"] integerValue] == 4) {
+//            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
+//                                                                                loadMoreType:TSVShortVideoListLoadMoreTypeWeiTouTiao];
+//            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
+//        } else if ([params[@"load_more"] integerValue] == 5) {
+//            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
+//                                                                                loadMoreType:TSVShortVideoListLoadMoreTypePush];
+//            self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
+//        } else {
+//            self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
+//                                                                             loadMoreType:TSVShortVideoListLoadMoreTypeNone];
+//            self.dataFetchManager.shouldShowNoMoreVideoToast = NO;
+//            if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
+//                self.dataFetchManager.tracerDic = paramObj.allParams[@"extraDic"];
+//            };
+//        }
+        self.dataFetchManager = [[TSVShortVideoDetailFetchManager alloc] initWithGroupID:self.groupID
+                                                                         loadMoreType:TSVShortVideoListLoadMoreTypeNone];
+        self.dataFetchManager.shouldShowNoMoreVideoToast = NO;
+        if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
+            self.dataFetchManager.tracerDic = paramObj.allParams[@"extraDic"];
+        };
          self.dataFetchManager.isFromFollowVc = _pageParams[@"isFromFlollow"]?:NO;
         self.originalDataFetchManager = self.dataFetchManager;
         

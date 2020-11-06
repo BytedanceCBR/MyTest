@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TTVideoEngineNetClient.h"
+#import <TTVideoEngine/TTVideoEngineHeader.h>
 
 @interface TTVVideoNetClient : NSObject<TTVideoEngineNetClient>
 
