@@ -1489,7 +1489,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     dataModel.shareType = BDUGShareWebPage;
     
     NSArray *contentItemArray = @[
-        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeQQ)]
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)],
     ];
     
     FHShareContentModel *model = [[FHShareContentModel alloc] init];

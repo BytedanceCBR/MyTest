@@ -9,6 +9,9 @@
 #import <BDUGShareBaseContentItem.h>
 #import <BDUGWechatContentItem.h>
 #import <BDUGQQFriendContentItem.h>
+#import <BDUGQQZoneContentItem.h>
+#import <BDUGWechatTimelineContentItem.h>
+#import <BDUGCopyContentItem.h>
 #import <SSCommonLogic.h>
 @implementation FHShareManager
 
@@ -52,8 +55,17 @@
         case FHShareChannelTypeWeChat:
             item = [self createWechatItemWithModel:model];
             break;
-        case FHShareChannelTypeQQ:
+        case FHShareChannelTypeWeChatTimeline:
+            item = [self createWechatTimeLineItemWithModel:model];
+            break;
+        case FHShareChannelTypeQQFriend:
             item = [self createQQFriendItemWithModel:model];
+            break;
+        case FHShareChannelTypeQQZone:
+            item = [self createQQZoneItemWithModel:model];
+            break;
+        case FHShareChannelTypeCopyLink:
+            item = [self createCopyLinkItemWithModel:model];
             break;
         default:
             break;
@@ -68,10 +80,33 @@
     return item;
 }
 
+-(BDUGWechatTimelineContentItem *)createWechatTimeLineItemWithModel:(FHShareBaseModel *)model {
+    BDUGWechatTimelineContentItem *item = [[BDUGWechatTimelineContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage defaultShareType:model.shareType];
+    item.activityImageName = @"pyq_allshare";
+    item.contentTitle = @"朋友圈";
+    return item;
+}
+
+
 -(BDUGQQFriendContentItem *)createQQFriendItemWithModel:(FHShareBaseModel *)model {
     BDUGQQFriendContentItem *item = [[BDUGQQFriendContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage imageUrl:model.imageUrl shareTye:model.shareType];
     item.activityImageName = @"qq_allshare";
     item.contentTitle = @"QQ";
+    return item;
+}
+
+-(BDUGQQZoneContentItem *)createQQZoneItemWithModel:(FHShareBaseModel *)model {
+    BDUGQQZoneContentItem *item = [[BDUGQQZoneContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage imageUrl:model.imageUrl shareTye:model.shareType];
+    item.activityImageName = @"qqkj_allshare";
+    item.contentTitle = @"QQ空间";
+    return item;
+}
+
+-(BDUGCopyContentItem *)createCopyLinkItemWithModel:(FHShareBaseModel *)model {
+    BDUGCopyContentItem *item = [[BDUGCopyContentItem alloc] init];
+    item.webPageUrl = model.shareUrl;
+    item.activityImageName = @"copy_allshare";
+    item.contentTitle = @"复制链接";
     return item;
 }
 

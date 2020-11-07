@@ -12,7 +12,7 @@ typedef NS_ENUM(NSInteger, FHShareChannelType)
 {
     FHShareChannelTypeWeChat,
     FHShareChannelTypeWeChatTimeline,
-    FHShareChannelTypeQQ,
+    FHShareChannelTypeQQFriend,
     FHShareChannelTypeQQZone,
     FHShareChannelTypeCopyLink,
 };
