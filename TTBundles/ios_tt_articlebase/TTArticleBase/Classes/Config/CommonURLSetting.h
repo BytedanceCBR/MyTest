@@ -86,6 +86,7 @@ NSString * logBaseURL(void);
 + (NSString*)commentActionURLString;
 + (NSString*)favoriteActionURLString;
 + (NSString*)postMessageURLString;
++ (NSString*)postMessageURLStringV3;
 + (NSString*)userInfoURLString;
 + (NSString*)loginURLString;
 + (NSString*)logoutURLString;

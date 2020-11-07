@@ -112,6 +112,7 @@
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
     [extraDic setValue:self.groupID forKey:@"group_id"];
+    [extraDic setValue:self.topID forKey:@"top_id"];
     __weak typeof(self)wself = self;
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:YES isFirst:NO listCount:10 extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;

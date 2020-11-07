@@ -572,6 +572,18 @@ extern NSString * logBaseURL(void);
     return [NSString stringWithFormat:@"%@/score_task/v1/task/get_read_bonus/",[self baseURL]];
 }
 
+//小视频用户关注
++ (NSString *)shortVideoFollowURLString
+{
+    return [NSString stringWithFormat:@"%@/2/relation/follow/v2/",[self baseURL]];
+}
+
+//小视频取消关注
++ (NSString *)shortVideoUnfollowURLString
+{
+    return [NSString stringWithFormat:@"%@/2/relation/unfollow/",[self baseURL]];
+}
+
 #pragma mark -  use toutiao
 
 +(NSString *)baseURL

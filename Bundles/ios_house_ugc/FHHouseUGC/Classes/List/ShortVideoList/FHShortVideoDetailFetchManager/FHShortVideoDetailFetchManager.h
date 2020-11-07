@@ -18,6 +18,7 @@ typedef void(^DataDidChangeBlock)(void);
 @property (nonatomic, assign) NSUInteger currentIndex;
 @property (nonatomic, copy) NSString *categoryId;
 @property (nonatomic, copy) NSString *groupID;
+@property (nonnull, copy) NSString *topID;
 @property (nonatomic, copy) NSString *enterFrom;
 @property (nonatomic, strong) NSDictionary *tracerDic;
 @property (nonatomic, assign) BOOL hasMoreToLoad;//是否还能loadmore
