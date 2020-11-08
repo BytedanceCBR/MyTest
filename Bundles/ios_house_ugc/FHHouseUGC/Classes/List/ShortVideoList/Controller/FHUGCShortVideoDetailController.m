@@ -345,6 +345,14 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.videoReportOptions = [TTReportManager fetchReportVideoOptions];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    NSArray *viewControllers = self.navigationController.viewControllers;//获取当前的视图控制其
+    if (![viewControllers containsObject:self]) {
+        [self.videoContainerViewController videoOverTracer];
+    }
+}
+
 - (void)initProperty
 {
     _offset = 0;
@@ -709,10 +717,10 @@ static const CGFloat kFloatingViewOriginY = 230;
     });
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-}
+//- (void)viewDidDisappear:(BOOL)animated
+//{
+//    [super viewDidDisappear:animated];
+//}
 
 - (void)didMoveToParentViewController:(UIViewController *)parent
 {
