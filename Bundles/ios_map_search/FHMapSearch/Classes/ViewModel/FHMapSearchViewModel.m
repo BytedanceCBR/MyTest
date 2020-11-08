@@ -2846,6 +2846,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         param[UT_ENTER_FROM] = @"mapfind";
         TRACK_EVENT(@"subwayfind_view", param);
     }else{
+        param[@"tab_name"] = [self eventHouseType]?:@"be_null";
         [FHUserTracker writeEvent:@"mapfind_view" params:param];
     }
 }

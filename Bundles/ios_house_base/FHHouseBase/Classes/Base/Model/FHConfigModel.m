@@ -369,6 +369,7 @@
              @"opData": @"op_data",
              @"houseOpData2": @"house_op_data_2",
              @"rentOpData": @"rent_op_data",
+             @"courtOpData": @"court_op_data",
              @"mainPageBannerOpData": @"main_page_banner",
              @"houseListBanner": @"house_list_banner",
              @"houseOpData": @"house_op_data",
@@ -517,6 +518,7 @@ DICT_PROP_GET(FHConfigDataOpData2Model,mainPageTopOpData,@"main_page_top_op_data
 DICT_PROP_GET(FHConfigDataOpDataModel,opData,@"op_data")
 DICT_PROP_GET(FHConfigDataOpDataModel,houseOpData2,@"house_op_data_2")
 DICT_PROP_GET(FHConfigDataRentOpDataModel,rentOpData,@"rent_op_data")
+DICT_PROP_GET(FHConfigDataRentOpDataModel,courtOpData,@"court_op_data")
 DICT_PROP_GET(FHConfigDataMainPageBannerOpDataModel ,mainPageBannerOpData,@"main_page_banner")
 DICT_PROP_GET(FHConfigDataMainPageBannerOpDataModel ,houseListBanner,@"house_list_banner")
 DICT_PROP_GET(FHConfigDataOpData2Model ,houseOpData,@"house_op_data")
