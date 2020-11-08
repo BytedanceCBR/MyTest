@@ -22,24 +22,13 @@
 #import "TTVDemanderTrackerManager.h"
 #import "TTVPlayerTipAdFinished.h"
 #import "ExploreMovieView.h"
-#import "TTVPlayerTipAdNewCreator.h"
-//#import "TTRepostViewController.h"
-//#import "TTRepostOriginModels.h"
 #import "TTVFeedItem+TTVConvertToArticle.h"
 #import "JSONAdditions.h"
-//#import "TTShareToRepostManager.h"
 #import "TTVPlayerAudioController.h"
-#import "TTVCommodityViewMessage.h"
-
 #import "TTVPlayerTipShareCreater.h"
 #import "TTVPlayerTipRelatedCreator.h"
 #import "TTVPlayerCacheProgressController.h"
 #import "TTVAutoPlayManager.h"
-#import "TTVCommodityView.h"
-#import "TTVCommodityButtonView.h"
-#import "TTVCommodityFloatView.h"
-#import "TTVPasterPlayer.h"
-#import "AKAwardCoinVideoMonitorManager.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 
 extern NSString * const TTActivityContentItemTypeForwardWeitoutiao;
@@ -47,20 +36,20 @@ extern NSInteger ttvs_isVideoShowOptimizeShare(void);
 extern NSInteger ttvs_isVideoShowDirectShare(void);
 extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
-@interface TTVCellPlayMovie ()<TTVDemandPlayerDelegate,TTVPlayVideoDelegate ,TTVCommodityViewDelegate ,TTVCommodityViewMessage,TTVCommodityButtonViewDelegate>
+@interface TTVCellPlayMovie ()<TTVDemandPlayerDelegate,TTVPlayVideoDelegate>
 
 @property (nonatomic, strong) TTVFeedCellMoreActionManager *moreActionMananger;
-@property(nonatomic, copy)dispatch_block_t shareButtonClickedBlock;
+@property (nonatomic, copy) dispatch_block_t shareButtonClickedBlock;
 @property (nonatomic, assign) BOOL isActive;
 @property (nonatomic, assign) CGRect movieViewFrame;
-@property (nonatomic, strong) TTVCommodityView *commodityView;
+@property (nonatomic, strong) TTVPlayerModel *model;
+
 @end
 
 @implementation TTVCellPlayMovie
 @synthesize movieView = _movieView;
 - (void)dealloc
 {
-    UNREGISTER_MESSAGE(TTVCommodityViewMessage, self);
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -68,16 +57,10 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 {
     self = [super init];
     if (self) {
-        REGISTER_MESSAGE(TTVCommodityViewMessage, self);
         self.isActive = YES;
         [self addNotification];
     }
     return self;
-}
-
-- (void)setDoubleTap666Delegate:(id<TTVPlayerDoubleTap666Delegate>)doubleTap666Delegate {
-    _doubleTap666Delegate = doubleTap666Delegate;
-    self.movieView.player.doubleTap666Delegate = doubleTap666Delegate;
 }
 
 - (TTVVideoArticle *)article
@@ -95,42 +78,15 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     self.moreActionMananger.didClickActivityItemAndQueryProcess = ^BOOL(NSString *type) {
         @strongify(self);
         if ([type isEqualToString:TTActivityContentItemTypeForwardWeitoutiao]) {
-//            [self forwardToWeitoutiao];
             return YES;
         }
         return NO;
     };
-//    self.moreActionMananger.shareToRepostBlock = ^(TTActivityType type) {
-//        @strongify(self);
-//        [self shareToRepostWithActivityType:type];
-//    };
+    
     [self.moreActionMananger shareButtonOnMovieClickedWithModel:[TTVFeedCellMoreActionModel modelWithArticle:self.cellEntity.originData] activityAction:^(NSString *type) {
 
     }];
 }
-
-//- (void)forwardToWeitoutiao {
-//    //实际转发对象为文章，操作对象为文章
-//    [TTRepostViewController presentRepostToWeitoutiaoViewControllerWithRepostType:TTThreadRepostTypeArticle
-//                                                                    originArticle:[[TTRepostOriginArticle alloc] initWithArticle:self.cellEntity.originData.ttv_convertedArticle]
-//                                                                     originThread:nil
-//                                                                   originShortVideoOriginalData:nil
-//                                                                operationItemType:TTRepostOperationItemTypeArticle
-//                                                                  operationItemID:self.cellEntity.originData.itemID
-//                                                                   repostSegments:nil];
-//}
-
-//- (void)shareToRepostWithActivityType:(TTActivityType)activityType {
-//    [[TTShareToRepostManager sharedManager] shareToRepostWithActivityType:activityType
-//                                                               repostType:TTThreadRepostTypeArticle
-//                                                        operationItemType:TTRepostOperationItemTypeArticle
-//                                                          operationItemID:self.cellEntity.originData.itemID
-//                                                            originArticle:[[TTRepostOriginArticle alloc] initWithArticle:self.cellEntity.originData.ttv_convertedArticle]
-//                                                             originThread:nil
-//                                                           originShortVideoOriginalData:nil
-//                                                        originWendaAnswer:nil
-//                                                           repostSegments:nil];
-//}
 
 - (void)shareButtonClicked
 {
@@ -139,27 +95,18 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     }
 }
 
-- (NSString *)enterFrom
-{
-    if ([self.cellEntity.categoryId isEqualToString:kTTMainCategoryID]) {
-        return @"click_headline";
-    }else{
-        return @"click_category";
-    }
-    return nil;
+- (void)setCellEntity:(TTVFeedListItem *)cellEntity {
+    _cellEntity = cellEntity;
+    [self configurePlayerModel];
 }
 
-- (void)play
-{
-    [ExploreMovieView removeAllExploreMovieView];
-    SAFECALL_MESSAGE(TTVCommodityViewMessage, @selector(ttv_message_removeall_comodityview), ttv_message_removeall_comodityview);
-
+- (void)configurePlayerModel {
     TTVPlayerSP sp = (self.cellEntity.article.groupFlags & ArticleGroupFlagsDetailSP) > 0 ? TTVPlayerSPLeTV : TTVPlayerSPToutiao;
     TTVFeedItem *feedItem = self.cellEntity.originData;
     TTVVideoArticle *article = self.cellEntity.article;
     
     //TTVPlayerModel
-    TTVVideoPlayerModel *model = [[TTVVideoPlayerModel alloc] init];
+    TTVPlayerModel *model = [[TTVPlayerModel alloc] init];
     model.categoryID = self.cellEntity.categoryId;
     model.groupID = [NSString stringWithFormat:@"%lld",article.groupId];
     model.itemID = [NSString stringWithFormat:@"%lld",article.itemId];
@@ -168,14 +115,14 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     model.logExtra = article.logExtra;
     model.videoID = article.videoId;
     model.sp = sp;
-    model.enterFrom = [self enterFrom];
     model.categoryName = self.cellEntity.categoryId;
     model.authorId = article.userId;
     model.extraDic = self.cellEntity.extraDic;
+    model.enableCommonTracker = YES;
     
-    if (feedItem.isVideoSourceUGCVideo) {
-        model.defaultResolutionType = TTVPlayerResolutionTypeHD;
-    }
+//    if (feedItem.isVideoSourceUGCVideo) {
+//        model.defaultResolutionType = TTVPlayerResolutionTypeHD;
+//    }
     NSDictionary *dic = [feedItem.logPb tt_JSONValue];
     if ([dic isKindOfClass:[NSDictionary class]]) {
         model.logPb = dic;
@@ -183,54 +130,27 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     if (!isEmptyString(article.videoDetailInfo.videoSubjectId)) {
         model.videoSubjectID = article.videoDetailInfo.videoSubjectId;
     }
-    if (feedItem.isVideoSourceUGCVideo) {
-        model.defaultResolutionType = TTVPlayerResolutionTypeHD;
-    }
-    //只有有admodel才行,号外广告显示正常视频UI
-    if ([self.cellEntity.originData.adModel isCreativeAd]) {//广告
-        model.enablePasterAd = NO;
-    }else{//非广告使用贴片功能
-        model.enablePasterAd = YES;
-        model.pasterAdFrom = @"feed";
-    }
-//    BOOL isAutoPlaying = [feedItem couldAutoPlay];
-//    model.isAutoPlaying = isAutoPlaying;
-//    model.showMutedView = isAutoPlaying;
-//    if (isAutoPlaying) {
-//        //广告自动播放时每次从头播放
-//        [[TTVPlayerCacheProgressController sharedInstance] removeCacheForVideoID:article.videoId];
-//        model.mutedWhenStart = YES;
-//        if ([[feedItem rawAdData] tta_boolForKey:@"auto_replay"]) {
-//            model.isLoopPlay = YES;
-//            model.disableFinishUIShow = YES;
-//        }
+//    BOOL isVideoFeedURLEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"video_feed_url" defaultValue:@NO freeze:NO] boolValue];
+//    if (isVideoFeedURLEnabled && [self.cellEntity.originData hasVideoPlayInfoUrl] && [self.cellEntity.originData isVideoUrlValid]) {
+//        model.videoPlayInfo = self.cellEntity.originData.videoPlayInfo;
 //    }
-//    model.mutedWhenStart = self.cellEntity.mutedWhenStart;
-    
-    BOOL isVideoFeedURLEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"video_feed_url" defaultValue:@NO freeze:NO] boolValue];
-    if (isVideoFeedURLEnabled && [self.cellEntity.originData hasVideoPlayInfoUrl] && [self.cellEntity.originData isVideoUrlValid]) {
-        model.videoPlayInfo = self.cellEntity.originData.videoPlayInfo;
-    }
-    NSInteger isVideoShowOptimizeShare = ttvs_isVideoShowOptimizeShare();
-    if (isVideoShowOptimizeShare > 0){
-        if (isEmptyString(model.adID)) {
-            model.playerShowShareMore = isVideoShowOptimizeShare;
-        }
-    }
-    
+
+    _model = model;
+}
+
+- (void)readyToPlay {
+    TTVFeedItem *feedItem = self.cellEntity.originData;
+    TTVVideoArticle *article = self.cellEntity.article;
     //movieView
-    TTVPlayVideo *playVideo = [[TTVPlayVideo alloc] initWithFrame:self.logo.bounds playerModel:model];
+    TTVPlayVideo *playVideo = [[TTVPlayVideo alloc] initWithFrame:self.logo.bounds playerModel:self.model];
     playVideo.player.delegate = self;
-    playVideo.player.doubleTap666Delegate = self.doubleTap666Delegate;
     playVideo.delegate = self;
-    if ([self.cellEntity.originData.adModel isCreativeAd]) {//广告
-        playVideo.player.tipCreator = [[TTVPlayerTipAdNewCreator alloc] init];
-    }else{
-        NSInteger isVideoShowDirectShare = ttvs_isVideoShowDirectShare();
-        if ((isVideoShowDirectShare == 1 || isVideoShowDirectShare == 3) && isEmptyString(model.adID)){
-            playVideo.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
-        }
+
+    NSInteger isVideoShowDirectShare = ttvs_isVideoShowDirectShare();
+    if ((isVideoShowDirectShare == 1 || isVideoShowDirectShare == 3) && isEmptyString(self.model.adID)){
+        playVideo.player.tipCreator = [[TTVPlayerTipShareCreater alloc] init];
     }
+    
     playVideo.player.enableRotate = !self.cellEntity.forbidRotate;
     
     NSDictionary *videoLargeImageDict = feedItem.largeImageDict;
@@ -240,91 +160,36 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     [playVideo setVideoLargeImageDict:videoLargeImageDict];
     self.movieView = playVideo;
     [self.movieView.player readyToPlay];
-//    if (isAutoPlaying && self.cellEntity.article.adId.longLongValue > 0) {
-//        self.movieView.player.banLoading = YES;
-//        self.movieView.player.muted = [self.cellEntity.originData couldAutoPlay];
-//    }
     self.movieView.player.muted = self.cellEntity.muted;
     [self addUrlTrackerOnPlayer:playVideo];
     [self settingMovieView:self.movieView];
-    [self.movieView.player play];
+    
     if(!self.cellEntity.hideTitleAndWatchCount){
         [playVideo.player setVideoTitle:feedItem.title];
         [playVideo.player setVideoWatchCount:article.videoDetailInfo.videoWatchCount playText:@"次播放"];
     }
     self.logo.userInteractionEnabled = ![feedItem couldAutoPlay];
-    [self.logo addSubview:self.movieView];
-    if (![TTDeviceHelper isPadDevice]) {
-        playVideo.player.commodityFloatView.animationToView = self.cellEntity.moreButton;
-        playVideo.player.commodityFloatView.animationSuperView = self.cellEntity.cell;
-        [playVideo.player.commodityFloatView setCommoditys:self.cellEntity.originData.commoditys];
-        playVideo.player.commodityButton.delegate = self;
-    }
-
-    [self ttv_configADFinishedView:playVideo.player.tipCreator.tipFinishedView];
-    
-    [[AKAwardCoinVideoMonitorManager shareInstance] monitorVideoWith:playVideo];
 }
 
-- (void)addCommodity{
-    if ([TTDeviceHelper isPadDevice]) {
-        return;
-    }
-    if (self.movieView) {
-        [TTVPlayVideo removeExcept:self.movieView];
-    }else{
-        [TTVPlayVideo removeAll];
-    }
-    [self.commodityView ttv_removeFromSuperview];
-    SAFECALL_MESSAGE(TTVCommodityViewMessage, @selector(ttv_message_removeall_comodityview), ttv_message_removeall_comodityview);
-    TTVCommodityView *commodity = nil;
-    if (self.movieView.superview) {
-        commodity = [[TTVCommodityView alloc] initWithFrame:self.movieView.bounds];
-        commodity.playVideo = self.movieView;
-        [self.movieView.player setCommodityView:commodity];
-    }else{
-        commodity = [[TTVCommodityView alloc] initWithFrame:self.logo.bounds];
-        [self.logo addSubview:commodity];
-    }
-    if (self.movieView.superview && [self.movieView.player.context isFullScreen]) {
-        commodity.position = @"fullscreen";
-    }else{
-        commodity.position = @"list";
-    }
-    commodity.videoID = self.cellEntity.article.videoId;
-    commodity.groupID = @(self.cellEntity.article.groupId).stringValue;
-    commodity.delegate = self;
-    [commodity setCommoditys:self.cellEntity.originData.commoditys];
-    [commodity showCommodity];
-    self.commodityView = commodity;
-    [self commodityViewshowed];
-}
-
-- (void)removeCommodityView {
-    
-    if (self.commodityView.superview) {
-        
-        [self.commodityView ttv_removeFromSuperview];
-    }
-}
-
-- (void)commodityViewshowed
+- (void)play
 {
-    if ([self.delegate respondsToSelector:@selector(ttv_commodityViewShowed)]) {
-        [self.delegate ttv_commodityViewShowed];
+    if(!self.movieView || self.movieView.hidden){
+        [self readyToPlay];
     }
-}
 
-- (void)commodityViewClosed
-{
-    if ([self.delegate respondsToSelector:@selector(ttv_commodityViewClosed)]) {
-        [self.delegate ttv_commodityViewClosed];
+    if(self.movieView.superview && self.movieView.superview == self.logo){
+        self.movieView.hidden = NO;
+        if (!self.movieView.player.context.isFullScreen &&
+            !self.movieView.player.context.isRotating) {
+            if (self.movieView.player.context.playbackState != TTVVideoPlaybackStatePlaying) {
+                [self.movieView.player play];
+            }
+        }
+    }else{
+        [ExploreMovieView removeAllExceptExploreMovieView:self.movieView];
+        [self.logo addSubview:self.movieView];
+        [self.movieView.player play];
     }
-}
-
-- (void)ttv_clickCommodityButton
-{
-    [self addCommodity];
 }
 
 - (void)setVideoTitle:(NSString *)title
@@ -350,15 +215,6 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     urlTracker.videoThirdMonitorUrl = article.videoDetailInfo.videoThirdMonitorURL;
     urlTracker.playOverTrackUrls = adInfo.videoTrackURL.playoverTrackURLListArray;
     [playVideo.commonTracker registerTracker:urlTracker];
-}
-
-- (void)ttv_configADFinishedView:(TTVPlayerTipAdNewFinished *)finishedView
-{
-    if ([finishedView isKindOfClass:[TTVPlayerTipAdNewFinished class]]) {
-        if ([self.cellEntity.originData isKindOfClass:[TTVFeedItem class]]) {
-            [finishedView setData:[TTVMoviePlayerControlFinishAdEntity entityWithData:self.cellEntity.originData]];
-        }
-    }
 }
 
 #pragma mark TTVDemandPlayerDelegate
@@ -518,7 +374,6 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         _movieView = movieView;
         _movieView.player.delegate = self;
         _movieView.delegate = self;
-        _movieView.player.doubleTap666Delegate = self.doubleTap666Delegate;
         [self settingMovieView:movieView];
     }
 }
@@ -601,7 +456,11 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 - (void)stopAllMovieViewPlay:(NSNotification *)notification
 {
-    [self.commodityView closeCommodity];
+    NSDictionary *userInfo = notification.userInfo;
+    if(userInfo[@"video"] && userInfo[@"video"] == self.movieView){
+        return;
+    }
+    
     [self invalideMovieView];
     [[TTVAutoPlayManager sharedManager] resetForce];
     self.movieView = nil;
@@ -649,14 +508,10 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     UIView *movieView = self.movieView;
     self.movieView.player.delegate = nil;
     self.movieView.delegate = nil;
-    self.movieView.player.doubleTap666Delegate = nil;
-    
-    BOOL iOS9OrLater = kCFCoreFoundationVersionNumber >= kCFCoreFoundationVersionNumber_iOS_9_0;
-    if (iOS9OrLater) {
-        //ios8不移除，避免movieView被释放的问题
-        [self.movieView removeFromSuperview];
-    }
+
+    [self.movieView removeFromSuperview];
     self.movieView = nil;
+    
     return movieView;
 }
 
@@ -667,7 +522,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         self.movieView.player.bannerHeight = 0;
         self.movieView.player.delegate = self;
         self.movieView.delegate = self;
-        self.movieView.player.doubleTap666Delegate = self.doubleTap666Delegate;
+
         [self.logo addSubview:movieView];
         [self.logo bringSubviewToFront:movieView];
         movieView.frame = self.logo.bounds;
@@ -698,7 +553,6 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
 
 - (void)didEndDisplaying
 {
-    [self.commodityView closeCommodity];
     if (!self.movieView) {
         self.movieView = [self movieViewFromeLogo];
     }
@@ -731,15 +585,10 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     }
     
     if (context == TTCellDisappearTypeChangeCategory) {
-        [self.commodityView closeCommodity];
         if (self.movieView && self.movieView.superview) {
-            if (![self.movieView.player.pasterPlayer shouldPasterADPause] &&
-                isEmptyString(self.cellEntity.originData.adID) &&
-                !self.movieView.player.context.isCommodityViewShow) {
-                [self invalideMovieView];
-                if (!self.isActive) {
-                    [self.movieView removeFromSuperview];
-                }
+            [self invalideMovieView];
+            if (!self.isActive) {
+                [self.movieView removeFromSuperview];
             }
         }
     }else if(context == TTCellDisappearTypeGoDetail){
@@ -804,12 +653,6 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         return YES;
     }
     return NO;
-}
-
-#pragma mark TTVCommodityViewMessage
-- (void)ttv_message_removeall_comodityview
-{
-    [self.commodityView closeCommodity];
 }
 
 @end

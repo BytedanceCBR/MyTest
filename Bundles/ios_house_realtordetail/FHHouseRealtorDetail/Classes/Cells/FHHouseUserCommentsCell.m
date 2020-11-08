@@ -49,7 +49,6 @@
     if (self.currentData == data  || ![data isKindOfClass:[FHHouseRealtorUserCommentItemModel class]]) {
         return;
     }
-    self.currentData = data;
     [self updateModel:data];
 }
 - (LynxView *)infoView {
@@ -92,8 +91,8 @@
     _loadTime = [[NSDate date] timeIntervalSince1970];
     //        NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.248.194:30334/realtor_detail_header/template.js?1594963282405"]];
     if (templateData) {
-        if (templateData != self.currentTemData) {
-            self.currentTemData = templateData;
+        if (self.currentData != model) {
+            self.currentData = model;
             LynxTemplateData *data = [[LynxTemplateData alloc]initWithJson:lynxData];
             [self.infoView loadTemplate:templateData withURL:@"local" initData:data];
         }

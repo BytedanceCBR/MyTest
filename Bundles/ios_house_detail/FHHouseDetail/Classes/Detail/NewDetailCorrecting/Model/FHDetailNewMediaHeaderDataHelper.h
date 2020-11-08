@@ -23,7 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, readonly) FHDetailNewMediaHeaderDataHelperPhotoAlbumData *photoAlbumData;
 
 
+- (NSInteger) getPictureDetailIndexFromMediaHeaderIndex:(NSInteger)index;
 
+- (NSInteger) getMediaHeaderIndexFromPictureDetailIndex:(NSInteger)index;
 
 
 @property (nonatomic, strong) FHNewHouseDetailHeaderMediaModel *mediaHeaderModel;

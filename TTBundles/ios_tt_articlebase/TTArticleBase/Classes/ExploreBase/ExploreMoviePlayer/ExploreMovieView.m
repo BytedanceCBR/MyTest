@@ -46,7 +46,7 @@
 #import "TTMovieStore.h"
 #import "TTUIResponderHelper.h"
 #import "TTNetworkHelper.h"
-#import "TTHTTPDNSManager.h"
+//#import "TTHTTPDNSManager.h"
 #import "TTVPlayVideo.h"
 #import "TTVVideoRotateScreenWindow.h"
 #import "TTVAudioActiveCenter.h"
@@ -1272,12 +1272,13 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
         [_moviePlayerController moviePlayContentForURL:playURL];
     }
     @catch (NSException *exception) {
-        LOGD(@"moviePlayContentForURL: %@", exception);
+//        LOGD(@"moviePlayContentForURL: %@", exception);
+//        wrapperTrackEvent(@"video", @"play_url_exception");
         [BDTrackerProtocol event:@"video" label:@"play_url_exception"];
     }
 
     if (playURL == nil) {
-        LOGD(@"showRetryTipView");
+//        LOGD(@"showRetryTipView");
         [self showRetryTipView];
         [_moviePlayerController movieStop];
     }
@@ -1287,7 +1288,8 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
             [self userPlay];
         }
         @catch (NSException *exception) {
-            LOGD(@"playMovie: %@", exception);
+//            LOGD(@"playMovie: %@", exception);
+//            wrapperTrackEvent(@"video", @"play_movie_exception");
             [BDTrackerProtocol event:@"video" label:@"play_movie_exception"];
         }
     }
@@ -1314,12 +1316,12 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
     {
         self.hostName = playURL.host;
         if (playURL && !isEmptyString(self.hostName)) {
-            NSString *ipAddress = [[TTHTTPDNSManager shareInstance] resolveHost:playURL];
-            if (isEmptyString(ipAddress)) {
-                [self playUrlWithoutipAddress:playURL];
-            }else{
-                [self playUrl:playURL ipAddress:ipAddress];
-            }
+//            NSString *ipAddress = [[TTHTTPDNSManager shareInstance] resolveHost:playURL];
+//            if (isEmptyString(ipAddress)) {
+//                [self playUrlWithoutipAddress:playURL];
+//            }else{
+//                [self playUrl:playURL ipAddress:ipAddress];
+//            }
         }
     }
 
@@ -1344,7 +1346,7 @@ static __weak ExploreMovieView *currentFullScreenMovieView_ = nil;
 - (void)trackManagerExecuteWithOriginUrl:(NSURL *)playURL
 {
     if (playURL) {
-        LOGD(@"checkLoadingTimeout");
+//        LOGD(@"checkLoadingTimeout");
         [self performSelector:@selector(checkLoadingTimeout) withObject:nil afterDelay:[ExploreMovieManager videoPlayRetryInterval] inModes:@[NSRunLoopCommonModes]];
         [self.moviePlayerController.trackManager setMovieOriginVideoURL:playURL.absoluteString];
     }
@@ -2365,7 +2367,7 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
             [self.pasterADDelegate pasterADWillStart];
         }
 
-        LOGD(@"movieControllerShowedOneFrame");
+//        LOGD(@"movieControllerShowedOneFrame");
         [self playStart];
     }
 }
@@ -2440,7 +2442,7 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
 {
     if (movieController == _moviePlayerController) {
         self.videoDidPlayable = YES;
-        LOGD(@"movieControllerMoviePlayable");
+//        LOGD(@"movieControllerMoviePlayable");、
         if (!self.willPlayableBlock) {
             [_moviePlayerController hideLoadingTipView];
         }
@@ -2872,6 +2874,17 @@ ResolutionButtonClickedWithType:(ExploreVideoDefinitionType)type
     //点击了别的视频，当前的view被remove掉
     [TTMovieViewCacheManager sharedInstance].currentPlayingVideoID = @"";
     [[NSNotificationCenter defaultCenter] postNotificationName:kExploreNeedStopAllMovieViewPlaybackNotification object:nil];
+}
+
++ (void)removeAllExceptExploreMovieView:(UIView<TTMovieStoreAction> *)video {
+    [ExploreMovieView setCurrentVideoPlaying:NO];
+    
+    [TTVPlayVideo removeExcept:video];
+    //点击了别的视频，当前的view被remove掉
+    [TTMovieViewCacheManager sharedInstance].currentPlayingVideoID = @"";
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    userInfo[@"video"] = video;
+    [[NSNotificationCenter defaultCenter] postNotificationName:kExploreNeedStopAllMovieViewPlaybackNotification object:nil userInfo:userInfo];
 }
 
 + (void)stopAllExploreMovieView

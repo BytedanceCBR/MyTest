@@ -10,10 +10,9 @@
 #import "AWEVideoPlayNetworkManager.h"
 #import "AWEUserModel.h"
 #import "TSVMonitorManager.h"
+#import "FHURLSettings.h"
 
 extern NSString * const TTFollowSuccessForPushGuideNotification;
-
-static NSString * const TT_DOMAIN = @"https://is.haoduofangs.com";
 
 @implementation AWEVideoUserInfoManager
 
@@ -23,8 +22,7 @@ static NSString * const TT_DOMAIN = @"https://is.haoduofangs.com";
         return;
     }
 
-    NSString *url = [NSString stringWithFormat:@"%@/2/relation/follow/v2/", TT_DOMAIN];
-    //https://docs.google.com/a/bytedance.com/spreadsheets/d/1v7vKLnFrO62E1sPbnp1szczfsnpIl3bxg97LaAKmvxc/edit?usp=sharing
+    NSString *url = [FHURLSettings shortVideoFollowURLString];
     NSDictionary *params = @{
                             @"user_id" : userId,
                             @"new_reason" : @61,
@@ -51,7 +49,7 @@ static NSString * const TT_DOMAIN = @"https://is.haoduofangs.com";
         return;
     }
     
-    NSString *url = [NSString stringWithFormat:@"%@/2/relation/unfollow/", TT_DOMAIN];
+    NSString *url = [FHURLSettings shortVideoUnfollowURLString];
     NSDictionary *params = @{
                                     @"user_id" : userId
                                  };

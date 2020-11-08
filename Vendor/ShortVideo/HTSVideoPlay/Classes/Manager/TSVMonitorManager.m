@@ -9,9 +9,9 @@
 #import "TTMonitor.h"
 #import "TTShortVideoModel.h"
 #import "AWEVideoConstants.h"
-#import "IESVideoPlayerDefine.h"
+//#import "IESVideoPlayerDefine.h"
 #import "TTMemoryUsageMonitorRecorder.h"
-#import "IESVideoPlayer.h"
+//#import "IESVideoPlayer.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTNetworkHelper.h"
 #import "FHFeedUGCCellModel.h"
@@ -28,14 +28,14 @@
 
 @end
 
-NS_INLINE NSString *IESVideoPlayerTypeStr()
-{
-    if (IESVideoPlayerTypeSpecify == IESVideoPlayerTypeSystem) {
-        return @"Sys";
-    } else {
-        return @"Own";
-    }
-}
+//NS_INLINE NSString *IESVideoPlayerTypeStr()
+//{
+//    if (IESVideoPlayerTypeSpecify == IESVideoPlayerTypeSystem) {
+//        return @"Sys";
+//    } else {
+//        return @"Own";
+//    }
+//}
 
 @implementation TSVMonitorManager
 
@@ -140,19 +140,19 @@ NS_INLINE NSString *IESVideoPlayerTypeStr()
 
 - (void)trackVideoPlayStatus:(TSVMonitorVideoPlayStatus)status model:(FHFeedUGCCellModel *)model error:(NSError *)error
 {
-    NSMutableDictionary *mutDict = [NSMutableDictionary dictionary];
-    
-    [mutDict setValue:@(status) forKey:@"status"];
-    [mutDict setValue:IESVideoPlayerTypeStr() forKey:@"player_type"];
-    
-    if (status == TSVMonitorVideoPlayFailed) {
-        [mutDict setValue:@(error.code) forKey:@"err_code"];
-        [mutDict setValue:error.localizedDescription forKey:@"err_des"];
-        [mutDict setValue:model.groupId forKey:@"mediaId"];
-        [mutDict setValue:model.video.playAddr.uri forKey:@"videoUri"];
-    }
-    
-    [[TTMonitor shareManager] trackService:@"tsv_media_service" value:[mutDict copy] extra:nil];
+//    NSMutableDictionary *mutDict = [NSMutableDictionary dictionary];
+//    
+//    [mutDict setValue:@(status) forKey:@"status"];
+//    [mutDict setValue:IESVideoPlayerTypeStr() forKey:@"player_type"];
+//    
+//    if (status == TSVMonitorVideoPlayFailed) {
+//        [mutDict setValue:@(error.code) forKey:@"err_code"];
+//        [mutDict setValue:error.localizedDescription forKey:@"err_des"];
+//        [mutDict setValue:model.groupId forKey:@"mediaId"];
+//        [mutDict setValue:model.video.playAddr.uri forKey:@"videoUri"];
+//    }
+//    
+//    [[TTMonitor shareManager] trackService:@"tsv_media_service" value:[mutDict copy] extra:nil];
 }
 
 - (void)didEnterShortVideoTab
@@ -290,21 +290,21 @@ NS_INLINE NSString *IESVideoPlayerTypeStr()
 
 - (void)sendDiskUsage
 {
-    id<IESVideoCacheProtocol> shortVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeSpecify];
-    
-    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-    }];
-    
-    if (bgTask == UIBackgroundTaskInvalid) {
-        return;
-    }
-    
-    [shortVideoCache getCacheSizeWithCompletion:^(CGFloat shortVideoCacheSize) {
-        [[TTMonitor shareManager] trackService:@"tsv_disk_usage" value:@(shortVideoCacheSize) extra:nil];
-        
-        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
-    }];
+//    id<IESVideoCacheProtocol> shortVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeSpecify];
+//
+//    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+//        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+//    }];
+//
+//    if (bgTask == UIBackgroundTaskInvalid) {
+//        return;
+//    }
+//
+//    [shortVideoCache getCacheSizeWithCompletion:^(CGFloat shortVideoCacheSize) {
+//        [[TTMonitor shareManager] trackService:@"tsv_disk_usage" value:@(shortVideoCacheSize) extra:nil];
+//
+//        [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+//    }];
 }
 
 #pragma mark - Property

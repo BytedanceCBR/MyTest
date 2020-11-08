@@ -144,9 +144,6 @@
     [self setupViewModel];
     self.isViewDidDisapper = NO;
     [self startLoadData];
-    if (!self.isDisableGoDetail) {
-        [self.viewModel addGoDetailLog];
-    }
     // Push推送过来的状态栏修改
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -235,7 +232,6 @@
         [weakSelf.navigationController popViewControllerAnimated:YES];
     };
     [self.view addSubview:_navBar];
-    self.viewModel.navBar = _navBar;
 
     self.bottomMaskView = [[UIView alloc] init];
     self.bottomMaskView.backgroundColor = [UIColor whiteColor];
@@ -245,7 +241,7 @@
     self.bottomBar = [[FHOldDetailBottomBarView alloc] initWithFrame:CGRectZero];
 
     [self.view addSubview:_bottomBar];
-    self.viewModel.bottomBar = _bottomBar;
+    
     _bottomBar.hidden = YES;
 
     self.bottomGroupChatBtn = [[FHDetailUGCGroupChatButton alloc] initWithFrame:CGRectZero];
@@ -261,14 +257,6 @@
     _bottomStatusBar.textColor = [UIColor whiteColor];
     _bottomStatusBar.hidden = YES;
     [self.view addSubview:_bottomStatusBar];
-    self.viewModel.bottomStatusBar = _bottomStatusBar;
-
-    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
-    self.viewModel.contactViewModel.searchId = self.searchId;
-    self.viewModel.contactViewModel.imprId = self.imprId;
-    self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
-    self.viewModel.contactViewModel.belongsVC = self;
-    self.viewModel.contactViewModel.houseInfoOriginBizTrace = self.bizTrace;
 
     [self addDefaultEmptyViewFullScreen];
 
@@ -334,8 +322,23 @@
     self.viewModel.extraInfo = self.extraInfo;
     self.viewModel.initTimeInterval = self.initTimeInterval;
     self.viewModel.houseType = self.houseType;
+    
+    self.viewModel.navBar = _navBar;
+    self.viewModel.bottomBar = _bottomBar;
+    self.viewModel.bottomStatusBar = _bottomStatusBar;
+    
+    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
+    self.viewModel.contactViewModel.searchId = self.searchId;
+    self.viewModel.contactViewModel.imprId = self.imprId;
+    self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
+    self.viewModel.contactViewModel.belongsVC = self;
+    self.viewModel.contactViewModel.houseInfoOriginBizTrace = self.bizTrace;
+    
     if (self.tracerDict[@"event_tracking_id"] && [self.tracerDict[@"event_tracking_id"] isKindOfClass:[NSString class]]) {
         self.viewModel.trackingId = self.tracerDict[@"event_tracking_id"];
+    }
+    if (!self.isDisableGoDetail) {
+        [self.viewModel addGoDetailLog];
     }
     __weak typeof(self) weakSelf = self;
     [self.viewModel setUpdateLayout:^{

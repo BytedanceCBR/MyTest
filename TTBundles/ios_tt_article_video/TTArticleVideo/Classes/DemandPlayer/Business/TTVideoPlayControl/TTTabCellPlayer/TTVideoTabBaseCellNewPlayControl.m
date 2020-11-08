@@ -134,8 +134,8 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         }
     }
 
-    self.movieView.player.commodityFloatView.animationToView = self.actionBar.moreButton;
-    self.movieView.player.commodityFloatView.animationSuperView = self.actionBar.superview;
+//    self.movieView.player.commodityFloatView.animationToView = self.actionBar.moreButton;
+//    self.movieView.player.commodityFloatView.animationSuperView = self.actionBar.superview;
     self.movieView.player.delegate = self;
     self.movieView.delegate = self;
     self.movieView.player.enableRotate = ![self.orderedData.article showPortrait];
@@ -171,7 +171,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
     if (self.movieView.superview) {
         commodity = [[TTVCommodityView alloc] initWithFrame:self.movieView.bounds];
         commodity.playVideo = self.movieView;
-        [self.movieView.player setCommodityView:commodity];
+//        [self.movieView.player setCommodityView:commodity];
     }else{
         commodity = [[TTVCommodityView alloc] initWithFrame:self.logo.bounds];
         [self.logo addSubview:commodity];
@@ -533,7 +533,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         [self.commodityView closeCommodity];
     }
     if (self.movieView && self.movieView.superview) {
-        if (![self.movieView.player.pasterPlayer shouldPasterADPause] && ![self.orderedData isAd]) {
+//        if (![self.movieView.player.pasterPlayer shouldPasterADPause] && ![self.orderedData isAd]) {
             UIViewController *controller = [TTUIResponderHelper correctTopViewControllerFor:self.movieView];
             if (controller) {
                 self.presentedViewController = controller;
@@ -545,7 +545,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
                     [self.movieView removeFromSuperview];
                 }
             }
-        }
+//        }
     }
 }
 

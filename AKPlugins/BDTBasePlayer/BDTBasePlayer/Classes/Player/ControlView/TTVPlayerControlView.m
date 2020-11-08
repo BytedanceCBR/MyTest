@@ -80,7 +80,6 @@ static const CGFloat kBottomBarHeight = 80;
 @property(nonatomic, strong)NSTimer *playbackControlViewTimer;
 @property(nonatomic, strong)TTVResolutionSelect *resolutionSelect;
 //@property(nonatomic, strong ,readonly)UIView <TTVPlayerControlBottomView, TTVPlayerContext> *bottomBarView;
-@property(nonatomic, strong)ExploreMovieMiniSliderView * miniSlider;
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 @property (nonatomic, strong) UITapGestureRecognizer *dummySingleTap;
 @property (nonatomic, strong) UITapGestureRecognizer *doubleTap;
@@ -242,6 +241,7 @@ static const CGFloat kBottomBarHeight = 80;
     //调节亮度相关
     _brightnessView = [[TTMovieBrightnessView alloc] initWithFrame:CGRectMake(0, 0, 155, 155)];
     _brightnessView.hidden = YES;
+    [self addSubview:_brightnessView];
 
     _adjustView = [[TTMovieAdjustView alloc] initWithFrame:CGRectMake(0, 0, 155, [TTMovieAdjustView heightWithMode:TTMovieAdjustViewModeFullScreen])];
     _adjustView.hidden = YES;
@@ -557,6 +557,7 @@ static const CGFloat kBottomBarHeight = 80;
     if (gesture.state == UIGestureRecognizerStateRecognized && canTouch) {
         [self bgButtonClicked];
         _adjustView.hidden = YES;
+        _brightnessView.hidden = YES;
         _gestureType = ExploreMoviePlayerControlViewGestureTypeNone;
         [self.resolutionSelect hidden];
         [self.playerStateStore sendAction:TTVPlayerEventTypeControlViewClickScreen payload:nil];
@@ -773,22 +774,19 @@ static const CGFloat kBottomBarHeight = 80;
     }else{
         _panGesture.enabled = NO;
     }
-    if (isFullScreen) {
-        [_brightnessView removeFromSuperview];
-        [self addSubview:_brightnessView];
-    } else {
-        [_brightnessView removeFromSuperview];
-        UIView *view = nil;
-        if ([TTDeviceHelper OSVersionNumber] < 8.f) {
-            view = [[[UIApplication sharedApplication] delegate] window];
-        } else {
-            view = [UIApplication sharedApplication].keyWindow;
-        }
-        [view addSubview:_brightnessView];
-        if ([TTDeviceHelper OSVersionNumber] < 8.f && [TTDeviceHelper isPadDevice]) {
-            _brightnessView.transform = [_brightnessView currentTransformInIOS7IPad];
-        }
-    }
+//    if (isFullScreen) {
+//        [_brightnessView removeFromSuperview];
+//        [self addSubview:_brightnessView];
+//    } else {
+//        [_brightnessView removeFromSuperview];
+//        UIView *view = nil;
+//        if ([TTDeviceHelper OSVersionNumber] < 8.f) {
+//            view = [[[UIApplication sharedApplication] delegate] window];
+//        } else {
+//            view = [UIApplication sharedApplication].keyWindow;
+//        }
+//        [view addSubview:_brightnessView];
+//    }
     _adjustView.mode = TTMovieAdjustViewModeFullScreen;
     _gestureType = ExploreMoviePlayerControlViewGestureTypeNone;
     [self setPlaybuttonIsPlaying:[self isPlaying]];
@@ -853,13 +851,16 @@ static const CGFloat kBottomBarHeight = 80;
     _adjustView.centerX = self.width / 2;
     _adjustView.centerY = self.height / 2;
     //亮度布局
-    if ([_brightnessView isIOS7IPad]) {
-        _brightnessView.center = [_brightnessView currentCenterInIOS7IPad];
-    } else {
-        _brightnessView.centerX = _brightnessView.superview.width / 2;
-        CGFloat diff = [self isFullScreen] ? 0 : 5;
-        _brightnessView.centerY = _brightnessView.superview.height / 2 - diff;
-    }
+//    if ([_brightnessView isIOS7IPad]) {
+//        _brightnessView.center = [_brightnessView currentCenterInIOS7IPad];
+//    } else {
+//    CGFloat width = self.width > self.height ? self.width : self.height;
+//    CGFloat height = self.width > self.height ? self.height : self.width;
+//        _brightnessView.centerX = height / 2;
+//        _brightnessView.centerY = width / 2;
+//    }
+    _brightnessView.centerX = self.width / 2;
+    _brightnessView.centerY = self.height / 2;
 }
 
 

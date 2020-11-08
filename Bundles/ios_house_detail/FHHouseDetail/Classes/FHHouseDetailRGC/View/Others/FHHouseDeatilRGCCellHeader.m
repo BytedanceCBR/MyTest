@@ -187,8 +187,14 @@
             make.width.mas_offset(0);
         }];
     }
-    if (cellModel.desc) {
-        self.infoLab.text =  cellModel.desc.string;
+//    if (cellModel.desc) {
+//        self.infoLab.text =  cellModel.desc.string;
+//    }else {
+//        self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];
+//    }
+    
+    if (cellModel.realtor.desc) {
+        self.infoLab.text = [NSString stringWithFormat:@"%@ %@",cellModel.realtor.desc,cellModel.createTime]; ;
     }else {
         self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];
     }

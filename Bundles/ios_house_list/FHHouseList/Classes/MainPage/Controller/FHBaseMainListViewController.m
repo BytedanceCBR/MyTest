@@ -19,6 +19,7 @@
 #import "FHMainOldTopView.h"
 #import "FHMainRentTopView.h"
 #import "FHMainListTableView.h"
+#import "FHHouseNewTopContainer.h"
 
 #define TOP_HOR_PADDING 3
 
@@ -55,6 +56,8 @@
             NSString *host = paramObj.sourceURL.host;
             if ([host hasPrefix:@"rent"]) {
                 _houseType = FHHouseTypeRentHouse;
+            } else if ([host isEqualToString:@"new_house_main"]) {
+                _houseType = FHHouseTypeNewHouse;
             }
         }
         
@@ -150,10 +153,11 @@
     [self.view addSubview:_containerView];
     [self.view addSubview:_topContainerView];
     
-    _viewModel = [[FHBaseMainListViewModel alloc] initWithTableView:self.tableView houseType:_houseType routeParam:self.paramObj];
+    _viewModel = [[FHBaseMainListViewModel alloc] initWithTableView:self.tableView houseType:_houseType routeParam:self.paramObj viewController:self];
     
     [_viewModel addNotiWithNaviBar:self.navbar];
     _topView = [[FHMainListTopView alloc] initWithBannerView:self.viewModel.topBannerView filterView:self.viewModel.filterPanel filterTagsView:self.viewModel.topTagsView];
+    [_topView showFilterCorner:NO];
     UIEdgeInsets insets = self.tableView.contentInset;
     insets.top = CGRectGetHeight(_topView.bounds);
     self.tableView.contentInset = insets;
@@ -299,6 +303,8 @@
             alpha = (offsetY - notiBarHeight) / offset;
         }
         bgColor = [UIColor themeGray8];
+    }else if ([self.viewModel.topBannerView isKindOfClass:[FHHouseNewTopContainer class]]) {
+        //TOOD: 修改alpha值
     }
     [self.navbar refreshAlpha:alpha];
     self.navbar.backgroundColor = bgColor;

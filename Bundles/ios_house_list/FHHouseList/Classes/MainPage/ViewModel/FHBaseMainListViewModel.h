@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , strong) NSString * realHouseQuery;
 @property(nonatomic , assign) BOOL animateShowNotify;
 
--(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj;
+-(instancetype)initWithTableView:(UITableView *)tableView houseType:(FHHouseType)houseType  routeParam:(TTRouteParamObj *)paramObj viewController:(FHBaseMainListViewController *)viewController;
 
 -(void)requestData:(BOOL)isHead;
 

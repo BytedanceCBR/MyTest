@@ -200,6 +200,10 @@ static CommonURLSetting *_sharedInstance = nil;
     
 //    NSArray *requestDomainURLs = @[@"https://dm.toutiao.com/get_domains/v4/", @"https://dm.bytedance.com/get_domains/v4/", @"https://dm.pstatp.com/get_domains/v4/"];
     NSArray *requestDomainURLs = @[@"https://dm.haoduofangs.com/get_domains/v4/"];
+//    NSArray *requestDomainURLs = @[
+//        [NSString stringWithFormat:@"https://%@/get_domains/v4/",[TTNetworkManager shareInstance].ServerConfigHostFirst],
+//        [NSString stringWithFormat:@"https://%@/get_domains/v4/",[TTNetworkManager shareInstance].ServerConfigHostSecond],
+//        [NSString stringWithFormat:@"https://%@/get_domains/v4/",[TTNetworkManager shareInstance].ServerConfigHostThird]];
 
     if (_repeatCount < [requestDomainURLs count]) {
         NSString *tURL = [requestDomainURLs objectAtIndex:_repeatCount];
@@ -257,64 +261,64 @@ static CommonURLSetting *_sharedInstance = nil;
     }
 }
 
-- (void)refactorRequestURLDomains {
-    
-//    NSArray *requestDomainURLs = @[@"https://dm.toutiao.com/get_domains/v4/", @"https://dm.bytedance.com/get_domains/v4/", @"https://dm.pstatp.com/get_domains/v4/"];
-        NSArray *requestDomainURLs = @[@"https://dm.haoduofangs.com/get_domains/v4/"];
-
-    if (_repeatCount < [requestDomainURLs count]) {
-        NSString *tURL = [requestDomainURLs objectAtIndex:_repeatCount];
-        
-        NSDictionary *commonParam = [TTNetworkUtilities commonURLParameters];
-        
-        NSMutableDictionary *mutParams = [NSMutableDictionary dictionaryWithDictionary:commonParam];
-        
-#ifndef TTModule
-        [mutParams setValue:[TTLocationManager sharedManager].city forKey:@"city"];
-        
-        //#warning test code
-        //        [mutParams setObject:[NSNumber numberWithInt:1] forKey:@"force"];
-        
-        CLLocationCoordinate2D coordinate = [TTLocationManager sharedManager].placemarkItem.coordinate;
-        if (coordinate.latitude * coordinate.longitude > 0) {
-            [mutParams setObject:@(coordinate.latitude) forKey:@"latitude"];
-            [mutParams setObject:@(coordinate.longitude) forKey:@"longitude"];
-        }
-#endif
-        [self.task cancel];
-        
-        NSString *getUrl = [TTNetworkUtil URLString:tURL appendCommonParams:mutParams];
-        
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:getUrl] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
-        [request setHTTPMethod:@"GET"];
-        
-        __weak typeof(self) wself = self;
-        
-        NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-            
-            if (!error && data) {
-                
-                NSError *jsonError = nil;
-                id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-                
-                [wself refactorHandleResult:(NSDictionary *)jsonDict error:jsonError];
-            } else {
-                [wself refactorRequestURLDomains];
-            }
-            
-        }];
-        
-        [task resume];
-        
-        self.task = task;
-        
-        _repeatCount ++;
-    }
-    else {
-        _repeatCount = 0;
-        [[TTMonitor shareManager] trackService:@"get_domain_error" status:1 extra:nil];
-    }
-}
+//- (void)refactorRequestURLDomains {
+//
+////    NSArray *requestDomainURLs = @[@"https://dm.toutiao.com/get_domains/v4/", @"https://dm.bytedance.com/get_domains/v4/", @"https://dm.pstatp.com/get_domains/v4/"];
+//        NSArray *requestDomainURLs = @[@"https://dm.haoduofangs.com/get_domains/v4/"];
+//
+//    if (_repeatCount < [requestDomainURLs count]) {
+//        NSString *tURL = [requestDomainURLs objectAtIndex:_repeatCount];
+//
+//        NSDictionary *commonParam = [TTNetworkUtilities commonURLParameters];
+//
+//        NSMutableDictionary *mutParams = [NSMutableDictionary dictionaryWithDictionary:commonParam];
+//
+//#ifndef TTModule
+//        [mutParams setValue:[TTLocationManager sharedManager].city forKey:@"city"];
+//
+//        //#warning test code
+//        //        [mutParams setObject:[NSNumber numberWithInt:1] forKey:@"force"];
+//
+//        CLLocationCoordinate2D coordinate = [TTLocationManager sharedManager].placemarkItem.coordinate;
+//        if (coordinate.latitude * coordinate.longitude > 0) {
+//            [mutParams setObject:@(coordinate.latitude) forKey:@"latitude"];
+//            [mutParams setObject:@(coordinate.longitude) forKey:@"longitude"];
+//        }
+//#endif
+//        [self.task cancel];
+//
+//        NSString *getUrl = [TTNetworkUtil URLString:tURL appendCommonParams:mutParams];
+//
+//        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:getUrl] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:10];
+//        [request setHTTPMethod:@"GET"];
+//
+//        __weak typeof(self) wself = self;
+//
+//        NSURLSessionTask *task = [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+//
+//            if (!error && data) {
+//
+//                NSError *jsonError = nil;
+//                id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+//
+//                [wself refactorHandleResult:(NSDictionary *)jsonDict error:jsonError];
+//            } else {
+//                [wself refactorRequestURLDomains];
+//            }
+//
+//        }];
+//
+//        [task resume];
+//
+//        self.task = task;
+//
+//        _repeatCount ++;
+//    }
+//    else {
+//        _repeatCount = 0;
+//        [[TTMonitor shareManager] trackService:@"get_domain_error" status:1 extra:nil];
+//    }
+//}
 
 
 - (void)handleResult_:(NSDictionary *)result error:(NSError *)error
@@ -440,117 +444,117 @@ static CommonURLSetting *_sharedInstance = nil;
     }
 }
 
-- (void)refactorHandleResult:(NSDictionary *)jsonObj error:(NSError *)error {
-    TTGetDomainsResponseModel *responseModel = nil;
-    NSError *parseError;
-    
-    if([jsonObj isKindOfClass:[NSDictionary class]]) {
-        responseModel = [[TTGetDomainsResponseModel alloc] initWithDictionary:jsonObj error:&parseError];
-    }
-    
-    if (!error && !parseError && responseModel && [responseModel.message isEqualToString:@"success"]) {
-        _repeatCount = 0;
-        NSDictionary *mapping = responseModel.data.mapping;
-        if (mapping && [mapping isKindOfClass:[NSDictionary class]]) {
-            
-            NSMutableDictionary *tDomains = [NSMutableDictionary dictionaryWithDictionary:baseURLDomains()];
-            BOOL needUpdate = NO;
-            
-            if ([mapping.allKeys containsObject:kNormalBaseURLDomainKey]) {
-                
-                NSString *tDomain = [mapping objectForKey:kNormalBaseURLDomainKey];
-                if (![tDomain isEqualToString:baseURLDomainForKey(kNormalBaseURLDomainKey)]) {
-                    [tDomains setObject:tDomain forKey:kNormalBaseURLDomainKey];
-                    needUpdate = YES;
-                }
-                [ExploreExtenstionDataHelper saveSharedBaseURLDomain:[tDomain copy]];
-            }
-            
-            if ([mapping.allKeys containsObject:kSecurityBaseURLDomainKey]) {
-                
-                NSString *tDomain = [mapping objectForKey:kSecurityBaseURLDomainKey];
-                if (![tDomain isEqualToString:baseURLDomainForKey(kSecurityBaseURLDomainKey)]) {
-                    [tDomains setObject:tDomain forKey:kSecurityBaseURLDomainKey];
-                    needUpdate = YES;
-                }
-                [ExploreExtenstionDataHelper saveSharedBaseURLDomain:[tDomain copy]];
-            }
-            
-            if ([mapping.allKeys containsObject:kChannelBaseURLDomainKey]) {
-                
-                NSString *tDomain = [mapping objectForKey:kChannelBaseURLDomainKey];
-                if (![tDomain isEqualToString:baseURLDomainForKey(kChannelBaseURLDomainKey)]) {
-                    [tDomains setObject:tDomain forKey:kChannelBaseURLDomainKey];
-                    needUpdate = YES;
-                }
-            }
-            
-            if ([mapping.allKeys containsObject:kSNSBaseURLDomainKey]) {
-                
-                NSString *tDomain = [mapping objectForKey:kSNSBaseURLDomainKey];
-                if (![tDomain isEqualToString:baseURLDomainForKey(kSNSBaseURLDomainKey)]) {
-                    [tDomains setObject:tDomain forKey:kSNSBaseURLDomainKey];
-                    needUpdate = YES;
-                }
-            }
-            
-            if ([mapping.allKeys containsObject:kLogBaseURLDomainKey]) {
-                
-                NSString *tDomain = [mapping objectForKey:kLogBaseURLDomainKey];
-                if (![tDomain isEqualToString:baseURLDomainForKey(kLogBaseURLDomainKey)]) {
-                    [tDomains setObject:tDomain forKey:kLogBaseURLDomainKey];
-                    needUpdate = YES;
-                }
-            }
-            
-            if ([mapping.allKeys containsObject:kAppMonitorBaseURLDomainKey]) {
-                
-                NSString *tDomain = [mapping objectForKey:kAppMonitorBaseURLDomainKey];
-                if (![tDomain isEqualToString:baseURLDomainForKey(kAppMonitorBaseURLDomainKey)]) {
-                    [tDomains setObject:tDomain forKey:kAppMonitorBaseURLDomainKey];
-                    needUpdate = YES;
-                }
-            }
-            
-            if (needUpdate) {
-                setBaseURLDomains([tDomains copy]);
-            }
-        }
-        
-        //处理开关
-        if (responseModel.data.useDNSMapping) {
-            [SSCommonLogic setEnabledDNSMapping:[responseModel.data.useDNSMapping integerValue]];
-        }
-        if (responseModel.data.disableEncryptAppLog) {
-            [SSCommonLogic setUseEncrypt:![responseModel.data.disableEncryptAppLog boolValue]];
-        }
-        
-        if (responseModel.data.useMonitorLog) {
-            [SSCommonLogic setMonitorLog:[responseModel.data.useMonitorLog boolValue]];
-        }
-        
-        if (responseModel.data.shouldCheckLog) {
-            [SSCommonLogic setCheckLog:[responseModel.data.shouldCheckLog boolValue]];
-        }
-        
-        //处理dns mapping
-        NSArray *dns_mapping = responseModel.data.DNSMapping;
-        if (dns_mapping && [dns_mapping isKindOfClass:[NSArray class]]) {
-            [DNSManager setDNSMapping:dns_mapping];
-        }
-        //读取长连接配置
-        // [[TTLCSServerConfig sharedTTLCSServerConfig] updateURLsWithResponseModel:responseModel];
-        [[TTLCSServerConfig sharedInstance] resetServerConfigUrls:responseModel.data.frontierURLs];
-        
-        //读取选路配置
-        [[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig] updateServerConfigWithResponseModel:responseModel];
-        
-    }
-    else {
-        // retry
-        [self refactorRequestURLDomains];
-    }
-}
+//- (void)refactorHandleResult:(NSDictionary *)jsonObj error:(NSError *)error {
+//    TTGetDomainsResponseModel *responseModel = nil;
+//    NSError *parseError;
+//
+//    if([jsonObj isKindOfClass:[NSDictionary class]]) {
+//        responseModel = [[TTGetDomainsResponseModel alloc] initWithDictionary:jsonObj error:&parseError];
+//    }
+//
+//    if (!error && !parseError && responseModel && [responseModel.message isEqualToString:@"success"]) {
+//        _repeatCount = 0;
+//        NSDictionary *mapping = responseModel.data.mapping;
+//        if (mapping && [mapping isKindOfClass:[NSDictionary class]]) {
+//
+//            NSMutableDictionary *tDomains = [NSMutableDictionary dictionaryWithDictionary:baseURLDomains()];
+//            BOOL needUpdate = NO;
+//
+//            if ([mapping.allKeys containsObject:kNormalBaseURLDomainKey]) {
+//
+//                NSString *tDomain = [mapping objectForKey:kNormalBaseURLDomainKey];
+//                if (![tDomain isEqualToString:baseURLDomainForKey(kNormalBaseURLDomainKey)]) {
+//                    [tDomains setObject:tDomain forKey:kNormalBaseURLDomainKey];
+//                    needUpdate = YES;
+//                }
+//                [ExploreExtenstionDataHelper saveSharedBaseURLDomain:[tDomain copy]];
+//            }
+//
+//            if ([mapping.allKeys containsObject:kSecurityBaseURLDomainKey]) {
+//
+//                NSString *tDomain = [mapping objectForKey:kSecurityBaseURLDomainKey];
+//                if (![tDomain isEqualToString:baseURLDomainForKey(kSecurityBaseURLDomainKey)]) {
+//                    [tDomains setObject:tDomain forKey:kSecurityBaseURLDomainKey];
+//                    needUpdate = YES;
+//                }
+//                [ExploreExtenstionDataHelper saveSharedBaseURLDomain:[tDomain copy]];
+//            }
+//
+//            if ([mapping.allKeys containsObject:kChannelBaseURLDomainKey]) {
+//
+//                NSString *tDomain = [mapping objectForKey:kChannelBaseURLDomainKey];
+//                if (![tDomain isEqualToString:baseURLDomainForKey(kChannelBaseURLDomainKey)]) {
+//                    [tDomains setObject:tDomain forKey:kChannelBaseURLDomainKey];
+//                    needUpdate = YES;
+//                }
+//            }
+//
+//            if ([mapping.allKeys containsObject:kSNSBaseURLDomainKey]) {
+//
+//                NSString *tDomain = [mapping objectForKey:kSNSBaseURLDomainKey];
+//                if (![tDomain isEqualToString:baseURLDomainForKey(kSNSBaseURLDomainKey)]) {
+//                    [tDomains setObject:tDomain forKey:kSNSBaseURLDomainKey];
+//                    needUpdate = YES;
+//                }
+//            }
+//
+//            if ([mapping.allKeys containsObject:kLogBaseURLDomainKey]) {
+//
+//                NSString *tDomain = [mapping objectForKey:kLogBaseURLDomainKey];
+//                if (![tDomain isEqualToString:baseURLDomainForKey(kLogBaseURLDomainKey)]) {
+//                    [tDomains setObject:tDomain forKey:kLogBaseURLDomainKey];
+//                    needUpdate = YES;
+//                }
+//            }
+//
+//            if ([mapping.allKeys containsObject:kAppMonitorBaseURLDomainKey]) {
+//
+//                NSString *tDomain = [mapping objectForKey:kAppMonitorBaseURLDomainKey];
+//                if (![tDomain isEqualToString:baseURLDomainForKey(kAppMonitorBaseURLDomainKey)]) {
+//                    [tDomains setObject:tDomain forKey:kAppMonitorBaseURLDomainKey];
+//                    needUpdate = YES;
+//                }
+//            }
+//
+//            if (needUpdate) {
+//                setBaseURLDomains([tDomains copy]);
+//            }
+//        }
+//
+//        //处理开关
+//        if (responseModel.data.useDNSMapping) {
+//            [SSCommonLogic setEnabledDNSMapping:[responseModel.data.useDNSMapping integerValue]];
+//        }
+//        if (responseModel.data.disableEncryptAppLog) {
+//            [SSCommonLogic setUseEncrypt:![responseModel.data.disableEncryptAppLog boolValue]];
+//        }
+//
+//        if (responseModel.data.useMonitorLog) {
+//            [SSCommonLogic setMonitorLog:[responseModel.data.useMonitorLog boolValue]];
+//        }
+//
+//        if (responseModel.data.shouldCheckLog) {
+//            [SSCommonLogic setCheckLog:[responseModel.data.shouldCheckLog boolValue]];
+//        }
+//
+//        //处理dns mapping
+//        NSArray *dns_mapping = responseModel.data.DNSMapping;
+//        if (dns_mapping && [dns_mapping isKindOfClass:[NSArray class]]) {
+//            [DNSManager setDNSMapping:dns_mapping];
+//        }
+//        //读取长连接配置
+//        // [[TTLCSServerConfig sharedTTLCSServerConfig] updateURLsWithResponseModel:responseModel];
+//        [[TTLCSServerConfig sharedInstance] resetServerConfigUrls:responseModel.data.frontierURLs];
+//
+//        //读取选路配置
+//        [[TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig] updateServerConfigWithResponseModel:responseModel];
+//
+//    }
+//    else {
+//        // retry
+//        [self refactorRequestURLDomains];
+//    }
+//}
 
 #pragma mark - domains
 
@@ -849,6 +853,11 @@ static CommonURLSetting *_sharedInstance = nil;
 + (NSString*)postMessageURLString
 {
     return [NSString stringWithFormat:@"%@/2/data/v4/post_message/", [self baseURL]];
+}
+
++ (NSString*)postMessageURLStringV3
+{
+    return [NSString stringWithFormat:@"%@/2/data/v3/post_message/", [self baseURL]];
 }
 
 + (NSString*)userInfoURLString
