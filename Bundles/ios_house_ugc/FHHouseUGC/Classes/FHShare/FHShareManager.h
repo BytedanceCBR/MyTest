@@ -15,6 +15,9 @@ typedef NS_ENUM(NSInteger, FHShareChannelType)
     FHShareChannelTypeQQFriend,
     FHShareChannelTypeQQZone,
     FHShareChannelTypeCopyLink,
+    FHShareChannelTypeReport,
+    FHShareChannelTypeBlock,
+    FHShareChannelTypeDislike,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -35,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHShareManager : NSObject
 + (instancetype)shareInstance;
+- (void)addCustomShareActivity;
 - (void)showSharePanelWithModel:(FHShareContentModel *)model;
 - (BOOL)isShareOptimization;
 @end

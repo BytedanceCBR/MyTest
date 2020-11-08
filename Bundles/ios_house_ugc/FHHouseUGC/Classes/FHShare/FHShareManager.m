@@ -14,6 +14,9 @@
 #import <BDUGCopyContentItem.h>
 #import <BDUGShareManager.h>
 #import <SSCommonLogic.h>
+#import "FHShareActivity/FHReportActivity.h"
+#import "FHShareActivity/FHBlockActivity.h"
+#import "FHShareActivity/FHDislikeActivity.h"
 
 
 @interface FHShareManager () <BDUGShareManagerDataSource,BDUGShareManagerDelegate>
@@ -35,8 +38,20 @@
     return defaultManager;
 }
 
+- (void)addCustomShareActivity {
+    NSArray *activityNameArray = @[@"FHReportActivity",@"FHBlockActivity",@"FHDislikeActivity"];
+    NSMutableArray *activities = [[NSMutableArray alloc] init];
+    for(NSString *activityName in activityNameArray) {
+        Class activityClass = NSClassFromString(activityName);
+        [activities addObject: [[activityClass alloc] init]];
+    }
+    [BDUGShareManager addUserDefinedActivitiesFromArray:activities];
+}
+
+
 -(BOOL)isShareOptimization {
-    return YES;
+    BOOL isShareOptimization = YES;
+    return  isShareOptimization;
     return [SSCommonLogic isShareOptimization];
 }
 
@@ -83,6 +98,15 @@
         case FHShareChannelTypeCopyLink:
             item = [self createCopyLinkItemWithModel:model];
             break;
+        case FHShareChannelTypeReport:
+            item = [self createReportItemWithModel:model];
+            break;
+        case FHShareChannelTypeBlock:
+            item = [self createBlockItemWithModel:model];
+            break;
+        case FHShareChannelTypeDislike:
+            item = [self createDislikeItemWithModel:model];
+            break;
         default:
             break;
     }
@@ -126,8 +150,33 @@
     return item;
 }
 
+-(FHReportContentItem *)createReportItemWithModel:(FHShareDataModel *)model {
+    FHReportContentItem *item = [[FHReportContentItem alloc] init];
+    item.activityImageName = @"report_allshare";
+    item.contentTitle = @"举报";
+    return item;
+}
+
+-(FHBlockContentItem *)createBlockItemWithModel:(FHShareDataModel *)model {
+    FHBlockContentItem *item = [[FHBlockContentItem alloc] init];
+    item.activityImageName = @"shield_allshare";
+    item.contentTitle = @"拉黑";
+    return item;
+}
+
+-(FHDislikeContentItem *)createDislikeItemWithModel:(FHShareDataModel *)model {
+    FHDislikeContentItem *item = [[FHDislikeContentItem alloc] init];
+    item.activityImageName = @"unlike_allshare";
+    item.contentTitle = @"屏蔽";
+    return item;
+}
+
 -(NSArray *)resetPanelItems:(NSArray *)array panelContent:(BDUGSharePanelContent *)panelContent {
     return [self createContentItemsWithModel:self.shareContentModel];
+}
+
+-(void)shareManager:(BDUGShareManager *)shareManager completedWith:(id<BDUGActivityProtocol>)activity sharePanel:(id<BDUGActivityPanelControllerProtocol>)panelController error:(NSError *)error desc:(NSString *)desc {
+    
 }
 
 @end
