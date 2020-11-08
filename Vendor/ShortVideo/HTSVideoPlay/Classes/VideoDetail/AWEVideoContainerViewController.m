@@ -460,6 +460,10 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(FHUGCShortVideoFullScreenCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (cell) {
+        [cell readyToPlay];
+    }
+    
     if (!self.currentVideoCell.playerView && (indexPath.section == 0 && indexPath.item == self.dataFetchManager.currentIndex)) {
         self.currentVideoCell = cell;
         self.currentIndexPath = indexPath;
@@ -484,9 +488,11 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(FHUGCShortVideoFullScreenCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
     if (cell) {
+        [self sendVideoOverTracking];
         [cell stop];
         [cell reset];
 //        [cell resetPlayerModel];
+
         if (cell.overlayViewController) {
             [cell.overlayViewController stopTimers];
             [cell.overlayViewController.miniSlider setWatchedProgress:0];
@@ -540,12 +546,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     } else {
         return;
     }
-
-
     TSVShortVideoListEntrance entrance = TSVShortVideoListEntranceOther;
-//    if ([self.dataFetchManager respondsToSelector:@selector(entrance)]) {
-//        entrance = self.dataFetchManager.entrance;
-//    }
     AWEPromotionCategory category;
     switch (entrance) {
         case TSVShortVideoListEntranceOther:
@@ -567,12 +568,13 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-
     [self.currentVideoCell pause];
-    [self sendVideoOverTracking];
     [self endLastImpression];
-    
     [self sendStayPageTracking];
+}
+
+- (void)videoOverTracer {
+    [self sendVideoOverTracking];
 }
 
 - (void)didMoveToParentViewController:(UIViewController *)parent
@@ -839,7 +841,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                 if (![newIndexPath isEqual:self.currentIndexPath]) {
                     // 左右划的播放
                     [self showPromotionIfNecessaryWithIndex:itemIndex];
-                    [self sendVideoOverTracking];
                     [self sendStayPageTracking];
                     self.firstPageShown = YES;
                     [self refreshCurrentModel];
