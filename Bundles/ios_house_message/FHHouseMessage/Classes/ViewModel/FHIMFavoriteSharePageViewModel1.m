@@ -11,6 +11,10 @@
 #import "FHHouseSelectedItemCell.h"
 #import "RXCollection.h"
 #import "FHIMFavoriteNewCell.h"
+#import "FHIMFavoriteSecondCell.h"
+#import "FHIMFavoriteRentCell.h"
+#import "FHIMFavoriteNeighborhoodCell.h"
+
 @interface FHIMFavoriteSharePageViewModel1 ()
 @property (nonatomic, strong) NSMutableOrderedSet<NSIndexPath*>* selected;
 @end
@@ -71,6 +75,9 @@
     [tableView registerClass:[FHHouseSelectedItemCell class] forCellReuseIdentifier:kCellId];
     [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:@"FHIMFavoriteListPlaceholderCellId"];
     [tableView registerClass:[FHIMFavoriteNewCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteNewCell class])];
+    [tableView registerClass:[FHIMFavoriteSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteSecondCell class])];
+    [tableView registerClass:[FHIMFavoriteRentCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteRentCell class])];
+    [tableView registerClass:[FHIMFavoriteNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteNeighborhoodCell class])];
 }
 
 -(void)cleanSelects {

@@ -1,14 +1,13 @@
 //
-//  FHIMFavoriteNewCell.m
+//  FHIMFavoriteNeighborhoodCell.m
 //  FHHouseMessage
 //
-//  Created by xubinbin on 2020/11/5.
+//  Created by xubinbin on 2020/11/8.
 //
 
-#import "FHIMFavoriteNewCell.h"
-#import "FHSingleImageInfoCellModel.h"
+#import "FHIMFavoriteNeighborhoodCell.h"
 
-@implementation FHIMFavoriteNewCell
+@implementation FHIMFavoriteNeighborhoodCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -24,14 +23,15 @@
     }
     FHSingleImageInfoCellModel *cellModel = (FHSingleImageInfoCellModel *)data;
     self.cellModel = cellModel;
-    FHNewHouseItemModel *model = cellModel.houseModel;
+    FHHouseNeighborDataItemsModel *model =cellModel.neighborModel;
     FHImageModel *imageModel = model.images.firstObject;
     [self updateMainImageWithUrl:imageModel.url];
+    self.imageTagLabelBgView.hidden = YES;
     self.mainTitleLabel.text = model.displayTitle;
-    self.subTitleLabel.text = model.displayDescription;
-    self.tagLabel.attributedText = cellModel.tagsAttrStr;
-    self.priceLabel.text = model.displayPricePerSqm;
-    [self updateTitlesLayout:self.cellModel.tagsAttrStr.length > 0];
+    self.subTitleLabel.text = model.displaySubtitle;
+    self.tagLabel.text = model.displayStatsInfo;
+    self.priceLabel.text = model.displayPrice;
+    [self updateTitlesLayout:YES];
 }
 
 @end

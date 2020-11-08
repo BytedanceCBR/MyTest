@@ -249,6 +249,7 @@
 - (FHHouseRecommendReasonView *)recReasonView {
     if (!_recReasonView) {
         _recReasonView = [[FHHouseRecommendReasonView alloc] init];
+        _recReasonView.hidden = YES;
     }
     return _recReasonView;
 }

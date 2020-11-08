@@ -63,7 +63,7 @@
         make.top.mas_equalTo(self.subTitleLabel.mas_bottom).offset(6);
         make.left.mas_equalTo(-3);
         make.right.mas_equalTo(0);
-        //make.height.mas_equalTo(15);
+        make.height.mas_equalTo(15);
     }];
     [self.rightInfoView addSubview:self.priceBgView];
     [self.priceBgView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -74,6 +74,7 @@
     [self.priceBgView addSubview:self.priceLabel];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.mas_equalTo(0);
+        make.height.mas_equalTo(20);
     }];
     self.checkView = [[UIImageView alloc] init];
     self.checkView.image = [UIImage imageNamed:@"fh_im_share_unchecked2"];
@@ -103,18 +104,39 @@
 
 - (void)updateTitlesLayout:(BOOL)showTags {
     CGSize titleSize = self.cellModel.titleSize;
-    self.mainTitleLabel.numberOfLines = showTags?1:2;
+    self.mainTitleLabel.numberOfLines = showTags ? 1 : 2;
     BOOL oneRow = showTags || titleSize.height < 30;
+    CGFloat height = 0;
+    CGFloat top = 0;
     [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(oneRow ? -2 : -5);
         make.height.mas_equalTo(oneRow ? 22 : 50);
     }];
+    if (self.subTitleLabel.text > 0) {
+        height = 17;
+        top = oneRow ? 4 : 1;
+    } else {
+        height = 0;
+        top = 0;
+    }
     [self.subTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(oneRow ? 4 : 1);
+        make.top.mas_equalTo(self.mainTitleLabel.mas_bottom).offset(top);
+        make.height.mas_equalTo(height);
+    }];
+    if ([self.tagLabel.attributedText length] > 0) {
+        top = 6;
+        height = 15;
+    } else {
+        top = 0;
+        height = 0;
+    }
+    [self.tagLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.subTitleLabel.mas_bottom).offset(top);
+        make.height.mas_equalTo(height);
     }];
     CGFloat priceBgTopMargin = showTags ? 5 :(oneRow ? 6 : 2);
     [self.priceBgView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(priceBgTopMargin);
+        make.top.mas_equalTo(self.tagLabel.mas_bottom).offset(priceBgTopMargin);
     }];
 }
 

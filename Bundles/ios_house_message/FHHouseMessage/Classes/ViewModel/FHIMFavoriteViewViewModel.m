@@ -24,6 +24,9 @@
 #import "IFHMyFavoriteController.h"
 #import "FHEnvContext.h"
 #import "FHIMFavoriteNewCell.h"
+#import "FHIMFavoriteSecondCell.h"
+#import "FHIMFavoriteRentCell.h"
+#import "FHIMFavoriteNeighborhoodCell.h"
 
 extern NSString *const kFHDetailFollowUpNotification;
 
@@ -87,6 +90,9 @@ extern NSString *const kFHDetailFollowUpNotification;
     [tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
     [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:@"FHIMFavoriteListPlaceholderCellId"];
     [tableView registerClass:[FHIMFavoriteNewCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteNewCell class])];
+    [tableView registerClass:[FHIMFavoriteSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteSecondCell class])];
+    [tableView registerClass:[FHIMFavoriteRentCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteRentCell class])];
+    [tableView registerClass:[FHIMFavoriteNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteNeighborhoodCell class])];
 }
 
 - (void)dealloc {
@@ -500,6 +506,15 @@ extern NSString *const kFHDetailFollowUpNotification;
                 case FHHouseTypeNewHouse:
                     identifier = NSStringFromClass([FHIMFavoriteNewCell class]);
                     break;
+                case FHHouseTypeSecondHandHouse:
+                    identifier = NSStringFromClass([FHIMFavoriteSecondCell class]);
+                    break;
+                case FHHouseTypeRentHouse:
+                    identifier = NSStringFromClass([FHIMFavoriteRentCell class]);
+                    break;
+                case FHHouseTypeNeighborhood:
+                    identifier = NSStringFromClass([FHIMFavoriteNeighborhoodCell class]);
+                    break;
                 default:
                     break;
             }
@@ -538,7 +553,7 @@ extern NSString *const kFHDetailFollowUpNotification;
         if (indexPath.row < self.dataList.count) {
             BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
             FHSingleImageInfoCellModel *cellModel = self.dataList[indexPath.row];
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? 22 : 0;
             return (isLastCell ? 125 : 105)+reasonHeight;
         }else{
             return 0;
