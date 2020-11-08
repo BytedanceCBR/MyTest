@@ -190,6 +190,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 
 - (void)beginTimers {
     self.videoTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(getVideoTimers) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.videoTimer forMode:NSRunLoopCommonModes];
 }
 
 - (void)getVideoTimers {
