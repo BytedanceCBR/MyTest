@@ -124,32 +124,13 @@ BOOL isShareToPlatformEnterBackground = NO;
     return result;
 }
 
-+ (void)addUpCacheSizeWithImage:(BOOL)imageSize http:(BOOL)httpSize coreData:(BOOL)coreDataSize wendaDraft:(BOOL)wendaDraft shortVideo:(BOOL)shortVideoSize completion:(void(^)(NSInteger))completionBlock
-{
-    
++ (void)addUpCacheSizeWithImage:(BOOL)imageSize http:(BOOL)httpSize coreData:(BOOL)coreDataSize wendaDraft:(BOOL)wendaDraft shortVideo:(BOOL)shortVideoSize completion:(void(^)(NSInteger))completionBlock {
     __block CGFloat result = 0;
-    
     //除了小视频以外的其他内容的总大小
     CGFloat otherCacheSize = [self cacheSizeWithImage:imageSize http:httpSize coreData:coreDataSize wendaDraft:wendaDraft];
-    
-    
     result += otherCacheSize;
-//    result += [[TTVOwnPlayerCacheWrapper sharedCache] getCacheSize];
-    
-    if (shortVideoSize) {
-//        id<IESVideoCacheProtocol> shortVideoCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeSpecify];
-//        [shortVideoCache getCacheSizeWithCompletion:^(CGFloat shortVideoCacheSize) {
-//            result += shortVideoCacheSize;
-//            [[TTMonitor shareManager] trackService:@"huoshanCache" value:@(shortVideoCacheSize) extra:nil];
-//            
-//            if (completionBlock) {
-//                completionBlock(result);
-//            }
-//        }];
-    } else {
-        if (completionBlock) {
-            completionBlock(result);
-        }
+    if (completionBlock) {
+        completionBlock(result);
     }
 }
 
