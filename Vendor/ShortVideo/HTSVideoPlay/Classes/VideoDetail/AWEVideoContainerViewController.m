@@ -462,6 +462,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 {
     if (!self.currentVideoCell.playerView && (indexPath.section == 0 && indexPath.item == self.dataFetchManager.currentIndex)) {
         self.currentVideoCell = cell;
+        self.currentIndexPath = indexPath;
         [self beginFirstImpression];
         [self alertCeullarPlayWithCompletion:^(BOOL continuePlaying) {
             if (continuePlaying) {
