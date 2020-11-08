@@ -12,7 +12,15 @@
 #import <BDUGQQZoneContentItem.h>
 #import <BDUGWechatTimelineContentItem.h>
 #import <BDUGCopyContentItem.h>
+#import <BDUGShareManager.h>
 #import <SSCommonLogic.h>
+
+
+@interface FHShareManager () <BDUGShareManagerDataSource,BDUGShareManagerDelegate>
+@property(nonatomic,strong) BDUGShareManager *shareManager;
+@property(nonatomic,strong) FHShareContentModel *shareContentModel;
+@end
+
 @implementation FHShareManager
 
 + (instancetype)shareInstance {
@@ -20,6 +28,9 @@
     static FHShareManager *defaultManager;
     dispatch_once(&onceToken, ^{
         defaultManager = [[FHShareManager alloc] init];
+        defaultManager.shareManager = [[BDUGShareManager alloc] init];
+        defaultManager.shareManager.dataSource = defaultManager;
+        defaultManager.shareManager.delegate = defaultManager;
     });
     return defaultManager;
 }
@@ -27,6 +38,11 @@
 -(BOOL)isShareOptimization {
     return YES;
     return [SSCommonLogic isShareOptimization];
+}
+
+- (void)showSharePanelWithModel:(FHShareContentModel *)model {
+    self.shareContentModel = model;
+    [self.shareManager displayPanelWithContent:nil];
 }
 
 -(NSArray *)createContentItemsWithModel:(FHShareContentModel *)model {
@@ -49,7 +65,7 @@
     return itemsArray;
 }
 
--(BDUGShareBaseContentItem *)createItemWithModel:(FHShareBaseModel *)model channelType:(FHShareChannelType)channelType {
+-(BDUGShareBaseContentItem *)createItemWithModel:(FHShareDataModel *)model channelType:(FHShareChannelType)channelType {
     BDUGShareBaseContentItem *item = nil;
     switch (channelType) {
         case FHShareChannelTypeWeChat:
@@ -73,14 +89,14 @@
     return item;
 }
 
--(BDUGWechatContentItem *)createWechatItemWithModel:(FHShareBaseModel *)model {
+-(BDUGWechatContentItem *)createWechatItemWithModel:(FHShareDataModel *)model {
     BDUGWechatContentItem *item = [[BDUGWechatContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage defaultShareType:model.shareType];
     item.activityImageName = @"weixin_allshare";
     item.contentTitle = @"微信";
     return item;
 }
 
--(BDUGWechatTimelineContentItem *)createWechatTimeLineItemWithModel:(FHShareBaseModel *)model {
+-(BDUGWechatTimelineContentItem *)createWechatTimeLineItemWithModel:(FHShareDataModel *)model {
     BDUGWechatTimelineContentItem *item = [[BDUGWechatTimelineContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage defaultShareType:model.shareType];
     item.activityImageName = @"pyq_allshare";
     item.contentTitle = @"朋友圈";
@@ -88,21 +104,21 @@
 }
 
 
--(BDUGQQFriendContentItem *)createQQFriendItemWithModel:(FHShareBaseModel *)model {
+-(BDUGQQFriendContentItem *)createQQFriendItemWithModel:(FHShareDataModel *)model {
     BDUGQQFriendContentItem *item = [[BDUGQQFriendContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage imageUrl:model.imageUrl shareTye:model.shareType];
     item.activityImageName = @"qq_allshare";
     item.contentTitle = @"QQ";
     return item;
 }
 
--(BDUGQQZoneContentItem *)createQQZoneItemWithModel:(FHShareBaseModel *)model {
+-(BDUGQQZoneContentItem *)createQQZoneItemWithModel:(FHShareDataModel *)model {
     BDUGQQZoneContentItem *item = [[BDUGQQZoneContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage imageUrl:model.imageUrl shareTye:model.shareType];
     item.activityImageName = @"qqkj_allshare";
     item.contentTitle = @"QQ空间";
     return item;
 }
 
--(BDUGCopyContentItem *)createCopyLinkItemWithModel:(FHShareBaseModel *)model {
+-(BDUGCopyContentItem *)createCopyLinkItemWithModel:(FHShareDataModel *)model {
     BDUGCopyContentItem *item = [[BDUGCopyContentItem alloc] init];
     item.webPageUrl = model.shareUrl;
     item.activityImageName = @"copy_allshare";
@@ -110,9 +126,13 @@
     return item;
 }
 
+-(NSArray *)resetPanelItems:(NSArray *)array panelContent:(BDUGSharePanelContent *)panelContent {
+    return [self createContentItemsWithModel:self.shareContentModel];
+}
+
 @end
 
-@implementation FHShareBaseModel
+@implementation FHShareDataModel
 
 @end
 

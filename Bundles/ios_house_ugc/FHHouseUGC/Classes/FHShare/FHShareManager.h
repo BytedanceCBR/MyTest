@@ -19,7 +19,7 @@ typedef NS_ENUM(NSInteger, FHShareChannelType)
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHShareBaseModel : NSObject
+@interface FHShareDataModel : NSObject
 @property(nonatomic,assign) BDUGShareType shareType;
 @property(nonatomic,copy) NSString *title;
 @property(nonatomic,copy) NSString *desc;
@@ -29,13 +29,13 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHShareContentModel : NSObject
-@property(nonatomic,strong) FHShareBaseModel *dataModel;
+@property(nonatomic,strong) FHShareDataModel *dataModel;
 @property(nonatomic,strong) NSArray *contentItemArray;
 @end
 
 @interface FHShareManager : NSObject
 + (instancetype)shareInstance;
-- (NSArray *)createContentItemsWithModel:(FHShareContentModel *)model;
+- (void)showSharePanelWithModel:(FHShareContentModel *)model;
 - (BOOL)isShareOptimization;
 @end
 

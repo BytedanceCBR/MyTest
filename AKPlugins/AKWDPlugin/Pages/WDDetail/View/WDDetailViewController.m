@@ -72,7 +72,6 @@
 #import "TTDislikeContentItem.h"
 #import "TTBlockContentItem.h"
 #import "TTReportContentItem.h"
-#import "BDUGShareManager.h"
 #import <FHShareManager.h>
 
 
@@ -80,7 +79,7 @@ extern NSInteger const kWDPostCommentBindingErrorCode;
 static NSString * const kHasShownComentPolicyIndicatorViewKey = @"HasShownComentPolicyIndicatorViewKey";
 static NSUInteger const kOldAnimationViewTag = 20161221;
 
-@interface WDDetailViewController () <TTDetailViewController, WDDetailViewDelegate, TTCommentDataSource, TTCommentViewControllerDelegate, TTCommentWriteManagerDelegate, UIViewControllerErrorHandler, TTUIViewControllerTrackProtocol, UIActionSheetDelegate, WDBottomToolViewDelegate, TTShareManagerDelegate, TTInteractExitProtocol, WDDetailHeaderViewDelegate,BDUGShareManagerDataSource,BDUGShareManagerDelegate>
+@interface WDDetailViewController () <TTDetailViewController, WDDetailViewDelegate, TTCommentDataSource, TTCommentViewControllerDelegate, TTCommentWriteManagerDelegate, UIViewControllerErrorHandler, TTUIViewControllerTrackProtocol, UIActionSheetDelegate, WDBottomToolViewDelegate, TTShareManagerDelegate, TTInteractExitProtocol, WDDetailHeaderViewDelegate>
 {
     BOOL _backButtonTouched;
     BOOL _closeButtonTouched;
@@ -120,7 +119,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 @property (nonatomic, strong) DetailActionRequestManager *actionManager;
 
 @property (nonatomic, strong) TTShareManager *shareManager;
-@property (nonatomic, strong) BDUGShareManager *bdShareManager;
 
 @property (nonatomic, assign) CGFloat enterHalfFooterStatusContentOffset;
 
@@ -1459,8 +1457,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
     [self p_removeIndicatorPolicyView];
     
-    if([[FHShareManager shareInstance] isShareOptimization]){
-        [self.bdShareManager displayPanelWithContent:[[BDUGSharePanelContent alloc] init]];
+    if([[FHShareManager shareInstance] isShareOptimization]) {
+        [self showSharePanel];
         return;
     }
 
@@ -1469,18 +1467,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self.shareManager displayActivitySheetWithContent:[contentItems copy]];
 }
 
-
--(BDUGShareManager *)bdShareManager {
-    if(!_bdShareManager) {
-        _bdShareManager = [[BDUGShareManager alloc] init];
-        _bdShareManager.dataSource = self;
-        _bdShareManager.delegate = self;
-    }
-    return _bdShareManager;
-}
-
--(NSArray *)resetPanelItems:(NSArray *)array panelContent:(BDUGSharePanelContent *)panelContent {
-    FHShareBaseModel *dataModel = [[FHShareBaseModel alloc] init];
+- (void)showSharePanel {
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
     dataModel.title = [self.natantViewModel shareTitle];
     dataModel.desc = [self.natantViewModel shareDesc];
     dataModel.imageUrl = [self.natantViewModel shareImgUrl];
@@ -1495,7 +1483,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     FHShareContentModel *model = [[FHShareContentModel alloc] init];
     model.dataModel = dataModel;
     model.contentItemArray = contentItemArray;
-    return [[FHShareManager shareInstance] createContentItemsWithModel:model];
+    
+    [[FHShareManager shareInstance] showSharePanelWithModel:model];
 }
 
 
