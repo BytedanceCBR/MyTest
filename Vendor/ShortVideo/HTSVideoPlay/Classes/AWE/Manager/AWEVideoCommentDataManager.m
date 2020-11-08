@@ -12,12 +12,12 @@
 #import "AWEActionSheetModel.h"
 #import "AWEActionSheetCellModel.h"
 #import "TSVMonitorManager.h"
+#import "CommonURLSetting.h"
+#import "FHURLSettings.h"
 
 #define DefaultTopModelCount 20  //取前20条remote数据与fake比较
 
 extern NSString * const TTCommentSuccessForPushGuideNotification;
-
-static NSString * const TT_DOMAIN = @"http://i.haoduofangs.com";
 
 static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain";
 
@@ -107,7 +107,7 @@ static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain"
     }
     self.isSendingComments = YES;
     
-    NSString *urlString = [NSString stringWithFormat:@"%@/2/data/v3/post_message/", TT_DOMAIN];
+    NSString *urlString = [CommonURLSetting postMessageURLStringV3];
     NSMutableDictionary *commentParam = [NSMutableDictionary dictionaryWithCapacity:10];
     [commentParam setValue:groupID forKey:@"group_id"];
     [commentParam setValue:itemID forKey:@"item_id"];
@@ -167,7 +167,7 @@ static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain"
         return;
     }
     
-    NSString *urlString = [NSString stringWithFormat:@"%@/2/comment/v1/delete_comment/", TT_DOMAIN];
+    NSString *urlString = [FHURLSettings deleteArticleNewCommentURLString];
     NSDictionary *params = @{
                             @"id" : commentId,
                           };
@@ -220,7 +220,7 @@ static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain"
     NSString *monitorIdentifier = [[TSVMonitorManager sharedManager] startMonitorNetworkService:TSVMonitorNetworkServiceCommentList key:itemID];
     
     __weak typeof(self) weakSelf = self;
-    NSString *urlString = [NSString stringWithFormat:@"%@/article/v2/tab_comments/", TT_DOMAIN];
+    NSString *urlString = [CommonURLSetting tabCommentURLStringV2];
     [[AWEVideoPlayNetworkManager sharedInstance] requestJSONFromURL:urlString params:commentParam method:@"GET" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         
@@ -268,7 +268,7 @@ static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain"
     NSParameterAssert(itemID);
 
     NSString *actionName = cancelDigg ? @"cancel_digg" : @"digg";
-    NSString *urlString = [NSString stringWithFormat:@"%@/2/data/comment_action/", TT_DOMAIN];
+    NSString *urlString = [CommonURLSetting commentActionURLString];
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:10];
     [params setValue:commentID forKey:@"comment_id"];
     [params setValue:groupID forKey:@"group_id"];
@@ -325,7 +325,7 @@ static NSString * const AWEIllegalParameterDomain = @"AWEIllegalParameterDomain"
     [params setValue:inputText forKey:@"report_content"];
     [params setValue:@1 forKey:@"source"];
     
-    NSString * url = [NSString stringWithFormat:@"%@/feedback/1/report_user/", TT_DOMAIN];
+    NSString * url = [CommonURLSetting reportUserURLString];
     
     NSString *monitorIdentifier = [[TSVMonitorManager sharedManager] startMonitorNetworkService:TSVMonitorNetworkServiceReportComment key:commentID];
     

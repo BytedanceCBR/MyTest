@@ -85,7 +85,7 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHShortVideoTracerUtil.h"
 #import "TTAccountManager.h"
-#import "IESOwnPlayerWrapper.h"
+//#import "IESOwnPlayerWrapper.h"
 #import "NSDictionary+BTDAdditions.h"
 
 static const CGFloat kCheckChallengeButtonWidth = 72;
@@ -188,13 +188,15 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     });
 }
 
+- (void)beginTimers {
+    self.videoTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(getVideoTimers) userInfo:nil repeats:YES];
+}
 
 - (void)getVideoTimers {
-      IESOwnPlayerWrapper *player = (IESOwnPlayerWrapper *)self.playerController;
-    if (player.currPlaybackTime) {
-        CGFloat watch = (player.currPlaybackTime/player.videoDuration)*100;
-        [self.miniSlider setWatchedProgress:(player.currPlaybackTime/player.videoDuration) *100];
-        [self.miniSlider setCacheProgress:(player.currPlayableDuration/player.videoDuration) *100];
+//      IESOwnPlayerWrapper *player = (IESOwnPlayerWrapper *)self.playerController;
+    if (self.playerStateStore) {
+        [self.miniSlider setWatchedProgress:self.playerStateStore.state.watchedProgress];
+        [self.miniSlider setCacheProgress:self.playerStateStore.state.cacheProgress];
 
     };
 }
@@ -591,17 +593,20 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.videoTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(getVideoTimers) userInfo:nil repeats:YES];
 //    if (!isEmptyString(self.viewModel.musicLabelString)) {
 //        [self.musicInfoView startAnimation];
 //    }
 }
 
+- (void)stopTimers {
+    [self.videoTimer invalidate];
+    self.videoTimer = nil;
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self.videoTimer invalidate];
-    self.videoTimer = nil;
+    [self stopTimers];
 //
 //    if (!isEmptyString(self.viewModel.musicLabelString)) {
 //        [self.musicInfoView stopAnimation];

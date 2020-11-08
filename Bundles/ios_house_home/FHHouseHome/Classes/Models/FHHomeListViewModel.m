@@ -313,7 +313,7 @@
             
             itemVC.scrollDidScrollCallBack = ^(UIScrollView * _Nonnull currentTable,BOOL isCanScroll) {
                 weakSelf.childVCScrollView = currentTable;
-                _superScrollEnable = isCanScroll;
+                weakSelf.superScrollEnable = isCanScroll;
             };
             
             itemVC.requestCallBack = ^(FHHomePullTriggerType refreshType, FHHouseType houseType, BOOL isSuccess, JSONModel * _Nonnull dataModel) {
@@ -453,7 +453,7 @@
     
     if ([houstTypeList containsObject:userSelectType]) {
         indexValue = [houstTypeList indexOfObject:userSelectType];
-        NSNumber *numberType = [houstTypeList objectAtIndex:indexValue];
+//        NSNumber *numberType = [houstTypeList objectAtIndex:indexValue];
         self.houseType = [userSelectType integerValue];
     }else
     {
@@ -853,7 +853,7 @@
                 }
             }
             
-            NSInteger scrollIndex = (NSInteger)((scrollView.contentOffset.x + KFHScreenWidth/2)/KFHScreenWidth);
+//            NSInteger scrollIndex = (NSInteger)((scrollView.contentOffset.x + KFHScreenWidth/2)/KFHScreenWidth);
             [self uploadFirstScreenHouseShow:self.categoryView.segmentedControl.selectedSegmentIndex andEnterType:@"switch"];
             
             self.previousHouseType = self.houseType;

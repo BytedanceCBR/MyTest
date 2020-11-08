@@ -7,7 +7,6 @@
 
 #import "FHNewHouseDetailReleatorCollectionCell.h"
 #import <FHHouseBase/FHRealtorAvatarView.h>
-#import "FHExtendHotAreaButton.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHNewHouseDetailReleatorCollectionCell ()
@@ -46,7 +45,7 @@
         }];
         
         __weak typeof(self) weakSelf = self;
-        self.callBtn = [[FHExtendHotAreaButton alloc] init];
+        self.callBtn = [[UIButton alloc] init];
         [self.callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal_new"] forState:UIControlStateNormal];
         [self.callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateSelected];
         [self.callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateHighlighted];
@@ -62,7 +61,7 @@
             make.top.mas_equalTo(self.name);
         }];
         
-        self.imBtn = [[FHExtendHotAreaButton alloc] init];
+        self.imBtn = [[UIButton alloc] init];
         [self.imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
         [self.imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateSelected];
         [self.imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateHighlighted];
@@ -78,7 +77,7 @@
             make.top.mas_equalTo(self.name);
         }];
 
-        self.licenceIcon = [[FHExtendHotAreaButton alloc] init];
+        self.licenceIcon = [[UIButton alloc] init];
         [self.licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
         [self.licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateSelected];
         [self.licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];

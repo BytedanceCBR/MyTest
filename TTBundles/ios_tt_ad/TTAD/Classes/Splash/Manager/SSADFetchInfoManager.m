@@ -116,7 +116,7 @@
                         if ([obj isKindOfClass:[SSADModel class]]) {
                             adjustModel(obj, currentTime);
                         } else {
-                            LOGE(@"解析出错");
+//                            LOGE(@"解析出错");
                             [self moniter_trackService:3 error:error];
                         }
                     }];

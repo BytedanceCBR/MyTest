@@ -342,7 +342,7 @@ Singleton_Implementation(TTAdCanvasManager)
             [data writeToFile:filePath atomically:YES];
         } 
     } @catch (NSException *exception) {
-        LOGD(@"%@", exception);
+//        LOGD(@"%@", exception);
     } @finally {
     }
 }
@@ -359,7 +359,7 @@ Singleton_Implementation(TTAdCanvasManager)
     @try {
         dict = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     } @catch (NSException *exception) {
-        LOGE(@"%@", exception);
+//        LOGE(@"%@", exception);
         NSError *error;
         [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
     } @finally {
@@ -383,7 +383,7 @@ Singleton_Implementation(TTAdCanvasManager)
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
     } @catch (NSException *exception) {
-        LOGE(@"%@", exception);
+//        LOGE(@"%@", exception);
     }
 }
 
@@ -395,7 +395,7 @@ Singleton_Implementation(TTAdCanvasManager)
     @try {
         projectModel = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     } @catch (NSException *exception) {
-        LOGE(@"%@", exception);
+//        LOGE(@"%@", exception);
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:kTTAdCanvasModel];
         [[NSUserDefaults standardUserDefaults] synchronize];
     } @finally {
@@ -640,7 +640,7 @@ Singleton_Implementation(TTAdCanvasManager)
     NSError *jsonError;
     TTAdCanvasJsonLayoutModel* jsonModel = [[TTAdCanvasJsonLayoutModel alloc] initWithDictionary:layoutInfo error:&jsonError];
     if (!jsonModel) {
-        LOGE(@"%@", jsonError.localizedDescription);
+//        LOGE(@"%@", jsonError.localizedDescription);
         return nil;
     }
     

@@ -34,6 +34,8 @@
 #import "FHDetailBaseModel.h"
 #import "FIMDebugManager.h"
 #import <TTUIWidget/TTNavigationController.h>
+#import "TTDialogDirector.h"
+#import "TTWeakPushAlertView.h"
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -96,7 +98,15 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 
 - (void)onMessageRecieved:(ChatMsg *)msg {
-    [[FHBubbleTipManager shareInstance] tryShowBubbleTip:msg openUrl:@""];
+    // 检查是否应用内通知正在展示
+    BOOL isInAppPushWeakAlertViewShowing = NO;
+    id presentingDialog = [TTDialogDirector presentingDialog];
+    if([presentingDialog isKindOfClass:TTWeakPushAlertView.class]) {
+        isInAppPushWeakAlertViewShowing = YES;
+    }
+    if(!isInAppPushWeakAlertViewShowing) {
+        [[FHBubbleTipManager shareInstance] tryShowBubbleTip:msg openUrl:@""];
+    }
 }
 
 - (NSString *)appVersionCode {

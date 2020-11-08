@@ -42,6 +42,7 @@
 @property (nonatomic, strong) UIView *logo;
 @property (nonatomic, weak) NSObject <TTVCellPlayMovieDelegate> *delegate;
 
+- (void)readyToPlay;
 - (void)play;
 - (UIView *)currentMovieView;
 - (BOOL)isFullScreen;
@@ -55,7 +56,6 @@
 - (void)viewWillAppear;
 - (void)viewWillDisappear;
 - (void)cellInListWillDisappear:(TTCellDisappearType)context;
-- (void)addCommodity;
 /**
  设置title font 以及在非全屏下是否显示title
  */

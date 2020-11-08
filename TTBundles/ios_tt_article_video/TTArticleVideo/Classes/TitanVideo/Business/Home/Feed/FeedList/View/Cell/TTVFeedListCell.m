@@ -366,7 +366,7 @@ CGFloat ttv_bottomPaddingViewHeight(void)
 // 首页列表cell点击处理
 - (void)didSelectWithContext:(TTVFeedCellSelectContext *)context
 {
-    [self.topMovieContainerView.playMovie removeCommodityView];
+//    [self.topMovieContainerView.playMovie removeCommodityView];
 }
 
 - (void)willDisplayWithContext:(TTVFeedCellWillDisplayContext *)context

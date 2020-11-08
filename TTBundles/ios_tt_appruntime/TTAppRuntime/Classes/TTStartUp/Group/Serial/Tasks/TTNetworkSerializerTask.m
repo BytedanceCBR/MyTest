@@ -58,22 +58,22 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
 + (void)settingNetworkSerializerClass {
     //add by songlu
     Monitorblock block = ^(NSDictionary* data, NSString* logType) {
-        LOGD(@"%s logType %@", __FUNCTION__, logType);
+//        LOGD(@"%s logType %@", __FUNCTION__, logType);
         [[TTMonitor shareManager] trackData:data logTypeStr:logType];
     };
     [TTNetworkManager setMonitorBlock:block];
 
-    GetDomainblock GetDomainblock = ^(NSData* data) {
-        NSError *jsonError = nil;
-        LOGD(@"%s GetDomainblock is %@", __FUNCTION__, data);
-        id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
-
-        if ([SSCommonLogic isRefactorGetDomainsEnabled]) {
-            [[CommonURLSetting sharedInstance] refactorHandleResult:(NSDictionary *)jsonDict error:jsonError];
-        } else {
-            [[CommonURLSetting sharedInstance] handleResult_:(NSDictionary *)jsonDict error:jsonError];
-        }
-    };
+//    GetDomainblock GetDomainblock = ^(NSData* data) {
+//        NSError *jsonError = nil;
+//        LOGD(@"%s GetDomainblock is %@", __FUNCTION__, data);
+//        id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:&jsonError];
+//
+//        if ([SSCommonLogic isRefactorGetDomainsEnabled]) {
+//            [[CommonURLSetting sharedInstance] refactorHandleResult:(NSDictionary *)jsonDict error:jsonError];
+//        } else {
+//            [[CommonURLSetting sharedInstance] handleResult_:(NSDictionary *)jsonDict error:jsonError];
+//        }
+//    };
 //    [TTNetworkManager setGetDomainBlock:GetDomainblock];
 
     NSString *city = [TTLocationManager sharedManager].city;
@@ -92,6 +92,9 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     } else {
         [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeAFNetworking];
     }
+    
+    [[TTNetworkManager shareInstance] setDomainHttpDns:@"dig.bdurl.net"];
+    [[TTNetworkManager shareInstance] setDomainNetlog:@"crash.snssdk.com"];
 
 //    // 初始化SafeGuard配置
 //    [[AKSafeGuardHelper sharedInstance] initSafeGuard];
@@ -185,6 +188,9 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     [TTNetworkManager shareInstance].ServerConfigHostFirst = @"dm.haoduofangs.com";
     [TTNetworkManager shareInstance].ServerConfigHostSecond = @"dm-lq.haoduofangs.com";
     [TTNetworkManager shareInstance].ServerConfigHostThird = @"dm-hl.haoduofangs.com";
+//    [TTNetworkManager shareInstance].ServerConfigHostFirst = @"tnc3-bjlgy.snssdk.com";
+//    [TTNetworkManager shareInstance].ServerConfigHostSecond = @"tnc3-alisc1.snssdk.com";
+//    [TTNetworkManager shareInstance].ServerConfigHostThird = @"tnc3-aliec2.snssdk.com";
 
     [[TTNetworkManager shareInstance] setDomainBase:@"i.haoduofangs.com"];
     [[TTNetworkManager shareInstance] setDomainLog:@"log.haoduofangs.com"];
@@ -272,7 +278,7 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     }
     [[TTNetworkManager shareInstance] start];
     
-    LOGI(@"isEncryptQueryInHeader = %d, isEncryptQuery = %d, isKeepPlainQuery = %d", [TTNetworkManager shareInstance].isEncryptQueryInHeader, [TTNetworkManager shareInstance].isEncryptQuery, [TTNetworkManager shareInstance].isKeepPlainQuery);
+//    LOGI(@"isEncryptQueryInHeader = %d, isEncryptQuery = %d, isKeepPlainQuery = %d", [TTNetworkManager shareInstance].isEncryptQueryInHeader, [TTNetworkManager shareInstance].isEncryptQuery, [TTNetworkManager shareInstance].isKeepPlainQuery);
 }
 
 

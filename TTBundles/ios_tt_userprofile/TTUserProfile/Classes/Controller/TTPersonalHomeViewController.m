@@ -1489,7 +1489,7 @@ TTAccountMulticastProtocol
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [TTAccount removeMulticastDelegate:self];
-    LOGD(@"%s",__func__);
+//    LOGD(@"%s",__func__);
 }
 
 - (void)updateFollowersCountWithFollowing:(BOOL)following

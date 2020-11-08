@@ -12,20 +12,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FHNewHouseDetailSectionModel;
 @interface FHNewHouseDetailViewController : FHBaseViewController
-
 //ViewModel
 @property (nonatomic, strong) FHNewHouseDetailViewModel *viewModel;
 //bizTrace
 @property (nonatomic, copy) NSString *bizTrace;
-
-//是否显示
-@property (nonatomic, assign) BOOL isViewDidDisapper;
-
+/// 一个曝光埋点的通用缓存，用于FHNewHouseDetailSectionController中及其子类
+/// key的命名，期望使用 classname+index的形式，越复杂越保证单一性
 @property (nonatomic, strong) NSMutableDictionary *elementShowCaches;
-
-- (void)updateLayout:(BOOL)isInstant;
-
-- (void)refreshSectionModel:(FHNewHouseDetailSectionModel *)sectionModel animated:(BOOL )animated;
 
 @end
 

@@ -42,10 +42,14 @@
         make.edges.mas_equalTo(self.coverView);
     }];
     
-    self.startBtn = [[UIButton alloc] init];
-    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateNormal];
-    [_startBtn setImage:[UIImage imageNamed:@"detail_video_start"] forState:UIControlStateHighlighted];
-    [_startBtn addTarget:self action:@selector(playVideo) forControlEvents:UIControlEventTouchUpInside];
+    self.startBtn = [[UIImageView alloc] init];
+    self.startBtn.image = [UIImage imageNamed:@"detail_video_start"];
+    
+    UITapGestureRecognizer *tapGesturRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(playVideo)];
+
+    [self.startBtn addGestureRecognizer:tapGesturRecognizer];
+    
+    self.startBtn.userInteractionEnabled = YES;
     [self.coverView addSubview:_startBtn];
 }
 
@@ -55,7 +59,7 @@
     }];
     
     [self.startBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(70);
+        make.width.height.mas_equalTo(50);
         make.center.equalTo(self);
     }];
 }
