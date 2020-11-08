@@ -12,10 +12,7 @@
 #import "UIViewController+Track.h"
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
-#import <FHCommonUI/FHFeedbackView.h>
 #import <TTArticleBase/SSCommonLogic.h>
-#import <CoreTelephony/CTCallCenter.h>
-#import <CoreTelephony/CTCall.h>
 #import "FHEnvContext.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import <ios_house_im/FHIMConfigManager.h>
@@ -57,10 +54,6 @@
 @property (nonatomic, copy) NSString *imprId;
 @property (nonatomic, assign) BOOL isDisableGoDetail;
 @property (nonatomic, strong) FHDetailContactModel *contactPhone;
-@property (nonatomic, strong) CTCallCenter *callCenter;
-@property (nonatomic, assign) BOOL isPhoneCallPickUp;
-//是否拨打电话（不区分是否接通）
-@property (nonatomic, assign) BOOL isPhoneCalled; // 新房UGC留资使用
 @property (nonatomic, assign) CGPoint lastContentOffset;
 @property (nonatomic, strong) NSDictionary *extraInfo;
 
@@ -71,7 +64,6 @@
 @property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHDetailBottomBar *bottomBar;
 @property (nonatomic, strong) FHDetailUGCGroupChatButton *bottomGroupChatBtn; // 新房群聊入口
-@property (nonatomic, strong) FHFeedbackView *feedbackView;
 
 @property (nonatomic) double initTimeInterval;
 
@@ -81,14 +73,12 @@
 @property (nonatomic, strong) FHDetailNavigationTitleView *segmentTitleView;
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 @property (nonatomic, assign) BOOL segmentViewChangedFlag;
+//是否显示
+@property (nonatomic, assign) BOOL isViewDidDisapper;
+
 @end
 
 @implementation FHNewHouseDetailViewController
-
-- (void)dealloc
-{
-    _callCenter = nil;
-}
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
 {
@@ -151,13 +141,9 @@
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupUI];
-    [self setupCallCenter];
+    [self setupViewModel];
     self.isViewDidDisapper = NO;
-    self.isPhoneCalled = NO;
     [self startLoadData];
-    if (!self.isDisableGoDetail) {
-        [self.viewModel addGoDetailLog];
-    }
     // Push推送过来的状态栏修改
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -239,49 +225,13 @@
     self.listAdapter.scrollViewDelegate = self;
     self.listAdapter.collectionViewDelegate = self;
 
-    self.viewModel = [[FHNewHouseDetailViewModel alloc] init];
-    self.viewModel.detailController = self;
-    self.viewModel.houseInfoOriginBizTrace = self.bizTrace;
-    self.viewModel.houseId = self.houseId;
-    self.viewModel.ridcode = self.ridcode;
-    self.viewModel.realtorId = self.realtorId;
-    self.viewModel.listLogPB = self.listLogPB;
-    // 构建详情页需要的埋点数据，放入baseViewModel中
-    self.viewModel.detailTracerDic = [self makeDetailTracerData];
-    self.viewModel.source = self.source;
-    self.viewModel.extraInfo = self.extraInfo;
-    self.viewModel.initTimeInterval = self.initTimeInterval;
-    self.viewModel.houseType = self.houseType;
-    if (self.tracerDict[@"event_tracking_id"] && [self.tracerDict[@"event_tracking_id"] isKindOfClass:[NSString class]]) {
-        self.viewModel.trackingId = self.tracerDict[@"event_tracking_id"];
-    }
     __weak typeof(self) weakSelf = self;
-    [self.KVOController observe:self.viewModel
-                        keyPath:@"sectionModels"
-                        options:NSKeyValueObservingOptionNew
-                          block:^(id _Nullable observer, id _Nonnull object, NSDictionary<NSString *, id> *_Nonnull change) {
-                              if (change[NSKeyValueChangeNewKey] && [change[NSKeyValueChangeNewKey] isKindOfClass:[NSArray class]]) {
-                                  [weakSelf updateTitleNames];
-                                  weakSelf.detailFlowLayout.sectionModels = weakSelf.viewModel.sectionModels;
-                                  [weakSelf.listAdapter performUpdatesAnimated:NO
-                                                                    completion:^(BOOL finished) {
-
-                                                                    }];
-                                  //            [weakSelf.listAdapter reloadDataWithCompletion:^(BOOL finished) {
-                                  //            }];
-                              }
-                          }];
-
-    __weak typeof(self) wself = self;
-    //    CGRect screenBounds = [UIScreen mainScreen].bounds;
-    //    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
     _navBar = [[FHDetailNavBar alloc] initWithType:FHDetailNavBarTypeDefault];
     [_navBar removeBottomLine];
     _navBar.backActionBlock = ^{
-        [wself.navigationController popViewControllerAnimated:YES];
+        [weakSelf.navigationController popViewControllerAnimated:YES];
     };
     [self.view addSubview:_navBar];
-    self.viewModel.navBar = _navBar;
 
     self.bottomMaskView = [[UIView alloc] init];
     self.bottomMaskView.backgroundColor = [UIColor whiteColor];
@@ -291,7 +241,7 @@
     self.bottomBar = [[FHOldDetailBottomBarView alloc] initWithFrame:CGRectZero];
 
     [self.view addSubview:_bottomBar];
-    self.viewModel.bottomBar = _bottomBar;
+    
     _bottomBar.hidden = YES;
 
     self.bottomGroupChatBtn = [[FHDetailUGCGroupChatButton alloc] initWithFrame:CGRectZero];
@@ -307,14 +257,6 @@
     _bottomStatusBar.textColor = [UIColor whiteColor];
     _bottomStatusBar.hidden = YES;
     [self.view addSubview:_bottomStatusBar];
-    self.viewModel.bottomStatusBar = _bottomStatusBar;
-
-    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
-    self.viewModel.contactViewModel.searchId = self.searchId;
-    self.viewModel.contactViewModel.imprId = self.imprId;
-    self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
-    self.viewModel.contactViewModel.belongsVC = self;
-    self.viewModel.contactViewModel.houseInfoOriginBizTrace = self.bizTrace;
 
     [self addDefaultEmptyViewFullScreen];
 
@@ -355,8 +297,7 @@
     self.segmentTitleView.alpha = 0;
     self.segmentTitleView.seperatorLine.hidden = NO;
     [self.segmentTitleView setCurrentIndexBlock:^(NSInteger currentIndex) {
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf scrollToCurrentIndex:currentIndex];
+        [weakSelf scrollToCurrentIndex:currentIndex];
     }];
     [self.view addSubview:self.segmentTitleView];
     [self.segmentTitleView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -366,6 +307,78 @@
     }];
     [self.segmentTitleView reloadData];
     self.segmentTitleView.selectIndex = 0;
+}
+
+- (void)setupViewModel {
+    self.viewModel = [[FHNewHouseDetailViewModel alloc] init];
+    self.viewModel.houseInfoOriginBizTrace = self.bizTrace;
+    self.viewModel.houseId = self.houseId;
+    self.viewModel.ridcode = self.ridcode;
+    self.viewModel.realtorId = self.realtorId;
+    self.viewModel.listLogPB = self.listLogPB;
+    // 构建详情页需要的埋点数据，放入baseViewModel中
+    self.viewModel.detailTracerDic = [self makeDetailTracerData];
+    self.viewModel.source = self.source;
+    self.viewModel.extraInfo = self.extraInfo;
+    self.viewModel.initTimeInterval = self.initTimeInterval;
+    self.viewModel.houseType = self.houseType;
+    
+    self.viewModel.navBar = _navBar;
+    self.viewModel.bottomBar = _bottomBar;
+    self.viewModel.bottomStatusBar = _bottomStatusBar;
+    
+    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
+    self.viewModel.contactViewModel.searchId = self.searchId;
+    self.viewModel.contactViewModel.imprId = self.imprId;
+    self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
+    self.viewModel.contactViewModel.belongsVC = self;
+    self.viewModel.contactViewModel.houseInfoOriginBizTrace = self.bizTrace;
+    
+    if (self.tracerDict[@"event_tracking_id"] && [self.tracerDict[@"event_tracking_id"] isKindOfClass:[NSString class]]) {
+        self.viewModel.trackingId = self.tracerDict[@"event_tracking_id"];
+    }
+    if (!self.isDisableGoDetail) {
+        [self.viewModel addGoDetailLog];
+    }
+    __weak typeof(self) weakSelf = self;
+    [self.viewModel setUpdateLayout:^{
+        if (!weakSelf) {
+            return;
+        }
+        [weakSelf updateLayout];
+    }];
+    [self.KVOController observe:self.viewModel
+                        keyPath:@"sectionModels"
+                        options:NSKeyValueObservingOptionNew
+                          block:^(id _Nullable observer, id _Nonnull object, NSDictionary<NSString *, id> *_Nonnull change) {
+        if (!weakSelf) {
+            return;
+        }
+        if (change[NSKeyValueChangeNewKey] && [change[NSKeyValueChangeNewKey] isKindOfClass:[NSArray class]]) {
+            [weakSelf updateTitleNames];
+            weakSelf.detailFlowLayout.sectionModels = weakSelf.viewModel.sectionModels;
+            [weakSelf.listAdapter performUpdatesAnimated:NO
+                                              completion:^(BOOL finished) {
+            }];
+        }
+    }];
+
+    [self.KVOController observe:self.viewModel keyPath:@"isShowEmpty" options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
+        if (!weakSelf) {
+            return;
+        }
+        if (change[NSKeyValueChangeNewKey] && [change[NSKeyValueChangeNewKey] isKindOfClass:[NSNumber class]]) {
+            BOOL isShowEmpty = [(NSNumber *)change[NSKeyValueChangeNewKey] boolValue];
+            if (isShowEmpty) {
+                weakSelf.isLoadingData = NO;
+                weakSelf.hasValidateData = NO;
+                [weakSelf.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            } else {
+                weakSelf.hasValidateData = YES;
+                [weakSelf.emptyView hideEmptyView];
+            }
+        }
+    }];
 }
 
 - (void)updateTitleNames {
@@ -544,25 +557,16 @@
     }
 }
 
-- (void)updateLayout:(BOOL)isInstant
+- (void)updateLayout
 {
     [self.collectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
-        if (isInstant) {
-            make.bottom.mas_equalTo(self.view);
-        } else {
-            make.bottom.mas_equalTo(self.bottomBar.mas_top);
-        }
+        make.bottom.mas_equalTo(self.bottomBar.mas_top);
     }];
-    self.bottomBar.hidden = isInstant;
-    self.bottomMaskView.hidden = isInstant;
-    self.bottomStatusBar.hidden = isInstant;
-
-    if (isInstant) {
-        [self.view bringSubviewToFront:self.collectionView];
-    } else {
-        [self.view sendSubviewToBack:self.collectionView];
-    }
+    self.bottomBar.hidden = NO;
+    self.bottomMaskView.hidden = NO;
+    self.bottomStatusBar.hidden = NO;
+    [self.view sendSubviewToBack:self.collectionView];
     [self.view setNeedsUpdateConstraints];
 }
 
@@ -577,21 +581,6 @@
 }
 
 #pragma mark - Request
- - (void)refreshSectionModel:(FHNewHouseDetailSectionModel *)sectionModel animated:(BOOL )animated {
-//     if ([self.viewModel.sectionModels containsObject:sectionModel]) {
-//         NSUInteger index = [self.viewModel.sectionModels indexOfObject:sectionModel];
-//         if (index < self.viewModel.sectionModels.count) {
-//             [self.listAdapterUpdater reloadCollectionView:self.collectionView sections:[NSIndexSet indexSetWithIndex:index]];
-//         }
-//     }
-//    [self.listAdapter performUpdatesAnimated:YES
-//                                      completion:^(BOOL finished) {
-//
-//                                      }];
-    [self.listAdapter reloadDataWithCompletion:^(BOOL finished) {
-    }];
-}
-
 - (void)startLoadData
 {
     if ([TTReachability isNetworkConnected]) {
@@ -616,66 +605,7 @@
     }
 }
 
-#pragma mark - Phone
-- (void)setupCallCenter
-{
-    @weakify(self);
-    _callCenter = [[CTCallCenter alloc] init];
-    _callCenter.callEventHandler = ^(CTCall *call) {
-        @strongify(self);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self callHandlerWith:call];
-        });
-    };
-}
-
-- (void)callHandlerWith:(CTCall *)call
-{
-    if (![self isTopestViewController]) {
-        return;
-    }
-
-    if ([call.callState isEqualToString:CTCallStateDisconnected]) {
-        [self checkShowSocialAlert];
-        self.isPhoneCalled = NO;
-    } else if ([call.callState isEqualToString:CTCallStateConnected]) {
-        //通话中
-        self.isPhoneCallPickUp = YES;
-    } else if ([call.callState isEqualToString:CTCallStateIncoming]) {
-        //来电话
-    } else if ([call.callState isEqualToString:CTCallStateDialing]) {
-        //正在拨号
-        self.isPhoneCalled = YES;
-    } else {
-        //doNothing
-    }
-}
-
-- (void)checkShowSocialAlert
-{
-    // 新房留资后弹窗
-    if (self.isPhoneCalled) {
-        self.isPhoneCalled = NO;
-        [self.viewModel.contactViewModel checkSocialPhoneCall];
-    } else {
-        self.viewModel.contactViewModel.socialContactConfig = nil;
-    }
-}
-
 #pragma mark - Method
-- (BOOL)isTopestViewController
-{
-    /**
-         经纪人评价页面原本只应该出现在房源详情页
-         目前会在房源详情页后面的所有页面只要触发手机号拨通就会弹出
-         在判断弹出的方法内进行页面层级的判断，或者在其他页面不接收电话相关的observer
-         */
-    if (self.navigationController.viewControllers.lastObject != self || self.presentedViewController != nil) {
-        return NO;
-    }
-    return YES;
-}
-
 // page_type
 - (NSString *)pageTypeString
 {
@@ -707,16 +637,6 @@
 - (void)tapAction:(id)tap
 {
     [self.collectionView endEditing:YES];
-}
-
-- (void)addRealtorEvaluatePopupShowLog:(NSDictionary *)params
-{
-    [FHUserTracker writeEvent:@"realtor_evaluate_popup_show" params:params];
-}
-
-- (void)addRealtorEvaluatePopupClickLog:(NSDictionary *)params
-{
-    [FHUserTracker writeEvent:@"realtor_evaluate_popup_click" params:params];
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol

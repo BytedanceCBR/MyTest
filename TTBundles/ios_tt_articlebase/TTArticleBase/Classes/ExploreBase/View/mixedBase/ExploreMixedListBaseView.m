@@ -156,7 +156,7 @@
 //#import "FRThreadSmartDetailManager.h"
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
-#import "TTVOwnPlayerPreloaderWrapper.h"
+//#import "TTVOwnPlayerPreloaderWrapper.h"
 #import "TTVSettingsConfiguration.h"
 //#import "TTFollowCategoryFetchExtraManager.h"
 #import "TTTabBarProvider.h"
@@ -3510,23 +3510,23 @@ TTRefreshViewDelegate
 
 - (void)preloadAdVideo
 {
-    if (!ttas_isAutoPlayVideoPreloadEnable()) {
-        return;
-    }
-    NSArray *items = _fetchListManager.items;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        for (id obj in items) {
-            if([obj isKindOfClass:[ExploreOrderedData class]] && [((ExploreOrderedData *)obj).originalData isKindOfClass:[Article class]]) {
-                ExploreOrderedData *item = (ExploreOrderedData *)obj;
-                if ([(ExploreOrderedData *)item couldAutoPlay] && !isEmptyString(item.article.videoID)) {
-                    HandleType handler = [[TTVOwnPlayerPreloaderWrapper sharedPreloader] preloadVideoID:item.article.videoID];
-                    TTAdPlayerPreloadModel *preloadModel = [[TTAdPlayerPreloadModel alloc] initWithAdId:item.adIDStr logExtra:item.logExtra handleType:handler];
-                    [[TTVOwnPlayerPreloaderWrapper sharedPreloader] addAdPreloadItem:preloadModel];
-                }
-            }
-        }
-        
-    });
+//    if (!ttas_isAutoPlayVideoPreloadEnable()) {
+//        return;
+//    }
+//    NSArray *items = _fetchListManager.items;
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        for (id obj in items) {
+//            if([obj isKindOfClass:[ExploreOrderedData class]] && [((ExploreOrderedData *)obj).originalData isKindOfClass:[Article class]]) {
+//                ExploreOrderedData *item = (ExploreOrderedData *)obj;
+//                if ([(ExploreOrderedData *)item couldAutoPlay] && !isEmptyString(item.article.videoID)) {
+//                    HandleType handler = [[TTVOwnPlayerPreloaderWrapper sharedPreloader] preloadVideoID:item.article.videoID];
+//                    TTAdPlayerPreloadModel *preloadModel = [[TTAdPlayerPreloadModel alloc] initWithAdId:item.adIDStr logExtra:item.logExtra handleType:handler];
+//                    [[TTVOwnPlayerPreloaderWrapper sharedPreloader] addAdPreloadItem:preloadModel];
+//                }
+//            }
+//        }
+//
+//    });
 }
 
 #pragma mark - UIScrollViewDelegate Methods

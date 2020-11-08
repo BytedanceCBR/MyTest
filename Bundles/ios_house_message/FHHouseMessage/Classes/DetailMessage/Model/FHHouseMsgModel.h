@@ -10,6 +10,27 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHHouseMsgDataItemsItemsTagsModel<NSObject>
 @end
 
+@protocol FHMsgDataItemsReportButtonListModel<NSObject>
+@end
+
+@protocol FHMsgDataItemReportContentStyleModel <NSObject>
+
+@end
+
+@interface FHMsgDataItemReportContentStyleModel : JSONModel
+
+@property (nonatomic, copy, nullable) NSString *fontColor;
+@property (nonatomic, assign) NSInteger start;
+@property (nonatomic, assign) NSInteger length;
+
+@end
+
+@interface FHMsgDataItemsReportButtonListModel : JSONModel
+
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *name;
+@end
+
 @interface FHHouseMsgDataItemsItemsTagsModel : JSONModel 
 
 @property (nonatomic, copy , nullable) NSString *content;
@@ -76,6 +97,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, assign) BOOL isSoldout;
 
+/**
+ 109 新增举报消息类型
+ */
+@property (nonatomic, copy, nullable) NSString *content;
+
+/// 对举报内容的格式化数据
+@property (nonatomic, copy, nullable) NSArray<FHMsgDataItemReportContentStyleModel> *contentStyleList;
+
+/// 按钮列表，有服务端下发
+@property (nonatomic, copy, nullable) NSArray<FHMsgDataItemsReportButtonListModel> *buttonList;
 @end
 
 @interface FHHouseMsgDataModel : JSONModel 

@@ -303,8 +303,6 @@
 }
 
 - (void)didSelectCell:(TTVFeedCellSelectContext *)context {
-    [self.videoView.playMovie removeCommodityView];
-    
     TTVVideoArticle *article = self.videoItem.article;
     if ((article.groupFlags & kVideoArticleGroupFlagsOpenUseWebViewInList) > 0 && !isEmptyString(article.articleURL)) {
         [self openWebviewWithItem:self.videoItem context:context];
@@ -388,25 +386,9 @@
             
             TTVideoShareMovie *shareMovie = [[TTVideoShareMovie alloc] init];
             shareMovie.movieView = [self cell_movieView];
-
-            TTVPlayVideo *movieView = (TTVPlayVideo *)shareMovie.movieView;
             
             [statParams setValue:shareMovie forKey:@"movie_shareMovie"];
-//            if ([cell conformsToProtocol:@protocol(TTVAutoPlayingCell)]) {
-//                if ([item.originData couldContinueAutoPlay]) {
-//                    shareMovie.isAutoPlaying = YES;
-//                    [[TTVAutoPlayManager sharedManager] cacheAutoPlayingCell:(id<TTVAutoPlayingCell>)cell movie:movieView fromView:cell.tableView];
-//                    TTVAutoPlayModel *model = [cell ttv_autoPlayModel];
-//                    TTVPlayVideo *movieView = nil;
-//                    if ([shareMovie.movieView isKindOfClass:[TTVPlayVideo class]]) {
-//                        movieView = (TTVPlayVideo *)shareMovie.movieView;
-//                    }
-//                    if (!movieView && [shareMovie.playerControl.movieView isKindOfClass:[TTVPlayVideo class]]) {
-//                        movieView = (TTVPlayVideo *)shareMovie.playerControl.movieView;
-//                    }
-//                    [[TTVAutoPlayManager sharedManager] trackForClickFeedAutoPlay:model movieView:movieView];
-//                }
-//            }
+
             [self cell_detachMovieView];
         }
         
@@ -568,7 +550,7 @@
     self.moreActionMananger.responder = self;
     self.moreActionMananger.cellEntity = self.videoItem.originData;
     self.moreActionMananger.playVideo = self.videoItem.playVideo;
-    __weak typeof(self) wself = self;
+
     self.moreActionMananger.didClickActivityItemAndQueryProcess = ^BOOL(NSString *type) {
         return NO;
     };

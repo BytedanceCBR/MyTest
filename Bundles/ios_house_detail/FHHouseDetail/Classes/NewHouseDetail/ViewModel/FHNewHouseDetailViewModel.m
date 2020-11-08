@@ -56,32 +56,24 @@
 - (void)startLoadData {
     // sub implements.........
     // Donothing
-    __weak typeof(self) wSelf = self;
+    __weak typeof(self) weakSelf = self;
     [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB ridcode:self.ridcode realtorId:self.realtorId extraInfo:self.extraInfo completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             if (model.data) {
-                wSelf.detailController.hasValidateData = YES;
-                [wSelf.detailController.emptyView hideEmptyView];
-                wSelf.bottomBar.hidden = NO;
-                [wSelf processDetailData:model];
-                [wSelf.navBar showMessageNumber];
+                weakSelf.isShowEmpty = NO;
+                weakSelf.bottomBar.hidden = NO;
+                [weakSelf processDetailData:model];
+                [weakSelf.navBar showMessageNumber];
             }else {
-                wSelf.detailController.isLoadingData = NO;
-                wSelf.detailController.hasValidateData = NO;
-                wSelf.bottomBar.hidden = YES;
-                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
+                weakSelf.isShowEmpty = YES;
+                weakSelf.bottomBar.hidden = YES;
+                [weakSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         }else {
-            wSelf.detailController.isLoadingData = NO;
-            //            if (wSelf.detailController.instantData) {
-            //                SHOW_TOAST(@"请求失败");
-            //            }else{
-            wSelf.detailController.hasValidateData = NO;
-            wSelf.bottomBar.hidden = YES;
-            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
-            //            }
+            weakSelf.isShowEmpty = YES;
+            weakSelf.bottomBar.hidden = YES;
+            [weakSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }
@@ -208,7 +200,9 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             self.sectionModels = sectionModels.copy;
-            [self.detailController updateLayout:model.isInstantData];
+            if (self.updateLayout) {
+                self.updateLayout();
+            }
         });
         
         __weak typeof(self) weakSelf = self;
@@ -230,7 +224,6 @@
 // 处理详情页周边新盘请求数据
 - (void)processDetailRelatedData {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-        self.detailController.isLoadingData = NO;
         NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
         if(self.relatedHouseData.data && self.relatedHouseData.data.items.count > 0)
         {
@@ -256,12 +249,6 @@
     return @"new_detail";
 }
 
-- (void)enableController:(BOOL)enabled
-{
-    TTNavigationController *nav = (TTNavigationController *)self.detailController.navigationController;
-    nav.panRecognizer.enabled = enabled;
-}
-
 - (void)addGoDetailLog
 {
     //    1. event_type ：house_app2c_v2
@@ -282,6 +269,7 @@
     if (self.houseId.length) {
         params[@"group_id"] = self.houseId;
     }
+    params[@"growth_deepevent"] = @(1);
     if (self.trackingId && self.trackingId.length) {
         params[@"event_tracking_id"] = self.trackingId;
     }
@@ -443,348 +431,4 @@
     });
 }
 
-- (FHDetailHalfPopLayer *)popLayer
-{
-    FHDetailHalfPopLayer *poplayer = [[FHDetailHalfPopLayer alloc] initWithFrame:self.detailController.view.bounds];
-    __weak typeof(self) wself = self;
-    poplayer.reportBlock = ^(id  _Nonnull data) {
-        [wself popLayerReport:data];
-    };
-    poplayer.feedBack = ^(NSInteger type, id  _Nonnull data, void (^ _Nonnull compltion)(BOOL)) {
-        [wself poplayerFeedBack:data type:type completion:compltion];
-    };
-    poplayer.dismissBlock = ^{
-        [wself enableController:YES];
-        wself.tableView.scrollsToTop = YES;
-    };
-    
-    [self.detailController.view addSubview:poplayer];
-    return poplayer;
-}
-
--(void)popLayerReport:(id)model
-{
-    NSString *enterFrom = @"be_null";
-    if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
-        enterFrom = @"official_inspection";
-    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        enterFrom = @"happiness_eye";
-        FHDetailDataBaseExtraDetectiveModel *detective = (FHDetailDataBaseExtraDetectiveModel *)model;
-        if (detective.fromDetail) {
-            enterFrom = @"happiness_eye_detail";
-        }
-    }
-    
-    NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
-    tracerDic[@"enter_from"] = enterFrom;
-    tracerDic[@"log_pb"] = self.listLogPB ?: @"be_null";
-    [FHUserTracker writeEvent:@"click_feedback" params:tracerDic];
-    
-    if ([TTAccountManager isLogin]) {
-        [self gotoReportVC:model];
-    } else {
-        [self gotoLogin:model enterFrom:enterFrom];
-    }
-}
-
-- (void)gotoLogin:(id)model enterFrom:(NSString *)enterFrom
-{
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    
-    [params setObject:enterFrom forKey:@"enter_from"];
-    [params setObject:@"feedback" forKey:@"enter_type"];
-    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
-    [params setObject:@(NO) forKey:@"need_pop_vc"];
-    __weak typeof(self) wSelf = self;
-    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-        if (type == TTAccountAlertCompletionEventTypeDone) {
-            // 登录成功
-            if ([TTAccountManager isLogin]) {
-                [wSelf gotoReportVC:model];
-            }
-            // 移除登录页面
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.7 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [wSelf delayRemoveLoginVC];
-            });
-        }
-    }];
-}
-
-// 二手房-房源问题反馈
-- (void)gotoReportVC:(id)model
-{
-    NSString *reportUrl = nil;
-    if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
-        reportUrl = [(FHDetailDataBaseExtraOfficialModel *)model dialogs].reportUrl;
-    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        reportUrl = [(FHDetailDataBaseExtraDetectiveModel *)model dialogs].reportUrl;
-    }
-    
-    if(reportUrl.length == 0){
-        return;
-    }
-    
-    NSDictionary *jsonDic = [self.detailData toDictionary];
-    if (jsonDic) {
-        
-        NSString *openUrl = @"sslocal://webview";
-        NSDictionary *pageData = @{@"data":jsonDic};
-        NSDictionary *commonParams = [[FHEnvContext sharedInstance] getRequestCommonParams];
-        if (commonParams == nil) {
-            commonParams = @{};
-        }
-        NSDictionary *commonParamsData = @{@"data":commonParams};
-        NSDictionary *jsParams = @{@"requestPageData":pageData,
-                                   @"getNetCommonParams":commonParamsData
-                                   };
-        NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-        NSString *urlStr = [NSString stringWithFormat:@"%@%@",host,reportUrl];
-        NSDictionary *info = @{@"url":urlStr,@"fhJSParams":jsParams,@"title":@"房源问题反馈"};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:openUrl] userInfo:userInfo];
-    }
-}
-
-- (void)delayRemoveLoginVC {
-    UINavigationController *navVC = self.detailController.navigationController;
-    NSInteger count = navVC.viewControllers.count;
-    if (navVC && count >= 2) {
-        NSMutableArray *vcs = [[NSMutableArray alloc] initWithArray:navVC.viewControllers];
-        if (vcs.count == count) {
-            [vcs removeObjectAtIndex:count - 2];
-            [self.detailController.navigationController setViewControllers:vcs];
-        }
-    }
-}
-
--(void)poplayerFeedBack:(id)model type:(NSInteger)type completion:(void (^)(BOOL success))completion
-{
-    if (![TTReachability isNetworkConnected]) {
-        SHOW_TOAST(@"网络异常");
-        completion(NO);
-        return;
-    }
-    NSString *source = nil;
-    NSString *agencyId = nil;
-    if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
-        source = @"official";
-        agencyId = [(FHDetailDataBaseExtraOfficialModel *)model agency].agencyId;
-    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        source = @"detective";
-    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]){
-        source = @"skyeye_price_abnormal";
-    }
-    
-    [FHHouseDetailAPI requstQualityFeedback:self.houseId houseType:FHHouseTypeNewHouse source:source feedBack:type agencyId:agencyId completion:^(bool succss, NSError * _Nonnull error) {
-        if (succss) {
-            completion(succss);
-        }else{
-            if (![TTReachability isNetworkConnected]) {
-                SHOW_TOAST(@"网络异常");
-            }else{
-                SHOW_TOAST(error.domain);
-            }
-            completion(NO);
-        }
-    } ];
-    
-}
-
-// 是否弹出ugc表单
-- (BOOL)needShowSocialInfoForm:(id)model {
-    if (self.weakSocialInfo) {
-        // 是否已关注
-        BOOL hasFollow = [self.weakSocialInfo.socialGroupInfo.hasFollow boolValue];
-        if (hasFollow) {
-            return NO;
-        }
-        
-        // 弹窗数据是否为空
-        if (self.weakSocialInfo.associateActiveInfo.activeInfo.count <= 0) {
-            return NO;
-        }
-        
-        // 当前VC是否在顶部
-        __block UIViewController * viewController = (UIViewController *)[TTUIResponderHelper topViewControllerFor: self.detailController];
-        if (viewController == self.detailController) {
-            // 房源详情添加了子图片VC为子VC，导致需要特殊处理
-            NSArray *tempSubVCs = [viewController childViewControllers];
-            if (tempSubVCs.count > 0) {
-                [tempSubVCs enumerateObjectsUsingBlock:^(UIViewController *  _Nonnull tempVC, NSUInteger idx, BOOL * _Nonnull stop) {
-                    // 图片VC
-                    if([tempVC isKindOfClass:[FHDetailPictureViewController class]]) {
-                        viewController = tempVC;
-                        *stop = YES;
-                    }
-                }];
-            }
-        }
-        if (viewController != self.detailController) {
-            return NO;
-        }
-        // 可以弹窗
-        return YES;
-    }
-    return NO;
-}
-
-// 显示新房UGC填留资弹窗
-- (void)showUgcSocialEntrance:(FHDetailNoticeAlertView *)alertView {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self showSocialEntranceViewWith:alertView];
-    });
-}
-
-- (void)showSocialEntranceViewWith:(FHDetailNoticeAlertView *)alertView {
-    if (self.weakSocialInfo.associateActiveInfo.activeInfo.count <= 0) {
-        if (alertView) {
-            [alertView dismiss];
-            [[ToastManager manager] showToast:@"提交成功，经纪人将尽快与您联系"];
-        }
-        return;
-    }
-    BOOL isfromForm = YES;
-    if (alertView == nil) {
-        isfromForm = NO;
-        alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"" subtitle:@"" btnTitle:@""];
-        [alertView showFrom:self.detailController.view];
-    }
-    CGFloat width = 280.0;
-    if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
-        width = 280.0 * [UIScreen mainScreen].bounds.size.width / 375.0f;
-    }
-    
-    NSString *titleText = self.weakSocialInfo.associateActiveInfo.associateContentTitle;
-    if (titleText.length <= 0) {
-        // 添加默认文案
-        NSString *type = self.weakSocialInfo.associateActiveInfo.associateLinkShowType;
-        if ([type isEqualToString:@"0"]) {
-            // 圈子
-            titleText = [NSString stringWithFormat:@"%@人已加入看房圈",self.weakSocialInfo.socialGroupInfo.followerCount];
-        } else if ([type isEqualToString:@"1"]) {
-            // 群聊
-            titleText = [NSString stringWithFormat:@"%ld人已加入看房群",self.weakSocialInfo.socialGroupInfo.chatStatus.currentConversationCount];
-        }
-    }
-    if (isfromForm) {
-        titleText = [NSString stringWithFormat:@"提交成功！%@",titleText];
-    }
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, width - 40, 300)];
-    titleLabel.hidden = YES;
-    titleLabel.font = [UIFont themeFontMedium:20];
-    titleLabel.textColor = [UIColor themeGray1];
-    titleLabel.numberOfLines = 0;
-    titleLabel.text = titleText;
-    CGSize size = [titleLabel sizeThatFits:CGSizeMake(width - 40, 300)];
-    
-    // 高度计算
-    CGFloat height = 40 + size.height + 60;
-    NSInteger count = 3;
-    if (self.weakSocialInfo.associateActiveInfo.activeInfo.count >= 3) {
-        count = 3;
-    } else if (self.weakSocialInfo.associateActiveInfo.activeInfo.count > 0) {
-        count = self.weakSocialInfo.associateActiveInfo.activeInfo.count;
-    } else {
-        count = 1;
-    }
-    CGFloat messageHeight = 20 * 2 + 28 * count + (count - 1) * 5;
-    height += messageHeight;
-    
-    FHDetailSocialEntranceView *v = [[FHDetailSocialEntranceView alloc] initWithFrame:CGRectMake(0, 0, width, height)];
-    v.backgroundColor = [UIColor themeWhite];
-    v.parentView = alertView;
-    v.messageHeight = messageHeight;
-    v.topTitleHeight = 40 + size.height;
-    v.socialInfo = self.weakSocialInfo;
-    __weak typeof(self) weakSelf = self;
-    v.submitBtnBlock = ^{
-        [weakSelf socialEntranceButtonClick];
-    };
-    v.titleLabel.text = titleText;
-    [alertView showAnotherView:v];
-    [v startAnimate];
-    
-    // show 埋点
-    NSMutableDictionary *params = @{}.mutableCopy;
-    NSDictionary *log_pb = self.detailTracerDic[@"log_pb"];
-    NSString *page_type = self.detailTracerDic[@"page_type"];
-    if (log_pb) {
-        params[@"log_pb"] = log_pb;
-    }
-    if (page_type) {
-        params[@"page_type"] = page_type;
-    }
-    NSString *type = self.weakSocialInfo.associateActiveInfo.associateLinkShowType;
-    if ([type isEqualToString:@"0"]) {
-        // 圈子
-        params[@"skip_page_type"] = @"community_group";
-    } else if ([type isEqualToString:@"1"]) {
-        // 群聊
-        params[@"skip_page_type"] = @"community_member_talk";
-    }
-    params[@"tip_type"] = @"community_tip";
-    [FHUserTracker writeEvent:@"tip_show" params:params];
-}
-
-- (void)socialEntranceButtonClick {
-    // click 埋点
-    NSMutableDictionary *params = @{}.mutableCopy;
-    NSDictionary *log_pb = self.detailTracerDic[@"log_pb"];
-    NSString *page_type = self.detailTracerDic[@"page_type"];
-    if (log_pb) {
-        params[@"log_pb"] = log_pb;
-    }
-    if (page_type) {
-        params[@"page_type"] = page_type;
-    }
-    NSString *type = self.weakSocialInfo.associateActiveInfo.associateLinkShowType;
-    if ([type isEqualToString:@"0"]) {
-        // 圈子
-        params[@"skip_page_type"] = @"community_group";
-    } else if ([type isEqualToString:@"1"]) {
-        // 群聊
-        params[@"skip_page_type"] = @"community_member_talk";
-    }
-    params[@"tip_type"] = @"community_tip";
-    params[@"click_type"] = @"confirm";
-    [FHUserTracker writeEvent:@"tip_click" params:params];
-    
-    if (self.weakSocialInfo && self.weakSocialInfo.associateActiveInfo) {
-        NSString *type = self.weakSocialInfo.associateActiveInfo.associateLinkShowType;
-        if ([type isEqualToString:@"0"]) {
-            // 圈子
-            NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
-            if (self.weakSocialInfo) {
-                FHHouseNewsSocialModel *socialInfo = (FHHouseNewsSocialModel *)self.weakSocialInfo;
-                if (socialInfo.socialGroupInfo && socialInfo.socialGroupInfo.socialGroupId.length > 0) {
-                    self.contactViewModel.needRefetchSocialGroupData = YES;
-                    NSMutableDictionary *dict = @{}.mutableCopy;
-                    NSDictionary *log_pb = tracerDic[@"log_pb"];
-                    NSString *group_id = nil;
-                    if (log_pb && [log_pb isKindOfClass:[NSDictionary class]]) {
-                        group_id = log_pb[@"group_id"];
-                    }
-                    tracerDic[@"log_pb"] = socialInfo.socialGroupInfo.logPb ? socialInfo.socialGroupInfo.logPb : @"be_null";
-                    NSString *page_type = tracerDic[@"page_type"];
-                    tracerDic[@"enter_from"] = page_type ?: @"be_null";
-                    tracerDic[@"enter_type"] = @"click";
-                    tracerDic[@"group_id"] = group_id ?: @"be_null";
-                    tracerDic[@"element_from"] = @"community_tip";
-                    dict[@"community_id"] = socialInfo.socialGroupInfo.socialGroupId;
-                    dict[@"tracer"] = tracerDic;
-                    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-                    // 跳转到圈子详情页
-                    NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
-                    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-                }
-            }
-        } else if ([type isEqualToString:@"1"]) {
-            // 群聊
-            if (self.contactViewModel) {
-                self.contactViewModel.ugcLoginType = FHUGCCommunityLoginTypeTip;
-                [self.contactViewModel groupChatAction];
-            }
-        }
-    }
-}
 @end

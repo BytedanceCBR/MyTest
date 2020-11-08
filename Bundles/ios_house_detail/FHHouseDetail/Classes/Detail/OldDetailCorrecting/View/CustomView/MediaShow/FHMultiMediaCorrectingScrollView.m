@@ -19,11 +19,14 @@
 #import "FHDetailHeaderTitleView.h"
 #import "UIViewAdditions.h"
 #import "FHHouseDetailHeaderMoreStateView.h"
+#import "FHMultiMediaPanoramaCell.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 
-#define k_VIDEOCELLID @"video_cell_id"
-#define k_IMAGECELLID @"image_cell_id"
-#define k_VRELLID @"vr_cell_id"
+static NSString * const k_VIDEOCELLID =       @"video_cell_id";
+static NSString * const k_IMAGECELLID =       @"image_cell_id";
+static NSString * const k_VRELLID =           @"vr_cell_id";
+static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
+
 
 @interface FHMultiMediaCorrectingScrollView ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
@@ -75,7 +78,8 @@
     [_colletionView registerClass:[FHMultiMediaImageCell class] forCellWithReuseIdentifier:k_IMAGECELLID];
     [_colletionView registerClass:[FHMultiMediaVideoCell class] forCellWithReuseIdentifier:k_VIDEOCELLID];
     [_colletionView registerClass:[FHMultiMediaVRImageCell class] forCellWithReuseIdentifier:k_VRELLID];
-
+    [_colletionView registerClass:[FHMultiMediaPanoramaCell class] forCellWithReuseIdentifier:k_PANORAMACELLID];
+    
     _colletionView.delegate = self;
     _colletionView.dataSource = self;
     
@@ -344,7 +348,9 @@
         }else if(model.mediaType == FHMultiMediaTypeVRPicture){
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VRELLID forIndexPath:indexPath];
             self.firstVRCell = (FHMultiMediaVRImageCell*)cell;
-        }else{
+        } else if (model.mediaType == FHMultiMediaTypeBaiduPanorama) {
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_PANORAMACELLID forIndexPath:indexPath];
+        } else{
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_IMAGECELLID forIndexPath:indexPath];
         }
         cell.isShowenPictureVC = self.isShowenPictureVC;

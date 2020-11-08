@@ -396,7 +396,7 @@
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-    LOGD(@"CellView KVO: %p %@", object, keyPath);
+//    LOGD(@"CellView KVO: %p %@", object, keyPath);
     
     NSNumber *oldValue = [change objectForKey:NSKeyValueChangeOldKey];
     NSNumber *newValue = [change objectForKey:NSKeyValueChangeNewKey];

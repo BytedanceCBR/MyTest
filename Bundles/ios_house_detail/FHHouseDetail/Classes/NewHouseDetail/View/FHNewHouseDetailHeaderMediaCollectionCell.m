@@ -466,14 +466,7 @@
     }
     
     NSUInteger detailIndex = 0;
-    
-    for (NSInteger i = 0; i < self.dataHelper.pictureDetailData.mediaItemArray.count; i++) {
-        FHMultiMediaItemModel *nextModel = self.dataHelper.pictureDetailData.mediaItemArray[i];
-        if ([nextModel.imageUrl isEqualToString:itemModel.imageUrl] && nextModel.mediaType == itemModel.mediaType) {
-            detailIndex = i;
-            break;
-        }
-    }
+    detailIndex = [self.dataHelper getPictureDetailIndexFromMediaHeaderIndex:index];
     [self showImagesWithCurrentIndex:detailIndex];
 }
 

@@ -566,7 +566,7 @@ static SSADEventTracker * sharedManager;
             [events setValue:[NSNumber numberWithLong:duration*1000] forKey:@"duration"];
         } else {
             if ([label isEqualToString:@"show_over"]) {
-                LOGD(@"stop heer");
+//                LOGD(@"stop heer");
             }
         }
         
@@ -599,7 +599,7 @@ static SSADEventTracker * sharedManager;
 
 + (void)sendTrackURLs:(NSArray<NSString *> *)urls with:(id<TTAd>) model {
     if (!urls || !model) {
-        LOGE(@"此处  ad 打点错误 %s", __PRETTY_FUNCTION__);
+//        LOGE(@"此处  ad 打点错误 %s", __PRETTY_FUNCTION__);
         return;
     }
     

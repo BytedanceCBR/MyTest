@@ -169,7 +169,7 @@
             
         case TTMovieFinishReasonPlaybackError: // 播放失败
         {
-            LOGD(@"播放失败 : %@", reason[@"error"]);
+//            LOGD(@"播放失败 : %@", reason[@"error"]);
             
             // event track : 播放失败
         } break;

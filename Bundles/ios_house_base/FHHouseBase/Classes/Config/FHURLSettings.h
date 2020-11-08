@@ -185,6 +185,12 @@ NS_ASSUME_NONNULL_BEGIN
 //小视频 活动页loadmore
 + (NSString *)shortVideoActivityListLoadMoreURL;
 
+//小视频用户关注
++ (NSString *)shortVideoFollowURLString;
+
+//小视频取消关注
++ (NSString *)shortVideoUnfollowURLString;
+
 //检测App更新
 + (NSString *)checkVersionURL;
 

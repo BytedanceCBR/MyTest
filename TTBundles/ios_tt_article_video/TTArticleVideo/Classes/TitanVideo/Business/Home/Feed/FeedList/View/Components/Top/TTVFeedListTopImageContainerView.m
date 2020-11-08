@@ -39,7 +39,7 @@ extern CGFloat ttvs_listVideoMaxHeight(void);
 extern UIColor *tt_ttuisettingHelper_cellViewBackgroundColor(void);
 extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 
-@interface TTVFeedListTopImageContainerView ()<TTVCellPlayMovieDelegate, TTVPlayerDoubleTap666Delegate>
+@interface TTVFeedListTopImageContainerView ()<TTVCellPlayMovieDelegate>
 
 @property (nonatomic, strong) SSThemedLabel *videoRightBottomLabel; //默认显示时间
 @property (nonatomic, strong) SSThemedLabel *videoTitleLabel;
@@ -150,7 +150,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
         self.playMovie = [[TTVCellPlayMovie alloc] init];
     }
     self.playMovie.delegate = self;
-    self.playMovie.doubleTap666Delegate = self;
+//    self.playMovie.doubleTap666Delegate = self;
     self.playMovie.logo = self.logo;
     self.playMovie.frame = self.logo.bounds;
     self.playMovie.fromView = self.logo;
@@ -179,7 +179,7 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 - (void)addCommodity
 {
     [self configurePlayMovie];
-    [self.playMovie addCommodity];
+//    [self.playMovie addCommodity];
 }
 
 #pragma mark TTVCellPlayMovieDelegate
@@ -382,60 +382,60 @@ extern BOOL ttvs_isEnhancePlayerTitleFont(void);
 }
 
 
-#pragma mark - TTVPlayerDoubleTap666Delegate
-
-- (TTVDoubleTapDigType)ttv_doubleTapDigType {
-    if (!isEmptyString(self.cellEntity.originData.adIDStr)) {
-        return TTVDoubleTapDigTypeForbidDig;
-    }
-    if (self.cellEntity.originData.userBury) {
-        return TTVDoubleTapDigTypeAlreadyBury;
-    }
-    if (self.cellEntity.originData.userDigg) {
-        return TTVDoubleTapDigTypeAlreadyDig;
-    }
-    return TTVDoubleTapDigTypeCanDig;
-}
-
-- (void)ttv_doDigActionWhenDoubleTap:(TTVDoubleTapDigType)digType {
-    if (digType == TTVDoubleTapDigTypeForbidDig || digType == TTVDoubleTapDigTypeAlreadyBury) {
-        return;
-    }
-    NSMutableDictionary *pramas = [NSMutableDictionary dictionary];
-    if ([self.cellEntity.categoryId isEqualToString:kTTMainCategoryID]) {
-        [pramas setValue:@"click_headline" forKey:@"enter_from"];
-    }else{
-        [pramas setValue:@"click_category" forKey:@"enter_from"];
-    }
-    [pramas setValue:self.cellEntity.categoryId forKey:@"category_name"];
-    [pramas setValue:self.cellEntity.originData.groupModel.groupID forKey:@"group_id"];
-    [pramas setValue:self.cellEntity.originData.groupModel.itemID forKey:@"item_id"];
-    [pramas setValue:@"list" forKey:@"position"];
-    [pramas setValue:(self.playMovie.isFullScreen ? @"fullscreen" : @"notfullscreen") forKey:@"fullscreen"];
-    [pramas setValue:@"double_like" forKey:@"action_type"];
-    [TTTrackerWrapper eventV3:@"rt_like" params:pramas];
-    
-    int diggCount = self.cellEntity.originData.diggCount;
-    diggCount ++;
-    if (digType == TTVDoubleTapDigTypeCanDig) {
-        TTVideoArticleService *articleService = [[TTServiceCenter sharedInstance] getService:[TTVideoArticleService class]];
-        TTVideoDiggBuryParameter *parameter = [[TTVideoDiggBuryParameter alloc] init];
-        parameter.aggr_type = self.cellEntity.originData.aggrType;
-        parameter.item_id = self.cellEntity.originData.itemID;
-        parameter.group_id = self.cellEntity.originData.groupModel.groupID;
-        parameter.ad_id = self.cellEntity.originData.adIDNumber.longLongValue > 0 ? self.cellEntity.originData.adIDNumber.stringValue : nil;
-        NSString *unique_id = parameter.group_id ? parameter.group_id : parameter.ad_id;
-        @weakify(self);
-        [articleService digg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
-            @strongify(self);
-            if (error) {
-                return;
-            }
-            SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:YES uniqueIDStr:unique_id);
-            SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
-        }];
-    }
-}
+//#pragma mark - TTVPlayerDoubleTap666Delegate
+//
+//- (TTVDoubleTapDigType)ttv_doubleTapDigType {
+//    if (!isEmptyString(self.cellEntity.originData.adIDStr)) {
+//        return TTVDoubleTapDigTypeForbidDig;
+//    }
+//    if (self.cellEntity.originData.userBury) {
+//        return TTVDoubleTapDigTypeAlreadyBury;
+//    }
+//    if (self.cellEntity.originData.userDigg) {
+//        return TTVDoubleTapDigTypeAlreadyDig;
+//    }
+//    return TTVDoubleTapDigTypeCanDig;
+//}
+//
+//- (void)ttv_doDigActionWhenDoubleTap:(TTVDoubleTapDigType)digType {
+//    if (digType == TTVDoubleTapDigTypeForbidDig || digType == TTVDoubleTapDigTypeAlreadyBury) {
+//        return;
+//    }
+//    NSMutableDictionary *pramas = [NSMutableDictionary dictionary];
+//    if ([self.cellEntity.categoryId isEqualToString:kTTMainCategoryID]) {
+//        [pramas setValue:@"click_headline" forKey:@"enter_from"];
+//    }else{
+//        [pramas setValue:@"click_category" forKey:@"enter_from"];
+//    }
+//    [pramas setValue:self.cellEntity.categoryId forKey:@"category_name"];
+//    [pramas setValue:self.cellEntity.originData.groupModel.groupID forKey:@"group_id"];
+//    [pramas setValue:self.cellEntity.originData.groupModel.itemID forKey:@"item_id"];
+//    [pramas setValue:@"list" forKey:@"position"];
+//    [pramas setValue:(self.playMovie.isFullScreen ? @"fullscreen" : @"notfullscreen") forKey:@"fullscreen"];
+//    [pramas setValue:@"double_like" forKey:@"action_type"];
+//    [TTTrackerWrapper eventV3:@"rt_like" params:pramas];
+//    
+//    int diggCount = self.cellEntity.originData.diggCount;
+//    diggCount ++;
+//    if (digType == TTVDoubleTapDigTypeCanDig) {
+//        TTVideoArticleService *articleService = [[TTServiceCenter sharedInstance] getService:[TTVideoArticleService class]];
+//        TTVideoDiggBuryParameter *parameter = [[TTVideoDiggBuryParameter alloc] init];
+//        parameter.aggr_type = self.cellEntity.originData.aggrType;
+//        parameter.item_id = self.cellEntity.originData.itemID;
+//        parameter.group_id = self.cellEntity.originData.groupModel.groupID;
+//        parameter.ad_id = self.cellEntity.originData.adIDNumber.longLongValue > 0 ? self.cellEntity.originData.adIDNumber.stringValue : nil;
+//        NSString *unique_id = parameter.group_id ? parameter.group_id : parameter.ad_id;
+//        @weakify(self);
+//        [articleService digg:parameter completion:^(TT2DataItemActionResponseModel *response, NSError *error) {
+//            @strongify(self);
+//            if (error) {
+//                return;
+//            }
+//            SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggChanged:uniqueIDStr:), ttv_message_feedDiggChanged:YES uniqueIDStr:unique_id);
+//            SAFECALL_MESSAGE(TTVFeedUserOpDataSyncMessage, @selector(ttv_message_feedDiggCountChanged:uniqueIDStr:), ttv_message_feedDiggCountChanged:diggCount uniqueIDStr:unique_id);
+//        }];
+//    }
+//}
 
 #pragma mark - helpers
 

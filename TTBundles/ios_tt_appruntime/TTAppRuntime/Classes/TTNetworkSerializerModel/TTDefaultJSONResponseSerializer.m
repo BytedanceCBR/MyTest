@@ -136,7 +136,7 @@ NSString * const SSResponeStatusCodeKey = @"status_code";
             
             *resultError =[NSError errorWithDomain:kTTNetworkErrorDomain code:kTTNetworkManagerJsonResultNotDictionaryErrorCode userInfo:userInfo];
             [self error:resultError addHTTPStatusCodeWithResponse:response];
-            LOGD(@"url: %@ return failed http result error: %@, json obj: %@", response.URL.absoluteString, parseError, jsonObj);
+//            LOGD(@"url: %@ return failed http result error: %@, json obj: %@", response.URL.absoluteString, parseError, jsonObj);
         }
         return jsonObj;
     }
@@ -158,7 +158,7 @@ NSString * const SSResponeStatusCodeKey = @"status_code";
         if (errorCode && ![errorCode isEqualToNumber:@0]) {
             [userInfo setValue:errorCode forKey:kTTNetworkErrorResponseErrorCodeKey];//由于业务导致的错误
             parseError = [NSError errorWithDomain:kTTNetworkErrorDomain code:errorCode.integerValue userInfo:userInfo];
-            LOGD(@"url: %@ return failed http result error: %@, json obj: %@", response.URL.absoluteString, parseError, jsonObj);
+//            LOGD(@"url: %@ return failed http result error: %@, json obj: %@", response.URL.absoluteString, parseError, jsonObj);
         }
         
     }
@@ -190,7 +190,7 @@ NSString * const SSResponeStatusCodeKey = @"status_code";
             }
             
             parseError = [NSError errorWithDomain:kTTNetworkErrorDomain code:kTTNetworkManagerOldJSONResultErrorErrorCode userInfo:userInfo];
-            LOGD(@"url: %@ return failed http result error: %@, json obj: %@", response.URL.absoluteString, parseError, jsonObj);
+//            LOGD(@"url: %@ return failed http result error: %@, json obj: %@", response.URL.absoluteString, parseError, jsonObj);
         }
     }
     else {

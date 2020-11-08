@@ -472,12 +472,12 @@ static TTCommentDataManager *sharedManager;
 
 - (void)deleteCommentWithCommentID:(NSString *)commentID finishBlock:(void (^)(NSError *error))finishBlock {
     if ([commentID longLongValue] == 0) {
-        LOGI(@"删除评论的ID不能为0");
+//        LOGI(@"删除评论的ID不能为0");
         return;
     }
 
     if (![TTAccountManager isLogin]) {
-        LOGI(@"删除评论必须登录");
+//        LOGI(@"删除评论必须登录");
         return;
     }
 
@@ -509,12 +509,12 @@ static TTCommentDataManager *sharedManager;
 
 - (void)deleteCommentReplyWithCommentReplyID:(NSString *)commentReplyID commentID:(NSString *)commentID finishBlock:(void (^)(NSError *error))finishBlock {
     if ([commentReplyID longLongValue] == 0 || [commentID longLongValue] == 0) {
-        LOGI(@"删除文章评论的ID不能为0");
+//        LOGI(@"删除文章评论的ID不能为0");
         return;
     }
 
     if (![TTAccountManager isLogin]) {
-        LOGI(@"删除评论必须登录");
+//        LOGI(@"删除评论必须登录");
         return;
     }
 

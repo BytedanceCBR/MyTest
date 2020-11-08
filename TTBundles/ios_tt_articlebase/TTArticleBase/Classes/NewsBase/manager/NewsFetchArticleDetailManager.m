@@ -179,7 +179,7 @@ static NewsFetchArticleDetailManager * sharedManager;
         if (!sself) {
             return;
         }
-        ENTER;
+//        ENTER;
         [sself.operations removeObject:task];
         
         NSMutableDictionary *extra = [NSMutableDictionary dictionary];
@@ -323,7 +323,7 @@ static NewsFetchArticleDetailManager * sharedManager;
         if (!sself) {
             return;
         }
-        ENTER;
+//        ENTER;
         [sself.operations removeObject:task];
         
         NSMutableDictionary *extra = [NSMutableDictionary dictionary];
@@ -732,7 +732,7 @@ static NewsFetchArticleDetailManager * sharedManager;
         if (!sself) {
             return;
         }
-        ENTER;
+//        ENTER;
         [sself.operations removeObject:task];
 
         NSMutableDictionary *extra = [NSMutableDictionary dictionary];
