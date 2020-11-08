@@ -752,9 +752,6 @@
         return self.guessYouWantData.count > 0 ? self.guessYouWantData.count + 1 : 0;
     } else if (tableView.tag == 2) {
         // 联想词
-        if (self.sugListData.count == 0 && !self.listController.isLoadingData && self.listController.fatherVC.naviBar.searchInput.text.length != 0) {
-            return 1;
-        }
         if(section == 0){
             return self.sugListData.count;
         }
@@ -787,7 +784,7 @@
         }
         return cell;
     } else if (tableView.tag == 2) {
-        if (self.sugListData.count == 0) {
+        if (self.sugListData.count == 0 && self.othersugListData.count == 0) {
             //空页面
             FHSuggestionEmptyCell *cell = (FHSuggestionEmptyCell *)[tableView dequeueReusableCellWithIdentifier:@"suggetEmptyCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -797,8 +794,7 @@
         if(nowsugListData.count <= indexPath.row || nowsugListData.count <0){
             return [[UITableViewCell alloc] init];
         }
-        //服务端会同时下发cardType=9和cardType=16两种类型的卡片数据
-        //TODO: 为支持1.0.1版本帮我找房需求，暂时根据model.cardType字段区分cell，后期需支持混排
+        //服务端会同时下发cardType=9和cardType=16mcardType=15三种类型的卡片数据
         FHSuggestionResponseItemModel *model = nowsugListData[indexPath.row];
         if(model.cardType == 18){
             FHRecommendtHeaderViewCell *cell = (FHRecommendtHeaderViewCell *)[tableView dequeueReusableCellWithIdentifier:@"RecommendtHeaderCell" forIndexPath:indexPath];
@@ -809,7 +805,6 @@
             FHSearchGuessYouWantTipsModel *tipModel = [[FHSearchGuessYouWantTipsModel alloc] init];
             tipModel.text = model.text;
             [tipCell refreshWithData:tipModel];
-            
             return tipCell;
         } else if (model.cardType == 15) {
             __weak typeof(self) weakSelf = self;
@@ -818,7 +813,6 @@
                 [weakSelf jump2HouseFindPageWithUrl:url from:@"driving_find_house_card"];
             };
             [helperCell updateWithData:model];
-            
             return helperCell;
         }else if(model.cardType == 16) {
             // 新房
@@ -840,7 +834,6 @@
                     [cell.secondaryLabel setNeedsLayout];
                     [cell.secondaryLabel layoutIfNeeded];
                     cell.secondaryLabel.textContainerInset = UIEdgeInsetsMake(0, 5, 0, 5);
-                    cell.secondarySubLabel.text = model.tips2;
                 }
                 return cell;
             }else if(model.houseType.intValue == FHHouseTypeSecondHandHouse) {// 二手房
@@ -848,7 +841,7 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.highlightedText = self.highlightedText;
                 if(indexPath.row == nowsugListData.count - 1){
-                    cell.topLine.hidden =YES;
+                    cell.sepLine.hidden =YES;
                 }
                 cell.model = model;
                 return cell;
@@ -865,7 +858,7 @@
                 }
                 cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeOrange1] fontSize:15.0];
                 cell.secondaryLabel.text = model.tips;
-                if (indexPath.row == self.sugListData.count - 1) {
+                if (indexPath.row == nowsugListData.count - 1) {
                     // 末尾
                     [cell.label mas_updateConstraints:^(MASConstraintMaker *make) {
                         make.bottom.mas_equalTo(cell.contentView).offset(-20);
@@ -895,8 +888,9 @@
         }
     } else if (tableView.tag == 2) {
         // 联想词
-        if (indexPath.row < self.sugListData.count) {
-            FHSuggestionResponseItemModel *model  = self.sugListData[indexPath.row];
+        NSMutableArray<FHSuggestionResponseItemModel>  *nowsugListData = indexPath.section == 0 ?self.sugListData:self.othersugListData;
+        if (indexPath.row < nowsugListData.count) {
+            FHSuggestionResponseItemModel *model  = nowsugListData[indexPath.row];
             if(model.cardType == 16){
                 [self associateWordCellClick:model rank:indexPath.row];
             }
@@ -940,20 +934,18 @@
                 return 0;
             }
             FHSuggestionResponseItemModel *model = nowsugListData[indexPath.row];
-            if(model.cardType == 18){
+            if(model.cardType == 18){//相关推荐高度
                 return 42;
-            }else if (model.cardType == 9) {
+            }else if (model.cardType == 9) {//tips高度
                 return 60;
             }else if (model.cardType == 15) {  //帮我找房卡片高度
                 return 93;
-            }else if (model.houseType.intValue == FHHouseTypeNewHouse) {
-                // 新房
+            }else if (model.houseType.intValue == FHHouseTypeNewHouse) {// 新房
                 return 67;
-            } else  if (model.houseType.intValue == FHHouseTypeSecondHandHouse) {
-                // 二手房
+            } else  if (model.houseType.intValue == FHHouseTypeSecondHandHouse) {// 二手房
                 return 68;
             }else {
-                if (indexPath.row == self.sugListData.count - 1) {
+                if (indexPath.row == nowsugListData.count - 1) {
                     return 61;
                 } else {
                     return 41;

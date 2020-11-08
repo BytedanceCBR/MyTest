@@ -44,7 +44,7 @@
     }];
     // secondaryLabel
     _secondaryLabel = [[UILabel alloc] init];
-    _secondaryLabel.font = [UIFont themeFontRegular:13];
+    _secondaryLabel.font = [UIFont themeFontRegular:10];
     _secondaryLabel.textColor = [UIColor themeGray3];
     _secondaryLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_secondaryLabel];

@@ -64,11 +64,12 @@
         make.top.equalTo(self.titleLab.mas_bottom).offset(3);
         make.right.equalTo(self.amountLab.mas_right);
     }];
-    [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
+    CGFloat lineH = UIScreen.mainScreen.scale > 2.5 ? 0.35 : 0.5;
+    [self.sepLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
             make.right.mas_equalTo(-15);
             make.bottom.mas_equalTo(0);
-            make.height.mas_equalTo([TTDeviceHelper ssOnePixel]);
+            make.height.mas_equalTo(lineH);
     }];
     [self.regionLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     [self.villageLab setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
@@ -156,14 +157,14 @@
     return _amountLab;
 }
 
-- (UIView *)topLine{
-    if(!_topLine){
-        UILabel *topLine = [[UILabel alloc]init];
-        _topLine=topLine;
-        _topLine.backgroundColor = [UIColor colorWithHexString:@"#e7e7e7"];
-        [self.contentView addSubview:_topLine];
+- (UIView *)sepLine{
+    if(!_sepLine){
+        UILabel *sepLine = [[UILabel alloc]init];
+        _sepLine=sepLine;
+        _sepLine.backgroundColor = [UIColor colorWithHexString:@"#e7e7e7"];
+        [self.contentView addSubview:_sepLine];
     }
-    return _topLine;
+    return _sepLine;
 }
 
 - (void)setModel:(FHSuggestionResponseItemModel *)model {
@@ -179,7 +180,7 @@
         };
         self.subTitleLab.text = model.oldName;
         self.zoneTypeLab.text = model.recallType;
-            CGFloat zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
+        CGFloat zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
         [self.zoneTypeView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_offset(zoneTypeLabWidth+12);
         }];
@@ -203,6 +204,12 @@
             make.centerY.equalTo(self.zoneTypeView);
             make.left.equalTo(self.contentView).offset(15);
         }];
+        
+        if(model.newtip){
+            self.zoneTypeView.backgroundColor = [UIColor colorWithHexStr:model.newtip[@"background_color"]];
+            self.zoneTypeLab.textColor = [UIColor colorWithHexStr:model.newtip[@"text_color"]];
+            self.zoneTypeLab.text = model.newtip[@"content"];
+        }
         
     }
 }
