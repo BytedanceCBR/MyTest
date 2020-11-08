@@ -127,6 +127,12 @@
 }
 
 - (void)startLoadData {
+    if(![TTReachability isNetworkConnected]){
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        self.showenRetryButton = YES;
+        return;
+    }
+    
     __weak typeof(self) wself = self;
     [self startLoading];
     [self.items removeAllObjects];
