@@ -499,6 +499,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSearchGuessYouWantTipsModel : FHSearchBaseItemModel
 
 @property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *realSearchOpenUrl;
+@property (nonatomic, copy , nullable) NSString *emphasisContent;
+
 
 @end
 
@@ -538,6 +542,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHSearchBaseItemModel *> *searchItems;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHListSearchHouseDataModel *recommendSearchModel;
+@property (nonatomic, strong, nullable) FHSearchGuessYouWantTipsModel *realBussinessSearch;
 
 @end
 

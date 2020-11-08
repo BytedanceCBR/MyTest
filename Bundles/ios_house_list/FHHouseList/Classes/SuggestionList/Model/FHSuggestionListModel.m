@@ -97,7 +97,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-                           @"otherItem": @"other_item",
+                           @"otherItems": @"other_items",
                            @"jumpHouseType": @"jump_house_type",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

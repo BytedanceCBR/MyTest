@@ -800,6 +800,7 @@
             FHRecommendtHeaderViewCell *cell = (FHRecommendtHeaderViewCell *)[tableView dequeueReusableCellWithIdentifier:@"RecommendtHeaderCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.label.text = model.text;
+            return cell;
         }else if (model.cardType == 9) {
             FHHouseListRecommendTipCell *tipCell = (FHHouseListRecommendTipCell *)[tableView dequeueReusableCellWithIdentifier:@"tipcell" forIndexPath:indexPath];
             FHSearchGuessYouWantTipsModel *tipModel = [[FHSearchGuessYouWantTipsModel alloc] init];
@@ -1316,13 +1317,13 @@
         if (model != NULL && error == NULL) {            // 构建数据源
             [wself.sugListData removeAllObjects];
             [wself.othersugListData removeAllObjects];
-            [wself.sugListData addObjectsFromArray:model.data.item];
-            if(model.data.otherItem.count > 0){
+            [wself.sugListData addObjectsFromArray:model.data.items];
+            if(model.data.otherItems.count > 0){
                 FHSuggestionResponseItemModel *tepmodel= [[FHSuggestionResponseItemModel alloc] init];
                 tepmodel.cardType = 18;
                 tepmodel.text = self.houseType == 1? @"相关二手房推荐":@"相关新房推荐";
                 [wself.othersugListData addObject:tepmodel];
-                [wself.othersugListData addObjectsFromArray:model.data.otherItem];
+                [wself.othersugListData addObjectsFromArray:model.data.otherItems];
             }
             [wself.listController.emptyView hideEmptyView];
             [wself reloadSugTableView];

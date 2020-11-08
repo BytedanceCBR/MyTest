@@ -159,7 +159,7 @@
 
 - (UIView *)sepLine{
     if(!_sepLine){
-        UILabel *sepLine = [[UILabel alloc]init];
+        UIView *sepLine = [[UIView alloc]init];
         _sepLine=sepLine;
         _sepLine.backgroundColor = [UIColor colorWithHexString:@"#e7e7e7"];
         [self.contentView addSubview:_sepLine];

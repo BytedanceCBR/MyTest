@@ -885,6 +885,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 hasMore = houseModel.hasMore;
                 refreshTip = houseModel.refreshTip;
                 if (houseModel.searchItems.count > 0) {
+                    if(houseModel.realBussinessSearch){
+                        [itemArray addObject:houseModel.realBussinessSearch];
+                    }
                     [itemArray addObjectsFromArray:houseModel.searchItems];
                 }
                 redirectTips = houseModel.redirectTips;
@@ -948,96 +951,96 @@ extern NSString *const INSTANT_DATA_KEY;
                 hideRefreshTip = YES;
             }
 
-                if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
-                    FHSearchHouseItemModel *itemModel = theItemModel;
-                    itemModel.isLastCell = (idx == itemArray.count - 1);
-                    if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]] || [lastObj isKindOfClass:[FHHouseReserveAdviserModel class]]) {
-                        itemModel.topMargin = 0;
-                    }
-                    if ((itemModel.houseType.integerValue == FHHouseTypeRentHouse || itemModel.houseType.integerValue == FHHouseTypeNeighborhood) && idx == 0) {
-                        itemModel.topMargin = 10;
-                    }
-                    theItemModel = itemModel;
-                }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
-                    FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
-                    if (agencyInfoModel.agencyTotal.integerValue != 0 && agencyInfoModel.houseTotal.integerValue != 0) {
-                        if (wself.isRefresh) {
-                            // 展示经纪人信息
-                            wself.showRealHouseTop = YES;
-                        }
-                    }else {
-                        theItemModel = nil;
-                    }
-                }else if ([theItemModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]] && wself.isRefresh) {
-                    // 展示搜索订阅卡片
-                    wself.isShowSubscribeCell = YES;
-                }else if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-
-                    FHSugListRealHouseTopInfoModel *infoModel = theItemModel;
-                    infoModel.searchId = wself.searchId;
-                    infoModel.tracerDict = traceDictParams;
-                    infoModel.searchQuery = wself.subScribeQuery;
-                    theItemModel = infoModel;
-                    if (!wself.isRefresh) {
-                        wself.showFakeHouseTop = YES;
-                    }
-                }else if ([theItemModel isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
-                    FHHouseNeighborAgencyModel *agencyModel = theItemModel;
-                    NSMutableDictionary *traceParam = [NSMutableDictionary new];
-                    traceParam[@"card_type"] = @"left_pic";
-                    traceParam[@"enter_from"] = traceDictParams[@"enter_from"];
-                    traceParam[@"element_from"] = traceDictParams[@"element_from"];
-                    traceParam[@"page_type"] = [self pageTypeString];
-                    traceParam[@"search_id"] = wself.searchId;
-                    traceParam[@"log_pb"] = agencyModel.logPb;
-                    traceParam[@"origin_from"] = wself.originFrom;
-                    traceParam[@"origin_search_id"] = wself.originSearchId;
-                    traceParam[@"rank"] = @(0);
-                    if(self.houseType == FHHouseTypeNeighborhood){
-                        traceParam[@"realtor_position"] = @"neighborhood_expert_card";
-                    }else{
-                        traceParam[@"realtor_position"] = @"area_expert_card";
-                    }
-                    agencyModel.tracerDict = traceParam;
-                    agencyModel.belongsVC = wself.listVC;
-                    theItemModel = agencyModel;
-                }else if ([theItemModel isKindOfClass:[FHSearchHouseDataRedirectTipsModel class]]) {
-                    FHSearchHouseDataRedirectTipsModel *tipModel = theItemModel;
-                    tipModel.clickRightBlock = ^(NSString *openUrl){
-                        [wself clickRedirectTip:openUrl];
-                    };
-                    theItemModel = tipModel;
-                }else if ([theItemModel isKindOfClass:[FHHouseReserveAdviserModel class]]) {
-                    FHHouseReserveAdviserModel *model = theItemModel;
-                    NSMutableDictionary *traceParam = [NSMutableDictionary new];
-                    traceParam[@"card_type"] = @"left_pic";
-                    traceParam[@"enter_from"] = traceDictParams[@"enter_from"];
-                    traceParam[@"element_from"] = traceDictParams[@"element_from"];
-                    traceParam[@"page_type"] = [self pageTypeString];
-                    traceParam[@"search_id"] = wself.searchId;
-                    traceParam[@"log_pb"] = model.logPb;
-                    traceParam[@"origin_from"] = wself.originFrom;
-                    traceParam[@"origin_search_id"] = wself.originSearchId;
-                    traceParam[@"rank"] = @(0);
-                    if(self.houseType == FHHouseTypeNeighborhood){
-                        traceParam[@"element_type"] = @"neighborhood_expert_card";
-                    }else{
-                        traceParam[@"element_type"] = @"area_expert_card";
-                    }
-                    model.tracerDict = traceParam;
-                    model.belongsVC = wself.listVC;
-                    model.tableView = wself.tableView;
-                    model.subscribeCache = wself.subscribeCache;
-                    theItemModel = model;
+            if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+                FHSearchHouseItemModel *itemModel = theItemModel;
+                itemModel.isLastCell = (idx == itemArray.count - 1);
+                if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]] || [lastObj isKindOfClass:[FHHouseReserveAdviserModel class]]) {
+                    itemModel.topMargin = 0;
                 }
+                if ((itemModel.houseType.integerValue == FHHouseTypeRentHouse || itemModel.houseType.integerValue == FHHouseTypeNeighborhood) && idx == 0) {
+                    itemModel.topMargin = 10;
+                }
+                theItemModel = itemModel;
+            }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
+                FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
+                if (agencyInfoModel.agencyTotal.integerValue != 0 && agencyInfoModel.houseTotal.integerValue != 0) {
+                    if (wself.isRefresh) {
+                        // 展示经纪人信息
+                        wself.showRealHouseTop = YES;
+                    }
+                }else {
+                    theItemModel = nil;
+                }
+            }else if ([theItemModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]] && wself.isRefresh) {
+                // 展示搜索订阅卡片
+                wself.isShowSubscribeCell = YES;
+            }else if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+                
+                FHSugListRealHouseTopInfoModel *infoModel = theItemModel;
+                infoModel.searchId = wself.searchId;
+                infoModel.tracerDict = traceDictParams;
+                infoModel.searchQuery = wself.subScribeQuery;
+                theItemModel = infoModel;
+                if (!wself.isRefresh) {
+                    wself.showFakeHouseTop = YES;
+                }
+            }else if ([theItemModel isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+                FHHouseNeighborAgencyModel *agencyModel = theItemModel;
+                NSMutableDictionary *traceParam = [NSMutableDictionary new];
+                traceParam[@"card_type"] = @"left_pic";
+                traceParam[@"enter_from"] = traceDictParams[@"enter_from"];
+                traceParam[@"element_from"] = traceDictParams[@"element_from"];
+                traceParam[@"page_type"] = [self pageTypeString];
+                traceParam[@"search_id"] = wself.searchId;
+                traceParam[@"log_pb"] = agencyModel.logPb;
+                traceParam[@"origin_from"] = wself.originFrom;
+                traceParam[@"origin_search_id"] = wself.originSearchId;
+                traceParam[@"rank"] = @(0);
+                if(self.houseType == FHHouseTypeNeighborhood){
+                    traceParam[@"realtor_position"] = @"neighborhood_expert_card";
+                }else{
+                    traceParam[@"realtor_position"] = @"area_expert_card";
+                }
+                agencyModel.tracerDict = traceParam;
+                agencyModel.belongsVC = wself.listVC;
+                theItemModel = agencyModel;
+            }else if ([theItemModel isKindOfClass:[FHSearchHouseDataRedirectTipsModel class]]) {
+                FHSearchHouseDataRedirectTipsModel *tipModel = theItemModel;
+                tipModel.clickRightBlock = ^(NSString *openUrl){
+                    [wself clickRedirectTip:openUrl];
+                };
+                theItemModel = tipModel;
+            }else if ([theItemModel isKindOfClass:[FHHouseReserveAdviserModel class]]) {
+                FHHouseReserveAdviserModel *model = theItemModel;
+                NSMutableDictionary *traceParam = [NSMutableDictionary new];
+                traceParam[@"card_type"] = @"left_pic";
+                traceParam[@"enter_from"] = traceDictParams[@"enter_from"];
+                traceParam[@"element_from"] = traceDictParams[@"element_from"];
+                traceParam[@"page_type"] = [self pageTypeString];
+                traceParam[@"search_id"] = wself.searchId;
+                traceParam[@"log_pb"] = model.logPb;
+                traceParam[@"origin_from"] = wself.originFrom;
+                traceParam[@"origin_search_id"] = wself.originSearchId;
+                traceParam[@"rank"] = @(0);
+                if(self.houseType == FHHouseTypeNeighborhood){
+                    traceParam[@"element_type"] = @"neighborhood_expert_card";
+                }else{
+                    traceParam[@"element_type"] = @"area_expert_card";
+                }
+                model.tracerDict = traceParam;
+                model.belongsVC = wself.listVC;
+                model.tableView = wself.tableView;
+                model.subscribeCache = wself.subscribeCache;
+                theItemModel = model;
+            }
             
-                if (theItemModel) {
-                    [wself.houseList addObject:theItemModel];
-                }
-                if (theItemModel) {
-                    lastObj = theItemModel;
-                }
-//            }
+            if (theItemModel) {
+                [wself.houseList addObject:theItemModel];
+            }
+            if (theItemModel) {
+                lastObj = theItemModel;
+            }
+            //            }
         }];
         
         [recommendItemArray enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {

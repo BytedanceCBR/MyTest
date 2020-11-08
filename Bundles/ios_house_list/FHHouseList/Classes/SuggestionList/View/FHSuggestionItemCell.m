@@ -483,7 +483,7 @@
 
 - (void)setupUI{
     _label = [[UILabel alloc] init];
-    [self addSubview:_label];
+    [self.contentView addSubview:_label];
     _label.font = [UIFont themeFontMedium:16];
     _label.textColor = [UIColor themeGray1];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {

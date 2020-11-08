@@ -84,8 +84,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface  FHSuggestionResponseDataModel  : JSONModel
 
-@property (nonatomic, strong , nullable) NSArray <FHSuggestionResponseItemModel> *item;
-@property (nonatomic, strong , nullable) NSArray <FHSuggestionResponseItemModel> *otherItem;
+@property (nonatomic, strong , nullable) NSArray <FHSuggestionResponseItemModel> *items;
+@property (nonatomic, strong , nullable) NSArray <FHSuggestionResponseItemModel> *otherItems;
 @property (nonatomic, assign) NSInteger jumpHouseType;
 
 @end

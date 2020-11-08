@@ -519,6 +519,7 @@
                            @"agencyInfo": @"agency_info",
                            @"topTip":@"top_tip",
                            @"bottomTip":@"bottom_tip",
+                           @"realBussinessSearch":@"real_bussiness_search",
                            //                           @"currentItems":@"items",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -872,6 +873,16 @@
 // 猜你想找Tips
 @implementation  FHSearchGuessYouWantTipsModel
 
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"realSearchOpenUrl": @"real_search_open_url",
+                           @"emphasisContent": @"emphasis_content",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

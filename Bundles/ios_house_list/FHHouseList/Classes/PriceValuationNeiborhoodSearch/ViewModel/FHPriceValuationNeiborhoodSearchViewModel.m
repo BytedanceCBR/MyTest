@@ -148,7 +148,7 @@
         wself.sugListData = nil;
         if (model != NULL && error == NULL) {
             // 构建数据源
-            wself.sugListData = model.data.item;
+            wself.sugListData = model.data.items;
             wself.listController.hasValidateData = YES;
             [wself reloadSugTableView];
         } else {

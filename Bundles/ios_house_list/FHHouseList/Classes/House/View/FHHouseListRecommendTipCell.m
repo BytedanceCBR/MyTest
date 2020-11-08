@@ -13,6 +13,7 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import "NSAttributedString+YYText.h"
 #import "YYLabel.h"
+#import "TTroute.h"
 
 @interface FHHouseListRecommendTipCell ()
 
@@ -50,16 +51,19 @@
 {
     if ([data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]) {
         FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
-        
+        if(model.content){
+            model.text = model.content;
+        }
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:model.text];
         NSDictionary *commonTextStyle = @{ NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor themeGray3]};
         [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
         [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
-        NSRange tapRange = [attrText.string rangeOfString:@"试试吧"];
-        [attrText yy_setTextHighlightRange:tapRange color:[UIColor colorWithHexStr:@"#fe5500"] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-            NSLog(@"xz:hehehehehe");
-        }];
-       
+        if(model.content){
+            NSRange tapRange = [attrText.string rangeOfString:model.emphasisContent];
+            [attrText yy_setTextHighlightRange:tapRange color:[UIColor colorWithHexStr:@"#fe5500"] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:model.realSearchOpenUrl] userInfo:nil];
+            }];
+        }
         self.noDataTipLabel.attributedText = attrText;
     }
 }
@@ -78,12 +82,11 @@
     }];
     [self.noDataTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.leftLine.mas_right).offset(15);
+        make.centerX.mas_equalTo(self.contentView);
         make.height.mas_equalTo(20);
     }];
     [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.noDataTipLabel.mas_right).offset(15);
         make.right.mas_equalTo(-15);
         make.height.mas_equalTo(1);
         make.width.mas_equalTo(self.leftLine);

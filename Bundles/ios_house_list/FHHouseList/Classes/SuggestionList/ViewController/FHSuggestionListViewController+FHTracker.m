@@ -53,9 +53,9 @@ static const char tabSwitchedKey;
     if (self.houseType != houseType || !word || !word.length) return;
     
     NSString *tagsStr = @"{}";
-    NSInteger count = result.data.item.count;
+    NSInteger count = result.data.items.count;
     if (count) {
-        NSArray *filteredResultArray = [result.data.item filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
+        NSArray *filteredResultArray = [result.data.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
             if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;
             FHSuggestionResponseItemModel *item = (FHSuggestionResponseItemModel *)object;
             return item.cardType == 16;
