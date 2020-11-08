@@ -291,6 +291,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     }
 
     [self.currentVideoCell play];
+    [self.currentVideoCell.overlayViewController beginTimers];
     [self beginFirstImpression];
     [self.tracker flushStayPageTime];
 }
@@ -815,6 +816,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         [self sendImpressionWithVideoDetail:videoDetail status:SSImpressionStatusRecording];
     }
 }
+
 
 #pragma mark -
 
