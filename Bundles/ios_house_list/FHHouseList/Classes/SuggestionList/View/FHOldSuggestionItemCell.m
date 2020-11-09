@@ -193,23 +193,24 @@
         UILabel *leftLab = [model.oldName length] > 0 ? self.subTitleLab:self.titleLab;
         float margin = [model.oldName length] > 0 ? 1:6;
         
-        [self.zoneTypeView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView).offset(14);
-            make.left.equalTo(leftLab.mas_right).offset(margin);
-            make.height.mas_offset(18);
-        }];
-        
-        [self.titleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.zoneTypeView);
-            make.left.equalTo(self.contentView).offset(15);
-        }];
-        
-        if(model.newtip){
-            self.zoneTypeView.backgroundColor = [UIColor colorWithHexStr:model.newtip[@"background_color"]];
-            self.zoneTypeLab.textColor = [UIColor colorWithHexStr:model.newtip[@"text_color"]];
-            self.zoneTypeLab.text = model.newtip[@"content"];
+        if(model.isnewstyle){
+            [self.zoneTypeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.contentView).offset(14);
+                make.left.equalTo(leftLab.mas_right).offset(margin);
+                make.height.mas_offset(18);
+            }];
+            
+            [self.titleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self.zoneTypeView);
+                make.left.equalTo(self.contentView).offset(15);
+            }];
+            
+            if(model.newtip){
+                self.zoneTypeView.backgroundColor = [UIColor colorWithHexStr:model.newtip[@"background_color"]];
+                self.zoneTypeLab.textColor = [UIColor colorWithHexStr:model.newtip[@"text_color"]];
+                self.zoneTypeLab.text = model.newtip[@"content"];
+            }
         }
-        
     }
 }
 

@@ -78,6 +78,7 @@
                            @"buttonText": @"button_text",
                            @"setHistory":@"set_history",
                            @"newtip":@"new_tip",
+                           @"isnewstyle":@"is_new_style",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
