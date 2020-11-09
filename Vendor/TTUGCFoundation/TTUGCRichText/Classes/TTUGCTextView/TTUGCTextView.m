@@ -15,7 +15,7 @@
 #import "UITextView+TTAdditions.h"
 #import "TTDeviceHelper.h"
 #import "UIViewAdditions.h"
-
+#import "ToastManager.h"
 @interface TTUGCTextView () <HPGrowingTextViewDelegate>
 
 @property (nonatomic, assign) BOOL didInputTextBackspaceOrAnythingElse;
@@ -204,6 +204,11 @@
     // Translate location of NSAttributedString -> location of TTRichSpanText (NSString)
     NSUInteger cursorBegin = [self transformIndexOfAttributedString:self.attributedText withIndex:range.location];
 
+    if (cursorBegin +richSpanText.text.length >2000) {
+        [[ToastManager manager] showToast:@"字数超过限制，请重新编辑"];
+        return;
+    }
+    
     // Remove selected text
     if (NSMaxRange(range) <= self.attributedText.length && range.length > 0) {
         NSUInteger cursorEnd = [self transformIndexOfAttributedString:self.attributedText withIndex:(range.location + range.length)];

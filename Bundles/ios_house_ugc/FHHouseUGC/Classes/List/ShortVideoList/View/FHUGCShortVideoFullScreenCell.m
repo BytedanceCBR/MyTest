@@ -183,6 +183,7 @@
 
 - (void)reset {
     [self.playerView reset];
+    [self.playerView.player releaseAysnc];
     self.playImage.hidden = YES;
 }
 
@@ -237,10 +238,15 @@
     }
     if (state == TTVVideoPlaybackStatePlaying) {
         self.playImage.hidden = YES;
+        self.videoIsPause = NO;
         if (self.videoDidStartPlay) {
             self.videoDidStartPlay();
         }
     }
+    if (state == TTVVideoPlaybackStatePaused) {
+        self.videoIsPause = YES;
+    }
+    
     if (state == TTVVideoPlaybackStateError) {
         self.doubleTapMaskView.userInteractionEnabled = NO;
     }else {

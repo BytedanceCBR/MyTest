@@ -51,11 +51,6 @@
 #import "FHUGCShortVideoFullScreenCell.h"
 #import "FHShortVideoPerLoaderManager.h"
 
-// 与西瓜视频共用的流量播放开关，全局变量哦，名字别乱改
-BOOL kBDTAllowCellularVideoPlay = NO;
-
-static BOOL kTSVCellularAlertShouldShow = YES;
-
 @interface AWEVideoContainerCollectionView : UICollectionView
 @end
 
@@ -119,10 +114,8 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillResignActive:) name:UIApplicationWillResignActiveNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skStoreViewDidAppear:) name:@"SKStoreProductViewDidAppearKey" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skStoreViewDidDisappear:) name:@"SKStoreProductViewDidDisappearKey" object:nil];
-
         [[SSImpressionManager shareInstance] addRegist:self];
         self.tracker = [[FHShortVideoTracerUtil alloc] init];
         self.feedClientShowCache = [[NSMutableArray alloc]init];
@@ -270,14 +263,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
             self.dataFetchManager.shouldShowNoMoreVideoToast) {
             self.showingNoMoreVideoIndicator = YES;
             @weakify(self);
-//            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage
-//                                      indicatorText:@"暂无更多视频"
-//                                     indicatorImage:nil
-//                                        autoDismiss:YES
-//                                     dismissHandler:^(BOOL isUserDismiss) {
-//                                         @strongify(self);
-//                                         self.showingNoMoreVideoIndicator = NO;
-//                                     }];
         }
     }
 
@@ -338,64 +323,9 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     [self playCurrentVideoIfAllowed];
 }
 
-//- (void)replaceDataFetchManager:(id<TSVShortVideoDataFetchManagerProtocol>)dataFetchManager
-//{
-//    //清理上一个视频的状态
-//    [self endLastImpression];
-//    [self.currentVideoCell.videoPlayView stop];
-//    [self sendVideoOverTracking];
-//    [self sendStayPageTracking];
-//    self.currentVideoCell = nil;
-//    self.currentIndexPath = nil;
-//
-//    //更新数据
-//    /*
-//     needsLoadingCell不要改成set调用，否则会导致下面的[self.collectionView reloadData]调用时，不调用collectionView:cellForItemAtIndexPath: 导致cell不更新状态
-//     */
-//    _needsLoadingCell = [dataFetchManager hasMoreToLoad];
-//
-//    self.dataFetchManager = dataFetchManager;
-//    [self.collectionView reloadData];
-//
-//    if ([self.dataFetchManager numberOfShortVideoItems]) {
-//        if (([self.dataFetchManager numberOfShortVideoItems] > self.dataFetchManager.currentIndex + 1) ||
-//            self.dataFetchManager.hasMoreToLoad) {
-//            self.initialItemIndex = self.dataFetchManager.currentIndex;
-//        } else {
-//            self.initialItemIndex = 0;
-//        }
-//
-//        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:self.dataFetchManager.currentIndex inSection:0];
-//        [self.collectionView scrollToItemAtIndexPath:indexPath
-//                                    atScrollPosition:UICollectionViewScrollPositionTop | UICollectionViewScrollPositionLeft
-//                                            animated:NO];
-//    }
-//    [self updateLoadingCellOnScreen];
-//
-//    //重新开始记录impression 和 stay_page
-//    [self beginFirstImpression];
-//    [self.tracker flushStayPageTime];
-//}
-
 - (void)refreshCurrentModel
 {
-    [self.currentVideoCell stop];
-    [self.currentVideoCell reset];
-    [self.currentVideoCell resetPlayerModel];
     self.currentVideoCell = nil;
-//    //清理上一个视频的状态
-//    [self endLastImpression];
-//    [self.currentVideoCell stop];
-//    [self sendVideoOverTracking];
-//    [self sendStayPageTracking];
-//
-//    [self.collectionView reloadItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:self.dataFetchManager.currentIndex inSection:0]]];
-//    self.currentIndexPath = nil;
-//    self.currentVideoCell = nil;
-//    [self playCurrentVideoIfAllowed];
-//    //重新开始记录impression 和 stay_page
-//    [self beginFirstImpression];
-//    [self.tracker flushStayPageTime];
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -530,21 +460,8 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 
 - (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(FHUGCShortVideoFullScreenCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([cell respondsToSelector:@selector(cellWillDisplay)]) {
-        [(FHUGCShortVideoFullScreenCell *)cell cellWillDisplay];
-        
-        if (BTDNetworkWifiConnected() && [[[TTSettingsManager sharedManager] settingForKey:@"tt_huoshan_iOS_video_prepare_optimise" defaultValue:@1 freeze:NO] boolValue]) {
-            [((FHUGCShortVideoFullScreenCell *)cell) readyToPlay];
-        }
-    }
-    
-//    if ([cell isKindOfClass:[AWEVideoLoadingCollectionViewCell class]]) {
-//        [self.viewModel willShowLoadingCell];
-//    }
-
     if (!self.currentVideoCell.playerView && (indexPath.section == 0 && indexPath.item == self.dataFetchManager.currentIndex)) {
         self.currentVideoCell = cell;
-        self.currentIndexPath = indexPath;
         [self beginFirstImpression];
         [self alertCeullarPlayWithCompletion:^(BOOL continuePlaying) {
             if (continuePlaying) {
@@ -553,6 +470,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                 self.dataFetchManager.currentIndex = indexPath.row;
                 [self.currentVideoCell readyToPlay];
                 [self.currentVideoCell play];
+                [self.currentVideoCell.overlayViewController beginTimers];
                 [self didSwitchToCell:self.currentVideoCell];
             } else {
                 if (self.wantToClosePage) {
@@ -560,6 +478,21 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                 }
             }
         }];
+    }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didEndDisplayingCell:(FHUGCShortVideoFullScreenCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    if (cell) {
+        [cell stop];
+        [cell reset];
+//        [cell resetPlayerModel];
+        if (cell.overlayViewController) {
+            [cell.overlayViewController stopTimers];
+            [cell.overlayViewController.miniSlider setWatchedProgress:0];
+            [cell.overlayViewController.miniSlider setCacheProgress:0];
+        }
+
+        NSLog(@"666");
     }
 }
 
@@ -903,8 +836,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
             if ([cell isKindOfClass:[FHUGCShortVideoFullScreenCell class]] ||
                 [cell isKindOfClass:[AWEVideoContainerAdCollectionViewCell class]]) {
                 if (![newIndexPath isEqual:self.currentIndexPath]) {
-                    [self.currentVideoCell.overlayViewController.miniSlider setWatchedProgress:0];
-                    [self.currentVideoCell.overlayViewController.miniSlider setCacheProgress:0];
                     // 左右划的播放
                     [self showPromotionIfNecessaryWithIndex:itemIndex];
                     [self sendVideoOverTracking];
@@ -916,7 +847,12 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                     self.currentIndexPath = newIndexPath;
                     [self.currentVideoCell readyToPlay];
                     [self.currentVideoCell play];
+                    [self.currentVideoCell.overlayViewController beginTimers];
                     [self didSwitchToCell:self.currentVideoCell];
+                }else  {
+                    if (self.currentVideoCell && !self.currentVideoCell.videoIsPause) {
+                        [self.currentVideoCell play];
+                    }
                 }
             } else {
 //                [self.currentVideoCell.videoPlayView stop];
@@ -939,11 +875,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         dispatch_once(&onceToken, ^{
             [[ToastManager manager] showToast:@"当前处在非WiFi环境，注意流量消耗哦！"];
         });
-//        if (kTSVCellularAlertShouldShow) {
-//            kTSVCellularAlertShouldShow = NO;
-//
-//            [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"当前处在非WiFi环境，注意流量消耗哦！" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
-//        }
     }
     
     !completion ?: completion(YES);
