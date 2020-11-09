@@ -126,7 +126,6 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
-@property (nonatomic , assign) NSInteger prehousetype;
 
 @end
 
@@ -1553,7 +1552,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
     self.houseType = houseTypeStr.integerValue;
-    
+    self.prehousetype = [routeObject.paramObj.allParams[@"pre_house_type"] intValue];
     if (self.sugSelectBlock) {
         self.sugSelectBlock(routeObject.paramObj);
     }
