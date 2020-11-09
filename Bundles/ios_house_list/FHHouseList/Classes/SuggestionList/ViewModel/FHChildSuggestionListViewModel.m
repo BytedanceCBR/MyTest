@@ -752,6 +752,9 @@
         return self.guessYouWantData.count > 0 ? self.guessYouWantData.count + 1 : 0;
     } else if (tableView.tag == 2) {
         // 联想词
+        if (self.sugListData.count + self.othersugListData.count == 0 && !self.listController.isLoadingData && self.listController.fatherVC.naviBar.searchInput.text.length != 0) {
+            return 1;
+        }
         if(section == 0){
             return self.sugListData.count;
         }
@@ -927,7 +930,7 @@
         }
     } else if (tableView.tag == 2) {
         // 联想词
-        if (self.sugListData.count == 0) {
+        if (self.sugListData.count + self.othersugListData.count == 0) {
             return self.listController.suggestTableView.frame.size.height;
         }else {
             NSMutableArray<FHSuggestionResponseItemModel>  *nowsugListData = indexPath.section == 0 ? self.sugListData:self.othersugListData;
@@ -1314,7 +1317,8 @@
     self.associatedCount += 1;
     __weak typeof(self) wself = self;
     self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
-        if (model != NULL && error == NULL) {            // 构建数据源
+        if (model != NULL && error == NULL) {
+            self.jumpHouseType = model.data.jumpHouseType;// 构建数据源
             [wself.sugListData removeAllObjects];
             [wself.othersugListData removeAllObjects];
             [wself.sugListData addObjectsFromArray:model.data.items];

@@ -126,6 +126,7 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
+@property (nonatomic , assign) NSInteger prehousetype;
 
 @end
 
@@ -179,6 +180,7 @@ extern NSString *const INSTANT_DATA_KEY;
         self.isFirstLoad = YES;
         self.tableView = tableView;
         self.isShowSubscribeCell = NO;
+        self.prehousetype = [paramObj.allParams[@"pre_house_type"] intValue];
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
         _startMonitorTime = [[NSDate date] timeIntervalSince1970];
 
@@ -490,6 +492,8 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     NSString *searchId = self.searchId;
 
+    NSInteger prehousetype = self.prehousetype ?: self.houseType;
+    query = [query stringByAppendingString:[NSString stringWithFormat:@"&pre_house_type=%ld",(long)prehousetype]];
     if (self.isCommute) {
         [self requestCommute:isRefresh query:query offset:offset searchId:searchId];
         return;

@@ -44,10 +44,10 @@
     }];
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.zoneTypeView);
-        make.left.equalTo(self.zoneTypeView.mas_right).offset(15);
+        make.left.equalTo(self.zoneTypeView.mas_right).offset(15); 
     }];
     [self.amountLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.regionLab);
+        make.top.equalTo(self.titleLab.mas_bottom).offset(3);
         make.right.equalTo(self.contentView).offset(-15);
     }];
     [self.subTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -62,7 +62,6 @@
     [self.villageLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.regionLab.mas_right).offset(5);
         make.top.equalTo(self.titleLab.mas_bottom).offset(3);
-        make.right.equalTo(self.amountLab.mas_right);
     }];
     CGFloat lineH = UIScreen.mainScreen.scale > 2.5 ? 0.35 : 0.5;
     [self.sepLine mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -170,8 +169,8 @@
 - (void)setModel:(FHSuggestionResponseItemModel *)model {
     if (model) {
         _model = model;
-        if(model.name.length>0){
-            NSAttributedString *text1 = [self processHighlightedDefault:model.name textColor:[UIColor themeGray1] fontSize:16.0];
+        if(model.text.length>0){
+            NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:16.0];
             self.titleLab.attributedText = [self processHighlighted:text1 originText:model.name textColor:[UIColor themeOrange1] fontSize:16.0];
             [self.titleLab sizeToFit];
         }
