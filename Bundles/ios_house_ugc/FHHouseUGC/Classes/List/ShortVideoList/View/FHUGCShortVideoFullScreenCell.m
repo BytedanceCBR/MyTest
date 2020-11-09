@@ -157,6 +157,7 @@
     model.isLoopPlay = YES;
     model.disableFinishUIShow = YES;
     model.disableControlView = YES;
+    model.tag = @"short_video";
     model.videoID = [NSString stringWithFormat:@"%@",self.cellModel.video.videoId];
     model.sp = sp;
     model.enterFrom = @"test";
