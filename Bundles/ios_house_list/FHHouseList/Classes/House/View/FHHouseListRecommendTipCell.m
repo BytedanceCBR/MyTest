@@ -83,6 +83,7 @@
     [self.noDataTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);
         make.centerX.mas_equalTo(self.contentView);
+        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width - 90);
         make.height.mas_equalTo(20);
     }];
     [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
