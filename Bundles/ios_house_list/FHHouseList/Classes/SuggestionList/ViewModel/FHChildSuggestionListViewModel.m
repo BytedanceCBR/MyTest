@@ -1323,9 +1323,10 @@
             [wself.othersugListData removeAllObjects];
             [wself.sugListData addObjectsFromArray:model.data.items];
             if(model.data.otherItems.count > 0){
-                FHSuggestionResponseItemModel *tepmodel= [[FHSuggestionResponseItemModel alloc] init];
+                FHSuggestionResponseItemModel *tepmodel = [[FHSuggestionResponseItemModel alloc] init];
                 tepmodel.cardType = 18;
-                tepmodel.text = self.houseType == 1? @"相关二手房推荐":@"相关新房推荐";
+                FHSuggestionResponseItemModel *firstmodel = model.data.otherItems[0];
+                tepmodel.text = [self getTitletext:[firstmodel.houseType intValue]];
                 [wself.othersugListData addObject:tepmodel];
                 [wself.othersugListData addObjectsFromArray:model.data.otherItems];
             }
@@ -1373,4 +1374,17 @@
     return _trackerCacheArr;;
 }
 
+- (NSString *)getTitletext:(NSInteger)housetype{
+    if(housetype == FHHouseTypeNewHouse){
+        return @"相关新房推荐";
+    }else if(housetype == FHHouseTypeSecondHandHouse){
+        return @"相关二手房推荐";
+    }else if(housetype == FHHouseTypeRentHouse){
+        return  @"相关租房推荐";
+    }else if(housetype == FHHouseTypeNeighborhood){
+        return @"相关小区推荐";
+    }else {
+        return @"相关推荐";
+    }
+}
 @end
