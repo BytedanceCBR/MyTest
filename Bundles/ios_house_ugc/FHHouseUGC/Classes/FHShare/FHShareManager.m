@@ -109,19 +109,19 @@
     BDUGShareBaseContentItem *item = nil;
     switch (channelType) {
         case FHShareChannelTypeWeChat:
-            item = [self createWechatItemWithModel:model.commonDateModel];
+            item = [self createWechatItemWithModel:model.commonDataModel];
             break;
         case FHShareChannelTypeWeChatTimeline:
-            item = [self createWechatTimeLineItemWithModel:model.commonDateModel];
+            item = [self createWechatTimeLineItemWithModel:model.commonDataModel];
             break;
         case FHShareChannelTypeQQFriend:
-            item = [self createQQFriendItemWithModel:model.commonDateModel];
+            item = [self createQQFriendItemWithModel:model.commonDataModel];
             break;
         case FHShareChannelTypeQQZone:
-            item = [self createQQZoneItemWithModel:model.commonDateModel];
+            item = [self createQQZoneItemWithModel:model.commonDataModel];
             break;
         case FHShareChannelTypeCopyLink:
-            item = [self createCopyLinkItemWithModel:model.commonDateModel];
+            item = [self createCopyLinkItemWithModel:model.commonDataModel];
             break;
         case FHShareChannelTypeReport:
             item = [self createReportItemWithModel:model.reportDataModel];

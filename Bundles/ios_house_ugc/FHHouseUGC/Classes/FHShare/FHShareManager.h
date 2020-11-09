@@ -33,7 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHShareDataModel : NSObject
-@property(nonatomic,strong) FHShareCommonDataModel *commonDateModel;
+@property(nonatomic,strong) FHShareCommonDataModel *commonDataModel;
 @property(nonatomic,strong) FHShareReportDataModel *reportDataModel;
 @end
 

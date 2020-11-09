@@ -24,6 +24,8 @@
 #import "TTVFeedItem+TTVArticleProtocolSupport.h"
 #import "UIImage+FIconFont.h"
 #import "UIButton+FHUGCMultiDigg.h"
+#import <TTWebImageManager.h>
+#import <FHShareManager.h>
 
 @interface FHUGCToolView ()<TTVVideoDetailCollectServiceDelegate>
 
@@ -196,6 +198,10 @@
 }
 
 - (void)shareBtnClicked {
+    if([[FHShareManager shareInstance] isShareOptimization]) {
+        [self showSharePanel];
+        return;;
+    }
     [self addClickShareLog];
     self.moreActionMananger = [[TTVFeedCellMoreActionManager alloc] init];
     self.moreActionMananger.categoryId = self.cellModel.videoItem.categoryId;
@@ -213,6 +219,30 @@
         
     }];
 }
+
+- (void)showSharePanel {
+    TTShareModel *shareModel = [TTShareModel shareModelWithFeedItem:self.cellModel.videoItem.originData];
+    
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
+    
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = shareModel.title;
+    commonDataModel.desc = shareModel.abstract;
+    commonDataModel.shareUrl = shareModel.shareURL ?: shareModel.downloadURL;
+    commonDataModel.thumbImage = [TTWebImageManager imageForModel:shareModel.infosModel];
+    commonDataModel.imageUrl  = [shareModel.infosModel urlStringAtIndex:0];
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDataModel = commonDataModel;
+
+    NSArray *contentItemArray = @[
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)],
+        @[@(FHShareChannelTypeDislike),@(FHShareChannelTypeBlock)],
+    ];
+    
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model];
+}
+
 
 - (void)collectionBtnClicked {// 网络
     if (![TTReachability isNetworkConnected]) {

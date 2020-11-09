@@ -173,16 +173,18 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 }
 
 - (void)showSharePanel {
+    Article *articleModel = self.detailModel.article;
+    
     FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
     
     FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
-    commonDataModel.title = self.detailModel.article.title;
-    commonDataModel.desc = self.detailModel.article.abstract;
-    commonDataModel.shareUrl = self.detailModel.article.shareURL;
-    commonDataModel.thumbImage = [TTShareMethodUtil weixinSharedImageForArticle:self.detailModel.article];
-    commonDataModel.imageUrl  = [TTShareMethodUtil weixinSharedImageURLForArticle:self.detailModel.article];
+    commonDataModel.title = articleModel.title;
+    commonDataModel.desc = isEmptyString(articleModel.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : articleModel.abstract;
+    commonDataModel.shareUrl = articleModel.shareURL;
+    commonDataModel.thumbImage = [TTShareMethodUtil weixinSharedImageForArticle:articleModel];
+    commonDataModel.imageUrl  = [TTShareMethodUtil weixinSharedImageURLForArticle:articleModel];
     commonDataModel.shareType = BDUGShareWebPage;
-    dataModel.commonDateModel = commonDataModel;
+    dataModel.commonDataModel = commonDataModel;
 
     FHShareReportDataModel *reportDataModel = [[FHShareReportDataModel alloc] init];
     WeakSelf;

@@ -396,7 +396,7 @@
     commonDataModel.shareUrl = self.viewModel.shareInfo.shareUrl;
     commonDataModel.thumbImage = [[BDImageCache sharedImageCache]imageFromDiskCacheForKey:self.viewModel.shareInfo.coverImage];
     commonDataModel.shareType = BDUGShareWebPage;
-    dataModel.commonDateModel = commonDataModel;
+    dataModel.commonDataModel = commonDataModel;
 
     NSArray *contentItemArray = @[
         @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)]
