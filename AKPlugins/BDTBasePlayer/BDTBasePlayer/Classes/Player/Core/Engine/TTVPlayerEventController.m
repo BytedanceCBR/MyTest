@@ -153,7 +153,9 @@ static NSString *const kvideo_controller_error_domain = @"kvideo_player_controll
         self.videoEngine.cacheEnable = YES;
     }
     self.videoEngine.resolutionServerControlEnabled = YES;
-    
+    if (self.playerModel.tag) {
+        [self.videoEngine setTag:self.playerModel.tag];
+    }
     if (self.playerStateStore.state.enableSmothlySwitch) {
         self.videoEngine.smoothlySwitching = YES;
         self.videoEngine.smoothDelayedSeconds = 3;
