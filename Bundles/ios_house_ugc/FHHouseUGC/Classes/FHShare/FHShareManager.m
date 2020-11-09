@@ -14,9 +14,10 @@
 #import <BDUGCopyContentItem.h>
 #import <BDUGShareManager.h>
 #import <SSCommonLogic.h>
-#import "FHShareActivity/FHReportActivity.h"
-#import "FHShareActivity/FHBlockActivity.h"
-#import "FHShareActivity/FHDislikeActivity.h"
+#import "FHReportActivity.h"
+#import "FHBlockActivity.h"
+#import "FHDislikeActivity.h"
+#import "FHIMActivity.h"
 
 @implementation FHShareDataModel
 
@@ -64,7 +65,7 @@
 }
 
 - (void)addCustomShareActivity {
-    NSArray *activityNameArray = @[@"FHReportActivity",@"FHBlockActivity",@"FHDislikeActivity"];
+    NSArray *activityNameArray = @[@"FHReportActivity",@"FHBlockActivity",@"FHDislikeActivity",@"FHIMActivity"];
     NSMutableArray *activities = [[NSMutableArray alloc] init];
     for(NSString *activityName in activityNameArray) {
         Class activityClass = NSClassFromString(activityName);
@@ -132,6 +133,9 @@
         case FHShareChannelTypeDislike:
             item = [self createDislikeItemWithModel];
             break;
+        case FHShareChannelTypeIM:
+            item = [self createIMItemWithModel:model.imDataModel];
+            break;
         default:
             break;
     }
@@ -194,6 +198,16 @@
     FHDislikeContentItem *item = [[FHDislikeContentItem alloc] init];
     item.activityImageName = @"unlike_allshare";
     item.contentTitle = @"屏蔽";
+    return item;
+}
+
+-(FHIMContentItem *)createIMItemWithModel:(FHShareIMDataModel *)model {
+    FHIMContentItem *item = [[FHIMContentItem alloc] init];
+    item.imShareInfo = model.imShareInfo;
+    item.tracer = model.tracer;
+    item.extraInfo = model.extraInfo;
+    item.activityImageName = @"share_im";
+    item.contentTitle = @"联系过的经纪人";
     return item;
 }
 
