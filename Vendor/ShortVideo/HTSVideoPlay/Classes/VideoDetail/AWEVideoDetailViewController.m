@@ -1390,6 +1390,12 @@ static const CGFloat kFloatingViewOriginY = 230;
                                                                                    dismissHandler:nil];
                 [indicatorView showFromParentView:activityPanelControllerWindow];
             }
+            if (groupID.length > 0 ) {
+                NSMutableDictionary *userInfo = @{}.mutableCopy;
+                userInfo[@"group_id"] = groupID;
+                userInfo[@"action"] = @(self.model.userRepin);
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCUserRepinStateChangeNotification" object:nil userInfo:userInfo];
+            }
         } else {
             TTIndicatorView * indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleImage
                                                                                 indicatorText:NSLocalizedString(@"操作失败", nil)

@@ -1109,7 +1109,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         if (!error) {
             self.model.userRepin = !self.model.userRepin;
 //            [self.model save];
-
             [self.orderedData setValue:@(self.model.userRepin) forKeyPath:@"originalData.userRepined"];
             
             contentItem.selected = self.model.userRepin;
@@ -1125,6 +1124,12 @@ static const CGFloat kFloatingViewOriginY = 230;
                                                                                    indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"]
                                                                                    dismissHandler:nil];
                 [indicatorView showFromParentView:activityPanelControllerWindow];
+            }
+            if (groupID.length > 0 ) {
+                NSMutableDictionary *userInfo = @{}.mutableCopy;
+                userInfo[@"group_id"] = groupID;
+                userInfo[@"action"] = @(self.model.userRepin);
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCUserRepinStateChangeNotification" object:nil userInfo:userInfo];
             }
         } else {
             TTIndicatorView * indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleImage
