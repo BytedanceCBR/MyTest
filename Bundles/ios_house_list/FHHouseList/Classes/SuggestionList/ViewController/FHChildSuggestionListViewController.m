@@ -345,18 +345,28 @@
     // 拼接URL
     NSString * fullText = [userInputText stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
     NSString * placeHolderStr = (fullText.length > 0 ? fullText : userInputText);
-    NSInteger jumpHouseTpye = self.viewModel.jumpHouseType ?: self.houseType;
+    __block NSInteger jumpHouseTpye = -1;
+    WeakSelf;
+    [self.fatherVC.houseTypeArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        StrongSelf;
+        if(self.viewModel.jumpHouseType == [obj intValue]){
+            jumpHouseTpye = self.viewModel.jumpHouseType ;
+        }
+    }];
+    jumpHouseTpye = jumpHouseTpye != -1 ? jumpHouseTpye : self.houseType;
     NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",jumpHouseTpye,placeHolderStr,placeHolderStr];
     if (self.suggestDelegate != NULL) {
         NSDictionary *infos = @{
                                 @"houseSearch":houseSearchParams,
                                 @"pre_house_type":@(self.houseType),
+                                @"jump_house_type":@(self.viewModel.jumpHouseType),
                                 };
         if (self.tracerDict.count > 0) {
             infos = @{
                       @"houseSearch":houseSearchParams,
                       @"tracer": self.tracerDict,
                       @"pre_house_type":@(self.houseType),
+                      @"jump_house_type":@(self.viewModel.jumpHouseType),
                       };
         }
         [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
@@ -366,6 +376,7 @@
             @"houseSearch":houseSearchParams,
             @"tracer": self.tracerDict,
             @"pre_house_type":@(self.houseType),
+            @"jump_house_type":@(self.viewModel.jumpHouseType),
         };
         [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
     }

@@ -44,7 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) NSString *commutePoi;//用户进入sug选择后显示的内容
 @property (nonatomic , strong) FHHouseListCommuteTipView *commuteTipView;
 @property (nonatomic , assign) NSInteger prehousetype;
-
+@property (nonatomic , assign) NSInteger jumpHouseType;
 #pragma mark - log相关
 - (void)updateTracerDict:(NSDictionary *)tracerDict;
 -(void)addStayCategoryLog:(NSTimeInterval)stayTime;

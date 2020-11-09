@@ -180,6 +180,7 @@ extern NSString *const INSTANT_DATA_KEY;
         self.tableView = tableView;
         self.isShowSubscribeCell = NO;
         self.prehousetype = [paramObj.allParams[@"pre_house_type"] intValue];
+        self.jumpHouseType = [paramObj.allParams[@"jump_house_type"] intValue];
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
         _startMonitorTime = [[NSDate date] timeIntervalSince1970];
 
@@ -493,6 +494,8 @@ extern NSString *const INSTANT_DATA_KEY;
 
     NSInteger prehousetype = self.prehousetype ?: self.houseType;
     query = [query stringByAppendingString:[NSString stringWithFormat:@"&pre_house_type=%ld",(long)prehousetype]];
+    NSInteger jumpHousetype = self.jumpHouseType ?: self.houseType;
+    query = [query stringByAppendingString:[NSString stringWithFormat:@"&jump_house_type=%ld",(long)jumpHousetype]];
     if (self.isCommute) {
         [self requestCommute:isRefresh query:query offset:offset searchId:searchId];
         return;
@@ -888,7 +891,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 hasMore = houseModel.hasMore;
                 refreshTip = houseModel.refreshTip;
                 if (houseModel.searchItems.count > 0) {
-                    if(houseModel.realBussinessSearch){
+                    if(houseModel.realBussinessSearch && houseModel.realBussinessSearch.content){
                         [itemArray addObject:houseModel.realBussinessSearch];
                     }
                     [itemArray addObjectsFromArray:houseModel.searchItems];
@@ -1553,6 +1556,7 @@ extern NSString *const INSTANT_DATA_KEY;
     NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
     self.houseType = houseTypeStr.integerValue;
     self.prehousetype = [routeObject.paramObj.allParams[@"pre_house_type"] intValue];
+    self.jumpHouseType = [routeObject.paramObj.allParams[@"jump_house_type"] intValue];
     if (self.sugSelectBlock) {
         self.sugSelectBlock(routeObject.paramObj);
     }
