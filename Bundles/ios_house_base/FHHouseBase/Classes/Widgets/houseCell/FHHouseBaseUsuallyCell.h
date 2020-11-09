@@ -14,9 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) CAShapeLayer *topLeftTagMaskLayer;
 
-- (void)configTopLeftTagWithTagImages:(id)data;
+- (void)configTopLeftTagWithTagImages:(NSArray<FHImageModel> *)tagImages;
 
 - (void)layoutTopLeftTagImageView;
+
+- (NSAttributedString *)originPriceAttr:(NSString *)originPrice;
 
 @end
 

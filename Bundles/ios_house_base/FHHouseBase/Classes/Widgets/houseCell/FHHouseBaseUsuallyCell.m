@@ -9,7 +9,7 @@
 
 @implementation FHHouseBaseUsuallyCell
 
-@synthesize mainImageView = _mainImageView, mainTitleLabel = _mainTitleLabel, pricePerSqmLabel = _pricePerSqmLabel, priceLabel = _priceLabel, houseMainImageBackView = _houseMainImageBackView;
+@synthesize mainTitleLabel = _mainTitleLabel, pricePerSqmLabel = _pricePerSqmLabel, priceLabel = _priceLabel, houseMainImageBackView = _houseMainImageBackView;
 
 - (void)initUI {
     [self.contentView addSubview:self.houseCellBackView];
@@ -101,12 +101,7 @@
     }
 }
 
-- (void)configTopLeftTagWithTagImages:(id)data {
-    if(![data isKindOfClass:[FHHouseListBaseItemModel class]]) {
-        return;
-    }
-    FHHouseListBaseItemModel *model = (FHHouseListBaseItemModel *)data;
-    NSArray<FHImageModel> *tagImages = model.tagImage;
+- (void)configTopLeftTagWithTagImages:(NSArray<FHImageModel> *)tagImages {
     if (tagImages.count > 0) {
         FHImageModel *tagImageModel = tagImages.firstObject;
         if (!tagImageModel.url.length) {
@@ -150,15 +145,6 @@
     [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
     [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray1] range:NSMakeRange(0, originPrice.length)];
     return attri;
-}
-
-- (UIImageView *)mainImageView {
-    if (!_mainImageView) {
-        _mainImageView = [[UIImageView alloc] init];
-        _mainImageView.layer.cornerRadius = 4;
-        _mainImageView.layer.masksToBounds = YES;
-    }
-    return _mainImageView;
 }
 
 - (UILabel *)mainTitleLabel {

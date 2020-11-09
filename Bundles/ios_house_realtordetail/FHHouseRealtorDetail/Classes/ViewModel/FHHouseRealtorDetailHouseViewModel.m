@@ -17,6 +17,8 @@
 #import "ToastManager.h"
 #import "FHHouseBaseItemCell.h"
 #import "FHHouseRealtorDetailPlaceCell.h"
+#import "FHRealtorSecondCell.h"
+
 @interface FHHouseRealtorDetailHouseViewModel ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
 @property(nonatomic,strong)NSDictionary *tracerDic;
@@ -68,8 +70,9 @@
 }
 
 - (void)registerCellClasses {
-        [self.tableView registerClass:[FHHouseRealtorDetailPlaceCell class] forCellReuseIdentifier:@"FHHouseRealtorDetailPlaceCell"];
-        [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
+    [self.tableView registerClass:[FHHouseRealtorDetailPlaceCell class] forCellReuseIdentifier:@"FHHouseRealtorDetailPlaceCell"];
+    [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
+    [self.tableView registerClass:[FHRealtorSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHRealtorSecondCell class])];
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -215,6 +218,16 @@
        [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
         return cell;
     }else {
+        if ([FHEnvContext isDisplayNewCardType]) {
+            NSString *identifier = NSStringFromClass([FHRealtorSecondCell class]);
+            FHHouseBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+            if (indexPath.row < self.dataList.count) {
+                JSONModel *model = self.dataList[indexPath.row];
+                [cell refreshWithData:model];
+                [cell refreshIndexCorner:(indexPath.row == 1) andLast:(indexPath.row == (self.dataList.count - 1))];
+            }
+            return cell;
+        }
         //to do 房源cell
         NSString *identifier = @"FHHomeSmallImageItemCell";
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];

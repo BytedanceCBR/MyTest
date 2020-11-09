@@ -29,7 +29,10 @@
 
 - (void)refreshWithData:(id)data {
     [super refreshWithData:data];
-    [self configTopLeftTagWithTagImages:data];
+    if([data isKindOfClass:[FHHouseListBaseItemModel class]]) {
+        FHHouseListBaseItemModel *model = (FHHouseListBaseItemModel *)data;
+        [self configTopLeftTagWithTagImages:model.tagImage];
+    }
 }
 
 - (void)layoutSubviews {
