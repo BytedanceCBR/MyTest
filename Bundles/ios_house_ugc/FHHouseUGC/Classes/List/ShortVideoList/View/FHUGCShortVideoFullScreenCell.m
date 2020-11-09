@@ -185,7 +185,6 @@
 
 - (void)reset {
     [self.playerView reset];
-    [self.playerView.player releaseAysnc];
     self.playImage.hidden = YES;
 }
 
