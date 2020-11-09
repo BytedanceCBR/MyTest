@@ -128,12 +128,21 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
                             }
                         }];
                         
+                        CGSize videoSize = CGSizeZero;
+                        NSArray *tracks = [asset tracksWithMediaType:AVMediaTypeVideo];
+                        if(tracks.count > 0) {
+                            AVAssetTrack *videoTrack = tracks.firstObject;
+                            videoSize = videoTrack.naturalSize;
+                        }
+                        
                         id<TIMFileUploadRequest> request = [[TIMCoreBridgeManager sharedInstance] getInstanceConformsToProtocol:@protocol(TIMFileUploadRequest)];
                         request.requestIdentifier = @"";
                         request.localFilePath = exportSession.outputURL;
                         request.mimeType = @"video/mp4";
                         request.ext = @{
-                            TIM_FILE_EXT_KEY_TYPE:TIM_FILE_EXT_VALUE_TYPE_VIDEO
+                            TIM_FILE_EXT_KEY_TYPE:TIM_FILE_EXT_VALUE_TYPE_VIDEO,
+                            TIM_FILE_EXT_KEY_PREVIEW_WIDTH: @(videoSize.width),
+                            TIM_FILE_EXT_KEY_PREVIEW_HEIGHT: @(videoSize.height),
                         };
                         
                         [TIMSMediaFileUploadManager sharedInstance].delegate = self;
@@ -213,7 +222,9 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
 - (void)uploadRequest:(NSString *)requestIdentifier didSuccessWithInfo:(id<TIMFileUploadedInfo>)info {
     dispatch_async(dispatch_get_main_queue(), ^{
         NSString *videoUrl = info.remotePath;
-        NSString *videoCoverImageUrl = info.ext[TIM_FILE_EXT_KEY_VIDEO_COVER_URL]?:@"";
+        NSString *videoCoverImageUrl = [info.ext btd_stringValueForKey:TIM_FILE_EXT_KEY_VIDEO_COVER_URL default:@""];
+        NSString *widthString = [info.ext btd_stringValueForKey:TIM_FILE_EXT_KEY_PREVIEW_WIDTH default:@""];
+        NSString *heightString = [info.ext btd_stringValueForKey:TIM_FILE_EXT_KEY_PREVIEW_HEIGHT default:@""];
         
         // 上传成功
         [self updateVideoUploadState:TTRLinkChatVideoUploadState_End data:@{
@@ -223,6 +234,8 @@ typedef NS_ENUM(NSUInteger, TTRLinkChatVideoUploadState) {
             @"data": @{
                     @"videoSrc": videoUrl?:@"",
                     @"videoCoverImg": videoCoverImageUrl?:@"",
+                    @"width": widthString?:@"",
+                    @"height": heightString?:@"",
             }
         }];
     });
