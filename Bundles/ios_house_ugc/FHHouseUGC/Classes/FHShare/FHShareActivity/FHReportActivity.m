@@ -17,6 +17,10 @@
 }
 
 - (void)performActivityWithCompletion:(BDUGActivityCompletionHandler _Nullable)completion {
+    if(self.contentItem.reportBlcok) {
+        self.contentItem.reportBlcok();
+        return;
+    }
     NSString *desc = @"举报成功，将减少类似推荐";
     if(completion){
         completion(self,nil,desc);

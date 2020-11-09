@@ -7,11 +7,19 @@
 
 #import "BDUGShareBaseContentItem.h"
 
-NSString * const FHActivityContentItemTypeReport = @"com.f100.ActivityContentItem.Report";
-
 NS_ASSUME_NONNULL_BEGIN
 
+static NSString * const FHActivityContentItemTypeReport = @"com.f100.ActivityContentItem.Report";
+
 @interface FHReportContentItem : BDUGShareBaseContentItem
+
+@property(nonatomic,copy) void (^reportBlcok)(void);
+
+@end
+
+@interface FHShareReportDataModel : NSObject
+
+@property(nonatomic,copy) void (^reportBlcok)(void);
 
 @end
 

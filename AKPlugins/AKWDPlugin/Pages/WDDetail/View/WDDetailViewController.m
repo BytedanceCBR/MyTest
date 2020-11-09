@@ -1469,21 +1469,22 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
 
 - (void)showSharePanel {
     FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
-    dataModel.title = [self.natantViewModel shareTitle];
-    dataModel.desc = [self.natantViewModel shareDesc];
-    dataModel.imageUrl = [self.natantViewModel shareImgUrl];
-    dataModel.thumbImage = [self.natantViewModel shareImage];
-    dataModel.shareUrl = [self.natantViewModel shareUrl];
-    dataModel.shareType = BDUGShareWebPage;
+    
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = [self.natantViewModel shareTitle];
+    commonDataModel.desc = [self.natantViewModel shareDesc];
+    commonDataModel.imageUrl = [self.natantViewModel shareImgUrl];
+    commonDataModel.thumbImage = [self.natantViewModel shareImage];
+    commonDataModel.shareUrl = [self.natantViewModel shareUrl];
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDateModel = commonDataModel;
     
     NSArray *contentItemArray = @[
-        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink),@(FHShareChannelTypeDislike),@(FHShareChannelTypeReport),@(FHShareChannelTypeBlock)],
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)],
+        @[@(FHShareChannelTypeDislike),@(FHShareChannelTypeReport),@(FHShareChannelTypeBlock)],
     ];
     
-    FHShareContentModel *model = [[FHShareContentModel alloc] init];
-    model.dataModel = dataModel;
-    model.contentItemArray = contentItemArray;
-    
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
     [[FHShareManager shareInstance] showSharePanelWithModel:model];
 }
 

@@ -14,3 +14,7 @@
 }
 
 @end
+
+@implementation FHShareReportDataModel
+
+@end

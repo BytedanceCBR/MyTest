@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <BDUGActivityContentItemProtocol.h>
+#import "FHReportContentItem.h"
 
 typedef NS_ENUM(NSInteger, FHShareChannelType)
 {
@@ -22,18 +23,22 @@ typedef NS_ENUM(NSInteger, FHShareChannelType)
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHShareDataModel : NSObject
+@interface FHShareCommonDataModel : NSObject
 @property(nonatomic,assign) BDUGShareType shareType;
 @property(nonatomic,copy) NSString *title;
 @property(nonatomic,copy) NSString *desc;
 @property(nonatomic,copy) NSString *shareUrl;
 @property(nonatomic,copy) NSString *imageUrl;
-@property(nonatomic,copy) UIImage *thumbImage;
+@property(nonatomic,strong) UIImage *thumbImage;
+@end
+
+@interface FHShareDataModel : NSObject
+@property(nonatomic,strong) FHShareCommonDataModel *commonDateModel;
+@property(nonatomic,strong) FHShareReportDataModel *reportDataModel;
 @end
 
 @interface FHShareContentModel : NSObject
-@property(nonatomic,strong) FHShareDataModel *dataModel;
-@property(nonatomic,strong) NSArray *contentItemArray;
+- (instancetype)initWithDataModel:(FHShareDataModel *)dataModel contentItemArray:(NSArray *)contentItemArray;
 @end
 
 @interface FHShareManager : NSObject

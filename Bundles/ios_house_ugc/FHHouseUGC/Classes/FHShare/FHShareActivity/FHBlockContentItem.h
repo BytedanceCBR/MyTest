@@ -7,9 +7,9 @@
 
 #import "BDUGShareBaseContentItem.h"
 
-NSString * const FHActivityContentItemTypeBlock = @"com.f100.ActivityContentItem.Block";
-
 NS_ASSUME_NONNULL_BEGIN
+
+static NSString * const FHActivityContentItemTypeBlock = @"com.f100.ActivityContentItem.Block";
 
 @interface FHBlockContentItem : BDUGShareBaseContentItem
 

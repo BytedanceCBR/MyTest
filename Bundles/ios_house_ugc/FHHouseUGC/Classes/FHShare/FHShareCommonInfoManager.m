@@ -12,7 +12,9 @@
 
 -(void)activityHasSharedWith:(id<BDUGActivityProtocol>)activity error:(NSError *)error desc:(NSString *)desc {
     NSString *imageName = error ? @"close_popup_textpage.png" : @"doneicon_popup_textpage.png";
-    [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:desc indicatorImage:[UIImage imageNamed:imageName] autoDismiss:YES dismissHandler:nil];
+    if(desc.length > 0) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:desc indicatorImage:[UIImage imageNamed:imageName] autoDismiss:YES dismissHandler:nil];
+    }
 }
 
 @end

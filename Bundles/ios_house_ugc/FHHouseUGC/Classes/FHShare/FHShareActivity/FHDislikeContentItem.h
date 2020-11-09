@@ -7,9 +7,9 @@
 
 #import "BDUGShareBaseContentItem.h"
 
-NSString * const FHActivityContentItemTypeDislike = @"com.f100.ActivityContentItem.Dislike";
-
 NS_ASSUME_NONNULL_BEGIN
+
+static NSString * const FHActivityContentItemTypeDislike = @"com.f100.ActivityContentItem.Dislike";
 
 @interface FHDislikeContentItem : BDUGShareBaseContentItem
 

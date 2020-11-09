@@ -18,6 +18,31 @@
 #import "FHShareActivity/FHBlockActivity.h"
 #import "FHShareActivity/FHDislikeActivity.h"
 
+@implementation FHShareDataModel
+
+@end
+
+@implementation FHShareCommonDataModel
+
+@end
+
+@interface FHShareContentModel ()
+@property(nonatomic,strong) FHShareDataModel *dataModel;
+@property(nonatomic,strong) NSArray *contentItemArray;
+@end
+
+@implementation FHShareContentModel
+
+- (instancetype)initWithDataModel:(FHShareDataModel *)dataModel contentItemArray:(NSArray *)contentItemArray {
+    self = [super init];
+    if (self) {
+        _dataModel = dataModel;
+        _contentItemArray = contentItemArray;
+    }
+    return self;
+}
+
+@end
 
 @interface FHShareManager () <BDUGShareManagerDataSource,BDUGShareManagerDelegate>
 @property(nonatomic,strong) BDUGShareManager *shareManager;
@@ -50,9 +75,9 @@
 
 
 -(BOOL)isShareOptimization {
-    BOOL isShareOptimization = YES;
+    BOOL isShareOptimization = [SSCommonLogic isShareOptimization];
+    isShareOptimization = YES;
     return  isShareOptimization;
-    return [SSCommonLogic isShareOptimization];
 }
 
 - (void)showSharePanelWithModel:(FHShareContentModel *)model {
@@ -84,28 +109,28 @@
     BDUGShareBaseContentItem *item = nil;
     switch (channelType) {
         case FHShareChannelTypeWeChat:
-            item = [self createWechatItemWithModel:model];
+            item = [self createWechatItemWithModel:model.commonDateModel];
             break;
         case FHShareChannelTypeWeChatTimeline:
-            item = [self createWechatTimeLineItemWithModel:model];
+            item = [self createWechatTimeLineItemWithModel:model.commonDateModel];
             break;
         case FHShareChannelTypeQQFriend:
-            item = [self createQQFriendItemWithModel:model];
+            item = [self createQQFriendItemWithModel:model.commonDateModel];
             break;
         case FHShareChannelTypeQQZone:
-            item = [self createQQZoneItemWithModel:model];
+            item = [self createQQZoneItemWithModel:model.commonDateModel];
             break;
         case FHShareChannelTypeCopyLink:
-            item = [self createCopyLinkItemWithModel:model];
+            item = [self createCopyLinkItemWithModel:model.commonDateModel];
             break;
         case FHShareChannelTypeReport:
-            item = [self createReportItemWithModel:model];
+            item = [self createReportItemWithModel:model.reportDataModel];
             break;
         case FHShareChannelTypeBlock:
-            item = [self createBlockItemWithModel:model];
+            item = [self createBlockItemWithModel];
             break;
         case FHShareChannelTypeDislike:
-            item = [self createDislikeItemWithModel:model];
+            item = [self createDislikeItemWithModel];
             break;
         default:
             break;
@@ -113,14 +138,14 @@
     return item;
 }
 
--(BDUGWechatContentItem *)createWechatItemWithModel:(FHShareDataModel *)model {
+-(BDUGWechatContentItem *)createWechatItemWithModel:(FHShareCommonDataModel *)model {
     BDUGWechatContentItem *item = [[BDUGWechatContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage defaultShareType:model.shareType];
     item.activityImageName = @"weixin_allshare";
     item.contentTitle = @"微信";
     return item;
 }
 
--(BDUGWechatTimelineContentItem *)createWechatTimeLineItemWithModel:(FHShareDataModel *)model {
+-(BDUGWechatTimelineContentItem *)createWechatTimeLineItemWithModel:(FHShareCommonDataModel *)model {
     BDUGWechatTimelineContentItem *item = [[BDUGWechatTimelineContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage defaultShareType:model.shareType];
     item.activityImageName = @"pyq_allshare";
     item.contentTitle = @"朋友圈";
@@ -128,21 +153,21 @@
 }
 
 
--(BDUGQQFriendContentItem *)createQQFriendItemWithModel:(FHShareDataModel *)model {
+-(BDUGQQFriendContentItem *)createQQFriendItemWithModel:(FHShareCommonDataModel *)model {
     BDUGQQFriendContentItem *item = [[BDUGQQFriendContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage imageUrl:model.imageUrl shareTye:model.shareType];
     item.activityImageName = @"qq_allshare";
     item.contentTitle = @"QQ";
     return item;
 }
 
--(BDUGQQZoneContentItem *)createQQZoneItemWithModel:(FHShareDataModel *)model {
+-(BDUGQQZoneContentItem *)createQQZoneItemWithModel:(FHShareCommonDataModel *)model {
     BDUGQQZoneContentItem *item = [[BDUGQQZoneContentItem alloc] initWithTitle:model.title desc:model.desc webPageUrl:model.shareUrl thumbImage:model.thumbImage imageUrl:model.imageUrl shareTye:model.shareType];
     item.activityImageName = @"qqkj_allshare";
     item.contentTitle = @"QQ空间";
     return item;
 }
 
--(BDUGCopyContentItem *)createCopyLinkItemWithModel:(FHShareDataModel *)model {
+-(BDUGCopyContentItem *)createCopyLinkItemWithModel:(FHShareCommonDataModel *)model {
     BDUGCopyContentItem *item = [[BDUGCopyContentItem alloc] init];
     item.webPageUrl = model.shareUrl;
     item.activityImageName = @"copy_allshare";
@@ -150,21 +175,22 @@
     return item;
 }
 
--(FHReportContentItem *)createReportItemWithModel:(FHShareDataModel *)model {
+-(FHReportContentItem *)createReportItemWithModel:(FHShareReportDataModel *)model {
     FHReportContentItem *item = [[FHReportContentItem alloc] init];
     item.activityImageName = @"report_allshare";
     item.contentTitle = @"举报";
+    item.reportBlcok = model.reportBlcok;
     return item;
 }
 
--(FHBlockContentItem *)createBlockItemWithModel:(FHShareDataModel *)model {
+-(FHBlockContentItem *)createBlockItemWithModel {
     FHBlockContentItem *item = [[FHBlockContentItem alloc] init];
     item.activityImageName = @"shield_allshare";
     item.contentTitle = @"拉黑";
     return item;
 }
 
--(FHDislikeContentItem *)createDislikeItemWithModel:(FHShareDataModel *)model {
+-(FHDislikeContentItem *)createDislikeItemWithModel {
     FHDislikeContentItem *item = [[FHDislikeContentItem alloc] init];
     item.activityImageName = @"unlike_allshare";
     item.contentTitle = @"屏蔽";
@@ -181,10 +207,5 @@
 
 @end
 
-@implementation FHShareDataModel
 
-@end
 
-@implementation FHShareContentModel
-
-@end
