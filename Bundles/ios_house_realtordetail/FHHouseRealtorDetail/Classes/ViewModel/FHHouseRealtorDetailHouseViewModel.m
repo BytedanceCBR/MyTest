@@ -224,7 +224,7 @@
             if (indexPath.row < self.dataList.count) {
                 JSONModel *model = self.dataList[indexPath.row];
                 [cell refreshWithData:model];
-                [cell refreshIndexCorner:(indexPath.row == 1) andLast:(indexPath.row == (self.dataList.count - 1))];
+                [cell refreshIndexCorner:(indexPath.row == 1) andLast:(indexPath.row == self.dataList.count)];
             }
             return cell;
         }
