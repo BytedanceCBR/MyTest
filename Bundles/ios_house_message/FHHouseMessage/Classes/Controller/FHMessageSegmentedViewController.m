@@ -634,14 +634,12 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)conversationUpdated:(NSString *)conversationIdentifier {
     if(conversationIdentifier.length > 0) {
         [self.conversationUpdateSubject sendNext:conversationIdentifier];
-        NSLog(@"refine: conversationUpdated: %@", conversationIdentifier);
     }
 }
 
 // 更新多个会话的个数和顺序
 - (void)conversationsUpdated:(NSArray<NSString *> *)conversationIdentifiers {
     [self refreshConversationList];
-    NSLog(@"refine: conversationsUpdated: %@", @(conversationIdentifiers.count));
 }
 
 - (void)setInteractivePanDirection:(FHSegmentedControllerAnimatedTransitionDirection)interactivePanDirection {
