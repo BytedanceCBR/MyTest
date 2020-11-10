@@ -839,6 +839,7 @@
                     [cell.secondaryLabel layoutIfNeeded];
                     cell.secondaryLabel.textContainerInset = UIEdgeInsetsMake(0, 5, 0, 5);
                 }
+                cell.secondarySubLabel.text = model.tips2;
                 return cell;
             }else if(model.houseType.intValue == FHHouseTypeSecondHandHouse) {// 二手房
                 FHOldSuggestionItemCell *cell = (FHOldSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"FHOldSuggestionItemCell" forIndexPath:indexPath];
