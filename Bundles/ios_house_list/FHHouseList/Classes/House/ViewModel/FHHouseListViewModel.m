@@ -1673,6 +1673,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 [(FHDynamicLynxCell *)cell updateWithCellModel:cellModel];
             }
         }
+        if([cell isKindOfClass:[FHHouseListRecommendTipCell class]]){
+            [(FHHouseListRecommendTipCell *)cell refreshWithData:data houseType:self.houseType];
+        }
         [cell refreshWithData:data];
         if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
             FHHouseListAgencyInfoCell *agencyInfoCell = (FHHouseListAgencyInfoCell *)cell;

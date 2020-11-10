@@ -524,6 +524,8 @@
     
     NSMutableDictionary *infos = [NSMutableDictionary new];
     infos[@"houseSearch"] = houseSearchParams;
+    infos[@"pre_house_type"] = @(self.houseType);
+    infos[@"jump_house_type"] = @([model.houseType intValue]);
     if (model.info) {
         NSDictionary *dic = [model.info toDictionary];
         infos[@"suggestion"] = [self createQueryCondition:dic];
@@ -543,11 +545,18 @@
     }
     if(model.setHistory){
         [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:nil];
+        if([model.houseType intValue] == self.houseType){
+            tracer[@"element_from"] = @"associate";
+        }else{
+            tracer[@"element_from"] = [model.houseType intValue] == FHHouseTypeNewHouse ? @"related_new_recommend" : @"related_old_recommend";
+        }
         tracer[@"element_from"] = [model.houseType intValue] == self.houseType ? @"associate" : @"related_new_recommend";
         tracer[@"enter_from"] = @"search_detail";
         tracer[@"log_pb"] = model.logPb;
         tracer[@"card_type"] = @"left_pic";
         tracer[@"rank"] = [NSString stringWithFormat: @"%zi",rank];
+    }else if(self.houseType != [model.houseType intValue]){
+        tracer[@"element_from"] = [model.houseType intValue] == FHHouseTypeNewHouse ? @"related_new_recommend" : @"related_old_recommend";
     }
     infos[@"tracer"] = tracer;
     [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos isGoDetail:model.setHistory];
@@ -808,7 +817,7 @@
             FHHouseListRecommendTipCell *tipCell = (FHHouseListRecommendTipCell *)[tableView dequeueReusableCellWithIdentifier:@"tipcell" forIndexPath:indexPath];
             FHSearchGuessYouWantTipsModel *tipModel = [[FHSearchGuessYouWantTipsModel alloc] init];
             tipModel.text = model.text;
-            [tipCell refreshWithData:tipModel];
+            [tipCell refreshWithData:tipModel houseType:self.houseType];
             return tipCell;
         } else if (model.cardType == 15) {
             __weak typeof(self) weakSelf = self;
@@ -1053,8 +1062,9 @@
             
             [FHUserTracker writeEvent:@"element_show" params:tracerDict];
         }
-        if (indexPath.row  < self.guessYouWantData.count) {
-            FHSuggestionResponseItemModel *model  = self.guessYouWantData[indexPath.row];
+        NSMutableArray<FHSuggestionResponseItemModel>  *nowsugListData = indexPath.section == 0 ? self.sugListData:self.othersugListData;
+        if (indexPath.row < nowsugListData.count) {
+            FHSuggestionResponseItemModel *model  = nowsugListData[indexPath.row];
             if(model.cardType == 16){
             [[self fatherVC] trackSugWordClickWithmodel:model eventName:@"search_detail_show"];
             }

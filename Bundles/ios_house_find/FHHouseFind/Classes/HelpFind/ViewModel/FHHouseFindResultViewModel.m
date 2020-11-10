@@ -603,7 +603,7 @@
        }else if([cellModel isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
            if (cellModel.cardType == 9) {
                FHHouseListRecommendTipCell *cell = [tableView dequeueReusableCellWithIdentifier:kFindNoHouseTitileCellId];
-               [cell refreshWithData:(FHSearchGuessYouWantContentModel *)cellModel];
+               [cell refreshWithData:(FHSearchGuessYouWantContentModel *)cellModel houseType:self.houseType];
                return cell;
            }
        }

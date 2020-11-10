@@ -355,6 +355,9 @@
     }];
     jumpHouseTpye = jumpHouseTpye != -1 ? jumpHouseTpye : self.houseType;
     NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",jumpHouseTpye,placeHolderStr,placeHolderStr];
+    if(jumpHouseTpye != self.houseType){
+        self.tracerDict[@"element_from"] = jumpHouseTpye == FHHouseTypeNewHouse ? @"related_new_recommend":@"related_old_recommend";
+    }
     if (self.suggestDelegate != NULL) {
         NSDictionary *infos = @{
                                 @"houseSearch":houseSearchParams,
