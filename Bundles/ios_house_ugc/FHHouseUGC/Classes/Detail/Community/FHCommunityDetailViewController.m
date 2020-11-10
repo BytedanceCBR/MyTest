@@ -375,7 +375,30 @@
     ];
     
     FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
-    [[FHShareManager shareInstance] showSharePanelWithModel:model];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self shareParams]];
+}
+
+- (NSDictionary *)shareParams
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *tracerDict = self.viewModel.tracerDict;
+    params[@"page_type"] = tracerDict[@"page_type"] ? : @"be_null";
+    params[@"enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"element_from"] = tracerDict[@"element_from"] ? : @"be_null";
+    params[@"log_pb"] = tracerDict[@"log_pb"] ? : @"be_null";
+    if (tracerDict[@"rank"]) {
+        params[@"rank"] = tracerDict[@"rank"] ? : @"be_null";
+    }
+    if (tracerDict[@"origin_from"]) {
+        params[@"origin_from"] = tracerDict[@"origin_from"] ? : @"be_null";
+    }
+    if (tracerDict[@"origin_search_id"]) {
+        params[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? : @"be_null";
+    }
+    if (tracerDict[@"card_type"]) {
+        params[@"card_type"] = tracerDict[@"card_type"] ? : @"be_null";
+    }
+    return params;
 }
 
 //发布按钮点击

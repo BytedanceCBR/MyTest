@@ -1485,7 +1485,22 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     ];
     
     FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
-    [[FHShareManager shareInstance] showSharePanelWithModel:model];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self shareParams]];
+}
+
+- (NSDictionary *)shareParams {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *tracerDict = self.detailModel.gdExtJsonDict;
+    params[@"origin_from"] = tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = @"answer";
+    params[@"group_id"] = self.detailModel.answerEntity.ansid;
+    params[@"group_source"] = @"10";
+    NSDictionary *logPb = tracerDict[@"log_pb"];
+    if([logPb isKindOfClass:[NSDictionary class]]) {
+        params[@"impr_id"] = logPb[@"impr_id"] ?: @"be_null";
+    }
+    return params;
 }
 
 

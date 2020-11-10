@@ -1497,7 +1497,25 @@ static const CGFloat kFloatingViewOriginY = 230;
     ];
     
     FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
-    [[FHShareManager shareInstance] showSharePanelWithModel:model];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self shareParams]];
+}
+
+- (NSDictionary *)shareParams {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *tracerDict = self.pageParams;
+    NSDictionary *extraDic = tracerDict[@"extraDic"];
+    if([extraDic isKindOfClass:[NSDictionary class]]) {
+        params[@"origin_from"] = extraDic[@"origin_from"] ?: @"be_null";
+    }
+    params[@"enter_from"] = tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = [FHShortVideoTracerUtil pageType];
+    params[@"group_id"] = tracerDict[@"group_id"] ?: @"be_bull";
+    params[@"group_source"] = tracerDict[@"group_source"] ?: @"be_bull";
+    NSDictionary *logPb = extraDic[@"log_pb"];
+    if([logPb isKindOfClass:[NSDictionary class]]) {
+        params[@"impr_id"] = logPb[@"impr_id"] ?: @"be_null";
+    }
+    return params;
 }
 
 #pragma mark -

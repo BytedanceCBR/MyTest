@@ -365,7 +365,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 
     FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
-    [[FHShareManager shareInstance] showSharePanelWithModel:model];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self baseParams]];
 }
 
 -(BOOL)hasImUser {

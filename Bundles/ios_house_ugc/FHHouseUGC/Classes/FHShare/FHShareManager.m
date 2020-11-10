@@ -20,6 +20,7 @@
 #import "FHIMActivity.h"
 #import "FHCollectActivity.h"
 #import <TTIndicatorView.h>
+#import <FHUserTracker.h>
 
 @implementation FHShareDataModel
 
@@ -84,8 +85,11 @@
     return  isShareOptimization;
 }
 
-- (void)showSharePanelWithModel:(FHShareContentModel *)model {
+- (void)showSharePanelWithModel:(FHShareContentModel *)model tracerDict:(NSDictionary *)tracerDict {
     self.shareContentModel = model;
+    self.tracerDict = tracerDict;
+    
+    [FHUserTracker writeEvent:@"click_share" params:tracerDict];
     [self.shareManager displayPanelWithContent:nil];
 }
 
@@ -235,7 +239,29 @@
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:desc indicatorImage:[UIImage imageNamed:imageName] autoDismiss:YES dismissHandler:nil];
     }
     
-    
+    NSMutableDictionary *params = self.tracerDict.mutableCopy;
+    params[@"platform"] = [self activityPlatform: activity];
+    [FHUserTracker writeEvent:@"share_platform" params:params];
+}
+
+
+- (NSString *)activityPlatform:(id<BDUGActivityProtocol>)activity {
+    NSString *contentItemType = activity.contentItemType;
+    if([contentItemType isEqual:BDUGActivityContentItemTypeWechat]){
+        return @"weixin";
+    } else if([contentItemType isEqual:BDUGActivityContentItemTypeWechatTimeLine]) {
+        return @"weixin_moments";
+    } else if([contentItemType isEqual:BDUGActivityContentItemTypeQQFriend]) {
+        return @"qq";
+    } else if([contentItemType isEqual:BDUGActivityContentItemTypeQQZone]) {
+        return @"qzone";
+    } else if([contentItemType isEqual:BDUGActivityContentItemTypeCopy]) {
+        return @"copy";
+    } else if([contentItemType isEqual:FHActivityContentItemTypeIM]) {
+        return @"realtor";
+    } else {
+        return @"be_null";
+    }
 }
 
 @end

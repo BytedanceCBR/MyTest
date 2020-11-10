@@ -1935,7 +1935,19 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     ];
 
     FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
-    [[FHShareManager shareInstance] showSharePanelWithModel:model];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self shareParams]];
+}
+
+- (NSDictionary *)shareParams {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *tracerDict = self.detailModel.reportParams;
+    params[@"origin_from"] = tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = tracerDict[@"page_type"] ?: @"be_null";
+    params[@"group_id"] = tracerDict[@"group_id"] ?: @"be_bull";
+    params[@"group_source"] = tracerDict[@"group_source"] ?: @"be_bull";
+    params[@"impr_id"] = tracerDict[@"impr_id"] ?: @"be_null";
+    return params;
 }
 
 @end

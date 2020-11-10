@@ -50,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHShareManager : NSObject
 + (instancetype)shareInstance;
 - (void)addCustomShareActivity;
-- (void)showSharePanelWithModel:(FHShareContentModel *)model;
+- (void)showSharePanelWithModel:(FHShareContentModel *)model tracerDict:(NSDictionary *)tracerDict;
 - (BOOL)isShareOptimization;
 @end
 
