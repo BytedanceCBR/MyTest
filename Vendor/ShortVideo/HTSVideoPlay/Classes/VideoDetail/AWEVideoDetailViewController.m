@@ -1390,6 +1390,12 @@ static const CGFloat kFloatingViewOriginY = 230;
                                                                                    dismissHandler:nil];
                 [indicatorView showFromParentView:activityPanelControllerWindow];
             }
+            if (groupID.length > 0 ) {
+                NSMutableDictionary *userInfo = @{}.mutableCopy;
+                userInfo[@"group_id"] = groupID;
+                userInfo[@"action"] = @(self.model.userRepin);
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCUserRepinStateChangeNotification" object:nil userInfo:userInfo];
+            }
         } else {
             TTIndicatorView * indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleImage
                                                                                 indicatorText:NSLocalizedString(@"操作失败", nil)
@@ -1950,6 +1956,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         [params setObject:@"click_publisher" forKey:@"enter_type"];
         // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
         [params setObject:@(YES) forKey:@"need_pop_vc"];
+        params[@"from_ugc"] = @(YES);
         [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
             if (type == TTAccountAlertCompletionEventTypeDone) {
                 //登录成功 走发送逻辑
