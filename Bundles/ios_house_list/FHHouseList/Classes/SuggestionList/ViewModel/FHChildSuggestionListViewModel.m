@@ -286,7 +286,7 @@
     NSDictionary * infos = @{@"title":@"我订阅的搜索",
                              @"subscribe_delegate":subscribeDelegateTable,
                              @"tracer":tracer
-    };
+                             };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     
     NSURL *url = [NSURL URLWithString:openUrl];
@@ -346,14 +346,14 @@
         NSString *pageType = [self pageTypeString];
         // 特殊埋点需求，此处enter_query和search_query都埋:be_null
         NSDictionary *houseSearchParams = @{
-            @"enter_query":@"be_null",
-            @"search_query":@"be_null",
-            @"page_type":pageType.length > 0 ? pageType : @"be_null",
-            @"query_type":queryType
-        };
+                                            @"enter_query":@"be_null",
+                                            @"search_query":@"be_null",
+                                            @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                            @"query_type":queryType
+                                            };
         NSMutableDictionary *infos = [NSMutableDictionary new];
         infos[@"houseSearch"] = houseSearchParams;
-        
+    
         NSMutableDictionary *tracer = [NSMutableDictionary new];
         tracer[@"enter_type"] = @"click";
         tracer[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
@@ -372,11 +372,11 @@
 {
     // 点击埋点
     NSDictionary *tracerDic = @{
-        @"word":model.text.length > 0 ? model.text : @"be_null",
-        @"history_id":model.historyId.length > 0 ? model.historyId : @"be_null",
-        @"rank":@(index),
-        @"show_type":@"list"
-    };
+                                @"word":model.text.length > 0 ? model.text : @"be_null",
+                                @"history_id":model.historyId.length > 0 ? model.historyId : @"be_null",
+                                @"rank":@(index),
+                                @"show_type":@"list"
+                                };
     [FHUserTracker writeEvent:@"search_history_click" params:tracerDic];
     
     NSString *jumpUrl = model.openUrl;
@@ -390,11 +390,11 @@
     NSString *pageType = [self pageTypeString];
     NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
     NSDictionary *houseSearchParams = @{
-        @"enter_query":queryText,
-        @"search_query":queryText,
-        @"page_type":pageType.length > 0 ? pageType : @"be_null",
-        @"query_type":queryType
-    };
+                                        @"enter_query":queryText,
+                                        @"search_query":queryText,
+                                        @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                        @"query_type":queryType
+                                        };
     
     NSMutableDictionary *infos = [NSMutableDictionary new];
     infos[@"houseSearch"] = houseSearchParams;
@@ -450,11 +450,11 @@
         NSString *pageType = [self pageTypeString];
         NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
         NSDictionary *houseSearchParams = @{
-            @"enter_query":queryText,
-            @"search_query":queryText,
-            @"page_type":pageType.length > 0 ? pageType : @"be_null",
-            @"query_type":queryType
-        };
+                                            @"enter_query":queryText,
+                                            @"search_query":queryText,
+                                            @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                            @"query_type":queryType
+                                            };
         NSMutableDictionary *infos = [NSMutableDictionary new];
         infos[@"houseSearch"] = houseSearchParams;
         if (model.extinfo) {
@@ -494,14 +494,14 @@
     NSString *impr_id = [model.logPb btd_stringValueForKey:@"impr_id" default:@"be_null"];
     
     NSDictionary *tracerDic = @{
-        @"word_text":model.text.length > 0 ? model.text : @"be_null",
-        @"associate_cnt":@(self.associatedCount),
-        @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
-        @"word_id":model.info.wordid.length > 0 ? model.info.wordid : @"be_null",
-        @"element_type":@"search",
-        @"impr_id":impr_id ?: @"be_null",
-        @"rank":@(rank)
-    };
+                                @"word_text":model.text.length > 0 ? model.text : @"be_null",
+                                @"associate_cnt":@(self.associatedCount),
+                                @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
+                                @"word_id":model.info.wordid.length > 0 ? model.info.wordid : @"be_null",
+                                @"element_type":@"search",
+                                @"impr_id":impr_id ?: @"be_null",
+                                @"rank":@(rank)
+                                };
     [FHUserTracker writeEvent:@"associate_word_click" params:tracerDic];
     [[self fatherVC] trackSugWordClickWithmodel:model eventName:@"sug_word_click"];
     NSString *jumpUrl = model.openUrl;
@@ -516,11 +516,11 @@
     NSString *inputStr = self.highlightedText.length > 0 ? self.highlightedText : @"be_null";
     NSString *queryText = model.text.length > 0 ? model.text : @"be_null";
     NSDictionary *houseSearchParams = @{
-        @"enter_query":inputStr,
-        @"search_query":queryText,
-        @"page_type":pageType.length > 0 ? pageType : @"be_null",
-        @"query_type":queryType
-    };
+                                        @"enter_query":inputStr,
+                                        @"search_query":queryText,
+                                        @"page_type":pageType.length > 0 ? pageType : @"be_null",
+                                        @"query_type":queryType
+                                        };
     
     NSMutableDictionary *infos = [NSMutableDictionary new];
     infos[@"houseSearch"] = houseSearchParams;
@@ -576,10 +576,10 @@
     for (NSInteger index = 0; index < self.sugListData.count; index ++) {
         FHSuggestionResponseItemModel *item = self.sugListData[index];
         NSDictionary *dic = @{
-            @"text":item.text.length > 0 ? item.text : @"be_null",
-            @"word_id":item.info.wordid.length > 0 ? item.info.wordid : @"be_null",
-            @"rank":@(index)
-        };
+                              @"text":item.text.length > 0 ? item.text : @"be_null",
+                              @"word_id":item.info.wordid.length > 0 ? item.info.wordid : @"be_null",
+                              @"rank":@(index)
+                              };
         [wordList addObject:dic];
     }
     NSError *error = NULL;
@@ -595,14 +595,14 @@
     }
     
     NSDictionary *tracerDic = @{
-        @"word_list":wordListStr.length > 0 ? wordListStr : @"be_null",
-        @"associate_cnt":@(self.associatedCount),
-        @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
-        @"word_cnt":@(wordList.count),
-        @"element_type":@"search",
-        @"impr_id":impr_id ?: @"be_null",
-    };
-    
+                                @"word_list":wordListStr.length > 0 ? wordListStr : @"be_null",
+                                @"associate_cnt":@(self.associatedCount),
+                                @"associate_type":[[FHHouseTypeManager sharedInstance] traceValueForType:self.houseType],
+                                @"word_cnt":@(wordList.count),
+                                @"element_type":@"search",
+                                @"impr_id":impr_id ?: @"be_null",
+                                };
+
     if (_isAssociatedCanTrack) {
         [FHUserTracker writeEvent:@"associate_word_show" params:tracerDic];
     }

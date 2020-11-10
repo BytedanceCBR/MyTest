@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)trackPageShow;
 - (void)trackTabIndexChange;
 - (void)trackSuggestionWithWord:(NSString *)word houseType:(NSInteger)houseType result:(FHSuggestionResponseModel *)result;
-- (void)trackSugWordClickWithmodel:(FHSuggestionResponseItemModel *)rank eventName:(NSString *)eventName;
+- (void)trackSugWordClickWithmodel:(FHSuggestionResponseItemModel *)model eventName:(NSString *)eventName;
 
 @end
 
