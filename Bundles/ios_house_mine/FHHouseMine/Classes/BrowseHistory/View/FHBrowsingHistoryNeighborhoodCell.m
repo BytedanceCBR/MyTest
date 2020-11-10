@@ -106,4 +106,5 @@
     }
     return _mainImageView;
 }
+
 @end
