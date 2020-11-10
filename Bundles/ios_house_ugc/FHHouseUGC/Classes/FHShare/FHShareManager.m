@@ -19,6 +19,7 @@
 #import "FHDislikeActivity.h"
 #import "FHIMActivity.h"
 #import "FHCollectActivity.h"
+#import <TTIndicatorView.h>
 
 @implementation FHShareDataModel
 
@@ -49,6 +50,7 @@
 @interface FHShareManager () <BDUGShareManagerDataSource,BDUGShareManagerDelegate>
 @property(nonatomic,strong) BDUGShareManager *shareManager;
 @property(nonatomic,strong) FHShareContentModel *shareContentModel;
+@property(nonatomic,strong) NSDictionary *tracerDict;
 @end
 
 @implementation FHShareManager
@@ -228,6 +230,11 @@
 }
 
 -(void)shareManager:(BDUGShareManager *)shareManager completedWith:(id<BDUGActivityProtocol>)activity sharePanel:(id<BDUGActivityPanelControllerProtocol>)panelController error:(NSError *)error desc:(NSString *)desc {
+    NSString *imageName = error ? @"close_popup_textpage.png" : @"doneicon_popup_textpage.png";
+    if(desc.length > 0) {
+        [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:desc indicatorImage:[UIImage imageNamed:imageName] autoDismiss:YES dismissHandler:nil];
+    }
+    
     
 }
 

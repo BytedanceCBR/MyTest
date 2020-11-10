@@ -6,7 +6,6 @@
 //
 
 #import "FHDislikeActivity.h"
-#import <BDUGShareAdapterSetting.h>
 
 @implementation FHDislikeActivity
 
@@ -21,7 +20,6 @@
     if(completion){
         completion(self,nil,desc);
     }
-    [[BDUGShareAdapterSetting sharedService] activityHasSharedWith:self error:nil desc:desc];
 }
 
 @end

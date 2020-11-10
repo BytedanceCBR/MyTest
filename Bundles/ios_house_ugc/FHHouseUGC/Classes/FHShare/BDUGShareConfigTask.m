@@ -15,7 +15,6 @@
 #import <FHSharePanel.h>
 #import <BDUGShareAdapterSetting.h>
 #import "FHShareManager.h"
-#import "FHShareCommonInfoManager.h"
 
 DEC_TASK("BDUGShareConfigTask",FHTaskTypeSDKs,TASK_PRIORITY_HIGH+2);
 @implementation BDUGShareConfigTask
@@ -30,7 +29,6 @@ DEC_TASK("BDUGShareConfigTask",FHTaskTypeSDKs,TASK_PRIORITY_HIGH+2);
     config.localMode = YES;
     [BDUGShareManager initializeShareSDKWithConfiguration:config];
     [[BDUGShareAdapterSetting sharedService] setPanelClassName:NSStringFromClass([FHSharePanel class])];
-    [BDUGShareAdapterSetting sharedService].commonInfoDelegate = [[FHShareCommonInfoManager alloc] init];
     [[FHShareManager shareInstance] addCustomShareActivity];
 }
 @end

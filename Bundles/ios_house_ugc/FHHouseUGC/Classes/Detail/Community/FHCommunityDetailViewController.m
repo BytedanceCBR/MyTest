@@ -19,6 +19,8 @@
 #import "FHUserTracker.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "UIImage+FIconFont.h"
+#import <FHShareManager.h>
+#import <BDImageCache.h>
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol, FHUGCPostMenuViewDelegate>
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
@@ -348,8 +350,32 @@
 // 分享按钮点击
 - (void)shareButtonClicked:(UIButton *)btn {
     if (self.viewModel.shareInfo && self.viewModel.shareTracerDict) {
+        if([[FHShareManager shareInstance] isShareOptimization]) {
+            [self showSharePanel];
+            return;
+        }
+        
         [[FHUGCShareManager sharedManager] shareActionWithInfo:self.viewModel.shareInfo tracerDic:self.viewModel.shareTracerDict];
     }
+}
+
+- (void)showSharePanel {
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
+    
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = self.viewModel.shareInfo.title;
+    commonDataModel.desc = self.viewModel.shareInfo.desc;
+    commonDataModel.shareUrl = self.viewModel.shareInfo.shareUrl;
+    commonDataModel.thumbImage = [[BDImageCache sharedImageCache]imageFromDiskCacheForKey:self.viewModel.shareInfo.coverImage];
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDataModel = commonDataModel;
+
+    NSArray *contentItemArray = @[
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)]
+    ];
+    
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model];
 }
 
 //发布按钮点击
