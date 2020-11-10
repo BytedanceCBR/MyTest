@@ -503,7 +503,7 @@
         @"rank":@(rank)
     };
     [FHUserTracker writeEvent:@"associate_word_click" params:tracerDic];
-    [[self fatherVC] trackSugWordClickWithmodel:model];
+    [[self fatherVC] trackSugWordClickWithmodel:model eventName:@"sug_word_click"];
     NSString *jumpUrl = model.openUrl;
     if (jumpUrl.length > 0) {
         NSString *placeHolder = [model.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
@@ -1052,6 +1052,12 @@
             };
             
             [FHUserTracker writeEvent:@"element_show" params:tracerDict];
+        }
+        if (indexPath.row  < self.guessYouWantData.count) {
+            FHSuggestionResponseItemModel *model  = self.guessYouWantData[indexPath.row];
+            if(model.cardType == 16){
+            [[self fatherVC] trackSugWordClickWithmodel:model eventName:@"search_detail_show"];
+            }
         }
     }
 }
