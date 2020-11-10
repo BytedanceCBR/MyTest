@@ -39,7 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)     FHSuggestionCollectionView *collectionView;
 @property (nonatomic, assign)     CGFloat keyboardHeight;
 @property (nonatomic, assign)     BOOL isTrackerCacheDisabled;
-@property (nonatomic, copy)     NSDictionary *sugWordShowtracerDic;
+@property (nonatomic, copy)       NSDictionary *sugWordShowtracerDic;
 
 - (void)requestDeleteHistory;
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;

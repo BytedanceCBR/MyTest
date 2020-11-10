@@ -6,6 +6,7 @@
 //
 
 #import "FHSuggestionListViewController.h"
+#import "FHSuggestionListModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -17,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)trackPageShow;
 - (void)trackTabIndexChange;
 - (void)trackSuggestionWithWord:(NSString *)word houseType:(NSInteger)houseType result:(FHSuggestionResponseModel *)result;
-- (void)trackSugWordClickWithrank:(NSInteger )rank;
+- (void)trackSugWordClickWithmodel:(FHSuggestionResponseItemModel *)rank;
 
 @end
 

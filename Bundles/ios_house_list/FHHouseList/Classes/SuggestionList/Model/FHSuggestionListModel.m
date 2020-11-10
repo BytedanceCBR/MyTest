@@ -39,6 +39,7 @@
                            @"districtName": @"district_name",
                            @"houseType": @"house_type",
                            @"neigbordId": @"neigbord_id",
+                           @"qrecid":@"qrec_id",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

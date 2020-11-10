@@ -169,8 +169,8 @@
 - (void)setModel:(FHSuggestionResponseItemModel *)model {
     if (model) {
         _model = model;
-        if(model.text.length>0){
-            NSAttributedString *text1 = [self processHighlightedDefault:model.text textColor:[UIColor themeGray1] fontSize:16.0];
+        if(model.name.length>0){
+            NSAttributedString *text1 = [self processHighlightedDefault:model.name textColor:[UIColor themeGray1] fontSize:16.0];
             self.titleLab.attributedText = [self processHighlighted:text1 originText:model.name textColor:[UIColor themeOrange1] fontSize:16.0];
             [self.titleLab sizeToFit];
         }

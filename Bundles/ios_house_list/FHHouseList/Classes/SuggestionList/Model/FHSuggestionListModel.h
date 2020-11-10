@@ -48,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, copy , nullable) NSString *districtName;
 @property (nonatomic, copy , nullable) NSString *neigbordId;
+@property (nonatomic, copy , nullable) NSString *qrecid;
 
 @end
 

@@ -503,7 +503,7 @@
         @"rank":@(rank)
     };
     [FHUserTracker writeEvent:@"associate_word_click" params:tracerDic];
-    [[self fatherVC] trackSugWordClickWithrank:rank];
+    [[self fatherVC] trackSugWordClickWithmodel:model];
     NSString *jumpUrl = model.openUrl;
     if (jumpUrl.length > 0) {
         NSString *placeHolder = [model.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];

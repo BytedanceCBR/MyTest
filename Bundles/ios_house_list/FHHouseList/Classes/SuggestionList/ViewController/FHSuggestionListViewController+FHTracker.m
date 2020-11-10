@@ -49,9 +49,14 @@ static const char tabSwitchedKey;
     [self trackPageShow];
 }
 
-- (void)trackSugWordClickWithrank:(NSInteger)rank{
+- (void)trackSugWordClickWithmodel:(FHSuggestionResponseItemModel *)model{
     NSMutableDictionary *parameters =  [NSMutableDictionary dictionaryWithDictionary:self.sugWordShowtracerDic];
-    parameters[@"rank"] = @(rank);
+    parameters[@"rank"] = @(model.rank);
+    parameters[@"log_pb"] = model.logPb;
+    parameters[@"word_text"] = [model.houseType intValue] == FHHouseTypeNewHouse? model.text:model.name;
+    parameters[@"group_id"] = model.info.qrecid;
+    parameters[@"recall_type"] = model.recallType;
+    
     TRACK_EVENT(@"sug_word_click", parameters);
     
 }
