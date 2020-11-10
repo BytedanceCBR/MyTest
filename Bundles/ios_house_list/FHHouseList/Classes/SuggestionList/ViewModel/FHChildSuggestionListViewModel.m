@@ -503,7 +503,7 @@
         @"rank":@(rank)
     };
     [FHUserTracker writeEvent:@"associate_word_click" params:tracerDic];
-    
+    [[self fatherVC] trackSugWordClickWithrank:rank];
     NSString *jumpUrl = model.openUrl;
     if (jumpUrl.length > 0) {
         NSString *placeHolder = [model.text stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
@@ -543,7 +543,7 @@
     }
     if(model.setHistory){
         [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:nil];
-        tracer[@"element_from"] = @"associate";
+        tracer[@"element_from"] = [model.houseType intValue] == self.houseType ? @"associate" : @"related_new_recommend";
         tracer[@"enter_from"] = @"search_detail";
         tracer[@"log_pb"] = model.logPb;
         tracer[@"card_type"] = @"left_pic";
@@ -897,7 +897,7 @@
         if (indexPath.row < nowsugListData.count) {
             FHSuggestionResponseItemModel *model  = nowsugListData[indexPath.row];
             if(model.cardType == 16){
-                [self associateWordCellClick:model rank:indexPath.row];
+                [self associateWordCellClick:model rank:model.rank];
             }
         }
     }
