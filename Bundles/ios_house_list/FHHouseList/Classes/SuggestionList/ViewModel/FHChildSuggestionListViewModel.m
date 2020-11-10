@@ -73,7 +73,7 @@
         self.sectionHeaderView.backgroundColor = [UIColor whiteColor];
         self.isFirstShow = YES;
         self.isUploadedPss = NO;
-        
+
         [self setupSubscribeView];
         [self setupHistoryView];
         [self initNotification];
@@ -362,7 +362,7 @@
             tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
         }
         infos[@"tracer"] = tracer;
-        
+
         // 参数都在jumpUrl中
         [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:nil placeholder:nil infoDict:infos isGoDetail:NO];
     }
@@ -820,14 +820,14 @@
             return helperCell;
         }else if(model.cardType == 16) {
             // 新房
-            if (model.houseType.intValue == 1) {
+            if (model.houseType.intValue == FHHouseTypeNewHouse) {
                 FHSuggestionNewHouseItemCell *cell = (FHSuggestionNewHouseItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestNewItemCell" forIndexPath:indexPath];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 NSAttributedString *text1 = [self processHighlightedDefault:model.text font:[UIFont themeFontSemibold:16] textColor:[UIColor themeGray1]];
                 NSAttributedString *text2 = [self processHighlightedDefault:model.text2 font:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
                 
-                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1] fontSize:15.0];
-                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1] fontSize:12.0];
+                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1] fontSize:16.0];
+                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1] fontSize:14.0];
                 if(indexPath.row == nowsugListData.count - 1){
                     cell.sepLine.hidden =YES;
                 }
