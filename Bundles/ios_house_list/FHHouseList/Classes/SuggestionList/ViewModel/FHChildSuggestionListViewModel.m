@@ -841,9 +841,9 @@
                     cell.sepLine.hidden =YES;
                 }
                 if(model.newtip){
-                    cell.secondaryLabel.text = model.newtip[@"content"];
-                    cell.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:model.newtip[@"background_color"]];
-                    cell.secondaryLabel.textColor = [UIColor colorWithHexStr:model.newtip[@"text_color"]];
+                    cell.secondaryLabel.text = model.newtip.content;
+                    cell.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:model.newtip.backgroundcolor];
+                    cell.secondaryLabel.textColor = [UIColor colorWithHexStr:model.newtip.textcolor];
                     [cell.secondaryLabel setNeedsLayout];
                     [cell.secondaryLabel layoutIfNeeded];
                     cell.secondaryLabel.textContainerInset = UIEdgeInsetsMake(0, 5, 0, 5);

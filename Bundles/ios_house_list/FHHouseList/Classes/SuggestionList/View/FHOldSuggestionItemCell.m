@@ -206,9 +206,9 @@
             }];
             
             if(model.newtip){
-                self.zoneTypeView.backgroundColor = [UIColor colorWithHexStr:model.newtip[@"background_color"]];
-                self.zoneTypeLab.textColor = [UIColor colorWithHexStr:model.newtip[@"text_color"]];
-                self.zoneTypeLab.text = model.newtip[@"content"];
+                self.zoneTypeView.backgroundColor = [UIColor colorWithHexStr:model.newtip.backgroundcolor];
+                self.zoneTypeLab.textColor = [UIColor colorWithHexStr:model.newtip.textcolor];
+                self.zoneTypeLab.text = model.newtip.content;
             }
         }
     }

@@ -53,6 +53,26 @@
 
 @end
 
+@implementation  FHSuggestionNewtipModel
+
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                         @"backgroundcolor": @"background_color",
+                         @"textcolor": @"text_color",
+                         };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 
 @implementation  FHSuggestionResponseModel
 
