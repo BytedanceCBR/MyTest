@@ -66,6 +66,7 @@
                 tracer[@"element_from"] = houseType == FHHouseTypeNewHouse ? @"channel_switch_new_result" : @"channel_switch_old_result";
                 tracer[@"enter_from"] = houseType == FHHouseTypeNewHouse ? @"new_list" : @"old_list";
                 tracer[@"enter_type"] = @"click";
+                tracer[@"origin_from"] = @"maintab_search";
                 infos[@"tracer"] = tracer;
                 TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:model.realSearchOpenUrl] userInfo:userInfo];
