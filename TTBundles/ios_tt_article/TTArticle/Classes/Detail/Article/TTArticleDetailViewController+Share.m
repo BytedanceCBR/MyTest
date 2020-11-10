@@ -58,7 +58,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 - (void)p_showMorePanel {
     if([[FHShareManager shareInstance] isShareOptimization]) {
         [self showSharePanel];
-        return;;
+        return;
     }
     
     if ([self.detailView.detailViewModel tt_articleDetailType] != TTDetailArchTypeSimple) {
@@ -125,7 +125,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     
     if([[FHShareManager shareInstance] isShareOptimization]) {
         [self showSharePanel];
-        return;;
+        return;
     }
     
     [self.activityActionManager clearCondition];

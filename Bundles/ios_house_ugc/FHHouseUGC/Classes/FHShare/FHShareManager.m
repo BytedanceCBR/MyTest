@@ -18,6 +18,7 @@
 #import "FHBlockActivity.h"
 #import "FHDislikeActivity.h"
 #import "FHIMActivity.h"
+#import "FHCollectActivity.h"
 
 @implementation FHShareDataModel
 
@@ -65,7 +66,7 @@
 }
 
 - (void)addCustomShareActivity {
-    NSArray *activityNameArray = @[@"FHReportActivity",@"FHBlockActivity",@"FHDislikeActivity",@"FHIMActivity"];
+    NSArray *activityNameArray = @[@"FHReportActivity",@"FHBlockActivity",@"FHDislikeActivity",@"FHIMActivity",@"FHCollectActivity"];
     NSMutableArray *activities = [[NSMutableArray alloc] init];
     for(NSString *activityName in activityNameArray) {
         Class activityClass = NSClassFromString(activityName);
@@ -135,6 +136,9 @@
             break;
         case FHShareChannelTypeIM:
             item = [self createIMItemWithModel:model.imDataModel];
+            break;
+        case FHShareChannelTypeCollect:
+            item = [self createCollectItemWithModel:model.collectDataModel];
             break;
         default:
             break;
@@ -208,6 +212,14 @@
     item.extraInfo = model.extraInfo;
     item.activityImageName = @"share_im";
     item.contentTitle = @"联系过的经纪人";
+    return item;
+}
+
+-(FHCollectContentItem *)createCollectItemWithModel:(FHShareCollectDataModel *)model {
+    FHCollectContentItem *item = [[FHCollectContentItem alloc] init];
+    item.collectBlcok = model.collectBlcok;
+    item.activityImageName = model.collected ? @"love_allshare_selected" : @"love_allshare";
+    item.contentTitle = @"收藏";
     return item;
 }
 

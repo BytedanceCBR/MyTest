@@ -41,7 +41,7 @@
     [FHMineAPI requestLinkChatPageUrlWithParams:nil completion:^(NSError * _Nonnull error, id  _Nonnull obj) {
         if(error) {
             [[ToastManager manager] showToast:@"网络不给力，请重试"];
-            return;;
+            return;
         }
         if(obj) {
             NSError *error = nil;
@@ -154,7 +154,7 @@
             make.size.mas_equalTo(CGSizeMake(104, 30));
         }];
         
-        return;;
+        return;
     }
     
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:TTReachabilityChangedNotification object:nil] deliverOnMainThread] subscribeNext:^(NSNotification * _Nullable x) {

@@ -130,6 +130,7 @@
 #import "FHShortVideoPerLoaderManager.h"
 #import "FHHouseUGCAPI.h"
 #import "FHUtils.h"
+#import <FHShareManager.h>
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
 @import AVFoundation;
@@ -1435,9 +1436,68 @@ static const CGFloat kFloatingViewOriginY = 230;
 //        if ([self.model isAd]) {
 //            shareType = AWEVideoShareTypeAd;
 //        }
+
+        if([[FHShareManager shareInstance] isShareOptimization]) {
+            [self showSharePanel:image];
+            return;
+        }
+        
         AWEVideoShareModel *shareModel = [[AWEVideoShareModel alloc] initWithModel:self.model image:image shareType:shareType];
         [self.shareManager displayActivitySheetWithContent:[shareModel shareContentItems]];
     }];
+}
+
+- (void)showSharePanel:(UIImage *)image {
+    FHFeedContentRawDataSmallVideoShareModel *shareModel = self.model.share;
+    
+    NSString *shareTitle = nil;
+    if (shareModel.shareTitle.length > 0) {
+        shareTitle = shareModel.shareTitle;
+    } else {
+        shareTitle = [NSString stringWithFormat:@"%@的精彩视频", self.model.user.name];
+    }
+    
+    NSString *desc = shareModel.shareDesc;
+    if (desc.length > 0) {
+        desc = [desc length] > 30 ? [[desc substringToIndex:30] stringByAppendingString:@"..."] : desc;
+    } else {
+        desc = @"这是我私藏的视频。一般人我才不分享！";
+    }
+
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
+
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = shareTitle;
+    commonDataModel.desc = desc;
+    commonDataModel.shareUrl = shareModel.shareUrl;
+    commonDataModel.thumbImage = image;
+    commonDataModel.imageUrl  = [self.model.video.originCover.urlList firstObject];
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDataModel = commonDataModel;
+
+    FHShareReportDataModel *reportDataModel = [[FHShareReportDataModel alloc] init];
+    WeakSelf;
+    reportDataModel.reportBlcok = ^{
+        StrongSelf;
+        [self handleReportVideo];
+    };
+    dataModel.reportDataModel = reportDataModel;
+    
+    FHShareCollectDataModel *collectDataModel = [[FHShareCollectDataModel alloc] init];
+    collectDataModel.collected = self.model.userRepin;
+    collectDataModel.collectBlcok = ^{
+        StrongSelf;
+        [self handleFavoriteVideoWithContentItem:nil];
+    };
+    dataModel.collectDataModel = collectDataModel;
+    
+    NSArray *contentItemArray = @[
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)],
+        @[@(FHShareChannelTypeCollect),@(FHShareChannelTypeDislike),@(FHShareChannelTypeReport),@(FHShareChannelTypeBlock)],
+    ];
+    
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model];
 }
 
 #pragma mark -

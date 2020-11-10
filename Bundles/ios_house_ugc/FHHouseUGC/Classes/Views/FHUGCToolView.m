@@ -200,7 +200,7 @@
 - (void)shareBtnClicked {
     if([[FHShareManager shareInstance] isShareOptimization]) {
         [self showSharePanel];
-        return;;
+        return;
     }
     [self addClickShareLog];
     self.moreActionMananger = [[TTVFeedCellMoreActionManager alloc] init];

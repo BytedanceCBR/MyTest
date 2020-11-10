@@ -284,7 +284,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)shareAction {
     if([[FHShareManager shareInstance] isShareOptimization]) {
         [self showSharePanel];
-        return;;
+        return;
     }
     
     [self shareActionWithShareExtra:@{}];

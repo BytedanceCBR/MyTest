@@ -9,6 +9,7 @@
 #import <BDUGActivityContentItemProtocol.h>
 #import "FHReportContentItem.h"
 #import "FHIMContentItem.h"
+#import "FHCollectContentItem.h"
 
 typedef NS_ENUM(NSInteger, FHShareChannelType)
 {
@@ -21,6 +22,7 @@ typedef NS_ENUM(NSInteger, FHShareChannelType)
     FHShareChannelTypeBlock,
     FHShareChannelTypeDislike,
     FHShareChannelTypeIM,
+    FHShareChannelTypeCollect,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -38,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong) FHShareCommonDataModel *commonDataModel;
 @property(nonatomic,strong) FHShareReportDataModel *reportDataModel;
 @property(nonatomic,strong) FHShareIMDataModel *imDataModel;
+@property(nonatomic,strong) FHShareCollectDataModel *collectDataModel;
 @end
 
 @interface FHShareContentModel : NSObject

@@ -673,7 +673,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 {
     if([[FHShareManager shareInstance] isShareOptimization]) {
         [self showSharePanel];
-        return;;
+        return;
     }
     
     if (ttvs_isShareIndividuatioEnable()) {
@@ -702,7 +702,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     
     if([[FHShareManager shareInstance] isShareOptimization]) {
         [self showSharePanel];
-        return;;
+        return;
     }
     
 //    if ([[TTKitchenMgr sharedInstance] getBOOL:kKCShareBoardDisplayRepost]) {

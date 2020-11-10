@@ -380,7 +380,7 @@
     if (self.viewModel.shareInfo && self.tracerDict) {
         if([[FHShareManager shareInstance] isShareOptimization]) {
             [self showSharePanel];
-            return;;
+            return;
         }
         [[FHUGCShareManager sharedManager] shareActionWithInfo:self.viewModel.shareInfo tracerDic:self.tracerDict];
     }
