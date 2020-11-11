@@ -221,8 +221,8 @@
         if ([FHEnvContext isDisplayNewCardType]) {
             NSString *identifier = NSStringFromClass([FHRealtorSecondCell class]);
             FHHouseBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-            if (indexPath.row < self.dataList.count) {
-                JSONModel *model = self.dataList[indexPath.row];
+            if (indexPath.row < self.dataList.count + 1) {
+                JSONModel *model = self.dataList[indexPath.row - 1];
                 [cell refreshWithData:model];
                 [cell refreshIndexCorner:(indexPath.row == 1) andLast:(indexPath.row == self.dataList.count)];
             }
