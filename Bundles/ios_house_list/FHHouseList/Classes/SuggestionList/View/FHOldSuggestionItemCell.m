@@ -185,9 +185,6 @@
         }];
         self.regionLab.text = model.tag;
         self.villageLab.text = model.tag2;
-        if([model.countDisplay length] == 0){
-            model.countDisplay = @"暂无房源";
-        }
         self.amountLab.text = model.countDisplay;
         
         UILabel *leftLab = [model.oldName length] > 0 ? self.subTitleLab:self.titleLab;

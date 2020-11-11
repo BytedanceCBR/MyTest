@@ -543,20 +543,16 @@
             tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
         }
     }
+    if([model.houseType intValue] != self.houseType){
+        tracer[@"element_from"] = [self elementFromNameByHouseType:[model.houseType intValue]];
+    }
     if(model.setHistory){
         [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:nil];
-        if([model.houseType intValue] == self.houseType){
-            tracer[@"element_from"] = @"associate";
-        }else{
-            tracer[@"element_from"] = [model.houseType intValue] == FHHouseTypeNewHouse ? @"related_new_recommend" : @"related_old_recommend";
-        }
         tracer[@"element_from"] = [model.houseType intValue] == self.houseType ? @"associate" : @"related_new_recommend";
         tracer[@"enter_from"] = @"search_detail";
         tracer[@"log_pb"] = model.logPb;
         tracer[@"card_type"] = @"left_pic";
         tracer[@"rank"] = [NSString stringWithFormat: @"%zi",rank];
-    }else if(self.houseType != [model.houseType intValue]){
-        tracer[@"element_from"] = [model.houseType intValue] == FHHouseTypeNewHouse ? @"related_new_recommend" : @"related_old_recommend";
     }
     infos[@"tracer"] = tracer;
     [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos isGoDetail:model.setHistory];
@@ -702,6 +698,18 @@
     return @"be_null";
 }
 
+- (NSString *)elementFromNameByHouseType:(NSInteger)houseType{
+    if(houseType == FHHouseTypeNewHouse){
+        return @"related_new_recommend";
+    }else if(houseType == FHHouseTypeSecondHandHouse){
+        return @"related_old_recommend";
+    }else if(houseType == FHHouseTypeRentHouse){
+        return @"related_renting_recommend";
+    }else{
+        return @"be_null";
+    }
+        
+}
 //跳转到帮我找房
 - (void)jump2HouseFindPageWithUrl:(NSString *)url from:(NSString *)from {
     if (url.length > 0) {
@@ -1401,7 +1409,7 @@
     }else if(housetype == FHHouseTypeNeighborhood){
         return @"相关小区推荐";
     }else {
-        return @"相关推荐";
+        return @"";
     }
 }
 @end

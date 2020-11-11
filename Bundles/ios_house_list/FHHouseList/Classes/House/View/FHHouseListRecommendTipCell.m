@@ -76,6 +76,19 @@
     }
 }
 
+- (NSString *)elementFromNameByhouseType:(NSInteger)houseType{
+    if(houseType == FHHouseTypeNewHouse){
+        return @"channel_switch_new_result";
+    }else if(houseType == FHHouseTypeSecondHandHouse){
+        return @"channel_switch_old_result";
+    }else if(houseType == FHHouseTypeRentHouse){
+        return  @"channel_switch_renting_result";
+    }else if(houseType == FHHouseTypeNeighborhood){
+        return  @"channel_switch_neighborhood_result";
+    }
+    return @"be_null";
+}
+
 + (CGFloat)heightForData:(id)data
 {
     return 60;
