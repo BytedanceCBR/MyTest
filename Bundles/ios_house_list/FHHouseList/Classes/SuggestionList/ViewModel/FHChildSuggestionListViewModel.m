@@ -825,7 +825,7 @@
             FHHouseListRecommendTipCell *tipCell = (FHHouseListRecommendTipCell *)[tableView dequeueReusableCellWithIdentifier:@"tipcell" forIndexPath:indexPath];
             FHSearchGuessYouWantTipsModel *tipModel = [[FHSearchGuessYouWantTipsModel alloc] init];
             tipModel.text = model.text;
-            [tipCell refreshWithData:tipModel houseType:self.houseType];
+            [tipCell refreshWithData:tipModel];
             return tipCell;
         } else if (model.cardType == 15) {
             __weak typeof(self) weakSelf = self;

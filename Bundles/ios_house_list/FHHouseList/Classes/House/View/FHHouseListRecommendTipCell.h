@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseListRecommendTipCell : FHListBaseCell
 
-- (void)refreshWithData:(id)data houseType:(NSInteger)houseType;
+@property (nonatomic , copy) void (^channelSwitchBlock)(void);
 
 @end
 

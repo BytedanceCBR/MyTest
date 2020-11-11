@@ -47,7 +47,7 @@
     [super setSelected:selected animated:animated];
 }
 
-- (void)refreshWithData:(id)data houseType:(NSInteger)houseType
+- (void)refreshWithData:(id)data
 {
     if ([data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]) {
         FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
@@ -61,32 +61,13 @@
         if(model.content){
             NSRange tapRange = [attrText.string rangeOfString:model.emphasisContent];
             [attrText yy_setTextHighlightRange:tapRange color:[UIColor colorWithHexStr:@"#fe5500"] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-                NSMutableDictionary *infos = [NSMutableDictionary new];
-                NSMutableDictionary *tracer = [NSMutableDictionary new];
-                tracer[@"element_from"] = houseType == FHHouseTypeNewHouse ? @"channel_switch_new_result" : @"channel_switch_old_result";
-                tracer[@"enter_from"] = houseType == FHHouseTypeNewHouse ? @"new_list" : @"old_list";
-                tracer[@"enter_type"] = @"click";
-                tracer[@"origin_from"] = @"maintab_search";
-                infos[@"tracer"] = tracer;
-                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
-                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:model.realSearchOpenUrl] userInfo:userInfo];
+                if(self.channelSwitchBlock){
+                    self.channelSwitchBlock();
+                }
             }];
         }
         self.noDataTipLabel.attributedText = attrText;
     }
-}
-
-- (NSString *)elementFromNameByhouseType:(NSInteger)houseType{
-    if(houseType == FHHouseTypeNewHouse){
-        return @"channel_switch_new_result";
-    }else if(houseType == FHHouseTypeSecondHandHouse){
-        return @"channel_switch_old_result";
-    }else if(houseType == FHHouseTypeRentHouse){
-        return  @"channel_switch_renting_result";
-    }else if(houseType == FHHouseTypeNeighborhood){
-        return  @"channel_switch_neighborhood_result";
-    }
-    return @"be_null";
 }
 
 + (CGFloat)heightForData:(id)data

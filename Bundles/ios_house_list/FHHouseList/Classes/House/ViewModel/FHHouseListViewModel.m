@@ -1673,8 +1673,21 @@ extern NSString *const INSTANT_DATA_KEY;
                 [(FHDynamicLynxCell *)cell updateWithCellModel:cellModel];
             }
         }
-        if([cell isKindOfClass:[FHHouseListRecommendTipCell class]]){
-            [(FHHouseListRecommendTipCell *)cell refreshWithData:data houseType:self.houseType];
+        if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+            FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
+            ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
+                NSMutableDictionary *infos = [NSMutableDictionary new];
+                NSMutableDictionary *tracer = [NSMutableDictionary new];
+                tracer[@"element_from"] = [self elementFromNameByhouseType:self.houseType];
+                tracer[@"enter_from"] = [self categoryName];
+                tracer[@"enter_type"] = @"click";
+                tracer[@"origin_from"] = @"maintab_search";
+                infos[@"tracer"] = tracer;
+                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+                if(model.realSearchOpenUrl){
+                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:model.realSearchOpenUrl] userInfo:userInfo];
+                }
+            };
         }
         [cell refreshWithData:data];
         if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
@@ -2037,6 +2050,19 @@ extern NSString *const INSTANT_DATA_KEY;
         _houseShowCache = [NSMutableDictionary dictionary];
     }
     return _houseShowCache;
+}
+
+- (NSString *)elementFromNameByhouseType:(NSInteger)houseType{
+    if(houseType == FHHouseTypeNewHouse){
+        return @"channel_switch_new_result";
+    }else if(houseType == FHHouseTypeSecondHandHouse){
+        return @"channel_switch_old_result";
+    }else if(houseType == FHHouseTypeRentHouse){
+        return  @"channel_switch_renting_result";
+    }else if(houseType == FHHouseTypeNeighborhood){
+        return  @"channel_switch_neighborhood_result";
+    }
+    return @"be_null";
 }
 
 -(NSString *)categoryName {
