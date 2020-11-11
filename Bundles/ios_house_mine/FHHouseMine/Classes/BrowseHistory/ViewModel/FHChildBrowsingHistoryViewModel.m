@@ -80,7 +80,7 @@
 }
 
 - (void)registerCellClasses {
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
+    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHouseBaseItemCellSecond"];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeRentHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];
     [_tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:@"FHHouseBaseNewHouseCell"];
@@ -258,6 +258,9 @@
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
         if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
             return @"FHHouseBaseNewHouseCell";
+        }
+        if (houseModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+            return @"FHHouseBaseItemCellSecond";
         }
         return [FHSearchHouseItemModel cellIdentifierByHouseType:houseModel.houseType.integerValue];
     }
