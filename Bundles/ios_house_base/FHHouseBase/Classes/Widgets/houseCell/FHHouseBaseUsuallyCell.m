@@ -11,6 +11,15 @@
 
 @synthesize mainTitleLabel = _mainTitleLabel, pricePerSqmLabel = _pricePerSqmLabel, priceLabel = _priceLabel, houseMainImageBackView = _houseMainImageBackView;
 
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    NSAssert(![self isMemberOfClass:[FHHouseBaseUsuallyCell class]], @"业务不可直接用基类，请继承基类");
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        
+    }
+    return self;
+}
+
 - (void)initUI {
     [self.contentView addSubview:self.houseCellBackView];
     [self.contentView addSubview:self.houseMainImageBackView];

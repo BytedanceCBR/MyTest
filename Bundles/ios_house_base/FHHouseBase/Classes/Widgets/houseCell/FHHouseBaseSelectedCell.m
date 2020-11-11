@@ -16,6 +16,15 @@
 
 @implementation FHHouseBaseSelectedCell
 
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    NSAssert(![self isMemberOfClass:[FHHouseBaseSelectedCell class]], @"业务不可直接用基类，请继承基类");
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        
+    }
+    return self;
+}
+
 - (void)initUI {
     [self.contentView addSubview:self.leftInfoView];
     [self.leftInfoView mas_makeConstraints:^(MASConstraintMaker *make) {

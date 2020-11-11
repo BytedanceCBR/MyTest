@@ -12,6 +12,7 @@
 @synthesize subTitleLabel = _subTitleLabel;
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    NSAssert(![self isMemberOfClass:[FHHouseBaseNewCell class]], @"业务不可直接用基类，请继承基类");
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
