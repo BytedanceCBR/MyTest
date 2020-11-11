@@ -1068,17 +1068,20 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (wself.showMode == FHMapSearchShowModeDrawLine) {
             [wself.bottomBar showDrawLine:[NSString stringWithFormat:@"%ld套房源",strongSelf->onSaleHouseCount] withNum:strongSelf->onSaleHouseCount showIndicator:strongSelf->onSaleHouseCount > 0];
         }
-        NSDictionary *urlParams = [FHHouseOpenURLUtil queryDict:model.mapFindHouseOpenUrl];
-         CLLocationCoordinate2D moveCenter = CLLocationCoordinate2DMake([urlParams tt_floatValueForKey:@"center_latitude"], [urlParams tt_floatValueForKey:@"center_longitude"]);
-        CGFloat zoomLevel = [urlParams tt_floatValueForKey:@"resize_level"];
         
-        //handle open url
-        [wself updateBubble:model.mapFindHouseOpenUrl];
-        
-        
-        if (moveCenter.latitude != 0 && moveCenter.longitude != 0 && zoomLevel) {
-            [self.mapView setCenterCoordinate:moveCenter animated:YES];
-            [self.mapView setZoomLevel:zoomLevel animated:YES]; //atP
+        //加一层保护，防止mapFindHouseOpenUrl为空时候会crash
+        if(model.mapFindHouseOpenUrl.length > 0){
+            NSDictionary *urlParams = [FHHouseOpenURLUtil queryDict:model.mapFindHouseOpenUrl];
+             CLLocationCoordinate2D moveCenter = CLLocationCoordinate2DMake([urlParams tt_floatValueForKey:@"center_latitude"], [urlParams tt_floatValueForKey:@"center_longitude"]);
+            CGFloat zoomLevel = [urlParams tt_floatValueForKey:@"resize_level"];
+            
+            //handle open url
+            [wself updateBubble:model.mapFindHouseOpenUrl];
+            
+            if (moveCenter.latitude != 0 && moveCenter.longitude != 0 && zoomLevel) {
+                [self.mapView setCenterCoordinate:moveCenter animated:YES];
+                [self.mapView setZoomLevel:zoomLevel animated:YES]; //atP
+            }
         }
 
     }];
@@ -2307,7 +2310,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         enterFrom = @"subwayfind";
     }
     
-    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@",neighborModel.nid];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://neighborhood_detail?neighborhood_id=%@",neighborModel.nid];
     NSMutableDictionary *tracerDic = [NSMutableDictionary new];
     [tracerDic addEntriesFromDictionary:self.logBaseParams];
     tracerDic[@"card_type"] = @"no_pic";
@@ -2843,6 +2846,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         param[UT_ENTER_FROM] = @"mapfind";
         TRACK_EVENT(@"subwayfind_view", param);
     }else{
+        param[@"tab_name"] = [self eventHouseType]?:@"be_null";
         [FHUserTracker writeEvent:@"mapfind_view" params:param];
     }
 }

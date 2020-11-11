@@ -10,11 +10,12 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
-#import "FHExtendHotAreaButton.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHCityListLocationBar ()
 
-@property (nonatomic, strong)   UIImageView       *locationIcon;
+@property (nonatomic, strong) UILabel *locationNameLabel;
+@property (nonatomic, strong) UIImageView *locationIcon;
 
 @end
 
@@ -33,27 +34,36 @@
 
 - (void)setupUI {
     // cityNameBtn
-    _cityNameBtn = [[FHExtendHotAreaButton alloc] init];
-    [_cityNameBtn setTitle:@"" forState:UIControlStateNormal];
-    [_cityNameBtn setTitle:@"" forState:UIControlStateHighlighted];
-    _cityNameBtn.titleLabel.font = [UIFont themeFontRegular:16];
-    [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateHighlighted];
-    [self addSubview:_cityNameBtn];
-    [_cityNameBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(22);
-        make.left.mas_equalTo(self).offset(20);
-        make.centerY.mas_equalTo(self);
+    self.cityNameBtn = [[UIControl alloc] init];
+    [self addSubview:self.cityNameBtn];
+    [self.cityNameBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.mas_equalTo(0);
+        make.left.mas_equalTo(self);
+        make.right.mas_equalTo(-85);
     }];
+
+    
+    self.locationNameLabel = [[UILabel alloc] init];
+    self.locationNameLabel.font = [UIFont themeFontRegular:16];
+    self.locationNameLabel.textColor = [UIColor themeGray1];
+    [self.cityNameBtn addSubview:self.locationNameLabel];
+    [self.locationNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20);
+        make.centerY.mas_equalTo(self.cityNameBtn);
+    }];
+    
+    
     // searchIcon
-    _locationIcon = [[UIImageView alloc] init];
-    _locationIcon.image = [UIImage imageNamed:@"location-name"];
-    [self addSubview:_locationIcon];
-    [_locationIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.cityNameBtn.mas_right).offset(2);
+    self.locationIcon = [[UIImageView alloc] init];
+    self.locationIcon.userInteractionEnabled = NO;
+    self.locationIcon.image = [UIImage imageNamed:@"location-name"];
+    [self.cityNameBtn addSubview:self.locationIcon];
+    [self.locationIcon mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(self.locationNameLabel.mas_right).offset(2);
         make.height.width.mas_equalTo(16);
         make.centerY.mas_equalTo(self);
     }];
+    
     // reLocationBtn
     _reLocationBtn = [[UIButton alloc] init];
     _reLocationBtn.backgroundColor = [UIColor clearColor];
@@ -72,23 +82,18 @@
 
 - (void)setCityName:(NSString *)cityName {
     _cityName = cityName;
-    [self.cityNameBtn setTitle:cityName forState:UIControlStateNormal];
-    [self.cityNameBtn setTitle:cityName forState:UIControlStateHighlighted];
+    self.locationNameLabel.text = cityName;
 }
 
 - (void)setIsLocationSuccess:(BOOL)isLocationSuccess {
     _isLocationSuccess = isLocationSuccess;
     _cityNameBtn.enabled = isLocationSuccess;
     if (isLocationSuccess && _cityName) {
-        [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-        [_cityNameBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateHighlighted];
-        [self.cityNameBtn setTitle:_cityName forState:UIControlStateNormal];
-        [self.cityNameBtn setTitle:_cityName forState:UIControlStateHighlighted];
+        self.locationNameLabel.textColor = [UIColor themeGray1];
+        self.locationNameLabel.text = _cityName;
     } else {
-        [_cityNameBtn setTitleColor:[UIColor themeGray4] forState:UIControlStateNormal];
-        [_cityNameBtn setTitleColor:[UIColor themeGray4] forState:UIControlStateHighlighted];
-        [self.cityNameBtn setTitle:@"定位失败" forState:UIControlStateNormal];
-        [self.cityNameBtn setTitle:@"定位失败" forState:UIControlStateHighlighted];
+        self.locationNameLabel.textColor = [UIColor themeGray4];
+        self.locationNameLabel.text = @"定位失败";
     }
 }
 

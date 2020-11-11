@@ -350,7 +350,7 @@
                 result = orderedData;
             }
         } else {
-            LOGD(@"...lost");
+//            LOGD(@"...lost");
         }
     }
     

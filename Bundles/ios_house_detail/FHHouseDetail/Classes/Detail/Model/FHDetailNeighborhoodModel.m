@@ -38,7 +38,6 @@
                            @"imprId": @"impr_id",
                            @"abtestVersions": @"abtest_versions",
                            @"coreInfo": @"core_info",
-                           @"neighborhoodVideo": @"neighborhood_video",
                            @"evaluationInfo": @"evaluation_info",
                            @"chooseAgencyList": @"choose_agency_list",
                            @"ugcSocialGroup":@"ugc_social_group",
@@ -50,6 +49,7 @@
                            @"saleHouseEntrance": @"sale_house_entrance",
                            @"neighborhoodSaleHouseInfo": @"neighborhood_sale_house_info",
                            @"albumInfo": @"album_info",
+                           @"neighborhoodTopImages":@"neighborhood_top_images",
                            @"neighborhoodEvaluation": @"neighborhood_evaluation"
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

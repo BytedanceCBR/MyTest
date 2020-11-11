@@ -46,6 +46,7 @@
 #import "BDABTestManager.h"
 #import "TTSandBoxHelper.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHCommonParamHelper.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -569,66 +570,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 - (void)updateRequestCommonParams
 {
-    NSDictionary *param = [TTNetworkUtilities commonURLParameters];
-    
-    //初始化公共请求参数
-    NSMutableDictionary *requestParam = [[NSMutableDictionary alloc] initWithDictionary:self.commonRequestParam];
-    if (param) {
-        [requestParam addEntriesFromDictionary:param];
-    }
-    
-    requestParam[@"app_id"] = @"1370";
-    requestParam[@"aid"] = @"1370";
-    
-    requestParam[@"channel"] = [[NSBundle mainBundle] infoDictionary][@"CHANNEL_NAME"];
-    requestParam[@"app_name"] = @"f100";
-    requestParam[@"source"] = @"app";
-    
-    //获取city_id
-    if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
-        NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
-        if (cityId > 0) {
-            [requestParam setValue:@(cityId) forKey:@"city_id"];
-        }
-    }
-    
-    double longitude = [FHLocManager sharedInstance].currentLocaton.coordinate.longitude;
-    double latitude = [FHLocManager sharedInstance].currentLocaton.coordinate.latitude;
-    NSString *gCityId = [FHLocManager sharedInstance].currentReGeocode.cityCode;
-    NSString *gCityName = [FHLocManager sharedInstance].currentReGeocode.city;
-    
-    
-    CGFloat f_density = [UIScreen mainScreen].scale;
-    CGFloat f_memory = [TTDeviceHelper getTotalCacheSpace];
-    
-    if (f_density) {
-        requestParam[@"f_density"] = @(f_density);
-    }
-    
-    if (f_memory) {
-        requestParam[@"f_memory"] = @(f_memory);
-    }
-    
-    if (longitude != 0 && longitude != 0) {
-        requestParam[@"gaode_lng"] = @(longitude);
-        requestParam[@"gaode_lat"] = @(latitude);
-    }
-    
-    if (longitude != 0 && longitude != 0) {
-        requestParam[@"longitude"] = @(longitude);
-        requestParam[@"latitude"] = @(latitude);
-    }
-    
-    if ([gCityId isKindOfClass:[NSString class]]) {
-        requestParam[@"gaode_city_id"] = gCityId;
-    }
-    
-    if ([gCityName isKindOfClass:[NSString class]]){
-        requestParam[@"city_name"] = gCityName;
-        requestParam[@"city"] = gCityName;
-    }
-    
-    self.commonRequestParam = requestParam;
+    NSDictionary *requestParam = [FHCommonParamHelper generateRequestCommonParams:self.commonRequestParam];
+    self.commonRequestParam = [requestParam mutableCopy];
 }
 
 - (NSDictionary *)getRequestCommonParams
@@ -1183,7 +1126,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isHasShortVideoList {
-    id res = [BDABTestManager getExperimentValueForKey:@"discover_type" withExposure:YES];
+    return YES;
+}
+
++ (BOOL)isHasPerLoadForVideo {
+    id res = [BDABTestManager getExperimentValueForKey:@"is_video_perload" withExposure:YES];
     if(res){
         return [res boolValue];
     }

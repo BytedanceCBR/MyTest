@@ -52,40 +52,11 @@
     return _photoAlbumData;
 }
 
-+ (NSArray<FHMultiMediaItemModel> *)getMultiMediaItem:(FHHouseDetailMediaTabInfo *)tabInfo rootName:(NSString *)rootName {
-    NSMutableArray *groupModels = [NSMutableArray array];
-    if (tabInfo.tabContent.count > 0) {
-        for (FHHouseDetailMediaStruct *mediaStr in tabInfo.tabContent) {
-            FHMultiMediaItemModel *item = [[FHMultiMediaItemModel alloc] init];
-            if (mediaStr.vrInfo) {   //VR
-                item.mediaType = FHMultiMediaTypeVRPicture;
-                item.groupType = tabInfo.tabName;
-                item.imageUrl = mediaStr.image.url;
-                item.vrOpenUrl = mediaStr.vrInfo.openUrl;
-                item.pictureTypeName = rootName;
-                [groupModels addObject:item];
-            } else {                        //图片
-                item.mediaType = FHMultiMediaTypePicture;
-                item.groupType = tabInfo.tabName;
-                item.imageUrl = mediaStr.image.url;
-                item.pictureTypeName = rootName;
-                [groupModels addObject:item];
-            }
-        }
-    } else if (tabInfo.subTab.count > 0) {
-        for (FHHouseDetailMediaTabInfo *otherTabInfo in tabInfo.subTab) {
-            NSArray *otherArr = [FHFloorPanDetailMediaHeaderDataHelper getMultiMediaItem:otherTabInfo rootName:rootName];
-            [groupModels addObjectsFromArray:otherArr];
-        }
-    }
-    return groupModels.copy;
-}
-
 + (FHFloorPanDetailMediaHeaderDataHelperHeaderViewData *)generateMediaHeaderViewData:(FHFloorPanDetailMediaHeaderModel *)newMediaHeaderModel {
     FHFloorPanDetailMediaHeaderDataHelperHeaderViewData *headerViewData = [[FHFloorPanDetailMediaHeaderDataHelperHeaderViewData alloc] init];
     NSMutableArray *itemArray = [NSMutableArray array];
     for (FHHouseDetailMediaTabInfo *mediaTabInfo in newMediaHeaderModel.topImages.tabList) {
-        [itemArray addObjectsFromArray:[FHFloorPanDetailMediaHeaderDataHelper getMultiMediaItem:mediaTabInfo rootName:mediaTabInfo.tabName]];
+        [itemArray addObjectsFromArray:[FHMultiMediaItemModel getMultiMediaItem:mediaTabInfo rootName:mediaTabInfo.tabName]];
     }
     
     headerViewData.mediaItemArray = itemArray.copy;
@@ -104,7 +75,7 @@
         [itemList addObjectsFromArray:[FHDetailPictureItemModel getPictureTabInfo:mediaTabInfo rootName:mediaTabInfo.tabName]];
     }
     for (FHHouseDetailMediaTabInfo *mediaTabInfo in newMediaHeaderModel.albumInfo.tabList) {
-        [itemArray addObjectsFromArray:[FHFloorPanDetailMediaHeaderDataHelper getMultiMediaItem:mediaTabInfo rootName:mediaTabInfo.tabName]];
+        [itemArray addObjectsFromArray:[FHMultiMediaItemModel getMultiMediaItem:mediaTabInfo rootName:mediaTabInfo.tabName]];
     }
     
     pictureModel.itemList = itemList.copy;

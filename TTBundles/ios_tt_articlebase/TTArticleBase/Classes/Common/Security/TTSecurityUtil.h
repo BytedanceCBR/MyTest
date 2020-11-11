@@ -12,8 +12,8 @@
 
 + (instancetype)sharedInstance;
 
-- (NSString *)encrypt:(NSString *)str token:(NSString *)token;
-
-- (NSString *)decrypt:(NSString *)str token:(NSString *)token;
+//- (NSString *)encrypt:(NSString *)str token:(NSString *)token;
+//
+//- (NSString *)decrypt:(NSString *)str token:(NSString *)token;
 
 @end

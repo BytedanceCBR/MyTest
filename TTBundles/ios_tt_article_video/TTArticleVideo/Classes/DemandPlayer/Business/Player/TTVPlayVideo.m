@@ -15,13 +15,9 @@
 #import "TTImageView.h"
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import <TTSettingsManager/TTSettingsManager.h>
-//#import "SSADManager.h"
-#import "TTAdSplashMediator.h"
 #import "NSObject+FBKVOController.h"
 #import "SSAppStore.h"
-#import "TTVVideoPlayerModel.h"
-#import "TTVPasterPlayer.h"
-#import "TTVMidInsertADPlayer.h"
+#import "TTVPlayerModel.h"
 #import "TTVResolutionStore.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTArticleBase/SSCommonLogic.h>
@@ -37,7 +33,7 @@ static __weak TTVPlayVideo *currentTTVPlayVideo_ = nil;
 
 @interface TTVPlayVideo ()
 @property (nonatomic, strong) TTImageView *logoImageView;
-@property (nonatomic, strong) TTVVideoPlayerModel *playerModel;
+@property (nonatomic, strong) TTVPlayerModel *playerModel;
 
 @end
 
@@ -49,7 +45,7 @@ static __weak TTVPlayVideo *currentTTVPlayVideo_ = nil;
     [_player stopWithFinishedBlock:nil];
 }
 
-- (instancetype)initWithFrame:(CGRect)frame playerModel:(TTVVideoPlayerModel *)playerModel
+- (instancetype)initWithFrame:(CGRect)frame playerModel:(TTVPlayerModel *)playerModel
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -60,7 +56,7 @@ static __weak TTVPlayVideo *currentTTVPlayVideo_ = nil;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [[TTMovieStore shareTTMovieStore] addMovie:self];
         self.playerModel = playerModel;
-        [self ttv_kvo];
+   
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(strongPushNotificationWillShowNotification:) name:TTStrongPushNotificationWillShowNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(strongPushNotificationWillHideNotification:) name:TTStrongPushNotificationWillHideNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(skStoreViewDidAppear:) name:SKStoreProductViewDidAppearKey object:nil];
@@ -131,34 +127,9 @@ static __weak TTVPlayVideo *currentTTVPlayVideo_ = nil;
     [self exitFullScreen:YES completion:nil];
 }
 
-- (void)ttv_kvo
-{
-    @weakify(self);
-//    [self.KVOController unobserve:[SSADManager shareInstance]];
-//    [self.KVOController observe:[SSADManager shareInstance] keyPath:@keypath([SSADManager shareInstance],isSplashADShowed) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-//        @strongify(self);
-//        if ([SSADManager shareInstance].isSplashADShowed) {
-//            [self.player sendAction:TTVPlayerEventTypeVirtualStackValuePause payload:nil];
-//        }else{
-//            [self.player sendAction:TTVPlayerEventTypeVirtualStackValuePlay payload:nil];
-//        }
-//    }];
-    [self.KVOController unobserve:[TTAdSplashMediator shareInstance]];
-    [self.KVOController observe:[TTAdSplashMediator shareInstance] keyPath:@keypath([TTAdSplashMediator shareInstance],isAdShowing) options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
-        @strongify(self);
-        if ([TTAdSplashMediator shareInstance].isAdShowing) {
-            [self.player sendAction:TTVPlayerEventTypeVirtualStackValuePause payload:nil];
-        }else{
-            [self.player sendAction:TTVPlayerEventTypeVirtualStackValuePlay payload:nil];
-        }
-    }];
-}
-
-- (void)setPlayerModel:(TTVVideoPlayerModel *)playerModel
+- (void)setPlayerModel:(TTVPlayerModel *)playerModel
 {
     if (_playerModel != playerModel) {
-//        playerModel.urlBaseParameter = [TTNetworkUtilities commonURLParameters];SSCommonLogic
-//        BOOL isMultiResolutionEnabled = [[[TTSettingsManager sharedManager] settingForKey:@"video_multi_resolution_enabled" defaultValue:@NO freeze:NO] boolValue];
         //获取f项目配置，根据配置是否显示标清和高清
         BOOL isMultiResolutionEnabled = [[SSCommonLogic fhSettings] tta_boolForKey:@"video_multi_resolution_enabled"];
         [TTVResolutionStore sharedInstance].userSelected = isMultiResolutionEnabled; //设置标清和普清是否自动
@@ -169,7 +140,7 @@ static __weak TTVPlayVideo *currentTTVPlayVideo_ = nil;
     }
 }
 
-- (void)resetPlayerModel:(TTVVideoPlayerModel *)playerModel
+- (void)resetPlayerModel:(TTVPlayerModel *)playerModel
 {
     self.playerModel = playerModel;
     [self.player reset];
@@ -237,9 +208,6 @@ static __weak TTVPlayVideo *currentTTVPlayVideo_ = nil;
 
 - (void)stopWithFinishedBlock:(TTVStopFinished)finishedBlock
 {
-    // 原视频 stop 贴片播放器同时 stop
-    [self.player.pasterPlayer stop];
-    [self.player.midInsertADPlayer stop];
     [self.player stopWithFinishedBlock:finishedBlock];
 }
 
@@ -273,11 +241,6 @@ static __weak TTVPlayVideo *currentTTVPlayVideo_ = nil;
 {
     NSAssert([NSThread isMainThread], @"must be called in main thread");
     return currentTTVPlayVideo_;
-}
-
-- (BOOL)isAdMovie
-{
-    return self.playerModel.adID.length > 0;
 }
 
 @end

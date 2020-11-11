@@ -91,7 +91,7 @@
         [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
         
     }
-    [requestDictonary setValue:@(10) forKey:@"count"];
+    [requestDictonary setValue:@(20) forKey:@"count"];
     [requestDictonary setValue:self.realtorInfo[@"realtor_id"]?:@"" forKey:@"realtor_id"];
     requestDictonary[CHANNEL_ID] = CHANNEL_ID_REALTOR_DETAIL_HOUSE;
     self.requestTask = nil;

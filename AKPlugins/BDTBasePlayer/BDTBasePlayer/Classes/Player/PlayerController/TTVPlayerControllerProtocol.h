@@ -37,7 +37,7 @@
 @protocol TTVPlayerViewControlView <NSObject>
 @property(nonatomic, weak)NSObject <TTVPlayerControlViewDelegate> *delegate;
 @property(nonatomic, strong)UIView <TTVPlayerControlBottomView> *bottomBarView;
-@property(nonatomic, strong ,readonly)UIView *miniSlider;
+@property(nonatomic, strong)UIView *miniSlider;
 - (void)setVideoTitle:(NSString *)title;
 - (void)setVideoWatchCount:(NSInteger)watchCount playText:(NSString *)playText;
 - (void)setToolBarHidden:(BOOL)hidden needAutoHide:(BOOL)needAutoHide;

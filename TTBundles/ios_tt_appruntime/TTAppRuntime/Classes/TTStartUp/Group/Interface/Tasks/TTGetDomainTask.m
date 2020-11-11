@@ -32,17 +32,17 @@ DEC_TASK("TTGetDomainTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+7);
             BOOL isChromiumEnabled = [TTRouteSelectionServerConfig sharedTTRouteSelectionServerConfig].isChromiumEnabled;
             if ([SSCommonLogic isRefactorGetDomainsEnabled]) {
                 if (!isChromiumEnabled) {
-                    LOGD(@"Chromium is not Enabled and do refactorRequestURLDomains");
+//                    LOGD(@"Chromium is not Enabled and do refactorRequestURLDomains");
                     [[CommonURLSetting sharedInstance] requestURLDomains];//refactorRequestURLDomains];
                 } else {
-                    LOGD(@"Chromium is Enabled and not do refactorRequestURLDomains");
+//                    LOGD(@"Chromium is Enabled and not do refactorRequestURLDomains");
                 }
             } else {
                 if (!isChromiumEnabled) {
-                    LOGD(@"Chromium is not Enabled and do requestURLDomains");
+//                    LOGD(@"Chromium is not Enabled and do requestURLDomains");
                     [[CommonURLSetting sharedInstance] requestURLDomains];
                 } else {
-                    LOGD(@"Chromium is Enabled and not do requestURLDomains");
+//                    LOGD(@"Chromium is Enabled and not do requestURLDomains");
                 }
             }
             

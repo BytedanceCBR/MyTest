@@ -8,14 +8,16 @@
 #import "FHDetailNewMediaHeaderScrollView.h"
 #import "FHCommonDefines.h"
 #import "FHMultiMediaImageCell.h"
+#import "FHMultiMediaPanoramaCell.h"
 #import "FHVideoModel.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "FHMultiMediaVRImageCell.h"
 #import "FHHouseDetailHeaderMoreStateView.h"
 
-#define k_VIDEOCELLID @"video_cell_id"
-#define k_IMAGECELLID @"image_cell_id"
-#define k_VRELLID     @"vr_cell_id"
+static NSString * const k_VIDEOCELLID =       @"video_cell_id";
+static NSString * const k_IMAGECELLID =       @"image_cell_id";
+static NSString * const k_VRELLID =           @"vr_cell_id";
+static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
 
 @interface FHDetailNewMediaHeaderScrollView ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -49,6 +51,7 @@
         [_colletionView registerClass:[FHMultiMediaImageCell class] forCellWithReuseIdentifier:k_IMAGECELLID];
         [_colletionView registerClass:[FHMultiMediaVideoCell class] forCellWithReuseIdentifier:k_VIDEOCELLID];
         [_colletionView registerClass:[FHMultiMediaVRImageCell class] forCellWithReuseIdentifier:k_VRELLID];
+        [_colletionView registerClass:[FHMultiMediaPanoramaCell class] forCellWithReuseIdentifier:k_PANORAMACELLID];
 
         _colletionView.delegate = self;
         _colletionView.dataSource = self;
@@ -129,9 +132,10 @@
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VRELLID forIndexPath:indexPath];
         } else if (model.mediaType == FHMultiMediaTypeVideo) {
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_VIDEOCELLID forIndexPath:indexPath];
+        } else if (model.mediaType == FHMultiMediaTypeBaiduPanorama) {
+            cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_PANORAMACELLID forIndexPath:indexPath];
         } else {
             cell = [collectionView dequeueReusableCellWithReuseIdentifier:k_IMAGECELLID forIndexPath:indexPath];
-           
         }
         [cell updateViewModel:model];
     }

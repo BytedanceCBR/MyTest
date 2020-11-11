@@ -33,11 +33,11 @@ static ExploreDeleteManager * shareManager;
 - (void)deleteArticleCommentForCommentID:(NSString *)commentID isAnswer:(BOOL)isAnswer isNewComment:(BOOL)isNewComment;
 {
     if ([commentID longLongValue] == 0) {
-        LOGI(@"删除文章评论的ID不能为0");
+//        LOGI(@"删除文章评论的ID不能为0");
         return;
     }
     if (![TTAccountManager isLogin]) {
-        LOGI(@"删除评论必须登录");
+//        LOGI(@"删除评论必须登录");
         return;
     }
     NSMutableDictionary * postParam = [[NSMutableDictionary alloc] initWithCapacity:10];
@@ -69,11 +69,11 @@ static ExploreDeleteManager * shareManager;
 
 - (void)deleteReplyedComment:(NSString *)replyCommentID InHostComment:(NSString *)hostCommentID {
     if ([replyCommentID longLongValue] == 0 || [hostCommentID longLongValue] == 0) {
-        LOGI(@"删除文章评论的ID不能为0");
+//        LOGI(@"删除文章评论的ID不能为0");
         return;
     }
     if (![TTAccountManager isLogin]) {
-        LOGI(@"删除评论必须登录");
+//        LOGI(@"删除评论必须登录");
         return;
     }
     
@@ -86,12 +86,12 @@ static ExploreDeleteManager * shareManager;
 - (void)deleteMomentForMomentID:(NSString *)momentID
 {
     if ([momentID longLongValue] == 0) {
-        LOGI(@"删除文章评论的ID不能为0");
+//        LOGI(@"删除文章评论的ID不能为0");
         return;
     }
     
     if (![TTAccountManager isLogin]) {
-        LOGI(@"删除评论必须登录");
+//        LOGI(@"删除评论必须登录");
         return;
     }
     
@@ -119,11 +119,11 @@ static ExploreDeleteManager * shareManager;
 
 - (void)deleteMomentCommentForCommentID:(NSString *)commentID {
     if ([commentID longLongValue] == 0) {
-        LOGI(@"删除动态评论的ID不能为0");
+//        LOGI(@"删除动态评论的ID不能为0");
         return;
     }
     if (![TTAccountManager isLogin]) {
-        LOGI(@"删除评论必须登录");
+//        LOGI(@"删除评论必须登录");
         return;
     }
     NSMutableDictionary * postParam = [[NSMutableDictionary alloc] initWithCapacity:10];

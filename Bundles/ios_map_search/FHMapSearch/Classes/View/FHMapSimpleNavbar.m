@@ -17,7 +17,7 @@
 #import <UIDevice+BTDAdditions.h>
 #import "FHEnvContext.h"
 #import "HMSegmentedControl.h"
-#import "UIView+FHTracker.h"
+#import "NSObject+FHTracker.h"
 
 #define BTN_WIDTH  24
 #define BG_LAYER_HEIGHT 100

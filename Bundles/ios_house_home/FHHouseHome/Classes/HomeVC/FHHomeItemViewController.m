@@ -43,9 +43,9 @@
 #import "FHHomeRentCell.h"
 extern NSString *const INSTANT_DATA_KEY;
 
-static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
-static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
-static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
+NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
+NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
+NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 @interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate, FHHouseSearchSecondHouseCellDelegate, FHHomeRentCellDelegate>
 
@@ -1037,7 +1037,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     if (indexPath.section == kFHHomeHouseTypeBannerViewSection) {
         if (self.houseType == _listModel.houseType && ![self.traceRecordDict objectForKey:@(self.houseType)] && [self checkIsHaveEntrancesList]) {
-            [self.traceRecordDict setValue:@"" forKey:@(self.houseType)];
+            [self.traceRecordDict setValue:@"" forKey:@(self.houseType).stringValue];
             [FHHomeCellHelper sendBannerTypeCellShowTrace:_houseType];
         }
         return ;
@@ -1056,7 +1056,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if (cellModel.idx) {
             [self.traceRecordDict setValue:@"" forKey:cellModel.idx];
             
-            NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
+//            NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
             
             NSMutableDictionary *tracerDict = [NSMutableDictionary new];
             tracerDict[@"house_type"] = cellModel.houseType.integerValue == FHHouseTypeNewHouse?@"new":([self houseTypeString] ? : @"be_null");
@@ -1069,7 +1069,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             tracerDict[@"rank"] = [self getRankFromHouseId:cellModel.idx indexPath:indexPath];
             tracerDict[@"origin_from"] = [self pageTypeString];
             tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
-            tracerDict[@"log_pb"] = [cellModel logPb] ? : @"be_null";
+            tracerDict[@"log_pb"] = [cellModel logPbWithTags] ? : @"be_null";
             tracerDict[@"biz_trace"] = [cellModel bizTrace] ? : @"be_null";
             [tracerDict removeObjectForKey:@"element_from"];
             
@@ -1122,7 +1122,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = [self pageTypeString];
-        traceParam[@"log_pb"] = theModel.logPb;
+        traceParam[@"log_pb"] = theModel.logPbWithTags;
         traceParam[@"origin_from"] = [self pageTypeString];
         traceParam[@"card_type"] = @"left_pic";
         traceParam[@"rank"] = [self getRankFromHouseId:theModel.idx indexPath:indexPath];

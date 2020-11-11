@@ -10,6 +10,9 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "YYText.h"
+#import <ByteDanceKit/ByteDanceKit.h>
+#import "FHSingleImageInfoCellModel.h"
+
 @implementation  FHSearchHouseDataItemsBaseInfoMapModel
 
 + (JSONKeyMapper*)keyMapper
@@ -490,6 +493,67 @@
 @end
 
 
+@implementation FHCourtBillboardPreviewButtonModel
+
++ (JSONKeyMapper*)keyMapper {
+    NSDictionary *dict = @{
+       @"openUrl": @"open_url",
+       @"text": @"text",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
+@implementation FHCourtBillboardPreviewItemModel : JSONModel
+
++ (JSONKeyMapper*)keyMapper {
+    NSDictionary *dict = @{
+       @"courtId": @"court_id",
+       @"openUrl": @"open_url",
+       @"title": @"title",
+       @"subtitle": @"subtitle",
+       @"pricingPerSqm": @"pricing_per_sqm",
+       @"img": @"img",
+       @"logPb": @"log_pb",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
+@implementation FHCourtBillboardPreviewModel
+
++ (JSONKeyMapper*)keyMapper {
+    NSDictionary *dict = @{
+       @"title": @"title",
+       @"button": @"button",
+       @"items": @"items",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
+
 #pragma mark - 新model
 
 @implementation  FHListSearchHouseModel
@@ -519,6 +583,7 @@
                            @"agencyInfo": @"agency_info",
                            @"topTip":@"top_tip",
                            @"bottomTip":@"bottom_tip",
+                           @"courtBillboardPreview": @"court_billboard_preview",
                            //                           @"currentItems":@"items",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
@@ -668,6 +733,12 @@
 
 #pragma mark - 后续统一用FHSearchBaseItemModel 和 FHSearchHouseItemModel
 
+@interface FHSearchHouseItemModel ()
+
+@property (nonatomic, copy, nullable, readwrite) NSDictionary *logPbWithTags;
+
+@end
+
 @implementation  FHSearchHouseItemModel
 
 - (instancetype)init
@@ -767,10 +838,10 @@
 {
     switch (houseType) {
         case FHHouseTypeNewHouse:
-            return @"FHHouseBaseNewHouseCell";
+            return @"FHHouseSearchNewHouseCell";
             break;
         case FHHouseTypeSecondHandHouse:
-            return @"FHHouseBaseItemCellSecond";
+            return @"FHHouseSearchSecondHouseCell";
             break;
         case FHHouseTypeRentHouse:
             return @"FHHouseBaseItemCellRent";
@@ -782,6 +853,46 @@
             break;
     }
     return @"FHHouseBaseItemCellList";
+}
+
+- (NSDictionary *)logPbWithTags {
+    if (!_logPbWithTags) {
+        if (self.logPb && [self.logPb isKindOfClass:[NSDictionary class]]) {
+            NSMutableDictionary *mutablLogPb = self.logPb.mutableCopy;
+            if (self.tags) {
+                NSAttributedString *tagsString = [FHSingleImageInfoCellModel tagsStringWithTagList:self.tags];
+                mutablLogPb[@"app_house_tags"] = [[self.tags btd_filter:^BOOL(id  _Nonnull obj) {
+                    if (obj && [obj isKindOfClass:[FHHouseTagsModel class]]) {
+                        FHHouseTagsModel *tagModel = (FHHouseTagsModel *)obj;
+                        if (tagModel.content && [tagsString.string containsString:tagModel.content]) {
+                            return YES;
+                        }
+                    }
+                    return NO;
+                }] btd_map:^id _Nullable(id  _Nonnull obj) {
+                    if (obj && [obj isKindOfClass:[FHHouseTagsModel class]]) {
+                        FHHouseTagsModel *tagModel = (FHHouseTagsModel *)obj;
+                        return tagModel.content;
+                    }
+                    return @"";
+                }];
+                
+            }
+            if (self.titleTags) {//FHSearchHouseItemTitleTagModel
+                mutablLogPb[@"app_marketing_tags"] = [self.titleTags btd_map:^id _Nullable(id  _Nonnull obj) {
+                    if (obj && [obj isKindOfClass:[FHSearchHouseItemTitleTagModel class]]) {
+                        FHSearchHouseItemTitleTagModel *tagModel = (FHSearchHouseItemTitleTagModel *)obj;
+                        return tagModel.text;
+                    }
+                    return @"";
+                }];
+            }
+            _logPbWithTags = mutablLogPb.copy;
+            return _logPbWithTags;
+        }
+        return self.logPb;
+    }
+    return _logPbWithTags;
 }
 
 - (void)setTags:(NSArray<FHHouseTagsModel> *)tags {

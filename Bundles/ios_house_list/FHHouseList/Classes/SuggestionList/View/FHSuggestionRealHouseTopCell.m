@@ -14,14 +14,14 @@
 #import "ToastManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import "TTRoute.h"
-#import "FHExtendHotAreaButton.h"
 #import "TTDeviceHelper.h"
 #import "FHUtils.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHSuggestionRealHouseTopCell()
 @property (nonatomic, strong)FHSugSubscribeDataDataSubscribeInfoModel *currentModel;
-@property (nonatomic, strong)FHExtendHotAreaButton      *allFalseHouseBtn;
+@property (nonatomic, strong)UIButton      *allFalseHouseBtn;
 @property (nonatomic, strong)UIView *segementContentView;
 @property (nonatomic, strong)UIButton *maskBtn;
 @property (nonatomic, strong)UIButton *maskWebBtn;
@@ -53,7 +53,7 @@
     }];
     
     _falseHouseLabel = [[UILabel alloc] init];
-    _falseHouseLabel.font = [UIFont themeFontRegular:[TTDeviceHelper isScreenWidthLarge320] ? 14 : 12];
+    _falseHouseLabel.font = [UIFont themeFontRegular:[UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320 ? 12 : 14];
     _falseHouseLabel.textColor = [UIColor themeGray3];
     _falseHouseLabel.textAlignment = NSTextAlignmentLeft;
     [backColorView addSubview:_falseHouseLabel];
@@ -63,9 +63,9 @@
         make.height.mas_equalTo(30);
     }];
 
-    _allFalseHouseBtn = [FHExtendHotAreaButton buttonWithType:UIButtonTypeCustom];
-    _allFalseHouseBtn.isExtend = YES;
-    UIImage *img = ICON_FONT_IMG(([TTDeviceHelper isScreenWidthLarge320] ? 14 : 12), @"\U0000e670", [UIColor colorWithHexString:@"#aeadad"]);
+    _allFalseHouseBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    _allFalseHouseBtn.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-8, -8, -8, -8);
+    UIImage *img = ICON_FONT_IMG(([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320 ? 12 : 14), @"\U0000e670", [UIColor colorWithHexString:@"#aeadad"]);
     [_allFalseHouseBtn setImage:img forState:UIControlStateNormal];
     [_allFalseHouseBtn addTarget:self action:@selector(allFalseHouseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     [_allFalseHouseBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
@@ -74,7 +74,7 @@
     
     [_allFalseHouseBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.falseHouseLabel.mas_right).offset(4);
-        make.centerY.equalTo(_falseHouseLabel);
+        make.centerY.equalTo(self.falseHouseLabel);
         make.width.mas_equalTo(16);
         make.height.mas_equalTo(16);
     }];

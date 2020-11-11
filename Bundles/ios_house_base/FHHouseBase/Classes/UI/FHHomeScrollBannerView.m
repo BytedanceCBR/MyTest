@@ -433,7 +433,7 @@
     for (int i = 0; i < _indexCount; i++) {
         UIView *tempV = [[UIView alloc] initWithFrame:CGRectMake(tempOffset, 0, _indexSize, _indexSize)];
         tempV.layer.cornerRadius = _indexSize / 2;
-        tempV.backgroundColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.6];
+        tempV.backgroundColor = [UIColor colorWithHexString:@"#bbbbbb"];
         [self addSubview:tempV];
         [self.viewArrays addObject:tempV];
         tempOffset += (_indexSize + 7);

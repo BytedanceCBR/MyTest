@@ -15,7 +15,6 @@
 #import "FHDetailNavBar.h"
 #import <Heimdallr/HMDTTMonitor.h>
 #import "FHDetailHalfPopLayer.h"
-#import "FHDetailSocialEntranceView.h"
 #import "FHDetailBottomBar.h"
 #import "FHDetailNeighborhoodModel.h"
 NS_ASSUME_NONNULL_BEGIN
