@@ -9,19 +9,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHouseTitleAndTagViewModel;
 @class FHSearchHouseItemModel;
 @class FHImageModel;
 @interface FHHouseNeighborhoodCardViewModel : FHHouseNewComponentViewModel
 
 @property (nonatomic, strong, readonly) FHImageModel *leftImageModel;
 
-@property (nonatomic, copy, readonly) NSString *title;
-
 @property (nonatomic, copy, readonly) NSString *subtitle;
 
 @property (nonatomic, copy, readonly) NSString *stateInfo;
 
 @property (nonatomic, copy, readonly) NSString *price;
+
+@property (nonatomic, strong, readonly) FHHouseTitleAndTagViewModel *titleAndTag;
 
 
 - (instancetype)initWithModel:(FHSearchHouseItemModel *)model;

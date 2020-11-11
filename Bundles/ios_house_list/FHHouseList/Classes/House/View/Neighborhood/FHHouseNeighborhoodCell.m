@@ -74,9 +74,9 @@
     }
 }
 
-+ (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
++ (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if ([viewModel isKindOfClass:[FHHouseNeighborhoodCardViewModel class]]) {
-        CGFloat height = [FHHouseNeighborhoodCardView viewHeightWithViewModel:(FHHouseNeighborhoodCardViewModel *)viewModel];
+        CGFloat height = [FHHouseNeighborhoodCardView calculateViewHeight:(FHHouseNeighborhoodCardViewModel *)viewModel];
         if (height > 0.01) {
             return height + 15;
         }

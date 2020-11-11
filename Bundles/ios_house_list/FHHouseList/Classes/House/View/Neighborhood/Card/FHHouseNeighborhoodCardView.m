@@ -10,10 +10,13 @@
 #import "UIColor+Theme.h"
 #import "FHHouseNeighborhoodCardViewModel.h"
 #import "Masonry.h"
+#import "FHHouseTitleAndTagView.h"
+#import "FHHouseTitleAndTagViewModel.h"
+#import "FHCommonDefines.h"
 
-@interface FHHouseNeighborhoodCardView()
+@interface FHHouseNeighborhoodCardView() 
 @property (nonatomic, strong) FHHouseLeftImageView *leftImageView;
-@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) FHHouseTitleAndTagView *titleAndTagView;
 @property (nonatomic, strong) UILabel *subtitleLabel;
 @property (nonatomic, strong) UILabel *priceLabel;
 @property (nonatomic, strong) UILabel *stateInfoLabel;
@@ -34,7 +37,7 @@
 
 - (void)setupUI {
     [self addSubview:self.leftImageView];
-    [self addSubview:self.titleLabel];
+    [self addSubview:self.titleAndTagView];
     [self addSubview:self.subtitleLabel];
     [self addSubview:self.stateInfoLabel];
     [self addSubview:self.priceLabel];
@@ -47,32 +50,39 @@
         make.width.height.mas_equalTo(84);
     }];
     
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.titleAndTagView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(8);
         make.top.mas_equalTo(12);
-        make.right.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
         make.height.mas_equalTo(22);
     }];
     
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(8);
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(2);
-        make.right.mas_equalTo(15);
+        make.top.mas_equalTo(self.titleAndTagView.mas_bottom).mas_offset(2);
+        make.right.mas_equalTo(-15);
         make.height.mas_equalTo(22);
     }];
     
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(8);
         make.top.mas_equalTo(self.priceLabel.mas_bottom).mas_offset(2);
-        make.right.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
         make.height.mas_equalTo(18);
     }];
     
     [self.stateInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(8);
         make.top.mas_equalTo(self.subtitleLabel.mas_bottom).mas_offset(3);
-        make.right.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
         make.height.mas_equalTo(18);
+    }];
+}
+
+- (void)refreshConstraints {
+    CGFloat titleAndTagHeight = [FHHouseTitleAndTagView viewHeightWithViewModel:self.cardViewModel.titleAndTag];
+    [self.titleAndTagView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(titleAndTagHeight);
     }];
 }
 
@@ -83,15 +93,11 @@
     return _leftImageView;
 }
 
-- (UILabel *)titleLabel {
-    if (!_titleLabel) {
-        _titleLabel = [[UILabel alloc] init];
-        _titleLabel.font = [UIFont fontWithName:@"PingFangSC-Semibold" size:16];
-        _titleLabel.textColor = [UIColor colorWithHexString:@"#333333"];
-        _titleLabel.numberOfLines = 1;
-        _titleLabel.textAlignment = NSTextAlignmentLeft;
+- (FHHouseTitleAndTagView *)titleAndTagView {
+    if (!_titleAndTagView) {
+        _titleAndTagView = [[FHHouseTitleAndTagView alloc] init];
     }
-    return _titleLabel;
+    return _titleAndTagView;
 }
 
 - (UILabel *)subtitleLabel {
@@ -135,13 +141,15 @@
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
     [self.leftImageView setImageModel:self.cardViewModel.leftImageModel];
-    self.titleLabel.text = self.cardViewModel.title;
+    self.titleAndTagView.viewModel = self.cardViewModel.titleAndTag;
     self.subtitleLabel.text = self.cardViewModel.subtitle;
     self.stateInfoLabel.text = self.cardViewModel.stateInfo;
     self.priceLabel.text = self.cardViewModel.price;
+    
+    [self refreshConstraints];
 }
 
-+ (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
++ (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (![viewModel isKindOfClass:FHHouseNeighborhoodCardViewModel.class]) return 0.0f;
     return 114.0f;
 }

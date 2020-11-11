@@ -24,9 +24,9 @@
         FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)model;
         switch (itemModel.cardType) {
             case FHSearchCardTypeNeighborhood: {
-                if (itemModel.cellStyle == 10) {
+//                if (itemModel.cellStyle == 10) {
                     return [[FHHouseNeighborhoodCardViewModel alloc] initWithModel:itemModel];
-                }
+//                }
                 break;
             }
             default:

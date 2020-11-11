@@ -10,6 +10,8 @@
 #import "NSObject+FHTracker.h"
 #import "FHUserTracker.h"
 #import "TTRoute.h"
+#import "FHHouseTitleAndTagViewModel.h"
+#import "FHCommonDefines.h"
 
 @interface FHHouseNeighborhoodCardViewModel()
 @property (nonatomic, strong) FHSearchHouseItemModel *model;
@@ -22,17 +24,18 @@
     self = [super init];
     if (self) {
         _model = model;
+        _titleAndTag = [[FHHouseTitleAndTagViewModel alloc] initWithModel:model];
+        _titleAndTag.maxWidth = SCREEN_WIDTH - 30 * 2 - 84 - 8;
     }
     return self;
 }
 
+- (BOOL)isValid {
+    return YES;
+}
 
 - (FHImageModel *)leftImageModel {
     return [self.model.images firstObject];
-}
-
-- (NSString *)title {
-    return self.model.displayTitle;
 }
 
 - (NSString *)subtitle; {
