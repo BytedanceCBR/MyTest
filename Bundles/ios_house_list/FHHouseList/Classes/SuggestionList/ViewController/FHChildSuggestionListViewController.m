@@ -161,7 +161,14 @@
     self.hasDismissedVC = NO;
     [self setupUI];
     [self addDefaultEmptyViewFullScreen];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shrinkKeyboard:)];
+    [self.emptyView addGestureRecognizer:tap];
+    
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+}
+
+- (void)shrinkKeyboard:(UITapGestureRecognizer *)tap {
+    [[UIApplication sharedApplication].keyWindow endEditing:YES];
 }
 
 - (void)retryLoadData
