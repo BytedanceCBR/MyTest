@@ -201,6 +201,7 @@ def appPods
 
     pod 'TencentQQSDK', '1.1.0-rc.0'
     pod 'WechatSDK', '0.3.2'
+    pod 'LarkOpenShareSDK', '1.0.4'
 
     #-----免流量统计-----
     pod_binary 'TTFlowStatisticsManager', '0.2.1'
@@ -600,11 +601,12 @@ def appPods
     #头条连续点赞组件
     pod_binary 'TTMultiDiggManager', '0.1.18-rc.5'
     #分享sdk
-    pod 'BDUGShare', '2.1.8-rc.1' , :subspecs =>[
+    pod 'BDUGShare', '2.1.8-alpha.0' , :subspecs =>[
       'BDUGShareBasic/BDUGUtil',
       'BDUGShareBasic/BDUGSystemShare',
       'BDUGShareBasic/BDUGQQShare',
       'BDUGShareBasic/BDUGWeChatShare',
+      'BDUGShareBasic/BDUGLarkShare',
       'BDUGShareBasic/BDUGTokenShare',
       'BDUGShareBasic/BDUGImageShare',
       'BDUGShareBasic/BDUGImageAnalysis',
@@ -614,6 +616,7 @@ def appPods
       'BDUGShareBusiness/BDUGShareWeChatBusiness',
       'BDUGShareBusiness/BDUGShareSystemBusiness',
       'BDUGShareBusiness/BDUGShareCopyBusiness',
+      'BDUGShareBusiness/BDUGShareLarkBusiness',
     ]
     pod 'BDUGImageMark', '1.0.2'
     pod 'BDUGLoggerInterface', '1.0.3'

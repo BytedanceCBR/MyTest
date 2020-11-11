@@ -9,7 +9,6 @@
 #import <TTLaunchDefine.h>
 #import <BDUGWeChatShare.h>
 #import <NewsBaseDelegate.h>
-#import <BDUGContainer/BDUGContainer.h>
 
 DEC_TASK("BDUGShareWeChatTask",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
 

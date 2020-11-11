@@ -10,6 +10,7 @@
 #import "FHReportContentItem.h"
 #import "FHIMContentItem.h"
 #import "FHCollectContentItem.h"
+#import <TTRoute.h>
 
 typedef NS_ENUM(NSInteger, FHShareChannelType)
 {
@@ -23,6 +24,7 @@ typedef NS_ENUM(NSInteger, FHShareChannelType)
     FHShareChannelTypeDislike,
     FHShareChannelTypeIM,
     FHShareChannelTypeCollect,
+    FHShareChannelTypeLark,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -52,6 +54,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addCustomShareActivity;
 - (void)showSharePanelWithModel:(FHShareContentModel *)model tracerDict:(NSDictionary *)tracerDict;
 - (BOOL)isShareOptimization;
+- (void)hasOpenWithRouteParamObj:(TTRouteParamObj *)paramObj;
+- (BOOL)openSnssdkUrlWith:(NSURL *)url;
 @end
 
 NS_ASSUME_NONNULL_END
