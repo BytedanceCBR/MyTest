@@ -9,7 +9,7 @@
 #import "FHHouseListBaseItemModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+//房源卡片基类 业务代码可继承，不可直接使用基类
 @interface FHHouseBaseUsuallyCell : FHHouseBaseCell
 
 @property (nonatomic, strong) CAShapeLayer *topLeftTagMaskLayer;

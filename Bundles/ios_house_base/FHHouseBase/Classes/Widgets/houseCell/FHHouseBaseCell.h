@@ -22,7 +22,7 @@
 #import <HTSVideoPlay/UIView+Yoga.h>
 
 NS_ASSUME_NONNULL_BEGIN
-//房源卡片基类
+//房源卡片基类 业务代码可继承，不可直接使用基类
 @interface FHHouseBaseCell : UITableViewCell
 
 @property (nonatomic, strong) UIView *leftInfoView;

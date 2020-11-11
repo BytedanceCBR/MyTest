@@ -25,8 +25,6 @@
 
 @implementation FHHomeRentCell
 
-@synthesize mainImageView = _mainImageView;
-
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
@@ -184,18 +182,6 @@
             [[ToastManager manager] showToast:@"反馈失败"];
         }
     }];
-}
-
-- (UIImageView *)mainImageView {
-    if (!_mainImageView) {
-        _mainImageView = [[UIImageView alloc]init];
-        _mainImageView.contentMode = UIViewContentModeScaleAspectFill;
-        _mainImageView.layer.cornerRadius = 4;
-        _mainImageView.clipsToBounds = YES;
-        _mainImageView.layer.borderWidth = 0.5;
-        _mainImageView.layer.borderColor = [UIColor colorWithHexString:@"e1e1e1"].CGColor;
-    }
-    return _mainImageView;
 }
 
 #pragma mark - dislike埋点
