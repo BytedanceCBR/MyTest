@@ -55,6 +55,7 @@ static const char tabSwitchedKey;
     parameters[@"log_pb"] = model.logPb;
     parameters[@"word_text"] = [model.houseType intValue] == FHHouseTypeNewHouse? model.text:model.name;
     parameters[@"group_id"] = model.info.qrecid;
+    parameters[@"element_type"] = @"search";
     parameters[@"recall_type"] = model.recallType;
     TRACK_EVENT(eventName, parameters);
 }
