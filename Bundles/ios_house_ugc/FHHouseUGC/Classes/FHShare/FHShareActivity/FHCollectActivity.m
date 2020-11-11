@@ -9,8 +9,6 @@
 
 @implementation FHCollectActivity
 
-@synthesize dataSource = _dataSource;
-
 -(NSString *)contentItemType {
     return FHActivityContentItemTypeCollect;
 }

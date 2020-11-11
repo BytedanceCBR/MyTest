@@ -187,7 +187,10 @@
         [self.originWindow makeKeyAndVisible];
         self.shareWindow.hidden = YES;
         
-        activityButton.activity.dataSource = nil;
+        if([activityButton.activity respondsToSelector:@selector(setDataSource:)]) {
+            [activityButton.activity setDataSource:nil];
+        }
+        
         WeakSelf;
         [activityButton.activity performActivityWithCompletion:^(id<BDUGActivityProtocol> activity, NSError *error, NSString *desc) {
             StrongSelf;

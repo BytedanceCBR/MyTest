@@ -9,8 +9,6 @@
 
 @implementation FHBlockActivity
 
-@synthesize dataSource = _dataSource;
-
 - (nonnull NSString *)contentItemType {
     return FHActivityContentItemTypeBlock;
 }

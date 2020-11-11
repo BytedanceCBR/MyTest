@@ -9,8 +9,6 @@
 
 @implementation FHDislikeActivity
 
-@synthesize dataSource = _dataSource;
-
 - (nonnull NSString *)contentItemType {
     return FHActivityContentItemTypeDislike;
 }

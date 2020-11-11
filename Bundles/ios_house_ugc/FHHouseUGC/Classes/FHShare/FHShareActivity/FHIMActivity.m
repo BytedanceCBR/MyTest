@@ -11,8 +11,6 @@
 
 @implementation FHIMActivity
 
-@synthesize dataSource = _dataSource;
-
 - (nonnull NSString *)contentItemType {
     return FHActivityContentItemTypeIM;
 }

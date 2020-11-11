@@ -9,8 +9,6 @@
 
 @implementation FHReportActivity
 
-@synthesize dataSource = _dataSource;
-
 - (nonnull NSString *)contentItemType {
     return FHActivityContentItemTypeReport;
 }
