@@ -161,8 +161,11 @@
             self.zoneTypeView.hidden = NO;
         };
         if (model.oldName.length > 0) {
+            self.subTitleLab.hidden = NO;
             NSAttributedString *text1 = [self processHighlightedDefault:model.oldName textColor:[UIColor themeGray1] font:[UIFont themeFontRegular:14]];
             self.subTitleLab.attributedText = [self processHighlighted:text1 originText:model.oldName textColor:[UIColor themeOrange1] font:[UIFont themeFontRegular:14]];
+        } else {
+            self.subTitleLab.hidden = YES;
         }
         self.zoneTypeLab.text = model.recallType;
             CGFloat zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;

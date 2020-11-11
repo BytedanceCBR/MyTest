@@ -112,6 +112,7 @@
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
     [extraDic setValue:self.groupID forKey:@"group_id"];
+    [extraDic setValue:self.topID forKey:@"top_id"];
     __weak typeof(self)wself = self;
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:YES isFirst:NO listCount:10 extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
@@ -143,7 +144,7 @@
 - (void)setCurrentShortVideoModel:(FHFeedUGCCellModel *)currentShortVideoModel {
     self.awemedDetailItems = [[NSMutableArray alloc]init];
     if (currentShortVideoModel && currentShortVideoModel.originContent) {
-        FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:currentShortVideoModel.originContent];
+        FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel copyFromModel:currentShortVideoModel];
         if (cellmodel) {
             cellmodel.tracerDic =  [self trackDict:currentShortVideoModel rank:0];
             [self.awemedDetailItems addObject:cellmodel];
@@ -155,7 +156,7 @@
     for (int m =0; m < otherShortVideoModels.count; m ++) {
         FHFeedUGCCellModel *itemModel = otherShortVideoModels[m];
         if (itemModel && itemModel.originContent) {
-            FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:itemModel.originContent];
+            FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel copyFromModel:itemModel];
             cellmodel.tracerDic =   [self trackDict:itemModel rank:self.awemedDetailItems.count + m];
             [self.awemedDetailItems addObject:cellmodel];
         }

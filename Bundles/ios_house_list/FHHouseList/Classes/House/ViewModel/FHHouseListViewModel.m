@@ -1202,7 +1202,12 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     
-    self.tableView.mj_footer.hidden = NO;
+    ///与大类页逻辑保持一致
+    if (self.houseList.count > 10 || self.sugesstHouseList.count > 10) {
+        self.tableView.mj_footer.hidden = NO;
+    }else{
+        self.tableView.mj_footer.hidden = YES;
+    }
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
         [self.refreshFooter setUpNoMoreDataText:@"已加载全部" offsetY:-3];
@@ -1685,6 +1690,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 [wself requestDeleteSubScribe:subscribeId andText:subscribeText];
             };
         }
+        if (!cell) {
+            return [[FHListBaseCell alloc]init];
+        }
         return cell;
     } 
     return [[FHListBaseCell alloc]init];
@@ -1842,7 +1850,7 @@ extern NSString *const INSTANT_DATA_KEY;
                   }
         }
     }else {
-        if (self.houseType == FHHouseTypeSecondHandHouse) {
+        if (self.houseType == FHHouseTypeSecondHandHouse && ![cellModel isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
             [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
         }
     }

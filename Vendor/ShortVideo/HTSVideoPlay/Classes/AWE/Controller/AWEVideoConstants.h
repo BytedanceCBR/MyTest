@@ -21,6 +21,8 @@ static NSString * const CommentCellIdentifier = @"COMMENT_CELL_IDENTIFIER";
 
 static NSString * const AWEVideoGroupId = @"group_id";
 
+static NSString * const AWEVideocTopId = @"top_id";
+
 static NSString * const AWEVideoRequestId = @"request_id";
 
 static NSString * const AWEVideoEnterFrom = @"enter_from";

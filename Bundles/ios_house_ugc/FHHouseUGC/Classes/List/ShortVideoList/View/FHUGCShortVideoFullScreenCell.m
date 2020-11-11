@@ -110,6 +110,7 @@
             [params setObject:@"click_publisher" forKey:@"enter_type"];
             // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
             [params setObject:@(YES) forKey:@"need_pop_vc"];
+            params[@"from_ugc"] = @(YES);
             [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
                 if (type == TTAccountAlertCompletionEventTypeDone) {
                     //登录成功 走发送逻辑
@@ -157,6 +158,7 @@
     model.isLoopPlay = YES;
     model.disableFinishUIShow = YES;
     model.disableControlView = YES;
+    model.tag = @"short_video";
     model.videoID = [NSString stringWithFormat:@"%@",self.cellModel.video.videoId];
     model.sp = sp;
     model.enterFrom = @"test";
@@ -237,10 +239,15 @@
     }
     if (state == TTVVideoPlaybackStatePlaying) {
         self.playImage.hidden = YES;
+        self.videoIsPause = NO;
         if (self.videoDidStartPlay) {
             self.videoDidStartPlay();
         }
     }
+    if (state == TTVVideoPlaybackStatePaused) {
+        self.videoIsPause = YES;
+    }
+    
     if (state == TTVVideoPlaybackStateError) {
         self.doubleTapMaskView.userInteractionEnabled = NO;
     }else {

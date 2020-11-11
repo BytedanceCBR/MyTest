@@ -161,6 +161,7 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, strong) id<TSVShortVideoDataFetchManagerProtocol> originalDataFetchManager;
 @property (nonatomic, copy) NSDictionary *pageParams;
 @property (nonnull, copy) NSString *groupID;
+@property (nonnull, copy) NSString *topID;
 @property (nonatomic, copy) NSString *groupSource;
 @property (nonatomic, copy) NSString *categoryName;
 @property (nonatomic, strong) NSNumber *showComment;//0不弹，1弹起评论浮层，2弹输入框
@@ -268,6 +269,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         _pageParams = paramObj.allParams.copy;
 
         _groupID = [params[AWEVideoGroupId] copy] ?: @"";
+        _topID =  [params[AWEVideocTopId] copy] ?: @"";
         _originalGroupID = [params[AWEVideoGroupId] copy] ?: @"";
         _ruleID = [params[AWEVideoRuleId] copy];
         _groupSource = [params[VideoGroupSource] copy] ?: @"";
@@ -300,6 +302,7 @@ static const CGFloat kFloatingViewOriginY = 230;
             self.dataFetchManager.tracerDic = self.extraDic;
           }
         self.dataFetchManager.groupID = self.groupID;
+        self.dataFetchManager.topID = self.topID;
         self.dataFetchManager.currentShortVideoModel = extraParams[@"current_video"];
         self.dataFetchManager.otherShortVideoModels = extraParams[@"other_videos"];
         @weakify(self);
@@ -332,7 +335,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         
         TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.groupID itemID:self.groupID impressionID:nil aggrType:1];
         self.groupModel = groupModel;
-        
     }
     return self;
 }
@@ -341,6 +343,14 @@ static const CGFloat kFloatingViewOriginY = 230;
 {
     self.userReportOptions = [TTReportManager fetchReportUserOptions];
     self.videoReportOptions = [TTReportManager fetchReportVideoOptions];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    NSArray *viewControllers = self.navigationController.viewControllers;//获取当前的视图控制其
+    if (![viewControllers containsObject:self]) {
+        [self.videoContainerViewController videoOverTracer];
+    }
 }
 
 - (void)initProperty
@@ -707,10 +717,10 @@ static const CGFloat kFloatingViewOriginY = 230;
     });
 }
 
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-}
+//- (void)viewDidDisappear:(BOOL)animated
+//{
+//    [super viewDidDisappear:animated];
+//}
 
 - (void)didMoveToParentViewController:(UIViewController *)parent
 {
@@ -1099,7 +1109,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         if (!error) {
             self.model.userRepin = !self.model.userRepin;
 //            [self.model save];
-
             [self.orderedData setValue:@(self.model.userRepin) forKeyPath:@"originalData.userRepined"];
             
             contentItem.selected = self.model.userRepin;
@@ -1115,6 +1124,12 @@ static const CGFloat kFloatingViewOriginY = 230;
                                                                                    indicatorImage:[UIImage themedImageNamed:@"doneicon_popup_textpage.png"]
                                                                                    dismissHandler:nil];
                 [indicatorView showFromParentView:activityPanelControllerWindow];
+            }
+            if (groupID.length > 0 ) {
+                NSMutableDictionary *userInfo = @{}.mutableCopy;
+                userInfo[@"group_id"] = groupID;
+                userInfo[@"action"] = @(self.model.userRepin);
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHUGCUserRepinStateChangeNotification" object:nil userInfo:userInfo];
             }
         } else {
             TTIndicatorView * indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleImage
@@ -1546,6 +1561,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         [params setObject:@"click_publisher" forKey:@"enter_type"];
         // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
         [params setObject:@(YES) forKey:@"need_pop_vc"];
+        params[@"from_ugc"] = @(YES);
         [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
             if (type == TTAccountAlertCompletionEventTypeDone) {
                 //登录成功 走发送逻辑
