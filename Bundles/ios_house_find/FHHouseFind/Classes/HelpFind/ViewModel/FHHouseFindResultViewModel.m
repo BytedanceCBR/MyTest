@@ -744,6 +744,10 @@
         tracerDict[@"element_type"] = @"search_related";
     }
     
+    if (self.tracerModel.elementFrom && ![self.tracerModel.elementFrom isEqualToString:@"be_null"]) {
+        tracerDict[@"element_from"] = self.tracerModel.elementFrom;
+    }
+    
     [FHUserTracker writeEvent:@"house_show" params:tracerDict];
 }
 

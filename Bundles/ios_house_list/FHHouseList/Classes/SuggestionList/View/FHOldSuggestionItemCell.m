@@ -176,18 +176,16 @@
             self.titleLab.attributedText = [self processHighlighted:text1 originText:model.name textColor:[UIColor themeOrange1] fontSize:16.0];
             [self.titleLab sizeToFit];
         }
-        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:model.oldName];
-        NSDictionary *commonTextStyle = @{ NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor themeGray1]};
-        [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
-        [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
-        NSRange tapRange = [attrText.string rangeOfString:self.highlightedText];
-        [attrText yy_setTextHighlightRange:tapRange color:[UIColor colorWithHexStr:@"#fe5500"] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-        }];
-        self.subTitleLab.attributedText = attrText;
-        [self.subTitleLab sizeToFit];
        
         if (model.recallType.length > 0) {
             self.zoneTypeView.hidden = NO;
+        }
+        if (model.oldName.length > 0) {
+            self.subTitleLab.hidden = NO;
+            NSAttributedString *text1 = [self processHighlightedDefault:model.oldName textColor:[UIColor themeGray1] font:[UIFont themeFontRegular:14]];
+            self.subTitleLab.attributedText = [self processHighlighted:text1 originText:model.oldName textColor:[UIColor themeOrange1] font:[UIFont themeFontRegular:14]];
+        } else {
+            self.subTitleLab.hidden = YES;
         }
         self.zoneTypeLab.text = model.recallType;
         CGFloat zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
@@ -220,6 +218,47 @@
             }
         }
     }
+}
+
+- (NSAttributedString *)processHighlightedDefault:(NSString *)text textColor:(UIColor *)textColor font:(UIFont *)font {
+    NSDictionary *attr = @{NSFontAttributeName:font,NSForegroundColorAttributeName:textColor};
+    NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:text attributes:attr];
+    
+    return attrStr;
+}
+
+- (NSAttributedString *)processHighlighted:(NSAttributedString *)text originText:(NSString *)originText textColor:(UIColor *)textColor font:(UIFont *)font {
+    if (self.highlightedText.length > 0) {
+        NSDictionary *attr = @{NSFontAttributeName:font,NSForegroundColorAttributeName:textColor};
+        NSMutableAttributedString * tempAttr = [[NSMutableAttributedString alloc] initWithAttributedString:text];
+        
+        NSMutableString *string = [NSMutableString stringWithString:self.highlightedText];
+        
+        //左括号
+        NSRange rangeLeft = [string rangeOfString:@"("];
+        if (rangeLeft.location != NSNotFound) {
+            [string insertString:@"[" atIndex:rangeLeft.location];
+            [string insertString:@"]" atIndex:rangeLeft.location + 2];
+        }
+        
+        //右括号
+        NSRange rangeRight = [string rangeOfString:@")"];
+        if (rangeRight.location != NSNotFound) {
+            [string insertString:@"[" atIndex:rangeRight.location];
+            [string insertString:@"]" atIndex:rangeRight.location + 2];
+        }
+        
+        //()在正则表达式有特殊意义——子表达式
+        NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:[NSString stringWithFormat:@"%@",string] options:NSRegularExpressionCaseInsensitive error:nil];
+        
+        [regex enumerateMatchesInString:originText options:NSMatchingReportProgress range:NSMakeRange(0, originText.length) usingBlock:^(NSTextCheckingResult * _Nullable result, NSMatchingFlags flags, BOOL * _Nonnull stop) {
+            [tempAttr addAttributes:attr range:result.range];
+        }];
+        return tempAttr;
+    } else {
+        return text;
+    }
+    return text;
 }
 
 // 1、默认

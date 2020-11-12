@@ -11,7 +11,6 @@
 #import "UIColor+Theme.h"
 #import "TTDeviceHelper.h"
 #import "BDWebImage.h"
-#import "FHExtendHotAreaButton.h"
 #import "UILabel+BTDAdditions.h"
 #import "YYLabel.h"
 

@@ -453,7 +453,7 @@ static TTFeedValidator *_feedValidator;
         {
             if (![[dict allKeys] containsObject:@"id"]) {
                 //判断，如果没有group id，则废弃这条数据
-                LOGD(@"ExploreOrderedDataCellTypeCard has NO id");
+//                LOGD(@"ExploreOrderedDataCellTypeCard has NO id");
                 continue;
             }
             
@@ -466,7 +466,7 @@ static TTFeedValidator *_feedValidator;
             
             [infoGIDSet addObject:gID];
             [mutDict setValue:gID forKey:@"uniqueID"];
-            LOGD(@"card uniqueID: %@", gID);
+//            LOGD(@"card uniqueID: %@", gID);
             
             // 处理card里的article
             NSArray *dataArray = [mutDict tt_arrayValueForKey:@"data"];
@@ -479,7 +479,7 @@ static TTFeedValidator *_feedValidator;
                 {
                     if (![[data allKeys] containsObject:@"group_id"]) {
                         //判断，如果没有gid，则废弃这条数据
-                        LOGD(@"ExploreOrderedDataCellTypeCard has NO group_id");
+//                        LOGD(@"ExploreOrderedDataCellTypeCard has NO group_id");
                         continue;
                     }
                     
@@ -741,7 +741,7 @@ static TTFeedValidator *_feedValidator;
         {
             if (![[dict allKeys] containsObject:@"id"]) {
                 //判断，如果没有group id，则废弃这条数据
-                LOGD(@"ExploreOrderedDataCellTypeHorizontalCard has NO id");
+//                LOGD(@"ExploreOrderedDataCellTypeHorizontalCard has NO id");
                 continue;
             }
             
@@ -755,7 +755,7 @@ static TTFeedValidator *_feedValidator;
             [infoGIDSet addObject:gID];
             [mutDict setValue:gID forKey:@"uniqueID"];
             [persistents addObject:mutDict];
-            LOGD(@"card uniqueID: %@", gID);
+//            LOGD(@"card uniqueID: %@", gID);
             // 处理card里的shortvideo
             for (NSDictionary *data in [mutDict tt_arrayValueForKey:@"data"])
             {
@@ -764,7 +764,7 @@ static TTFeedValidator *_feedValidator;
                 {
                     if (![[data allKeys] containsObject:@"id"]) {
                         //判断，如果没有gid，则废弃这条数据
-                        LOGD(@"ExploreOrderedDataCellTypeShortVideo has NO id");
+//                        LOGD(@"ExploreOrderedDataCellTypeShortVideo has NO id");
                         continue;
                     }
                     

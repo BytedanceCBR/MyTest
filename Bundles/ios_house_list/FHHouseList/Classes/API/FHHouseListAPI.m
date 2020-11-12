@@ -13,6 +13,7 @@
 #import <FHHouseBase/FHHouseNeighborModel.h>
 #import "FHErrorHubManagerUtil.h"
 #import "FHPostDataHTTPRequestSerializer.h"
+#import "NSDictionary+BTDAdditions.h"
 #define QURL(QPATH) [[FHMainApi host] stringByAppendingString:QPATH]
 #define GET @"GET"
 #define POST @"POST"
@@ -464,7 +465,8 @@
         qparam[@"suggestion_params"] = sugParam;
     }
     
-    qparam[CHANNEL_ID] = CHANNEL_ID_SEARCH_COURT;
+    NSString *channelID = [param btd_stringValueForKey:CHANNEL_ID];
+    qparam[CHANNEL_ID] = channelID ?: CHANNEL_ID_SEARCH_COURT;
     if ([NSStringFromClass(cls) isEqualToString:NSStringFromClass([FHListSearchHouseModel class])]) {
         return [FHHouseListAPI querySearchData:queryPath uploadLog:YES params:qparam class:cls logPath:nil completion:completion];
     }

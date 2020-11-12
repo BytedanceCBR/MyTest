@@ -19,7 +19,7 @@
 //protocol
 @property(nonatomic, weak)NSObject <TTVPlayerControlViewDelegate> *delegate;
 @property(nonatomic, strong)UIView <TTVPlayerControlBottomView, TTVPlayerContext> *bottomBarView;
-@property(nonatomic, strong ,readonly)UIView *miniSlider;
+@property(nonatomic, strong)ExploreMovieMiniSliderView * miniSlider;
 @property (nonatomic, strong) TTVPlayerStateStore *playerStateStore;
 @property (nonatomic, assign) UIEdgeInsets dimAreaEdgeInsetsWhenFullScreen;
 

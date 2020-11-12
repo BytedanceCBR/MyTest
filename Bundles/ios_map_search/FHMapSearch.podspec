@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
 
   s.resources = ['FHMapSearch/Assets/*.xcassets']
 
-  s.vendored_frameworks = 'FHMapSearch/Frameworks/*.framework'
+  s.vendored_frameworks = 'FHMapSearch/Frameworks/F100BaiduMapKit.framework'
   s.pod_target_xcconfig = {
     'HEADER_SEARCH_PATHS' => '"${PODS_TARGET_SRCROOT}/FHMapSearch/Frameworks/F100BaiduMapKit.framework/Headers"',
   }

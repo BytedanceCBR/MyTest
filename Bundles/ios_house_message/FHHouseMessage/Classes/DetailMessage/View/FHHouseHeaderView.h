@@ -9,15 +9,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseHeaderView : UIView
+@interface FHHouseHeaderView : UITableViewHeaderFooterView
 
 @property(nonatomic, strong) UIView *dateView;
 @property(nonatomic, strong) UILabel *dateLabel;
-@property(nonatomic, strong) UIView *contentView;
 @property(nonatomic, strong) UILabel *contentLabel;
 @property(nonatomic, strong) UIView *bottomLine;
-
-- (void)setContentViewMargin:(UIEdgeInsets)edgeInsets;
 
 @end
 

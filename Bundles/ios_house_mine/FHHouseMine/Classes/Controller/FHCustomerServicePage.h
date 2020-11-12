@@ -5,12 +5,12 @@
 //  Created by wangzhizhou on 2020/9/24.
 //
 
-#import "FHBaseViewController.h"
+#import "SSWebViewController.h"
 #import "FHUserTracker.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHCustomerServicePage : FHBaseViewController
+@interface FHCustomerServicePage : SSWebViewController
 
 /// 跳转到linkChat客服页面
 + (void)jumpToLinkChatPage:(nullable NSDictionary *)params;

@@ -1211,7 +1211,12 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     
-    self.tableView.mj_footer.hidden = NO;
+    ///与大类页逻辑保持一致
+    if (self.houseList.count > 10 || self.sugesstHouseList.count > 10) {
+        self.tableView.mj_footer.hidden = NO;
+    }else{
+        self.tableView.mj_footer.hidden = YES;
+    }
     self.lastHasMore = hasMore;
     if (hasMore == NO) {
         [self.refreshFooter setUpNoMoreDataText:@"已加载全部" offsetY:-3];
@@ -1711,6 +1716,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 [wself requestDeleteSubScribe:subscribeId andText:subscribeText];
             };
         }
+        if (!cell) {
+            return [[FHListBaseCell alloc]init];
+        }
         return cell;
     } 
     return [[FHListBaseCell alloc]init];
@@ -1868,7 +1876,7 @@ extern NSString *const INSTANT_DATA_KEY;
                   }
         }
     }else {
-        if (self.houseType == FHHouseTypeSecondHandHouse) {
+        if (self.houseType == FHHouseTypeSecondHandHouse && ![cellModel isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
             [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
         }
     }
@@ -1944,7 +1952,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         theModel = (FHSearchHouseItemModel *)cellModel;
-        logPb = theModel.logPb;
+        logPb = theModel.logPbWithTags;
         if (theModel.isRecommendCell) {
             traceParam[@"search_id"] = self.recommendSearchId;
             elementFrom = @"search_related";
@@ -2226,10 +2234,15 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         tracerDict[@"group_id"] = houseModel.id ? : @"be_null";
         tracerDict[@"impr_id"] = houseModel.imprId ? : @"be_null";
-        tracerDict[@"log_pb"] = houseModel.logPb ? : @"be_null";
+        tracerDict[@"log_pb"] = houseModel.logPbWithTags ? : @"be_null";
         tracerDict[@"house_type"] = houseModel.houseType.integerValue == FHHouseTypeNewHouse?@"new":([self houseTypeString] ? : @"be_null");
         tracerDict[@"biz_trace"] = [houseModel bizTrace] ? : @"be_null";
         tracerDict[@"card_type"] = @"left_pic";
+        
+        if (self.tracerModel.elementFrom && ![self.tracerModel.elementFrom isEqualToString:@"be_null"]) {
+            tracerDict[UT_ELEMENT_FROM] = self.tracerModel.elementFrom;
+        }
+        
         [FHUserTracker writeEvent:@"house_show" params:tracerDict];
     } else if ([cellModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
         
@@ -2270,6 +2283,11 @@ extern NSString *const INSTANT_DATA_KEY;
         tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
         tracerDict[@"log_pb"] = agencyCM.logPb ? : @"be_null";
         tracerDict[@"realtor_logpb"] = agencyCM.contactModel.realtorLogpb ? : @"be_null";
+        
+        if (self.tracerModel.elementFrom && ![self.tracerModel.elementFrom isEqualToString:@"be_null"]) {
+            tracerDict[UT_ELEMENT_FROM] = self.tracerModel.elementFrom;
+        }
+        
         [FHUserTracker writeEvent:@"house_show" params:tracerDict];
     }else if ([cellModel isKindOfClass:[FHSearchHouseDataRedirectTipsModel class]]) {
         NSDictionary *params = @{@"page_type":@"city_switch",
@@ -2323,8 +2341,9 @@ extern NSString *const INSTANT_DATA_KEY;
 
 #pragma mark category log
 -(void)addEnterCategoryLog {
-
-    [FHUserTracker writeEvent:@"enter_category" params:[self categoryLogDict]];
+    NSMutableDictionary *logParams = [NSMutableDictionary dictionaryWithDictionary:[self categoryLogDict]];
+    logParams[UT_ENTER_TYPE] = @"click";
+    [FHUserTracker writeEvent:@"enter_category" params:logParams];
 }
 
 -(void)addCategoryRefreshLog {

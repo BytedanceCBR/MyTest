@@ -8,22 +8,10 @@
 
 #import "TTVPlayerCacheProgressController.h"
 #import "KVOController.h"
+#import <TTKitchen/TTKitchenManager.h>
+#import <ByteDanceKit/ByteDanceKit.h>
+#import "TTVPlayerCacheProgressController+DetailFeed.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
-
-
-@interface TTVPlayerCacheProgressObject : NSObject
-
-@property (nonatomic, copy) NSString *videoID;
-@property (nonatomic, assign) CGFloat progress;
-/**
- 记录当前播放的时间
- */
-@property (nonatomic, assign) CGFloat currentTime;
-@property (nonatomic, copy) NSString *stopEvent;
-
-- (instancetype)initWithVideoID:(NSString *)videoID progress:(CGFloat)progress currentTime:(CGFloat)currentTime;
-
-@end
 
 @implementation TTVPlayerCacheProgressObject
 
@@ -75,7 +63,9 @@
     self = [super init];
     if (self) {
         _maxCacheCount = 2;
+        _detailMaxCacheCount = 10;
         _cacheQueue = [[NSMutableArray alloc] init];
+        _detailCacheQueue = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -112,12 +102,20 @@
     if (same) {
         [_cacheQueue removeObject:same];
     }
+    
+    [self detailFeedRemoveCacheForVideoID:videoID];
 }
 
-- (void)cacheProgress:(CGFloat)progress currentTime:(CGFloat)currentTime VideoID:(NSString *)videoID {
-    if (progress <= 0 || progress >= 100) {
+- (void)cacheProgress:(CGFloat)progress currentTime:(CGFloat)currentTime VideoID:(NSString *)videoID isDetailFeed:(BOOL)isDetailFeed {
+    if (progress <= 0 || progress >= 100 || !videoID) {
         return;
     }
+    
+    if (isDetailFeed) {
+        [self detailFeedCacheProgress:progress currentTime:currentTime VideoID:videoID];
+        return;
+    }
+    
     __block TTVPlayerCacheProgressObject *same = nil;
     [_cacheQueue enumerateObjectsUsingBlock:^(TTVPlayerCacheProgressObject *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (videoID.length > 0 && [obj.videoID isEqualToString:videoID]) {
@@ -140,7 +138,11 @@
     for (TTVPlayerCacheProgressObject *obj in _cacheQueue) {
         if ([obj.videoID isEqualToString:videoID]) {
             return obj;
-            break;
+        }
+    }
+    for (TTVPlayerCacheProgressObject *obj in _detailCacheQueue) {
+        if ([obj.videoID isEqualToString:videoID]) {
+            return obj;
         }
     }
     return nil;
@@ -150,7 +152,11 @@
     for (TTVPlayerCacheProgressObject *obj in _cacheQueue) {
         if ([obj.videoID isEqualToString:videoID]) {
             return obj;
-            break;
+        }
+    }
+    for (TTVPlayerCacheProgressObject *obj in _detailCacheQueue) {
+        if ([obj.videoID isEqualToString:videoID]) {
+            return obj;
         }
     }
     return nil;
@@ -165,3 +171,4 @@
 }
 
 @end
+

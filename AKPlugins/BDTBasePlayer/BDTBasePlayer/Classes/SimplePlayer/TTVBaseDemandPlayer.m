@@ -314,6 +314,7 @@ extern NSString * _Nonnull const kExploreMovieViewDidChangeFullScreenNotifictaio
 - (void)reset
 {
     [self ttv_addPlayerStateStore];
+    [self.playerController resetVideo];
 }
 
 - (void)ttv_addPlayerStateStore

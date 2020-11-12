@@ -93,6 +93,9 @@
     @"moreDetail": @"more_detail",
     @"dateStr": @"date_str",
     @"moreLabel": @"more_label",
+    @"content": @"content",
+    @"buttonList": @"button_list",
+    @"contentStyleList": @"content_style_list",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -138,3 +141,42 @@
 }
 @end
 
+@implementation FHMsgDataItemsReportButtonListModel
+
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"openUrl": @"open_url",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHMsgDataItemReportContentStyleModel
+
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"fontColor": @"font_color",
+    @"start": @"start",
+    @"length": @"length",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
