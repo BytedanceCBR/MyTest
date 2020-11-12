@@ -24,7 +24,8 @@ DEC_TASK("BDUGShareQQTask",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
 }
 
 -(void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
-    [BDUGQQShare registerWithID:TTLogicString(@"qqOAuthAppID", nil) universalLink:nil];
+    NSString *qqAppID = TTLogicString(@"qqOAuthAppID", nil);
+    [BDUGQQShare registerWithID:qqAppID universalLink:[NSString stringWithFormat:@"https://i.haoduofangs.com/qq_conn/%@/",qqAppID]];
 }
 
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
