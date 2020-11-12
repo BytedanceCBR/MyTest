@@ -24,7 +24,6 @@ typedef NS_ENUM(NSInteger, FHShareChannelType)
     FHShareChannelTypeDislike,
     FHShareChannelTypeIM,
     FHShareChannelTypeCollect,
-    FHShareChannelTypeLark,
 };
 
 NS_ASSUME_NONNULL_BEGIN
@@ -56,6 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isShareOptimization;
 - (void)hasOpenWithRouteParamObj:(TTRouteParamObj *)paramObj;
 - (BOOL)openSnssdkUrlWith:(NSURL *)url;
+- (void)addLarkShareButtonToScreen;
 @end
 
 NS_ASSUME_NONNULL_END

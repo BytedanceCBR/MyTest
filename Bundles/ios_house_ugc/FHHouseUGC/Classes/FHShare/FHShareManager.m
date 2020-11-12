@@ -12,7 +12,6 @@
 #import <BDUGQQZoneContentItem.h>
 #import <BDUGWechatTimelineContentItem.h>
 #import <BDUGCopyContentItem.h>
-#import <BDUGLarkContentItem.h>
 #import <BDUGShareManager.h>
 #import <SSCommonLogic.h>
 #import "FHReportActivity.h"
@@ -24,6 +23,10 @@
 #import <FHUserTracker.h>
 #import <NSDictionary+BTDAdditions.h>
 #import <NSString+BTDAdditions.h>
+#import <NSURL+BTDAdditions.h>
+#import <FHCommonDefines.h>
+#import <UIColor+Theme.h>
+#import "FHLarkShareButton.h"
 
 @implementation FHShareDataModel
 
@@ -55,7 +58,7 @@
 @property(nonatomic,strong) BDUGShareManager *shareManager;
 @property(nonatomic,strong) FHShareContentModel *shareContentModel;
 @property(nonatomic,strong) NSDictionary *tracerDict;
-@property(nonatomic,copy) NSString *snssdkUrl;
+@property(nonatomic,strong) FHLarkShareButton *larkShareButton;
 @end
 
 @implementation FHShareManager
@@ -150,9 +153,6 @@
         case FHShareChannelTypeCollect:
             item = [self createCollectItemWithModel:model.collectDataModel];
             break;
-        case FHShareChannelTypeLark:
-            item = [self createLarkItem];
-            break;
         default:
             break;
     }
@@ -196,15 +196,6 @@
     return item;
 }
 
--(BDUGLarkContentItem *)createLarkItem {
-    BDUGLarkContentItem *item = [[BDUGLarkContentItem alloc] init];
-    item.defaultShareType = BDUGShareWebPage;
-    item.webPageUrl = self.snssdkUrl;
-    item.title = @"幸福里";
-    item.activityImageName = @"BDUGShareLarkResource.bundle/lark_allshare";
-    item.contentTitle = @"飞书";
-    return item;
-}
 
 -(FHReportContentItem *)createReportItemWithModel:(FHShareReportDataModel *)model {
     FHReportContentItem *item = [[FHReportContentItem alloc] init];
@@ -281,28 +272,32 @@
     }
 }
 
--(void)hasOpenWithRouteParamObj:(TTRouteParamObj *)paramObj {
-    NSString *openUrl = paramObj.sourceURL.absoluteString;
-    NSString *params = [paramObj.userInfo.allInfo btd_jsonStringEncoded];
-    self.snssdkUrl = [[NSString stringWithFormat:@"snssdk1370://fhsharemanager?fhshareurl=%@&fhshareparams=%@",openUrl,params] stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]];
-}
-
 -(BOOL)openSnssdkUrlWith:(NSURL *)url {
-    NSString *urlString = url.absoluteString;
-    NSRange urlRange = [urlString rangeOfString:@"fhshareurl="];
-    NSRange paramsRange = [urlString rangeOfString:@"&fhshareparams="];
-    NSUInteger urlBegin = urlRange.location + urlRange.length;
-    NSUInteger urlLength = paramsRange.location - urlBegin;
-    NSUInteger paramsBegin = paramsRange.location + paramsRange.length;
-    
-    NSString *openUrlString = [urlString substringWithRange:NSMakeRange(urlBegin,urlLength)];
-    NSString *paramString = [urlString substringFromIndex:paramsBegin];
-    paramString = [paramString stringByRemovingPercentEncoding];
-    
-    NSDictionary *params = [paramString btd_jsonDictionary];
-    NSURL *openUrl = [NSURL URLWithString:openUrlString];
+    NSDictionary *queryDict = [url btd_queryItemsWithDecoding];
+    NSString *scheme = [queryDict objectForKey:@"scheme"];
+    NSDictionary *params = [[queryDict objectForKey:@"params"] btd_jsonDictionary];
+    NSURL *openUrl = [NSURL URLWithString:scheme];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
     return [[TTRoute sharedRoute] openURLByViewController:openUrl userInfo:userInfo];
+}
+
+-(void)hasOpenWithRouteParamObj:(TTRouteParamObj *)paramObj {
+    self.larkShareButton.paramObj = paramObj;
+}
+
+- (void)addLarkShareButtonToScreen {
+    [[[UIApplication sharedApplication] keyWindow] addSubview:self.larkShareButton];
+}
+
+-(FHLarkShareButton *)larkShareButton {
+    if(!_larkShareButton) {
+        _larkShareButton = [[FHLarkShareButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 40, SCREEN_HEIGHT - 160, 40, 40)];
+        [_larkShareButton setBackgroundImage:[UIImage imageNamed:@"BDUGShareLarkResource.bundle/lark_allshare"] forState:UIControlStateNormal];
+        _larkShareButton.layer.cornerRadius = 20;
+        _larkShareButton.layer.borderWidth = 1;
+        _larkShareButton.layer.borderColor = [UIColor themeGray6].CGColor;
+    }
+    return _larkShareButton;
 }
 
 @end

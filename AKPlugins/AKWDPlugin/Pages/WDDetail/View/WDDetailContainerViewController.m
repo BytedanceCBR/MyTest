@@ -21,6 +21,7 @@
 #import "TTInteractExitHelper.h"
 #import <KVOController/NSObject+FBKVOController.h>
 #import "ExploreOrderedData.h"
+#import <FHShareManager.h>
 
 @interface WDDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol, WDDetailModelDataSource>
 @property (nonatomic, assign) BOOL hasDidAppeared;
@@ -71,6 +72,9 @@
         else {
             self.viewModel.detailModel.dataSource = self;
             self.viewModel.detailModel.isJumpComment = self.isJumpComment;
+        }
+        if([TTSandBoxHelper isInHouseApp]) {
+            [[FHShareManager shareInstance] hasOpenWithRouteParamObj:paramObj];
         }
     }
     return self;

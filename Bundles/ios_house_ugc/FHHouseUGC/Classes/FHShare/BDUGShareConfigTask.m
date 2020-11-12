@@ -15,6 +15,7 @@
 #import <FHSharePanel.h>
 #import <BDUGShareAdapterSetting.h>
 #import "FHShareManager.h"
+#import <TTSandBoxHelper+House.h>
 
 DEC_TASK("BDUGShareConfigTask",FHTaskTypeSDKs,TASK_PRIORITY_HIGH+2);
 @implementation BDUGShareConfigTask
@@ -30,5 +31,8 @@ DEC_TASK("BDUGShareConfigTask",FHTaskTypeSDKs,TASK_PRIORITY_HIGH+2);
     [BDUGShareManager initializeShareSDKWithConfiguration:config];
     [[BDUGShareAdapterSetting sharedService] setPanelClassName:NSStringFromClass([FHSharePanel class])];
     [[FHShareManager shareInstance] addCustomShareActivity];
+    if([TTSandBoxHelper isInHouseApp]) {
+        [[FHShareManager shareInstance] addLarkShareButtonToScreen];
+    }
 }
 @end

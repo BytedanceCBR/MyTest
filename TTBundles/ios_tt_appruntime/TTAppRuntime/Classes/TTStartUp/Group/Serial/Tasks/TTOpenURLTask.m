@@ -13,6 +13,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "FHEnvContext.h"
 #import "TTLaunchDefine.h"
+#import <FHShareManager.h>
 
 DEC_TASK("TTOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_MEDIUM);
 
@@ -29,6 +30,10 @@ extern BOOL kFHInAppPushTipsHidden;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    
+    if([TTSandBoxHelper isInHouseApp] && [url.absoluteString containsString:@"fhsharemanager"]) {
+        return [[FHShareManager shareInstance] openSnssdkUrlWith:url];
+    }
     
     [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
     // 部分页面不支持Push跳转
