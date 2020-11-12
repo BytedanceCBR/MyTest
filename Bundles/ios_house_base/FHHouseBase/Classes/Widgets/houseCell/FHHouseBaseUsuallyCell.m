@@ -60,7 +60,7 @@
     }];
     [self.contentView addSubview:self.pricePerSqmLabel];
     [self.pricePerSqmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_greaterThanOrEqualTo(self.subTitleLabel.mas_right).offset(5);
+        make.left.mas_greaterThanOrEqualTo(self.subTitleLabel.mas_right).offset(2);
         make.top.equalTo(self.subTitleLabel);
         make.right.equalTo(self.contentView).offset(-15);
     }];

@@ -44,7 +44,7 @@
         make.size.mas_equalTo(CGSizeMake(48, 18));
     }];
     [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-40);
+        make.right.mas_equalTo(-23);
     }];
     [self.pricePerSqmLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-23);

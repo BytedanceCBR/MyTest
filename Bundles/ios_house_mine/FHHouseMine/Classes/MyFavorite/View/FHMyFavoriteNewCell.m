@@ -34,8 +34,8 @@
     }];
     [self.contentView addSubview:self.vrLoadingView];
     [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.mainImageView).offset(12);
-        make.bottom.equalTo(self.mainImageView).offset(-10);
+        make.left.equalTo(self.mainImageView).offset(6);
+        make.bottom.equalTo(self.mainImageView).offset(-6);
         make.size.mas_equalTo(CGSizeMake(16, 16));
     }];
     [self.contentView addSubview:self.mainTitleLabel];
