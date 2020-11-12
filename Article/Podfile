@@ -201,7 +201,6 @@ def appPods
 
     pod 'TencentQQSDK', '1.1.0-rc.0'
     pod 'WechatSDK', '0.3.2'
-    pod 'LarkOpenShareSDK', '1.0.4'
 
     #-----免流量统计-----
     pod_binary 'TTFlowStatisticsManager', '0.2.1'
@@ -606,7 +605,6 @@ def appPods
       'BDUGShareBasic/BDUGSystemShare',
       'BDUGShareBasic/BDUGQQShare',
       'BDUGShareBasic/BDUGWeChatShare',
-      'BDUGShareBasic/BDUGLarkShare',
       'BDUGShareBasic/BDUGTokenShare',
       'BDUGShareBasic/BDUGImageShare',
       'BDUGShareBasic/BDUGImageAnalysis',
@@ -616,7 +614,6 @@ def appPods
       'BDUGShareBusiness/BDUGShareWeChatBusiness',
       'BDUGShareBusiness/BDUGShareSystemBusiness',
       'BDUGShareBusiness/BDUGShareCopyBusiness',
-      'BDUGShareBusiness/BDUGShareLarkBusiness',
     ]
     pod 'BDUGImageMark', '1.0.2'
     pod 'BDUGLoggerInterface', '1.0.3'
@@ -642,6 +639,7 @@ def testPods
     pod 'BDiOSDebugBinary', '0.0.4'
     pod 'BDTracker/Debug', '2.5.2'
     pod 'BDInstall/Debug', '1.5.0'
+    pod 'LarkOpenShareSDK', '1.0.4'
 end
 
 target 'NewsLiteInHouse' do

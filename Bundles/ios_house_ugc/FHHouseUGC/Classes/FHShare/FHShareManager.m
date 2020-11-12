@@ -292,7 +292,7 @@
 -(FHLarkShareButton *)larkShareButton {
     if(!_larkShareButton) {
         _larkShareButton = [[FHLarkShareButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 40, SCREEN_HEIGHT - 160, 40, 40)];
-        [_larkShareButton setBackgroundImage:[UIImage imageNamed:@"BDUGShareLarkResource.bundle/lark_allshare"] forState:UIControlStateNormal];
+        [_larkShareButton setBackgroundImage:[UIImage imageNamed:@"lark_allshare"] forState:UIControlStateNormal];
         _larkShareButton.layer.cornerRadius = 20;
         _larkShareButton.layer.borderWidth = 1;
         _larkShareButton.layer.borderColor = [UIColor themeGray6].CGColor;

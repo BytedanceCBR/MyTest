@@ -6,7 +6,8 @@
 //
 
 #import "FHLarkShareButton.h"
-#import <BDUGLarkActivity.h>
+#import <LarkOpenShareSDK/LarkApiObject.h>
+#import <LarkOpenShareSDK/LarkShareApi.h>
 #import <NSDictionary+BTDAdditions.h>
 #import <NSString+BTDAdditions.h>
 #import <NSURL+BTDAdditions.h>
@@ -49,16 +50,17 @@
 }
 
 - (void)shareToLark {
-    BDUGLarkContentItem *item = [[BDUGLarkContentItem alloc] init];
     NSString *scheme = self.paramObj.sourceURL.absoluteString ?: @"sslocal://main?select_tab=tab_stream";
     NSString *params = [self.paramObj.userInfo.allInfo btd_jsonStringEncoded] ?: @"";
-    item.webPageUrl = [NSURL btd_URLWithString:@"snssdk1370://fhsharemanager" queryItems:@{@"scheme":scheme,@"params":params}].absoluteString;
-    item.defaultShareType = BDUGShareWebPage;
-    item.title = @"幸福里";
-    BDUGLarkActivity *activity = [[BDUGLarkActivity alloc] init];
-    activity.contentItem = item;
-    [activity performActivityWithCompletion:^(id<BDUGActivityProtocol>  _Nonnull activity, NSError * _Nullable error, NSString * _Nullable desc) {
-    }];
+    
+    LarkMediaWebObject *webObejct = [[LarkMediaWebObject alloc] init];
+    webObejct.title = @"幸福里";
+    webObejct.urlStr = [NSURL btd_URLWithString:@"snssdk1370://fhsharemanager" queryItems:@{@"scheme":scheme,@"params":params}].absoluteString;
+    
+    LarkSendMessageRequest *request = [[LarkSendMessageRequest alloc] init];
+    request.mediaObject = webObejct;
+    
+    [LarkShareApi sendRequest:request];
 }
 
 @end
