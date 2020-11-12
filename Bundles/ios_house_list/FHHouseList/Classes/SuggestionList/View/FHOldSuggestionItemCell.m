@@ -95,7 +95,7 @@
     if (!_zoneTypeLab) {
         UILabel *zoneTypeLab = [[UILabel alloc]init];
         zoneTypeLab.textColor = [UIColor themeGray1];
-        zoneTypeLab.font = [UIFont themeFontRegular:10];
+        zoneTypeLab.font = [UIFont themeFontRegular:12];
         [self.zoneTypeView addSubview:zoneTypeLab];
         _zoneTypeLab = zoneTypeLab;
     }
@@ -149,7 +149,7 @@
 - (UILabel *)amountLab {
     if (!_amountLab) {
         UILabel *amountLab = [[UILabel alloc]init];
-        amountLab.textColor = [UIColor themeGray3];
+        amountLab.textColor = [UIColor themeGray1];
         amountLab.font = [UIFont themeFontRegular:14];
         amountLab.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:amountLab];
@@ -200,6 +200,8 @@
         float margin = [model.oldName length] > 0 ? 1:6;
         
         if(model.isnewstyle){
+            amountLab.textColor = [UIColor themeGray3];
+            zoneTypeLab.font = [UIFont themeFontRegular:10];
             [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(self.titleLab.mas_bottom).offset(3);
                 make.right.equalTo(self.contentView).offset(-15);
