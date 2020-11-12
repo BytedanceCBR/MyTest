@@ -24,9 +24,7 @@
 + (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (![viewModel isKindOfClass:FHHouseTitleAndTagViewModel.class]) return 0.0f;
     FHHouseTitleAndTagViewModel *tagViewModel = (FHHouseTitleAndTagViewModel *)viewModel;
-    CGFloat lineHeight = tagViewModel.titleFont.lineHeight;
-    CGFloat height = [tagViewModel.attributedTitle boundingRectWithSize:CGSizeMake(tagViewModel.maxWidth, lineHeight * 2 + 1) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size.height;
-    return ceil(height);
+    return [tagViewModel showHeight];
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -71,6 +69,11 @@
             [_titleTagViews addObject:tagView];
         }
     } else if (_titleTagViews.count > titleAndTagViewModel.tags.count) {
+        for (NSInteger index = _titleTagViews.count - 1; index >= (NSInteger)[titleAndTagViewModel.tags count]; index--) {
+            FHHouseTagView *tagView = _titleTagViews[index];
+            [tagView removeFromSuperview];
+        }
+        
         [_titleTagViews removeObjectsInRange:NSMakeRange(titleAndTagViewModel.tags.count, _titleTagViews.count - titleAndTagViewModel.tags.count)];
     }
     

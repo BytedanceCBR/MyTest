@@ -78,7 +78,7 @@
     if ([viewModel isKindOfClass:[FHHouseNeighborhoodCardViewModel class]]) {
         CGFloat height = [FHHouseNeighborhoodCardView calculateViewHeight:(FHHouseNeighborhoodCardViewModel *)viewModel];
         if (height > 0.01) {
-            return height + 15;
+            return height + 10;
         }
     }
     

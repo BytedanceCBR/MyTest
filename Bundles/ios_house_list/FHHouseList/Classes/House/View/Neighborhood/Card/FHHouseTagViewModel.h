@@ -10,8 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseTagViewModel : FHHouseNewComponentViewModel
-
-@property (nonatomic, assign) CGFloat maxWidth;
+@property (nonatomic, assign) CGFloat tagWidth;
 
 - (NSString *)text;
 - (UIColor *)textColor;

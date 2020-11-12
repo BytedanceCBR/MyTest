@@ -57,6 +57,7 @@
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
         tracerDict[@"rank"] = @(indexPath.row);
         tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : @"be_null";
+        tracerDict[UT_ENTER_FROM] = self.fh_trackModel.enterFrom ? : @"be_null";
         tracerDict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : @"be_null";
         tracerDict[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : @"be_null";
         tracerDict[UT_ELEMENT_TYPE] = @"be_null";

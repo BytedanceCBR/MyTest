@@ -14,6 +14,17 @@
 #import "FHHouseTitleAndTagViewModel.h"
 #import "FHCommonDefines.h"
 
+static const UIEdgeInsets CardInsets = {15.0f, 15.0f, 15.0f, 15.0f};
+static const CGFloat LeftRightMargin = 8.0f;
+static const CGFloat LeftImageHeight = 84.0f;
+static const CGFloat TitleTopMargin = 12.0f;
+static const CGFloat PriceTopMargin = 2.0f;
+static const CGFloat PriceHeight = 22.0f;
+static const CGFloat SubtitleTopMargin = 2.0f;
+static const CGFloat SubtitleHeight = 18.0f;
+static const CGFloat StateInfoTopMargin = 3.0f;
+static const CGFloat StateInfoHeight = 18.0f;
+
 @interface FHHouseNeighborhoodCardView() 
 @property (nonatomic, strong) FHHouseLeftImageView *leftImageView;
 @property (nonatomic, strong) FHHouseTitleAndTagView *titleAndTagView;
@@ -45,37 +56,37 @@
 
 - (void)setupConstraints {
     [self.leftImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.top.mas_equalTo(15);
-        make.width.height.mas_equalTo(84);
+        make.left.mas_equalTo(CardInsets.left);
+        make.top.mas_equalTo(CardInsets.top);
+        make.width.height.mas_equalTo(LeftImageHeight);
     }];
     
     [self.titleAndTagView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(8);
-        make.top.mas_equalTo(12);
-        make.right.mas_equalTo(-15);
+        make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(LeftRightMargin);
+        make.top.mas_equalTo(TitleTopMargin);
+        make.right.mas_equalTo(-CardInsets.right);
         make.height.mas_equalTo(22);
     }];
     
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(8);
-        make.top.mas_equalTo(self.titleAndTagView.mas_bottom).mas_offset(2);
-        make.right.mas_equalTo(-15);
-        make.height.mas_equalTo(22);
+        make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(LeftRightMargin);
+        make.top.mas_equalTo(self.titleAndTagView.mas_bottom).mas_offset(PriceTopMargin);
+        make.right.mas_equalTo(-CardInsets.right);
+        make.height.mas_equalTo(PriceHeight);
     }];
     
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(8);
-        make.top.mas_equalTo(self.priceLabel.mas_bottom).mas_offset(2);
-        make.right.mas_equalTo(-15);
-        make.height.mas_equalTo(18);
+        make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(LeftRightMargin);
+        make.top.mas_equalTo(self.priceLabel.mas_bottom).mas_offset(SubtitleTopMargin);
+        make.right.mas_equalTo(-CardInsets.right);
+        make.height.mas_equalTo(SubtitleHeight);
     }];
     
     [self.stateInfoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(8);
-        make.top.mas_equalTo(self.subtitleLabel.mas_bottom).mas_offset(3);
-        make.right.mas_equalTo(-15);
-        make.height.mas_equalTo(18);
+        make.left.mas_equalTo(self.leftImageView.mas_right).mas_offset(LeftRightMargin);
+        make.top.mas_equalTo(self.subtitleLabel.mas_bottom).mas_offset(StateInfoTopMargin);
+        make.right.mas_equalTo(-CardInsets.right);
+        make.height.mas_equalTo(StateInfoHeight);
     }];
 }
 
@@ -151,7 +162,11 @@
 
 + (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (![viewModel isKindOfClass:FHHouseNeighborhoodCardViewModel.class]) return 0.0f;
-    return 114.0f;
+    FHHouseNeighborhoodCardViewModel *cardViewModel = (FHHouseNeighborhoodCardViewModel *)viewModel;
+    CGFloat titleAndTagHeight = [FHHouseTitleAndTagView viewHeightWithViewModel:cardViewModel.titleAndTag];
+    CGFloat height = TitleTopMargin + titleAndTagHeight + PriceTopMargin + PriceHeight + SubtitleTopMargin + SubtitleHeight + StateInfoTopMargin + StateInfoHeight + CardInsets.bottom;
+    if (height < CardInsets.top + LeftImageHeight + CardInsets.bottom) height =  CardInsets.top + LeftImageHeight + CardInsets.bottom;
+    return height;
 }
 
 @end

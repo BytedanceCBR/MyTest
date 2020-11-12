@@ -14,7 +14,6 @@
 
 @interface FHHouseTagViewModel()
 @property (nonatomic, strong) id model;
-@property (nonatomic, assign) CGFloat tagWidth;
 @end
 
 @implementation FHHouseTagViewModel
@@ -38,9 +37,6 @@
 - (CGFloat)tagWidth {
     if (_tagWidth < 0.01) {
         _tagWidth = [self.text btd_widthWithFont:self.textFont height:self.tagHeight] + 3 * 2;
-        if (_tagWidth > self.maxWidth && self.maxWidth > 0) {
-            _tagWidth = self.maxWidth;
-        }
     }
     return _tagWidth;
 }

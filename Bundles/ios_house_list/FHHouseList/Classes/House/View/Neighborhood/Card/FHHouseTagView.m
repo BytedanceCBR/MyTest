@@ -73,7 +73,7 @@
         [self.gradientLayer removeFromSuperlayer];
     }
     
-//    self.layer.cornerRadius = 2;
+    self.layer.cornerRadius = 2;
     self.backgroundColor = tagViewModel.backgroundColor;
     [self setNeedsLayout];
 }

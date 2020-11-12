@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithModel:(FHSearchHouseItemModel *)model;
 
-- (UIFont *)titleFont;
+- (CGFloat)showHeight;
 
 @end
 

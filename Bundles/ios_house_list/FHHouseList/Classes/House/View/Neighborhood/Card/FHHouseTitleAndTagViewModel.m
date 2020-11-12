@@ -11,6 +11,7 @@
 #import "NSString+BTDAdditions.h"
 #import "UIFont+House.h"
 #import "FHHouseTagView.h"
+#import "FHCommonDefines.h"
 
 @interface FHHouseTitleAndTagViewModel()
 @property (nonatomic, strong) FHSearchHouseItemModel *model;
@@ -22,42 +23,6 @@
 - (instancetype)initWithModel:(FHSearchHouseItemModel *)model {
     self = [super init];
     if (self) {
-        {
-//            NSMutableArray *tags = [NSMutableArray array];
-//            {
-//                FHSearchHouseItemTitleTagModel *tagModel = [[FHSearchHouseItemTitleTagModel alloc] init];
-//                tagModel.isGradient = YES;
-//                tagModel.text = @"小区测评";
-//                tagModel.textColor = @"#ffffff";
-//                tagModel.topBackgroundColor = @"#eeca99";
-//                tagModel.bottomBackgroundColor = @"#dd9c43";
-//                [tags addObject:tagModel];
-//            }
-//            
-//            {
-//                FHSearchHouseItemTitleTagModel *tagModel = [[FHSearchHouseItemTitleTagModel alloc] init];
-//                tagModel.isGradient = YES;
-//                tagModel.text = @"热";
-//                tagModel.textColor = @"#ffffff";
-//                tagModel.topBackgroundColor = @"#eeca99";
-//                tagModel.bottomBackgroundColor = @"#dd9c43";
-//                [tags addObject:tagModel];
-//            }
-//
-//            model.titleTags = tags;
-            
-//            model.displayTitle = @"阿三开吉德津科撒的空间撒娇看到撒娇肯德基卡是贷记卡手机壳贷记卡圣诞节卡上就看到";
-            
-            
-//            @property (nonatomic, assign) BOOL isGradient;
-//            @property (nonatomic, copy , nullable) NSString *text;
-//            @property (nonatomic, copy , nullable) NSString *textColor;
-//            @property (nonatomic, copy , nullable) NSString *backgroundColor;
-//            @property (nonatomic, copy , nullable) NSString *topBackgroundColor;
-//            @property (nonatomic, copy , nullable) NSString *bottomBackgroundColor;
-            
-        }
-        
         _model = model;
         
         NSMutableArray *tags = [NSMutableArray array];
@@ -73,8 +38,22 @@
 
 - (void)setMaxWidth:(CGFloat)maxWidth {
     _maxWidth = maxWidth;
+    CGFloat width = 0;
+    CGFloat index = 0;
     for (FHHouseTagViewModel *tagModel in self.tags) {
-        tagModel.maxWidth = maxWidth;
+        CGFloat tagWidth = [tagModel tagWidth];
+        CGFloat margin = (index == self.tags.count - 1) ? 4 : 2;
+        if (width + tagWidth + margin > maxWidth) {
+            tagModel.tagWidth = maxWidth - width - 4;
+            break;
+        }
+        
+        index++;
+        width += (tagWidth + margin);
+    }
+    
+    if (index < self.tags.count) {
+        _tags = [self.tags subarrayWithRange:NSMakeRange(0, index)];
     }
 }
 
@@ -129,18 +108,16 @@
 }
 
 - (CGFloat)showHeight {
-    CGFloat indent = [self titleIndent];
     CGFloat lineHeight = self.titleFont.lineHeight;
+    CGFloat indent = [self titleIndent];
     NSString *title = self.model.displayTitle;
     if (title == nil) title = @"";
-    NSMutableParagraphStyle *style = [[self paragraphStyle] mutableCopy];
-    style.lineBreakMode = NSLineBreakByCharWrapping;
-    CGSize size = [title boundingRectWithSize:CGSizeMake(self.maxWidth - indent, lineHeight * 2 + 1) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{
-        NSFontAttributeName:self.titleFont,
-        NSParagraphStyleAttributeName:style,
-    } context:nil].size;
+    CGFloat titleWidth = [title btd_widthWithFont:[self titleFont] height:lineHeight];
+    if (indent + titleWidth > self.maxWidth) {
+        return lineHeight * 2 + 1;
+    }
     
-    return MIN(ceil(size.height), lineHeight * 2 + 1);
+    return lineHeight;
 }
 
 @end
