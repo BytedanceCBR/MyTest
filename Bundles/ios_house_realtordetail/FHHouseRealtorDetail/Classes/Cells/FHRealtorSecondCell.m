@@ -141,13 +141,6 @@
     }
 }
 
-///把左上角的标签放在最上面，防止被VC蒙层遮挡
-- (void)bringTagImageToTopIfExist {
-    if (self.topLeftTagImageView) {
-        [self.mainImageView bringSubviewToFront:self.topLeftTagImageView];
-    }
-}
-
 - (CGFloat)contentSmallImageMaxWidth {
     return  SCREEN_WIDTH - 20 - 72 - 90; //根据UI图 直接计算出来
 }

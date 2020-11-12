@@ -20,6 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSAttributedString *)originPriceAttr:(NSString *)originPrice;
 
+///把左上角的标签放在最上面，防止被VC蒙层遮挡
+- (void)bringTagImageToTopIfExist;
+
 @end
 
 NS_ASSUME_NONNULL_END

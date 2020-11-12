@@ -43,8 +43,8 @@
     }];
     [self.contentView addSubview:self.vrLoadingView];
     [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.mainImageView).offset(12);
-        make.bottom.equalTo(self.mainImageView).offset(-10);
+        make.left.equalTo(self.mainImageView).offset(6);
+        make.bottom.equalTo(self.mainImageView).offset(-6);
         make.size.mas_equalTo(CGSizeMake(16, 16));
     }];
     [self.contentView addSubview:self.mainTitleLabel];
@@ -154,6 +154,13 @@
     [attri addAttribute:NSStrikethroughStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(0, originPrice.length)];
     [attri addAttribute:NSStrikethroughColorAttributeName value:[UIColor themeGray1] range:NSMakeRange(0, originPrice.length)];
     return attri;
+}
+
+///把左上角的标签放在最上面，防止被VC蒙层遮挡
+- (void)bringTagImageToTopIfExist {
+    if (self.topLeftTagImageView) {
+        [self.mainImageView bringSubviewToFront:self.topLeftTagImageView];
+    }
 }
 
 - (UILabel *)mainTitleLabel {
