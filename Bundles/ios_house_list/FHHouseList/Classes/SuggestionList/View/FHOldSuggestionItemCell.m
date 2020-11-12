@@ -200,8 +200,8 @@
         float margin = [model.oldName length] > 0 ? 1:6;
         
         if(model.isnewstyle){
-            amountLab.textColor = [UIColor themeGray3];
-            zoneTypeLab.font = [UIFont themeFontRegular:10];
+            self.amountLab.textColor = [UIColor themeGray3];
+            self.zoneTypeLab.font = [UIFont themeFontRegular:10];
             [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(self.titleLab.mas_bottom).offset(3);
                 make.right.equalTo(self.contentView).offset(-15);
