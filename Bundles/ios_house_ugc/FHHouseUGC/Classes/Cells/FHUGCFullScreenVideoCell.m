@@ -791,6 +791,7 @@
     UIView *view = [self cell_movieView];
     view.hidden = YES;
     [self pause];
+    [self hideMutedBtn];
 }
 
 - (void)stop {
