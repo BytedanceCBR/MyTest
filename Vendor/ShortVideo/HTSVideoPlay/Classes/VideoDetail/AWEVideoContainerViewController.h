@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (UIView *)exitScreenshotView;
 
+- (void)videoOverTracer;
+
 @end
 
 NS_ASSUME_NONNULL_END
