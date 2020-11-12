@@ -1158,4 +1158,13 @@
     return cellModel;
 }
 
++ (FHFeedUGCCellModel *)copyFromModel:(FHFeedUGCCellModel *)oldCellModel {
+    FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:oldCellModel.originContent];
+    cellmodel.userDigg = oldCellModel.userDigg;
+    cellmodel.diggCount = oldCellModel.diggCount;
+    cellmodel.commentCount = oldCellModel.commentCount;
+    cellmodel.userRepin = oldCellModel.userRepin;
+    return cellmodel;
+}
+
 @end

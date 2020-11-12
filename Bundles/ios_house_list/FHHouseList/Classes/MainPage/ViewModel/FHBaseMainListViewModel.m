@@ -1732,6 +1732,9 @@ extern NSString *const INSTANT_DATA_KEY;
                     }
                 };
             }
+            if (!cell) {
+                return [[FHListBaseCell alloc]init];
+            }
             return cell;
         }
         

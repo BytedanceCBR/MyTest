@@ -1690,6 +1690,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 [wself requestDeleteSubScribe:subscribeId andText:subscribeText];
             };
         }
+        if (!cell) {
+            return [[FHListBaseCell alloc]init];
+        }
         return cell;
     } 
     return [[FHListBaseCell alloc]init];
