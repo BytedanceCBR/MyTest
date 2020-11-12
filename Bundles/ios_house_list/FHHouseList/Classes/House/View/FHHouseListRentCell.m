@@ -130,8 +130,10 @@
         [commuteAttr appendAttributedString:timeAttr];
         self.distanceLabel.attributedText = commuteAttr;
         self.distanceLabel.hidden = NO;
+        self.tagLabel.hidden = YES;
     } else {
         self.distanceLabel.hidden = YES;
+        self.tagLabel.hidden = NO;
     }
 }
 
