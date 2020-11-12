@@ -125,8 +125,10 @@
         
         self.cellModel = cellModel;
         
+        [self.iconView setBd_isOpenDownsample:YES];
         if (cellModel.attachCardInfo.imageModel && cellModel.attachCardInfo.imageModel.url.length > 0) {
-            [self.iconView fh_setImageWithURL:cellModel.attachCardInfo.imageModel.url placeholder:nil reSize:self.iconView.size];
+            [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.attachCardInfo.imageModel.url]];
+//            [self.iconView fh_setImageWithURL:cellModel.attachCardInfo.imageModel.url placeholder:nil reSize:self.iconView.size];
         }else{
             [self.iconView setImage:nil];
         }
