@@ -49,7 +49,7 @@
         make.left.equalTo(self.zoneTypeView.mas_right).offset(15); 
     }];
     [self.amountLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.titleLab.mas_bottom).offset(3);
+        make.centerY.equalTo(self.zoneTypeView);
         make.right.equalTo(self.contentView).offset(-15);
     }];
     [self.subTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -200,6 +200,10 @@
         float margin = [model.oldName length] > 0 ? 1:6;
         
         if(model.isnewstyle){
+            [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.titleLab.mas_bottom).offset(3);
+                make.right.equalTo(self.contentView).offset(-15);
+            }];
             [self.zoneTypeView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(self.contentView).offset(14);
                 make.left.equalTo(leftLab.mas_right).offset(margin);
