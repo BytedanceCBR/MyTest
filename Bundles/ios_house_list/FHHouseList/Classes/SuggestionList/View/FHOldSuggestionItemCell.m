@@ -10,6 +10,8 @@
 #import "UIFont+House.h"
 #import "masonry.h"
 #import "TTDeviceHelper.h"
+#import "NSAttributedString+YYText.h"
+#import "YYLabel.h"
 @interface FHOldSuggestionItemCell ()
 @property (weak, nonatomic) UIView *zoneTypeView;
 @property (weak, nonatomic) UILabel *zoneTypeLab;
@@ -93,7 +95,7 @@
     if (!_zoneTypeLab) {
         UILabel *zoneTypeLab = [[UILabel alloc]init];
         zoneTypeLab.textColor = [UIColor themeGray1];
-        zoneTypeLab.font = [UIFont themeFontRegular:12];
+        zoneTypeLab.font = [UIFont themeFontRegular:10];
         [self.zoneTypeView addSubview:zoneTypeLab];
         _zoneTypeLab = zoneTypeLab;
     }
@@ -174,10 +176,19 @@
             self.titleLab.attributedText = [self processHighlighted:text1 originText:model.name textColor:[UIColor themeOrange1] fontSize:16.0];
             [self.titleLab sizeToFit];
         }
+        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:model.oldName];
+        NSDictionary *commonTextStyle = @{ NSFontAttributeName:[UIFont themeFontRegular:14],NSForegroundColorAttributeName:[UIColor themeGray1]};
+        [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
+        [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
+        NSRange tapRange = [attrText.string rangeOfString:self.highlightedText];
+        [attrText yy_setTextHighlightRange:tapRange color:[UIColor colorWithHexStr:@"#fe5500"] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
+        }];
+        self.subTitleLab.attributedText = attrText;
+        [self.subTitleLab sizeToFit];
+       
         if (model.recallType.length > 0) {
             self.zoneTypeView.hidden = NO;
-        };
-        self.subTitleLab.text = model.oldName;
+        }
         self.zoneTypeLab.text = model.recallType;
         CGFloat zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
         [self.zoneTypeView mas_updateConstraints:^(MASConstraintMaker *make) {

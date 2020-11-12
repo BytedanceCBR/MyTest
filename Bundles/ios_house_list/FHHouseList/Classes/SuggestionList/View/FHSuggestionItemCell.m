@@ -198,7 +198,7 @@
     
     // secondaryLabel
     _secondaryLabel = [[YYLabel alloc] init];
-    _secondaryLabel.font = [UIFont themeFontRegular:13];
+    _secondaryLabel.font = [UIFont themeFontRegular:10];
     _secondaryLabel.textColor = [UIColor themeGray3];
     _secondaryLabel.layer.masksToBounds = YES;
     _secondaryLabel.layer.cornerRadius = 2;
