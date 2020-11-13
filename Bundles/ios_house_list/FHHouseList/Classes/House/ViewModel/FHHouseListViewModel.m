@@ -2150,18 +2150,21 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if(self.houseType == FHHouseTypeNeighborhood){
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
+        tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
         tracerDict[@"house_type"] = @"neighborhood";
     }else{
         if (self.isHasFilterCondition) {
             tracerDict[@"element_type"] = @"area_expert_card";
+            tracerDict[@"realtor_position"] = @"area_expert_card";
             tracerDict[@"house_type"] = @"area";
         }else{
             tracerDict[@"element_type"] = @"neighborhood_expert_card";
+            tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
             tracerDict[@"house_type"] = @"neighborhood";
         }
     }
     
-    [FHUserTracker writeEvent:@"lead_show" params:tracerDict];
+    [FHUserTracker writeEvent:@"realtor_show" params:tracerDict];
 }
 
 
