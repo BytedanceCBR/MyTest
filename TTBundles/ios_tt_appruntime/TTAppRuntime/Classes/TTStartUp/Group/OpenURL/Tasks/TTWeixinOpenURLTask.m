@@ -12,7 +12,7 @@
 #import "TTLaunchDefine.h"
 #import <TTAccountSDK/TTAccount+PlatformAuthLogin.h>
 
-DEC_TASK("TTWeixinOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH+4);
+//DEC_TASK("TTWeixinOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH+4);
 
 @implementation TTWeixinOpenURLTask
 
