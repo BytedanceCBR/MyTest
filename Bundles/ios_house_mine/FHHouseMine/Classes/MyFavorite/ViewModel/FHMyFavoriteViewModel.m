@@ -27,6 +27,11 @@
 #import "FHHouseListBaseItemCell.h"
 #import "FHHouseListBaseItemModel.h"
 #import "FHHomePlaceHolderCell.h"
+#import "FHMyFavoriteSecondCell.h"
+#import "FHMyFavoriteRentCell.h"
+#import "FHMyFavoriteNeighborhoodCell.h"
+#import "FHMyFavoriteNewCell.h"
+#import "FHEnvContext.h"
 
 extern NSString *const kFHDetailFollowUpNotification;
 
@@ -93,6 +98,22 @@ extern NSString *const kFHDetailFollowUpNotification;
     [tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
     if (self.type == FHHouseTypeNewHouse ) {
          [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kFHFavoriteListPlaceholderCellId];
+    }
+    switch (self.type) {
+        case FHHouseTypeNeighborhood:
+            [tableView registerClass:[FHMyFavoriteNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHMyFavoriteNeighborhoodCell class])];
+            break;
+        case FHHouseTypeRentHouse:
+            [tableView registerClass:[FHMyFavoriteRentCell class] forCellReuseIdentifier:NSStringFromClass([FHMyFavoriteRentCell class])];
+            break;
+        case FHHouseTypeSecondHandHouse:
+            [tableView registerClass:[FHMyFavoriteSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHMyFavoriteSecondCell class])];
+            break;
+        case FHHouseTypeNewHouse:
+            [tableView registerClass:[FHMyFavoriteNewCell class] forCellReuseIdentifier:NSStringFromClass([FHMyFavoriteNewCell class])];
+            break;
+        default:
+            break;
     }
 }
 
@@ -519,15 +540,34 @@ extern NSString *const kFHDetailFollowUpNotification;
             return cell;
         }
     }else{
+        if ([FHEnvContext isDisplayNewCardType]) {
+            NSString *identifier = @"";
+            switch (self.type) {
+                case FHHouseTypeNeighborhood:
+                    identifier = NSStringFromClass([FHMyFavoriteNeighborhoodCell class]);
+                    break;
+                case FHHouseTypeRentHouse:
+                    identifier = NSStringFromClass([FHMyFavoriteRentCell class]);
+                    break;;
+                case FHHouseTypeSecondHandHouse:
+                    identifier = NSStringFromClass([FHMyFavoriteSecondCell class]);
+                    break;
+                case FHHouseTypeNewHouse:
+                    identifier = NSStringFromClass([FHMyFavoriteNewCell class]);
+                    break;
+                default:
+                    break;
+            }
+            if ([identifier length] > 0) {
+                FHHouseBaseUsuallyCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+                FHHouseListBaseItemModel *cellModel = self.dataList[indexPath.row];
+                [cell refreshWithData:cellModel];
+                return cell;
+            }
+        }
         FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier: self.type == FHHouseTypeNewHouse?@"FHNewHouseCell":kCellId];
-        BOOL isFirstCell = (indexPath.row == 0);
-//        BOOL isLastCell = (indexPath.row == self.dataList.count - 1);
-        
         if (indexPath.row < self.dataList.count) {
             FHHouseListBaseItemModel *cellModel = self.dataList[indexPath.row];
-//            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-//            [cell refreshTopMargin: 20];
-//            [cell updateWithHouseCellModel:cellModel];
             [cell refreshWithData:cellModel];
         }
         return cell;
