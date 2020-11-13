@@ -56,7 +56,7 @@ static const float kSegementedOneWidth = 50;
 - (void)initNavBar {
     self.title = @"浏览历史";
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.seperatorLine.hidden = NO;
+    self.customNavBarView.seperatorLine.hidden = YES;
 }
 
 - (void)setupUI {
