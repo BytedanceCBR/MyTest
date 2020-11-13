@@ -278,7 +278,7 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
         if ([FHEnvContext isDisplayNewCardType]) {
-            if (self.houseType == FHHouseTypeRentHouse) {
+            if (houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
                 return [FHHouseListRentCell class];
             }
         }
@@ -335,7 +335,7 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
         if ([FHEnvContext isDisplayNewCardType]) {
-            if (self.houseType == FHHouseTypeRentHouse) {
+            if (houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
                 return NSStringFromClass([FHHouseListRentCell class]);
             }
         }

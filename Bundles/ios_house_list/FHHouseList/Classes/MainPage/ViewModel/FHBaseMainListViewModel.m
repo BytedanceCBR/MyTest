@@ -232,7 +232,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if (houseModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
             return [FHHouseSearchSecondHouseCell class];
         }
-        if ([FHEnvContext isDisplayNewCardType] && self.houseType == FHHouseTypeRentHouse) {
+        if ([FHEnvContext isDisplayNewCardType] && houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
             return [FHHouseListRentCell class];
         }
         return [FHHouseBaseItemCell class];
@@ -285,7 +285,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if (houseModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
             return NSStringFromClass([FHHouseSearchSecondHouseCell class]);
         }
-        if ([FHEnvContext isDisplayNewCardType] && self.houseType == FHHouseTypeRentHouse) {
+        if ([FHEnvContext isDisplayNewCardType] && houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
             return NSStringFromClass([FHHouseListRentCell class]);
         }
         return [FHSearchHouseItemModel cellIdentifierByHouseType:houseModel.houseType.integerValue];
