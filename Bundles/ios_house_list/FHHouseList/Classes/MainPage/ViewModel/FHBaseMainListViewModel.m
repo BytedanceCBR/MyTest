@@ -2537,6 +2537,7 @@ extern NSString *const INSTANT_DATA_KEY;
     tracerDict[@"is_call"] = cellModel.contactModel.enablePhone ? @(1) : @(0);
     tracerDict[@"is_report"] = @(0);
     tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
+    tracerDict[@"realtor_id"] = cellModel.id;
     
     if(self.houseType == FHHouseTypeNeighborhood){
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
