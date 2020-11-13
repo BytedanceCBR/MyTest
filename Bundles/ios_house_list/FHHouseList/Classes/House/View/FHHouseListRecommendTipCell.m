@@ -16,6 +16,7 @@
 #import "NSAttributedString+YYText.h"
 #import "YYLabel.h"
 #import "TTroute.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHHouseListRecommendTipCell ()
 
@@ -34,7 +35,7 @@
         [self.contentView addSubview:self.noDataTipLabel];
         [self.contentView addSubview:self.leftLine];
         [self.contentView addSubview:self.rightLine];
-        [self initConstraints];
+//        [self initConstraints];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -71,6 +72,14 @@
             }];
         }
         self.noDataTipLabel.attributedText = attrText;
+        [self.noDataTipLabel sizeToFit];
+        [self.noDataTipLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(self.contentView);
+            make.centerX.mas_equalTo(self.contentView);
+            make.height.mas_equalTo(20);
+            make.width.mas_equalTo([model.text btd_widthWithFont:[UIFont themeFontRegular:14] height:20]);
+        }];
+        [self initConstraints];
     }
 }
 
@@ -84,19 +93,13 @@
         make.centerY.mas_equalTo(self.contentView);
         make.left.mas_equalTo(15);
         make.height.mas_equalTo(1);
-        make.width.mas_greaterThanOrEqualTo(30);
-    }];
-    [self.noDataTipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.contentView);
-        make.centerX.mas_equalTo(self.contentView);
-        make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width - 90);
-        make.height.mas_equalTo(20);
+        make.right.mas_equalTo(self.noDataTipLabel.mas_left).offset(-10);
     }];
     [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.noDataTipLabel.mas_right).offset(10);
         make.right.mas_equalTo(-15);
         make.height.mas_equalTo(1);
-        make.width.mas_equalTo(self.leftLine);
     }];
 }
 
