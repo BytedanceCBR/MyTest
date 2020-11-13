@@ -6,8 +6,6 @@
 //
 
 #import "FHLarkShareButton.h"
-//#import <LarkOpenShareSDK/LarkApiObject.h>
-//#import <LarkOpenShareSDK/LarkShareApi.h>
 #import <NSDictionary+BTDAdditions.h>
 #import <NSString+BTDAdditions.h>
 #import <NSURL+BTDAdditions.h>
@@ -54,7 +52,6 @@
     NSString *params = [self.paramObj.userInfo.allInfo btd_jsonStringEncoded] ?: @"";
     NSString *url = [NSURL btd_URLWithString:@"snssdk1370://fhsharemanager" queryItems:@{@"scheme":scheme,@"params":params}].absoluteString;
     
-    
     Class LarkMediaWebObject = NSClassFromString(@"LarkMediaWebObject");
     id webObejct = [[LarkMediaWebObject alloc] init];
     if([webObejct respondsToSelector:NSSelectorFromString(@"setTitle:")]){
@@ -74,15 +71,6 @@
     if([LarkShareApi respondsToSelector:NSSelectorFromString(@"sendRequest:")]) {
         [LarkShareApi performSelector:NSSelectorFromString(@"sendRequest:") withObject:request];
     }
-    
-//    LarkMediaWebObject *webObejct = [[LarkMediaWebObject alloc] init];
-//    webObejct.title = @"幸福里";
-//    webObejct.urlStr = [NSURL btd_URLWithString:@"snssdk1370://fhsharemanager" queryItems:@{@"scheme":scheme,@"params":params}].absoluteString;
-    
-//    LarkSendMessageRequest *request = [[LarkSendMessageRequest alloc] init];
-//    request.mediaObject = webObejct;
-
-//    [LarkShareApi sendRequest:request];
 }
 
 @end
