@@ -845,9 +845,7 @@
                 
                 cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1] fontSize:16.0];
                 cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1] fontSize:14.0];
-                if(indexPath.row == nowsugListData.count - 1){
-                    cell.sepLine.hidden =YES;
-                }
+                cell.sepLine.hidden = indexPath.row == nowsugListData.count - 1;
                 if(model.newtip){
                     cell.secondaryLabel.text = model.newtip.content;
                     cell.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:model.newtip.backgroundcolor];
@@ -862,9 +860,7 @@
                 FHOldSuggestionItemCell *cell = (FHOldSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"FHOldSuggestionItemCell" forIndexPath:indexPath];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
                 cell.highlightedText = self.highlightedText;
-                if(indexPath.row == nowsugListData.count - 1){
-                    cell.sepLine.hidden =YES;
-                }
+                cell.sepLine.hidden = indexPath.row == nowsugListData.count - 1;
                 cell.model = model;
                 return cell;
             }else {
