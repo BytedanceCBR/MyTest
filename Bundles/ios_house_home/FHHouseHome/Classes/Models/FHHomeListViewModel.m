@@ -310,6 +310,7 @@
             
             // 添加子控制器
             [self.homeViewController addChildViewController:itemVC];
+            itemVC.superTableView = self.tableViewV;
             
             itemVC.scrollDidScrollCallBack = ^(UIScrollView * _Nonnull currentTable,BOOL isCanScroll) {
                 weakSelf.childVCScrollView = currentTable;

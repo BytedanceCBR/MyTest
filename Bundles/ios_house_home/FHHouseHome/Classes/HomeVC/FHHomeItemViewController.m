@@ -61,6 +61,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 @property (nonatomic, strong) NSMutableDictionary *traceRecordDict;
 @property (nonatomic, assign) BOOL isOriginRequest;
 @property (nonatomic, assign) BOOL isDisAppeared;
+@property (nonatomic, assign) NSInteger maxFirstScreenCount;
 @property (nonatomic, weak) FHHomeListViewModel *listModel;
 @property (nonatomic, assign) NSInteger lastOffset;
 @property (nonatomic, assign) NSInteger lastClickOffset;
@@ -98,6 +99,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     self.isDisAppeared = NO;
     self.traceNeedUploadCache = [NSMutableArray new];
     self.traceEnterCategoryCache = [NSMutableDictionary new];
+    self.maxFirstScreenCount = 0;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pageTitleViewToTop) name:@"headerViewToTop" object:nil];
     
@@ -740,21 +742,21 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         CGRect rect=[self.tableView  convertRect:self.tableView .bounds toView:window];
 
 //        __block NSString *removeKey = nil;
-        CGRect rectCell =[self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
-        NSInteger index = self.traceFirstScreenNeedUploadCache.allKeys.count - (NSInteger)(rect.origin.y) / rectCell.size.height;
+        NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(0, scrollView.contentOffset.y + self.superTableView.contentOffset.y + _maxFirstScreenCount * 120)];
+//        CGRect rectCell =[self.tableView rectForRowAtIndexPath:indexPath];
+//        NSInteger index = self.traceFirstScreenNeedUploadCache.allKeys.count - (NSInteger)(rect.origin.y) / rectCell.size.height;
+        NSLog(@"tableView:%@ rectCell:%@ indexPath=%@",NSStringFromCGRect(rect),NSStringFromCGRect(rectCell), indexPath);
         NSLog(@"bu bao index=%ld",index);
 
         
-        NSArray *keyArray = [NSArray arrayWithArray: self.traceEnterCategoryCache.allKeys];
-        if (keyArray.count > index) {
-            for(NSInteger i = 1; i < keyArray.count + 5; i++){
-                if(keyArray.count > i){
-                    NSString *keyString =[NSString stringWithFormat:@"%ld",i];
+        NSArray *keyArray = [NSArray arrayWithArray:self.traceEnterCategoryCache.allKeys];
+        for(NSInteger i = 0; i < keyArray.count; i++){
+            NSString *keyString = keyArray[i];
+                if([keyString integerValue] == indexPath.row){
                     if ([self.traceFirstScreenNeedUploadCache.allKeys containsObject:keyString]) {
-                        NSLog(@"uploaded i =%ld",i);
+                        NSLog(@"tableView  uploaded i =%ld",i);
                         [FHEnvContext recordEvent:self.traceFirstScreenNeedUploadCache[keyString] andEventKey:@"house_show"];
                         [self.traceFirstScreenNeedUploadCache removeObjectForKey:keyString];
-                    }
                 }
             }
         }
@@ -1119,7 +1121,9 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 CGFloat targetOriginY = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType] + topHeight + rectInWindow.origin.y + rectInWindow.size.height + kFHHomeSearchbarHeight;
                 //超出屏幕的cell
                 if (targetOriginY > [UIScreen mainScreen].bounds.size.height) {
-                    NSLog(@"index house show=%ld rectInTableView.y=%f rectInWindow.y=%f device.height=%f",indexPath.row, rectInTableView.origin.y,targetOriginY ,[UIScreen mainScreen].bounds.size.height);
+                    if (self.maxFirstScreenCount != 0) {
+                        self.maxFirstScreenCount = indexPath.row;
+                    }
                     [self.traceFirstScreenNeedUploadCache setValue:tracerDict forKey:[NSString stringWithFormat:@"%ld",indexPath.row]];
                     return;;
                 }

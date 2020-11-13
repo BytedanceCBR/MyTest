@@ -35,6 +35,8 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic , strong) FHTracerModel *tracerModel;
 @property (nonatomic, assign) TTReloadType reloadType; //当前enterType，用于enter_category
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, weak) UITableView *superTableView;
+
 @property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 
 @property (nonatomic, strong) NSMutableArray *traceNeedUploadCache;
