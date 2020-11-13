@@ -17,7 +17,7 @@
 static const UIEdgeInsets CardInsets = {15.0f, 15.0f, 15.0f, 15.0f};
 static const CGFloat LeftRightMargin = 8.0f;
 static const CGFloat LeftImageHeight = 84.0f;
-static const CGFloat TitleTopMargin = 12.0f;
+static const CGFloat TitleTopMargin = 13.0f;
 static const CGFloat PriceTopMargin = 2.0f;
 static const CGFloat PriceHeight = 22.0f;
 static const CGFloat SubtitleTopMargin = 2.0f;
