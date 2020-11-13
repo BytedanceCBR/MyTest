@@ -227,14 +227,12 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         
         if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
-            if (houseModel.cellStyles == 8) {
-                return [FHHouseSearchNewHouseCell class];
-            }
+            return [FHHouseSearchNewHouseCell class];
         }
-        if (houseModel.cellStyles == 7) {
+        if (houseModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
             return [FHHouseSearchSecondHouseCell class];
         }
-        if ([FHEnvContext isDisplayNewCardType] && self.houseType == FHHouseTypeRentHouse) {
+        if ([FHEnvContext isDisplayNewCardType] && houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
             return [FHHouseListRentCell class];
         }
         return [FHHouseBaseItemCell class];
@@ -278,16 +276,16 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
-        if (houseModel.houseType.integerValue == FHHouseTypeNewHouse&& houseModel.cellStyles == 8) {
+        if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
             return NSStringFromClass([FHHouseSearchNewHouseCell class]);
         }
         if(houseModel.cardType == FHSearchCardTypeAgentCard){
                return NSStringFromClass([FHHouseAgentCardCell class]);
         }
-        if (houseModel.cellStyles == 7) {
+        if (houseModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
             return NSStringFromClass([FHHouseSearchSecondHouseCell class]);
         }
-        if ([FHEnvContext isDisplayNewCardType] && self.houseType == FHHouseTypeRentHouse) {
+        if ([FHEnvContext isDisplayNewCardType] && houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
             return NSStringFromClass([FHHouseListRentCell class]);
         }
         return [FHSearchHouseItemModel cellIdentifierByHouseType:houseModel.houseType.integerValue];
@@ -1655,14 +1653,6 @@ extern NSString *const INSTANT_DATA_KEY;
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
                 cell.backgroundColor = [UIColor themeGray7];
-            }
-            if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
-                FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
-                if (item.houseType.integerValue == FHHouseTypeNewHouse && item.cellStyles == 6) {
-                    FHHouseListBaseItemCell *newHousecell = (FHHouseListBaseItemCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-                    [newHousecell updateSynchysisNewHouseCellWithSearchHouseModel:item];
-                    return newHousecell;
-                }
             }
             
             if ([cell isKindOfClass:[FHHouseAgentCardCell class]]) {

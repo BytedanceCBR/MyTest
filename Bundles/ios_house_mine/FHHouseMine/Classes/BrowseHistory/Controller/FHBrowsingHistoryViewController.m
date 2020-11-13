@@ -6,7 +6,7 @@
 //
 
 #import "FHSuggestionCollectionView.h"
-#import "TTDeviceHelper.h"
+#import <UIDevice+BTDAdditions.h>
 #import "HMSegmentedControl.h"
 #import "FHBrowsingHistoryViewModel.h"
 #import "FHEnvContext.h"
@@ -17,6 +17,7 @@
 #import "UIViewController+Track.h"
 #import "FHFakeInputNavbar.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+
 
 static const float kSegementedOneWidth = 50;
 
@@ -55,7 +56,7 @@ static const float kSegementedOneWidth = 50;
 - (void)initNavBar {
     self.title = @"浏览历史";
     [self setupDefaultNavBar:NO];
-    self.customNavBarView.seperatorLine.hidden = NO;
+    self.customNavBarView.seperatorLine.hidden = YES;
 }
 
 - (void)setupUI {
@@ -63,7 +64,7 @@ static const float kSegementedOneWidth = 50;
     self.topView = [[UIView alloc] init];
     self.topView.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:_topView];
-    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    BOOL isIphoneX = [UIDevice btd_isIPhoneXSeries];
     CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20);
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
@@ -140,8 +141,8 @@ static const float kSegementedOneWidth = 50;
     [self.topView addSubview:_segmentControl];
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topView);
-        make.height.mas_equalTo(44);
-        make.bottom.mas_equalTo(0);
+        make.height.mas_equalTo(42);
+        make.bottom.mas_equalTo(-2);
         make.width.mas_equalTo((kSegementedOneWidth + 16) * self.houseTypeArray.count);
     }];
     
