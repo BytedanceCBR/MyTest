@@ -1040,9 +1040,9 @@ extern NSString *const INSTANT_DATA_KEY;
                            @"tracer": traceParam,
                            @"from_home":@(fromHome)
                            }.mutableCopy;
-    if (sugDelegateTable) {
-        dict[@"sug_delegate"] = sugDelegateTable;
-    }
+//    if (sugDelegateTable) {
+//        dict[@"sug_delegate"] = sugDelegateTable;
+//    }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
