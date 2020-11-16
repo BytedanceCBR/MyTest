@@ -161,7 +161,7 @@ extern NSString *const INSTANT_DATA_KEY;
         
         _mainListPage =  [paramObj.sourceURL.host hasSuffix:@"main"];
         if (_mainListPage && _houseType == FHHouseTypeRentHouse) {
-            self.tracerModel.originFrom = @"renting";
+            self.tracerModel.originFrom = @"renting_list";
         }
         
         [self setupTopTagsView];
