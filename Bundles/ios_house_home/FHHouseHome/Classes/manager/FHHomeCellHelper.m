@@ -7,6 +7,7 @@
 
 #import "FHHomeCellHelper.h"
 #import "FHHomeEntrancesCell.h"
+#import "FHHomeEntranceContainerCell.h"
 #import "FHHomeBannerCell.h"
 #import "FHHomeCityTrendCell.h"
 #import <FHHouseBase/FHConfigModel.h>
@@ -85,6 +86,8 @@ static NSMutableArray  * _Nullable identifierArr;
     [tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:NSStringFromClass([UITableViewCell class])];
     
     [tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHSynchysisNewHouseCell"];
+    
+    [tableView registerClass:[FHHomeEntranceContainerCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeEntranceContainerCell class])];
 }
 
 + (void)registerDelegate:(UITableView *)tableView andDelegate:(id)delegate
@@ -282,8 +285,11 @@ static NSMutableArray  * _Nullable identifierArr;
         
         NSInteger countValue = dataModel.opData.items.count;
         
+//        if (countValue > 0) {
+//            height = [FHHomeEntrancesCell cellHeightForModel:dataModel.opData];
+//        }
         if (countValue > 0) {
-            height = [FHHomeEntrancesCell cellHeightForModel:dataModel.opData];
+            height = [FHHomeEntranceContainerCell cellHeightForModel:dataModel.opData];
         }
         
         if (dataModel.mainPageBannerOpData.items.count > 0) {
@@ -385,6 +391,57 @@ static NSMutableArray  * _Nullable identifierArr;
         }
     };
     [cellEntrance setNeedsLayout];
+}
+
+#pragma mark 填充数据 fill data 滑动icon =======================
++ (void)fillFHHomeEntrancesContainerCell:(FHHomeEntranceContainerCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:(NSDictionary *)traceParams{
+    [cell updateWithItems:model.items];
+    cell.clickBlock = ^(NSInteger index, FHConfigDataOpDataItemsModel * _Nonnull itemModel) {
+        NSMutableDictionary *dictTrace = [NSMutableDictionary new];
+        [dictTrace setValue:@"maintab" forKey:@"enter_from"];
+        
+        if ([traceParams isKindOfClass:[NSDictionary class]]) {
+            [dictTrace addEntriesFromDictionary:traceParams];
+        }
+        //首页工具箱里面的icon追加上报
+        NSString *enterFrom = traceParams[@"enter_from"];
+        if (enterFrom && [enterFrom isEqualToString:@"tools_box"]) {
+            [self addCLickIconLog:itemModel andPageType:@"tools_box"];
+        }else
+        {
+            [self addCLickIconLog:itemModel andPageType:@"maintab"];
+        }
+        [dictTrace setValue:@"maintab_icon" forKey:@"element_from"];
+        [dictTrace setValue:@"click" forKey:@"enter_type"];
+        
+        if ([itemModel.logPb isKindOfClass:[NSDictionary class]] && itemModel.logPb[@"element_from"] != nil) {
+            [dictTrace setValue:itemModel.logPb[@"element_from"] forKey:@"element_from"];
+        }
+        NSString *stringOriginFrom = itemModel.logPb[@"origin_from"];
+        if ([stringOriginFrom isKindOfClass:[NSString class]] && stringOriginFrom.length != 0) {
+            [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:stringOriginFrom forKey:@"origin_from"];
+            [dictTrace setValue:stringOriginFrom forKey:@"origin_from"];
+        }else{
+            [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:@"be_null" forKey:@"origin_from"];
+            [dictTrace setValue:@"be_null" forKey:@"origin_from"];
+        }
+        NSDictionary *userInfoDict = @{@"tracer":dictTrace};
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+        if ([itemModel.openUrl isKindOfClass:[NSString class]]) {
+            NSURL *url = [NSURL URLWithString:itemModel.openUrl];
+            if ([itemModel.openUrl containsString:@"snssdk1370://category_feed"]) {
+                [FHHomeConfigManager sharedInstance].isNeedTriggerPullDownUpdate = YES;
+                [FHHomeConfigManager sharedInstance].isTraceClickIcon = YES;
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            }else if ([itemModel.openUrl containsString:@"://commute_list"]){
+                //通勤找房
+                [[FHCommuteManager sharedInstance] tryEnterCommutePage:itemModel.openUrl logParam:dictTrace];
+            }else{
+                    [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+            }
+        }
+    };
+    
 }
 
 + (void)fillFHHomeBannerCell:(FHHomeBannerCell *)cell withModel:(FHConfigDataOpData2Model *)model
@@ -610,8 +667,11 @@ static NSMutableArray  * _Nullable identifierArr;
 {
     cell.fd_enforceFrameLayout = NO; //
     
-    if ([cell isKindOfClass:[FHHomeEntrancesCell class]] && [model isKindOfClass:[FHConfigDataOpDataModel class]]) {
-        [self fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:nil];
+//    if ([cell isKindOfClass:[FHHomeEntrancesCell class]] && [model isKindOfClass:[FHConfigDataOpDataModel class]]) {
+//        [self fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:nil];
+//    }
+    if ([cell isKindOfClass:[FHHomeEntranceContainerCell class]] && [model isKindOfClass:[FHConfigDataOpDataModel class]]) {
+        [self fillFHHomeEntrancesContainerCell:(FHHomeEntranceContainerCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:nil];
     }
     
     if ([cell isKindOfClass:[FHHomeBannerCell class]] && [model isKindOfClass:[FHConfigDataOpData2Model class]]) {
@@ -652,8 +712,11 @@ static NSMutableArray  * _Nullable identifierArr;
         return NSStringFromClass([FHHomeHeaderTableViewCell class]);
     }
     
+//    if ([model isKindOfClass:[FHConfigDataOpDataModel class]]) {
+//        return NSStringFromClass([FHHomeEntrancesCell class]   );
+//    }
     if ([model isKindOfClass:[FHConfigDataOpDataModel class]]) {
-        return NSStringFromClass([FHHomeEntrancesCell class]);
+        return NSStringFromClass([FHHomeEntranceContainerCell class]   );
     }
     
     if ([model isKindOfClass:[FHConfigDataOpData2Model class]]) {
