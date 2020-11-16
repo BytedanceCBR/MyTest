@@ -19,6 +19,7 @@
 @property (nonatomic , strong) NSString *courtId;
 @property (nonatomic , strong) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, assign) NSInteger topIndex;
+@property (nonatomic, assign) NSInteger followStatus;
 @property (nonatomic, strong) FHDetailNewDataTimelineModel *timeLineModel;
 
 @end
@@ -31,7 +32,7 @@
         _courtId = paramObj.allParams[@"court_id"];
         self.topIndex = [paramObj.allParams[@"top_index"] integerValue];
         self.timeLineModel =  paramObj.allParams[@"time_line_model"];
-        
+        self.followStatus = [paramObj.allParams[@"follow_status"] integerValue];
     }
     return self;
 }
@@ -48,6 +49,7 @@
     [_timeLineListViewModel.navBar showMessageNumber];
     [self setNavBarTitle:@"楼盘动态"];
     [self.view bringSubviewToFront:[self getNaviBar]];
+    self.contactViewModel.followStatus = self.followStatus;
     if (self.timeLineModel) {
         [self.timeLineListViewModel processDetailData:self.timeLineModel];
     }
