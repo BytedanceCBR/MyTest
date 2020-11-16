@@ -179,7 +179,7 @@ extern NSString *const INSTANT_DATA_KEY;
         self.isFirstLoad = YES;
         self.tableView = tableView;
         self.isShowSubscribeCell = NO;
-        self.prehousetype = [paramObj.allParams[@"pre_house_type"] intValue];
+        self.preHouseType = [paramObj.allParams[@"pre_house_type"] intValue];
         self.jumpHouseType = [paramObj.allParams[@"jump_house_type"] intValue];
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
         _startMonitorTime = [[NSDate date] timeIntervalSince1970];
@@ -492,7 +492,7 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     NSString *searchId = self.searchId;
 
-    NSInteger prehousetype = self.prehousetype ?: self.houseType;
+    NSInteger prehousetype = self.preHouseType ?: self.houseType;
     query = [query stringByAppendingString:[NSString stringWithFormat:@"&pre_house_type=%ld",(long)prehousetype]];
     NSInteger jumpHousetype = self.jumpHouseType ?: self.houseType;
     query = [query stringByAppendingString:[NSString stringWithFormat:@"&jump_house_type=%ld",(long)jumpHousetype]];
@@ -1560,7 +1560,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
     self.houseType = houseTypeStr.integerValue;
-    self.prehousetype = [routeObject.paramObj.allParams[@"pre_house_type"] intValue];
+    self.preHouseType = [routeObject.paramObj.allParams[@"pre_house_type"] intValue];
     self.jumpHouseType = [routeObject.paramObj.allParams[@"jump_house_type"] intValue];
     if (self.sugSelectBlock) {
         self.sugSelectBlock(routeObject.paramObj);
