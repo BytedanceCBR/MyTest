@@ -58,12 +58,12 @@
         make.right.mas_lessThanOrEqualTo(self.amountLab.mas_left).offset(-15);
     }];
     [self.regionLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.titleLab);
+        make.left.equalTo(self.titleLab).priorityHigh();
         make.top.equalTo(self.titleLab.mas_bottom).offset(3);
     }];
     [self.villageLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.regionLab.mas_right).offset(5);
-        make.right.mas_lessThanOrEqualTo(self.contentView).offset(-100);
+        make.left.equalTo(self.regionLab.mas_right).offset(5).priorityHigh();
+        make.right.mas_lessThanOrEqualTo(self.amountLab.mas_left).offset(-6);
         make.top.equalTo(self.titleLab.mas_bottom).offset(3);
     }];
     CGFloat lineH = UIScreen.mainScreen.scale > 2.5 ? 0.35 : 0.5;
@@ -73,8 +73,8 @@
             make.bottom.mas_equalTo(0);
             make.height.mas_equalTo(lineH);
     }];
-    [self.regionLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
-    [self.villageLab setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.regionLab setContentCompressionResistancePriority:UILayoutPrioritySceneSizeStayPut forAxis:UILayoutConstraintAxisHorizontal];
+    [self.villageLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     [self.subTitleLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     [self.amountLab setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.amountLab setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
