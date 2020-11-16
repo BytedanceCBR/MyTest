@@ -745,19 +745,19 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(0, scrollView.contentOffset.y + self.superTableView.contentOffset.y + _maxFirstScreenCount * 120)];
 //        CGRect rectCell =[self.tableView rectForRowAtIndexPath:indexPath];
 //        NSInteger index = self.traceFirstScreenNeedUploadCache.allKeys.count - (NSInteger)(rect.origin.y) / rectCell.size.height;
-        NSLog(@"tableView:%@ rectCell:%@ indexPath=%@",NSStringFromCGRect(rect),NSStringFromCGRect(rectCell), indexPath);
-        NSLog(@"bu bao index=%ld",index);
+//        NSLog(@"tableView:%@ rectCell:%@ indexPath=%@",NSStringFromCGRect(rect),NSStringFromCGRect(rectCell), indexPath);
+        NSLog(@"bu bao index=%ld",indexPath.row);
 
         
-        NSArray *keyArray = [NSArray arrayWithArray:self.traceEnterCategoryCache.allKeys];
+        NSArray *keyArray = [NSArray arrayWithArray:self.traceFirstScreenNeedUploadCache.allKeys];
         for(NSInteger i = 0; i < keyArray.count; i++){
             NSString *keyString = keyArray[i];
-                if([keyString integerValue] == indexPath.row){
-                    if ([self.traceFirstScreenNeedUploadCache.allKeys containsObject:keyString]) {
-                        NSLog(@"tableView  uploaded i =%ld",i);
+             if([keyString integerValue] == indexPath.row){
+                if ([self.traceFirstScreenNeedUploadCache.allKeys containsObject:keyString]) {
+                        NSLog(@"tableView  uploaded i =%@",keyString);
                         [FHEnvContext recordEvent:self.traceFirstScreenNeedUploadCache[keyString] andEventKey:@"house_show"];
                         [self.traceFirstScreenNeedUploadCache removeObjectForKey:keyString];
-                }
+              }
             }
         }
         
@@ -1121,8 +1121,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 CGFloat targetOriginY = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType] + topHeight + rectInWindow.origin.y + rectInWindow.size.height + kFHHomeSearchbarHeight;
                 //超出屏幕的cell
                 if (targetOriginY > [UIScreen mainScreen].bounds.size.height) {
-                    if (self.maxFirstScreenCount != 0) {
-                        self.maxFirstScreenCount = indexPath.row;
+                    if (_maxFirstScreenCount == 0) {
+                        _maxFirstScreenCount = indexPath.row;
                     }
                     [self.traceFirstScreenNeedUploadCache setValue:tracerDict forKey:[NSString stringWithFormat:@"%ld",indexPath.row]];
                     return;;
