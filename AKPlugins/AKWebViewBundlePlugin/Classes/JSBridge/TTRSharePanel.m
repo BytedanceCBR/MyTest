@@ -23,6 +23,7 @@
 #import <TTImage/TTWebImageManager.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "TTCopyContentItem.h"
+#import <FHShareManager.h>
 @interface TTRSharePanel()<TTShareManagerDelegate>
 @property (nonatomic, strong) TTShareManager *shareManager;
 @property (nonatomic, strong) NSSet *shareActivityContentItemTypes;
@@ -52,6 +53,11 @@
     __weak __typeof(self)weakSelf = self;
     void (^showSharePanel)(UIImage *thumbImage) = ^(UIImage *thumbImage) {
         __strong __typeof(weakSelf)strongSelf = weakSelf;
+        if([[FHShareManager shareInstance] isShareOptimization]) {
+            [weakSelf showSharePanelWithTitle:title content:content thumbImage:thumbImage webPageURL:webPageURL];
+            TTR_CALLBACK_SUCCESS
+            return;
+        }
         NSArray *contentItems = [strongSelf shareContentItemsWithTitle:title content:content thumbImage:thumbImage webPageURL:webPageURL];
         [strongSelf.shareManager displayActivitySheetWithContent:contentItems];
         TTR_CALLBACK_SUCCESS
@@ -219,4 +225,24 @@
     }
     return _shareManager;
 }
+
+- (void)showSharePanelWithTitle:(NSString *)title content:(NSString *)content thumbImage:(UIImage *)thumbImage webPageURL:(NSString *)webPageURL{
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
+    
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = title;
+    commonDataModel.desc = content;
+    commonDataModel.shareUrl = webPageURL;
+    commonDataModel.thumbImage = thumbImage;
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDataModel = commonDataModel;
+
+    NSArray *contentItemArray = @[
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)]
+    ];
+    
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:@{}];
+}
+
 @end

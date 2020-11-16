@@ -88,7 +88,6 @@
 
 -(BOOL)isShareOptimization {
     BOOL isShareOptimization = [SSCommonLogic isShareOptimization];
-    isShareOptimization = YES;
     return  isShareOptimization;
 }
 
