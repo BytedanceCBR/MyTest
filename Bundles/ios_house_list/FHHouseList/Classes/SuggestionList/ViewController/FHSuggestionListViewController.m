@@ -204,7 +204,7 @@
         self.naviBar.searchInput.text = text;
     }
     [self.viewModel textFieldTextChange:text];
-}
+}                                      
 
 - (void)setupSegmentedControl {
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];

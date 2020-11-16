@@ -63,7 +63,7 @@
     }];
     [self.villageLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.regionLab.mas_right).offset(5);
-        make.right.mas_equalTo(self.contentView).offset(-100);
+        make.right.mas_lessThanOrEqualTo(self.contentView).offset(-100);
         make.top.equalTo(self.titleLab.mas_bottom).offset(3);
     }];
     CGFloat lineH = UIScreen.mainScreen.scale > 2.5 ? 0.35 : 0.5;
