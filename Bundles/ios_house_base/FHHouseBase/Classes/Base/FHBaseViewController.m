@@ -64,9 +64,9 @@
             self.tracerModel = [FHTracerModel makerTracerModelWithDic:paramObj.allParams];
         }
         [self complementTrackerDataIfNeeded:paramObj.allParams];
-        if([TTSandBoxHelper isInHouseApp]) {
-            [[FHShareManager shareInstance] hasOpenWithRouteParamObj:paramObj];
-        }
+//        if([TTSandBoxHelper isInHouseApp]) {
+//            [[FHShareManager shareInstance] hasOpenWithRouteParamObj:paramObj];
+//        }
     }
     return self;
 }

@@ -73,9 +73,9 @@
             self.viewModel.detailModel.dataSource = self;
             self.viewModel.detailModel.isJumpComment = self.isJumpComment;
         }
-        if([TTSandBoxHelper isInHouseApp]) {
-            [[FHShareManager shareInstance] hasOpenWithRouteParamObj:paramObj];
-        }
+//        if([TTSandBoxHelper isInHouseApp]) {
+//            [[FHShareManager shareInstance] hasOpenWithRouteParamObj:paramObj];
+//        }
     }
     return self;
 }

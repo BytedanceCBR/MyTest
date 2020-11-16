@@ -98,9 +98,9 @@
         }
         
         self.viewModel = viewModel;
-        if([TTSandBoxHelper isInHouseApp]) {
-            [[FHShareManager shareInstance] hasOpenWithRouteParamObj:paramObj];
-        }
+//        if([TTSandBoxHelper isInHouseApp]) {
+//            [[FHShareManager shareInstance] hasOpenWithRouteParamObj:paramObj];
+//        }
     }
     return self;
 }
