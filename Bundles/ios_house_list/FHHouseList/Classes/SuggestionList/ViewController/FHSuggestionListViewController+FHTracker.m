@@ -85,12 +85,23 @@ static const char tabSwitchedKey;
     NSMutableArray *itemArray = [[NSMutableArray alloc] init];
     [itemArray addObjectsFromArray:result.data.items];
     [itemArray addObjectsFromArray:result.data.otherItems];
-    NSDictionary *differResultnum = @{
-        @"new":@([self getDifferResultnum:itemArray houseType:FHHouseTypeNewHouse]),
-        @"old":@([self getDifferResultnum:itemArray houseType:FHHouseTypeSecondHandHouse]),
-        @"neighborhood":@([self getDifferResultnum:itemArray houseType:FHHouseTypeNeighborhood]),
-        @"renting":@([self getDifferResultnum:itemArray houseType:FHHouseTypeRentHouse]),
-    };
+    NSMutableDictionary *differResultnum = [NSMutableDictionary new];
+    NSInteger newNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeNewHouse];
+    NSInteger oldNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeSecondHandHouse];
+    NSInteger rentingNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeRentHouse];
+    NSInteger neighborhoodNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeNeighborhood];
+    if(newNum){
+        differResultnum[@"new"] = @(newNum);
+    }
+    if(oldNum){
+        differResultnum[@"old"] = @(oldNum);
+    }
+    if(rentingNum){
+        differResultnum[@"renting"] = @(rentingNum);
+    }
+    if(neighborhoodNum){
+        differResultnum[@"neighborhood"] = @(neighborhoodNum);
+    }
     NSString *differResultnumstring = [differResultnum btd_jsonStringEncoded];
     self.sugWordShowtracerDic = @{
         UT_ORIGIN_FROM: [self fh_originFrom],
