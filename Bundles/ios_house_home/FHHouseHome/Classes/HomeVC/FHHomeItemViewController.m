@@ -40,6 +40,7 @@
 #import "FHHouseSearchNewHouseCell.h"
 #import "BDABTestManager.h"
 #import "NSString+BTDAdditions.h"
+#import "NSArray+BTDAdditions.h"
 extern NSString *const INSTANT_DATA_KEY;
 
 static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
@@ -172,6 +173,37 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 - (void)removeNotifications
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)itemDidSelectedWithHouseType:(NSInteger)houseType
+{
+    if (self.houseType != houseType) {
+        return;
+    }
+    
+    if (self.traceFirstScreenNeedUploadCache.allKeys.count > 0) {
+        CGFloat cellHeight = 0.0;
+        ///尝试取推荐列表第一个cell，以这个cell的高度作为cell的标准高度计算
+        UITableViewCell *firstCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
+        if (!firstCell || ![firstCell isKindOfClass:[UITableViewCell class]]) {
+            return;
+        }
+        
+        cellHeight = firstCell.bounds.size.height;
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(0, self.tableView.contentOffset.y + self.superTableView.contentOffset.y + _maxFirstScreenCount * cellHeight)];
+
+        NSArray *keyArray = [NSArray arrayWithArray:self.traceFirstScreenNeedUploadCache.allKeys];
+        for (NSInteger i = 0; i < keyArray.count; i++) {
+            NSString *keyString = keyArray[i];
+            if([keyString integerValue] <= indexPath.row) {
+                if ([self.traceFirstScreenNeedUploadCache.allKeys containsObject:keyString]) {
+                    NSLog(@"tableView  uploaded i =%@",keyString);
+                    [FHEnvContext recordEvent:self.traceFirstScreenNeedUploadCache[keyString] andEventKey:@"house_show"];
+                    [self.traceFirstScreenNeedUploadCache removeObjectForKey:keyString];
+                }
+            }
+        }
+    }
 }
 
 - (void)enterCategoryWithEnterType:(NSNotification *)notify
@@ -738,17 +770,14 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
    }
     
     if (scrollView == self.tableView && self.traceFirstScreenNeedUploadCache.allKeys.count > 0) {
-        UIWindow * window=[[[UIApplication sharedApplication] delegate] window];
-        CGRect rect=[self.tableView  convertRect:self.tableView .bounds toView:window];
+        CGFloat cellHeight = 120;  //默认高度
+        ///尝试取推荐列表第一个cell，以这个cell的高度作为cell的标准高度计算
+        UITableViewCell *firstCell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]];
+        if (firstCell && [firstCell isKindOfClass:[UITableViewCell class]]) {
+            cellHeight = firstCell.bounds.size.height;
+        }
+        NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(0, scrollView.contentOffset.y + self.superTableView.contentOffset.y + _maxFirstScreenCount * cellHeight)];
 
-//        __block NSString *removeKey = nil;
-        NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(0, scrollView.contentOffset.y + self.superTableView.contentOffset.y + _maxFirstScreenCount * 120)];
-//        CGRect rectCell =[self.tableView rectForRowAtIndexPath:indexPath];
-//        NSInteger index = self.traceFirstScreenNeedUploadCache.allKeys.count - (NSInteger)(rect.origin.y) / rectCell.size.height;
-//        NSLog(@"tableView:%@ rectCell:%@ indexPath=%@",NSStringFromCGRect(rect),NSStringFromCGRect(rectCell), indexPath);
-        NSLog(@"bu bao index=%ld",indexPath.row);
-
-        
         NSArray *keyArray = [NSArray arrayWithArray:self.traceFirstScreenNeedUploadCache.allKeys];
         for(NSInteger i = 0; i < keyArray.count; i++){
             NSString *keyString = keyArray[i];
@@ -760,20 +789,6 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
               }
             }
         }
-        
-        
-//
-//        if (self.traceFirstScreenNeedUploadCache.count > index) {
-//            [self.traceFirstScreenNeedUploadCache removeObjectAtIndex:index];
-//        }
-        
-        
-//        for (NSString *key in self.traceFirstScreenNeedUploadCache.allKeys) {
-//            NSLog(@"[obj floatValue] =%lf gap=%lf",[key floatValue],[UIScreen mainScreen].bounds.size.height - rect.origin.y);
-//            if ([key floatValue] > ([UIScreen mainScreen].bounds.size.height - rect.origin.y) ) {
-//            }
-//        }
-
     }
 }
 

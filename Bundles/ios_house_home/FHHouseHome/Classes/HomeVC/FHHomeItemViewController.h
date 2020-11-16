@@ -70,6 +70,11 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 
 - (void)removeNotifications;
 
+/**
+ 当前类型的子VC被选中
+ */
+- (void)itemDidSelectedWithHouseType:(NSInteger)houseType;
+
 @end
 
 NS_ASSUME_NONNULL_END
