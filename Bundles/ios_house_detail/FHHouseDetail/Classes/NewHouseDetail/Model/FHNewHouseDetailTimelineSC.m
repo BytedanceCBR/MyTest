@@ -80,6 +80,7 @@
         NSString *courtId = vc.viewModel.houseId;
         NSMutableDictionary *mutableDict = [self subPageParams].mutableCopy;
         mutableDict[@"top_index"] = @(self.selectedIndex);
+        mutableDict[@"follow_status"] = @(vc.viewModel.contactViewModel.followStatus);
         FHNewHouseDetailTimelineSM *model = (FHNewHouseDetailTimelineSM *)self.sectionModel;
         mutableDict[@"time_line_model"] = model.newsCellModel.timeLineModel;
         NSDictionary *dict = mutableDict.copy;
