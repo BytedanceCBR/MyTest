@@ -35,7 +35,6 @@
 #import "Masonry.h"
 #import "UIView+House.h"
 #import <FHShareManager.h>
-#import <TTSandBoxHelper+House.h>
 
 @interface TTDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol>
 
@@ -98,9 +97,6 @@
         }
         
         self.viewModel = viewModel;
-//        if([TTSandBoxHelper isInHouseApp]) {
-//            [[FHShareManager shareInstance] hasOpenWithRouteParamObj:paramObj];
-//        }
     }
     return self;
 }

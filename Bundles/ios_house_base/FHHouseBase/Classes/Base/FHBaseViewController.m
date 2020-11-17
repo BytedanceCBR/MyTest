@@ -22,7 +22,6 @@
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "UIImage+FIconFont.h"
 #import <FHShareManager.h>
-#import <TTSandBoxHelper+House.h>
 
 @interface FHBaseViewController ()<TTRouteInitializeProtocol, UIViewControllerErrorHandler>
 
@@ -64,9 +63,6 @@
             self.tracerModel = [FHTracerModel makerTracerModelWithDic:paramObj.allParams];
         }
         [self complementTrackerDataIfNeeded:paramObj.allParams];
-//        if([TTSandBoxHelper isInHouseApp]) {
-//            [[FHShareManager shareInstance] hasOpenWithRouteParamObj:paramObj];
-//        }
     }
     return self;
 }

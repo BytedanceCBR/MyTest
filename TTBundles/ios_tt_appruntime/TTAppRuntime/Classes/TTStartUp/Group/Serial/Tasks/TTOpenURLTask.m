@@ -31,10 +31,6 @@ extern BOOL kFHInAppPushTipsHidden;
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
     
-//    if([TTSandBoxHelper isInHouseApp] && [url.absoluteString containsString:@"fhsharemanager"]) {
-//        return [[FHShareManager shareInstance] openSnssdkUrlWith:url];
-//    }
-    
     [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
     // 部分页面不支持Push跳转
     if (kFHInAppPushTipsHidden) {
