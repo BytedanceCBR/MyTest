@@ -932,7 +932,7 @@ extern NSString *const INSTANT_DATA_KEY;
         self.showPlaceHolder = NO;
         if (self.isEnterCategory) {
             [self addEnterCategoryLog];
-            self.isEnterCategory = NO;
+//            self.isEnterCategory = NO;
         }
         if (self.isRefresh) {
             [self addHouseSearchLog];
@@ -1559,6 +1559,9 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     
     NSString *houseTypeStr = routeObject.paramObj.allParams[@"house_type"];
+    if(allInfo[@"tracer"]){
+        [self updateTracerDict:allInfo[@"tracer"]];
+    }
     self.houseType = houseTypeStr.integerValue;
     self.preHouseType = [routeObject.paramObj.allParams[@"pre_house_type"] intValue];
     self.jumpHouseType = [routeObject.paramObj.allParams[@"jump_house_type"] intValue];
@@ -1683,10 +1686,10 @@ extern NSString *const INSTANT_DATA_KEY;
             ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
                 NSMutableDictionary *infos = [NSMutableDictionary new];
                 NSMutableDictionary *tracer = [NSMutableDictionary new];
-                tracer[@"element_from"] = [self elementFromNameByhouseType:self.houseType];
+                tracer[@"element_from"] = [self elementFromNameByhouseType:self.preHouseType];
                 tracer[@"enter_from"] = [self categoryName];
                 tracer[@"enter_type"] = @"click";
-                tracer[@"origin_from"] = @"maintab_search";
+                tracer[@"origin_from"] = self.tracerModel.originFrom;
                 infos[@"tracer"] = tracer;
                 TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
                 if(model.realSearchOpenUrl){
