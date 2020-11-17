@@ -606,9 +606,6 @@ def appPods
       'BDUGShareBasic/BDUGSystemShare',
       'BDUGShareBasic/BDUGQQShare',
       'BDUGShareBasic/BDUGWeChatShare',
-      'BDUGShareBasic/BDUGTokenShare',
-      'BDUGShareBasic/BDUGImageShare',
-      'BDUGShareBasic/BDUGImageAnalysis',
       'BDUGShareBasic/BDUGVideoImageShare',
       'BDUGShareBusiness/BDUGActivity',
       'BDUGShareBusiness/BDUGShareQQBusiness',
@@ -616,7 +613,6 @@ def appPods
       'BDUGShareBusiness/BDUGShareSystemBusiness',
       'BDUGShareBusiness/BDUGShareCopyBusiness',
     ]
-    pod 'BDUGImageMark', '1.0.2'
     pod 'BDUGLoggerInterface', '1.0.3'
 end
 
