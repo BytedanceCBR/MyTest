@@ -78,6 +78,7 @@
     [self.subTitleLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     [self.amountLab setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.amountLab setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.zoneTypeView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 }
 
 - (UIView *)zoneTypeView {
@@ -209,10 +210,15 @@
             }];
             [self.zoneTypeView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(self.contentView).offset(14);
+                make.width.mas_offset(zoneTypeLabWidth+12).priorityHigh();
                 make.left.equalTo(leftLab.mas_right).offset(margin);
+                make.right.mas_lessThanOrEqualTo(self.amountLab.mas_right);
                 make.height.mas_offset(18);
             }];
-            
+            [self.subTitleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self.zoneTypeView);
+                make.left.equalTo(self.titleLab.mas_right).offset(5);
+            }];
             [self.titleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.equalTo(self.zoneTypeView);
                 make.left.equalTo(self.contentView).offset(15);

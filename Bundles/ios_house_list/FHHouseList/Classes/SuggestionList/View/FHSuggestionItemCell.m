@@ -205,9 +205,9 @@
     [self.contentView addSubview:_secondaryLabel];
     [_secondaryLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.label.mas_right).offset(5);
-        make.top.mas_equalTo(12);
+        make.centerY.mas_equalTo(self.label);
 //        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.width.mas_greaterThanOrEqualTo(63).priorityHigh();
+        make.width.mas_lessThanOrEqualTo(63).priorityHigh();
     }];
     [_secondaryLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_secondaryLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
