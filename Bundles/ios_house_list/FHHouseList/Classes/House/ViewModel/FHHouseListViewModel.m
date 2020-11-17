@@ -1683,13 +1683,15 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
             FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
+            WeakSelf;
             ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
+                StrongSelf;
                 NSMutableDictionary *infos = [NSMutableDictionary new];
                 NSMutableDictionary *tracer = [NSMutableDictionary new];
                 tracer[@"element_from"] = [self elementFromNameByhouseType:self.preHouseType];
                 tracer[@"enter_from"] = [self categoryName];
                 tracer[@"enter_type"] = @"click";
-                tracer[@"origin_from"] = self.tracerModel.originFrom;
+                tracer[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
                 infos[@"tracer"] = tracer;
                 TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
                 if(model.realSearchOpenUrl){

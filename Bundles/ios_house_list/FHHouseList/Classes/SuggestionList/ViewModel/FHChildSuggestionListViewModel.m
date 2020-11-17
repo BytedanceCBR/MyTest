@@ -548,12 +548,12 @@
     }
     if(model.setHistory){
         [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:nil];
-        tracer[@"element_from"] = [model.houseType intValue] == self.houseType ? @"associate" : @"related_new_recommend";
-        tracer[@"enter_from"] = @"search_detail";
+        tracer[@"element_from"] = [model.houseType intValue] == self.houseType ? @"associate" : [self elementFromNameByHouseType:[model.houseType intValue]];
         tracer[@"log_pb"] = model.logPb;
         tracer[@"card_type"] = @"left_pic";
         tracer[@"rank"] = [NSString stringWithFormat: @"%zi",rank];
     }
+    tracer[@"enter_from"] = @"search_detail";
     infos[@"tracer"] = tracer;
     [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos isGoDetail:model.setHistory];
 }
