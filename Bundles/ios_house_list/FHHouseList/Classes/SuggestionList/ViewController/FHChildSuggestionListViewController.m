@@ -365,34 +365,15 @@
     if(jumpHouseTpye != self.houseType){
         self.tracerDict[@"element_from"] = [self.viewModel elementFromNameByHouseType:self.houseType];
     }
-    if (self.suggestDelegate != NULL) {
-        NSDictionary *infos = @{
-                                @"houseSearch":houseSearchParams,
-                                @"pre_house_type":@(self.houseType),
-                                @"jump_house_type":@(self.viewModel.jumpHouseType),
-                                };
-        if (self.tracerDict.count > 0) {
-            self.tracerDict[@"enter_type"] = @"enter";
-            self.tracerDict[@"enter_from"] = @"search_detail";
-            infos = @{
-                      @"houseSearch":houseSearchParams,
-                      @"tracer": self.tracerDict,
-                      @"pre_house_type":@(self.houseType),
-                      @"jump_house_type":@(self.viewModel.jumpHouseType),
-                      };
-        }
-        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
-    } else {
-        self.tracerDict[@"enter_type"] = @"enter";
-        self.tracerDict[@"enter_from"] = @"search_detail";
-        NSDictionary *infos = @{
-            @"houseSearch":houseSearchParams,
-            @"tracer": self.tracerDict,
-            @"pre_house_type":@(self.houseType),
-            @"jump_house_type":@(self.viewModel.jumpHouseType),
-        };
-        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
-    }
+    self.tracerDict[@"enter_type"] = @"enter";
+    self.tracerDict[@"enter_from"] = @"search_detail";
+    NSDictionary *infos = @{
+        @"houseSearch":houseSearchParams,
+        @"tracer": self.tracerDict,
+        @"pre_house_type":@(self.houseType),
+        @"jump_house_type":@(self.viewModel.jumpHouseType),
+    };
+    [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
 }
 
 - (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString * _Nullable)queryText placeholder:(NSString * _Nullable)placeholder infoDict:(NSDictionary *)infos isGoDetail:(BOOL)isGoDetail{
