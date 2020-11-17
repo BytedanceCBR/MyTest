@@ -68,7 +68,6 @@ def fhPods
 #    pod 'ios_house_im' , :path => '../../../im/bugfix', :inhibit_warnings => false
      pod 'ios_house_im' ,'0.9.0.14.3-bugfix', :inhibit_warnings => false
 
-     pod 'FHHouseShare' , :path => '../Bundles/ios_house_share', :inhibit_warnings => false
 end
 
 def appDevelopPods
