@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreMixedListBaseView.m
 //  Article
 //
@@ -155,7 +156,7 @@
 //#import "FRThreadSmartDetailManager.h"
 #import <TTKitchen/TTKitchen.h> 
 #import <TTKitchenExtension/TTKitchenExtension.h>
-#import "TTVOwnPlayerPreloaderWrapper.h"
+//#import "TTVOwnPlayerPreloaderWrapper.h"
 #import "TTVSettingsConfiguration.h"
 //#import "TTFollowCategoryFetchExtraManager.h"
 #import "TTTabBarProvider.h"
@@ -1699,7 +1700,7 @@ TTRefreshViewDelegate
                 Book *book = orderedData.book;
                 if (book && [TTTrackerWrapper isOnlyV3SendingEnable]) {
                 } else {
-                    wrapperTrackEventWithCustomKeys(@"card", @"card_show", [NSString stringWithFormat:@"%lld", cardObj.uniqueID], nil, extra);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"card" label:@"card_show" value:[NSString stringWithFormat:@"%lld", cardObj.uniqueID] source:nil extraDic:extra];
                 }
                 if(book) {
                     [TTTrackerWrapper eventV3:@"show_card" params:@{@"category_name":@"novel_channel"} isDoubleSending:YES];
@@ -3309,14 +3310,14 @@ TTRefreshViewDelegate
 - (void)addLastReadTrackWithLabel:(NSString *)label
 {
     if ([self isNewTab]) {
-        wrapperTrackEvent(@"new_tab", label);
+        [BDTrackerProtocol event:@"new_tab" label:label];
     }
     else {
         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
         [dict setValue:self.categoryID forKey:@"category_id"];
         [dict setValue:self.concernID forKey:@"concern_id"];
         [dict setValue:[NSNumber numberWithInteger:self.refer] forKey:@"refer"];
-        wrapperTrackEventWithCustomKeys(@"category", label, nil, nil, dict);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"category" label:label value:nil source:nil extraDic:dict];
     }
 }
 
@@ -3509,23 +3510,23 @@ TTRefreshViewDelegate
 
 - (void)preloadAdVideo
 {
-    if (!ttas_isAutoPlayVideoPreloadEnable()) {
-        return;
-    }
-    NSArray *items = _fetchListManager.items;
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        for (id obj in items) {
-            if([obj isKindOfClass:[ExploreOrderedData class]] && [((ExploreOrderedData *)obj).originalData isKindOfClass:[Article class]]) {
-                ExploreOrderedData *item = (ExploreOrderedData *)obj;
-                if ([(ExploreOrderedData *)item couldAutoPlay] && !isEmptyString(item.article.videoID)) {
-                    HandleType handler = [[TTVOwnPlayerPreloaderWrapper sharedPreloader] preloadVideoID:item.article.videoID];
-                    TTAdPlayerPreloadModel *preloadModel = [[TTAdPlayerPreloadModel alloc] initWithAdId:item.adIDStr logExtra:item.logExtra handleType:handler];
-                    [[TTVOwnPlayerPreloaderWrapper sharedPreloader] addAdPreloadItem:preloadModel];
-                }
-            }
-        }
-        
-    });
+//    if (!ttas_isAutoPlayVideoPreloadEnable()) {
+//        return;
+//    }
+//    NSArray *items = _fetchListManager.items;
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        for (id obj in items) {
+//            if([obj isKindOfClass:[ExploreOrderedData class]] && [((ExploreOrderedData *)obj).originalData isKindOfClass:[Article class]]) {
+//                ExploreOrderedData *item = (ExploreOrderedData *)obj;
+//                if ([(ExploreOrderedData *)item couldAutoPlay] && !isEmptyString(item.article.videoID)) {
+//                    HandleType handler = [[TTVOwnPlayerPreloaderWrapper sharedPreloader] preloadVideoID:item.article.videoID];
+//                    TTAdPlayerPreloadModel *preloadModel = [[TTAdPlayerPreloadModel alloc] initWithAdId:item.adIDStr logExtra:item.logExtra handleType:handler];
+//                    [[TTVOwnPlayerPreloaderWrapper sharedPreloader] addAdPreloadItem:preloadModel];
+//                }
+//            }
+//        }
+//
+//    });
 }
 
 #pragma mark - UIScrollViewDelegate Methods
@@ -4559,7 +4560,7 @@ TTRefreshViewDelegate
             [TTTrackerWrapper eventData:tipRefreshTrackerDic];
         }
     }
-    wrapperTrackEvent(@"category", @"refresh_tip_all");
+    [BDTrackerProtocol event:@"category" label:@"refresh_tip_all"];
 }
 
 - (void)hideRemoteReloadTip {

@@ -184,10 +184,10 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 //小区户型
-@protocol FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel<NSObject>
+@protocol FHDetailNeighborhoodSaleHouseInfoItemModel<NSObject>
 @end
 
-@interface FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel : JSONModel
+@interface FHDetailNeighborhoodSaleHouseInfoItemModel : JSONModel
 @property (nonatomic, copy , nullable) NSString *count;
 @property (nonatomic, copy , nullable) NSString *queryValue;
 @property (nonatomic, copy , nullable) NSString *priceRange;
@@ -195,8 +195,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *areaRange;
 @end
 
-@interface FHDetailNeighborhoodSaleHouseInfoModel : JSONModel
-@property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodSaleHouseInfoNeighborhoodSaleHouseListModel> *neighborhoodSaleHouseList;
+@interface FHDetailNeighborhoodSaleHouseInfoListModel : JSONModel
+@property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodSaleHouseInfoItemModel> *neighborhoodSaleHouseList;
 @end
 
 // 小区点评
@@ -233,14 +233,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *id;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighbordhoodStatusModel *neighbordhoodStatus ;
 @property (nonatomic, copy , nullable) NSString *imprId;
-@property (nonatomic, strong , nullable) FHVideoHouseVideoModel *neighborhoodVideo;
 @property (nonatomic, copy , nullable) NSString *abtestVersions;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataCoreInfoModel> *coreInfo;
 @property (nonatomic, strong , nullable) NSArray<FHFillFormAgencyListItemModel> *chooseAgencyList;
 @property (nonatomic, copy , nullable) NSString *recommendedRealtorsTitle;
 @property (nonatomic, strong , nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodSaleHouseEntranceModel *saleHouseEntrance;
-@property (nonatomic, strong , nullable) FHDetailNeighborhoodSaleHouseInfoModel *neighborhoodSaleHouseInfo;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodSaleHouseInfoListModel *neighborhoodSaleHouseInfo;
 @property (nonatomic, strong , nullable) FHDetailContactModel *highlightedRealtor;
 @property (nonatomic, strong , nullable) FHDetailContactModel *contact;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataQuestionModel *question;
@@ -249,6 +248,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *recommendRealtorsAssociateInfo;
 @property (nonatomic, strong , nullable) FHClueAssociateInfoModel *highlightedRealtorAssociateInfo;
 @property (nonatomic, strong , nullable) FHHouseDetailMediaInfo *albumInfo;
+@property (nonatomic, strong , nullable) FHHouseDetailMediaInfo *neighborhoodTopImages;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighborhoodEvaluationModel *neighborhoodEvaluation ; 
 
 @end

@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTAdFullScreenVideoViewModel.m
 //  Article
 //
@@ -223,7 +224,7 @@
             StrongSelf;
             if (![TTAccountManager isLogin] && ![TTVideoTip hasTipFavLoginUserDefaultKey]) {
                 
-                wrapperTrackEvent(@"pop", @"login_detail_favor_show");
+                [BDTrackerProtocol event:@"pop" label:@"login_detail_favor_show"];
                 
                 [TTAccountManager showLoginAlertWithType:TTAccountLoginAlertTitleTypeFavor source:@"detail_first_favor" completion:^(TTAccountAlertCompletionEventType type, NSString *phoneNum) {
                     if (type == TTAccountAlertCompletionEventTypeTip) {

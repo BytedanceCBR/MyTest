@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  ExploreDetailADContainerView.m
 //  Article
 //
@@ -114,7 +115,7 @@ static NSMutableDictionary *_adClasses;
                 TTInstallNetworkConnection nt = [[TTTrackerProxy sharedProxy] connectionType];
                 [events setValue:@(nt) forKey:@"nt"];
 
-                wrapperTrackEventWithCustomKeys(@"detail_ad", @"show", obj.mediaID, nil, events);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"detail_ad" label:@"show" value:obj.mediaID source:nil extraDic:events];
             }
             else {
                 [obj sendTrackEventWithLabel:@"show" eventName:@"detail_ad"];
@@ -196,7 +197,7 @@ static NSMutableDictionary *_adClasses;
             [self addSubview:adView];
             
         } else {
-            LOGE(@"文章详情页下发了不支持的广告类型");
+//            LOGE(@"文章详情页下发了不支持的广告类型");
         }
     }];
     [self sizeToFit];
@@ -462,13 +463,13 @@ static NSMutableDictionary *_adClasses;
         TTInstallNetworkConnection nt = [[TTTrackerProxy sharedProxy] connectionType];
         [events setValue:@(nt) forKey:@"nt"];
 
-        wrapperTrackEventWithCustomKeys(@"detail_ad", @"click", adModel.mediaID, nil, events);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"detail_ad" label:@"click" value:adModel.mediaID source:nil extraDic:events];
         [adModel sendTrackEventWithLabel:@"detail_show" eventName:@"detail_ad"];
     } else {
         [adModel sendTrackEventWithLabel:@"click" eventName:@"detail_ad"];
     }
     if (self.isVideoAd) {
-        wrapperTrackEventWithCustomKeys(@"video", @"detail_selfad", [@(self.viewModel.article.uniqueID) stringValue], nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_selfad" value:[@(self.viewModel.article.uniqueID) stringValue] source:nil extraDic:nil];
     }
 }
 

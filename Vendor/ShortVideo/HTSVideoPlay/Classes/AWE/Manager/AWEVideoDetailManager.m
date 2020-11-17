@@ -11,14 +11,14 @@
 #import "BTDMacros.h"
 #import "TTModuleBridge.h"
 #import "DetailActionRequestManager.h"
-
-static NSString * const TT_DOMAIN = @"https://is.haoduofangs.com";
+#import "FHURLSettings.h"
+#import "CommonURLSetting.h"
 
 @implementation AWEVideoDetailManager
 
 + (void)diggVideoItemWithID:(NSString *)groupID groupSource:(NSString *)groupSource completion:(AWEVideoDiggBlock)block
 {
-    NSString *url = [NSString stringWithFormat:@"%@/ugc/video/v1/digg/digg/", TT_DOMAIN];
+    NSString *url = [FHURLSettings shortVideoDiggUpURL];
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"group_id"] = groupID;
     params[@"group_source"] = groupSource;
@@ -28,7 +28,7 @@ static NSString * const TT_DOMAIN = @"https://is.haoduofangs.com";
 
 + (void)cancelDiggVideoItemWithID:(NSString *)groupID completion:(AWEVideoDiggBlock)block
 {
-    NSString *url = [NSString stringWithFormat:@"%@/ugc/video/v1/digg/cancel/", TT_DOMAIN];
+    NSString *url = [FHURLSettings shortVideoCancelDiggURL];
     NSMutableDictionary *params = @{}.mutableCopy;
     params[@"group_id"] = groupID;
     [self diggRequestWithParam:params withUrl:url completion:block];
@@ -67,7 +67,7 @@ static NSString * const TT_DOMAIN = @"https://is.haoduofangs.com";
     [params setValue:inputText forKey:@"report_content"];
     [params setValue:@1 forKey:@"source"];
     
-    NSString * url = [NSString stringWithFormat:@"%@/video_api/report/", TT_DOMAIN];
+    NSString * url = [CommonURLSetting reportVideoURLString];
     
     [[AWEVideoPlayNetworkManager sharedInstance] requestJSONFromURL:url params:params method:@"POST" needCommonParams:YES callback:^(NSError *error, id jsonObj) {
         !block ?: block(jsonObj, error);

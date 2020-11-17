@@ -187,7 +187,7 @@
         [cell refreshWithData:model.priceNotifyCellModel];
         return cell;
     }
-    return nil;
+    return [super defaultCellAtIndex:index];
 }
 
 @end

@@ -5521,10 +5521,19 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     }
     return NO;
 }
+
++ (BOOL)isEnableHouseDetailNativeReport {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_house_detail_native_report"] != nil) {
+        BOOL isEnableNativeReport = [[fhSettings objectForKey:@"f_house_detail_native_report"] boolValue];
+        return isEnableNativeReport;
+    }
+    return NO;
+}
 + (BOOL)isEnableLinkChatPage {
     NSDictionary *fhSettings = [self fhSettings];
-    if (fhSettings != nil && [fhSettings objectForKey:@"f_enable_link_chat_page"] != nil) {
-        BOOL isEnableLinkChatPage = [[fhSettings objectForKey:@"f_enable_link_chat_page"] boolValue];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_enable_linkchat_page"] != nil) {
+        BOOL isEnableLinkChatPage = [[fhSettings objectForKey:@"f_enable_linkchat_page"] boolValue];
         return isEnableLinkChatPage;
     }
     return NO;

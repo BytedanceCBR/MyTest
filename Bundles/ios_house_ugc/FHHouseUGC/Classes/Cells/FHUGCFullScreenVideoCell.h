@@ -27,9 +27,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)play;
 
+- (void)pause;
+
+- (void)stop;
+
 - (BOOL)cell_isPlaying;
 
+- (UIView *)cell_movieView;
+
 - (void)showMutedBtn;
+
+- (void)readyToPlay;
 
 @end
 

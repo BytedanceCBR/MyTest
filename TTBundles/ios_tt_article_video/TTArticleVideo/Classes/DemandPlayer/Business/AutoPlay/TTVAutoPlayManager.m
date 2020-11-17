@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVAutoPlayManager.m
 //  Article
 //
@@ -363,7 +364,7 @@ static TTVAutoPlayManager *manager = nil;
 
 - (void)ttv_trackForFeedAutoPlay:(TTVAutoPlayModel *)data
 {
-    wrapperTrackEventWithCustomKeys(@"video_play", @"feed_auto_play", data.uniqueID, nil, @{@"item_id" : data.itemID ?: @""});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_play" label:@"feed_auto_play" value:data.uniqueID source:nil extraDic:@{@"item_id" : data.itemID ?: @""}];
     if (data.adID.length > 0) {
         [self ttv_sendADEvent:@"embeded_ad" label:@"feed_auto_play" value:data.adID extra:nil logExtra:data.logExtra extValue:data.groupID];
     }
@@ -468,7 +469,7 @@ static TTVAutoPlayManager *manager = nil;
         [extra setValue:@(MAX(self.totalTime - self.lastPlayTime, 0)) forKey:@"duration"];
         self.lastPlayTime = self.totalTime;
         
-        wrapperTrackEventWithCustomKeys(@"video_over", movieView.playerModel.trackLabel, data.uniqueID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"video_over" label:movieView.playerModel.trackLabel value:data.uniqueID source:nil extraDic:extra];
         if (data.adID.length > 0) {
             [self ttv_sendADEvent:@"embeded_ad" label:@"feed_play_over" value:data.adID extra:extra logExtra:data.logExtra extValue:data.groupID];
         }
@@ -493,7 +494,7 @@ static TTVAutoPlayManager *manager = nil;
     //同 trackForClickFeedAutoPlay
     [self ttv_setDurationWithExtra:extra movieView:movieView];
     
-    wrapperTrackEventWithCustomKeys(@"video_over", @"feed_auto_over", data.uniqueID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_over" label:@"feed_auto_over" value:data.uniqueID source:nil extraDic:extra];
 }
 
 //列表播放结束
@@ -502,7 +503,7 @@ static TTVAutoPlayManager *manager = nil;
     NSMutableDictionary *extra = [self ttv_commonParams:data movie:movieView];
     [self ttv_setDurationWithExtra:extra movieView:movieView];
     
-    wrapperTrackEventWithCustomKeys(@"video_over", @"feed_play_over", data.uniqueID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_over" label:@"feed_play_over" value:data.uniqueID source:nil extraDic:extra];
     if (data.adID.longLongValue > 0) {
         [self ttv_sendADEvent:@"embeded_ad" label:@"feed_play_over" value:data.adID extra:extra logExtra:data.logExtra extValue:data.groupID];
     }
@@ -518,7 +519,7 @@ static TTVAutoPlayManager *manager = nil;
     self.totalTime = [totalTime doubleValue];
     [extra setValue:@(self.totalTime - self.lastPlayTime) forKey:@"duration"];
     self.lastPlayTime = self.totalTime;
-    wrapperTrackEventWithCustomKeys(@"video_over", @"feed_back_play_over", data.uniqueID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_over" label:@"feed_back_play_over" value:data.uniqueID source:nil extraDic:extra];
     if (data.adID.longLongValue > 0) {
         [self ttv_sendADEvent:@"embeded_ad" label:@"feed_back_play_over" value:data.adID extra:extra logExtra:data.logExtra extValue:data.groupID];
     }
@@ -534,7 +535,7 @@ static TTVAutoPlayManager *manager = nil;
     self.totalTime = [totalTime doubleValue];
     [extra setValue:@(self.totalTime - self.lastPlayTime) forKey:@"duration"];
     self.lastPlayTime = self.totalTime;
-    wrapperTrackEventWithCustomKeys(@"video_over", @"auto_detail_play_over", data.uniqueID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_over" label:@"auto_detail_play_over" value:data.uniqueID source:nil extraDic:extra];
     if (data.adID.longLongValue > 0) {
         [self ttv_sendADEvent:@"detail_ad" label:@"detail_play_over" value:data.adID extra:extra logExtra:data.logExtra extValue:data.groupID];
     }
@@ -548,7 +549,7 @@ static TTVAutoPlayManager *manager = nil;
 {
     NSMutableDictionary *extra = [self ttv_commonParams:data movie:movieView];
     [self ttv_setDurationWithExtra:extra movieView:movieView];
-    wrapperTrackEventWithCustomKeys(@"enter_detail", @"click_feed_auto_play", data.uniqueID, nil, extra);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"enter_detail" label:@"click_feed_auto_play" value:data.uniqueID source:nil extraDic:extra];
     if (data.adID.longLongValue > 0) {
         [self ttv_sendADEvent:@"embeded_ad" label:@"click_feed_auto_play" value:data.adID extra:extra logExtra:data.logExtra extValue:data.groupID];
     }

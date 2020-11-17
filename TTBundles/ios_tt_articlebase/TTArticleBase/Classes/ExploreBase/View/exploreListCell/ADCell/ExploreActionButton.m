@@ -1,4 +1,5 @@
 //  ExploreDownloadButton.m
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  Article
 //
 //  Created by SunJiangting on 14-9-19.
@@ -152,7 +153,7 @@
                     //比如未安装三方SDK,再尝试打开头条页面
                     UINavigationController *tController = [TTUIResponderHelper topNavigationControllerFor:nil];
                     [[SSActionManager sharedManager] openWebURL:self.adModel.webURL appName:self.adModel.webTitle adID:self.adModel.ad_id logExtra:self.adModel.log_extra inNavigationController:tController];
-                    wrapperTrackEventWithCustomKeys(@"embeded_ad", @"open_url_h5", self.adModel.ad_id, nil, applinkParams);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"open_url_h5" value:self.adModel.ad_id source:nil extraDic:applinkParams];
                     return;
                 }
             }

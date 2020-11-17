@@ -47,7 +47,7 @@
         make.left.mas_equalTo(self.keyLabel.mas_right).offset(10);
         make.top.mas_equalTo(10);
         make.height.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
+        make.right.mas_equalTo(-10);
         make.bottom.mas_equalTo(self.keyLabel);
     }];
 }

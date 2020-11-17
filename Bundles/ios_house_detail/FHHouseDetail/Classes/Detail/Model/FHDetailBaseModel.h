@@ -303,6 +303,12 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, strong , nullable) NSArray<FHDetailHouseVRDataModel> *items;
 
 @end
+
+@interface FHDetailPanoramaInfo : JSONModel
+@property (nonatomic, copy, nullable) NSString *gaodeLng;
+@property (nonatomic, copy, nullable) NSString *gaodeLat;
+@end
+
 @protocol FHHouseDetailImageListDataModel<NSObject>
 @end
 
@@ -350,6 +356,7 @@ typedef NS_ENUM (NSUInteger, FHHouseDetailImageListDataUsedSceneType) {
 @property (nonatomic, copy, nullable) NSString *desc;
 @property (nonatomic, strong, nullable) FHVideoHouseVideoVideoInfosModel *videoInfo;
 @property (nonatomic, strong, nullable) FHDetailHouseVRDataModel *vrInfo;
+@property (nonatomic, strong, nullable) FHDetailPanoramaInfo *panoramaInfo;
 @property (nonatomic, strong, nullable) FHImageModel *image;
 @property (nonatomic, strong, nullable) FHImageModel *smallImage;
 @end

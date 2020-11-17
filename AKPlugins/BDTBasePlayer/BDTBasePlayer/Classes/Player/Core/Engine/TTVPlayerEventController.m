@@ -17,7 +17,7 @@
 #import "TTStringHelper.h"
 #import "TTBaseMacro.h"
 #import "TTVPlayerCacheProgressController.h"
-#import "TTVideoEngine.h"
+#import "TTVideoEngineEnvConfig+CN.h"
 #import "TTVVideoURLParser.h"
 #import "KVOController.h"
 #import "TTVResolutionStore.h"
@@ -29,47 +29,47 @@
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TTVPlayerLogEvent.h"
 #import "TTVPlayerAudioController.h"
-#import "TTVVideoNetClient.h"
-#import "TTVOwnPlayerPreloaderWrapper.h"
-#import "TTVOwnPlayerCacheWrapper.h"
+#import <TTVideoEngine/TTVideoEngineHeader.h>
+//#import "TTVOwnPlayerPreloaderWrapper.h"
+//#import "TTVOwnPlayerCacheWrapper.h"
 #import "TTVAudioActiveCenter.h"
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #import "TTSettingsManager.h"
 #import "FHHMDTManager.h"
+#import "TTVURLService.h"
 
 static NSString *const kvideo_controller_error_domain = @"kvideo_player_controller_error_domain";
-static NSString *platformString;
+//static NSString *platformString;
 @interface TTVPlayerEventController () <TTVFluxStoreCallbackProtocol ,TTVideoEngineDataSource,TTVideoEngineDelegate,TTVideoEngineResolutionDelegate>
 
-@property (nonatomic, strong)  TTVideoEngine *videoEngine;
+@property (nonatomic, strong) TTVideoEngine *videoEngine;
 @property (nonatomic, copy) NSString *requestUrl;
 @property (nonatomic, strong) TTVPlayerWatchTimer *watchTimer;
-@property(nonatomic, strong)TTVPlayerLogEvent *logEvent;
+@property (nonatomic, strong) TTVPlayerLogEvent *logEvent;
 @property (nonatomic, strong) TTVAudioActiveCenter *activeCenter;
-@property(nonatomic, copy)NSString *directVideoUrl;//直接可播放的视频url
+@property (nonatomic, copy) NSString *directVideoUrl;//直接可播放的视频url
 
-@property (nonatomic, strong) NSMutableSet *retainTaskSet;
 @end
 
 @implementation TTVPlayerEventController
 
-+ (NSString *)platform{
-    size_t size;
-    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
-    char *machine = malloc(size);
-    sysctlbyname("hw.machine", machine, &size, NULL, 0);
-    NSString *platform = [NSString stringWithUTF8String:machine];
-    free(machine);
-    return platform;
-}
-
-+ (NSString *)ttv_platformString{
-    NSString *platform = [self platform];
-    if ([platform isEqualToString:@"i386"])         return @"Simulator";
-    if ([platform isEqualToString:@"x86_64"])       return @"Simulator";
-    return platform;
-}
+//+ (NSString *)platform{
+//    size_t size;
+//    sysctlbyname("hw.machine", NULL, &size, NULL, 0);
+//    char *machine = malloc(size);
+//    sysctlbyname("hw.machine", machine, &size, NULL, 0);
+//    NSString *platform = [NSString stringWithUTF8String:machine];
+//    free(machine);
+//    return platform;
+//}
+//
+//+ (NSString *)ttv_platformString{
+//    NSString *platform = [self platform];
+//    if ([platform isEqualToString:@"i386"])         return @"Simulator";
+//    if ([platform isEqualToString:@"x86_64"])       return @"Simulator";
+//    return platform;
+//}
 
 
 #pragma life cycle
@@ -77,13 +77,11 @@ static NSString *platformString;
 - (instancetype)init{
     self = [super init];
     if (self) {
-        _useCache = YES;
         self.logEvent = [TTVPlayerLogEvent sharedInstance];
         _watchTimer = [[TTVPlayerWatchTimer alloc] init];
         _activeCenter = [[TTVAudioActiveCenter alloc] init];
         BOOL playUseIp = [[[TTSettingsManager sharedManager] settingForKey:@"tt_play_use_ip" defaultValue:@NO freeze:NO] boolValue];
         [[self class] setEnableHTTPDNS:playUseIp];
-//        [[TTVPlayerAudioController sharedInstance] setCategory:AVAudioSessionCategoryPlayback];
     }
     return self;
 }
@@ -107,11 +105,6 @@ static NSString *platformString;
 }
 
 - (void)dealloc {
-    // 不需要时释放缓存文件强引用(允许删除文件)
-    for (NSNumber *task in self.retainTaskSet) {
-        TTAVPreloader *preloader = [TTVOwnPlayerPreloaderWrapper sharedPreloader].preloader;
-        [preloader releaseFileForKey:[task longLongValue]];
-    }
     [self.videoEngine removeTimeObserver];
     [_playerStateStore unregisterForActionClass:[TTVPlayerStateAction class] observer:self];
 }
@@ -128,11 +121,6 @@ static NSString *platformString;
 }
 
 - (void)ttv_setup {
-    for (NSNumber *task in self.retainTaskSet) {
-        TTAVPreloader *preloader = [TTVOwnPlayerPreloaderWrapper sharedPreloader].preloader;
-        [preloader releaseFileForKey:[task longLongValue]];
-    }
-    [self.retainTaskSet removeAllObjects];
     [_watchTimer reset];
     [_watchTimer endWatch];
     [TTVResolutionStore sharedInstance].resolutionAlertClick = NO;
@@ -155,41 +143,24 @@ static NSString *platformString;
             }
         }
     }
-    TTVideoEngineVideoInfo *videoInfo = [[TTVideoEngineVideoInfo alloc] init];
-    videoInfo.vid = self.playerModel.videoID;
-    videoInfo.expire = self.playerModel.expirationTime;
-    videoInfo.playInfo = [[TTVideoEnginePlayInfo alloc] initWithDictionary:self.playerModel.videoPlayInfo];
     
     [self.KVOController unobserve:self.videoEngine];
     [self.videoEngine.playerView removeFromSuperview];
-    BOOL isOwn = self.playerModel.useOwnPlayer && [[UIDevice currentDevice].systemVersion floatValue] >= 8.0;
-    if (!isEmptyString(self.playerModel.localURL)) {
-        isOwn = NO;
+    
+    self.videoEngine = [[TTVideoEngine alloc] initWithOwnPlayer:YES];
+    if(self.playerModel.enableCache){
+        self.videoEngine.startTime = [[TTVPlayerCacheProgressController sharedInstance] playTimeForVideoID:self.playerModel.videoID];
+        self.videoEngine.cacheEnable = YES;
     }
-    self.videoEngine = [[TTVideoEngine alloc] initWithOwnPlayer:isOwn];
     self.videoEngine.resolutionServerControlEnabled = YES;
-    self.videoEngine.h265Enabled = [[TTSettingsManager sharedManager] settingForKey:@"video_h265_enable" defaultValue:@(NO) freeze:NO];
+    if (self.playerModel.tag) {
+        [self.videoEngine setTag:self.playerModel.tag];
+    }
     if (self.playerStateStore.state.enableSmothlySwitch) {
         self.videoEngine.smoothlySwitching = YES;
         self.videoEngine.smoothDelayedSeconds = 3;
     }
-    self.videoEngine.netClient = [[TTVVideoNetClient alloc] init];
-    
-    BOOL hardDecoder = [[[TTSettingsManager sharedManager] settingForKey:@"tt_player_hard_decoder" defaultValue:@0 freeze:NO] boolValue];
-    if (!platformString) {
-        platformString = [[self class] ttv_platformString];
-    }
-    if ([platformString isEqualToString:@"Simulator"]) {
-        hardDecoder = NO;
-    }
-    self.videoEngine.hardwareDecode = hardDecoder;
-    if ([TTVPlayerSettingUtility ttvs_playerImageScaleEnable]) {
-        self.videoEngine.imageScaleType = TTVideoEngineImageScaleTypeLanczos;
-    }
-    if ([TTVPlayerSettingUtility tt_play_image_enhancement]) {
-        self.videoEngine.enhancementType = TTVideoEngineEnhancementTypeContrast;
-    }
-    [self.videoEngine setVideoInfo:videoInfo];
+
     self.videoEngine.playerView.userInteractionEnabled = YES;
     
     if (!isEmptyString(self.playerModel.localURL)) {
@@ -201,38 +172,18 @@ static NSString *platformString;
         self.playerStateStore.state.isUsingLocalURL = NO;
         [self.videoEngine configResolution:lastResolution completion:^(BOOL success, TTVideoEngineResolutionType completeResolution) {
             self.playerStateStore.state.currentResolution = completeResolution;
-
         }];
-        // 播放开始时增加缓存文件强引用(不允许删除文件)
-        TTAVPreloader *preloader = [TTVOwnPlayerPreloaderWrapper sharedPreloader].preloader;
-        HandleType handler = [preloader getHandle:self.playerModel.videoID resolution:TTVOwnPlayerPreloaderDefaultResolution];
-        if (![self.retainTaskSet containsObject:@(handler)]) {
-            [self.retainTaskSet addObject:@(handler)];
-            
-            [preloader stopTask:handler];
-            [preloader retainFileForKey:handler];
-        }
         
-        TTAVPreloaderItem *item = [preloader preloadItemForKey:handler];
-        if (self.useCache && item) {
-            self.playerStateStore.state.playingWithCache = item.filePath.length > 0;
-            [self.videoEngine setPreloaderItem:item];
-        } else {
-            self.playerStateStore.state.playingWithCache = NO;
-            [self.videoEngine setVideoID:self.playerModel.videoID];
-        }
+        self.playerStateStore.state.playingWithCache = NO;
+        //绑定缓存关键类
+        [self.videoEngine setOptionForKey:VEKKeyProxyServerEnable_BOOL value:@(YES)];
+        [self.videoEngine setOptionForKey:VEKKeyModelCacheVideoInfoEnable_BOOL value:@(YES)];
+        [self.videoEngine setVideoID:self.playerModel.videoID];
     }
     self.videoEngine.dataSource = self;
     self.videoEngine.delegate = self;
     self.videoEngine.resolutionDelegate = self;
     [self ttv_kvo];
-}
-
-- (void)openAutoModel
-{
-    if (self.videoEngine.supportedResolutionTypes.count > 0 || self.videoEngine.currentResolution == TTVideoEngineResolutionTypeSD) {
-        [self.videoEngine configResolution:TTVideoEngineResolutionTypeAuto];
-    }
 }
 
 - (void)ttv_kvo
@@ -336,6 +287,11 @@ static NSString *platformString;
     }];
 }
 
+- (void)setScaleMode:(TTVPlayerScalingMode)scaleMode {
+    _scaleMode = scaleMode;
+    self.videoEngine.scaleMode = scaleMode;
+}
+
 #pragma mark TTVideoEngineDataSource
 - (NSString *)apiForFetcher
 {
@@ -359,10 +315,6 @@ static NSString *platformString;
     if (hasError) {
         [self.watchTimer endWatch];
         [self saveCacheProgress];
-        // 清空当前视频缓存
-        if (!isEmptyString(self.playerModel.videoID)) {
-            [[TTVOwnPlayerCacheWrapper sharedCache] clearCacheForVideoID:self.playerModel.videoID];
-        }
     }else{
         [self.watchTimer endWatch];
         if (self.playerStateStore.state.duration > 0 && self.playerStateStore.state.currentPlaybackTime + 2 > self.playerStateStore.state.duration) {//播放结束了就不要cache播放进度了
@@ -375,6 +327,8 @@ static NSString *platformString;
     }
 }
 
+- (void)videoEngine:(TTVideoEngine *)videoEngine mdlKey:(NSString *)key hitCacheSze:(NSInteger)cacheSize {
+}
 
 /**
  playbackState loadingState 都会重试,不能拿来做最终失败的UI暂时时机
@@ -444,7 +398,7 @@ static NSString *platformString;
     if (![TTVResolutionStore sharedInstance].userSelected || [TTVResolutionStore sharedInstance].forceSelected) {
         [TTVResolutionStore sharedInstance].autoResolution = self.playerStateStore.state.currentResolution;
     }
-    [self openAutoModel];
+
     [self.playerStateStore sendAction:TTVPlayerEventTypeShowVideoFirstFrame payload:nil];
 }
 
@@ -581,6 +535,10 @@ static NSString *platformString;
     }
 }
 
+- (void)resetVideo {
+     self.videoEngine.startTime = 0;
+}
+
 - (void)seekVideoToProgress:(CGFloat)progress complete:(void(^)(BOOL success))finised {
     [self _seekVideoToProgress:progress autoSeek:NO complete:finised];
 }
@@ -606,7 +564,9 @@ static NSString *platformString;
     }
     if ([action isKindOfClass:[TTVPlayerStateAction class]]) {
         if (action.actionType == TTVPlayerEventTypeShowVideoFirstFrame) {
-            [self _showVideoFirstFrame];
+//            if(self.playerModel.enableCache){
+//                [self _showVideoFirstFrame];
+//            }
         } else if (action.actionType == TTVPlayerEventTypeSwitchResolution) {
             NSMutableDictionary *dic = action.payload;
             if (!dic) {
@@ -639,7 +599,8 @@ static NSString *platformString;
     if (self.playerStateStore.state.currentPlaybackTime + 2 >= self.playerStateStore.state.duration) {
         return;
     }
-    [[TTVPlayerCacheProgressController sharedInstance] cacheProgress:progress currentTime:self.playerStateStore.state.currentPlaybackTime VideoID:self.playerModel.videoID];
+    
+    [[TTVPlayerCacheProgressController sharedInstance] cacheProgress:progress currentTime:self.playerStateStore.state.currentPlaybackTime VideoID:self.playerModel.videoID isDetailFeed:self.isPlayInDetailFeed];
 }
 
 #pragma mark - fetch video

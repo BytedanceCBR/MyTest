@@ -59,39 +59,39 @@
 
 - (void)willAppear
 {
-    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
+//    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
     [self.listView willAppear];
     [self.listView scrollToTopEnable:YES];
 }
 
 - (void)didAppear
 {
-    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
+//    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
     [self.listView didAppear];
 }
 
 - (void)willDisappear
 {
-    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
+//    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
     [self.listView willDisappear];
 }
 
 - (void)didDisappear
 {
-    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
+//    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
     [self.listView didDisappear];
     [self.listView scrollToTopEnable:NO];
 }
 
 - (void)cellWillEnterForground
 {
-    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
+//    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
     [self.listView listViewWillEnterForground];
 }
 
 - (void)cellWillEnterBackground
 {
-    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
+//    LOGD(@"~~~~~~%@ %@", self.category.categoryID, NSStringFromSelector(_cmd));
     [self.listView listViewWillEnterBackground];
 }
 

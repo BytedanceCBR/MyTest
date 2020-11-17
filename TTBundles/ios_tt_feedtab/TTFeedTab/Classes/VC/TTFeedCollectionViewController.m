@@ -501,7 +501,7 @@ TTFeedCollectionCellDelegate>
             [self.delegate ttFeedCollectionViewController:self didScrollToIndex:self.currentIndex];
         }
 
-        LOGD(@"~~~didEndDecelerating appear %@", self.pageCategories[_currentIndex].categoryID);
+//        LOGD(@"~~~didEndDecelerating appear %@", self.pageCategories[_currentIndex].categoryID);
         [self currentPageCellAppear:userDrag];
         
         if (![self.lastCategoryID isEqualToString:category.categoryID]) {
@@ -510,7 +510,7 @@ TTFeedCollectionCellDelegate>
                 if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
                     // 统计 - 进入推荐列表
                     if ([category.categoryID isEqualToString:kTTMainCategoryID]) {
-                        wrapperTrackEvent(@"new_tab", userDrag ? @"enter_flip" : @"enter_click");
+                        [BDTrackerProtocol event:@"new_tab" label:userDrag ? @"enter_flip" : @"enter_click"];
                     }
                     // 进非推荐列表
                     else {
@@ -518,7 +518,7 @@ TTFeedCollectionCellDelegate>
                         NSMutableDictionary *extraDict = [NSMutableDictionary dictionaryWithCapacity:2];
                         [extraDict setValue:category.concernID forKey:@"concern_id"];
                         [extraDict setValue:@(1) forKey:@"refer"];
-                        wrapperTrackEventWithCustomKeys(@"category", label, nil, nil, extraDict);
+                        [BDTrackerProtocol trackEventWithCustomKeys:@"category" label:label value:nil source:nil extraDic:extraDict];
                     }
                 }
             }
@@ -578,7 +578,7 @@ TTFeedCollectionCellDelegate>
                     }
                 }
                 
-                wrapperTrackEvent(@"subscription", label);
+                [BDTrackerProtocol event:@"subscription" label:label];
             }
             else if ([category.categoryID isEqualToString:kTTNewsLocalCategoryID]) {
                 [[TTAuthorizeManager sharedManager].locationObj showAlertAtLocalCategory:^{} authCompleteBlock:^(TTAuthorizeLocationArrayParamBlock arrayParamBlock) {
@@ -981,12 +981,12 @@ TTFeedCollectionCellDelegate>
     
     NSString *currCategoryID = self.currentCategory.categoryID;
     if ([TTDeviceHelper isPadDevice]) {
-        wrapperTrackEvent(@"refresh", [NSString stringWithFormat:@"category_%@", currCategoryID]);
+        [BDTrackerProtocol event:@"refresh" label:[NSString stringWithFormat:@"category_%@", currCategoryID]];
     } else {
         if ([currCategoryID isEqualToString:kTTMainCategoryID]) {
-            wrapperTrackEvent(@"new_tab", @"new_button_refresh"); // 推荐频道
+            [BDTrackerProtocol event:@"new_tab" label:@"new_button_refresh"]; // 推荐频道
         } else {
-            wrapperTrackEvent(@"category", @"new_button_refresh");
+            [BDTrackerProtocol event:@"category" label:@"new_button_refresh"];
         }
     }
 }

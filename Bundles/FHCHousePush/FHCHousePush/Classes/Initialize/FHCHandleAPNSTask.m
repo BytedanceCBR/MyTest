@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  FHCHandleAPNSTask.m
 //  FHCHousePush
 //
@@ -289,12 +290,12 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {
     if([TTAuthorizeManager sharedManager].pushObj.authorizeModel.isPushAuthorizeDetermined == NO){
-        wrapperTrackEvent(@"pop", @"push_permission_show");
+        [BDTrackerProtocol event:@"pop" label:@"push_permission_show"];
         
         if (notificationSettings.types == UIRemoteNotificationTypeNone) {
-            wrapperTrackEvent(@"pop", @"push_permission_cancel");
+            [BDTrackerProtocol event:@"pop" label:@"push_permission_cancel"];
         } else {
-            wrapperTrackEvent(@"pop", @"push_permission_confirm");
+            [BDTrackerProtocol event:@"pop" label:@"push_permission_confirm"];
         }
         [TTAuthorizeManager sharedManager].pushObj.authorizeModel.isPushAuthorizeDetermined = YES;
         [[TTAuthorizeManager sharedManager].pushObj.authorizeModel saveData];

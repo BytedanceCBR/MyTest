@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVDeleteAction.m
 //  Article
 //
@@ -50,7 +51,7 @@
     [extraDict setValue:@"click_video" forKey:@"source"];
     [extraDict setValue:@(1) forKey:@"aggr_type"];
     [extraDict setValue:@(1) forKey:@"type"];
-    wrapperTrackEventWithCustomKeys(@"list_share", @"delete_ugc", group_id, nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"list_share" label:@"delete_ugc" value:group_id source:nil extraDic:extraDict];
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     [params setValue:userId forKey:@"user_id"];
     [params setValue:item_id forKey:@"item_id"];

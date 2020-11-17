@@ -24,6 +24,7 @@ extern NSString const *CHANNEL_ID_RELATED_HOUSE; //相关二手房 ✅
 extern NSString const *CHANNEL_ID_RELATED_RENT; //相关租房 ✅
 extern NSString const *CHANNEL_ID_RELATED_NEIGHBORHOOD; //相关小区 ✅
 extern NSString const *CHANNEL_ID_SEARCH_COURT; //新房搜索 ✅
+extern NSString const *CHANNEL_ID_SEARCH_COURT_WITH_BANNER; //新房大类页搜索✅
 extern NSString const *CHANNEL_ID_SEARCH_HOUSE; //二手房搜索 ✅
 extern NSString const *CHANNEL_ID_SEARCH_HOUSE_WITH_BANNER; //二手房大类页 ✅
 extern NSString const *CHANNEL_ID_SEARCH_NEIGHBORHOOD; //小区搜索 ✅

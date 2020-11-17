@@ -393,13 +393,11 @@
 }
 @end
 
-
 @interface FHHomeHouseDataItemsModel ()
 
 @property (nonatomic, copy, nullable, readwrite) NSDictionary *logPbWithTags;
 
 @end
-
 
 @implementation  FHHomeHouseDataItemsModel
 
@@ -550,12 +548,11 @@
                     return @"";
                 }];
                 
-
             }
             if (self.titleTags) {//FHSearchHouseItemTitleTagModel
                 mutablLogPb[@"app_marketing_tags"] = [self.titleTags btd_map:^id _Nullable(id  _Nonnull obj) {
-                    if (obj && [obj isKindOfClass:[FHSearchHouseItemTitleTagModel class]]) {
-                        FHSearchHouseItemTitleTagModel *tagModel = (FHSearchHouseItemTitleTagModel *)obj;
+                    if (obj && [obj isKindOfClass:[FHHomeHouseItemTitleTagModel class]]) {
+                        FHHomeHouseItemTitleTagModel *tagModel = (FHHomeHouseItemTitleTagModel *)obj;
                         return tagModel.text;
                     }
                     return @"";

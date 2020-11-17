@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class TSVVideoDetailPromptManager;
 @class AWEVideoDetailSecondUsePromptManager;
 
-@class TSVDetailViewModel, AWEVideoDetailControlOverlayViewController, AWEVideoContainerCollectionViewCell;
+@class TSVDetailViewModel, AWEVideoDetailControlOverlayViewController;
 
 @interface AWEVideoContainerViewController : UIViewController
 
@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)pauseCurrentVideo;
 
 - (UIView *)exitScreenshotView;
+
+- (void)videoOverTracer;
 
 @end
 

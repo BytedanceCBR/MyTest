@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTPersonalHomeViewController.m
 //  Article
 //
@@ -401,11 +402,11 @@ TTAccountMulticastProtocol
         [self.pagingView reloadData];
         CGFloat deltaTime = CFAbsoluteTimeGetCurrent() - self.startTime;
         if(deltaTime >= 0) {
-            wrapperTrackEventWithCustomKeys(@"stay_profile", @"enter_homepage", self.userInfoModel.data.user_id, nil, @{@"user_loadtime" : @(deltaTime)});
+            [BDTrackerProtocol trackEventWithCustomKeys:@"stay_profile" label:@"enter_homepage" value:self.userInfoModel.data.user_id source:nil extraDic:@{@"user_loadtime" : @(deltaTime)}];
         }
         
         if([self.source isEqualToString:@"recommend_personal_home"]) {
-            wrapperTrackEventWithCustomKeys(@"follow_sug", @"enter_profile", self.userInfoModel.data.user_id, nil, nil);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"follow_sug" label:@"enter_profile" value:self.userInfoModel.data.user_id source:nil extraDic:nil];
         } else {//搜索结果页由于会自己发埋点，这里就不发了
             //            if([self.userInfoModel.data.current_user_id isEqualToString:self.userInfoModel.data.user_id]) {
             NSMutableDictionary *dict = [NSMutableDictionary dictionary];
@@ -615,9 +616,9 @@ TTAccountMulticastProtocol
     if(isEmptyString(key)) return;
     if(self.isClick) {
         self.isClick = NO;
-        wrapperTrackEventWithCustomKeys(@"profile", [NSString stringWithFormat:@"enter_%@",key], self.userInfoModel.data.user_id, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"profile" label:[NSString stringWithFormat:@"enter_%@",key] value:self.userInfoModel.data.user_id source:nil extraDic:nil];
     } else {
-        wrapperTrackEventWithCustomKeys(@"profile", [NSString stringWithFormat:@"slide_%@",key], self.userInfoModel.data.user_id, nil, nil);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"profile" label:[NSString stringWithFormat:@"slide_%@",key] value:self.userInfoModel.data.user_id source:nil extraDic:nil];
     }
 }
 
@@ -686,7 +687,7 @@ TTAccountMulticastProtocol
         [[TTRoute sharedRoute] openURLByPushViewController:url];
     }
     
-    wrapperTrackEventWithCustomKeys(@"profile", @"click_profile_firstmenu", self.userInfoModel.data.user_id, nil, @{@"location": @(index + 1)});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"profile" label:@"click_profile_firstmenu" value:self.userInfoModel.data.user_id source:nil extraDic:@{@"location": @(index + 1)}];
 }
 
 #pragma mark - navigationView 代理
@@ -735,13 +736,13 @@ TTAccountMulticastProtocol
     [self requestUnBlockUser];
     NSString *key = [self tabKeyWithType:self.currentSegmentType];
     if(isEmptyString(key)) return;
-    wrapperTrackEventWithCustomKeys(@"prifile_more", @"quit_blacklist", self.userInfoModel.data.user_id, nil, @{@"gtype" : key});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"prifile_more" label:@"quit_blacklist" value:self.userInfoModel.data.user_id source:nil extraDic:@{@"gtype" : key}];
 }
 
 - (void)headerViewDidSelectedIconView
 {
     if(isEmptyString(self.userInfoModel.data.big_avatar_url)) return;
-    wrapperTrackEventWithCustomKeys(@"profile", @"show_avatar", self.userInfoModel.data.user_id, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"profile" label:@"show_avatar" value:self.userInfoModel.data.user_id source:nil extraDic:nil];
     TTPhotoScrollViewController *showImageViewController = [[TTPhotoScrollViewController alloc] init];
     showImageViewController.whiteMaskViewEnable = NO;
     showImageViewController.finishBackView = [TTInteractExitHelper getSuitableFinishBackViewWithCurrentContext];
@@ -759,17 +760,17 @@ TTAccountMulticastProtocol
         UINavigationController *nav = [TTUIResponderHelper topNavigationControllerFor:[TTUIResponderHelper topmostViewController]];
         [TTAccountManager presentQuickLoginFromVC:nav type:TTAccountLoginDialogTitleTypeDefault source:nil isPasswordStyle:NO completion:^(TTAccountLoginState state) {
         }];
-        wrapperTrackEventWithCustomKeys(@"profile", @"private_letter", self.userInfoModel.data.user_id, nil, @{@"islogin" : @"logout"});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"profile" label:@"private_letter" value:self.userInfoModel.data.user_id source:nil extraDic:@{@"islogin" : @"logout"}];
         return;
     }
     
     if(self.userInfoModel.data.is_following.boolValue == 0) {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:NSLocalizedString(@"关注后才可发私信", nil) indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage.png"] autoDismiss:YES dismissHandler:nil];
         
-        wrapperTrackEventWithCustomKeys(@"profile", @"private_letter", self.userInfoModel.data.user_id, nil, @{@"fans" : @"not_fans"});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"profile" label:@"private_letter" value:self.userInfoModel.data.user_id source:nil extraDic:@{@"fans" : @"not_fans"}];
         return;
     } else {
-        wrapperTrackEventWithCustomKeys(@"profile", @"private_letter", self.userInfoModel.data.user_id, nil, @{@"fans" : @"fans"});
+        [BDTrackerProtocol trackEventWithCustomKeys:@"profile" label:@"private_letter" value:self.userInfoModel.data.user_id source:nil extraDic:@{@"fans" : @"fans"}];
     }
     
     NSMutableDictionary *param =[NSMutableDictionary dictionary];
@@ -821,7 +822,7 @@ TTAccountMulticastProtocol
     if(!TTNetworkConnected()) return;
     NSURL *url = [NSURL URLWithString:@"sslocal://webview?url=https://ic.snssdk.com/ugc/star/chart/&source=user_profile&hide_bar=1&title="];
     [[TTRoute sharedRoute] openURLByPushViewController:url];
-    wrapperTrackEventWithCustomKeys(@"profile", @"click_star_ranking", self.userInfoModel.data.user_id, nil, @{@"ranking" : @(self.userInfoModel.data.star_chart.Rate.integerValue)});
+    [BDTrackerProtocol trackEventWithCustomKeys:@"profile" label:@"click_star_ranking" value:self.userInfoModel.data.user_id source:nil extraDic:@{@"ranking" : @(self.userInfoModel.data.star_chart.Rate.integerValue)}];
 }
 
 - (void)headerView:(TTPersonalHomeHeaderView *)headerView didSelectedFollowSpreadOut:(BOOL)isSpread
@@ -871,7 +872,7 @@ TTAccountMulticastProtocol
     } else {
         [self.headerView adjustInfoViewTopMargin:self.headerView.infoView.headerViewTopMargin];
     }
-    wrapperTrackEventWithCustomKeys(@"profile", @"signature_detail", self.userInfoModel.data.user_id, nil, nil);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"profile" label:@"signature_detail" value:self.userInfoModel.data.user_id source:nil extraDic:nil];
     [self.pagingView reloadHeaderViewHeight:self.headerView.height];
     self.pagingView.isAnimation = NO;
 }
@@ -967,12 +968,12 @@ TTAccountMulticastProtocol
     }
     [alert addActionWithTitle:@"取消" actionType:TTThemedAlertActionTypeCancel actionBlock:^{
         if(tmpParam.count > 0) {
-            wrapperTrackEventWithCustomKeys(@"profile_more", @"quit_blacklist", self.userInfoModel.data.user_id, nil, tmpParam);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"profile_more" label:@"quit_blacklist" value:self.userInfoModel.data.user_id source:nil extraDic:tmpParam];
         }
     }];
     [alert addActionWithTitle:@"确定" actionType:TTThemedAlertActionTypeNormal actionBlock:^{
         if(tmpParam.count > 0) {
-            wrapperTrackEventWithCustomKeys(@"profile_more", @"confirm_blacklist", self.userInfoModel.data.user_id, nil, tmpParam);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"profile_more" label:@"confirm_blacklist" value:self.userInfoModel.data.user_id source:nil extraDic:tmpParam];
         }
         if(weakSelf.isRequestBlock) return;
         weakSelf.isRequestBlock = YES;
@@ -1488,7 +1489,7 @@ TTAccountMulticastProtocol
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [TTAccount removeMulticastDelegate:self];
-    LOGD(@"%s",__func__);
+//    LOGD(@"%s",__func__);
 }
 
 - (void)updateFollowersCountWithFollowing:(BOOL)following

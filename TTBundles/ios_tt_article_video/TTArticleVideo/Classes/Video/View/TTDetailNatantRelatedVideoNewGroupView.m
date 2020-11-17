@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTDetailNatantRelatedVideoNewGroupView.m
 //  Article
 //
@@ -229,10 +230,10 @@
                 if (col_no) {
                     NSMutableDictionary *dic = [NSMutableDictionary dictionary];
                     [dic setValue:media_id forKey:@"media_id"];
-                    wrapperTrackEventWithCustomKeys(@"video", @"detail_album_show", col_no, nil, dic);
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_album_show" value:col_no source:nil extraDic:dic];
                 }
                 else if ([rArticle hasVideoSubjectID]) {
-                    wrapperTrackEventWithCustomKeys(@"video", @"detail_album_show", nil, nil, @{@"video_subject_id" : [rArticle videoSubjectID]});
+                    [BDTrackerProtocol trackEventWithCustomKeys:@"video" label:@"detail_album_show" value:nil source:nil extraDic:@{@"video_subject_id" : [rArticle videoSubjectID]}];
                 }
             }
             [view refreshTitleWithTags:[itemInfo objectForKey:@"tags"]];
@@ -245,7 +246,7 @@
     
 - (void)appendMoreItems{
     //展开前最后一个item重新显示bottomLine
-    wrapperTrackEvent(@"video", @"detail_loadmore_relatedVideo");
+    [BDTrackerProtocol event:@"video" label:@"detail_loadmore_relatedVideo"];
     CGFloat wrapperHeightCursor = self.height - kLoadMoreButtonTopInset - kLoadMoreItemHeight;
     TTDetailNatantRelateReadView *view = [self.items lastObject];
     [view hideBottomLine:YES];
@@ -406,11 +407,11 @@
         [adDict setValue:@"1" forKey:@"is_ad_event"];
         NSString* creativeType = rArticle.videoAdExtra.creative_type;
         if (!isEmptyString(creativeType)) {
-            wrapperTrackEventWithCustomKeys(@"detail_ad_list", @"show", value, nil, adDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"detail_ad_list" label:@"show" value:value source:nil extraDic:adDict];
         }
         else
         {
-            wrapperTrackEventWithCustomKeys(@"embeded_ad", @"show", value, nil, adDict);
+            [BDTrackerProtocol trackEventWithCustomKeys:@"embeded_ad" label:@"show" value:value source:nil extraDic:adDict];
         }
         TTURLTrackerModel* trackModel = [[TTURLTrackerModel alloc] initWithAdId:[[rArticle relatedAdId] stringValue] logExtra:[rArticle relatedLogExtra]];
         ttTrackURLsModel(rArticle.videoAdExtra.track_url_list, trackModel);

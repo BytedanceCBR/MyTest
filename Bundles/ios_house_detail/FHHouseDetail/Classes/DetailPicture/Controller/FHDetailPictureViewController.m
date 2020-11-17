@@ -676,7 +676,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 }
 
 - (void)updateBottomTitleLabel {
-    if (self.currentIndex < 0 && self.currentIndex >= self.detailPictureModel.itemList.count) {
+    if (self.currentIndex < 0 || self.currentIndex >= self.detailPictureModel.itemList.count) {
         return;
     }
     FHDetailPictureItemModel *itemModel = self.detailPictureModel.itemList[self.currentIndex];
@@ -1931,6 +1931,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             self.bottomBar.alpha = 0;
             self.videoInfoView.alpha = 0;
             imageView.hidden = YES;
+            if (self.willBeginPanBackBlock) {
+                self.willBeginPanBackBlock(self.currentIndex);
+            }
             break;
         case TTPreviewAnimateStateChange:
             self.containerView.alpha = MAX(0,(scale*14-13 - _animateManager.minScale)/(1 - _animateManager.minScale));

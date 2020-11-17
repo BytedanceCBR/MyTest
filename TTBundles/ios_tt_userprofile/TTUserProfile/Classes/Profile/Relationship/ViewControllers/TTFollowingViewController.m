@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTFollowingViewController.m
 //  Article
 //
@@ -137,7 +138,7 @@ TTAccountMulticastProtocol
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    wrapperTrackEvent(@"followings", @"followings_pull_refresh");
+    [BDTrackerProtocol event:@"followings" label:@"followings_pull_refresh"];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -445,7 +446,7 @@ TTAccountMulticastProtocol
             TTFollowingMergeResponseModel *model = self.followingMergeModels[indexPath.row];
             NSString *type = model.type;
             if ([type isEqualToString:@"interest"] || ![self isNewFollowingEnable]) {
-                wrapperTrackEvent(@"followings", @"enter_xingqu");
+                [BDTrackerProtocol event:@"followings" label:@"enter_xingqu"];
                 
                 TTInterestViewController *interestVC = [[TTInterestViewController alloc] initWithUID:self.currentFriend.userID];
                 [self.topNavigationController pushViewController:interestVC animated:YES];
@@ -459,7 +460,7 @@ TTAccountMulticastProtocol
                         NSMutableDictionary *extra = [NSMutableDictionary dictionaryWithCapacity:2];
                         extra[@"type"] = !isEmptyString(model.type) ? model.type : @"";
                         extra[@"tips"] = [model.tips boolValue] ? @YES : @NO;
-                        wrapperTrackEventWithCustomKeys(@"followings_list", @"item_click", nil, nil, [extra copy]);
+                        [BDTrackerProtocol trackEventWithCustomKeys:@"followings_list" label:@"item_click" value:nil source:nil extraDic:[extra copy]];
                     }
                     if ([cell isKindOfClass:[TTFollowingMergeCell class]]) {
                         [cell setTipsCount:@"0"];
@@ -492,18 +493,18 @@ TTAccountMulticastProtocol
                 extra[@"user_id"] = !isEmptyString(model.ID) ? model.ID : @"0";
                 extra[@"media_id"] = !isEmptyString(model.media_id) ? model.media_id : @"0";
                 extra[@"tips_count"] = !isEmptyString(model.tipsCount) ? model.tipsCount : @"0";
-                wrapperTrackEventWithCustomKeys(@"followings_list", @"item_click", nil, nil, [extra copy]);
+                [BDTrackerProtocol trackEventWithCustomKeys:@"followings_list" label:@"item_click" value:nil source:nil extraDic:[extra copy]];
             } else {
                 /* old */
                 NSString *umengEventlabelPrefix = @"followings";
                 if ([umengEventlabelPrefix length] > 0) {
-                    wrapperTrackEvent(self.umengEventName, [NSString stringWithFormat:@"%@_profile", umengEventlabelPrefix]);
+                    [BDTrackerProtocol event:self.umengEventName label:[NSString stringWithFormat:@"%@_profile", umengEventlabelPrefix]];
                 }
                 if (!model.isFollowing) {
                     // 未关注对方
-                    wrapperTrackEvent(@"friends", @"follow_profile");
+                    [BDTrackerProtocol event:@"friends" label:@"follow_profile"];
                 }
-                wrapperTrackEvent(@"followings", @"enter_followings_profile"); /* new */
+                [BDTrackerProtocol event:@"followings" label:@"enter_followings_profile"];  /* new */
             }
             
             ArticleMomentProfileViewController *controller = [[ArticleMomentProfileViewController alloc] initWithFriendModel:[model articleFriend]];

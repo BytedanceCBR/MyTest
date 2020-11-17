@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailViewController.m
 //  Article
 //
@@ -1206,14 +1207,14 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
                     case TTVVideoDetailBannerTypeOpenApp:
                     {
                         if (videoInfoResponse.partnerVideo.appName) {
-                            wrapperTrackEventWithCustomKeys(@"video_banner", @"subscribe_show_jump", [self.detailModel uniqueID], nil, @{@"app" : videoInfoResponse.partnerVideo.appName});
+                            [BDTrackerProtocol trackEventWithCustomKeys:@"video_banner" label:@"subscribe_show_jump" value:[self.detailModel uniqueID] source:nil extraDic:@{@"app" : videoInfoResponse.partnerVideo.appName}];
                         }
                     }
                         break;
                     case TTVVideoDetailBannerTypeDownloadApp:
                     {
                         if (videoInfoResponse.partnerVideo.appName) {
-                            wrapperTrackEventWithCustomKeys(@"video_banner", @"subscribe_show_download", [self.detailModel uniqueID], nil, @{@"app" : videoInfoResponse.partnerVideo.appName});
+                            [BDTrackerProtocol trackEventWithCustomKeys:@"video_banner" label:@"subscribe_show_download" value:[self.detailModel uniqueID] source:nil extraDic:@{@"app" : videoInfoResponse.partnerVideo.appName}];
                         }
                     }
                         break;

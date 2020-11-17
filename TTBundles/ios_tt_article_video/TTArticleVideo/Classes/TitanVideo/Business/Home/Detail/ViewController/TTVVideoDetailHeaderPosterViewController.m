@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailHeaderPosterViewController.m
 //  Article
 //
@@ -108,12 +109,12 @@ extern CGFloat ttvs_detailVideoMaxHeight(void);
 - (void)setShareMovie:(TTVideoShareMovie *)shareMovie
 {
     if (shareMovie != _shareMovie) {
-        if ([shareMovie.movieView isKindOfClass:[TTVPlayVideo class]]) {
-            TTVPlayVideo *movieView = (TTVPlayVideo *)shareMovie.movieView;
-            if ([movieView isAdMovie] && movieView.playerModel.isAutoPlaying) {
-                [self sendADEvent:@"detail_ad" label:@"detail_play" value:self.videoInfo.adModel.ad_id extra:nil logExtra:self.videoInfo.adModel.log_extra];
-            }
-        }
+//        if ([shareMovie.movieView isKindOfClass:[TTVPlayVideo class]]) {
+//            TTVPlayVideo *movieView = (TTVPlayVideo *)shareMovie.movieView;
+//            if ([movieView isAdMovie] && movieView.playerModel.isAutoPlaying) {
+//                [self sendADEvent:@"detail_ad" label:@"detail_play" value:self.videoInfo.adModel.ad_id extra:nil logExtra:self.videoInfo.adModel.log_extra];
+//            }
+//        }
         
         [self.KVOController unobserve:_shareMovie];
         _shareMovie = shareMovie;
@@ -462,7 +463,7 @@ extern CGFloat ttvs_detailVideoMaxHeight(void);
 - (void)vdvi_trackWithLabel:(NSString *)label source:(NSString *)source groupId:(NSString *)groupId {
     NSMutableDictionary *extraDict = [[NSMutableDictionary alloc] init];
     [extraDict setValue:source forKey:@"action_type"];
-    wrapperTrackEventWithCustomKeys(@"video_player", label, groupId, nil, extraDict);
+    [BDTrackerProtocol trackEventWithCustomKeys:@"video_player" label:label value:groupId source:nil extraDic:extraDict];
 }
 
 - (void)p_handleMovieContainerViewPanned:(UIPanGestureRecognizer *)ges {

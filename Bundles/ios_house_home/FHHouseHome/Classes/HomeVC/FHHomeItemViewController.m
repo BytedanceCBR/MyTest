@@ -41,13 +41,14 @@
 #import "BDABTestManager.h"
 #import "NSString+BTDAdditions.h"
 #import "NSArray+BTDAdditions.h"
+#import "FHHomeRentCell.h"
 extern NSString *const INSTANT_DATA_KEY;
 
-static NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
-static NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
-static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
+NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
+NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
+NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
-@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate, FHHouseSearchSecondHouseCellDelegate>
+@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate, FHHouseSearchSecondHouseCellDelegate, FHHomeRentCellDelegate>
 
 @property (nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property (nonatomic , assign) NSInteger itemCount;
@@ -401,6 +402,8 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     [self.tableView registerClass:[FHHouseSearchSecondHouseCell class] forCellReuseIdentifier:@"FHHouseHomeSecondHouseCell"];
     
     [self.tableView registerClass:[FHHouseSearchNewHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseSearchNewHouseCell class])];
+    
+    [self.tableView registerClass:[FHHomeRentCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeRentCell class])];
 }
 
 //判断是否有运营位
@@ -1060,7 +1063,16 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 return cell;
             }
         }
-        
+        if ([FHEnvContext isDisplayNewCardType] && self.houseType == FHHouseTypeRentHouse) {
+            NSString *identifier = NSStringFromClass([FHHomeRentCell class]);
+            FHHomeRentCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+            cell.delegate = self;
+            if (indexPath.row < self.houseDataItemsModel.count) {
+                [cell refreshWithData:self.houseDataItemsModel[indexPath.row]];
+            }
+            [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.houseDataItemsModel.count - 1) && !self.hasMore)];
+            return cell;
+        }
         //to do 房源cell
         NSString *identifier = self.houseType == FHHouseTypeRentHouse ? kCellRentHouseItemImageId : kCellSmallItemImageId;
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
@@ -1080,7 +1092,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     if (indexPath.section == kFHHomeHouseTypeBannerViewSection) {
         if (self.houseType == _listModel.houseType && ![self.traceRecordDict objectForKey:@(self.houseType)] && [self checkIsHaveEntrancesList]) {
-            [self.traceRecordDict setValue:@"" forKey:@(self.houseType)];
+            [self.traceRecordDict setValue:@"" forKey:@(self.houseType).stringValue];
             [FHHomeCellHelper sendBannerTypeCellShowTrace:_houseType];
         }
         return ;
@@ -1100,6 +1112,7 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [self.traceRecordDict setValue:@"" forKey:cellModel.idx];
             
 //            NSString *originFrom = [FHEnvContext sharedInstance].getCommonParams.originFrom ? : @"be_null";
+
             NSMutableDictionary *tracerDict = [NSMutableDictionary new];
             tracerDict[@"house_type"] = cellModel.houseType.integerValue == FHHouseTypeNewHouse?@"new":([self houseTypeString] ? : @"be_null");
             tracerDict[@"card_type"] = @"left_pic";

@@ -1,4 +1,5 @@
 
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTRelationshipViewController.m
 //  Article
 //
@@ -169,7 +170,7 @@ TTHorizontalCategoryBarDelegate
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    wrapperTrackEvent(@"friends", @"enter");
+    [BDTrackerProtocol event:@"friends" label:@"enter"];
 }
 
 - (void)willMoveToParentViewController:(UIViewController *)parent {
@@ -375,7 +376,7 @@ TTHorizontalCategoryBarDelegate
             
             NSArray *logs = @[@"followings_enter", @"followers_enter", @"enter_mine_visitor"];
             if (indexOfTappedItem < [logs count]) {
-                wrapperTrackEvent(@"friends", logs[indexOfTappedItem]);
+                [BDTrackerProtocol event:@"friends" label:logs[indexOfTappedItem]];
             }
         };
     }

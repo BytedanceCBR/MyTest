@@ -65,6 +65,7 @@
 #import "BDABTestManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import "FHNewHouseDetailViewController.h"
+#import "FHNeighborhoodDetailViewController.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -708,7 +709,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     
     // ------------- 房源详情页 --------------------//
     if([self.belongsVC isKindOfClass:FHHouseDetailViewController.class] ||
-       [self.belongsVC isKindOfClass:FHNewHouseDetailViewController.class]) {
+       [self.belongsVC isKindOfClass:FHNewHouseDetailViewController.class] ||
+       [self.belongsVC isKindOfClass:FHNeighborhoodDetailViewController.class]) {
         FHHouseDetailViewController *houseDetailVC = (FHHouseDetailViewController *)self.belongsVC;
         NSObject *detailData  = houseDetailVC.viewModel.detailData;
         switch(houseDetailVC.viewModel.houseType) {
@@ -1150,7 +1152,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     tracerDic[@"realtor_rank"] = @(0);
     tracerDic[@"realtor_position"] = @"detail_button";
     tracerDic[@"realtor_logpb"] = contactPhone.realtorLogpb;
-    tracerDic[@"biz_trace"] = self.houseInfoBizTrace;
+    tracerDic[@"biz_trace"] = contactPhone.bizTrace;
     [tracerDic setValue:_contactPhone.enablePhone? @"1" : @"0" forKey:@"phone_show"];
     if (!isEmptyString(_contactPhone.imOpenUrl)) {
         [tracerDic setValue:@"1" forKey:@"im_show"];

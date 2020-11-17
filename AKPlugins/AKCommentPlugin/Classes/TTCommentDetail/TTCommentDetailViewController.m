@@ -188,7 +188,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
         [extra setValue:_pageState.detailModel.groupModel.itemID forKey:@"item_id"];
         [extra setValue:_recommendReason forKey:@"recommend_reason"];
         [extra setValue:@(duration/1000.0).stringValue forKey:@"ext_value"];
-        wrapperTrackEventWithCustomKeys(@"stay_page", [@"click_" stringByAppendingString:_categoryName], _pageState.detailModel.groupModel.groupID, nil, extra);
+        [BDTrackerProtocol trackEventWithCustomKeys:@"stay_page" label:[@"click_" stringByAppendingString:_categoryName] value:_pageState.detailModel.groupModel.groupID source:nil extraDic:extra];
         
         //新加的详情页关联时常
         NSString *enterFrom = [NSString stringWithFormat:@"click_%@", _categoryName];
@@ -558,7 +558,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    wrapperTrackEvent(@"update_detail", @"reply_replier_content");
+    [BDTrackerProtocol event:@"update_detail" label:@"reply_replier_content"];
     TTMomentDetailAction *action = [TTMomentDetailAction actionWithType:TTMomentDetailActionTypePublishComment comment:nil];
     action.source = TTMomentDetailActionSourceTypeComment;
     action.commentDetailModel = self.pageState.detailModel;
@@ -1194,7 +1194,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
             if (!weakSelf) {
                 return;
             }
-            wrapperTrackEvent(@"update_detail", @"replier_loadmore");
+            [BDTrackerProtocol event:@"update_detail" label:@"replier_loadmore"];
             TTMomentDetailAction *action = [TTMomentDetailAction actionWithType:TTMomentDetailActionTypeLoadComment comment:weakSelf.commentModel];
             action.shouldMiddlewareHandle = YES;
             [weakSelf.store dispatch:action];

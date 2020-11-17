@@ -38,7 +38,6 @@
         self.realtorDetailInfo = paramObj.allParams;
         self.tracerDict[@"enter_from"] =  self.tracerDict[@"page_type"];
         self.tracerDict[@"page_type"] = [self pageType];
-        
     }
     return self;
 }

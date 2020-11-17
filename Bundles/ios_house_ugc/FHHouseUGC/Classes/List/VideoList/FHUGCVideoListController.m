@@ -97,7 +97,7 @@
 
     [self addEnterCategoryLog];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [self.viewModel autoPlayCurrentVideo];
+//    [self.viewModel autoPlayCurrentVideo];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

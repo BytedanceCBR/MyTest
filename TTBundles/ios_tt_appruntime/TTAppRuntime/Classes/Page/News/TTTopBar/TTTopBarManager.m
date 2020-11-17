@@ -134,7 +134,7 @@ NSString *const kTTPublishUnloginImageName = @"publish_unlogin";
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSDictionary *cachedDict = [[TTPersistence persistenceWithName:kTTTopBarConfigurationPath] valueForKey:kTTTopBarConfigKey];
         if ([dict tt_longlongValueForKey:@"version"] > [cachedDict tt_longlongValueForKey:@"version"]) {
-            LOGD(@"TTTopBar 版本号变化，开始更新!!!，当前版本%lld,更新版本%lld",[cachedDict tt_longlongValueForKey:@"version"],[dict tt_longlongValueForKey:@"version"]);
+//            LOGD(@"TTTopBar 版本号变化，开始更新!!!，当前版本%lld,更新版本%lld",[cachedDict tt_longlongValueForKey:@"version"],[dict tt_longlongValueForKey:@"version"]);
             TTPersistence *persistence = [TTPersistence persistenceWithName:kTTTopBarConfigurationPath];
             [persistence setValue:dict forKey:kTTTopBarConfigKey];
             if (!isEmptyString([dict tt_stringValueForKey:@"url"])) {
@@ -158,7 +158,7 @@ NSString *const kTTPublishUnloginImageName = @"publish_unlogin";
             }
             [persistence save];
         } else {
-            LOGD(@"TTTopBar 版本号不变，无需更新!!!");
+//            LOGD(@"TTTopBar 版本号不变，无需更新!!!");
         }
     });
 }
@@ -352,7 +352,7 @@ NSString *const kTTPublishUnloginImageName = @"publish_unlogin";
             if (!removeZipError) {
                 [persistence setValue:@(YES) forKey:kTTTopBarImagesDownloadKey];
                 [persistence save];
-                LOGD(@"TTTopBar资源包下载成功");
+//                LOGD(@"TTTopBar资源包下载成功");
                 [TTSandBoxHelper disableBackupForPath:[kTTTopBarImagesPath stringDocumentsPath]];
                 
                 [[NSNotificationCenter defaultCenter] postNotificationName:kTTTopBarImagesDownloadKey object:nil];
@@ -367,7 +367,7 @@ NSString *const kTTPublishUnloginImageName = @"publish_unlogin";
                 });
             }
         } else {
-            LOGD(@"TTTopBar 资源包md5不匹配!!!");
+//            LOGD(@"TTTopBar 资源包md5不匹配!!!");
             static dispatch_once_t onceToken;
             dispatch_once(&onceToken, ^{
                 [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionChanged:) name:TTReachabilityChangedNotification object:nil];

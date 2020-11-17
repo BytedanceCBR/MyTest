@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTFavoriteHistoryViewController.m
 //  Article
 //
@@ -184,7 +185,7 @@ dispatch_async(dispatch_get_main_queue(), block);\
         }
     }
     // 点击搜索按钮埋点，对应来源
-    wrapperTrackEvent(from, @"search");
+    [BDTrackerProtocol event:from label:@"search"];
     
     NSMutableDictionary *condition = [NSMutableDictionary dictionaryWithCapacity:1];
     condition[@"from"] = from;
@@ -260,7 +261,7 @@ dispatch_async(dispatch_get_main_queue(), block);\
     
     if ([self.pageController.currentPageViewController respondsToSelector:@selector(isCurrentVCEditing)]) {
         if([((id<TTFeedFavoriteHistoryProtocol>)self.pageController.currentPageViewController) isCurrentVCEditing]) {
-           wrapperTrackEvent([[[self class] stayIDArray] objectAtIndex:0], @"edit");
+           [BDTrackerProtocol event:[[[self class] stayIDArray] objectAtIndex:0] label:@"edit"];
         }
     }
 }
@@ -293,7 +294,7 @@ dispatch_async(dispatch_get_main_queue(), block);\
     [self disableEditButtonIfNeededForViewController:self.pageController.currentPageViewController];
     [self changeRightButtonTextIfNeededAtIndex:toIndex];
     if (toIndex >=0 && toIndex < [[self class] stayIDArray].count) {
-        wrapperTrackEvent([[[self class] stayIDArray] objectAtIndex:toIndex], @"tab_swipe");
+        [BDTrackerProtocol event:[[[self class] stayIDArray] objectAtIndex:toIndex] label:@"tab_swipe"];
     }
 }
 

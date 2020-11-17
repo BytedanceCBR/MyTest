@@ -66,6 +66,7 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
 @property (nonatomic , assign) BOOL available;
 @property (nonatomic , assign) BOOL userHouseTypeSelected;
 @property (nonatomic , assign) FHHouseType houseType;
+@property (nonatomic , assign) FHHouseType originHouseType; //用于保存页面进入时的房源类型，给reset使用
 @property (nonatomic , assign) FHHouseType houseTypeSelectedValue;
 @property (nonatomic , strong) NSMutableDictionary *selectMap; // housetype : FHHouseFindSelectModel
 @property (nonatomic , strong) FHSearchFilterConfigItem *regionConfigItem;
@@ -112,6 +113,7 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
         collectionView.dataSource = self;
         _collectionView.allowsMultipleSelection = YES;
         _houseTypeSelectedValue = houseType;
+        _originHouseType = houseType;
 //        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onTap)];
 //        tapGesture.delegate = self;
 //        tapGesture.cancelsTouchesInView = NO;
@@ -956,7 +958,8 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
     defaultHouseIndex = defaultHouseIndex < self.houseTypeConfigItem.options.count ? defaultHouseIndex : 0;
     FHSearchFilterConfigOption *optionHouse = [self.houseTypeConfigItem.options btd_objectAtIndex:defaultHouseIndex];
     if ([optionHouse isKindOfClass:[FHSearchFilterConfigOption class]]) {
-        _houseTypeSelectedValue = optionHouse.houseType;
+        //reset时使用页面初始化时传入的houseType
+        _houseTypeSelectedValue = self.originHouseType;
         self.userHouseTypeSelected = NO;
     }
     

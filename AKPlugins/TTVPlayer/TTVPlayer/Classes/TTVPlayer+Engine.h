@@ -190,8 +190,6 @@
 ///-----------------------------------------------------------------
 // 是否循环播放，默认 NO, 播放完停止在最后一帧
 @property (nonatomic) BOOL looping;
-
-#if __has_include(<TTVideoEngineHeader.h>)
 /**
  Get option that you care about.
  Example: get video width.
@@ -212,10 +210,9 @@
  @param options key is one of VEKKeys, value defined id type.
  */
 - (void)setOptions:(NSDictionary<VEKKeyType, id> *)options;
-#else
+
 - (NSInteger)getVideoWidth;
 - (NSInteger)getVideoHeight;
-#endif
 
 
 @end

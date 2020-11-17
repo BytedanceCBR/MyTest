@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTOpenURLTask.m
 //  Article
 //
@@ -57,7 +58,7 @@ extern BOOL kFHInAppPushTipsHidden;
     NSString *page = paramObj.host;
     NSDictionary *params = paramObj.queryParams;
     if ([page isEqualToString:@"home"] && params[@"growth_from"]) {
-        wrapperTrackEvent(@"launch", params[@"growth_from"]);
+        [BDTrackerProtocol event:@"launch" label:params[@"growth_from"]];
         SSLog(@">>>> Launch: growth_from : %@",params);
     }
     

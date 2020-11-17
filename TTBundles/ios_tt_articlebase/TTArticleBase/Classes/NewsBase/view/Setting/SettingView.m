@@ -75,10 +75,10 @@
 #import "TTUserSettings/TTUserSettingsManager+NetworkTraffic.h"
 #import "TTUserSettings/TTUserSettingsManager+Notification.h"
 
-#import "IESVideoPlayer.h"
+//#import "IESVideoPlayer.h"
 #import <TTRexxar/TTRPackageManager.h>
 #import <TTSettingsManager/TTSettingsManager.h>
-#import <BDTBasePlayer/TTVOwnPlayerCacheWrapper.h>
+//#import <BDTBasePlayer/TTVOwnPlayerCacheWrapper.h>
 
 //#import "TTLivePlayerTrafficViewController.h"
 #import "TTAdSplashMediator.h"
@@ -450,7 +450,7 @@ TTEditUserProfileViewControllerDelegate
 {
     [super willAppear];
     
-    wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, @"enter");
+    [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:@"enter"];
     
     [_tableView reloadData];
     
@@ -459,7 +459,7 @@ TTEditUserProfileViewControllerDelegate
     [[NSNotificationCenter defaultCenter] postNotificationName:kSettingViewWillAppearNotification object:nil];
     
     if (_shouldShowADRegisterEntrance) {
-        wrapperTrackEvent(@"ad_register", @"setting_ad_register_show");
+        [BDTrackerProtocol event:@"ad_register" label:@"setting_ad_register_show"];
     }
 }
 
@@ -1095,7 +1095,7 @@ TTEditUserProfileViewControllerDelegate
     if (_isOpenSettingApp) {
         [[APNsManager sharedManager] sendAppNoticeStatus];
         if ([self isAPNSEnabled]) {
-            wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, @"notice_set_open");
+            [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:@"notice_set_open"];
             
             [self.pushNotificatoinSwitch setOn:YES];
             [TTUserSettingsManager closeAPNsNewAlert:NO];
@@ -1262,7 +1262,7 @@ TTEditUserProfileViewControllerDelegate
         [topVC dismissViewControllerAnimated:YES completion:nil];
     }]];
     [alert addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"取消", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-        wrapperTrackEvent(@"net_alert_setting", @"cancel");
+        [BDTrackerProtocol event:@"net_alert_setting" label:@"cancel"];
         [topVC dismissViewControllerAnimated:YES completion:nil];
     }]];
     [self _settingSourceViewOfController:alert tableView:tableView indexPath:indexPath];
@@ -1342,14 +1342,14 @@ TTEditUserProfileViewControllerDelegate
             [self _showIPhoneActionSheetForLoadImage];
         }
     } else if (cellType == SettingCellTypeVideoTrafficTip) {
-        wrapperTrackEvent(@"net_alert_setting", @"click");
+        [BDTrackerProtocol event:@"net_alert_setting" label:@"click"];
         if ([self _shouldShowIPadAlert]) {
             [self _showIPadAlertForVideoTrafficTip:tableView indexPath:indexPath];
         } else {
             [self _showIPhoneActionSheetForVideoTrafficTip];
         }
     } else if (cellType == SettingCellTypeClearCache) {
-        wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, @"clear_cache");
+        [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:@"clear_cache"];
         if (_cacheStatus != ArticleSettingViewCacheStatusCalcCompleted) {
             return;
         }
@@ -1366,7 +1366,7 @@ TTEditUserProfileViewControllerDelegate
     } else if (cellType == SettingCellTypeNatantSwitch) {
         
     }else if (cellType == SettingCellTypeCheckNewVersion) {
-        wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, @"check_version");
+        [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:@"check_version"];
         // 苹果审核拒绝app自己检测版本更新
         //[[NewVersionAlertManager alertManager] startAlertAutoCheck:NO];
     }
@@ -1401,7 +1401,7 @@ TTEditUserProfileViewControllerDelegate
         } else {
             [TTAccountManager presentQuickLoginFromVC:self.viewController type:TTAccountLoginDialogTitleTypeDefault source:@"" isPasswordStyle:YES completion:nil];
         }
-        wrapperTrackEvent(@"ad_register", @"setting_ad_register_clk");
+        [BDTrackerProtocol event:@"ad_register" label:@"setting_ad_register_clk"];
     } else if (cellType == SettingCellTypeAbout) {
         [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"fschema://aboutUs"]];
     }else if(cellType == SettingCellTypeNormalProblem){
@@ -1545,13 +1545,13 @@ TTEditUserProfileViewControllerDelegate
             
             // LogV1
             if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-                wrapperTrackerEvent([TTSandBoxHelper appName], @"xiangping", @"account_setting_signout");
+                [BDTrackerProtocol event:@"xiangping" label:@"account_setting_signout"];
             }
             // LogV3
             [TTTrackerWrapper eventV3:@"login_account_exit" params:nil isDoubleSending:YES];
             
             if (self.resetPasswordAlertShowed) {
-                wrapperTrackEvent(@"login", @"exit_password_setting_success");
+                [BDTrackerProtocol event:@"login" label:@"exit_password_setting_success"];
             }
             self.resetPasswordAlertShowed = NO;
             
@@ -1570,7 +1570,7 @@ TTEditUserProfileViewControllerDelegate
 
 - (void)feedbackButtonClicked:(id)sender
 {
-    wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, @"feedback");
+    [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:@"feedback"];
     SSFeedbackViewController * feedbackViewController = [[SSFeedbackViewController alloc] init];
     UIViewController *topController = [TTUIResponderHelper topViewControllerFor: self];
     [topController.navigationController pushViewController:feedbackViewController animated:YES];
@@ -1639,7 +1639,7 @@ TTEditUserProfileViewControllerDelegate
     BOOL apnsClosed = ![self isAPNSEnabled];
     if (apnsClosed) {
         if (&UIApplicationOpenSettingsURLString != NULL) {
-            wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, @"notice_set");
+            [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:@"notice_set"];
             NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
             if ([TTDeviceHelper OSVersionNumber] >= 10.0) {
 #pragma clang diagnostic push
@@ -1662,7 +1662,7 @@ TTEditUserProfileViewControllerDelegate
     
     [TTUserSettingsManager closeAPNsNewAlert:![TTUserSettingsManager apnsNewAlertClosed]];
     [[APNsManager sharedManager] sendAppNoticeStatus];
-    wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, ![TTUserSettingsManager apnsNewAlertClosed] ? @"apn_notice_on" : @"apn_notice_off");
+    [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:![TTUserSettingsManager apnsNewAlertClosed] ? @"apn_notice_on" : @"apn_notice_off"];
     [self.tableView reloadData];
 }
 
@@ -1687,7 +1687,7 @@ TTEditUserProfileViewControllerDelegate
     {
         //
         NSString *eventName = (mode == ReadModeTitle) ? @"title_mode" : @"digest_mode";
-        wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR,eventName);
+        [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:eventName];
     }
 }
 
@@ -1700,12 +1700,12 @@ TTEditUserProfileViewControllerDelegate
     switch (newMode) {
         case TTThemeModeDay:
         {
-            wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, @"click_to_day");
+            [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:@"click_to_day"];
         }
             break;
         case TTThemeModeNight:
         {
-            wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, @"click_to_night");
+            [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:@"click_to_night"];
         }
             break;
         default:
@@ -1722,7 +1722,7 @@ TTEditUserProfileViewControllerDelegate
  * 账号管理/编辑资料
  */
 - (void)showEditUserView:(id)sender {
-    wrapperTrackEvent(@"setting", @"enter_edit_profile");
+    [BDTrackerProtocol event:@"setting" label:@"enter_edit_profile"];
     
     if([TTAccountManager isLogin]) {
         TTEditUserProfileViewController *profileVC = [TTEditUserProfileViewController new];
@@ -1735,7 +1735,7 @@ TTEditUserProfileViewControllerDelegate
 }
 
 - (void)openAccountBindingSettingDidSelectCell:(UITableViewCell *)cell {
-    wrapperTrackEvent(@"setting", @"enter_edit_account");
+    [BDTrackerProtocol event:@"setting" label:@"enter_edit_account"];
     
     TTAccountBindingViewController *vc = [[TTAccountBindingViewController alloc] init];
     UINavigationController *topNav = [TTUIResponderHelper topNavigationControllerFor:self];
@@ -1749,7 +1749,7 @@ TTEditUserProfileViewControllerDelegate
 }
 
 - (void)openUserBlacklistsDidSelectCell:(UITableViewCell *)cell {
-    wrapperTrackEvent(@"setting", @"enter_blacklist");
+    [BDTrackerProtocol event:@"setting" label:@"enter_blacklist"];
     
     BlockUsersListViewController *vc = [[BlockUsersListViewController alloc] init];
     UINavigationController *topNav = [TTUIResponderHelper topNavigationControllerFor:self];
@@ -1784,7 +1784,7 @@ TTEditUserProfileViewControllerDelegate
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == actionSheet.cancelButtonIndex && actionSheet.tag == kActionSheetForVideoTrafficTip) {
-        wrapperTrackEvent(@"net_alert_setting", @"cancel");
+        [BDTrackerProtocol event:@"net_alert_setting" label:@"cancel"];
     }
     if (buttonIndex != actionSheet.cancelButtonIndex)
     {
@@ -1807,7 +1807,7 @@ TTEditUserProfileViewControllerDelegate
             
             
             NSString *eventName = settingType == TTNetworkTrafficOptimum ? @"bandwidth_big" : (settingType == TTNetworkTrafficMedium ? @"bandwidth_normal" : @"bandwidth_small");
-            wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, eventName);
+            [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:eventName];
         } else if (actionSheet.tag == kActionSheetForVideoTrafficTip) {
             [self setVideoTrafficTipWithIndex:buttonIndex];
         }
@@ -1830,7 +1830,7 @@ TTEditUserProfileViewControllerDelegate
                     break;
             }
             
-            wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, eventLabel);
+            [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:eventLabel];
             
         }
     }
@@ -1851,7 +1851,7 @@ TTEditUserProfileViewControllerDelegate
     
     
     NSString *eventName = settingType == TTNetworkTrafficOptimum ? @"bandwidth_big" : (settingType == TTNetworkTrafficMedium ? @"bandwidth_normal" : @"bandwidth_small");
-    wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, eventName);
+    [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:eventName];
 }
 
 - (void)setVideoTrafficTipWithIndex:(NSInteger)index
@@ -1860,7 +1860,7 @@ TTEditUserProfileViewControllerDelegate
     if (curIndex == index) {
         return;
     }
-    wrapperTrackEvent(@"net_alert_setting", index?@"once":@"every");
+    [BDTrackerProtocol event:@"net_alert_setting" label:index?@"once":@"every"];
     UITableViewCell *cell = [_tableView cellForRowAtIndexPath:[self settingCellIndexPathForType:SettingCellTypeVideoTrafficTip]];
     [[NSUserDefaults standardUserDefaults] setInteger:index forKey:TTVideoTrafficTipSettingKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -1888,7 +1888,7 @@ TTEditUserProfileViewControllerDelegate
             break;
     }
     
-    wrapperTrackEvent(UMENG_SETTINGVIEW_EVENT_ID_STR, eventLabel);
+    [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:eventLabel];
 }
 
 - (void)clearCache {
@@ -1918,14 +1918,14 @@ TTEditUserProfileViewControllerDelegate
         [[SSTrashManager sharedManager] trashItemAtPath:webCache resultingItemPath:&resultPath error:nil];
     }
     
-    //火山短视频缓存
-    id<IESVideoCacheProtocol> shortVideoSysPlayerCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeSystem];
-    [shortVideoSysPlayerCache clearAllCache];//系统播放器
+//    //火山短视频缓存
+//    id<IESVideoCacheProtocol> shortVideoSysPlayerCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeSystem];
+//    [shortVideoSysPlayerCache clearAllCache];//系统播放器
+//    
+//    id<IESVideoCacheProtocol> shortVideoOwnPlayerCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeTTOwn];
+//    [shortVideoOwnPlayerCache clearAllCache];//自研播放器
     
-    id<IESVideoCacheProtocol> shortVideoOwnPlayerCache = [IESVideoCache cacheWithType:IESVideoPlayerTypeTTOwn];
-    [shortVideoOwnPlayerCache clearAllCache];//自研播放器
-    
-    [[TTVOwnPlayerCacheWrapper sharedCache] clearAllCache];
+//    [[TTVOwnPlayerCacheWrapper sharedCache] clearAllCache];
     
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     

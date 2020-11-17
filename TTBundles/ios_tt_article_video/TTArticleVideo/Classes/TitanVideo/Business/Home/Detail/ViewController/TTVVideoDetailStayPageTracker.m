@@ -1,4 +1,5 @@
 //
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
 //  TTVVideoDetailStayPageTracker.m
 //  Article
 //
@@ -298,9 +299,9 @@ static NSInteger const vaildStayPageMaxInterval = 7200;
 - (void)ttv_logBack
 {
     if (self.detailStateStore.state.clickedBackBtn) {
-        wrapperTrackEvent(@"detail", @"page_close_button");
+        [BDTrackerProtocol event:@"detail" label:@"page_close_button"];
     } else {
-        wrapperTrackEvent(@"detail", @"back_gesture");
+        [BDTrackerProtocol event:@"detail" label:@"back_gesture"];
     }
 }
 
