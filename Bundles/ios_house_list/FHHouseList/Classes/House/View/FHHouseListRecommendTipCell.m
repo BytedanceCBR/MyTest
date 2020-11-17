@@ -72,7 +72,6 @@
             }];
         }
         self.noDataTipLabel.attributedText = attrText;
-        [self.noDataTipLabel sizeToFit];
         [self.noDataTipLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(self.contentView);
             make.centerX.mas_equalTo(self.contentView);
