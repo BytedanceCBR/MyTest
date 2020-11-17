@@ -197,7 +197,6 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             NSString *keyString = keyArray[i];
             if([keyString integerValue] <= indexPath.row) {
                 if ([self.traceFirstScreenNeedUploadCache.allKeys containsObject:keyString]) {
-                    NSLog(@"tableView  uploaded i =%@",keyString);
                     [FHEnvContext recordEvent:self.traceFirstScreenNeedUploadCache[keyString] andEventKey:@"house_show"];
                     [self.traceFirstScreenNeedUploadCache removeObjectForKey:keyString];
                 }
@@ -783,7 +782,6 @@ static NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             NSString *keyString = keyArray[i];
              if([keyString integerValue] == indexPath.row){
                 if ([self.traceFirstScreenNeedUploadCache.allKeys containsObject:keyString]) {
-                        NSLog(@"tableView  uploaded i =%@",keyString);
                         [FHEnvContext recordEvent:self.traceFirstScreenNeedUploadCache[keyString] andEventKey:@"house_show"];
                         [self.traceFirstScreenNeedUploadCache removeObjectForKey:keyString];
               }
