@@ -30,8 +30,6 @@
 @property (nonatomic, strong) FHNeighborListViewModel *viewModel;
 @property (nonatomic, strong) TTRouteParamObj *paramObj;
 
-@property (nonatomic, assign) FHNeighborListVCType neighborListVCType;
-
 @property (nonatomic, strong) UITableView *tableView;
 
 @property (nonatomic, strong) FHRefreshCustomFooter *refreshFooter;

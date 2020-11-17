@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHNeighborListViewController : FHBaseViewController
 
 @property (nonatomic, assign) FHHouseType houseType;
+@property (nonatomic, assign) FHNeighborListVCType neighborListVCType;
 
 @end
 

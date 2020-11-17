@@ -288,11 +288,10 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
   */
  + (BOOL)isHasPerLoadForVideo;
 
- /*
-  
- 是否开启首页二手房、新房新样式实验、默认为NO
+/*
+ 降级卡片开关
  */
-+ (BOOL)isShowHomeHouseCard;
++ (BOOL)isDisplayNewCardType;
 
 /*
 判断开启首次安装用户引导，默认YES

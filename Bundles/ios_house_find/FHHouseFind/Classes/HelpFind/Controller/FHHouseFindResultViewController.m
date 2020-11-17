@@ -21,7 +21,6 @@
 @property (nonatomic , strong) UIButton *rightBtn;
 @property (nonatomic, assign)   BOOL     isViewDidDisapper;
 @property (nonatomic, assign)   FHHouseType  currentHouseType;
-
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 @property (nonatomic , strong) TTRouteParamObj *paramObj;
 @property (nonatomic , strong) FHHouseFindRecommendDataModel *recommendModel;
