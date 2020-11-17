@@ -37,6 +37,7 @@ def fhPods
     pod 'FHHouseEpidemicSituation', :path => '../Bundles/ios_house_esituation', :inhibit_warnings => false
     pod 'FHHouseRealtorDetail', :path => '../Bundles/ios_house_realtordetail', :inhibit_warnings => false
     pod 'FHHouseUGC' , :path => '../Bundles/ios_house_ugc', :inhibit_warnings => false
+    pod 'FHHouseShare' , :path => '../Bundles/ios_house_share', :inhibit_warnings => false
     pod 'FHHouseTrend' , :path => '../Bundles/ios_house_trend', :inhibit_warnings => false
     pod 'FHCHousePush' , :path => '../Bundles/FHCHousePush', :inhibit_warnings => false#,:git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
     #    pod 'FHCHousePush' , :git => 'git@code.byted.org:fproject/FHCHousePush.git' , :branch => 'feature/develop'
