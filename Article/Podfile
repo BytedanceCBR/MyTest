@@ -350,7 +350,9 @@ def appPods
     'WatchdogProtect',
     'HMDAlogProtocol',
     'Protect',
-    'HMDSDKMonitor'
+    'HMDSDKMonitor',
+    'OpenTracing',
+    'HMDLaunchTracing'
     ]
 
     pod 'TTMacroManager','1.0.1'
