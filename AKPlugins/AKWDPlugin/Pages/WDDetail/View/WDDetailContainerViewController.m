@@ -21,7 +21,6 @@
 #import "TTInteractExitHelper.h"
 #import <KVOController/NSObject+FBKVOController.h>
 #import "ExploreOrderedData.h"
-#import <FHShareManager.h>
 
 @interface WDDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol, WDDetailModelDataSource>
 @property (nonatomic, assign) BOOL hasDidAppeared;

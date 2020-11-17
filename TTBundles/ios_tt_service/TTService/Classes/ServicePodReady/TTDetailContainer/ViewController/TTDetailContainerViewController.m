@@ -34,7 +34,6 @@
 #import "FHErrorView.h"
 #import "Masonry.h"
 #import "UIView+House.h"
-#import <FHShareManager.h>
 
 @interface TTDetailContainerViewController ()<TTDetailViewControllerDelegate, TTDetailViewControllerDataSource, UIViewControllerErrorHandler,TTInteractExitProtocol>
 
