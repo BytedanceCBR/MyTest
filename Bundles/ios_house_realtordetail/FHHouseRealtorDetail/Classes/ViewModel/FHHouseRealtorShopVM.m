@@ -21,6 +21,8 @@
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "NSObject+YYModel.h"
 #import "FHUserTracker.h"
+#import "FHRealtorSecondCell.h"
+
 @interface FHHouseRealtorShopVM ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
 @property(nonatomic , weak) UITableView *tableView;
@@ -193,6 +195,7 @@
 
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
+    [self.tableView registerClass:[FHRealtorSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHRealtorSecondCell class])];
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -304,6 +307,16 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     //to do 房源cell
+    if ([FHEnvContext isDisplayNewCardType]) {
+        NSString *identifier = NSStringFromClass([FHRealtorSecondCell class]);
+        FHHouseBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        if (indexPath.row < self.dataList.count) {
+            JSONModel *model = self.dataList[indexPath.row];
+            [cell refreshWithData:model];
+            [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == (self.dataList.count - 1))];
+        }
+        return cell;
+    }
     NSString *identifier = @"FHHomeSmallImageItemCell";
     FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     cell.delegate = self;

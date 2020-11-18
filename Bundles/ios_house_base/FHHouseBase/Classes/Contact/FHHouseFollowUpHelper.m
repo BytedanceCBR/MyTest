@@ -100,7 +100,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
 {
     NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
     if (toastCount < 3) {
-        CSToastStyle *style = [[CSToastStyle alloc]initWithDefaultStyle];
+        FHCSToastStyle *style = [[FHCSToastStyle alloc]initWithDefaultStyle];
         style.cornerRadius = 12;
         style.messageAlignment = NSTextAlignmentCenter;
         style.messageColor = [UIColor whiteColor];
@@ -112,7 +112,7 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
         style.customX = [UIScreen mainScreen].bounds.size.width - 20 - 50;
         style.verticalOffset = 65 + ([TTDeviceHelper isIPhoneXDevice] ? 20 : 0);
         UIViewController *temp = [TTUIResponderHelper topmostViewController];
-        [temp.view makeToast:@"已加入关注列表" duration:3 position:CSToastPositionTop style:style];
+        [temp.view makeToast:@"已加入关注列表" duration:3 position:FHCSToastPositionTop style:style];
         toastCount += 1;
         [[NSUserDefaults standardUserDefaults]setInteger:toastCount forKey:kFHToastCountKey];
         [[NSUserDefaults standardUserDefaults]synchronize];

@@ -23,6 +23,7 @@
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 #import "TTAccountManager.h"
 #import "UIViewController+NavigationBarStyle.h"
+#import "FHCommonDefines.h"
 
 typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     FHSegmentedControllerAnimatedTransitionDirectionUnknown,
@@ -248,10 +249,18 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 @property (nonatomic, assign) CGFloat pushTipViewHeight;
 @property (nonatomic, assign) BOOL isLogin;
 @property (nonatomic, assign) BOOL loginStateChange;
+@property (nonatomic, strong) RACSubject *conversationUpdateSubject;
 
 @end
 
 @implementation FHMessageSegmentedViewController
+
+- (RACSubject *)conversationUpdateSubject {
+    if(!_conversationUpdateSubject) {
+        _conversationUpdateSubject = [RACSubject subject];
+    }
+    return _conversationUpdateSubject;
+}
 
 - (void)setViewControllers:(NSArray *)viewControllers {
     for (UIViewController *viewController in _viewControllers) {
@@ -458,6 +467,12 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     }];
     [[IMManager shareInstance].accountCenter registerAccountStatusListener:self];
     [self updateContentView];
+    
+    
+    [[[self.conversationUpdateSubject throttle:0.5] deliverOnMainThread] subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        [self refreshConversationListDisplayEmptyMaskViewIfNeed];
+    }];
 }
 
 - (void)didLogin {
@@ -606,13 +621,25 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     }
 }
 
-- (void)conversationUpdated:(NSString *)conversationIdentifier {
+- (void)refreshConversationListDisplayEmptyMaskViewIfNeed {
     NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
     [_combiner resetConversations:allConversations];
     FHMessageViewController *vc = self.activeViewController;
     if (vc && vc.viewModel) {
         [vc.viewModel checkShouldShowEmptyMaskView];
     }
+}
+
+// 更新单个会话的内容
+- (void)conversationUpdated:(NSString *)conversationIdentifier {
+    if(conversationIdentifier.length > 0) {
+        [self.conversationUpdateSubject sendNext:conversationIdentifier];
+    }
+}
+
+// 更新多个会话的个数和顺序
+- (void)conversationsUpdated:(NSArray<NSString *> *)conversationIdentifiers {
+    [self refreshConversationList];
 }
 
 - (void)setInteractivePanDirection:(FHSegmentedControllerAnimatedTransitionDirection)interactivePanDirection {

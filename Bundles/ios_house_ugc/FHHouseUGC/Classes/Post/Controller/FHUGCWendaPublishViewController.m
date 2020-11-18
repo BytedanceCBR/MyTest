@@ -7,7 +7,7 @@
 
 #import "FHUGCWendaPublishViewController.h"
 #import <FHPostUGCMainView.h>
-#import "IMConsDefine.h"
+#import "FHCommonDefines.h"
 #import <FHUGCConfig.h>
 #import <FHCommunityList.h>
 #import "WDDefines.h"

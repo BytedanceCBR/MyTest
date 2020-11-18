@@ -12,6 +12,8 @@
 #import "UIViewController+HUD.h"
 #import "TTRoute.h"
 #import "FHUserTracker.h"
+#import "FHMapSearchNewCell.h"
+#import "FHEnvContext.h"
 
 //#import "FHHomeBaseTableView.h"
 #define kMapSearchCellNewHouseItemImageId @"FHHouseBaseNewHouseCell"
@@ -32,7 +34,7 @@
     if (self) {
        _houseTable = [[UITableView alloc] initWithFrame:CGRectMake(0, 0,  [UIScreen mainScreen].bounds.size.width,kMapSearchCellHeight) style:UITableViewStylePlain];
         [_houseTable registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:kMapSearchCellNewHouseItemImageId];
-
+        [_houseTable registerClass:[FHMapSearchNewCell class] forCellReuseIdentifier:NSStringFromClass([FHMapSearchNewCell class])];
         _houseTable.dataSource = self;
         _houseTable.delegate = self;
 //        _tableView.bounces = NO;
@@ -128,6 +130,15 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
        //to do 房源cell
+    if ([FHEnvContext isDisplayNewCardType]) {
+        FHMapSearchNewCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHMapSearchNewCell class])];
+        [cell refreshTopMargin:4];
+        if (_itemModel) {
+            FHSearchHouseItemModel *itemModelForMap = [[FHSearchHouseItemModel alloc] initWithDictionary:[_itemModel toDictionary] error:nil];
+            [cell refreshWithData:itemModelForMap];
+        }
+        return cell;
+    }
     FHHouseBaseNewHouseCell *cell = [tableView dequeueReusableCellWithIdentifier:kMapSearchCellNewHouseItemImageId];
 //     cell.delegate = self;
     [cell refreshTopMargin:4];

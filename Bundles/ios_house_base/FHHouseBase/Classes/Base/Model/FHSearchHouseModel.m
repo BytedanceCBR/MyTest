@@ -791,6 +791,7 @@
                            @"skyEyeTag": @"sky_eye_tag",
                            @"advantageDescription":@"advantage_description",
                            @"cellStyles":@"cell_style",
+                           @"cardType": @"card_type",
                            @"tagImage": @"tag_image",
                            
                            @"pricePerSqmNum": @"price_per_sqm_num",
@@ -876,7 +877,6 @@
                     }
                     return @"";
                 }];
-                
             }
             if (self.titleTags) {//FHSearchHouseItemTitleTagModel
                 mutablLogPb[@"app_marketing_tags"] = [self.titleTags btd_map:^id _Nullable(id  _Nonnull obj) {

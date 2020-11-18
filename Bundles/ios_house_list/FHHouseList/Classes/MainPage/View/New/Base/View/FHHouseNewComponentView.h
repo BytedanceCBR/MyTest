@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel;
 
+@optional
++ (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel;
+
 @end
 
 @interface FHHouseNewComponentView : UIView<FHHouseNewComponentViewProtocol>
