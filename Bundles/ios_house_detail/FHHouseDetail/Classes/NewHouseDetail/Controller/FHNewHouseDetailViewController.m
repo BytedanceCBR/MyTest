@@ -60,7 +60,6 @@
 @property (nonatomic, strong) FHDetailNavBar *navBar;
 @property (nonatomic, strong) FHNewHouseDetailFlowLayout *detailFlowLayout;
 @property (nonatomic, strong) FHBaseCollectionView *collectionView;
-@property (nonatomic, strong) UILabel *bottomStatusBar;
 @property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHDetailBottomBar *bottomBar;
 @property (nonatomic, strong) FHDetailUGCGroupChatButton *bottomGroupChatBtn; // 新房群聊入口
@@ -249,15 +248,6 @@
     self.bottomBar.bottomGroupChatBtn = _bottomGroupChatBtn; // 这样子改动最小
     _bottomGroupChatBtn.hidden = YES;
 
-    _bottomStatusBar = [[UILabel alloc] init];
-    _bottomStatusBar.textAlignment = NSTextAlignmentCenter;
-    _bottomStatusBar.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
-    _bottomStatusBar.text = @"该房源已停售";
-    _bottomStatusBar.font = [UIFont themeFontRegular:14];
-    _bottomStatusBar.textColor = [UIColor whiteColor];
-    _bottomStatusBar.hidden = YES;
-    [self.view addSubview:_bottomStatusBar];
-
     [self addDefaultEmptyViewFullScreen];
 
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -272,11 +262,6 @@
         } else {
             make.bottom.mas_equalTo(self.view);
         }
-    }];
-    [_bottomStatusBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.bottomBar.mas_top);
-        make.height.mas_equalTo(0);
     }];
 
     [_bottomMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -322,11 +307,7 @@
     self.viewModel.extraInfo = self.extraInfo;
     self.viewModel.initTimeInterval = self.initTimeInterval;
     self.viewModel.houseType = self.houseType;
-    
-    self.viewModel.navBar = _navBar;
-    self.viewModel.bottomBar = _bottomBar;
-    self.viewModel.bottomStatusBar = _bottomStatusBar;
-    
+        
     self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
     self.viewModel.contactViewModel.searchId = self.searchId;
     self.viewModel.contactViewModel.imprId = self.imprId;
@@ -372,10 +353,13 @@
             if (isShowEmpty) {
                 weakSelf.isLoadingData = NO;
                 weakSelf.hasValidateData = NO;
+                weakSelf.bottomBar.hidden = YES;
                 [weakSelf.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             } else {
                 weakSelf.hasValidateData = YES;
+                weakSelf.bottomBar.hidden = NO;
                 [weakSelf.emptyView hideEmptyView];
+                [weakSelf.navBar showMessageNumber];
             }
         }
     }];
@@ -565,7 +549,6 @@
     }];
     self.bottomBar.hidden = NO;
     self.bottomMaskView.hidden = NO;
-    self.bottomStatusBar.hidden = NO;
     [self.view sendSubviewToBack:self.collectionView];
     [self.view setNeedsUpdateConstraints];
 }
