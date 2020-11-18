@@ -65,6 +65,9 @@
 #import "FHDynamicLynxCell.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "NSArray+BTDAdditions.h"
+#import "UITableView+FHHouseCard.h"
+#import "FHHouseCardUtils.h"
+#import "NSObject+FHTracker.h"
 #import "FHHouseListRentCell.h"
 
 extern NSString *const INSTANT_DATA_KEY;
@@ -400,10 +403,19 @@ extern NSString *const INSTANT_DATA_KEY;
         [wself loadData:wself.isRefresh];
     }];
     self.tableView.mj_footer = self.refreshFooter;
-
+    
+    if ([self isNeighborhoodList]) {
+        self.tableView.backgroundColor = [UIColor themeGray7];
+    }
+    
+    [self.tableView fhHouseCard_registerCellStyles];
+    
     [self registerCellClasses];
 }
 
+- (BOOL)isNeighborhoodList {
+    return (self.houseType == FHHouseTypeNeighborhood && self.searchType != FHHouseListSearchTypeNeighborhoodDeal);
+}
 
 -(void)loadData:(BOOL)isRefresh {
     [self loadData:isRefresh fromRecommend:self.fromRecommend];
@@ -944,8 +956,22 @@ extern NSString *const INSTANT_DATA_KEY;
             if (idx == 0 && [theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
                 hideRefreshTip = YES;
             }
-
-                if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+            
+            NSObject *entity = [FHHouseCardUtils getEntityFromModel:theItemModel];
+            if (entity) {
+                FHTracerModel *tracerModel = [[FHTracerModel alloc] init];
+                tracerModel.originSearchId = self.originSearchId;
+                tracerModel.searchId = self.searchId;
+                tracerModel.originFrom = self.tracerModel.originFrom;
+                tracerModel.enterFrom = self.tracerModel.enterFrom;
+                tracerModel.elementFrom = self.tracerModel.elementFrom;
+                tracerModel.elementType = self.tracerModel.elementType;
+                tracerModel.pageType = [self pageTypeString];
+                tracerModel.categoryName = [self categoryName];
+                
+                entity.fh_trackModel = tracerModel;
+                theItemModel = entity;
+            } else if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *itemModel = theItemModel;
                     itemModel.isLastCell = (idx == itemArray.count - 1);
                     if ([lastObj isKindOfClass:[FHHouseNeighborAgencyModel class]] || [lastObj isKindOfClass:[FHHouseReserveAdviserModel class]]) {
@@ -1631,6 +1657,9 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     if (data) {
         identifier = [self cellIdentifierForEntity:data];
+        
+        UITableViewCell *cell = [tableView fhHouseCard_cellForEntity:data atIndexPath:indexPath];
+        if (cell) return cell;
     }
     __weak typeof(self)wself = self;
     if (identifier.length > 0) {
@@ -1692,12 +1721,14 @@ extern NSString *const INSTANT_DATA_KEY;
             return [[FHListBaseCell alloc]init];
         }
         return cell;
-    } 
+    }
     return [[FHListBaseCell alloc]init];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if ([tableView fhHouseCard_willShowCell:cell atIndexPath:indexPath]) return;
+    
     if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
         return;
     }
@@ -1777,6 +1808,9 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
     if (data) {
+        CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath];
+        if (cellHeight > -0.001f) return cellHeight;
+        
         id cellClass = [self cellClassForEntity:data];
         if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
             FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
@@ -1814,6 +1848,9 @@ extern NSString *const INSTANT_DATA_KEY;
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if ([tableView fhHouseCard_didClickCell:cell atIndexPath:indexPath]) return;
+    
     if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
         
         if (indexPath.row < self.houseList.count) {
