@@ -1254,7 +1254,6 @@ extern NSString *const INSTANT_DATA_KEY;
 -(void)showMaskView:(BOOL)show
 {
     self.maskView.hidden = !show;
-    
 }
 
 

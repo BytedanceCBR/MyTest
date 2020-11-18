@@ -57,6 +57,11 @@ static const char tabSwitchedKey;
     parameters[@"group_id"] = model.info.qrecid;
     parameters[@"element_type"] = @"search";
     parameters[@"recall_type"] = model.recallType;
+    if([eventName isEqualToString:@"search_detail_show"]){
+        [parameters removeObjectForKey:@"result_num"];
+        [parameters removeObjectForKey:@"differ_result_num"];
+        [parameters removeObjectForKey:@"rank"];
+    }
     TRACK_EVENT(eventName, parameters);
 }
 
