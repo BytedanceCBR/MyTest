@@ -494,7 +494,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             [wself.items removeObject:subscribeModel];
             [wself reloadData];
         }else {
-            [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
+            [[ToastManager manager] showToast:[NSString stringWithFormat:@"%@%@",model.message.length ? @"" : @"提交失败 ", model.message]];
         }
     }];
     // 静默关注功能
