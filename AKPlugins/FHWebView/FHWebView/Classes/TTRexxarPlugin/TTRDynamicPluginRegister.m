@@ -83,6 +83,11 @@
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRShortVideo.getRedPackIntro" for:@"get_redpack_state"];
 
     [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"FHLoginConflictBridgePlugin.postMessageToNative" for:@"app.postMessageToNative"];
+    
+    // LinkChat JS Bridge
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLinkChat.getUserPermission" for:@"getUserPermission"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLinkChat.openPhotoLibrary" for:@"openPhotoLibrary"];
+    [[TTRJSBForwarding sharedInstance] registeJSBAlias:@"TTRLinkChat.linkChatPlayVideo" for:@"linkChatPlayVideo"];
 }
 
 @end

@@ -746,12 +746,19 @@
 }
 
 - (void)goToPersonalHomePage {
+    NSString *schema = nil;
     if(!isEmptyString(self.cellModel.user.schema)){
+        schema = self.cellModel.user.schema;
+    }else if(!isEmptyString(self.cellModel.user.userId)){
+        schema = [NSString stringWithFormat:@"sslocal://profile?uid=%@", self.cellModel.user.userId];
+    }
+    
+    if(!isEmptyString(schema)){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"from_page"] = self.cellModel.tracerDic[@"page_type"] ? self.cellModel.tracerDic[@"page_type"] : @"default";
         dict[@"origin_from"] = self.cellModel.tracerDic[@"origin_from"] ?: @"be_null";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *openUrl = [NSURL URLWithString:self.cellModel.user.schema];
+        NSURL *openUrl = [NSURL URLWithString:schema];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
 }
@@ -791,6 +798,7 @@
     UIView *view = [self cell_movieView];
     view.hidden = YES;
     [self pause];
+    [self hideMutedBtn];
 }
 
 - (void)stop {

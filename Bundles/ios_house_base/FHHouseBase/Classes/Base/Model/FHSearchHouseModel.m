@@ -838,10 +838,10 @@
 {
     switch (houseType) {
         case FHHouseTypeNewHouse:
-            return @"FHHouseBaseNewHouseCell";
+            return @"FHHouseSearchNewHouseCell";
             break;
         case FHHouseTypeSecondHandHouse:
-            return @"FHHouseBaseItemCellSecond";
+            return @"FHHouseSearchSecondHouseCell";
             break;
         case FHHouseTypeRentHouse:
             return @"FHHouseBaseItemCellRent";

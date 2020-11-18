@@ -25,6 +25,7 @@
 @property (nonatomic, copy) NSString *logExtra;
 @property (nonatomic, copy) NSDictionary *logPb;
 @property (nonatomic, assign) TTVPlayerSP sp;
+@property (nonatomic, copy) NSString *tag;
 
 #pragma mark 视频4中播放方式
 /**
