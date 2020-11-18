@@ -9,6 +9,9 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "masonry.h"
+#import "TTDeviceHelper.h"
+#import "NSAttributedString+YYText.h"
+#import "YYLabel.h"
 @interface FHOldSuggestionItemCell ()
 @property (weak, nonatomic) UIView *zoneTypeView;
 @property (weak, nonatomic) UILabel *zoneTypeLab;
@@ -32,7 +35,7 @@
 
 - (void)createUI {
     [self.zoneTypeView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.contentView).offset(17);
+        make.top.equalTo(self.contentView).offset(14);
         make.left.equalTo(self.contentView).offset(15);
         make.height.mas_offset(18);
     }];
@@ -43,7 +46,7 @@
     }];
     [self.titleLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.zoneTypeView);
-        make.left.equalTo(self.zoneTypeView.mas_right).offset(15);
+        make.left.equalTo(self.zoneTypeView.mas_right).offset(15); 
     }];
     [self.amountLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.zoneTypeView);
@@ -55,19 +58,27 @@
         make.right.mas_lessThanOrEqualTo(self.amountLab.mas_left).offset(-15);
     }];
     [self.regionLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.titleLab);
+        make.left.equalTo(self.titleLab).priorityHigh();
         make.top.equalTo(self.titleLab.mas_bottom).offset(3);
     }];
     [self.villageLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.regionLab.mas_right).offset(5);
+        make.left.equalTo(self.regionLab.mas_right).offset(5).priorityHigh();
+        make.right.mas_lessThanOrEqualTo(self.amountLab.mas_left).offset(-6);
         make.top.equalTo(self.titleLab.mas_bottom).offset(3);
-        make.right.equalTo(self.amountLab.mas_right);
     }];
-    [self.regionLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
-    [self.villageLab setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    CGFloat lineH = UIScreen.mainScreen.scale > 2.5 ? 0.35 : 0.5;
+    [self.sepLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(15);
+            make.right.mas_equalTo(-15);
+            make.bottom.mas_equalTo(0);
+            make.height.mas_equalTo(lineH);
+    }];
+    [self.regionLab setContentCompressionResistancePriority:UILayoutPrioritySceneSizeStayPut forAxis:UILayoutConstraintAxisHorizontal];
+    [self.villageLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     [self.subTitleLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     [self.amountLab setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.amountLab setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.zoneTypeView setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
 }
 
 - (UIView *)zoneTypeView {
@@ -140,7 +151,7 @@
 - (UILabel *)amountLab {
     if (!_amountLab) {
         UILabel *amountLab = [[UILabel alloc]init];
-        amountLab.textColor = [UIColor themeGray1];
+        amountLab.textColor = [UIColor colorWithHexStr:@"#999999"];
         amountLab.font = [UIFont themeFontRegular:14];
         amountLab.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:amountLab];
@@ -149,7 +160,17 @@
     return _amountLab;
 }
 
-- (void)setModel:(FHSuggestionResponseDataModel *)model {
+- (UIView *)sepLine{
+    if(!_sepLine){
+        UIView *sepLine = [[UIView alloc]init];
+        _sepLine=sepLine;
+        _sepLine.backgroundColor = [UIColor colorWithHexString:@"#e7e7e7"];
+        [self.contentView addSubview:_sepLine];
+    }
+    return _sepLine;
+}
+
+- (void)setModel:(FHSuggestionResponseItemModel *)model {
     if (model) {
         _model = model;
         if(model.name.length>0){
@@ -157,9 +178,10 @@
             self.titleLab.attributedText = [self processHighlighted:text1 originText:model.name textColor:[UIColor themeOrange1] fontSize:16.0];
             [self.titleLab sizeToFit];
         }
+       
         if (model.recallType.length > 0) {
             self.zoneTypeView.hidden = NO;
-        };
+        }
         if (model.oldName.length > 0) {
             self.subTitleLab.hidden = NO;
             NSAttributedString *text1 = [self processHighlightedDefault:model.oldName textColor:[UIColor themeGray1] font:[UIFont themeFontRegular:14]];
@@ -168,13 +190,53 @@
             self.subTitleLab.hidden = YES;
         }
         self.zoneTypeLab.text = model.recallType;
-            CGFloat zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
+        CGFloat zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
         [self.zoneTypeView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_offset(zoneTypeLabWidth+12);
         }];
         self.regionLab.text = model.tag;
         self.villageLab.text = model.tag2;
         self.amountLab.text = model.countDisplay;
+        
+        UILabel *leftLab = [model.oldName length] > 0 ? self.subTitleLab:self.titleLab;
+        float margin = [model.oldName length] > 0 ? 1:6;
+        
+        if(model.isnewstyle){
+            self.amountLab.textColor = [UIColor colorWithHexStr:@"#999999"];
+            self.zoneTypeView.layer.cornerRadius = 2;
+            self.zoneTypeLab.font = [UIFont themeFontRegular:10];
+            zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
+            [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.titleLab.mas_bottom).offset(3);
+                make.right.equalTo(self.contentView).offset(-15);
+            }];
+            [self.zoneTypeLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self.zoneTypeView);
+                make.width.mas_equalTo(zoneTypeLabWidth).priorityHigh();
+                make.left.equalTo(self.zoneTypeView).offset(5);
+                make.right.equalTo(self.zoneTypeView).offset(-5);
+            }];
+            [self.zoneTypeView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.contentView).offset(14);
+                make.left.equalTo(leftLab.mas_right).offset(margin);
+                make.right.mas_lessThanOrEqualTo(self.amountLab.mas_right);
+                make.height.mas_offset(15);
+            }];
+            [self.subTitleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self.zoneTypeView);
+                make.left.equalTo(self.titleLab.mas_right).offset(5);
+            }];
+            [self.titleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self.zoneTypeView);
+                make.left.equalTo(self.contentView).offset(15);
+            }];
+            
+            if(model.newtip){
+                self.zoneTypeView.backgroundColor = [UIColor colorWithHexStr:model.newtip.backgroundcolor];
+                self.zoneTypeLab.textColor = [UIColor colorWithHexStr:model.newtip.textcolor];
+                self.zoneTypeLab.text = model.newtip.content;
+            }
+        }
     }
 }
 

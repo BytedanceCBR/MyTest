@@ -583,8 +583,8 @@
                            @"agencyInfo": @"agency_info",
                            @"topTip":@"top_tip",
                            @"bottomTip":@"bottom_tip",
+                           @"realBussinessSearch":@"real_bussiness_search",
                            @"courtBillboardPreview": @"court_billboard_preview",
-                           //                           @"currentItems":@"items",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -791,6 +791,7 @@
                            @"skyEyeTag": @"sky_eye_tag",
                            @"advantageDescription":@"advantage_description",
                            @"cellStyles":@"cell_style",
+                           @"cardType": @"card_type",
                            @"tagImage": @"tag_image",
                            
                            @"pricePerSqmNum": @"price_per_sqm_num",
@@ -982,6 +983,16 @@
 // 猜你想找Tips
 @implementation  FHSearchGuessYouWantTipsModel
 
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"realSearchOpenUrl": @"real_search_open_url",
+                           @"emphasisContent": @"emphasis_content",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

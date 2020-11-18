@@ -1,19 +1,18 @@
 //
-//  FHHouseNewComponentView.m
-//  FHHouseList
+//  FHHouseCardTableViewCell.m
+//  ABRInterface
 //
-//  Created by bytedance on 2020/10/28.
+//  Created by bytedance on 2020/11/10.
 //
 
-#import "FHHouseNewComponentView.h"
+#import "FHHouseCardTableViewCell.h"
 #import "FHHouseNewComponentViewModel.h"
 
-@interface FHHouseNewComponentView()<FHHouseNewComponentViewModelObserver>
+@interface FHHouseCardTableViewCell()<FHHouseNewComponentViewModelObserver>
 
 @end
 
-
-@implementation FHHouseNewComponentView
+@implementation FHHouseCardTableViewCell
 @synthesize viewModel = _viewModel;
 
 - (void)dealloc {
@@ -24,6 +23,14 @@
     [_viewModel removeObserver:self];
     _viewModel = viewModel;
     [_viewModel addObserver:self];
+}
+
+- (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
+
+- (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
+    
 }
 
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {

@@ -82,6 +82,7 @@
 #import "NSArray+BTDAdditions.h"
 #import "FHHouseListRentCell.h"
 #import "NSObject+FHTracker.h"
+#import "NSDictionary+BTDAdditions.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -162,7 +163,7 @@ extern NSString *const INSTANT_DATA_KEY;
         
         _mainListPage =  [paramObj.sourceURL.host hasSuffix:@"main"];
         if (_mainListPage && _houseType == FHHouseTypeRentHouse) {
-            self.tracerModel.originFrom = @"renting";
+            self.tracerModel.originFrom = @"renting_list";
         }
         
         [self setupTopTagsView];
@@ -1037,9 +1038,9 @@ extern NSString *const INSTANT_DATA_KEY;
                            @"tracer": traceParam,
                            @"from_home":@(fromHome)
                            }.mutableCopy;
-    if (sugDelegateTable) {
-        dict[@"sug_delegate"] = sugDelegateTable;
-    }
+//    if (sugDelegateTable) {
+//        dict[@"sug_delegate"] = sugDelegateTable;
+//    }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
@@ -1339,14 +1340,20 @@ extern NSString *const INSTANT_DATA_KEY;
     TTRouteParamObj *paramObj = [[TTRoute sharedRoute]routeParamObjWithURL:[NSURL URLWithString:model.openUrl]];
     NSMutableDictionary *queryP = [NSMutableDictionary new];
     [queryP addEntriesFromDictionary:paramObj.allParams];
-    NSDictionary *baseParams = [self baseLogParam];
+
+    
+    NSDictionary *logPbParams = [FHTracerModel getLogPbParams:model.logPb];
+    NSString *originFrom = [logPbParams btd_stringValueForKey:UT_ORIGIN_FROM];
+    if (!originFrom) originFrom = self.viewController.tracerModel.originFrom;
+    NSString *elemenFrom = [logPbParams btd_stringValueForKey:UT_ELEMENT_FROM];
+    
     NSMutableDictionary *dict = @{}.mutableCopy;
-    dict[UT_ENTER_FROM] = baseParams[UT_ENTER_FROM] ? : @"be_null";
-    dict[UT_ELEMENT_FROM] = baseParams[UT_ELEMENT_FROM] ? : @"be_null";
-    dict[UT_ORIGIN_FROM] = baseParams[UT_ORIGIN_FROM] ? : @"be_null";
+    dict[UT_ORIGIN_FROM] = originFrom ? : @"be_null";
+    dict[UT_ENTER_FROM] = [self pageTypeString] ? : @"be_null";;
+    dict[UT_ELEMENT_FROM] = elemenFrom ? : @"be_null";
     dict[UT_LOG_PB] = model.logPb ? : @"be_null";
-    dict[UT_SEARCH_ID] = baseParams[UT_SEARCH_ID] ? : @"be_null";
-    dict[UT_ORIGIN_SEARCH_ID] = baseParams[UT_ORIGIN_SEARCH_ID] ? : @"be_null";
+    dict[UT_SEARCH_ID] = self.searchId? : @"be_null";
+    dict[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
     
     NSDictionary *userInfoDict = @{@"tracer":dict};
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
