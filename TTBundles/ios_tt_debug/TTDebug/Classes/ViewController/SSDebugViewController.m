@@ -99,6 +99,7 @@
 #import "FHLynxDebugVC.h"
 #import "FIMDebugManager.h"
 #import <TTTracker/TTTracker.h>
+#import <FlutterPackagesDebugViewController.h>
 
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
@@ -176,6 +177,12 @@ extern NSString *const BOE_OPEN_KEY ;
         STTableViewCellItem *clientABDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"😘F项目客户端AB实验调试选项点这里😘" target:self action:@selector(_openABTestSDKClientABTestVC)];
         clientABDebugItem.switchStyle = NO;
         [itemArray addObject:clientABDebugItem];
+        
+        
+        STTableViewCellItem *flutterDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Flutter动态包" target:self action:@selector(_showFlutterDebug)];
+        flutterDebugItem.switchStyle = NO;
+        [itemArray addObject:flutterDebugItem];
+        
         
         STTableViewCellItem *lynxDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Lynx_Debug" target:self action:@selector(_openLynxBridge)];
                lynxDebugItem.switchStyle = NO;
@@ -933,6 +940,12 @@ extern NSString *const BOE_OPEN_KEY ;
 {
     FHLynxScanVC* scanVC = [FHLynxScanVC new];
     [self.navigationController pushViewController:scanVC animated:YES];
+}
+
+-(void)_showFlutterDebug
+{
+    FlutterPackagesDebugViewController *controller = [[FlutterPackagesDebugViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)_ugcDebugTest:(UISwitch *)uiswitch {
