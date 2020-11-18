@@ -80,6 +80,7 @@
 #import "FHHouseSearchNewHouseCell.h"
 #import "FHDynamicLynxCell.h"
 #import "NSArray+BTDAdditions.h"
+#import "FHHouseListRentCell.h"
 #import "NSObject+FHTracker.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
@@ -198,16 +199,14 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceCellId];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHouseBaseItemCellList"];
-    //[_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeSecondHandHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeRentHouse]];
     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];
-     [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNewHouse]];
-     //[_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHListSynchysisNewHouseCell"];
     [_tableView registerClass:[FHHouseAgentCardCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseAgentCardCell class])];
     [_tableView registerClass:[FHFindHouseHelperCell class] forCellReuseIdentifier:@"FHFindHouseHelperCell"];
     [_tableView registerClass:[FHHouseSearchSecondHouseCell class] forCellReuseIdentifier:@"FHHouseSearchSecondHouseCell"];
     [_tableView registerClass:[FHHouseSearchNewHouseCell class] forCellReuseIdentifier:@"FHHouseSearchNewHouseCell"];
     [_tableView registerClass:[FHDynamicLynxCell class] forCellReuseIdentifier:@"FHDynamicLynxCell"];
+    [_tableView registerClass:[FHHouseListRentCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListRentCell class])];
     for (NSString *className in self.cellIdArray) {
         [self registerCellClassBy:className];
     }
@@ -228,15 +227,13 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         
         if(houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
-            if (houseModel.cellStyles ==6) {
-               return [FHHouseListBaseItemCell class];
-            }
-            if (houseModel.cellStyles == 8) {
-                return [FHHouseSearchNewHouseCell class];
-            }
+            return [FHHouseSearchNewHouseCell class];
         }
-        if (houseModel.cellStyles == 7) {
+        if (houseModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
             return [FHHouseSearchSecondHouseCell class];
+        }
+        if ([FHEnvContext isDisplayNewCardType] && houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
+            return [FHHouseListRentCell class];
         }
         return [FHHouseBaseItemCell class];
     }else if ([model isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
@@ -279,17 +276,17 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
-        if(houseModel.houseType.integerValue == FHHouseTypeNewHouse && houseModel.cellStyles == 6){
-               return @"FHListSynchysisNewHouseCell";
-        }
-        if (houseModel.houseType.integerValue == FHHouseTypeNewHouse&& houseModel.cellStyles == 8) {
+        if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
             return NSStringFromClass([FHHouseSearchNewHouseCell class]);
         }
         if(houseModel.cardType == FHSearchCardTypeAgentCard){
                return NSStringFromClass([FHHouseAgentCardCell class]);
         }
-        if (houseModel.cellStyles == 7) {
+        if (houseModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
             return NSStringFromClass([FHHouseSearchSecondHouseCell class]);
+        }
+        if ([FHEnvContext isDisplayNewCardType] && houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
+            return NSStringFromClass([FHHouseListRentCell class]);
         }
         return [FHSearchHouseItemModel cellIdentifierByHouseType:houseModel.houseType.integerValue];
     }
@@ -479,14 +476,6 @@ extern NSString *const INSTANT_DATA_KEY;
         self.tableView.scrollEnabled = NO;
     }
     self.errorMaskView.hidden = !show;
-    if ([UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320) {
-        if (self.houseType == FHHouseTypeNewHouse) {
-            ///新房大类页不展示tagsView，更新时直接隐藏
-            self.topTagsView.hidden = YES;
-        } else {
-            self.topTagsView.hidden = show;
-        }
-    }
 }
 
 - (void)requestAddSubScribe:(NSString *)text
@@ -1592,7 +1581,25 @@ extern NSString *const INSTANT_DATA_KEY;
         //显示无网或者无结果view
         self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
     }
+    
+    if (self.tableView.height > self.tableView.contentSize.height) {
+        //内容不足时回到顶部
+        self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
+    }
     [self scrollViewDidScroll:self.tableView];
+}
+
+-(void)onConditionPanelClickedWithContent:(NSString *)content {
+    [self reportClickOptionsWithPosition:content];
+}
+
+-(void)reportClickOptionsWithPosition:(NSString *)position {
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[UT_PAGE_TYPE] = [self pageTypeString];
+    tracerDict[UT_ELEMENT_TYPE] = @"filter";
+    tracerDict[UT_CLICK_POSITION] = position ?: @"be_null";
+    tracerDict[UT_HOUSE_TYPE] = [self houseTypeString];
+    [FHUserTracker writeEvent:@"click_options" params:tracerDict];
 }
 
 -(UIImage *)placeHolderImage
@@ -1650,18 +1657,15 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         
         __weak typeof(self)wself = self;
+        if ([FHEnvContext isDisplayNewCardType] && self.houseType == FHHouseTypeRentHouse) {
+            FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            [cell refreshWithData:data];
+            return cell;
+        }
         if (identifier.length > 0) {
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
                 cell.backgroundColor = [UIColor themeGray7];
-            }
-            if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
-                FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
-                if (item.houseType.integerValue == FHHouseTypeNewHouse && item.cellStyles == 6) {
-                    FHHouseListBaseItemCell *newHousecell = (FHHouseListBaseItemCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-                    [newHousecell updateSynchysisNewHouseCellWithSearchHouseModel:item];
-                    return newHousecell;
-                }
             }
             
             if ([cell isKindOfClass:[FHHouseAgentCardCell class]]) {
@@ -1734,6 +1738,9 @@ extern NSString *const INSTANT_DATA_KEY;
                         tableView.forbiddenScrollRectToVisible = NO;
                     }
                 };
+            }
+            if (!cell) {
+                return [[FHListBaseCell alloc]init];
             }
             return cell;
         }
@@ -1883,9 +1890,9 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
         if (model.houseType.integerValue != FHHouseTypeNewHouse) {
-              if (self.houseType == FHHouseTypeSecondHandHouse) {
-                      [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
-                  }
+            if (self.houseType == FHHouseTypeSecondHandHouse) {
+                [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+            }
         }
     }
 }
@@ -2537,16 +2544,19 @@ extern NSString *const INSTANT_DATA_KEY;
     tracerDict[@"is_call"] = cellModel.contactModel.enablePhone ? @(1) : @(0);
     tracerDict[@"is_report"] = @(0);
     tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
+    tracerDict[@"realtor_id"] = cellModel.id;
     
     if(self.houseType == FHHouseTypeNeighborhood){
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
+        tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
         tracerDict[@"house_type"] = @"neighborhood";
     }else{
         tracerDict[@"element_type"] = @"area_expert_card";
+        tracerDict[@"realtor_position"] = @"area_expert_card";
         tracerDict[@"house_type"] = @"area";
     }
     
-    [FHUserTracker writeEvent:@"lead_show" params:tracerDict];
+    [FHUserTracker writeEvent:@"realtor_show" params:tracerDict];
 }
 
 -(NSDictionary *)addEnterHouseListLog:(NSString *)openUrl

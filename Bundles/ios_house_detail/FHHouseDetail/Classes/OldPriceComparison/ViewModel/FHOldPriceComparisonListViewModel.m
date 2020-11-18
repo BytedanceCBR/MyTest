@@ -25,6 +25,8 @@
 #import "FHHouseListBaseItemCell.h"
 #import "FHHouseListBaseItemModel.h"
 #import "FHHomePlaceHolderCell.h"
+#import "FHPriceComparisonSecondCell.h"
+#import "FHEnvContext.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -85,6 +87,7 @@
     _refreshFooter.hidden = YES;
     [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
     [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
+    [_tableView registerClass:[FHPriceComparisonSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHPriceComparisonSecondCell class])];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -263,11 +266,16 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.listController.hasValidateData == YES) {
+        if ([FHEnvContext isDisplayNewCardType]) {
+            FHPriceComparisonSecondCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPriceComparisonSecondCell class])];
+            if (indexPath.row >= 0 && indexPath.row < self.houseList.count) {
+                [cell refreshWithData:self.houseList[indexPath.row]];
+            }
+            return cell;
+        }
         FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
         FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
         [cell refreshWithData: cellModel];
-//        [cell refreshTopMargin: 20];
-//        [cell updateWithHouseCellModel:cellModel];
         return cell;
     } else {
         // PlaceholderCell
@@ -290,11 +298,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    if (self.listController.hasValidateData) {
-//        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-//        return isLastCell ? 106 : 86;
-//    }
-//    return 86;
     return 88;
 }
 

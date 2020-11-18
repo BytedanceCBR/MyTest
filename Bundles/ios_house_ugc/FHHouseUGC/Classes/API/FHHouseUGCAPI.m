@@ -223,9 +223,9 @@
                     if(isFirst && feedListModel.data.count == 0) {
                         NSMutableDictionary *categoryDict = @{}.mutableCopy;
                         categoryDict[@"version_code"] = [TTSandBoxHelper fhVersionCode];
-                        categoryDict[@"category"] = category;
                         categoryDict[@"x_tt_logid"] = response.allHeaderFields[@"x_tt_logid"];
-                        [[HMDTTMonitor defaultManager] hmdTrackService:@"ugc_feed_list_fisrt_empty" metric:nil category:categoryDict extra:nil];
+                        NSString *monitorKey = [NSString stringWithFormat:@"ugc_feed_%@_fisrt_empty",category];
+                        [[HMDTTMonitor defaultManager] hmdTrackService:monitorKey metric:nil category:categoryDict extra:nil];
                     }
                 }
             }

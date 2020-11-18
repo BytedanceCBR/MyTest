@@ -338,7 +338,7 @@
             NSString *errorMsg = message ?: error.domain;
             extraDict[@"message"] = errorMsg ?: @"";
             categoryDict[@"status"] = [NSString stringWithFormat:@"%ld", FHClueErrorTypeServerFailure];
-            [[ToastManager manager] showToast:@"网络错误"];
+            [[ToastManager manager] showToast:message ?: @"网络错误"];
         }
         
         [self addClueFormErrorRateLog:categoryDict extraDict:extraDict];

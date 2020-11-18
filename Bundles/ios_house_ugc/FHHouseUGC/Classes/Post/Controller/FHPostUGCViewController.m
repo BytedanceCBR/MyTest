@@ -54,6 +54,7 @@
 #import "SSAPNsAlertManager.h"
 #import "FHUGCTagsView.h"
 #import "FHUGCTagAndRemarkModel.h"
+#import "FHCommonDefines.h"
 
 static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;

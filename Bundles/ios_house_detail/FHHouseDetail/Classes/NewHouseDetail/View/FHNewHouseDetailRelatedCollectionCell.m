@@ -8,7 +8,6 @@
 #import "FHNewHouseDetailRelatedCollectionCell.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import "FHDetailRelatedCourtModel.h"
-#import <FHHouseBase/FHHouseListBaseItemCell.h>
 #import <lottie-ios/Lottie/LOTAnimationView.h>
 #import <YYText/YYLabel.h>
 #import <BDWebImage/UIImageView+BDWebImage.h>

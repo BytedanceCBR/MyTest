@@ -425,7 +425,7 @@
             [wself subscribeSuccess];
             [FHUserInfoManager savePhoneNumber:phoneNum];
         }else {
-            [[ToastManager manager] showToast:[NSString stringWithFormat:@"提交失败 %@",model.message]];
+            [[ToastManager manager] showToast:[NSString stringWithFormat:@"%@%@",model.message.length ? @"" : @"提交失败 ", model.message]];
         }
     }];
 }

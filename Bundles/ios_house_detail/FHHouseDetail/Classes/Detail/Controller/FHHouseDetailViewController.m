@@ -860,15 +860,6 @@
         tracerDic[@"click_position"] = @"cancel";
         [self addRealtorEvaluatePopupClickLog:tracerDic];
     }];
-    BOOL isForceEnableConfirm = NO;
-    NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
-    if (fhSettings != nil && [fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] != nil) {
-        NSInteger info = [[fhSettings objectForKey:@"f_phone_feedback_low_score_submit_enabled"] integerValue];
-        if (info == 1) {
-            isForceEnableConfirm = YES;
-        }
-    }
-    feedbackView.isForceEnableConfirm = isForceEnableConfirm;
     [feedbackView showFrom:nil];
     [self addRealtorEvaluatePopupShowLog:tracerDic];
 }

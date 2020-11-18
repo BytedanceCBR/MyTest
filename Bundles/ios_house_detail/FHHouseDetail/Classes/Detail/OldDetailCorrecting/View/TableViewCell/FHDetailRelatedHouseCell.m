@@ -19,6 +19,9 @@
 #import "FHSingleImageInfoCellModel.h"
 #import "FHDetailBottomOpenAllView.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
+#import "FHOldHouseDetailRelatedSecondCell.h"
+#import "FHEnvContext.h"
+
 @interface FHDetailRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
 @property (nonatomic, strong)   FHDetailHeaderView       *headerView;
@@ -96,6 +99,7 @@
         tv.showsVerticalScrollIndicator = NO;
         tv.scrollEnabled = NO;
         [tv registerClass:[FHHouseBaseItemCell  class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
+        [tv registerClass:[FHOldHouseDetailRelatedSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHOldHouseDetailRelatedSecondCell class])];
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView);
@@ -268,6 +272,11 @@
     if (indexPath.row >= 0 && indexPath.row < self.items.count) {
         FHSearchHouseItemModel *item = self.items[indexPath.row];
         FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
+        if ([FHEnvContext isDisplayNewCardType]) {
+            FHHouseBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHOldHouseDetailRelatedSecondCell class])];
+            [cell refreshWithData:cellModel];
+            return cell;
+        }
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
         if ([cell isKindOfClass:[FHHouseBaseItemCell  class]]) {
             FHHouseBaseItemCell  *imageInfoCell = (FHHouseBaseItemCell  *)cell;
