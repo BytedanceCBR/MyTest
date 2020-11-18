@@ -194,7 +194,7 @@ NSString * const TTDebugrealInitializedNotification = @"TTDebugrealInitializedNo
     injectedInfo.commonParams = [TTNetworkManager shareInstance].commonParams;
     injectedInfo.sessionID = BDTrackerProtocol.sessionID;
     injectedInfo.buildInfo = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"BuildInfo"];
-    injectedInfo.performanceUploadHost = [CommonURLSetting baseURL];
+    injectedInfo.performanceUploadHost = @"i.haoduofangs.com";
     
     [[Heimdallr shared] setupWithInjectedInfo:injectedInfo];
     

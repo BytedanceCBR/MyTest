@@ -1296,6 +1296,22 @@ extern NSString *const INSTANT_DATA_KEY;
 
 }
 
+#pragma mark filter被点击
+-(void)onConditionPanelClickedWithContent:(NSString *)content
+{
+    [self reportClickOptionsWithPosition:content];
+}
+
+-(void)reportClickOptionsWithPosition:(NSString *)position
+{
+    NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    tracerDict[UT_PAGE_TYPE] = [self pageTypeString];
+    tracerDict[UT_ELEMENT_TYPE] = @"filter";
+    tracerDict[UT_CLICK_POSITION] = position ?: @"be_null";
+    tracerDict[UT_HOUSE_TYPE] = [self houseTypeString];
+    [FHUserTracker writeEvent:@"click_options" params:tracerDict];
+}
+
 #pragma mark - nav 点击事件
 -(void)showInputSearch {
     if (self.closeConditionFilter) {
@@ -2132,21 +2148,24 @@ extern NSString *const INSTANT_DATA_KEY;
     tracerDict[@"is_call"] = cellModel.contactModel.enablePhone ? @(1) : @(0);
     tracerDict[@"is_report"] = @(0);
     tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
-    
+    tracerDict[@"realtor_id"] = cellModel.id;
     if(self.houseType == FHHouseTypeNeighborhood){
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
+        tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
         tracerDict[@"house_type"] = @"neighborhood";
     }else{
         if (self.isHasFilterCondition) {
             tracerDict[@"element_type"] = @"area_expert_card";
+            tracerDict[@"realtor_position"] = @"area_expert_card";
             tracerDict[@"house_type"] = @"area";
         }else{
             tracerDict[@"element_type"] = @"neighborhood_expert_card";
+            tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
             tracerDict[@"house_type"] = @"neighborhood";
         }
     }
     
-    [FHUserTracker writeEvent:@"lead_show" params:tracerDict];
+    [FHUserTracker writeEvent:@"realtor_show" params:tracerDict];
 }
 
 
