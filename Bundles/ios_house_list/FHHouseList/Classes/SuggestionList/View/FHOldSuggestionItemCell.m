@@ -203,7 +203,7 @@
         
         if(model.isnewstyle){
             self.amountLab.textColor = [UIColor colorWithHexStr:@"#999999"];
-            self.zoneTypeView.layer.cornerRadius = 0;
+            self.zoneTypeView.layer.cornerRadius = 2;
             self.zoneTypeLab.font = [UIFont themeFontRegular:10];
             zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
             [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
