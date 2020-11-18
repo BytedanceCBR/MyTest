@@ -193,7 +193,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         cellHeight = firstCell.bounds.size.height;
         ///卡片露出范围修正，增加tabbar的高度
         CGFloat tabBarHeight = self.tabBarController.tabBar.height;
-        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(0, self.tableView.contentOffset.y + self.superTableView.contentOffset.y + _maxFirstScreenCount * cellHeight - tabBarHeight)];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(0, self.tableView.contentOffset.y + self.superTableView.contentOffset.y + _maxFirstScreenCount * cellHeight - tabBarHeight/2)];
 
         NSArray *keyArray = [NSArray arrayWithArray:self.traceFirstScreenNeedUploadCache.allKeys];
         for (NSInteger i = 0; i < keyArray.count; i++) {
@@ -782,7 +782,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         }
         ///卡片露出范围修正，增加tabbar的高度
         CGFloat tabBarHeight = self.tabBarController.tabBar.height;
-        NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(0, scrollView.contentOffset.y + self.superTableView.contentOffset.y + _maxFirstScreenCount * cellHeight - tabBarHeight)];
+        NSIndexPath * indexPath = [self.tableView indexPathForRowAtPoint:CGPointMake(0, scrollView.contentOffset.y + self.superTableView.contentOffset.y + _maxFirstScreenCount * cellHeight - tabBarHeight/2)];
         
 
         NSArray *keyArray = [NSArray arrayWithArray:self.traceFirstScreenNeedUploadCache.allKeys];
