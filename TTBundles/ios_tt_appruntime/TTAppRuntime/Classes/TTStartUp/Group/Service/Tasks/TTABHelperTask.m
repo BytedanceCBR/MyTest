@@ -182,7 +182,7 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
     NSMutableArray *groups = [NSMutableArray arrayWithCapacity:count];
     for (NSInteger index = 0; index < count; ++index) {
         //name:vid
-        NSString *name = [NSString stringWithFormat:@"%ld",517327 + index]; // Libra对应d实验组vid
+        NSString *name = [NSString stringWithFormat:@"%ld",2117488 + index]; // Libra对应d实验组vid
         NSMutableDictionary *params = @{}.mutableCopy;
         params[@"is_video_perload"] = @(index);
         BDClientABTestGroup *group = [[BDClientABTestGroup alloc] initWithName:name minRegion:1000/count*index maxRegion:1000/count*(index+1)-1 results:params];
