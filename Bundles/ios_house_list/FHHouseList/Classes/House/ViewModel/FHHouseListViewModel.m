@@ -98,6 +98,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
 
 @property (nonatomic , assign) BOOL isRefresh;
+@property (nonatomic , assign) BOOL isFirstHavetip;
 @property (nonatomic , copy) NSString *query;
 @property (nonatomic , copy) NSString *condition;
 
@@ -177,6 +178,7 @@ extern NSString *const INSTANT_DATA_KEY;
         self.isRefresh = YES;
         self.isEnterCategory = YES;
         self.isFirstLoad = YES;
+        self.isFirstHavetip = YES;
         self.tableView = tableView;
         self.isShowSubscribeCell = NO;
         self.preHouseType = [paramObj.allParams[@"pre_house_type"] intValue];
@@ -891,7 +893,8 @@ extern NSString *const INSTANT_DATA_KEY;
                 self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
                 hasMore = houseModel.hasMore;
                 refreshTip = houseModel.refreshTip;
-                if(houseModel.realBussinessSearch && houseModel.realBussinessSearch.content && self.houseList.count == 0){
+                if(houseModel.realBussinessSearch && houseModel.realBussinessSearch.content && self.isFirstHavetip){
+                    self.isFirstHavetip = NO;
                     [itemArray addObject:houseModel.realBussinessSearch];
                 }
                 if (houseModel.searchItems.count > 0) {
@@ -1568,6 +1571,7 @@ extern NSString *const INSTANT_DATA_KEY;
     if(allInfo[@"tracer"]){
         [self updateTracerDict:allInfo[@"tracer"]];
     }
+    self.isFirstHavetip = YES;
     self.houseType = houseTypeStr.integerValue;
     self.preHouseType = [routeObject.paramObj.allParams[@"pre_house_type"] intValue];
     self.jumpHouseType = [routeObject.paramObj.allParams[@"jump_house_type"] intValue];
@@ -1979,6 +1983,8 @@ extern NSString *const INSTANT_DATA_KEY;
     traceParam[@"log_pb"] = logPb;
     traceParam[@"origin_from"] = self.originFrom;
     traceParam[@"origin_search_id"] = self.originSearchId;
+    NSInteger realrank = self.isFirstHavetip == NO ? rank - 1 :rank ;
+    rank = realrank;
     traceParam[@"rank"] = @(rank);
     NSMutableDictionary *dict = @{@"house_type":@(theModel.houseType.integerValue) ,
                            @"tracer": traceParam
@@ -2228,6 +2234,8 @@ extern NSString *const INSTANT_DATA_KEY;
     NSString *originFrom = self.originFrom ? : @"be_null";
 
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
+    NSInteger realrank = self.isFirstHavetip == NO ? rank - 1 :rank ;
+    rank = realrank;
     tracerDict[@"rank"] = @(rank);
     tracerDict[@"origin_from"] = originFrom;
     tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
@@ -2525,7 +2533,8 @@ extern NSString *const INSTANT_DATA_KEY;
      "search_id"
      "log_pb": "
      */
-    
+    NSInteger realrank = self.isFirstHavetip == NO ? rank - 1 :rank ;
+    rank = realrank;
     FHSearchHouseItemModel *theModel = nil;
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         theModel = (FHSearchHouseItemModel *)cellModel;
