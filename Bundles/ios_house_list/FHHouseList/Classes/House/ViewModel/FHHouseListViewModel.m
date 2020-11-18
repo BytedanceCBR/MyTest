@@ -1682,7 +1682,26 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([FHEnvContext isDisplayNewCardType]) {
             if (self.houseType == FHHouseTypeRentHouse) {
                 FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+                FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
+                WeakSelf;
+                ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
+                    StrongSelf;
+                    NSMutableDictionary *infos = [NSMutableDictionary new];
+                    NSMutableDictionary *tracer = [NSMutableDictionary new];
+                    tracer[@"element_from"] = [self elementFromNameByhouseType:self.preHouseType];
+                    tracer[@"enter_from"] = [self categoryName];
+                    tracer[@"enter_type"] = @"click";
+                    tracer[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
+                    infos[@"tracer"] = tracer;
+                    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+                    if(model.realSearchOpenUrl){
+                        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:model.realSearchOpenUrl] userInfo:userInfo];
+                    }
+                };
                 [cell refreshWithData:data];
+                if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+                    ((FHHouseListRecommendTipCell *)cell).errorView.hidden = NO;
+                }
                 return cell;
             }
         }
@@ -1713,6 +1732,9 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
             FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
+            if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+                ((FHHouseListRecommendTipCell *)cell).errorView.hidden = NO;
+                    }
             WeakSelf;
             ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
                 StrongSelf;
@@ -1841,6 +1863,9 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
     if (data) {
+        if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+            return self.tableView.bounds.size.height;
+        }
         CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath];
         if (cellHeight > -0.001f) return cellHeight;
         
