@@ -49,7 +49,7 @@ static NSString *const kFModulePacakgeName = @"BFlutterBusiness";
 {
     // SaveU
     BDPMSConfig *config = [[BDPMSConfig alloc] init];
-    config.aid = @"1488";
+    config.aid = @"1370";
     config.channel = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"];;
     config.deviceId = [BDTrackerProtocol deviceID];
     [[BDPMSManager sharedInstance] setConfig:config];
