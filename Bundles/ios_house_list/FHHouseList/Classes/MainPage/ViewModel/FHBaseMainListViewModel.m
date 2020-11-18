@@ -163,7 +163,7 @@ extern NSString *const INSTANT_DATA_KEY;
         
         _mainListPage =  [paramObj.sourceURL.host hasSuffix:@"main"];
         if (_mainListPage && _houseType == FHHouseTypeRentHouse) {
-            self.tracerModel.originFrom = @"renting";
+            self.tracerModel.originFrom = @"renting_list";
         }
         
         [self setupTopTagsView];
@@ -1038,9 +1038,9 @@ extern NSString *const INSTANT_DATA_KEY;
                            @"tracer": traceParam,
                            @"from_home":@(fromHome)
                            }.mutableCopy;
-    if (sugDelegateTable) {
-        dict[@"sug_delegate"] = sugDelegateTable;
-    }
+//    if (sugDelegateTable) {
+//        dict[@"sug_delegate"] = sugDelegateTable;
+//    }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
