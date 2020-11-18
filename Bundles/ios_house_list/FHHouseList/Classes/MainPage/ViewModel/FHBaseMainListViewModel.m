@@ -1890,9 +1890,9 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
         if (model.houseType.integerValue != FHHouseTypeNewHouse) {
-              if (self.houseType == FHHouseTypeSecondHandHouse) {
-                      [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
-                  }
+            if (self.houseType == FHHouseTypeSecondHandHouse) {
+                [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+            }
         }
     }
 }

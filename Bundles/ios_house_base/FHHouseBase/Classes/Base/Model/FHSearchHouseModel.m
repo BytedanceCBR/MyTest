@@ -876,7 +876,6 @@
                     }
                     return @"";
                 }];
-                
             }
             if (self.titleTags) {//FHSearchHouseItemTitleTagModel
                 mutablLogPb[@"app_marketing_tags"] = [self.titleTags btd_map:^id _Nullable(id  _Nonnull obj) {
