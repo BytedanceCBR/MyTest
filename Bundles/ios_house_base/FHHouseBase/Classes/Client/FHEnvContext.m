@@ -48,6 +48,7 @@
 #import "NSDictionary+BTDAdditions.h"
 #import "FHCommonParamHelper.h"
 #import "SSCommonLogic.h"
+#import <FHFlutter/FHFlutterManager.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -630,6 +631,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [FHIESGeckoManager configGeckoInfo];
         [FHIESGeckoManager configIESWebFalcon];
         [[FHLynxManager sharedInstance] initLynx];
+        
+        [FHFlutterManager registerFHFlutterPackageInfo];
     });
 }
 
