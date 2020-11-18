@@ -1152,14 +1152,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if (self.isRefresh && self.viewModelDelegate && (itemArray.count > 0 || recommendItemArray.count > 0) && !hideRefreshTip) {
             [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
         }
-        if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
-            [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
-            self.tableView.scrollEnabled = NO;
-            [self.maskView mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.tableView.mas_top).mas_offset(80);
-                make.right.left.bottom.mas_equalTo(self.tableView);
-            }];
-        }else if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
+        if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
             [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
         } else {
             [self showMaskView:NO];
@@ -1789,7 +1782,6 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         return height;
     }
-    
     BOOL isFirstCell = NO;
     BOOL isLastCell = NO;
     CGFloat normalHeight = height;

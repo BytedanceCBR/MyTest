@@ -35,6 +35,7 @@
         [self.contentView addSubview:self.noDataTipLabel];
         [self.contentView addSubview:self.leftLine];
         [self.contentView addSubview:self.rightLine];
+        [self.contentView addSubview:self.errorView];
 //        [self initConstraints];
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -100,6 +101,12 @@
         make.right.mas_equalTo(-15);
         make.height.mas_equalTo(1);
     }];
+    [self.errorView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.contentView).offset(60);
+        make.bottom.left.right.mas_equalTo(self.contentView);
+    }];
+    [self.errorView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
+    self.errorView.hidden = YES;
 }
 
 - (UIView *)leftLine
@@ -120,4 +127,11 @@
     return _rightLine;
 }
 
+- (FHErrorView *)errorView
+{
+    if(!_errorView){
+        _errorView = [[FHErrorView alloc ] init];
+    }
+    return  _errorView;
+}
 @end
