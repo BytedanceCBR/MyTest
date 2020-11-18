@@ -202,27 +202,25 @@
         float margin = [model.oldName length] > 0 ? 1:6;
         
         if(model.isnewstyle){
-            [self.zoneTypeView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_offset(zoneTypeLabWidth);
-            }];
             self.amountLab.textColor = [UIColor colorWithHexStr:@"#999999"];
             self.zoneTypeView.layer.cornerRadius = 0;
             self.zoneTypeLab.font = [UIFont themeFontRegular:10];
+            zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
             [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(self.titleLab.mas_bottom).offset(3);
                 make.right.equalTo(self.contentView).offset(-15);
             }];
+            [self.zoneTypeLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.equalTo(self.zoneTypeView);
+                make.width.mas_equalTo(zoneTypeLabWidth).priorityHigh();
+                make.left.equalTo(self.zoneTypeView).offset(5);
+                make.right.equalTo(self.zoneTypeView).offset(-5);
+            }];
             [self.zoneTypeView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(self.contentView).offset(14);
-                make.width.mas_offset(zoneTypeLabWidth+10).priorityHigh();
                 make.left.equalTo(leftLab.mas_right).offset(margin);
                 make.right.mas_lessThanOrEqualTo(self.amountLab.mas_right);
                 make.height.mas_offset(15);
-            }];
-            [self.zoneTypeLab mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.centerY.equalTo(self.zoneTypeView);
-                make.left.equalTo(self.zoneTypeView).offset(5);
-                make.right.equalTo(self.zoneTypeView).offset(-5);
             }];
             [self.subTitleLab mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.equalTo(self.zoneTypeView);
