@@ -21,6 +21,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import "ByteDanceKit.h"
 #import "IMManager.h"
+#import "FIMDebugManager.h"
 
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
@@ -41,11 +42,20 @@
 @property (assign, nonatomic) CGFloat maxOffset;
 @property (assign, nonatomic) BOOL cancelAnimationCompletion;
 @property (nonatomic, assign) BOOL index;
-//@property (nonatomic, weak) UITableView *tableView;
-
 @end
 
 @implementation FHMessageCell
+
+- (UILabel *)indexLabel {
+    if(!_indexLabel) {
+        _indexLabel = [UILabel new];
+        _indexLabel.textColor = [UIColor themeRed];
+        _indexLabel.font = [UIFont themeFontMedium:14];
+        _indexLabel.text = @"0/0";
+        _indexLabel.backgroundColor = [UIColor themeBlack];
+    }
+    return _indexLabel;
+}
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
@@ -180,6 +190,14 @@
         make.right.mas_equalTo(0);
     }];
     self.editView.hidden = YES;
+    
+    if([[FIMDebugManager shared] isEnableForEntry:FIMDebugOptionEntrySwitchShowDebugInfo]) {
+        [self.contentView addSubview:self.indexLabel];
+        [self.indexLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.contentView);
+            make.left.equalTo(self.contentView);
+        }];
+    }
 }
 
 -(void)displaySendState:(ChatMsg *)msg isMute:(BOOL)isMute {
