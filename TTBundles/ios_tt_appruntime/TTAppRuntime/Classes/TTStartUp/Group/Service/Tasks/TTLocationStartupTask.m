@@ -60,11 +60,11 @@ DEC_TASK("TTLocationStartupTask",FHTaskTypeAfterLaunch,TASK_PRIORITY_HIGH+1);
 
 - (void)uploadLocationWithBlock:(void (^)(BOOL isSuccess))block
 {
-    //单次采集上报
+    //循环采集上报
     if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
         [[FHLocManager sharedInstance] configLocationManager];
         [BDUGLocationDataCollect sharedCollector].geocoders = @[[BDUGAmapGeocoder sharedGeocoder]];
-        [[BDUGLocationDataCollect sharedCollector] reportLocationInfoWithCompletion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
+        [[BDUGLocationDataCollect sharedCollector] startPollingReportLocationInfoWithCompletion:^(BDUGLocationInfo * _Nullable locationInfo, NSError * _Nullable error) {
                if (block) {
                    block(error?NO:YES);
                }
