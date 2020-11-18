@@ -230,8 +230,8 @@
     
     // _secondarySubLabel
     _secondarySubLabel = [[UILabel alloc] init];
-    _secondarySubLabel.font = [UIFont themeFontRegular:13];
-    _secondarySubLabel.textColor = [UIColor themeGray3];
+    _secondarySubLabel.font = [UIFont themeFontRegular:14];
+    _secondarySubLabel.textColor = [UIColor colorWithHexStr:@"#999999"];
     _secondarySubLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_secondarySubLabel];
     [_secondarySubLabel mas_makeConstraints:^(MASConstraintMaker *make) {

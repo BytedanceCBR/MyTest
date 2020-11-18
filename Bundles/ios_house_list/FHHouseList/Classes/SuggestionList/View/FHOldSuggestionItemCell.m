@@ -151,7 +151,7 @@
 - (UILabel *)amountLab {
     if (!_amountLab) {
         UILabel *amountLab = [[UILabel alloc]init];
-        amountLab.textColor = [UIColor themeGray1];
+        amountLab.textColor = [UIColor colorWithHexStr:@"#999999"];
         amountLab.font = [UIFont themeFontRegular:14];
         amountLab.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:amountLab];
@@ -202,7 +202,7 @@
         float margin = [model.oldName length] > 0 ? 1:6;
         
         if(model.isnewstyle){
-            self.amountLab.textColor = [UIColor themeGray3];
+            self.amountLab.textColor = [UIColor colorWithHexStr:@"#999999"];
             self.zoneTypeLab.font = [UIFont themeFontRegular:10];
             [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.equalTo(self.titleLab.mas_bottom).offset(3);
