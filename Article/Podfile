@@ -163,11 +163,11 @@ def appPods
     pod_binary 'TSVToolkit', '0.1.2'
     pod_binary 'lottie-ios', '2.1.5'
 
-    pod 'TTKitchen','3.0.1',:subspecs => [
+    pod_binary 'TTKitchen','3.5.5',:subspecs => [
     'Core',
     'SettingsSyncer'
     ]
-    pod 'TTKitchenExtension','1.0.14'
+    pod_binary 'TTKitchenExtension','1.0.14'
     
     pod_binary 'TTPerformanceHelper', '0.1.1', :subspecs => [
     'TTThreadSafeContainer',
