@@ -235,11 +235,6 @@
                 self.zoneTypeView.backgroundColor = [UIColor colorWithHexStr:model.newtip.backgroundcolor];
                 self.zoneTypeLab.textColor = [UIColor colorWithHexStr:model.newtip.textcolor];
                 self.zoneTypeLab.text = model.newtip.content;
-                self.zoneTypeLab.hidden = NO;
-                self.zoneTypeView.hidden = NO;
-            }else{
-                self.zoneTypeLab.hidden = YES;
-                self.zoneTypeView.hidden = YES;
             }
         }
     }
