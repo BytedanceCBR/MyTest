@@ -20,6 +20,8 @@
 #import "FHDetailBottomOpenAllView.h"
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import "FHHouseListBaseItemCell.h"
+#import "FHHouseListRentRelatedCell.h"
+#import "FHEnvContext.h"
 
 @interface FHDetailRentRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -76,6 +78,7 @@
         tv.scrollEnabled = NO;
 //        [tv registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
         [tv registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:@"FHSingleImageInfoCell"];
+        [tv registerClass:[FHHouseListRentRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListRentRelatedCell class])];
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(20);
@@ -244,6 +247,11 @@
 //        }
                 FHHouseListBaseItemModel *item = self.items[indexPath.row];
 //                FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
+        if ([FHEnvContext isDisplayNewCardType]) {
+            FHHouseListRentRelatedCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseListRentRelatedCell class])];
+            [cell refreshWithData:item];
+            return cell;
+        }
                 UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
                 if ([cell isKindOfClass:[FHHouseListBaseItemCell class]]) {
                     FHHouseListBaseItemCell *imageInfoCell = (FHHouseListBaseItemCell *)cell;

@@ -195,12 +195,12 @@ static NSMutableArray  * _Nullable identifierArr;
     if (items > 0)
     {
         [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            NSString *stringOpStyle = @"be_null";
             FHConfigDataOpData2ItemsModel *item = (FHConfigDataOpData2ItemsModel *)obj;
             NSMutableDictionary *dictTraceParams = [NSMutableDictionary dictionary];
             
             if ([item isKindOfClass:[FHConfigDataOpData2ItemsModel class]]) {
                 if ([item.logPb isKindOfClass:[NSDictionary class]]) {
+                    dictTraceParams[@"log_pb"] = item.logPb;
                     NSString *stringName =  item.logPb[@"operation_name"];
                     [dictTraceParams setValue:stringName forKey:@"operation_name"];
                 }

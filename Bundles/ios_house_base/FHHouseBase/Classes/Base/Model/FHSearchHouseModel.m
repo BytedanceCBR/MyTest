@@ -839,10 +839,10 @@
 {
     switch (houseType) {
         case FHHouseTypeNewHouse:
-            return @"FHHouseBaseNewHouseCell";
+            return @"FHHouseSearchNewHouseCell";
             break;
         case FHHouseTypeSecondHandHouse:
-            return @"FHHouseBaseItemCellSecond";
+            return @"FHHouseSearchSecondHouseCell";
             break;
         case FHHouseTypeRentHouse:
             return @"FHHouseBaseItemCellRent";
@@ -877,7 +877,6 @@
                     }
                     return @"";
                 }];
-                
             }
             if (self.titleTags) {//FHSearchHouseItemTitleTagModel
                 mutablLogPb[@"app_marketing_tags"] = [self.titleTags btd_map:^id _Nullable(id  _Nonnull obj) {

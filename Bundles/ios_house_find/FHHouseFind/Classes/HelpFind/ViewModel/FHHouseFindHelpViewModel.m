@@ -403,7 +403,7 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
             NSString *errorMsg = message ?: error.domain;
             extraDict[@"message"] = errorMsg ?: @"";
             categoryDict[@"status"] = [NSString stringWithFormat:@"%ld", FHClueErrorTypeServerFailure];
-            [[ToastManager manager] showToast:@"网络错误"];
+            [[ToastManager manager] showToast:message ?: @"网络错误"];
         }
         
         [strongSelf addClueFormErrorRateLog:categoryDict extraDict:extraDict];

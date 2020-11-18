@@ -2310,7 +2310,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         enterFrom = @"subwayfind";
     }
     
-    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://old_house_detail?neighborhood_id=%@",neighborModel.nid];
+    NSMutableString *strUrl = [NSMutableString stringWithFormat:@"fschema://neighborhood_detail?neighborhood_id=%@",neighborModel.nid];
     NSMutableDictionary *tracerDic = [NSMutableDictionary new];
     [tracerDic addEntriesFromDictionary:self.logBaseParams];
     tracerDic[@"card_type"] = @"no_pic";

@@ -10,6 +10,11 @@
 #import "FHPlaceHolderCell.h"
 #import "FHHouseSelectedItemCell.h"
 #import "RXCollection.h"
+#import "FHIMFavoriteNewCell.h"
+#import "FHIMFavoriteSecondCell.h"
+#import "FHIMFavoriteRentCell.h"
+#import "FHIMFavoriteNeighborhoodCell.h"
+
 @interface FHIMFavoriteSharePageViewModel1 ()
 @property (nonatomic, strong) NSMutableOrderedSet<NSIndexPath*>* selected;
 @end
@@ -54,6 +59,14 @@
         } else {
             [theCell setDisable:YES];
         }
+    } else if ([cell isKindOfClass:[FHHouseBaseSelectedCell class]]) {
+        FHHouseBaseSelectedCell *theCell = (FHHouseBaseSelectedCell *)cell;
+        [theCell setItemSelected:[_selected containsObject:indexPath]];
+        if ((![_selected containsObject:indexPath] && [_selected count] < 9) || [_selected containsObject:indexPath]) {
+            [theCell setDisable:NO];
+        } else {
+            [theCell setDisable:YES];
+        }
     }
     return cell;
 }
@@ -61,6 +74,10 @@
 - (void)registerCell:(UITableView *)tableView {
     [tableView registerClass:[FHHouseSelectedItemCell class] forCellReuseIdentifier:kCellId];
     [tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:@"FHIMFavoriteListPlaceholderCellId"];
+    [tableView registerClass:[FHIMFavoriteNewCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteNewCell class])];
+    [tableView registerClass:[FHIMFavoriteSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteSecondCell class])];
+    [tableView registerClass:[FHIMFavoriteRentCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteRentCell class])];
+    [tableView registerClass:[FHIMFavoriteNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHIMFavoriteNeighborhoodCell class])];
 }
 
 -(void)cleanSelects {

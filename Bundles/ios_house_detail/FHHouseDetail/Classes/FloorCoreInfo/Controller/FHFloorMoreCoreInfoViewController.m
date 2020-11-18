@@ -53,6 +53,7 @@
     
     [self setNavBarTitle:@"楼盘信息"];
     [self.view bringSubviewToFront:[self getNaviBar]];
+    [self.view bringSubviewToFront:[self getBottomBar]];
 }
 
 - (void)retryLoadData
@@ -84,7 +85,14 @@
 }
 
 - (void)setUpLynxView{
-    _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, [self getNaviBar].frame.size.height, self.view.frame.size.width,self.view.frame.size.height - 80 - [self getNaviBar].frame.size.height - [self.coreInfoListViewModel getSafeTop]  - [self.coreInfoListViewModel getSafeBottom])];
+    
+    CGFloat bottomBarHeight = 80 ;
+    if (@available(iOS 11.0, *)) {
+      bottomBarHeight = bottomBarHeight + [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom ;
+    }
+    
+    _lynxView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, [self getNaviBar].frame.size.height, self.view.frame.size.width,self.view.frame.size.height - [self getNaviBar].frame.size.height  - bottomBarHeight)];
+    _lynxView.backgroundColor = [UIColor themeGray7];
     [self.view addSubview:_lynxView];
     FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
     baesparmas.channel = @"lynx_estate_info_v2";
