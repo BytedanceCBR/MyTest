@@ -189,6 +189,12 @@ def appPods
     'AmapLocation'
     ]
     
+    #flutter相关库
+    pod_binary 'BDFlutterPluginManager','0.1.7'
+    pod_binary 'FlutterChannelTool','2.0.0'
+    pod_binary 'TTNetworkDownloader','1.0.5'
+    pod 'TransBridge-iOS','0.1.6'
+    
     pod 'BDUGSettingsInterface' , '1.1.0'
     pod 'BDUGKit' , '1.3.3'
     
@@ -324,6 +330,7 @@ def appPods
     'TTNet',
     'HMDStart',
     'Mach',
+    'Dart',
     'Utility',
     'DeviceInfo',
     'HMDANR',
