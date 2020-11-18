@@ -1155,14 +1155,18 @@ extern NSString *const INSTANT_DATA_KEY;
         if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
             [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
             self.tableView.scrollEnabled = NO;
+            self.tableView.backgroundColor = [UIColor whiteColor];
             [self.maskView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.tableView.mas_top).mas_offset(80);
                 make.right.left.bottom.mas_equalTo(self.tableView);
             }];
-        }else if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
-            [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
-        } else {
-            [self showMaskView:NO];
+        }else{
+            self.tableView.backgroundColor = [UIColor themeGray7];
+            if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
+                [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
+            } else {
+                [self showMaskView:NO];
+            }
         }
         
         // 刷新请求的时候将列表滑动在最顶部
