@@ -237,7 +237,7 @@
     [_secondarySubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.subLabel.mas_right).offset(5);
         make.centerY.mas_equalTo(self.subLabel);
-        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.right.mas_equalTo(self.contentView).offset(-15);
     }];
     
     // sepLine
