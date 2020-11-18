@@ -843,8 +843,8 @@
                 NSAttributedString *text1 = [self processHighlightedDefault:model.text font:[UIFont themeFontSemibold:16] textColor:[UIColor themeGray1]];
                 NSAttributedString *text2 = [self processHighlightedDefault:model.text2 font:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
                 
-                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1] fontSize:16.0];
-                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1] fontSize:14.0];
+                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1]  font:[UIFont themeFontSemibold:16]];
+                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1]  font:[UIFont themeFontRegular:14]];
                 cell.sepLine.hidden = indexPath.row == nowsugListData.count - 1;
                 if(model.newtip){
                     cell.secondaryLabel.text = model.newtip.content;
@@ -874,7 +874,7 @@
                     NSAttributedString *text2 = [self processHighlightedGray:model.text2];
                     [resultText appendAttributedString:text2];
                 }
-                cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeOrange1] fontSize:15.0];
+                cell.label.attributedText = [self processHighlighted:resultText originText:originText textColor:[UIColor themeOrange1] font:[UIFont themeFontRegular:15.0]];
                 cell.secondaryLabel.text = model.tips;
                 if (indexPath.row == nowsugListData.count - 1) {
                     // 末尾
@@ -1101,9 +1101,9 @@
 }
 
 // 3、高亮
-- (NSAttributedString *)processHighlighted:(NSAttributedString *)text originText:(NSString *)originText textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize {
+- (NSAttributedString *)processHighlighted:(NSAttributedString *)text originText:(NSString *)originText textColor:(UIColor *)textColor font:(UIFont *)font {
     if (self.highlightedText.length > 0) {
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontSemibold:fontSize],NSForegroundColorAttributeName:textColor};
+        NSDictionary *attr = @{NSFontAttributeName:font,NSForegroundColorAttributeName:textColor};
         NSMutableAttributedString * tempAttr = [[NSMutableAttributedString alloc] initWithAttributedString:text];
         
         NSMutableString *string = [NSMutableString stringWithString:self.highlightedText];
