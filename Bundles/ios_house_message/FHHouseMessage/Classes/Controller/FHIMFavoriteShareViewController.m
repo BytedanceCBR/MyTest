@@ -107,7 +107,7 @@
 //    [[[[RACObserve(_containerView, contentOffset) throttle:0.1] map:^id _Nullable(NSValue*  _Nullable value) {
         @strongify(self);
         CGPoint point = [value CGPointValue];
-        return @(abs((point.x + SCREEN_WIDTH / 2) / SCREEN_WIDTH));
+        return @(abs((point.x + FIM_SCREEN_WIDTH / 2) / FIM_SCREEN_WIDTH));
     }] skip:1] subscribeNext:^(NSNumber*  _Nullable x) {
         if (self.shareViewModel.currentPage != [x unsignedIntegerValue]) {
             NSUInteger index = [x unsignedIntegerValue];

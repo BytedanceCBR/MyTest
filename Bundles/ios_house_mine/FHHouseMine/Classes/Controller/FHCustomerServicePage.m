@@ -48,7 +48,7 @@
                     NSMutableDictionary *userInfoDict = [NSMutableDictionary dictionary];
                     userInfoDict[TRACER_KEY] = params;
                     
-                    NSURLComponents *urlComponent = [NSURLComponents componentsWithString:@"sslocal://linkchat_customer_service"];
+                    NSURLComponents *urlComponent = [NSURLComponents componentsWithString:@"sslocal://link_chat"];
                     NSURLQueryItem *geckoDisable = [NSURLQueryItem queryItemWithName:@"gecko_enable" value:@"0"];
                     NSURLQueryItem *url = [NSURLQueryItem queryItemWithName:@"url" value:linkChatUrl];
                     urlComponent.queryItems = @[geckoDisable, url];
