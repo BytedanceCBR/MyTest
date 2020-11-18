@@ -189,7 +189,7 @@
     _label.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
+        make.left.mas_equalTo(15);
         make.top.mas_equalTo(11);
         make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 73);
     }];
@@ -219,7 +219,7 @@
     _subLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_subLabel];
     [_subLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
+        make.left.mas_equalTo(15);
         make.top.mas_equalTo(self.label.mas_bottom).offset(6);
         make.height.mas_equalTo(17);
         make.bottom.mas_equalTo(-13);

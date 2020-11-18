@@ -890,7 +890,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 self.mapFindHouseOpenUrl = houseModel.mapFindHouseOpenUrl;
                 hasMore = houseModel.hasMore;
                 refreshTip = houseModel.refreshTip;
-                if(houseModel.realBussinessSearch && houseModel.realBussinessSearch.content){
+                if(houseModel.realBussinessSearch && houseModel.realBussinessSearch.content && self.houseList.count == 0){
                     [itemArray addObject:houseModel.realBussinessSearch];
                 }
                 if (houseModel.searchItems.count > 0) {
