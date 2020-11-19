@@ -1461,7 +1461,7 @@ TTEditUserProfileViewControllerDelegate
 - (void)triggerLogoutDidSelectCell
 {
     if ([SSCommonLogic ttAlertControllerEnabled]) {
-        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"退出确认", nil) message:NSLocalizedString(@"退出当前账号，将不能同步收藏，发布评论等", nil) preferredType:TTThemedAlertControllerTypeAlert];
+        TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"退出确认", nil) message:NSLocalizedString(@"退出当前帐号，将无法使用聊天、关注、收藏等功能", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithTitle:NSLocalizedString(@"取消", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:nil];
         WeakSelf;
         [alert addActionWithTitle:NSLocalizedString(@"确认退出", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
@@ -1474,7 +1474,7 @@ TTEditUserProfileViewControllerDelegate
         // See details here: http://stackoverflow.com/questions/30606512/uialertview-delay-or-not-showing & http://openradar.appspot.com/19285091
         // Note that UIAlertView is already deprecated and it should not be used anymore.
         dispatch_async(dispatch_get_main_queue(), ^{
-            TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"退出确认", nil) message:NSLocalizedString(@"退出当前账号，将不能同步收藏，发布评论等", nil) preferredType:TTThemedAlertControllerTypeAlert];
+            TTThemedAlertController *alertVC = [[TTThemedAlertController alloc] initWithTitle:NSLocalizedString(@"退出确认", nil) message:NSLocalizedString(@"退出当前帐号，将无法使用聊天、关注、收藏等功能", nil) preferredType:TTThemedAlertControllerTypeAlert];
             WeakSelf;
             [alertVC addActionWithTitle:NSLocalizedString(@"取消", nil) actionType:TTThemedAlertActionTypeCancel actionBlock:^{
             }];
