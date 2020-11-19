@@ -197,6 +197,7 @@ def appPods
     pod_binary 'FlutterChannelTool','2.0.0'
     pod_binary 'TTNetworkDownloader','1.0.5'
     pod 'TransBridge-iOS','0.1.6'
+#    pod 'FCFlutterShell' , :path => '../Bundles/f_c_flutter_shell', :inhibit_warnings => false
     pod_binary 'FCFlutterShell','0.0.2-alpha.0'
     
     
