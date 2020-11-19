@@ -14,18 +14,13 @@
 #import <BDUGCopyContentItem.h>
 #import <BDUGShareManager.h>
 #import <SSCommonLogic.h>
-#import "FHReportActivity.h"
-#import "FHBlockActivity.h"
-#import "FHDislikeActivity.h"
-#import "FHIMActivity.h"
-#import "FHCollectActivity.h"
+#import "FHReportContentItem.h"
+#import "FHBlockContentItem.h"
+#import "FHDislikeContentItem.h"
+#import "FHIMContentItem.h"
+#import "FHCollectContentItem.h"
 #import <TTIndicatorView.h>
 #import <FHUserTracker.h>
-#import <NSDictionary+BTDAdditions.h>
-#import <NSString+BTDAdditions.h>
-#import <NSURL+BTDAdditions.h>
-#import <FHCommonDefines.h>
-#import <UIColor+Theme.h>
 
 @implementation FHShareDataModel
 

@@ -10,7 +10,6 @@
 #import "FHReportContentItem.h"
 #import "FHIMContentItem.h"
 #import "FHCollectContentItem.h"
-#import <TTRoute.h>
 
 typedef NS_ENUM(NSInteger, FHShareChannelType)
 {
