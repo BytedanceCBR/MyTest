@@ -415,11 +415,11 @@
 
 
 - (void)displayMessageDot:(NSInteger)dotNumber{
-    self.messageDotNumber.hidden = (dotNumber <= 0);
-    if (dotNumber >0) {
+    self.messageDotNumber.alpha = (dotNumber <= 0) ? 0 : 1;
+    if (dotNumber > 0) {
         self.messageDotNumber.text = dotNumber >99?@"99+":[NSString stringWithFormat:@"%ld",dotNumber];
-        if (dotNumber>9) {
-            [_messageDotNumber mas_updateConstraints:^(MASConstraintMaker *make) {
+        if(dotNumber > 9) {
+            [self.messageDotNumber mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(dotNumber>99?29:22);
             }];
         }
