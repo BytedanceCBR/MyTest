@@ -74,7 +74,7 @@
         }
         self.noDataTipLabel.attributedText = attrText;
         [self.noDataTipLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.contentView);
+            make.top.mas_equalTo(self.contentView).offset(20);
             make.centerX.mas_equalTo(self.contentView);
             make.height.mas_equalTo(20);
             make.width.mas_equalTo([model.text btd_widthWithFont:[UIFont themeFontRegular:14] height:20]);
@@ -90,13 +90,13 @@
 
 - (void)initConstraints {
     [self.leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.contentView);
+        make.centerY.mas_equalTo(self.noDataTipLabel);
         make.left.mas_equalTo(15);
         make.height.mas_equalTo(1);
         make.right.mas_equalTo(self.noDataTipLabel.mas_left).offset(-10);
     }];
     [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.contentView);
+        make.centerY.mas_equalTo(self.noDataTipLabel);
         make.left.mas_equalTo(self.noDataTipLabel.mas_right).offset(10);
         make.right.mas_equalTo(-15);
         make.height.mas_equalTo(1);
@@ -106,6 +106,7 @@
         make.bottom.left.right.mas_equalTo(self.contentView);
     }];
     [self.errorView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
+    self.errorView.backgroundColor = [UIColor clearColor];
     self.errorView.hidden = YES;
 }
 

@@ -877,6 +877,9 @@ extern NSString *const INSTANT_DATA_KEY;
         NSMutableArray *itemArray = [NSMutableArray new];
         NSMutableArray *recommendItemArray = @[].mutableCopy;
         self.tableView.scrollEnabled = YES;
+        if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
+            self.tableView.backgroundColor = [UIColor themeGray7];
+        }
         BOOL hasMore = NO;
         NSString *refreshTip;
         FHSearchHouseDataRedirectTipsModel *redirectTips;
@@ -1682,7 +1685,30 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([FHEnvContext isDisplayNewCardType]) {
             if (self.houseType == FHHouseTypeRentHouse) {
                 FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+                FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
+                if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && model.realSearchOpenUrl){
+                    WeakSelf;
+                    ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
+                        StrongSelf;
+                        NSMutableDictionary *infos = [NSMutableDictionary new];
+                        NSMutableDictionary *tracer = [NSMutableDictionary new];
+                        tracer[@"element_from"] = [self elementFromNameByhouseType:self.preHouseType];
+                        tracer[@"enter_from"] = [self categoryName];
+                        tracer[@"enter_type"] = @"click";
+                        tracer[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
+                        infos[@"tracer"] = tracer;
+                        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+                        if(model.realSearchOpenUrl){
+                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:model.realSearchOpenUrl] userInfo:userInfo];
+                        }
+                    };
+                }
                 [cell refreshWithData:data];
+                if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+                    self.tableView.scrollEnabled = NO;
+                    self.tableView.backgroundColor = [UIColor whiteColor];
+                    ((FHHouseListRecommendTipCell *)cell).errorView.hidden = NO;
+                }
                 return cell;
             }
         }
@@ -1711,8 +1737,14 @@ extern NSString *const INSTANT_DATA_KEY;
                 [(FHDynamicLynxCell *)cell updateWithCellModel:cellModel];
             }
         }
+        [cell refreshWithData:data];
         if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
             FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
+            if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+                self.tableView.scrollEnabled = NO;
+                self.tableView.backgroundColor = [UIColor whiteColor];
+                ((FHHouseListRecommendTipCell *)cell).errorView.hidden = NO;
+                    }
             WeakSelf;
             ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
                 StrongSelf;
@@ -1729,7 +1761,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
             };
         }
-        [cell refreshWithData:data];
         if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
             FHHouseListAgencyInfoCell *agencyInfoCell = (FHHouseListAgencyInfoCell *)cell;
             if (!agencyInfoCell.btnClickBlock) {
@@ -1841,6 +1872,9 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
     if (data) {
+        if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+            return self.tableView.bounds.size.height;
+        }
         CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath];
         if (cellHeight > -0.001f) return cellHeight;
         
