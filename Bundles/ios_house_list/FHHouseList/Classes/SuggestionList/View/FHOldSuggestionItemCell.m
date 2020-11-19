@@ -201,7 +201,7 @@
         UILabel *leftLab = [model.oldName length] > 0 ? self.subTitleLab:self.titleLab;
         float margin = [model.oldName length] > 0 ? 1:6;
         
-        if(model.isnewstyle){
+        if(model.isNewStyle){
             self.amountLab.textColor = [UIColor colorWithHexStr:@"#999999"];
             self.zoneTypeView.layer.cornerRadius = 2;
             self.zoneTypeLab.font = [UIFont themeFontRegular:10];
