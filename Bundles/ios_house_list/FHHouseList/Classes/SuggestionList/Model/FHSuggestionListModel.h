@@ -88,7 +88,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @property (nonatomic, copy , nullable) NSString *buttonText;
 @property (nonatomic, assign) BOOL setHistory;
-@property (nonatomic, assign) BOOL isnewstyle;
+@property (nonatomic, assign) BOOL isNewStyle;
 @property (nonatomic, assign) NSInteger rank;
 @end
 
