@@ -106,6 +106,7 @@
         make.bottom.left.right.mas_equalTo(self.contentView);
     }];
     [self.errorView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
+    self.errorView.backgroundColor = [UIColor clearColor];
     self.errorView.hidden = YES;
 }
 

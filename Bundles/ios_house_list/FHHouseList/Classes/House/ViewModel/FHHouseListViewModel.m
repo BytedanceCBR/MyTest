@@ -877,6 +877,9 @@ extern NSString *const INSTANT_DATA_KEY;
         NSMutableArray *itemArray = [NSMutableArray new];
         NSMutableArray *recommendItemArray = @[].mutableCopy;
         self.tableView.scrollEnabled = YES;
+        if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
+            self.tableView.backgroundColor = [UIColor themeGray7];
+        }
         BOOL hasMore = NO;
         NSString *refreshTip;
         FHSearchHouseDataRedirectTipsModel *redirectTips;
@@ -1700,6 +1703,8 @@ extern NSString *const INSTANT_DATA_KEY;
                 };
                 [cell refreshWithData:data];
                 if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+                    self.tableView.scrollEnabled = NO;
+                    self.tableView.backgroundColor = [UIColor whiteColor];
                     ((FHHouseListRecommendTipCell *)cell).errorView.hidden = NO;
                 }
                 return cell;
@@ -1730,9 +1735,12 @@ extern NSString *const INSTANT_DATA_KEY;
                 [(FHDynamicLynxCell *)cell updateWithCellModel:cellModel];
             }
         }
+        [cell refreshWithData:data];
         if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
             FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
             if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+                self.tableView.scrollEnabled = NO;
+                self.tableView.backgroundColor = [UIColor whiteColor];
                 ((FHHouseListRecommendTipCell *)cell).errorView.hidden = NO;
                     }
             WeakSelf;
@@ -1751,7 +1759,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
             };
         }
-        [cell refreshWithData:data];
         if ([cell isKindOfClass:[FHHouseListAgencyInfoCell class]]) {
             FHHouseListAgencyInfoCell *agencyInfoCell = (FHHouseListAgencyInfoCell *)cell;
             if (!agencyInfoCell.btnClickBlock) {
