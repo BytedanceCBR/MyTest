@@ -90,13 +90,13 @@
 
 - (void)initConstraints {
     [self.leftLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.contentView);
+        make.centerY.mas_equalTo(self.noDataTipLabel);
         make.left.mas_equalTo(15);
         make.height.mas_equalTo(1);
         make.right.mas_equalTo(self.noDataTipLabel.mas_left).offset(-10);
     }];
     [self.rightLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.contentView);
+        make.centerY.mas_equalTo(self.noDataTipLabel);
         make.left.mas_equalTo(self.noDataTipLabel.mas_right).offset(10);
         make.right.mas_equalTo(-15);
         make.height.mas_equalTo(1);
