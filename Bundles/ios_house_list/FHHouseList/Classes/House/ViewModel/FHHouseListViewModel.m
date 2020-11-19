@@ -865,6 +865,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if (self.isRefresh) {
         [self.houseList removeAllObjects];
+        self.isFirstHavetip = YES;
         [self.sugesstHouseList removeAllObjects];
         [self.tableView.mj_footer endRefreshing];
     }
