@@ -1686,21 +1686,23 @@ extern NSString *const INSTANT_DATA_KEY;
             if (self.houseType == FHHouseTypeRentHouse) {
                 FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
                 FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
-                WeakSelf;
-                ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
-                    StrongSelf;
-                    NSMutableDictionary *infos = [NSMutableDictionary new];
-                    NSMutableDictionary *tracer = [NSMutableDictionary new];
-                    tracer[@"element_from"] = [self elementFromNameByhouseType:self.preHouseType];
-                    tracer[@"enter_from"] = [self categoryName];
-                    tracer[@"enter_type"] = @"click";
-                    tracer[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
-                    infos[@"tracer"] = tracer;
-                    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
-                    if(model.realSearchOpenUrl){
-                        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:model.realSearchOpenUrl] userInfo:userInfo];
-                    }
-                };
+                if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && model.realSearchOpenUrl){
+                    WeakSelf;
+                    ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
+                        StrongSelf;
+                        NSMutableDictionary *infos = [NSMutableDictionary new];
+                        NSMutableDictionary *tracer = [NSMutableDictionary new];
+                        tracer[@"element_from"] = [self elementFromNameByhouseType:self.preHouseType];
+                        tracer[@"enter_from"] = [self categoryName];
+                        tracer[@"enter_type"] = @"click";
+                        tracer[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
+                        infos[@"tracer"] = tracer;
+                        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+                        if(model.realSearchOpenUrl){
+                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:model.realSearchOpenUrl] userInfo:userInfo];
+                        }
+                    };
+                }
                 [cell refreshWithData:data];
                 if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
                     self.tableView.scrollEnabled = NO;
