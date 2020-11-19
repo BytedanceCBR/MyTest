@@ -52,13 +52,20 @@ static NSString *const kFModulePacakgeName = @"BFlutterBusiness";
     config.aid = @"1370";
     config.channel = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"];;
     config.deviceId = [BDTrackerProtocol deviceID];
+    
+    //手动赋值版本号
+    NSString *shortVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    if(bundleVersion.length > 0){
+       config.bundleVersion = [NSString stringWithFormat:@"%@.%@",shortVersion,[bundleVersion substringFromIndex:bundleVersion.length - 1]];
+    }
+    
     [[BDPMSManager sharedInstance] setConfig:config];
     [[BDFlutterPackageManager sharedInstance] loadPackagesWithCallback:^(BOOL success) {
         NSLog(@"BDFlutterPackageManager初始化%@", success ? @"成功" : @"失败");
     }];
     
     [VesselEnvironment configBaseUrl:[FHURLSettings baseURL]];
-    
     
     [[FlutterManager sharedManager] setReleaseDartVMEnabled:YES];
     [[FlutterManager sharedManager] setAutoDestroyFlutterContext:YES];
