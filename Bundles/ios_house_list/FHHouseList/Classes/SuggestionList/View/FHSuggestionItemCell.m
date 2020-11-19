@@ -12,6 +12,7 @@
 #import "TTDeviceHelper.h"
 #import "BDWebImage.h"
 #import "UILabel+BTDAdditions.h"
+#import "YYLabel.h"
 
 @interface FHSuggestionItemCell ()
 
@@ -166,7 +167,6 @@
 // --
 @interface FHSuggestionNewHouseItemCell ()
 
-@property (nonatomic, strong)   UIView       *sepLine;
 
 @end
 
@@ -189,21 +189,25 @@
     _label.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_label];
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
+        make.left.mas_equalTo(15);
         make.top.mas_equalTo(11);
-        make.width.mas_greaterThanOrEqualTo(240);
+        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 73);
     }];
+
+    
     // secondaryLabel
-    _secondaryLabel = [[UILabel alloc] init];
-    _secondaryLabel.font = [UIFont themeFontRegular:13];
+    _secondaryLabel = [[YYLabel alloc] init];
+    _secondaryLabel.font = [UIFont themeFontRegular:10];
     _secondaryLabel.textColor = [UIColor themeGray3];
-    _secondaryLabel.textAlignment = NSTextAlignmentRight;
+    _secondaryLabel.layer.masksToBounds = YES;
+    _secondaryLabel.layer.cornerRadius = 2;
+//    _secondaryLabel.textAlignment = NSTextAlignmentCenter;
     [self.contentView addSubview:_secondaryLabel];
     [_secondaryLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.label.mas_right).offset(5);
-        make.top.mas_equalTo(12);
-        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.width.mas_greaterThanOrEqualTo(63).priorityHigh();
+        make.centerY.mas_equalTo(self.label);
+//        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.width.mas_lessThanOrEqualTo(63).priorityHigh();
     }];
     [_secondaryLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_secondaryLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
@@ -215,7 +219,7 @@
     _subLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_subLabel];
     [_subLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(20);
+        make.left.mas_equalTo(15);
         make.top.mas_equalTo(self.label.mas_bottom).offset(6);
         make.height.mas_equalTo(17);
         make.bottom.mas_equalTo(-13);
@@ -226,14 +230,14 @@
     
     // _secondarySubLabel
     _secondarySubLabel = [[UILabel alloc] init];
-    _secondarySubLabel.font = [UIFont themeFontRegular:13];
-    _secondarySubLabel.textColor = [UIColor themeGray3];
+    _secondarySubLabel.font = [UIFont themeFontRegular:14];
+    _secondarySubLabel.textColor = [UIColor colorWithHexStr:@"#999999"];
     _secondarySubLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_secondarySubLabel];
     [_secondarySubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.subLabel.mas_right).offset(5);
         make.centerY.mas_equalTo(self.subLabel);
-        make.right.mas_equalTo(self.contentView).offset(-20);
+        make.right.mas_equalTo(self.contentView).offset(-15);
     }];
     
     // sepLine
@@ -463,4 +467,26 @@
     }
 }
 
+@end
+
+@implementation FHRecommendtHeaderViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self setupUI];
+    }
+    return self;
+}
+
+- (void)setupUI{
+    _label = [[UILabel alloc] init];
+    [self.contentView addSubview:_label];
+    _label.font = [UIFont themeFontMedium:16];
+    _label.textColor = [UIColor themeGray1];
+    [_label mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self);
+        make.left.mas_equalTo(15);
+    }];
+}
 @end

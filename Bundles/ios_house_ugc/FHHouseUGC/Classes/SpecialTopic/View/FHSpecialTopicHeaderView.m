@@ -10,7 +10,7 @@
 #import "UIColor+Theme.h"
 #import "UILabel+House.h"
 #import "WDDefines.h"
-#import "IMConsDefine.h"
+#import "FHCommonDefines.h"
 #import "FHUGCFollowButton.h"
 #import "SSViewBase.h"
 #import "TTDeviceHelper.h"

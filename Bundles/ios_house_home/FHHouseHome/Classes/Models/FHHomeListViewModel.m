@@ -310,6 +310,7 @@
             
             // 添加子控制器
             [self.homeViewController addChildViewController:itemVC];
+            itemVC.superTableView = self.tableViewV;
             
             itemVC.scrollDidScrollCallBack = ^(UIScrollView * _Nonnull currentTable,BOOL isCanScroll) {
                 weakSelf.childVCScrollView = currentTable;
@@ -576,22 +577,26 @@
     }
 }
 
-- (void)updateIndexChangedScrollStatus{
-      for (FHHomeItemViewController *vc in self.itemsVCArray) {
-          if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.houseType) {
-              self.childVCScrollView = vc.tableView;
-              if (vc.tableView.contentOffset.y == 0) {
-                  self.superScrollEnable = YES;
-              }
-          }
-          
-          if (self.tableViewV.contentOffset.y < (self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
-              vc.tableView.contentOffset = CGPointMake(0, 0);
-              vc.childScrollEnable = NO;
-          }else{
-              vc.childScrollEnable = YES;
+- (void)updateIndexChangedScrollStatus {
+    for (FHHomeItemViewController *vc in self.itemsVCArray) {
+      if ([vc isKindOfClass:[FHHomeItemViewController class]] && vc.houseType == self.houseType) {
+          self.childVCScrollView = vc.tableView;
+          if (vc.tableView.contentOffset.y == 0) {
+              self.superScrollEnable = YES;
           }
       }
+      
+      if (self.tableViewV.contentOffset.y < (self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
+          vc.tableView.contentOffset = CGPointMake(0, 0);
+          vc.childScrollEnable = NO;
+      }else{
+          vc.childScrollEnable = YES;
+      }
+      
+      if ([vc respondsToSelector:@selector(itemDidSelectedWithHouseType:)]) {
+          [vc itemDidSelectedWithHouseType:self.houseType];
+      }
+    }
 }
 
 - (void)bindItemVCTrace
