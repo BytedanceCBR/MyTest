@@ -323,12 +323,10 @@
     UIAlertAction *dislikeAction = [UIAlertAction actionWithTitle:@"拉黑" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         
         UIAlertController *dislikeConfirmActionSheet = [UIAlertController alertControllerWithTitle:@"拉黑后，无法进行评论回复和点赞" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *dislikeConfirmAction = [UIAlertAction actionWithTitle:@"确认拉黑" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        UIAlertAction *dislikeConfirmAction = [UIAlertAction actionWithTitle:@"确认拉黑" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             [[ToastManager manager] showToast:@"已拉黑该用户"];
         }];
-       
-        [dislikeConfirmAction setValue:[UIColor redColor] forKey:@"titleTextColor"];
-        
+
         UIAlertAction *cancelConfirmAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         }];
 
