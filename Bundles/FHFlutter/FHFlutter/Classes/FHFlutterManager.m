@@ -184,8 +184,6 @@ static NSString *const kFModulePacakgeName = @"BFlutterBusiness";
 
 +(BOOL)checkPackageIsAvailad{
    NSArray *validPackages = [[BDFlutterPackageManager sharedInstance] allValidPackages];
-    
-    
     return YES;
 }
 
