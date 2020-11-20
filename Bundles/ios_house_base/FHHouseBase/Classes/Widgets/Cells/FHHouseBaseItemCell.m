@@ -1674,7 +1674,7 @@
             FHImageModel *imageModel = [commonModel.houseImage firstObject];
             [self updateMainImageWithUrl:imageModel.url];
             self.imageTagLabelBgView.hidden = YES;
-            [self updateSamllTitlesLayout:attributeString.length > 0];
+            [self updateSamllTitlesLayout:attributeString.length > 0 && self.distanceLabel.hidden];
         } else if (houseType == FHHouseTypeNeighborhood) {
             
             self.houseVideoImageView.hidden = !commonModel.houseVideo.hasVideo;

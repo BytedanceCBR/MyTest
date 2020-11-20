@@ -49,23 +49,66 @@ static const char tabSwitchedKey;
     [self trackPageShow];
 }
 
+- (void)trackSugWordClickWithmodel:(FHSuggestionResponseItemModel *)model eventName:(nonnull NSString *)eventName{
+    NSMutableDictionary *parameters =  [NSMutableDictionary dictionaryWithDictionary:self.sugWordShowtracerDic];
+    parameters[@"rank"] = @(model.rank);
+    parameters[@"log_pb"] = model.logPb;
+    parameters[@"word_text"] = [model.houseType intValue] == FHHouseTypeNewHouse? model.text:model.name;
+    parameters[@"group_id"] = model.info.qrecid;
+    parameters[@"element_type"] = @"search";
+    parameters[@"recall_type"] = model.recallType;
+    if([eventName isEqualToString:@"search_detail_show"]){
+        [parameters removeObjectForKey:@"result_num"];
+        [parameters removeObjectForKey:@"differ_result_num"];
+        [parameters removeObjectForKey:@"rank"];
+    }
+    TRACK_EVENT(eventName, parameters);
+}
+
 - (void)trackSuggestionWithWord:(NSString *)word houseType:(NSInteger)houseType result:(FHSuggestionResponseModel *)result {
     if (self.houseType != houseType || !word || !word.length) return;
     
     NSString *tagsStr = @"{}";
-    NSInteger count = result.data.count;
+    NSInteger count = result.data.items.count + result.data.otherItems.count;
     if (count) {
-        NSArray *filteredResultArray = [result.data filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
-            if (![object isKindOfClass:FHSuggestionResponseDataModel.class]) return NO;
-            FHSuggestionResponseDataModel *item = (FHSuggestionResponseDataModel *)object;
+        NSArray *filteredResultArray = [result.data.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
+            if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;
+            FHSuggestionResponseItemModel *item = (FHSuggestionResponseItemModel *)object;
             return item.cardType == 16;
         }]];
         
-        count = filteredResultArray.count;
+        NSArray *filteredOtherResultArray = [result.data.otherItems filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
+            if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;
+            FHSuggestionResponseItemModel *item = (FHSuggestionResponseItemModel *)object;
+            return item.cardType == 16;
+        }]];
+        
+        count = filteredResultArray.count + filteredOtherResultArray.count;
         tagsStr = [self resultTagsString:filteredResultArray houseType:houseType];
+        
     }
-    
-    NSDictionary *parameters = @{
+    NSMutableArray *itemArray = [[NSMutableArray alloc] init];
+    [itemArray addObjectsFromArray:result.data.items];
+    [itemArray addObjectsFromArray:result.data.otherItems];
+    NSMutableDictionary *differResultnum = [NSMutableDictionary new];
+    NSInteger newNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeNewHouse];
+    NSInteger oldNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeSecondHandHouse];
+    NSInteger rentingNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeRentHouse];
+    NSInteger neighborhoodNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeNeighborhood];
+    if(newNum){
+        differResultnum[@"new"] = @(newNum);
+    }
+    if(oldNum){
+        differResultnum[@"old"] = @(oldNum);
+    }
+    if(rentingNum){
+        differResultnum[@"renting"] = @(rentingNum);
+    }
+    if(neighborhoodNum){
+        differResultnum[@"neighborhood"] = @(neighborhoodNum);
+    }
+    NSString *differResultnumstring = [differResultnum btd_jsonStringEncoded];
+    self.sugWordShowtracerDic = @{
         UT_ORIGIN_FROM: [self fh_originFrom],
         UT_ENTER_FROM: self.tabSwitched ? [self fh_pageType] : [self fh_fromPageType],
         UT_PAGE_TYPE: [self fh_pageType],
@@ -74,8 +117,19 @@ static const char tabSwitchedKey;
         TrackKeySuggestionWord: word,
         TrackKeySuggestionResultTags: tagsStr,
         UT_EVENT_TRACKING_ID: TrackValueSuggestionResultShowTrackingID,
+        @"differ_result_num":differResultnumstring,
     };
-    TRACK_EVENT(TrackEventSuggestionResultShow, parameters);
+    [FHUserTracker writeEvent:TrackEventSuggestionResultShow params:self.sugWordShowtracerDic];
+//    TRACK_EVENT(TrackEventSuggestionResultShow,self.sugWordShowtracerDic);
+}
+
+- (NSInteger)getDifferResultnum:(NSArray *)resultArray houseType:(NSInteger)houseType{
+    NSArray *filteredOtherResultArray = [resultArray filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
+        if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;
+        FHSuggestionResponseItemModel *item = (FHSuggestionResponseItemModel *)object;
+        return [item.houseType intValue] == houseType && item.cardType == 16;
+    }]];
+    return  filteredOtherResultArray.count;
 }
 
 //{小区|牡丹园,小区|牡丹园中兴大厦,地铁|牡丹园站}
@@ -83,7 +137,7 @@ static const char tabSwitchedKey;
     NSMutableString *tagStr = [NSMutableString string];
     [tagStr appendString:@"{"];
     BOOL firstTag = YES;
-    for (FHSuggestionResponseDataModel *item in resultArray) {
+    for (FHSuggestionResponseItemModel *item in resultArray) {
         if (!firstTag) {
             [tagStr appendFormat:@","];
         }

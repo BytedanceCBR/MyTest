@@ -5532,8 +5532,8 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
 }
 + (BOOL)isEnableLinkChatPage {
     NSDictionary *fhSettings = [self fhSettings];
-    if (fhSettings != nil && [fhSettings objectForKey:@"f_enable_link_chat_page"] != nil) {
-        BOOL isEnableLinkChatPage = [[fhSettings objectForKey:@"f_enable_link_chat_page"] boolValue];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_enable_linkchat_page"] != nil) {
+        BOOL isEnableLinkChatPage = [[fhSettings objectForKey:@"f_enable_linkchat_page"] boolValue];
         return isEnableLinkChatPage;
     }
     return NO;
