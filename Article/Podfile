@@ -605,7 +605,7 @@ def appPods
     #头条连续点赞组件
     pod_binary 'TTMultiDiggManager', '0.1.18-rc.5'
     #分享sdk
-    pod 'BDUGShare', '2.1.8-alpha.0' , :subspecs =>[
+    pod_binary 'BDUGShare', '2.1.8-alpha.0' , :subspecs =>[
       'BDUGShareBasic/BDUGUtil',
       'BDUGShareBasic/BDUGSystemShare',
       'BDUGShareBasic/BDUGQQShare',
@@ -617,7 +617,7 @@ def appPods
       'BDUGShareBusiness/BDUGShareSystemBusiness',
       'BDUGShareBusiness/BDUGShareCopyBusiness',
     ]
-    pod 'BDUGLoggerInterface', '1.0.3'
+    pod_binary 'BDUGLoggerInterface', '1.0.3'
 end
 
 
