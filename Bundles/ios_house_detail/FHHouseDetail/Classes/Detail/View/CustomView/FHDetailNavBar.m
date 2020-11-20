@@ -511,9 +511,7 @@
 }
 
 - (void)showMessageNumber {
-    if (self.messageDotNumber.text.length>0) {
-        self.messageDotNumber.hidden = NO;
-    }
+    self.messageDotNumber.hidden = NO;
 }
 
 - (void)goToJump {
