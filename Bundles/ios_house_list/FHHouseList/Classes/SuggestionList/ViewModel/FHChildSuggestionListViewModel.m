@@ -1147,6 +1147,7 @@
         [self.sugHttpTask cancel];
     }
     self.sugListData = NULL;
+    self.othersugListData = NULL;
     [self reloadSugTableView];
 }
 
