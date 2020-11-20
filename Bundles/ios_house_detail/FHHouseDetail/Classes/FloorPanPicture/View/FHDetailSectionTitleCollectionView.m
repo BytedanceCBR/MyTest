@@ -25,6 +25,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.titleLabel = [[UILabel alloc] init];
+        self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         self.titleLabel.font = [UIFont themeFontRegular:14];
         self.titleLabel.textColor = [UIColor colorWithHexStr:@"#6d7278"];
         [self addSubview:self.titleLabel];
