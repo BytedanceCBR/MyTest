@@ -201,7 +201,7 @@
         UILabel *leftLab = [model.oldName length] > 0 ? self.subTitleLab:self.titleLab;
         float margin = [model.oldName length] > 0 ? 1:6;
         
-        if(model.isnewstyle){
+        if(model.isNewStyle){
             self.amountLab.textColor = [UIColor colorWithHexStr:@"#999999"];
             self.zoneTypeView.layer.cornerRadius = 2;
             self.zoneTypeLab.font = [UIFont themeFontRegular:10];
@@ -235,6 +235,11 @@
                 self.zoneTypeView.backgroundColor = [UIColor colorWithHexStr:model.newtip.backgroundcolor];
                 self.zoneTypeLab.textColor = [UIColor colorWithHexStr:model.newtip.textcolor];
                 self.zoneTypeLab.text = model.newtip.content;
+                self.zoneTypeLab.hidden = NO;
+                self.zoneTypeView.hidden = NO;
+            }else{
+                self.zoneTypeLab.hidden = YES;
+                self.zoneTypeView.hidden = YES;
             }
         }
     }

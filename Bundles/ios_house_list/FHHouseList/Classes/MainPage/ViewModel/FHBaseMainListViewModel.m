@@ -1029,6 +1029,10 @@ extern NSString *const INSTANT_DATA_KEY;
         }else if (_houseType == FHHouseTypeSecondHandHouse){
             fromHome = 5; // list main
             sugDelegateTable = nil;
+        }else {
+            /// TODO:先跟二手房保持一致，之后定义一个新的枚举值
+            fromHome = 5;
+            sugDelegateTable = nil;
         }
         
     }
@@ -1038,9 +1042,9 @@ extern NSString *const INSTANT_DATA_KEY;
                            @"tracer": traceParam,
                            @"from_home":@(fromHome)
                            }.mutableCopy;
-//    if (sugDelegateTable) {
-//        dict[@"sug_delegate"] = sugDelegateTable;
-//    }
+    if (sugDelegateTable) {
+        dict[@"sug_delegate"] = sugDelegateTable;
+    }
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
     NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];
