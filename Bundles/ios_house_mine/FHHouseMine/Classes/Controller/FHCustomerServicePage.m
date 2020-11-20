@@ -154,7 +154,7 @@
             make.size.mas_equalTo(CGSizeMake(104, 30));
         }];
         
-        return;
+        return;;
     }
     
     [[[[NSNotificationCenter defaultCenter] rac_addObserverForName:TTReachabilityChangedNotification object:nil] deliverOnMainThread] subscribeNext:^(NSNotification * _Nullable x) {
