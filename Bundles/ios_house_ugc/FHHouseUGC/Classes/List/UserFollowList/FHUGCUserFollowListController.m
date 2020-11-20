@@ -81,7 +81,7 @@
     self.panBeginAction = ^{
         [weakSelf.searchView.searchInput resignFirstResponder];
     };
-    CGFloat height = [FHFakeInputNavbar perferredHeight];
+
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     [self.emptyView hideEmptyView];
     [self startLoadData];
@@ -192,7 +192,7 @@
             [[ToastManager manager] showToast:@"网络异常"];
             [weakSelf updateTableViewWithMoreData:weakSelf.tableView.hasMore];
         } else {
-            [weakSelf requestSuggestion:weakSelf.searchText];
+            [weakSelf requestSuggestion:weakSelf.searchText loadmore:YES];
         }
     }];
     [self.refreshFooter setUpNoMoreDataText:@""];
@@ -287,7 +287,7 @@
         self.tableView.hidden = NO;
         self.sugOffset = 0;
         self.hasMore = NO;
-        [self requestSuggestion:text];
+        [self requestSuggestion:text loadmore:NO];
     } else {
         // 清空sug列表数据
         [self.items removeAllObjects];
@@ -297,7 +297,7 @@
 }
 
 // sug建议
-- (void)requestSuggestion:(NSString *)text {
+- (void)requestSuggestion:(NSString *)text loadmore:(BOOL)loadmore {
     if (self.sugHttpTask) {
         [self.sugHttpTask cancel];
     }
@@ -305,7 +305,9 @@
     self.sugHttpTask = [FHHouseUGCAPI requestFollowSugSearchByText:text socialGroupId:self.socialGroupId offset:self.sugOffset class:[FHUGCUserFollowModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
             weakSelf.associatedCount +=1;
-            [weakSelf.items removeAllObjects];
+            if(!loadmore){
+                [weakSelf.items removeAllObjects];
+            }
             [weakSelf processDataWith:(FHUGCUserFollowModel *)model];
         } else {
             [weakSelf processDataWith:nil];
