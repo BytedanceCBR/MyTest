@@ -571,6 +571,7 @@
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
         
+        cell.contentView.userInteractionEnabled = NO;
         cell.delegate = self;
         cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
         cellModel.cell = cell;
