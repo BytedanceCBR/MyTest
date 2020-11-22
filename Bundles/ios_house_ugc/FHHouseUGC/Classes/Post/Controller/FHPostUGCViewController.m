@@ -1415,7 +1415,14 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     self.isToolbarWillEndEditing = YES;
-    [self endEditing];
+    
+    
+    self.isToolbarWillEndEditing = YES;
+    
+    [self.view endEditing:YES];
+    
+    [self.toolbar endEditing:YES];
+//    [self endEditing];
 }
 
 
@@ -1448,7 +1455,12 @@ static NSInteger const kMaxPostImageCount = 9;
 }
 
 - (void)addMultiImagesViewNeedEndEditing {
-    [self endEditing];
+//    [self endEditing];
+    self.isToolbarWillEndEditing = YES;
+    
+    [self.view endEditing:YES];
+    
+    [self.toolbar endEditing:YES];
 }
 
 - (void)addMultiImageViewDidBeginDragging:(FRAddMultiImagesView *)addMultiImagesView {

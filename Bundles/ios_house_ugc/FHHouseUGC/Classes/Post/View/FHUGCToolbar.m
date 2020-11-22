@@ -125,8 +125,17 @@
         
         // 修改父类控制布局
         [self layoutSuperView];
+        [self addObserver:self forKeyPath:@"frame" options:0 context:NULL];
     }
     return self;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if([keyPath isEqualToString:@"frame"]) {
+        if([object valueForKeyPath:keyPath] != [NSNull null]) {
+            
+        }
+    }
 }
 
 - (void)layoutSuperView {
@@ -352,11 +361,11 @@
 
 - (BOOL)endEditing:(BOOL)animated {
     
-    void (^animations)(void) = ^{
-        self.top = self.toolbarViewOrigin.y;
-    };
+//    void (^animations)(void) = ^{
+//        self.top = self.toolbarViewOrigin.y;
+//    };
     
-    void (^completion)(BOOL) = ^(BOOL finished) {
+//    void (^completion)(BOOL) = ^(BOOL finished) {
         self.keyboardButton.imageName = @"fh_ugc_toolbar_keyboard_selected";
         self.keyboardButton.accessibilityLabel = @"弹出键盘";
         self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
@@ -367,16 +376,16 @@
         }
         
         self.emojiInputView.hidden = !self.emojiInputViewVisible;
-    };
+//    };
     
-    if (animated) {
-        
-        [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:animations completion:completion];
-        
-    } else {
-        animations();
-        completion(YES);
-    }
+//    if (animated) {
+//
+//        [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:animations completion:completion];
+//
+//    } else {
+//        animations();
+//        completion(YES);
+//    }
     
     return YES;
 }
