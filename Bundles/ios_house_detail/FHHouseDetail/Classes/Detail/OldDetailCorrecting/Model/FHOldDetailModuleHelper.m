@@ -123,39 +123,24 @@
         if (housingEvaluation.count > 0) {
             [moduleItems addObject:@{@"housingEvaluation":housingEvaluation}];
         }
-        BOOL isSurveyRealtorFirst = [SSCommonLogic isSurveyRealtorFirst];
-        if(isSurveyRealtorFirst) {
-            if (surveyedRealtorAgentlist.count > 0) {
-                [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
-            }
-            if (agentlist.count > 0) {
-                [moduleItems addObject:@{@"agentlist":agentlist}];
-            }
-        } else {
-            if (agentlist.count > 0) {
-                [moduleItems addObject:@{@"agentlist":agentlist}];
-            }
-            if (surveyedRealtorAgentlist.count > 0) {
-                [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
-            }
+    }
+    BOOL isSurveyRealtorFirst = [SSCommonLogic isSurveyRealtorFirst];
+    if(isSurveyRealtorFirst) {
+        if (surveyedRealtorAgentlist.count > 0) {
+            [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
         }
-    }else{
-        BOOL isSurveyRealtorFirst = [SSCommonLogic isSurveyRealtorFirst];
-        if(isSurveyRealtorFirst) {
-            if (surveyedRealtorAgentlist.count > 0) {
-                [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
-            }
-            if (agentlist.count > 0) {
-                [moduleItems addObject:@{@"agentlist":agentlist}];
-            }
-        } else {
-            if (agentlist.count > 0) {
-                [moduleItems addObject:@{@"agentlist":agentlist}];
-            }
-            if (surveyedRealtorAgentlist.count > 0) {
-                [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
-            }
+        if (agentlist.count > 0) {
+            [moduleItems addObject:@{@"agentlist":agentlist}];
         }
+    } else {
+        if (agentlist.count > 0) {
+            [moduleItems addObject:@{@"agentlist":agentlist}];
+        }
+        if (surveyedRealtorAgentlist.count > 0) {
+            [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
+        }
+    }
+    if(![[FHEnvContext getCurrentSelectCityIdFromLocal] isEqual:@"10416"] || ![[BDABTestManager getExperimentValueForKey:@"f_wuhu_detail_card_order" withExposure:YES] intValue]){
         if (housingEvaluation.count > 0) {
             [moduleItems addObject:@{@"housingEvaluation":housingEvaluation}];
         }
