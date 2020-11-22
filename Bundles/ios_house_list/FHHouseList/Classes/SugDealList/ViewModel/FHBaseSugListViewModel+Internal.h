@@ -19,7 +19,7 @@
 
 @property(nonatomic , strong) UITableView *suggestTableView;
 @property(nonatomic , strong) TTHttpTask *sugHttpTask;
-@property (nonatomic, strong) NSArray<FHSuggestionResponseDataModel> *sugListData;
+@property (nonatomic, strong) NSArray<FHSuggestionResponseItemModel> *sugListData;
 @property (nonatomic, copy)     NSString       *highlightedText;
 @property (nonatomic, weak)     id<FHHouseBaseDataProtocel>    delegate;
 @property (nonatomic, weak)     id<FHHouseSuggestionDelegate>    suggestDelegate;
