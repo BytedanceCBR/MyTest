@@ -50,6 +50,8 @@
 #import "FHDetailNewBuildingsCell.h"
 #import "TTAccountManager.h"
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
+#import "BDABTestManager.h"
+#import "FHEnvContext.h"
 
 @interface FHHouseNewDetailViewModel ()
 
@@ -567,7 +569,7 @@
         [self.items addObject:agentListModel];
     }
     
-    //用户房源评价
+    //用户房源评价/顾问点评
     if (model.data.realtorContent.content.data.count > 0) {
         FHhouseDetailRGCListCellModel *detailRGCListCellModel = [[FHhouseDetailRGCListCellModel alloc] init];
         detailRGCListCellModel.detailTracerDic = self.detailTracerDic;
@@ -648,6 +650,20 @@
         buildingCellModel.houseModelType = FHHouseModelTypeNewBuildingInfo;
         buildingCellModel.buildingInfo = model.data.buildingInfo;
         [self.items addObject:buildingCellModel];
+    }
+    
+    if([[FHEnvContext getCurrentSelectCityIdFromLocal] isEqual:@"10416"] && [[BDABTestManager getExperimentValueForKey:@"f_wuhu_detail_card_order" withExposure:YES] intValue]){
+        __block NSInteger FHhouseDetailRGCListCellIndex = -1,FHDetailAgentListIndex = -1;
+        [self.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([obj isKindOfClass:[FHhouseDetailRGCListCellModel class]]){
+                FHhouseDetailRGCListCellIndex = idx;
+            }else if([obj isKindOfClass:[FHDetailAgentListModel class]]){
+                FHDetailAgentListIndex = idx;
+            }
+        }];
+        if(FHhouseDetailRGCListCellIndex != -1 && FHDetailAgentListIndex != -1){
+            [self.items exchangeObjectAtIndex:FHhouseDetailRGCListCellIndex withObjectAtIndex:FHDetailAgentListIndex];
+        }
     }
     
     self.items = [FHNewDetailModuleHelper moduleClassificationMethod:self.items];

@@ -9,6 +9,9 @@
 #import "FHDetailBaseModel.h"
 #import "FHHouseShadowImageType.h"
 #import "FHDetailListSectionTitleCell.h"
+#import "BDABTestManager.h"
+#import "FHEnvContext.h"
+
 
 @implementation FHNewDetailModuleHelper
 
@@ -89,11 +92,20 @@
     if (access.count > 0) {
         [moduleItems addObject:@{@"access":access}];
     }
-    if (agentlist.count > 0) {
-        [moduleItems addObject:@{@"agentlist":agentlist}];
-    }
-    if (agentevaluationlist.count > 0) {
-        [moduleItems addObject:@{@"agentevaluationlist":agentevaluationlist}];
+    if([[FHEnvContext getCurrentSelectCityIdFromLocal] isEqual:@"10416"] && [[BDABTestManager getExperimentValueForKey:@"f_wuhu_detail_card_order" withExposure:YES] intValue]){
+        if (agentevaluationlist.count > 0) {
+            [moduleItems addObject:@{@"agentevaluationlist":agentevaluationlist}];
+        }
+        if (agentlist.count > 0) {
+            [moduleItems addObject:@{@"agentlist":agentlist}];
+        }
+    }else{
+        if (agentlist.count > 0) {
+            [moduleItems addObject:@{@"agentlist":agentlist}];
+        }
+        if (agentevaluationlist.count > 0) {
+            [moduleItems addObject:@{@"agentevaluationlist":agentevaluationlist}];
+        }
     }
     if (locations.count > 0) {
         [moduleItems addObject:@{@"locations":locations}];
