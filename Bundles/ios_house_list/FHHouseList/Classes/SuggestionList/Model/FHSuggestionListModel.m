@@ -83,6 +83,15 @@
 
 @end
 
+@implementation  FHOtherSuggestionResponseModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 
 @implementation  FHSuggestionResponseItemModel
 
