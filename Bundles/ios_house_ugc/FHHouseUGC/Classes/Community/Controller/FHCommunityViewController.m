@@ -476,10 +476,10 @@
         }
     }
     
-    if(self.isNewDiscovery){
-        top = 0;
-        bottom = 0;
-    }
+//    if(self.isNewDiscovery){
+//        top = 0;
+//        bottom = 0;
+//    }
 
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(top);
