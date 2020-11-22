@@ -1708,7 +1708,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
                     self.tableView.scrollEnabled = NO;
                     self.tableView.backgroundColor = [UIColor whiteColor];
-                    ((FHHouseListRecommendTipCell *)cell).errorView.hidden = NO;
+                    [((FHHouseListRecommendTipCell *)cell) showErrorView];
                 }
                 return cell;
             }
@@ -1744,8 +1744,8 @@ extern NSString *const INSTANT_DATA_KEY;
             if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
                 self.tableView.scrollEnabled = NO;
                 self.tableView.backgroundColor = [UIColor whiteColor];
-                ((FHHouseListRecommendTipCell *)cell).errorView.hidden = NO;
-                    }
+                [((FHHouseListRecommendTipCell *)cell) showErrorView];
+            }
             WeakSelf;
             ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
                 StrongSelf;

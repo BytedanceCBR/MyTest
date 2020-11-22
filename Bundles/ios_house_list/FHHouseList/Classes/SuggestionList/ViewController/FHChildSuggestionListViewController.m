@@ -22,7 +22,6 @@
 #import "FHFindHouseHelperCell.h"
 #import "FHHouseListRecommendTipCell.h"
 #import "UIDevice+BTDAdditions.h"
-#import <NSString+BTDAdditions.h>
 
 @interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -329,7 +328,7 @@
 - (void)doTextFieldShouldReturn:(NSString *)text {
     
     
-    NSString *userInputText = [text btd_stringByRemoveAllCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"+ "]] ;
+    NSString *userInputText = text;
     
     // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
     NSString *rollText = self.homePageRollDic[@"text"];

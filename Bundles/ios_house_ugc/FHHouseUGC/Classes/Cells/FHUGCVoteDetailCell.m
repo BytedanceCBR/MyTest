@@ -84,7 +84,7 @@
         if (voteInfo) {
             // 完成(或者过期) 或者 取消投票
             FHUGCVoteInfoVoteInfoModel *currentVoteInfo = self.cellModel.voteInfo;
-            if ([currentVoteInfo.voteId isEqualToString:voteInfo.voteId] && currentVoteInfo != voteInfo) {
+            if ([currentVoteInfo.voteId isEqualToString:voteInfo.voteId]) {
                 // 同样的投票
                 // 更新数据
                 currentVoteInfo.selected = voteInfo.selected;
