@@ -34,6 +34,8 @@
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import <BDTrackerProtocol/BDTrackerProtocol+ABTest.h>
 #import <TTKitchen/TTKitchen.h>
+#import <NSDictionary+BTDAdditions.h>
+#import <TTSettingsManager.h>
 
 #if __has_include(<TTTracker/TTTracker.h>)
 #import <TTTracker/TTTracker.h>
@@ -50,7 +52,7 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
-    [[self class] startupTracker];
+    [[self class] startTracker];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
 //        [[self class] startupTracker];
         [[SSImpressionManager shareInstance] setTodayExtensionBlock:^(void){
@@ -67,16 +69,24 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
     });
 }
 
-+ (void)startupTracker {
-    //一期只升级BDInstall，暂时不使用BDTracker
-//    BOOL useBDTracker = NO;// [TTKitchen getBOOL:kTTBDTrackerEnable];
-//    if (useBDTracker) {
-//        [BDTrackerProtocol setBDTrackerEnabled];
-//        [self setupBDTracker];
-//    } else {
++ (void)startTracker {
+    /**
+     增加服务端实验用于控制是否使用BDTracker，默认情况下使用TTTracker
+     实验地址：https://data.bytedance.net/libra/flight/539777/edit
+     */
+    BOOL useBDTracker = NO;
+    NSDictionary *settings = [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    if (settings && [settings isKindOfClass:[NSDictionary class]]) {
+        useBDTracker = [settings btd_boolValueForKey:@"f_bdtracker_enabled"];
+    }
+    
+    if (useBDTracker) {
+        [BDTrackerProtocol setBDTrackerEnabled];
+        [self setupBDTracker];
+    } else {
         [BDTrackerProtocol setTTTrackerEnabled];
         [self setupTTTracker];
-//    }
+    }
 }
 
 + (void)setupBDTracker {
