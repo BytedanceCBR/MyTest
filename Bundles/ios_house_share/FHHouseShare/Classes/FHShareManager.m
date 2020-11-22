@@ -88,7 +88,9 @@
     self.shareContentModel = model;
     self.tracerDict = tracerDict;
     
-    [FHUserTracker writeEvent:@"click_share" params:tracerDict];
+    if(self.tracerDict) {
+        [FHUserTracker writeEvent:@"click_share" params:tracerDict];
+    }
     [self.shareManager displayPanelWithContent:nil];
 }
 
@@ -239,9 +241,11 @@
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:desc indicatorImage:[UIImage imageNamed:imageName] autoDismiss:YES dismissHandler:nil];
     }
     
-    NSMutableDictionary *params = self.tracerDict.mutableCopy;
-    params[@"platform"] = [self activityPlatform: activity];
-    [FHUserTracker writeEvent:@"share_platform" params:params];
+    if(self.tracerDict) {
+        NSMutableDictionary *params = self.tracerDict.mutableCopy;
+        params[@"platform"] = [self activityPlatform: activity];
+        [FHUserTracker writeEvent:@"share_platform" params:params];
+    }
 }
 
 

@@ -242,7 +242,7 @@
     ];
     
     FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
-    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:@{}];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:nil];
 }
 
 @end
