@@ -10,6 +10,8 @@
 #import "FHHouseShadowImageType.h"
 #import "FHDetailListSectionTitleCell.h"
 #import "SSCommonLogic.h"
+#import "BDABTestManager.h"
+#import "FHEnvContext.h"
 
 @implementation FHOldDetailModuleHelper
 
@@ -117,6 +119,11 @@
     if (billBoard.count > 0) {
         [moduleItems addObject:@{@"billBoard":billBoard}];
     }
+    if([[FHEnvContext getCurrentSelectCityIdFromLocal] isEqual:@"10416"] && [[BDABTestManager getExperimentValueForKey:@"f_wuhu_detail_card_order" withExposure:YES] intValue]){
+        if (housingEvaluation.count > 0) {
+            [moduleItems addObject:@{@"housingEvaluation":housingEvaluation}];
+        }
+    }
     BOOL isSurveyRealtorFirst = [SSCommonLogic isSurveyRealtorFirst];
     if(isSurveyRealtorFirst) {
         if (surveyedRealtorAgentlist.count > 0) {
@@ -133,8 +140,10 @@
             [moduleItems addObject:@{@"surveyedRealtorAgentlist":surveyedRealtorAgentlist}];
         }
     }
-    if (housingEvaluation.count > 0) {
-        [moduleItems addObject:@{@"housingEvaluation":housingEvaluation}];
+    if(![[FHEnvContext getCurrentSelectCityIdFromLocal] isEqual:@"10416"] || ![[BDABTestManager getExperimentValueForKey:@"f_wuhu_detail_card_order" withExposure:YES] intValue]){
+        if (housingEvaluation.count > 0) {
+            [moduleItems addObject:@{@"housingEvaluation":housingEvaluation}];
+        }
     }
     if (neighborhoodInfos.count > 0) {
         [moduleItems addObject:@{@"neighborhoodInfos":neighborhoodInfos}];
@@ -242,5 +251,4 @@
     }];
     [returnArr insertObject:titleMolde atIndex:insterIndex];
 }
-
 @end

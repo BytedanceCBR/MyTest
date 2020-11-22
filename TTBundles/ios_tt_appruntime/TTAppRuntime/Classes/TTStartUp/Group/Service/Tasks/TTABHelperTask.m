@@ -96,9 +96,6 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
         return nil;
     }];
     [BDABTestManager registerExperiment:wuhuDetailCardOrder];
-    int t = 0;
-    t = [[BDABTestManager getExperimentValueForKey:@"f_wuhu_detail_card_order" withExposure:YES] intValue];
-    NSLog(@"xz:%d",t);
 }
 
 // 添加客户端实验
