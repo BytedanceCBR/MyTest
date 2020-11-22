@@ -80,6 +80,25 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
         return nil;
     }];
     [BDABTestManager registerExperiment:exp];
+    
+    BDABTestBaseExperiment *wuhuDetailCardOrder = [[BDABTestBaseExperiment alloc] initWithKey:@"f_wuhu_detail_card_order"
+                                                                        owner:@"shangguanxiangzheng"
+                                                                  description:@"芜湖小端房源详情页腰部展位与评测位置互换实验:默认为0"
+                                                                 defaultValue:@(0)
+                                                                    valueType:BDABTestValueTypeNumber
+                                                                     isSticky:YES settingsValueBlock:^id(NSString *key) {
+        if (key.length > 0) {
+            NSDictionary *archSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+            if ([archSettings valueForKey:key]) {
+                return archSettings[key];
+            }
+        }
+        return nil;
+    }];
+    [BDABTestManager registerExperiment:wuhuDetailCardOrder];
+    int t = 0;
+    t = [[BDABTestManager getExperimentValueForKey:@"f_wuhu_detail_card_order" withExposure:YES] intValue];
+    NSLog(@"xz:%d",t);
 }
 
 // 添加客户端实验
