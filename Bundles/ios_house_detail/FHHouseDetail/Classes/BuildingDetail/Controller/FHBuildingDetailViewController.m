@@ -535,6 +535,11 @@
             titleView.titleLabel.font = [UIFont themeFontMedium:20];
             titleView.titleLabel.textColor = [UIColor themeGray1];
             titleView.titleLabel.text = sectionModel.sectionTitle;
+            [titleView.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(15);
+                make.centerY.mas_equalTo(titleView).offset(2);
+                make.right.mas_equalTo(0);
+            }];
             return titleView;
         }
     }
