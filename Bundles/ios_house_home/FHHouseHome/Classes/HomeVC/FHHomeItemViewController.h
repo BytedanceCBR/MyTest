@@ -35,9 +35,12 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic , strong) FHTracerModel *tracerModel;
 @property (nonatomic, assign) TTReloadType reloadType; //当前enterType，用于enter_category
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, weak) UITableView *superTableView;
+
 @property (nonatomic, weak) FHHomeSearchPanelViewModel *panelVM;
 
 @property (nonatomic, strong) NSMutableArray *traceNeedUploadCache;
+@property (nonatomic, strong) NSMutableDictionary *traceFirstScreenNeedUploadCache;
 @property (nonatomic, strong) NSMutableDictionary *traceEnterCategoryCache;
 @property (nonatomic, strong) NSMutableDictionary *traceEnterTopTabache;
 @property (nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
@@ -66,6 +69,11 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 - (void)initNotifications;
 
 - (void)removeNotifications;
+
+/**
+ 当前类型的子VC被选中
+ */
+- (void)itemDidSelectedWithHouseType:(NSInteger)houseType;
 
 @end
 

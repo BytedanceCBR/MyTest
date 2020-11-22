@@ -18,7 +18,7 @@
     self.highlightedText = query;
     __weak typeof(self) wself = self;
     
-    self.sugHttpTask = [FHHouseListAPI requestDealSuggestionCityId:cityId houseType:houseType query:query searchType:searchType class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.sugHttpTask = [FHHouseListAPI requestDealSuggestionCityId:cityId houseType:houseType query:query searchType:searchType class:[FHOtherSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHOtherSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (error.code == NSURLErrorCancelled) {
             return ;
         }

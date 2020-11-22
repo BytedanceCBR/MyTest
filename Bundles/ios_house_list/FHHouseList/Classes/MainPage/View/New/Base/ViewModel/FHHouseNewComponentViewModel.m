@@ -11,10 +11,12 @@
 @end
 
 @implementation FHHouseNewComponentViewModel
+@synthesize cachedHeight = _cachedHeight, needCalculateHeight = _needCalculateHeight;
 
 - (instancetype)init {
     self = [super init];
     if (self) {
+        _needCalculateHeight = YES;
         _observers = [NSHashTable weakObjectsHashTable];
     }
     return self;
@@ -38,6 +40,10 @@
 
 - (BOOL)isValid {
     return NO;
+}
+
+- (void)setNeedCalculateHeight {
+    _needCalculateHeight = YES;
 }
 
 @end

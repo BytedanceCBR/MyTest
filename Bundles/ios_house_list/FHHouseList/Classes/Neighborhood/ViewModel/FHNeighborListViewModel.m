@@ -26,6 +26,8 @@
 #import "FHHouseListBaseItemModel.h"
 #import "FHRecommendCourtCell.h"
 #import "FHEnvContext.h"
+#import "FHHouseListSecondRelatedCell.h"
+#import "FHHouseListRentRelatedCell.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -69,6 +71,8 @@
     [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
     [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
     [_tableView registerClass:[FHRecommendCourtCell class] forCellReuseIdentifier:NSStringFromClass([FHRecommendCourtCell class])];
+    [_tableView registerClass:[FHHouseListSecondRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListSecondRelatedCell class])];
+    [_tableView registerClass:[FHHouseListRentRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListRentRelatedCell class])];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -215,41 +219,29 @@
                 [cell refreshWithData:self.houseList[indexPath.row]];
                 return cell;
             }
-             FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
-            
-//            if (cellModel.isRealHouseTopCell) {
-//                if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-//                    FHSugListRealHouseTopInfoModel *realHouseInfo = (FHSugListRealHouseTopInfoModel *)cellModel.realHouseTopModel;
-//                    FHSuggestionRealHouseTopCell *topRealCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHSuggestionRealHouseTopCell class])];
-//                    if ([topRealCell respondsToSelector:@selector(refreshUI:)]) {
-//                        [topRealCell refreshUI:realHouseInfo];
-//                    }
-//
-//                    NSString *origin_from = self.listController.tracerDict[@"origin_from"];
-//                    NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
-//
-//                    NSMutableDictionary *traceParam = @{}.mutableCopy;
-//                    traceParam[@"category_name"] = @"same_neighborhood_list";
-//                    traceParam[@"element_from"] = @"be_null";
-//                    traceParam[@"origin_from"] = origin_from ? : @"be_null";
-//                    traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
-//                    traceParam[@"search_id"] = self.searchId;
-////                     topRealCell.tracerDict = traceParam;
-//
-//                    __weak typeof(self) weakSelf = self;
-//                    NSString *stringQuery = [NSString stringWithFormat:@"neighborhood_id=%@",self.neiborHoorId];
-//                    if (self.condition) {
-//                        stringQuery = [stringQuery stringByAppendingString:self.condition];
-//                    }
-////                    topRealCell.searchQuery = stringQuery;
-//
-//                    return topRealCell;
-//                }
-//            }
-                        FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
-                        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-//                        FHHouseListBaseItemModel model = _houseList[indexPath.row];
-                        [cell refreshWithData:cellModel];
+            FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
+            if ([FHEnvContext isDisplayNewCardType]) {
+                NSString *identifier = @"";
+                switch (self.listController.neighborListVCType) {
+                    case FHNeighborListVCTypeRentSameNeighbor:
+                    case FHNeighborListVCTypeRentNearBy:
+                        identifier = NSStringFromClass([FHHouseListRentRelatedCell class]);
+                        break;
+                    case FHNeighborListVCTypeErshouSameNeighbor:
+                    case FHNeighborListVCTypeErshouNearBy:
+                        identifier = NSStringFromClass([FHHouseListSecondRelatedCell class]);
+                        break;
+                    default:
+                        break;
+                }
+                if ([identifier length] > 0) {
+                    FHHouseBaseUsuallyCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+                    [cell refreshWithData:cellModel];
+                    return cell;
+                }
+            }
+            FHHouseListBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
+            [cell refreshWithData:cellModel];
 
             
 //            FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
