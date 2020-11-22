@@ -105,9 +105,12 @@
         make.top.mas_equalTo(self.contentView).offset(60);
         make.bottom.left.right.mas_equalTo(self.contentView);
     }];
-    [self.errorView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
     self.errorView.backgroundColor = [UIColor clearColor];
     self.errorView.hidden = YES;
+}
+
+- (void)showErrorView{
+    [self.errorView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
 }
 
 - (UIView *)leftLine

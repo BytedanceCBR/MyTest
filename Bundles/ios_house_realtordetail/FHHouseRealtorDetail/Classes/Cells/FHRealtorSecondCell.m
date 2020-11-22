@@ -147,6 +147,15 @@
 
 - (void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast {
     CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH - 30, 86);
+    if (isFirst && isLast) {
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:frame byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight | UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = self.houseCellBackView.bounds;
+        maskLayer.path = maskPath.CGPath;
+        self.houseCellBackView.layer.mask = maskLayer;
+        return;
+    }
+    
     if (isFirst) {
         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:frame byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(15, 15)];
         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
@@ -162,6 +171,7 @@
     }  else {
         self.houseCellBackView.layer.mask = nil;
     }
+    
 }
 
 @end
