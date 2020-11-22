@@ -1414,8 +1414,13 @@ static NSInteger const kMaxPostImageCount = 9;
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    self.isToolbarWillEndEditing = YES;
-    [self endEditing];
+//    if (self.toolbar.emojiInputViewVisible) {
+        [self endEditing];
+//    }else {
+//        self.isToolbarWillEndEditing = YES;
+//        [self.view endEditing:YES];
+//        [self.toolbar endEditing:YES];
+//    }
 }
 
 

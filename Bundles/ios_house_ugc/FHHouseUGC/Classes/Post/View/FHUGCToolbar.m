@@ -96,6 +96,8 @@
 @property (nonatomic, strong) NSMutableArray<FHUGCToolBarTag *> *stageStack;
 @property (nonatomic, assign) CGPoint toolbarViewOriginWhenInit;
 @property (nonatomic, assign) CGPoint toolbarViewOrigin;
+@property (nonatomic, assign) CGFloat keyBoardHeight;
+@property (nonatomic, assign) BOOL bordIsShow;
 @property (nonatomic, assign) BOOL executeOnceFlag;
 @end
 
@@ -125,8 +127,17 @@
         
         // 修改父类控制布局
         [self layoutSuperView];
+        [self addObserver:self forKeyPath:@"frame" options:0 context:NULL];
     }
     return self;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if([keyPath isEqualToString:@"frame"]) {
+        if([object valueForKeyPath:keyPath] != [NSNull null]) {
+            
+        }
+    }
 }
 
 - (void)layoutSuperView {
@@ -214,11 +225,11 @@
         self.toolbarViewOrigin = self.origin;
         self.executeOnceFlag = YES;
     }
-    else {
-        if(!self.isSelected) {
-            self.toolbarViewOrigin = CGPointMake(self.toolbarViewOriginWhenInit.x, self.toolbarViewOriginWhenInit.y + (hasTagsView ? 0 : TAGS_VIEW_HEIGHT));
-        }
-    }
+//    else {
+//        if(!self.isSelected) {
+//            self.toolbarViewOrigin = CGPointMake(self.toolbarViewOriginWhenInit.x, self.toolbarViewOriginWhenInit.y - (hasTagsView ? 0 : TAGS_VIEW_HEIGHT));
+//        }
+//    }
     
     [self layoutSuperView];
     
@@ -228,9 +239,24 @@
 
 #pragma mark - 父类键盘事件重载
 
+- (void)setFrame:(CGRect)frame {
+    
+    void (^animations)(void) = ^{
+        [super setFrame:frame];
+    };
+    
+    void (^completion)(BOOL) = ^(BOOL finished) {
+          self.toolbarViewOriginWhenInit = self.origin;
+          self.toolbarViewOrigin = self.origin;
+    };
+    [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:animations completion:completion];
+
+}
+
 - (void)keyboardWillShow:(NSNotification *)notification {
     CGFloat targetY;
     CGRect keyboardScreenFrame = [[notification.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    self.keyBoardHeight= keyboardScreenFrame.size.height;
     CGFloat duration = [[notification.userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue];
     CGRect frame = self.frame;
     
@@ -265,7 +291,7 @@
     self.keyboardButton.accessibilityLabel = @"收起键盘";
     self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
     self.emojiButton.accessibilityLabel = @"表情";
-    
+    self.bordIsShow = YES;
     frame.origin.y = targetY;
     
     [UIView animateWithDuration:duration delay:0.0 options:options animations:^{
@@ -304,7 +330,6 @@
             options = animationCurve << 16;
             break;
     }
-    
     if (self.emojiInputViewVisible) { // 切换到表情输入，收起键盘
         // 提前显示表情选择器
         targetY = CGRectGetMinY(keyboardScreenFrame) - CGRectGetHeight(frame);
@@ -318,21 +343,22 @@
         self.keyboardButton.accessibilityLabel = @"弹出键盘";
         self.emojiButton.imageName = @"fh_ugc_toolbar_emoj_normal";
         self.emojiButton.accessibilityLabel = @"表情";
-        
+        self.bordIsShow = NO;
         targetY = CGRectGetMinY(keyboardScreenFrame) - [FHUGCToolbar toolbarHeightWithTags:self.tags hasSelected:self.isSelected];
     }
     
     frame.origin.y = targetY;
     
-    [UIView animateWithDuration:duration delay:0.0 options:options animations:^{
-        self.frame = frame;
-    } completion:^(BOOL finished) {
-        if (self.emojiInputViewVisible) {
-            self.emojiInputView.hidden = NO;
-        } else {
-            self.emojiInputView.hidden = YES;
-        }
-    }];
+//    [UIView animateWithDuration:duration delay:0.0 options:options animations:^{
+//        self.frame = frame;
+//    } completion:^(BOOL finished) {
+//
+//    }];
+    if (self.emojiInputViewVisible) {
+        self.emojiInputView.hidden = NO;
+    } else {
+        self.emojiInputView.hidden = YES;
+    }
 }
 
 - (void)keyboardAction:(id)sender {
@@ -370,9 +396,9 @@
     };
     
     if (animated) {
-        
+
         [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:animations completion:completion];
-        
+
     } else {
         animations();
         completion(YES);
@@ -400,9 +426,13 @@
         self.emojiButton.accessibilityLabel = @"收起表情选择框";
         if (self.delegate && [self.delegate respondsToSelector:@selector(toolbarDidClickEmojiButton:)]) {
             [self.delegate toolbarDidClickEmojiButton:YES];
-            
             [UIView animateWithDuration:0.25 delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
-                self.top = self.toolbarViewOrigin.y - EMOJI_INPUT_VIEW_HEIGHT - 60;
+                if (self.bordIsShow) {
+                    self.top = self.toolbarViewOrigin.y - EMOJI_INPUT_VIEW_HEIGHT - 60 + self.keyBoardHeight;
+                }else {
+                    self.top = self.toolbarViewOrigin.y  - EMOJI_INPUT_VIEW_HEIGHT;
+                }
+                
             } completion:^(BOOL finished) {
                 self.height = [FHUGCToolbar toolbarHeightWithTags:self.tags hasSelected:self.isSelected] + EMOJI_INPUT_VIEW_HEIGHT;
             }];
