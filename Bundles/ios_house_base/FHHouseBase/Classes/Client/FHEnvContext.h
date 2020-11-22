@@ -263,11 +263,6 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 + (BOOL)isLongShortTicketOpen;
 
 /*
-是否开启发现和UGC合并，默认NO
- */
-+ (BOOL)isNewDiscovery;
-
-/*
 是否首页替换为新发现，默认NO
  */
 + (BOOL)isHomeNewDiscovery;

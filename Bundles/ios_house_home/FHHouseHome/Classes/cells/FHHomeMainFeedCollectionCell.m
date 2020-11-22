@@ -35,7 +35,7 @@
 
 - (void)addCommunityVC {
     FHCommunityViewController *vc = [[FHCommunityViewController alloc] init];
-    vc.isNewDiscovery = YES;
+    vc.isInHomePage = YES;
     vc.tracerDict = @{
         @"origin_from":@"discover_stream",
         @"enter_from":@"maintab",

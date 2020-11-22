@@ -35,7 +35,11 @@
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(FHCommunityViewController *)viewController {
     self = [super initWithCollectionView:collectionView controller:viewController];
     
-    self.currentTabIndex = 0;
+    if ([FHEnvContext isCurrentCityNormalOpen]) {
+        self.currentTabIndex = 1;
+    }else{
+        self.currentTabIndex = 0;
+    }
     
     collectionView.delegate = self;
     collectionView.dataSource = self;
@@ -191,7 +195,7 @@
 
 //设置每个item的尺寸
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if(self.viewController.isNewDiscovery){
+    if(self.viewController.isInHomePage){
         [collectionView layoutIfNeeded];
         return collectionView.frame.size;
     }else{
