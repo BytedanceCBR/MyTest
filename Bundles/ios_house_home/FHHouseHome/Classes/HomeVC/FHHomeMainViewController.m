@@ -317,7 +317,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)changeTopStatusShowHouse:(BOOL)isShowHouse
 {
-    self.topView.segmentControl.hidden = isShowHouse;
+//    self.topView.segmentControl.hidden = isShowHouse;
     self.topView.houseSegmentControl.hidden = !isShowHouse;
     //房源显示时，禁止滑动
     if (isShowHouse) {

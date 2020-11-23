@@ -65,6 +65,11 @@
     self.cellArray = [NSMutableArray array];
     NSMutableArray *dataArray = [NSMutableArray array];
     NSArray *categories = [[FHUGCCategoryManager sharedManager] allCategories];
+    if(self.viewController.isInHomePage){
+        categories = @[[FHUGCCategoryManager sharedManager].recommendCategory];
+    }else{
+        categories = [[FHUGCCategoryManager sharedManager].allCategories copy];
+    }
     self.viewController.categorys = [categories copy];
     for (NSInteger i = 0; i < categories.count; i++) {
         FHUGCCategoryDataDataModel *category = categories[i];

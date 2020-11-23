@@ -1122,10 +1122,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return YES;
 }
 
-+ (BOOL)isHasShortVideoList {
-    return NO;
-}
-
 + (BOOL)isHasPerLoadForVideo {
     id res = [BDABTestManager getExperimentValueForKey:@"is_video_perload" withExposure:YES];
     if(res){
