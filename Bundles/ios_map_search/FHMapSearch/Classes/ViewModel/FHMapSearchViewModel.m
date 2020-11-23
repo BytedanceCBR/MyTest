@@ -880,7 +880,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     [self requestHouses:byUser showTip:showTip region:_mapView.region];
 }
 
--(void)requestHouses:(BOOL)byUser showTip:(BOOL)showTip region:(MACoordinateRegion )region
+-(void)requestHouses:(BOOL)byUser showTip:(BOOL)showTip region:(MACoordinateRegion )region {
+    [self requestHouses:byUser showTip:showTip region:region firstTime:NO];
+}
+
+-(void)requestHouses:(BOOL)byUser showTip:(BOOL)showTip region:(MACoordinateRegion )region firstTime:(BOOL)firstTime
 {
     if (_requestHouseTask &&  _requestHouseTask.state == TTHttpTaskStateRunning) {
         [_requestHouseTask cancel];
@@ -1049,6 +1053,9 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         if (![wself.viewController isShowingMaskView]) {
             //只有不展示maskview时才显示
             [wself addAnnotations:model.list];
+            if (firstTime) {
+                [wself selectNeighborhoodAnnotationIfNeed:model.list];
+            }
         }
         
         wself.houseListOpenUrl = model.houseListOpenUrl;
@@ -1088,6 +1095,22 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     _requestMapLevel = _mapView.zoomLevel;
     _requestHouseTask = task;
 
+}
+
+- (void)selectNeighborhoodAnnotationIfNeed:(NSArray *)list {
+    if (self.configModel.neighborhoodId.count == 0 || list.count == 0) return;
+    NSString *nid = [self.configModel.neighborhoodId firstObject];
+    if (!nid || ![nid isKindOfClass:NSString.class]) return;
+    for (FHHouseAnnotation *houseAnnotation in self.mapView.annotations) {
+        if (![houseAnnotation isKindOfClass:FHHouseAnnotation.class] || ![houseAnnotation.houseData.nid isEqualToString:nid]) continue;
+        MAAnnotationView *annotationView = [self.mapView viewForAnnotation:houseAnnotation];
+        if (annotationView) {
+            self.currentSelectAnnotation = houseAnnotation;
+            [self.mapView selectAnnotation:houseAnnotation animated:YES];
+            [self handleSelect:annotationView];
+        }
+        break;
+    }
 }
 
 -(void)addAnnotations:(NSArray *)list
@@ -1833,7 +1856,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 
 -(void)mapInitComplete:(MAMapView *)mapView
 {
-    [self requestHouses:NO showTip:YES];
+    [self requestHouses:NO showTip:YES region:_mapView.region firstTime:YES];
 }
 
 - (void)mapViewDidFailLoadingMap:(MAMapView *)mapView withError:(NSError *)error
