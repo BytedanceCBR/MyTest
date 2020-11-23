@@ -127,17 +127,8 @@
         
         // 修改父类控制布局
         [self layoutSuperView];
-        [self addObserver:self forKeyPath:@"frame" options:0 context:NULL];
     }
     return self;
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
-    if([keyPath isEqualToString:@"frame"]) {
-        if([object valueForKeyPath:keyPath] != [NSNull null]) {
-            
-        }
-    }
 }
 
 - (void)layoutSuperView {
