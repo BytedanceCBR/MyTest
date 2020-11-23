@@ -11,6 +11,7 @@
 #import "FHNearbyViewController.h"
 #import "FHMyJoinViewController.h"
 #import "FHHouseFindViewController.h"
+#import "FHHouseComfortFindViewController.h"
 #import "FHUGCShortVideoListController.h"
 
 @interface FHCommunityDiscoveryCell ()
@@ -50,6 +51,9 @@
         }else if(cellModel.type == FHCommunityCollectionCellTypeCustom){
             FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
             [vc viewWillAppear];
+        }else if(_cellModel.type == FHCommunityCollectionCellTypeHouseComfortFind) {
+            FHHouseComfortFindViewController *vc = (FHHouseComfortFindViewController *)self.vc;
+            [vc viewWillAppear];
         }
     }
 }
@@ -66,6 +70,9 @@
         [vc viewWillDisappear];
     }else if(_cellModel.type == FHCommunityCollectionCellTypeCustom){
         FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
+        [vc viewWillDisappear];
+    }else if(_cellModel.type == FHCommunityCollectionCellTypeHouseComfortFind) {
+        FHHouseComfortFindViewController *vc = (FHHouseComfortFindViewController *)self.vc;
         [vc viewWillDisappear];
     }
 }
@@ -96,6 +103,9 @@
         vc.isNewDiscovery = YES;
         vc.category = _cellModel.category;
         vc.needReportEnterCategory = YES;
+        self.vc = vc;
+    } else if(_cellModel.type == FHCommunityCollectionCellTypeHouseComfortFind) {
+        FHHouseComfortFindViewController *vc = [[FHHouseComfortFindViewController alloc] init];
         self.vc = vc;
     }
     
@@ -144,6 +154,14 @@
             [vc scrollToTopAndRefreshAllData];
         }else{
             [vc scrollToTopAndRefresh];
+        }
+    }else if([self.vc isKindOfClass:[FHHouseComfortFindViewController class]]) {
+        FHHouseComfortFindViewController *vc = (FHHouseComfortFindViewController *)self.vc;
+        vc.feedVC.isRefreshTypeClicked = isClick;
+        if(isHead){
+            [vc.feedVC scrollToTopAndRefreshAllData];
+        }else{
+            [vc.feedVC scrollToTopAndRefresh];
         }
     }
 }

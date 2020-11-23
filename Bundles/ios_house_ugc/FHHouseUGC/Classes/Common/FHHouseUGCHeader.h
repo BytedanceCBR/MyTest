@@ -26,6 +26,7 @@ typedef NS_ENUM(NSInteger, FHCommunityCollectionCellType)
     FHCommunityCollectionCellTypeCustom,
     FHCommunityCollectionCellTypeVideo,
     FHCommunityCollectionCellTypeSmallVideo,
+    FHCommunityCollectionCellTypeHouseComfortFind,
 };
 
 typedef NS_ENUM(NSInteger, FHUGCFeedListCellSubType)
