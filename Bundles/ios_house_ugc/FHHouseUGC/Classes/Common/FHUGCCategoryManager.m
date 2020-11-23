@@ -62,6 +62,8 @@
         type = FHCommunityCollectionCellTypeMyJoin;
     }else if([category isEqualToString:@"f_ugc_neighbor"]){
         type = FHCommunityCollectionCellTypeNearby;
+    }else if([category isEqual:@"f_house_finder"]) {
+        type = FHCommunityCollectionCellTypeHouseComfortFind;
     }else{
         type = FHCommunityCollectionCellTypeCustom;
     }
