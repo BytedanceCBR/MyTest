@@ -177,7 +177,7 @@ extern BOOL ttvs_isVideoFeedURLEnabled(void);
         [self readyToPlay];
     }
 
-    if(self.movieView.superview && self.movieView.superview == self.logo){
+    if(self.movieView.superview){
         self.movieView.hidden = NO;
         if (!self.movieView.player.context.isFullScreen &&
             !self.movieView.player.context.isRotating) {
