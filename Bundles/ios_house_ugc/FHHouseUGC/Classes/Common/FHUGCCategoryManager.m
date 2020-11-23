@@ -47,8 +47,8 @@
 
 - (NSInteger)getCategoryIndex:(NSString *)category {
     NSInteger index = -1;
-    for (NSInteger i = 0; i < _allCategories.count; i++) {
-        FHUGCCategoryDataDataModel *model = _allCategories[i];
+    for (NSInteger i = 0; i < self.allCategories.count; i++) {
+        FHUGCCategoryDataDataModel *model = self.allCategories[i];
         if([model.category isEqualToString:category]){
             return i;
             break;

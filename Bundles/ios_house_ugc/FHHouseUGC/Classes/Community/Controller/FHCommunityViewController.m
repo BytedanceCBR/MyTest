@@ -44,13 +44,12 @@
 @property(nonatomic, strong) UIView *topView;
 @property(nonatomic, strong) UIButton *searchBtn;
 @property(nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
-@property (nonatomic, strong) FHLoginTipView * loginTipview;
-//@property(nonatomic, strong) FHUGCGuideView *guideView;
+@property(nonatomic, strong) FHLoginTipView * loginTipview;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
-@property (nonatomic, assign) BOOL isShowLoginTip;
+@property(nonatomic, assign) BOOL isShowLoginTip;
 @end
 
 @implementation FHCommunityViewController
@@ -96,7 +95,6 @@
         }
         self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCommunityHaveNewContents) name:kFHUGCCommunityTabHasNewNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
     
@@ -121,17 +119,8 @@
 }
 
 - (void)onFocusHaveNewContents {
-    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
     BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
-    if(self.viewModel.currentTabIndex != 1 && hasSocialGroups && hasNew && !self.isInHomePage){
-        _segmentControl.sectionRedPoints = @[@1];
-        self.hasFocusTips = YES;
-    }
-}
-
-- (void)onCommunityHaveNewContents {
-    BOOL hasNew = [FHUGCConfig sharedInstance].ugcCommunityHasNew;
-    NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+    NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
     if(self.viewModel.currentTabIndex != index && hasNew && index >= 0 && !self.isInHomePage){
         NSMutableArray *redPoints = [NSMutableArray array];
         for (NSInteger i = 0; i <= index; i++) {
@@ -148,11 +137,11 @@
 
 - (void)hideRedPoint {
     if(!self.isInHomePage){
-        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
         if(self.viewModel.currentTabIndex == index && self.hasFocusTips){
             self.hasFocusTips = NO;
-            [FHUGCConfig sharedInstance].ugcCommunityHasNew = NO;
-            [[FHUGCConfig sharedInstance] recordHideCommunityRedPointTime];
+            [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+            [[FHUGCConfig sharedInstance] recordHideRedPointTime];
             self.segmentControl.sectionRedPoints = @[@0];
             [self.viewModel refreshCell:YES isClick:NO];
         }
@@ -232,11 +221,11 @@
         //去掉邻里tab的红点
         [FHEnvContext hideFindTabRedDots];
         if(!self.isInHomePage){
-            NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+            NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
             //去掉圈子红点的同时刷新tab
-            if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].ugcCommunityHasNew){
+            if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].ugcFocusHasNew){
                 self.hasFocusTips = NO;
-                [FHUGCConfig sharedInstance].ugcCommunityHasNew = NO;
+                [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
                 [self.viewModel refreshCell:YES isClick:NO];
             }
         }

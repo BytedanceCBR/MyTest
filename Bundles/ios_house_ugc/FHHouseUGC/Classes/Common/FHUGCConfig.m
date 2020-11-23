@@ -60,14 +60,6 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 @property (nonatomic, assign)   NSTimeInterval focusTimerInterval;//轮训时间
 @property (nonatomic, assign)   NSTimeInterval focusInterval;//间隔时间
 
-@property (nonatomic, strong)   NSTimer       *ugcTimer;//邻里tab是否有新内容的轮训timer
-@property (nonatomic, assign)   NSTimeInterval ugcTimerInterval;//轮训时间
-@property (nonatomic, assign)   NSTimeInterval ugcInterval;//间隔时间
-
-@property (nonatomic, strong)   NSTimer       *communityTimer;//圈子频道是否有新内容的轮训timer
-@property (nonatomic, assign)   NSTimeInterval communityTimerInterval;//轮训时间
-@property (nonatomic, assign)   NSTimeInterval communityInterval;//间隔时间
-
 @property (nonatomic, assign)   NSInteger retryTimes;//重试次数
 
 @end
@@ -91,10 +83,10 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         
         _focusTimerInterval = defaultFocusTimerInterval;
         _focusInterval = defaultFocusInterval;
-        _ugcTimerInterval = defaultFocusTimerInterval;
-        _ugcInterval = defaultFocusInterval;
-        _communityTimerInterval = defaultFocusTimerInterval;
-        _communityInterval = defaultFocusInterval;
+//        _ugcTimerInterval = defaultFocusTimerInterval;
+//        _ugcInterval = defaultFocusInterval;
+//        _communityTimerInterval = defaultFocusTimerInterval;
+//        _communityInterval = defaultFocusInterval;
         // 加载本地
         [self loadFollowListData];
         [self loadLocalUgcConfigData];
@@ -121,7 +113,6 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
             [groupIDs enumerateObjectsUsingBlock:^(NSString *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 if (obj.length > 0) {
                     FHUGCScialGroupDataModel *data = [self socialGroupData:obj];
-//                    [self updatePostSuccessScialGroupDataModel:data];
                     // 更新圈子数据
                     [self updateSocialGroupDataWith:data];
                 }
@@ -135,7 +126,6 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     NSString *groupId = noti.userInfo[@"social_group_id"];
     if (groupId.length > 0) {
         FHUGCScialGroupDataModel *data = [self socialGroupData:groupId];
-//        [self updatePostDelSuccessScialGroupDataModel:data];
         // 更新圈子数据
         [self updateSocialGroupDataWith:data];
     }
@@ -183,17 +173,9 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     if([FHEnvContext isUGCOpen]){
         self.retryTimes = 0;
         [self loadFollowData];
-    }else{
-//        if(![FHEnvContext isNewDiscovery]){
-            [self setFocusTimerState];
-//        }
     }
     
-//    if([FHEnvContext isNewDiscovery]){
-//        [self setUGCTimerState];
-//        [self setCommunityTimerState];
-//    }
-    
+    [self setFocusTimerState];
     [self loadUGCConfigData];
     [[TTForumPostThreadStatusViewModel sharedInstance_tt] checkCityPostData];
 }
@@ -206,10 +188,6 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
             wself.retryTimes++;
             if(wself.retryTimes < 5){
                 [wself performSelector:@selector(loadFollowData) withObject:nil afterDelay:30];
-            }else{
-//                if(![FHEnvContext isNewDiscovery]){
-                    [wself setFocusTimerState];
-//                }
             }
             return;
         }
@@ -224,18 +202,11 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                     }
                     [wself updateFollowData];
                     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCUpdateFollowDataAfterAccountStatuschangedNotification object:nil];
-//                    if(![FHEnvContext isNewDiscovery]){
-                        [wself setFocusTimerState];
-//                    }
                 });
             }else{
                 wself.retryTimes++;
                 if(wself.retryTimes < 5){
                     [wself performSelector:@selector(loadFollowData) withObject:nil afterDelay:30];
-                }else{
-//                    if(![FHEnvContext isNewDiscovery]){
-                        [wself setFocusTimerState];
-//                    }
                 }
             }
         }
@@ -351,24 +322,6 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     }
 }
 
-- (void)setUGCTimerState {
-    //触发小红点逻辑
-    if([FHEnvContext isUGCOpen]){
-        [self setUGCHasNewTimerInteralAndGetNewFirstTime];
-    }else{
-        [self stopUGCTimer];
-    }
-}
-
-- (void)setCommunityTimerState {
-    //触发小红点逻辑
-    if([FHEnvContext isUGCOpen]){
-        [self setCommunityHasNewTimerInteralAndGetNewFirstTime];
-    }else{
-        [self stopCommunityTimer];
-    }
-}
-
 - (NSArray<FHUGCScialGroupDataModel> *)followList {
     return self.followData.data.userFollowSocialGroups;
 }
@@ -400,7 +353,6 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
             // 看是否 + 1
             if (!currentFollowed) {
                 model.hasFollow = @"1";
-                NSString *followCountStr = model.followerCount;
                 NSInteger followCount = [model.followerCount integerValue];
                 followCount += 1;
                 NSString *replaceFollowCountStr = [TTBusinessManager formatCommentCount:followCount];
@@ -410,7 +362,6 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
             // 看是否 - 1
             if (currentFollowed) {
                 model.hasFollow = @"0";
-                NSString *followCountStr = model.followerCount;
                 NSInteger followCount = [model.followerCount integerValue];
                 followCount -= 1;
                 if (followCount < 0) {
@@ -422,51 +373,6 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         }
     }
 }
-
-//// 发帖成功 更新帖子数 + 1
-//- (void)updatePostSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model {
-//    if (model) {
-//        NSString *contentCountStr = model.contentCount;
-//        NSInteger contentCount = [model.contentCount integerValue];
-//        contentCount += 1;
-//        NSString *replaceContentCountStr = [TTBusinessManager formatCommentCount:contentCount];
-//        NSString *countText = model.countText;
-//        // 替换第二个数字（热帖个数）
-//        NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
-//        // 有数据而且不是起始位置的数据
-//        if (range.location >= 0 && range.length > 0) {
-//            countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
-//            model.contentCount = replaceContentCountStr;
-//        } else {
-//            model.contentCount = contentCountStr;
-//        }
-//        model.countText = countText;
-//    }
-//}
-
-//// 删帖成功 更新帖子数 - 1
-//- (void)updatePostDelSuccessScialGroupDataModel:(FHUGCScialGroupDataModel *)model {
-//    if (model) {
-//        NSString *contentCountStr = model.contentCount;
-//        NSInteger contentCount = [model.contentCount integerValue];
-//        contentCount -= 1;
-//        if (contentCount < 0) {
-//            contentCount = 0;
-//        }
-//        NSString *replaceContentCountStr = [TTBusinessManager formatCommentCount:contentCount];
-//        NSString *countText = model.countText;
-//        // 替换第二个数字（热帖个数）
-//        NSRange range = [countText rangeOfString:contentCountStr options:NSBackwardsSearch];
-//        // 有数据而且不是起始位置的数据
-//        if (range.location >= 0 && range.length > 0) {
-//            countText = [countText stringByReplacingCharactersInRange:range withString:replaceContentCountStr];
-//            model.contentCount = replaceContentCountStr;
-//        } else {
-//            model.contentCount = contentCountStr;
-//        }
-//        model.countText = countText;
-//    }
-//}
 
 - (void)updateSocialGroupDataWith:(FHUGCScialGroupDataModel *)model {
     [[FHUGCSocialGroupData sharedInstance] updateSocialGroupDataWith:model];
@@ -564,15 +470,13 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
                 BOOL isSuccess = NO;
                 if ([model.status isEqualToString:@"0"]) {
                     if (follow) {
-                        // [[ToastManager manager] showToast:@"关注成功"];
                         // 关注成功
-                        FHUGCFollowModel *tModel = model;
-                        if ([tModel isKindOfClass:[FHUGCFollowModel class]]) {
+                        if ([model isKindOfClass:[FHUGCFollowModel class]]) {
+                            FHUGCFollowModel *tModel = (FHUGCFollowModel *)model;
                             [self followSuccessWith:tModel.data];
                         }
                         [[HMDTTMonitor defaultManager] hmdTrackService:@"follow_community" metric:nil category:@{@"status":@(0)} extra:nil];
                     } else {
-                        // [[ToastManager manager] showToast:@"取消关注成功"];
                         // 取消关注成功
                         [self cancelFollowSuccessWith:social_group_id];
                         [[HMDTTMonitor defaultManager] hmdTrackService:@"unfollow_community" metric:nil category:@{@"status":@(0)} extra:nil];
@@ -645,11 +549,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCUpdateFollowDataAfterAccountStatuschangedNotification object:nil];
     // 重新加载
     [self loadFollowData];
-    
-//    if([FHEnvContext isNewDiscovery]){
-//        [self setUGCTimerState];
-//        [self setCommunityTimerState];
-//    }
+    [self setFocusTimerState];
 }
 
 
@@ -742,33 +642,9 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     [self.focusTimer fire];
 }
 
-- (void)startUGCTimer {
-    if(_ugcTimer){
-        [self stopUGCTimer];
-    }
-    [self.ugcTimer fire];
-}
-
-- (void)startCommunityTimer {
-    if(_communityTimer){
-        [self stopCommunityTimer];
-    }
-    [self.communityTimer fire];
-}
-
 - (void)stopTimer {
     [_focusTimer invalidate];
     _focusTimer = nil;
-}
-
-- (void)stopUGCTimer {
-    [_ugcTimer invalidate];
-    _ugcTimer = nil;
-}
-
-- (void)stopCommunityTimer {
-    [_communityTimer invalidate];
-    _communityTimer = nil;
 }
 
 - (NSTimer *)focusTimer {
@@ -780,28 +656,10 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     return _focusTimer;
 }
 
-- (NSTimer *)ugcTimer {
-    if(!_ugcTimer){
-        _ugcTimer  =  [NSTimer timerWithTimeInterval:self.ugcTimerInterval target:self selector:@selector(getUGCHasNewForTimer) userInfo:nil repeats:YES];
-        
-        [[NSRunLoop mainRunLoop] addTimer:_ugcTimer forMode:NSRunLoopCommonModes];
-    }
-    return _ugcTimer;
-}
-
-- (NSTimer *)communityTimer {
-    if(!_communityTimer){
-        _communityTimer  =  [NSTimer timerWithTimeInterval:self.communityTimerInterval target:self selector:@selector(getCommunityHasNewForTimer) userInfo:nil repeats:YES];
-        
-        [[NSRunLoop mainRunLoop] addTimer:_communityTimer forMode:NSRunLoopCommonModes];
-    }
-    return _communityTimer;
-}
-
 - (void)setFocusHasNewTimerInteralAndGetNewFirstTime {
     //每隔一段时候调用接口
     __weak typeof(self) wself = self;
-    [FHHouseUGCAPI refreshFeedTips:@"f_ugc_follow" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSTimeInterval cacheDuration, NSError * _Nonnull error) {
+    [FHHouseUGCAPI refreshFeedTips:@"f_news_recommend" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSTimeInterval cacheDuration, NSError * _Nonnull error) {
         if(!error && hasNew){
             self.ugcFocusHasNew = YES;
         }else{
@@ -824,87 +682,13 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     }];
 }
 
-- (void)setUGCHasNewTimerInteralAndGetNewFirstTime {
-    //每隔一段时候调用接口
-    __weak typeof(self) wself = self;
-    [FHHouseUGCAPI refreshFeedTips:@"f_news_recommend" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSTimeInterval cacheDuration, NSError * _Nonnull error) {
-        if(!error && hasNew){
-            self.ugcHasNew = YES;
-        }else{
-            self.ugcHasNew = NO;
-        }
-        
-        if(self.ugcHasNew){
-            self.ugcHasNew = [self isCanShowUGCRedPoint];
-        }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCRecomendTabHasNewNotification object:nil];
-        
-        if(interval > 0){
-            self.ugcTimerInterval = interval;
-        }
-        if(cacheDuration > 0){
-            self.ugcInterval = cacheDuration;
-        }
-        [self startUGCTimer];
-    }];
-}
-
-- (void)setCommunityHasNewTimerInteralAndGetNewFirstTime {
-    //每隔一段时候调用接口
-    __weak typeof(self) wself = self;
-    [FHHouseUGCAPI refreshFeedTips:@"f_ugc_neighbor" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSTimeInterval cacheDuration, NSError * _Nonnull error) {
-        if(!error && hasNew){
-            self.ugcCommunityHasNew = YES;
-        }else{
-            self.ugcCommunityHasNew = NO;
-        }
-        
-        if(self.ugcCommunityHasNew){
-            self.ugcCommunityHasNew = [self isCanShowCommunityRedPoint];
-        }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCCommunityTabHasNewNotification object:nil];
-        
-        if(interval > 0){
-            self.communityTimerInterval = interval;
-        }
-        if(cacheDuration > 0){
-            self.communityInterval = cacheDuration;
-        }
-        [self startCommunityTimer];
-    }];
-}
-
 - (void)getHasNewForTimer {
     //每隔一段时候调用接口
     __weak typeof(self) wself = self;
-    [FHHouseUGCAPI refreshFeedTips:@"f_ugc_follow" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSTimeInterval cacheDuration, NSError * _Nonnull error) {
+    [FHHouseUGCAPI refreshFeedTips:@"f_news_recommend" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSTimeInterval cacheDuration, NSError * _Nonnull error) {
         if(!error && hasNew && [self isCanShowRedPoint]){
             self.ugcFocusHasNew = YES;
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCFocusTabHasNewNotification object:nil];
-        }
-    }];
-}
-
-- (void)getUGCHasNewForTimer {
-    //每隔一段时候调用接口
-    __weak typeof(self) wself = self;
-    [FHHouseUGCAPI refreshFeedTips:@"f_news_recommend" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSTimeInterval cacheDuration, NSError * _Nonnull error) {
-        if(!error && hasNew && [self isCanShowUGCRedPoint]){
-            self.ugcHasNew = YES;
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCRecomendTabHasNewNotification object:nil];
-        }
-    }];
-}
-
-- (void)getCommunityHasNewForTimer {
-    //每隔一段时候调用接口
-    __weak typeof(self) wself = self;
-    [FHHouseUGCAPI refreshFeedTips:@"f_ugc_neighbor" beHotTime:self.behotTime completion:^(bool hasNew, NSTimeInterval interval, NSTimeInterval cacheDuration, NSError * _Nonnull error) {
-        if(!error && hasNew && [self isCanShowCommunityRedPoint]){
-            self.ugcCommunityHasNew = YES;
-            [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCCommunityTabHasNewNotification object:nil];
         }
     }];
 }
@@ -926,44 +710,6 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     //显示时候记录时间
     NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
     [FHUtils setContent:@(currentTime) forKey:lastRedPointShowKey];
-}
-
-- (BOOL)isCanShowUGCRedPoint {
-    //显示时候记录时间
-    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
-    NSNumber *last = [FHUtils contentForKey:lastUGCRedPointShowKey];
-    NSTimeInterval lastTime = last.doubleValue;
-    
-    if(lastTime > 0 && (currentTime - lastTime) <= self.ugcInterval){
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (void)recordHideUGCRedPointTime {
-    //显示时候记录时间
-    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
-    [FHUtils setContent:@(currentTime) forKey:lastUGCRedPointShowKey];
-}
-
-- (BOOL)isCanShowCommunityRedPoint {
-    //显示时候记录时间
-    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
-    NSNumber *last = [FHUtils contentForKey:lastCommunityRedPointShowKey];
-    NSTimeInterval lastTime = last.doubleValue;
-    
-    if(lastTime > 0 && (currentTime - lastTime) <= self.communityInterval){
-        return NO;
-    }
-    
-    return YES;
-}
-
-- (void)recordHideCommunityRedPointTime {
-    //显示时候记录时间
-    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
-    [FHUtils setContent:@(currentTime) forKey:lastCommunityRedPointShowKey];
 }
 
 #pragma mark - Publisher Hisgtory
