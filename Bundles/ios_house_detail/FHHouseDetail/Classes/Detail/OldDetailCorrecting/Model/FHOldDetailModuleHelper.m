@@ -204,7 +204,7 @@
             }];
         }
         //加载周边时
-        if ([[obj allKeys] containsObject:@"locationPeripherys"] || [[obj allKeys] containsObject:@"housingEvaluation"] || [[obj allKeys] containsObject:@"disclaimers"] || [[obj allKeys] containsObject:@"neighborhoodInfos"]) {
+        if ([[obj allKeys] containsObject:@"locationPeripherys"] || [[obj allKeys] containsObject:@"disclaimers"] || [[obj allKeys] containsObject:@"neighborhoodInfos"]) {
             //如果包含大标题的模块存在，则当前模块第一个元素和上一个模块最后一个元素的阴影不裁剪,同时在当前模块插入标题
             if (idx > 0) {
                 FHDetailBaseModel *currentModel = currentItemArr[0];
@@ -236,9 +236,10 @@
         titleMolde.title = @"小区信息";
     }else if (model.houseModelType == FHHouseModelTypeLocationPeriphery) {
         titleMolde.title = @"位置及周边配套";
-    }else if (model.houseModelType == FHHouseModelTypeHousingEvaluation) {
-        titleMolde.title = @"房源动态";
     }
+//    else if (model.houseModelType == FHHouseModelTypeHousingEvaluation) {
+//        titleMolde.title = @"房源动态";
+//    }
     //外面传了就直接用
     if(title.length > 0){
         titleMolde.title = title;
