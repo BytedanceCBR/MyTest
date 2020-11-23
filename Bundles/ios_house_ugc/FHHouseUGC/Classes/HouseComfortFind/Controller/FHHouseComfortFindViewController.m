@@ -7,6 +7,8 @@
 
 #import "FHHouseComfortFindViewController.h"
 #import "UIViewAdditions.h"
+#import "FHCommonDefines.h"
+#import "FHEnvContext.h"
 
 @interface FHHouseComfortFindViewController ()
 @property(nonatomic,strong) FHHouseComfortFindHeaderView *headerView;
@@ -54,7 +56,13 @@
         self.feedVC =[[FHCommunityFeedListController alloc] init];
         self.feedVC.listType = FHCommunityFeedListTypeCustom;
         self.feedVC.category = @"f_house_finder";
-        self.feedVC.tableHeaderView = self.headerView;
+        
+        self.headerView = [[FHHouseComfortFindHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, comfortFindHeaderViewHeight)];
+        WeakSelf;
+        self.feedVC.requestSuccess = ^(BOOL hasFeedData) {
+            StrongSelf;
+            [self updateHeaderView:hasFeedData];
+        };
         
         if(self.isOpenByPush) {
             [self setupDefaultNavBar:NO];
@@ -77,15 +85,8 @@
     }
 }
 
-- (FHHouseComfortFindHeaderView *)headerView {
-    if(!_headerView) {
-        _headerView = [[FHHouseComfortFindHeaderView alloc] init];
-        if(_headerView.itemsCount){
-            _headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 94);
-            [_headerView refreshView];
-        }
-    }
-    return _headerView;
+-(void)updateHeaderView:(BOOL)hasFeedData {
+    self.feedVC.tableHeaderView = self.headerView;
 }
 
 -(CGFloat)navBarHeight {

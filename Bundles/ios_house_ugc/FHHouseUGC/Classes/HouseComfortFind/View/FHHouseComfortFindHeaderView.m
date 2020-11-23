@@ -6,11 +6,11 @@
 //
 
 #import "FHHouseComfortFindHeaderView.h"
+#import "FHCommonDefines.h"
 #import <FHEnvContext.h>
 #import <FHConfigModel.h>
 #import "UIColor+Theme.h"
 #import "UIViewAdditions.h"
-#import "FHCommuteManager.h"
 #import "TTRoute.h"
 
 @interface FHHouseComfortFindHeaderView ()
@@ -19,20 +19,21 @@
 
 @implementation FHHouseComfortFindHeaderView
 
-- (instancetype)init{
-    self = [super init];
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
     if (self) {
-        [self initItems];
+        [self setBackgroundColor:[UIColor themeWhite]];
+        UIView *seprateView = [[UIView alloc] initWithFrame:CGRectMake(horizontalMargin ,comfortFindHeaderViewHeight ,SCREEN_WIDTH - 2 * horizontalMargin ,0.5)];
+        [seprateView setBackgroundColor:[UIColor themeGray6]];
+        [self addSubview:seprateView];
     }
     return self;
 }
 
-- (void)initItems {
+- (void)updateItems {
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if (!dataModel) {
-        dataModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
-    }
-    
+
     NSArray *itemsName = @[@"地图找房",@"查房价",@"帮我找房",@"城市行情",@"房贷计算"];
     NSMutableArray *items = [NSMutableArray array];
     NSMutableDictionary *itemsDict = [NSMutableDictionary dictionary];
@@ -65,13 +66,13 @@
 }
 
 -(void)refreshView {
-    [self setBackgroundColor:[UIColor themeWhite]];
+    for(UIView *itemView in self.subviews){
+        if([itemView isKindOfClass:[FHHomeEntranceItemView class]]){
+            [itemView removeFromSuperview];
+        }
+    }
     
     UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];;
-    CGFloat iconWidth = 52;
-    CGFloat itemViewHeight = 70;
-    CGFloat horizontalMargin = 20;
-    CGFloat verticalMargin = 12;
     CGFloat iconMargin = (SCREEN_WIDTH - 5 * iconWidth - 2 * horizontalMargin) / 4;
     
     for (NSInteger i = 0 ; i < self.items.count; i++) {
@@ -84,10 +85,6 @@
         [itemView addTarget:self action:@selector(itemViewClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:itemView];
     }
-    
-    UIView *seprateView = [[UIView alloc] initWithFrame:CGRectMake(horizontalMargin, 94, SCREEN_WIDTH - 2 * horizontalMargin, 0.5)];
-    [seprateView setBackgroundColor:[UIColor themeGray6]];
-    [self addSubview:seprateView];
 }
 
 - (void)itemViewClick:(FHHomeEntranceItemView *)itemView{
