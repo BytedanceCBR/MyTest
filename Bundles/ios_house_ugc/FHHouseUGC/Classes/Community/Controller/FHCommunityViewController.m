@@ -62,7 +62,13 @@
     //test
     self.hasShowDots = NO;
     self.isUgcOpen = [FHEnvContext isUGCOpen];
-    self.categorys = [[FHUGCCategoryManager sharedManager].allCategories copy];
+    
+    if(self.isInHomePage){
+        self.categorys = @[[FHUGCCategoryManager sharedManager].recommendCategory];
+    }else{
+        self.categorys = [[FHUGCCategoryManager sharedManager].allCategories copy];
+    }
+    
     self.alreadyShowGuide = NO;
     self.ttTrackStayEnable = YES;
     self.isShowLoginTip = NO;

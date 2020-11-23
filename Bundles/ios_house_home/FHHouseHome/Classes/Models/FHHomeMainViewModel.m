@@ -19,7 +19,7 @@
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHHomeMainViewController *viewController;
 @property(nonatomic , weak) FHHomeViewController *homeListVC;
-@property(nonatomic , strong) NSMutableArray *dataArray;
+@property(nonatomic , strong) NSArray *dataArray;
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
 @property(nonatomic , strong) NSMutableDictionary *traceDict;
@@ -65,7 +65,7 @@
 - (void)resetDataArray
 {
     if ([FHEnvContext isCurrentCityNormalOpen]) {
-        self.dataArray = @[@(kFHHomeMainCellTypeHouse),@(kFHHomeMainCellTypeFeed)];
+        self.dataArray = @[@(kFHHomeMainCellTypeHouse)];
     }else
     {
         self.dataArray = @[@(kFHHomeMainCellTypeFeed)];
@@ -114,7 +114,7 @@
     }
     
     if ([cell.contentVC isKindOfClass:[FHHomeViewController class]]) {
-        self.homeListVC = cell.contentVC;
+        self.homeListVC = (FHHomeViewController *)cell.contentVC;
     }
     
     return cell;

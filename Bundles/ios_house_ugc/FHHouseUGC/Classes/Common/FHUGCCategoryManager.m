@@ -40,6 +40,7 @@
     if (self) {
         _allCategories = [NSMutableArray array];
         _defaultCategories = [self generatDefaultCategories];
+        _recommendCategory = [self generateCategoryDataModel:@"f_news_recommend" name:@"推荐"];
     }
     return self;
 }
