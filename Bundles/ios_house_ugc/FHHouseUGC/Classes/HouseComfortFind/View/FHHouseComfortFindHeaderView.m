@@ -19,16 +19,15 @@
 
 @implementation FHHouseComfortFindHeaderView
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
+- (instancetype)init{
+    self = [super init];
     if (self) {
-        [self initView];
+        [self initItems];
     }
     return self;
 }
 
-- (void)initView {
+- (void)initItems {
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (!dataModel) {
         dataModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
@@ -58,29 +57,37 @@
             }
         }
     }
-    self.items = items;
+    _items = items;
+}
 
-    if(items.count) {
-        
-        CGFloat ratio = SCREEN_WIDTH/375;
-        CGRect itemFrame = CGRectMake(0, 0, MAX(ceil(ratio*NORMAL_ICON_WIDTH),NORMAL_ITEM_WIDTH), ceil(ratio*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT));
-        CGFloat margin = (SCREEN_WIDTH - 5 * itemFrame.size.width - 2 * HOR_MARGIN) / 4;
-        CGSize iconSize = CGSizeMake(ceil(NORMAL_ICON_WIDTH*ratio), ceil(NORMAL_ICON_WIDTH*ratio));
-        UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];;
+-(NSUInteger)itemsCount{
+    return _items.count;
+}
 
-        for (NSInteger i = 0 ; i < items.count; i++) {
-            FHConfigDataOpDataItemsModel *model = items[i];
-            FHHomeEntranceItemView *itemView = [[FHHomeEntranceItemView alloc] initWithFrame:itemFrame iconSize:iconSize];
-            [itemView setBackgroundColor:[UIColor themeWhite]];
-            FHConfigDataOpDataItemsImageModel *imgModel = [model.image firstObject];
-            [itemView updateWithIconUrl:imgModel.url name:model.title placeHolder:placeHolder];
-            itemView.origin = CGPointMake(HOR_MARGIN+(itemFrame.size.width+margin) * i, TOP_MARGIN_PER_ROW);
-            [itemView addTarget:self action:@selector(itemViewClick:) forControlEvents:UIControlEventTouchUpInside];
-            itemView.tag = i;
-            [self addSubview:itemView];
-        }
-        [self setBackgroundColor:[UIColor themeWhite]];
+-(void)refreshView {
+    [self setBackgroundColor:[UIColor themeWhite]];
+    
+    UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];;
+    CGFloat iconWidth = 52;
+    CGFloat itemViewHeight = 70;
+    CGFloat horizontalMargin = 20;
+    CGFloat verticalMargin = 12;
+    CGFloat iconMargin = (SCREEN_WIDTH - 5 * iconWidth - 2 * horizontalMargin) / 4;
+    
+    for (NSInteger i = 0 ; i < self.items.count; i++) {
+        FHConfigDataOpDataItemsModel *model = self.items[i];
+        FHHomeEntranceItemView *itemView = [[FHHomeEntranceItemView alloc] initWithFrame:CGRectMake(horizontalMargin + (iconWidth + iconMargin) * i, verticalMargin,iconWidth, itemViewHeight) iconSize:CGSizeMake(iconWidth, iconWidth)];
+        [itemView setBackgroundColor:[UIColor themeWhite]];
+        FHConfigDataOpDataItemsImageModel *imgModel = [model.image firstObject];
+        [itemView updateWithIconUrl:imgModel.url name:model.title placeHolder:placeHolder];
+        itemView.tag = i;
+        [itemView addTarget:self action:@selector(itemViewClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self addSubview:itemView];
     }
+    
+    UIView *seprateView = [[UIView alloc] initWithFrame:CGRectMake(horizontalMargin, 94, SCREEN_WIDTH - 2 * horizontalMargin, 0.5)];
+    [seprateView setBackgroundColor:[UIColor themeGray6]];
+    [self addSubview:seprateView];
 }
 
 - (void)itemViewClick:(FHHomeEntranceItemView *)itemView{
