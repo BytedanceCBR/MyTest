@@ -760,7 +760,12 @@
 #pragma mark - tableview delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1 + (self.othersugListData.count > 0);
+    if(tableView.tag == 2){
+        return 1 + (self.othersugListData.count > 0);
+    }else if(tableView.tag == 1){
+        return  1;
+    }
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -1142,6 +1147,7 @@
         [self.sugHttpTask cancel];
     }
     self.sugListData = NULL;
+    self.othersugListData = NULL;
     [self reloadSugTableView];
 }
 
