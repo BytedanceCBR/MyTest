@@ -22,6 +22,9 @@ jobs:
             - wangxinyu.kevin@bytedance.com
             - xielei.233@bytedance.com
         settings:
+            POD_COMMAND: "pod install --repo-update"
+            cert_url: "http://tosv.byted.org/obj/compilecluster/NetWorkInHousePriv220723.p12"
+            EXPORTOPTION_PLIST : "exportOptionFInHouse.plist"
             build_config_id: 3949
             build_size_ipa: true
         except:
@@ -35,6 +38,9 @@ jobs:
             - wangxinyu.kevin@bytedance.com
             - xielei.233@bytedance.com
         settings:
+            POD_COMMAND: "pod install --repo-update"
+            cert_url: "http://tosv.byted.org/obj/compilecluster/NetWorkInHousePriv220723.p12"
+            EXPORTOPTION_PLIST : "exportOptionFInHouse.plist"
             build_config_id: 3949
             merge_target: true
     merge_base_build:
@@ -45,6 +51,9 @@ jobs:
             - wangxinyu.kevin@bytedance.com
             - xielei.233@bytedance.com
         settings:
+          POD_COMMAND: "pod install --repo-update"
+          cert_url: "http://tosv.byted.org/obj/compilecluster/NetWorkInHousePriv220723.p12"
+          EXPORTOPTION_PLIST : "exportOptionFInHouse.plist"
           merge_base: true
           build_size_ipa: true
           build_config_id: 3949
@@ -62,6 +71,9 @@ jobs:
             - feature_size
             - merge_base_build
         settings:
+            POD_COMMAND: "pod install --repo-update"
+            cert_url: "http://tosv.byted.org/obj/compilecluster/NetWorkInHousePriv220723.p12"
+            EXPORTOPTION_PLIST : "exportOptionFInHouse.plist"
             build_config_id: 3949
             app_id: 137001
     code_check:
@@ -72,6 +84,9 @@ jobs:
             - wangxinyu.kevin@bytedance.com
             - xielei.233@bytedance.com
         settings:
+          POD_COMMAND: "pod install --repo-update"
+          cert_url: "http://tosv.byted.org/obj/compilecluster/NetWorkInHousePriv220723.p12"
+          EXPORTOPTION_PLIST : "exportOptionFInHouse.plist"
           build_config_id: 3949
         except:
           variables:
