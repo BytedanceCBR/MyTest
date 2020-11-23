@@ -81,8 +81,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)viewWillAppear {
     [self.viewModel viewWillAppear];
     
     if ([[NSDate date]timeIntervalSince1970] - _enterTabTimestamp > 24*60*60) {
@@ -107,14 +106,23 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self viewWillAppear];
+}
+
+- (void)viewWillDisappear {
     [self.viewModel viewWillDisappear];
     if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
         [self viewDisAppearForEnterType:1];
     }
     [FHFeedOperationView dismissIfVisible];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self viewWillDisappear];
 }
 
 - (void)initView {

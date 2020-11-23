@@ -12,6 +12,7 @@
 #import "FHMyJoinViewController.h"
 #import "FHHouseFindViewController.h"
 #import "FHHouseComfortFindViewController.h"
+#import "FHUGCShortVideoListController.h"
 
 @interface FHCommunityDiscoveryCell ()
 
@@ -44,6 +45,9 @@
             FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
             vc.withTips = self.withTips;
             [vc viewWillAppear];
+        }else if(cellModel.type == FHCommunityCollectionCellTypeSmallVideo){
+            FHUGCShortVideoListController *vc = (FHUGCShortVideoListController *)self.vc;
+            [vc viewWillAppear];
         }else if(cellModel.type == FHCommunityCollectionCellTypeCustom){
             FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
             [vc viewWillAppear];
@@ -60,6 +64,9 @@
         [vc viewWillDisappear];
     }else if(_cellModel.type == FHCommunityCollectionCellTypeMyJoin){
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
+        [vc viewWillDisappear];
+    }else if(_cellModel.type == FHCommunityCollectionCellTypeSmallVideo){
+        FHUGCShortVideoListController *vc = (FHUGCShortVideoListController *)self.vc;
         [vc viewWillDisappear];
     }else if(_cellModel.type == FHCommunityCollectionCellTypeCustom){
         FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
@@ -85,6 +92,10 @@
         FHMyJoinViewController *vc = [[FHMyJoinViewController alloc] init];
         vc.withTips = self.withTips;
         vc.isNewDiscovery = YES;
+        self.vc = vc;
+    }else if(_cellModel.type == FHCommunityCollectionCellTypeSmallVideo){
+        FHUGCShortVideoListController *vc = [[FHUGCShortVideoListController alloc] init];
+        vc.needReportEnterCategory = YES;
         self.vc = vc;
     }else if(_cellModel.type == FHCommunityCollectionCellTypeCustom){
         FHCommunityFeedListController *vc = [[FHCommunityFeedListController alloc] init];
@@ -128,6 +139,14 @@
         FHMyJoinViewController *vc = (FHMyJoinViewController *)self.vc;
         vc.feedListVC.isRefreshTypeClicked = isClick;
         [vc refreshFeedListData:isHead];
+    }else if([self.vc isKindOfClass:[FHUGCShortVideoListController class]]){
+        FHUGCShortVideoListController *vc = (FHUGCShortVideoListController *)self.vc;
+        vc.isRefreshTypeClicked = isClick;
+        if(isHead){
+            [vc scrollToTopAndRefreshAllData];
+        }else{
+            [vc scrollToTopAndRefresh];
+        }
     }else if([self.vc isKindOfClass:[FHCommunityFeedListController class]]){
         FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
         vc.isRefreshTypeClicked = isClick;

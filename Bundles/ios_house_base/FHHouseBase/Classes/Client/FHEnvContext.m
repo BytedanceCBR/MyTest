@@ -1114,10 +1114,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
 }
 
-+ (BOOL)isNewDiscovery {
-    return NO;
-}
-
 + (BOOL)isHomeNewDiscovery {
     return YES;
 }
@@ -1127,7 +1123,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isHasShortVideoList {
-    return YES;
+    return NO;
 }
 
 + (BOOL)isHasPerLoadForVideo {
