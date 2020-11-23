@@ -82,9 +82,13 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
     
     if (useBDTracker) {
         [BDTrackerProtocol setBDTrackerEnabled];
-        [self setupBDTracker];
     } else {
         [BDTrackerProtocol setTTTrackerEnabled];
+    }
+    ///这个条件判断不要跟上面的合并！
+    if ([BDTrackerProtocol isBDTrackerEnabled]) {
+        [self setupBDTracker];
+    } else {
         [self setupTTTracker];
     }
 }
