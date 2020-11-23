@@ -15,10 +15,12 @@
 #import "FHMainApi.h"
 #import "TTSandBoxHelper.h"
 #import "JSONAdditions.h"
+#import "FHEnvContext.h"
 
 @interface FHUGCCategoryManager ()
 
 @property(nonatomic, strong) NSMutableArray *defaultCategories;
+@property(nonatomic, strong) NSMutableArray *defaultCategoriesNotOpenCity;
 
 @end
 
@@ -40,6 +42,7 @@
     if (self) {
         _allCategories = [NSMutableArray array];
         _defaultCategories = [self generatDefaultCategories];
+        _defaultCategoriesNotOpenCity = [self generatDefaultCategoriesNotOpenCity];
         _recommendCategory = [self generateCategoryDataModel:@"f_news_recommend" name:@"推荐"];
     }
     return self;
@@ -262,7 +265,11 @@
 
 - (NSMutableArray *)allCategories {
 //    if(_allCategories.count <= 0){
+    if([FHEnvContext isCurrentCityNormalOpen]){
         return _defaultCategories;
+    }else{
+        return _defaultCategoriesNotOpenCity;
+    }
 //    }
     
 //    return _allCategories;
@@ -274,6 +281,16 @@
     [categories addObject:[self generateCategoryDataModel:@"f_house_smallvideo" name:@"视频"]];
     [categories addObject:[self generateCategoryDataModel:@"f_news_recommend" name:@"推荐"]];
     [categories addObject:[self generateCategoryDataModel:@"f_house_finder" name:@"找好房"]];
+    [categories addObject:[self generateCategoryDataModel:@"f_house_qa" name:@"买房问问"]];
+    
+    return categories;
+}
+
+//当接口失败时的兜底频道
+- (NSMutableArray *)generatDefaultCategoriesNotOpenCity {
+    NSMutableArray *categories = [NSMutableArray array];
+    [categories addObject:[self generateCategoryDataModel:@"f_house_smallvideo" name:@"视频"]];
+    [categories addObject:[self generateCategoryDataModel:@"f_news_recommend" name:@"推荐"]];
     [categories addObject:[self generateCategoryDataModel:@"f_house_qa" name:@"买房问问"]];
     
     return categories;

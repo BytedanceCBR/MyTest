@@ -387,22 +387,11 @@
         [weakSelf.viewModel refreshCell:NO isClick:YES];
     };
     
-//    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
-//
-//     if(segmentContentWidth >= SCREEN_WIDTH){
-         [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-             make.left.right.mas_equalTo(self.topView);
-             make.height.mas_equalTo(44);
-             make.bottom.mas_equalTo(self.topView).offset(-8);
-         }];
-//     }else{
-//         [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-//             make.centerX.mas_equalTo(self.topView);
-//             make.width.mas_equalTo(segmentContentWidth);
-//             make.height.mas_equalTo(44);
-//             make.bottom.mas_equalTo(self.topView).offset(-8);
-//         }];
-//     }
+    [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.topView);
+        make.height.mas_equalTo(44);
+        make.bottom.mas_equalTo(self.topView).offset(-8);
+    }];
 }
 
 - (NSArray *)getSegmentTitles {
@@ -483,21 +472,6 @@
         [self initViewModel];
         self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
         self.segmentControl.sectionTitles = [self getSegmentTitles];
-        CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
-        if(!self.isInHomePage && segmentContentWidth >= SCREEN_WIDTH){
-            [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.right.mas_equalTo(self.topView);
-                make.height.mas_equalTo(44);
-                make.bottom.mas_equalTo(self.topView).offset(-8);
-            }];
-        }else{
-            [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.mas_equalTo(self.topView);
-                make.width.mas_equalTo(segmentContentWidth);
-                make.height.mas_equalTo(44);
-                make.bottom.mas_equalTo(self.topView).offset(-8);
-            }];
-        }
     }
 }
 
