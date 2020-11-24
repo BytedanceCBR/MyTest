@@ -52,7 +52,7 @@ static const char tabSwitchedKey;
 - (void)trackSugWordClickWithmodel:(FHSuggestionResponseItemModel *)model eventName:(nonnull NSString *)eventName{
     NSMutableDictionary *parameters =  [NSMutableDictionary dictionaryWithDictionary:self.sugWordShowtracerDic];
     parameters[@"rank"] = @(model.rank) ?: 0;
-    [parameters btd_setObject:model.logPb forKey:@"log_pd"];
+    [parameters btd_objectForKey:model.logPb default:@"be_null"];
     parameters[@"word_text"] = [model.houseType intValue] == FHHouseTypeNewHouse? model.text:model.name;
     parameters[@"group_id"] = model.info.qrecid ?: @"be_null";
     parameters[@"element_type"] = @"search";
