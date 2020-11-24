@@ -37,7 +37,7 @@
 #import "FHUGCCategoryManager.h"
 #import "FHLoginTipView.h"
 
-@interface FHCommunityViewController ()
+@interface FHCommunityViewController ()<FHUGCPostMenuViewDelegate>
 
 @property(nonatomic, strong) FHCommunityBaseViewModel *viewModel;
 @property(nonatomic, strong) UIView *bottomLineView;
@@ -157,6 +157,7 @@
 
     self.bottomLineView = [[UIView alloc] init];
     _bottomLineView.backgroundColor = [UIColor themeGray6];
+    _bottomLineView.hidden = YES;
     [self.topView addSubview:_bottomLineView];
 
     self.containerView = [[UIView alloc] init];
@@ -358,8 +359,8 @@
             NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
 
-    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
-            NSForegroundColorAttributeName: [UIColor themeOrange1]};
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontMedium:18],
+            NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
@@ -386,22 +387,11 @@
         [weakSelf.viewModel refreshCell:NO isClick:YES];
     };
     
-    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
-
-     if(segmentContentWidth >= SCREEN_WIDTH){
-         [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-             make.left.right.mas_equalTo(self.topView);
-             make.height.mas_equalTo(44);
-             make.bottom.mas_equalTo(self.topView).offset(-8);
-         }];
-     }else{
-         [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-             make.centerX.mas_equalTo(self.topView);
-             make.width.mas_equalTo(segmentContentWidth);
-             make.height.mas_equalTo(44);
-             make.bottom.mas_equalTo(self.topView).offset(-8);
-         }];
-     }
+    [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.topView);
+        make.height.mas_equalTo(44);
+        make.bottom.mas_equalTo(self.topView).offset(-8);
+    }];
 }
 
 - (NSArray *)getSegmentTitles {
@@ -482,21 +472,6 @@
         [self initViewModel];
         self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
         self.segmentControl.sectionTitles = [self getSegmentTitles];
-        CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
-        if(!self.isInHomePage && segmentContentWidth >= SCREEN_WIDTH){
-            [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.right.mas_equalTo(self.topView);
-                make.height.mas_equalTo(44);
-                make.bottom.mas_equalTo(self.topView).offset(-8);
-            }];
-        }else{
-            [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.mas_equalTo(self.topView);
-                make.width.mas_equalTo(segmentContentWidth);
-                make.height.mas_equalTo(44);
-                make.bottom.mas_equalTo(self.topView).offset(-8);
-            }];
-        }
     }
 }
 
@@ -510,7 +485,8 @@
     NSString *tabIdentifier = [FHEnvContext getCurrentTabIdentifier];
     if(!self.isInHomePage && [tabIdentifier isEqualToString:@"tab_f_find"]){
         if (self.navigationController.viewControllers.count <= 1) {
-            [self.viewModel changeTab:1];
+            NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
+            [self.viewModel changeTab:index];
         }
     }
 }
@@ -611,7 +587,7 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
-    __weak typeof(self) wSelf = self;
+
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
