@@ -365,7 +365,7 @@
     jumpHouseTpye = jumpHouseTpye != -1 ? jumpHouseTpye : self.houseType;
     NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",jumpHouseTpye,placeHolderStr,placeHolderStr];
     if(jumpHouseTpye != self.houseType){
-        self.tracerDict[@"element_from"] = [self.viewModel elementFromNameByHouseType:self.houseType];
+        self.tracerDict[@"element_from"] = [self.viewModel relatedRecommendelEmentFromNameByHouseType:self.houseType];
     }
     self.tracerDict[@"enter_type"] = @"enter";
     self.tracerDict[@"enter_from"] = @"search_detail";

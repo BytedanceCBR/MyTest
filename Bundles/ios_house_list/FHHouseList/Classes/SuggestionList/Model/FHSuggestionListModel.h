@@ -108,6 +108,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+//除了搜索中间页调用sug的情形
+@interface  FHOtherSuggestionResponseModel  : JSONModel  <FHBaseModelProtocol>
+
+@property (nonatomic, copy , nullable) NSString *status;
+@property (nonatomic, copy , nullable) NSString *message;
+@property (nonatomic, strong , nullable) NSArray<FHSuggestionResponseItemModel> *data;
+
+@end
 
 // FHSuggestionSearchHistoryResponseModel
 @protocol FHSuggestionSearchHistoryResponseDataDataModel<NSObject>

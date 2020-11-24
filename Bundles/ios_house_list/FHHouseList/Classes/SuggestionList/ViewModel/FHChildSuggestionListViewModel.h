@@ -38,7 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType;
 - (void)reloadHistoryTableView;
 - (void)viewWillDisappear;
-- (NSString *)elementFromNameByHouseType:(NSInteger)houseType;
+- (NSString *)relatedRecommendelEmentFromNameByHouseType:(NSInteger)houseType;
 @end
 
 NS_ASSUME_NONNULL_END
