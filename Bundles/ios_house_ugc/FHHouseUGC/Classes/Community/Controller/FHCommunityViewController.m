@@ -37,20 +37,19 @@
 #import "FHUGCCategoryManager.h"
 #import "FHLoginTipView.h"
 
-@interface FHCommunityViewController ()
+@interface FHCommunityViewController ()<FHUGCPostMenuViewDelegate>
 
 @property(nonatomic, strong) FHCommunityBaseViewModel *viewModel;
 @property(nonatomic, strong) UIView *bottomLineView;
 @property(nonatomic, strong) UIView *topView;
 @property(nonatomic, strong) UIButton *searchBtn;
 @property(nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
-@property (nonatomic, strong) FHLoginTipView * loginTipview;
-//@property(nonatomic, strong) FHUGCGuideView *guideView;
+@property(nonatomic, strong) FHLoginTipView * loginTipview;
 @property(nonatomic, assign) BOOL hasShowDots;
 @property(nonatomic, assign) BOOL alreadyShowGuide;
 @property(nonatomic, assign) BOOL isFirstLoad;
 @property(nonatomic, strong) FHUGCPostMenuView *publishMenuView;
-@property (nonatomic, assign) BOOL isShowLoginTip;
+@property(nonatomic, assign) BOOL isShowLoginTip;
 @end
 
 @implementation FHCommunityViewController
@@ -96,7 +95,6 @@
         }
         self.segmentControl.sectionTitles = [self getSegmentTitles];
     }];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onCommunityHaveNewContents) name:kFHUGCCommunityTabHasNewNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
     
@@ -121,17 +119,8 @@
 }
 
 - (void)onFocusHaveNewContents {
-    BOOL hasSocialGroups = [FHUGCConfig sharedInstance].followList.count > 0;
     BOOL hasNew = [FHUGCConfig sharedInstance].ugcFocusHasNew;
-    if(self.viewModel.currentTabIndex != 1 && hasSocialGroups && hasNew && !self.isInHomePage){
-        _segmentControl.sectionRedPoints = @[@1];
-        self.hasFocusTips = YES;
-    }
-}
-
-- (void)onCommunityHaveNewContents {
-    BOOL hasNew = [FHUGCConfig sharedInstance].ugcCommunityHasNew;
-    NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+    NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
     if(self.viewModel.currentTabIndex != index && hasNew && index >= 0 && !self.isInHomePage){
         NSMutableArray *redPoints = [NSMutableArray array];
         for (NSInteger i = 0; i <= index; i++) {
@@ -148,11 +137,11 @@
 
 - (void)hideRedPoint {
     if(!self.isInHomePage){
-        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
         if(self.viewModel.currentTabIndex == index && self.hasFocusTips){
             self.hasFocusTips = NO;
-            [FHUGCConfig sharedInstance].ugcCommunityHasNew = NO;
-            [[FHUGCConfig sharedInstance] recordHideCommunityRedPointTime];
+            [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+            [[FHUGCConfig sharedInstance] recordHideRedPointTime];
             self.segmentControl.sectionRedPoints = @[@0];
             [self.viewModel refreshCell:YES isClick:NO];
         }
@@ -168,6 +157,7 @@
 
     self.bottomLineView = [[UIView alloc] init];
     _bottomLineView.backgroundColor = [UIColor themeGray6];
+    _bottomLineView.hidden = YES;
     [self.topView addSubview:_bottomLineView];
 
     self.containerView = [[UIView alloc] init];
@@ -232,11 +222,11 @@
         //去掉邻里tab的红点
         [FHEnvContext hideFindTabRedDots];
         if(!self.isInHomePage){
-            NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+            NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
             //去掉圈子红点的同时刷新tab
-            if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].ugcCommunityHasNew){
+            if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].ugcFocusHasNew){
                 self.hasFocusTips = NO;
-                [FHUGCConfig sharedInstance].ugcCommunityHasNew = NO;
+                [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
                 [self.viewModel refreshCell:YES isClick:NO];
             }
         }
@@ -369,8 +359,8 @@
             NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
 
-    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
-            NSForegroundColorAttributeName: [UIColor themeOrange1]};
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontMedium:18],
+            NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
@@ -397,22 +387,11 @@
         [weakSelf.viewModel refreshCell:NO isClick:YES];
     };
     
-    CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
-
-     if(segmentContentWidth >= SCREEN_WIDTH){
-         [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-             make.left.right.mas_equalTo(self.topView);
-             make.height.mas_equalTo(44);
-             make.bottom.mas_equalTo(self.topView).offset(-8);
-         }];
-     }else{
-         [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-             make.centerX.mas_equalTo(self.topView);
-             make.width.mas_equalTo(segmentContentWidth);
-             make.height.mas_equalTo(44);
-             make.bottom.mas_equalTo(self.topView).offset(-8);
-         }];
-     }
+    [self.segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(self.topView);
+        make.height.mas_equalTo(44);
+        make.bottom.mas_equalTo(self.topView).offset(-8);
+    }];
 }
 
 - (NSArray *)getSegmentTitles {
@@ -493,21 +472,6 @@
         [self initViewModel];
         self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
         self.segmentControl.sectionTitles = [self getSegmentTitles];
-        CGFloat segmentContentWidth = [self.segmentControl totalSegmentedControlWidth];
-        if(!self.isInHomePage && segmentContentWidth >= SCREEN_WIDTH){
-            [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.left.right.mas_equalTo(self.topView);
-                make.height.mas_equalTo(44);
-                make.bottom.mas_equalTo(self.topView).offset(-8);
-            }];
-        }else{
-            [self.segmentControl mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.centerX.mas_equalTo(self.topView);
-                make.width.mas_equalTo(segmentContentWidth);
-                make.height.mas_equalTo(44);
-                make.bottom.mas_equalTo(self.topView).offset(-8);
-            }];
-        }
     }
 }
 
@@ -521,7 +485,8 @@
     NSString *tabIdentifier = [FHEnvContext getCurrentTabIdentifier];
     if(!self.isInHomePage && [tabIdentifier isEqualToString:@"tab_f_find"]){
         if (self.navigationController.viewControllers.count <= 1) {
-            [self.viewModel changeTab:1];
+            NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
+            [self.viewModel changeTab:index];
         }
     }
 }
@@ -622,7 +587,7 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
-    __weak typeof(self) wSelf = self;
+
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功

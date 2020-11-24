@@ -13,9 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHCommunityDiscoveryCellModel : NSObject
 
-@property(nonatomic , assign) FHCommunityCollectionCellType type;
+@property (nonatomic , assign) FHCommunityCollectionCellType type;
 @property (nonatomic, copy , nullable) NSString *category;
 @property (nonatomic, copy , nullable) NSString *name;
+@property (nonatomic, assign) BOOL isInHomePage;
 //埋点
 @property(nonatomic, strong) NSDictionary *tracerDict;
 

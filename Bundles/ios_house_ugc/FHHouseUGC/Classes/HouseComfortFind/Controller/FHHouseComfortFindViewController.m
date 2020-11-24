@@ -58,11 +58,12 @@
         
         if(self.isOpenByPush) {
             [self setupDefaultNavBar:NO];
+            self.customNavBarView.title.text = @"找好房";
             
-            CGFloat Height = [self navBarHeight];
+            CGFloat navBarHeight = [self navBarHeight];
             CGRect frame = self.view.bounds;
-            frame.size.height = frame.size.height - Height;
-            frame.origin.y = Height;
+            frame.size.height = frame.size.height - navBarHeight;
+            frame.origin.y = navBarHeight;
             self.feedVC.view.frame = frame;
         } else {
             self.feedVC.view.frame = self.view.bounds;
@@ -78,8 +79,11 @@
 
 - (FHHouseComfortFindHeaderView *)headerView {
     if(!_headerView) {
-        CGFloat Height = ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW + 10;
-        _headerView = [[FHHouseComfortFindHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, Height)];
+        _headerView = [[FHHouseComfortFindHeaderView alloc] init];
+        if(_headerView.itemsCount){
+            _headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 94);
+            [_headerView refreshView];
+        }
     }
     return _headerView;
 }
