@@ -61,7 +61,7 @@
         WeakSelf;
         self.feedVC.requestSuccess = ^(BOOL hasFeedData) {
             StrongSelf;
-            [self updateHeaderView:hasFeedData];
+            [self updateHeaderView];
         };
         
         if(self.isOpenByPush) {
@@ -85,8 +85,15 @@
     }
 }
 
--(void)updateHeaderView:(BOOL)hasFeedData {
-    self.feedVC.tableHeaderView = self.headerView;
+-(void)updateHeaderView {
+    [self.headerView loadItemViews];
+    if(self.headerView.itemsCount) {
+        if(self.feedVC.tableHeaderView != self.headerView) {
+            self.feedVC.tableHeaderView = self.headerView;
+        }
+    } else {
+        self.feedVC.tableHeaderView = nil;
+    }
 }
 
 -(CGFloat)navBarHeight {

@@ -15,6 +15,7 @@
 
 @interface FHHouseComfortFindHeaderView ()
 @property(nonatomic,strong) NSArray *items;
+@property(nonatomic,weak) FHConfigDataModel *dataModel;
 @end
 
 @implementation FHHouseComfortFindHeaderView
@@ -24,11 +25,19 @@
     self = [super initWithFrame:frame];
     if (self) {
         [self setBackgroundColor:[UIColor themeWhite]];
-        UIView *seprateView = [[UIView alloc] initWithFrame:CGRectMake(horizontalMargin ,comfortFindHeaderViewHeight ,SCREEN_WIDTH - 2 * horizontalMargin ,0.5)];
-        [seprateView setBackgroundColor:[UIColor themeGray6]];
-        [self addSubview:seprateView];
     }
     return self;
+}
+
+- (void)loadItemViews {
+    FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    if(self.dataModel == dataModel) {
+        return;
+    }
+    self.dataModel = dataModel;
+    
+    [self updateItems];
+    [self refreshView];
 }
 
 - (void)updateItems {
@@ -66,10 +75,8 @@
 }
 
 -(void)refreshView {
-    for(UIView *itemView in self.subviews){
-        if([itemView isKindOfClass:[FHHomeEntranceItemView class]]){
-            [itemView removeFromSuperview];
-        }
+    for(UIView *subView in self.subviews){
+        [subView removeFromSuperview];
     }
     
     UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];;
@@ -85,6 +92,10 @@
         [itemView addTarget:self action:@selector(itemViewClick:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:itemView];
     }
+    
+    UIView *seprateView = [[UIView alloc] initWithFrame:CGRectMake(horizontalMargin ,comfortFindHeaderViewHeight ,SCREEN_WIDTH - 2 * horizontalMargin ,0.5)];
+    [seprateView setBackgroundColor:[UIColor themeGray6]];
+    [self addSubview:seprateView];
 }
 
 - (void)itemViewClick:(FHHomeEntranceItemView *)itemView{
