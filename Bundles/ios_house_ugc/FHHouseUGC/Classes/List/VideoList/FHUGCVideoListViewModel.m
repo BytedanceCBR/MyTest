@@ -75,10 +75,12 @@
 
 - (void)viewWillAppear {
     self.isViewAppear = YES;
+    [self lazyStartVideoPlay];
 }
 
 - (void)viewWillDisappear {
     self.isViewAppear = NO;
+    [self stopCurrentVideo];
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
