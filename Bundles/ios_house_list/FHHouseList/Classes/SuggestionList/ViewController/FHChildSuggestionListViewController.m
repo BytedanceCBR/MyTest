@@ -39,6 +39,8 @@
 @property (nonatomic, assign)   BOOL isShowHistory;
 @property (nonatomic, copy)     NSString *textFieldText;
 
+@property (nonatomic, copy)     NSString *lastSearchWord;
+
 @end
 
 @implementation FHChildSuggestionListViewController
@@ -500,12 +502,28 @@
         self.isLoadingData = NO;
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     } else {
+        if (![self shouldReloadSuggestionWord:text]) {
+            return;
+        }
         self.isLoadingData = YES;
         NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
         if (cityId) {
             [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
         }
     }
+}
+
+/**
+ Sug词有变化时发起请求，否则不发请求，用于避免
+ 搜索中间页顶部tab切换时发起重复sug词的请求
+ */
+- (BOOL)shouldReloadSuggestionWord:(NSString *)word {
+    if (![self.lastSearchWord isEqualToString:word]) {
+        self.lastSearchWord = word;
+        return YES;
+    }
+    
+    return NO;
 }
 
 #pragma mark - dealloc
