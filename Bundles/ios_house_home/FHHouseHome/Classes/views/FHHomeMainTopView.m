@@ -22,6 +22,7 @@
 #import "UIImage+FIconFont.h"
 #import "TTDeviceHelper.h"
 #import "FHUserTracker.h"
+#import "NSObject+FHTracker.h"
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
@@ -90,13 +91,13 @@ static const float kMapSearchBtnRightPading = 50;
     if (configData.mainPageTopOpData && configData.mainPageTopOpData.items.count >= 1 && configData.cityAvailability.enable.boolValue) {
         
         __block FHConfigDataOpData2ItemsModel *mapItemModel = nil;
-         [configData.mainPageTopOpData.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-             if ([obj isKindOfClass:[FHConfigDataOpData2ItemsModel class]]) {
-                 if ([((FHConfigDataOpData2ItemsModel *)obj).id isEqualToString:@"map_search"]) {
-                     mapItemModel = (FHConfigDataOpData2ItemsModel *)obj;
-                 }
-             }
-         }];
+        [configData.mainPageTopOpData.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if ([obj isKindOfClass:[FHConfigDataOpData2ItemsModel class]]) {
+                if ([((FHConfigDataOpData2ItemsModel *)obj).id isEqualToString:@"map_search"]) {
+                    mapItemModel = (FHConfigDataOpData2ItemsModel *)obj;
+                }
+            }
+        }];
         
         _mapItemModel = mapItemModel;
         
@@ -112,7 +113,7 @@ static const float kMapSearchBtnRightPading = 50;
         [_mapSearchBtn setImage:[UIImage imageNamed:@"home_map_icon"] forState:UIControlStateNormal];
         [_mapSearchBtn addTarget:self action:@selector(clickMapSearch) forControlEvents:UIControlEventTouchUpInside];
         _mapSearchBtn.hitTestEdgeInsets =  UIEdgeInsetsMake(-10, -10, -10, -30);
-
+        
         [self addSubview:_mapSearchBtn];
         
         _mapSearchLabel = [UILabel new];
@@ -120,7 +121,7 @@ static const float kMapSearchBtnRightPading = 50;
         _mapSearchLabel.textColor = [UIColor themeGray1];
         _mapSearchLabel.font = [UIFont themeFontMedium:14];
         [self addSubview:_mapSearchLabel];
-
+        
         
         [_mapSearchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
@@ -129,12 +130,12 @@ static const float kMapSearchBtnRightPading = 50;
         }];
         
         [_mapSearchLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-              make.left.equalTo(self.mapSearchBtn.mas_right).offset(5);
-              make.centerY.equalTo(self.mapSearchBtn).offset(0);
-              make.width.mas_equalTo(40);
-    //          make.height.mas_equalTo(24);
+            make.left.equalTo(self.mapSearchBtn.mas_right).offset(5);
+            make.centerY.equalTo(self.mapSearchBtn).offset(0);
+            make.width.mas_equalTo(40);
+            //          make.height.mas_equalTo(24);
         }];
-            
+        
     }else
     {
         [_mapSearchBtn removeFromSuperview];
@@ -243,7 +244,7 @@ static const float kMapSearchBtnRightPading = 50;
     _houseSegmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     _houseSegmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     [_houseSegmentControl setBackgroundColor:[UIColor clearColor]];
-
+    
     //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
     
     __weak typeof(self) weakSelf = self;
@@ -261,7 +262,7 @@ static const float kMapSearchBtnRightPading = 50;
     
     [_houseSegmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topBackCityContainer);
-//        make.height.mas_equalTo(kSegementedMainTopHeight);
+        //        make.height.mas_equalTo(kSegementedMainTopHeight);
         if (self.changeCountryBtn) {
             make.centerY.equalTo(self.changeCountryBtn).offset(-6);
         }else{
@@ -273,6 +274,24 @@ static const float kMapSearchBtnRightPading = 50;
     [self updateSegementedTitles:titlesArray andSelectIndex:indexValue];
 }
 
+-(FHHomeSearchPanelView *)searchPanelView {
+    if(!_searchPanelView) {
+        _searchPanelView = [[FHHomeSearchPanelView alloc] init];
+        _searchPanelView.fh_pageType = @"maintab";
+        _searchPanelView.fh_originFrom = @"maintab_search";
+        [_searchPanelView adjustLayoutFor:FHHomeSearchPanelViewLocation_HomeNavBar];
+    }
+    return _searchPanelView;
+}
+- (void)setupSearchPanelView {
+    [self.topBackCityContainer addSubview:self.searchPanelView];
+    [self.searchPanelView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.changeCountryBtn);
+        make.height.mas_equalTo(34);
+        make.left.equalTo(self.changeCountryBtn.mas_right).offset(-15);
+        make.right.equalTo(self.mapSearchBtn.mas_left).offset(-10);
+    }];
+}
 - (void)updateSegementedTitles:(NSArray <NSString *> *)titles andSelectIndex:(NSInteger)index
 {
     _houseSegmentControl.sectionTitles = titles;
@@ -282,7 +301,7 @@ static const float kMapSearchBtnRightPading = 50;
     {
         _houseSegmentControl.selectedSegmentIndex = _houseSegmentControl.selectedSegmentIndex;
     }
-        
+    
     [_houseSegmentControl mas_updateConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topBackCityContainer);
         make.height.mas_equalTo(kSegementedMainTopHeight);
@@ -307,7 +326,7 @@ static const float kMapSearchBtnRightPading = 50;
             if ([_mapItemModel.logPb isKindOfClass:[NSDictionary class]]) {
                 [clickParams addEntriesFromDictionary:_mapItemModel.logPb];
             }
-
+            
             NSMutableDictionary *infos = [NSMutableDictionary new];
             infos[@"tracer"] = clickParams;
             infos[@"from_home"] = @(1);
@@ -364,7 +383,7 @@ static const float kMapSearchBtnRightPading = 50;
         [self.topBackCityContainer setBackgroundColor:[UIColor colorWithHexString:dataModel.cityAvailability.backgroundColor]];
     }
     [self.topBackCityContainer setBackgroundColor:[UIColor themeHomeColor]];
-
+    
     
     CGFloat padingTop = 8;
     if ([TTDeviceHelper isIPhoneXSeries]) {
@@ -387,11 +406,6 @@ static const float kMapSearchBtnRightPading = 50;
     UIButton *citySwichButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.changeCountryBtn = citySwichButton;
     [self.topBackCityContainer addSubview:citySwichButton];
-    //    citySwichButton.layer.cornerRadius = 20;
-    //    citySwichButton.layer.shadowColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.1f].CGColor;
-    //    citySwichButton.layer.shadowOffset = CGSizeMake(0.f, 2.f);
-    //    citySwichButton.layer.shadowRadius = 6.f;
-    //    citySwichButton.layer.shadowOpacity = 1.f;
     [citySwichButton.titleLabel setFont:[UIFont themeFontRegular:14]];
     citySwichButton.backgroundColor = [UIColor clearColor];
     [citySwichButton mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -463,6 +477,7 @@ static const float kMapSearchBtnRightPading = 50;
         [self updateMapSearchBtn];
         [self setBackgroundColor:[UIColor themeHomeColor]];
         [self.topBackCityContainer setBackgroundColor:[UIColor themeHomeColor]];
+        [self setupSearchPanelView];
     }
     
 }
@@ -477,9 +492,6 @@ static const float kMapSearchBtnRightPading = 50;
         self.searchBtn.hidden = NO;
         self.mapSearchLabel.hidden = YES;
         
-//        self.mapSearchLabel.alpha = 0;
-//        self.searchBtn.alpha = 0;
-
         [UIView animateWithDuration:1 animations:^{
             self.searchBtn.alpha = 1;
             [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -492,15 +504,13 @@ static const float kMapSearchBtnRightPading = 50;
     {
         self.searchBtn.hidden = YES;
         self.mapSearchLabel.hidden = NO;
- 
+        
         [UIView animateWithDuration:1 animations:^{
-//            self.mapSearchLabel.alpha = 1;
-//            self.searchBtn.alpha = 0;
-             [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
-            make.centerY.equalTo(self.searchBtn).offset(0);
-            make.width.height.mas_equalTo(20);
-           }];
+            [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
+                make.centerY.equalTo(self.searchBtn).offset(0);
+                make.width.height.mas_equalTo(20);
+            }];
         }];
     }
     
@@ -514,11 +524,8 @@ static const float kMapSearchBtnRightPading = 50;
 - (void)changeBackColor:(NSInteger)index
 {
     UIColor *backColor = (index == 0 && [FHEnvContext isCurrentCityNormalOpen]) ? [UIColor themeHomeColor] : [UIColor whiteColor];
-//    [self.houseSegmentControl setBackgroundColor:backColor];
-//    [self.segmentControl setBackgroundColor:backColor];
     [self setBackgroundColor:backColor];
     [self.topBackCityContainer setBackgroundColor:backColor];
-    
 }
 
 @end
