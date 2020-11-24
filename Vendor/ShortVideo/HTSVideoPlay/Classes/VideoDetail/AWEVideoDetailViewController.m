@@ -1920,7 +1920,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     NSDictionary *tracerDict = self.pageParams;
     NSDictionary *extraDic = tracerDict[@"extraDic"];
     if([extraDic isKindOfClass:[NSDictionary class]]) {
-        params[@"element_type"] = extraDic[@"element_type"] ?: @"be_null";
+        params[@"element_type"] = extraDic[@"element_type"];
     }
     return params;
 }

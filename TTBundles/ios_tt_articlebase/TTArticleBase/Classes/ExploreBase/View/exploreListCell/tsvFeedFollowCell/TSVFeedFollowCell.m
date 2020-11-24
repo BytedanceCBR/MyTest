@@ -35,6 +35,7 @@
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "TTFavoriteViewController.h"
 
 #define kCardRectPadding            10
 #define kMoreArrowW                 6
@@ -350,6 +351,12 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
             [info setValue:self.cellData forKey:HTSVideoDetailOrderedData];
         }
         [info setValue:@(YES) forKey:@"isFromFlollow"];
+        
+        if([self.cell.delegate isKindOfClass:[TTFavoriteViewController class]]){
+            NSDictionary *extraDic = @{@"origin_from":@"click_favorite",@"enter_from":@"favorite"};
+            [info setValue:extraDic forKey:@"extraDic"];
+        }
+        
         NSMutableDictionary *tracerDic = @[].mutableCopy;
         NSDictionary *trackParams = [self trackParamsDictForData:self.orderedData];
 //        tracerDic[@"page_type"] = @"small_video_detail";

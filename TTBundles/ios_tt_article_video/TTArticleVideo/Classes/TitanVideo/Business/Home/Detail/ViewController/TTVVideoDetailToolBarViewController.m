@@ -1943,7 +1943,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     NSDictionary *tracerDict = self.detailModel.reportParams;
     params[@"origin_from"] = tracerDict[@"origin_from"] ?: @"be_null";
     params[@"enter_from"] = tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"page_type"] = tracerDict[@"page_type"] ?: @"be_null";
+    params[@"page_type"] = @"video_detail";
     params[@"group_id"] = tracerDict[@"group_id"] ?: @"be_bull";
     params[@"group_source"] = tracerDict[@"group_source"] ?: @"be_bull";
     params[@"impr_id"] = tracerDict[@"impr_id"] ?: @"be_null";
