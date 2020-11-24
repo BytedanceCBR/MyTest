@@ -97,14 +97,12 @@
 
     [self addEnterCategoryLog];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
-//    [self.viewModel autoPlayCurrentVideo];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [self.viewModel viewWillDisappear];
     [self addStayCategoryLog];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [self.viewModel stopCurrentVideo];
 }
 
 - (void)initView {
@@ -165,7 +163,7 @@
     if(self.currentVideo){
         [self.viewModel.dataList addObject:self.currentVideo];
         [self.tableView reloadData];
-        [self.viewModel readyCurrentVideo];
+//        [self.viewModel readyCurrentVideo];
         self.tableView.mj_footer.hidden = NO;
         self.tableView.mj_footer.state = MJRefreshStateRefreshing;
     }

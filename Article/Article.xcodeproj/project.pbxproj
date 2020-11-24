@@ -818,7 +818,6 @@
 			buildConfigurationList = 619867822223E8EF0056B2EF /* Build configuration list for PBXNativeTarget "serviceNofExtension" */;
 			buildPhases = (
 				F421BB65275360314908FDDB /* [CP] Check Pods Manifest.lock */,
-				86FDB6C794E0E79C7BECAFC2 /* [CP-User] bits_injection */,
 				619867752223E8EE0056B2EF /* Sources */,
 				619867762223E8EE0056B2EF /* Frameworks */,
 				619867772223E8EE0056B2EF /* Resources */,
@@ -837,7 +836,6 @@
 			buildConfigurationList = 619867942223E9A70056B2EF /* Build configuration list for PBXNativeTarget "com.f100.client.FHNotificationServiceExtension" */;
 			buildPhases = (
 				0326D622A704A3AC9E730DF8 /* [CP] Check Pods Manifest.lock */,
-				CF9B3715F24D87F70F444022 /* [CP-User] bits_injection */,
 				619867872223E9A70056B2EF /* Sources */,
 				619867882223E9A70056B2EF /* Frameworks */,
 				619867892223E9A70056B2EF /* Resources */,
@@ -858,7 +856,6 @@
 				976D5763629DDEEC7079A3CA /* [CP] Check Pods Manifest.lock */,
 				B373C7FB2174587A008F9905 /* Run Script - build revision */,
 				8A87010F8505BD8913E88E0F /* [CP-User] sgmpreaction */,
-				9AB6687AB2A1B876F4A02A10 /* [CP-User] bits_injection */,
 				B373C7FC2174587A008F9905 /* Sources */,
 				B373CE862174587A008F9905 /* Run Script - delete revision */,
 				B373CE872174587A008F9905 /* Resources */,
@@ -888,7 +885,6 @@
 				FC43609B9C36F3E4F3B44A8D /* [CP] Check Pods Manifest.lock */,
 				FEFA525B205FB1A8001F50D8 /* Run Script - build revision */,
 				4F33401AD6D0132A00D64D8E /* [CP-User] sgmpreaction */,
-				9F362F4CE253C937D7937909 /* [CP-User] bits_injection */,
 				FEFA525C205FB1A8001F50D8 /* Sources */,
 				FEFA59C0205FB1A8001F50D8 /* Run Script - delete revision */,
 				FEFA59C1205FB1A8001F50D8 /* Resources */,
@@ -1236,16 +1232,6 @@
 			shellPath = /bin/sh;
 			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
 		};
-		86FDB6C794E0E79C7BECAFC2 /* [CP-User] bits_injection */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "[CP-User] bits_injection";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
-		};
 		8A87010F8505BD8913E88E0F /* [CP-User] sgmpreaction */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1277,26 +1263,6 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
-		};
-		9AB6687AB2A1B876F4A02A10 /* [CP-User] bits_injection */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "[CP-User] bits_injection";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
-		};
-		9F362F4CE253C937D7937909 /* [CP-User] bits_injection */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "[CP-User] bits_injection";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
 		};
 		B373C7FB2174587A008F9905 /* Run Script - build revision */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1357,16 +1323,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-resources.sh\"\n";
 			showEnvVarsInLog = 0;
-		};
-		CF9B3715F24D87F70F444022 /* [CP-User] bits_injection */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			name = "[CP-User] bits_injection";
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "curl --retry 2 https://ios.bytedance.net/wlapi/tosDownload/iosbinary/d_pod_extentions/6.4.0/bits_component_injection.sh|bash";
 		};
 		E048B8C5F5720CDEF075018C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1892,7 +1848,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.1.1.0;
+				CURRENT_PROJECT_VERSION = 7.1.2.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
@@ -1945,7 +1901,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -1982,7 +1938,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.1.1.0;
+				CURRENT_PROJECT_VERSION = 7.1.2.0;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_BITCODE = NO;
@@ -2040,7 +1996,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				ONLY_ACTIVE_ARCH = NO;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2076,7 +2032,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.1.1.0;
+				CURRENT_PROJECT_VERSION = 7.1.2.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
@@ -2129,7 +2085,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2167,7 +2123,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.1.1.0;
+				CURRENT_PROJECT_VERSION = 7.1.2.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -2227,7 +2183,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.1.1;
+				MARKETING_VERSION = 1.1.2;
 				ONLY_ACTIVE_ARCH = NO;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";

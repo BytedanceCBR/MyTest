@@ -27,6 +27,14 @@
 }
 
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
+    if ([self respondsToSelector:@selector(calculateViewHeight:)]) {
+        if (viewModel.needCalculateHeight) {
+            viewModel.cachedHeight = [self calculateViewHeight:viewModel];
+            viewModel.needCalculateHeight = NO;
+        }
+        return viewModel.cachedHeight;
+    }
+    
     return 0.0f;
 }
 

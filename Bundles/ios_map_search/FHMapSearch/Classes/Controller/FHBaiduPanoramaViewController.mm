@@ -189,6 +189,10 @@ NSString * const FHAMapComplexCode = @"120300";
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.amapView.delegate = nil;
+    self.panoramaView.delegate = nil;
+    if (self.searchApi) {
+        self.searchApi.delegate = nil;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
