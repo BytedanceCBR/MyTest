@@ -821,18 +821,18 @@
         }
         //服务端会同时下发cardType=9和cardType=16mcardType=15三种类型的卡片数据
         FHSuggestionResponseItemModel *model = nowsugListData[indexPath.row];
-        if(model.cardType == 18){
+        if(model.cardType == FHSearchCardTypeGuessYouWantTip){
             FHRecommendtHeaderViewCell *cell = (FHRecommendtHeaderViewCell *)[tableView dequeueReusableCellWithIdentifier:@"RecommendtHeaderCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.label.text = model.text;
             return cell;
-        }else if (model.cardType == 9) {
+        }else if (model.cardType == FHSearchCardTypeGuessYouWantTip) {
             FHHouseListRecommendTipCell *tipCell = (FHHouseListRecommendTipCell *)[tableView dequeueReusableCellWithIdentifier:@"tipcell" forIndexPath:indexPath];
             FHSearchGuessYouWantTipsModel *tipModel = [[FHSearchGuessYouWantTipsModel alloc] init];
             tipModel.text = model.text;
             [tipCell refreshWithData:tipModel];
             return tipCell;
-        } else if (model.cardType == 15) {
+        } else if (model.cardType == FHSearchCardTypeFindHouseHelper) {
             __weak typeof(self) weakSelf = self;
             FHFindHouseHelperCell *helperCell = (FHFindHouseHelperCell *)[tableView dequeueReusableCellWithIdentifier:@"helperCell" forIndexPath:indexPath];
             helperCell.cellTapAction = ^(NSString *url) {
@@ -840,7 +840,7 @@
             };
             [helperCell updateWithData:model];
             return helperCell;
-        }else if(model.cardType == 16) {
+        }else if(model.cardType == FHSuggestionItemCard) {
             // 新房
             if (model.houseType.intValue == FHHouseTypeNewHouse) {
                 FHSuggestionNewHouseItemCell *cell = (FHSuggestionNewHouseItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestNewItemCell" forIndexPath:indexPath];
@@ -914,7 +914,7 @@
         NSMutableArray<FHSuggestionResponseItemModel>  *nowsugListData = indexPath.section == 0 ?self.sugListData:self.othersugListData;
         if (indexPath.row < nowsugListData.count) {
             FHSuggestionResponseItemModel *model  = nowsugListData[indexPath.row];
-            if(model.cardType == 16){
+            if(model.cardType == FHSuggestionItemCard){
                 [self associateWordCellClick:model rank:model.rank];
             }
         }
@@ -1074,7 +1074,7 @@
         NSMutableArray<FHSuggestionResponseItemModel>  *nowsugListData = indexPath.section == 0 ? self.sugListData:self.othersugListData;
         if (indexPath.row < nowsugListData.count) {
             FHSuggestionResponseItemModel *model  = nowsugListData[indexPath.row];
-            if(model.cardType == 16){
+            if(model.cardType == FHSuggestionItemCard){
             [[self fatherVC] trackSugWordClickWithmodel:model eventName:@"search_detail_show"];
             }
         }
@@ -1351,7 +1351,7 @@
             [wself.sugListData addObjectsFromArray:model.data.items];
             if(model.data.otherItems.count > 0){
                 FHSuggestionResponseItemModel *tepmodel = [[FHSuggestionResponseItemModel alloc] init];
-                tepmodel.cardType = 18;
+                tepmodel.cardType = FHSearchCardTypeGuessYouWantTip;
                 FHSuggestionResponseItemModel *firstmodel = model.data.otherItems[0];
                 tepmodel.text = [self getTitletext:[firstmodel.houseType intValue]];
                 [wself.othersugListData addObject:tepmodel];
