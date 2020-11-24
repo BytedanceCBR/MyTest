@@ -14,7 +14,7 @@
 }
 
 - (void)performActivityWithCompletion:(BDUGActivityCompletionHandler _Nullable)completion {
-    NSString *desc = @"屏蔽成功，将减少类似推荐";
+    NSString *desc = @"将减少类似推荐";
     if(completion){
         completion(self,nil,desc);
     }
