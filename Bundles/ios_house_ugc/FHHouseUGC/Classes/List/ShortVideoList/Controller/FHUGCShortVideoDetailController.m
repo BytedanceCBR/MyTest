@@ -1514,19 +1514,22 @@ static const CGFloat kFloatingViewOriginY = 230;
 }
 
 - (NSDictionary *)shareParams {
+    FHFeedUGCCellModel *model = self.model;
+    NSDictionary *logPb = [model.logPb copy];
+    
     NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"group_id"] = model.groupId ?: @"be_bull";
+    params[@"group_source"] = logPb[@"group_source"] ?: @"be_bull";
+    params[@"impr_id"] = logPb[@"impr_id"] ?: @"be_bull";
+    params[@"origin_from"] = model.tracerDic[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = model.tracerDic[@"enter_from"] ?: @"be_null";
+    params[@"category_name"] = @"f_house_smallvideo_flow";
+    params[@"page_type"] = @"small_video_detail";
+
     NSDictionary *tracerDict = self.pageParams;
     NSDictionary *extraDic = tracerDict[@"extraDic"];
     if([extraDic isKindOfClass:[NSDictionary class]]) {
-        params[@"origin_from"] = extraDic[@"origin_from"] ?: @"be_null";
-    }
-    params[@"enter_from"] = tracerDict[@"enter_from"] ?: @"be_null";
-    params[@"page_type"] = [FHShortVideoTracerUtil pageType];
-    params[@"group_id"] = tracerDict[@"group_id"] ?: @"be_bull";
-    params[@"group_source"] = tracerDict[@"group_source"] ?: @"be_bull";
-    NSDictionary *logPb = extraDic[@"log_pb"];
-    if([logPb isKindOfClass:[NSDictionary class]]) {
-        params[@"impr_id"] = logPb[@"impr_id"] ?: @"be_null";
+        params[@"element_type"] = extraDic[@"element_type"] ?: @"be_null";
     }
     return params;
 }

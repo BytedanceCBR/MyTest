@@ -21,6 +21,7 @@
 #import "FHCollectContentItem.h"
 #import <TTIndicatorView.h>
 #import <FHUserTracker.h>
+#import "FHCommonDefines.h"
 
 @implementation FHShareDataModel
 
@@ -236,11 +237,13 @@
 }
 
 -(void)shareManager:(BDUGShareManager *)shareManager completedWith:(id<BDUGActivityProtocol>)activity sharePanel:(id<BDUGActivityPanelControllerProtocol>)panelController error:(NSError *)error desc:(NSString *)desc {
-    NSString *imageName = error ? @"close_popup_textpage.png" : @"doneicon_popup_textpage.png";
-    if(desc.length > 0) {
+    if(!IS_EMPTY_STRING(desc)) {
+        NSString *imageName = error ? @"close_popup_textpage.png" : @"doneicon_popup_textpage.png";
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:desc indicatorImage:[UIImage imageNamed:imageName] autoDismiss:YES dismissHandler:nil];
     }
-    
+}
+
+-(void)hasShareActivity:(id<BDUGActivityProtocol>)activity{
     if(self.tracerDict) {
         NSMutableDictionary *params = self.tracerDict.mutableCopy;
         params[@"platform"] = [self activityPlatform: activity];

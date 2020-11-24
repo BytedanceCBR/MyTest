@@ -13,6 +13,7 @@
 #import <UIViewAdditions.h>
 #import <BDUGActivityProtocol.h>
 #import <UIDevice+BTDAdditions.h>
+#import "FHShareManager.h"
 
 @interface FHActivityButton : UIButton
 @property (nonatomic,strong) id<BDUGActivityProtocol> activity;
@@ -190,6 +191,8 @@
         if([activityButton.activity respondsToSelector:@selector(setDataSource:)]) {
             [activityButton.activity setDataSource:nil];
         }
+        
+        [[FHShareManager shareInstance] hasShareActivity:activityButton.activity];
         
         WeakSelf;
         [activityButton.activity performActivityWithCompletion:^(id<BDUGActivityProtocol> activity, NSError *error, NSString *desc) {

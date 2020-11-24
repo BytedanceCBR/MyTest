@@ -10,6 +10,7 @@
 #import "FHReportContentItem.h"
 #import "FHIMContentItem.h"
 #import "FHCollectContentItem.h"
+#import <BDUGActivityProtocol.h>
 
 typedef NS_ENUM(NSInteger, FHShareChannelType)
 {
@@ -52,6 +53,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)addCustomShareActivity;
 - (void)showSharePanelWithModel:(FHShareContentModel *)model tracerDict:(NSDictionary *)tracerDict;
 - (BOOL)isShareOptimization;
+- (void)hasShareActivity:(id<BDUGActivityProtocol>)activity;
 @end
 
 NS_ASSUME_NONNULL_END
