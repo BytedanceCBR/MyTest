@@ -860,6 +860,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 4) {
         self.detailController.isLoadingData = NO;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;
         //  同小区房源
         if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
@@ -916,7 +917,10 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         }
          self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];
         //
-        [self reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self reloadData];
+            });
+        });
     }
 }
 
