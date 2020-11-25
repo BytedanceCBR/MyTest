@@ -51,12 +51,12 @@ static const char tabSwitchedKey;
 
 - (void)trackSugWordClickWithmodel:(FHSuggestionResponseItemModel *)model eventName:(nonnull NSString *)eventName{
     NSMutableDictionary *parameters =  [NSMutableDictionary dictionaryWithDictionary:self.sugWordShowtracerDic];
-    parameters[@"rank"] = @(model.rank);
-    parameters[@"log_pb"] = model.logPb;
+    parameters[@"rank"] = @(model.rank) ?: 0;
+    [parameters btd_objectForKey:model.logPb default:@"be_null"];
     parameters[@"word_text"] = [model.houseType intValue] == FHHouseTypeNewHouse? model.text:model.name;
-    parameters[@"group_id"] = model.info.qrecid;
+    parameters[@"group_id"] = model.info.qrecid ?: @"be_null";
     parameters[@"element_type"] = @"search";
-    parameters[@"recall_type"] = model.recallType;
+    parameters[@"recall_type"] = model.recallType ?: @"be_null";
     if([eventName isEqualToString:@"search_detail_show"]){
         [parameters removeObjectForKey:@"result_num"];
         [parameters removeObjectForKey:@"differ_result_num"];
@@ -122,7 +122,7 @@ static const char tabSwitchedKey;
     [FHUserTracker writeEvent:TrackEventSuggestionResultShow params:self.sugWordShowtracerDic];
 //    TRACK_EVENT(TrackEventSuggestionResultShow,self.sugWordShowtracerDic);
 }
-
+//cardtype == 16是sug词对应可以跳转列表页cell/详情页cell卡片
 - (NSInteger)getDifferResultnum:(NSArray *)resultArray houseType:(NSInteger)houseType{
     NSArray *filteredOtherResultArray = [resultArray filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
         if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;

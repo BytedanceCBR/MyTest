@@ -544,12 +544,12 @@
         }
     }
     if([model.houseType intValue] != self.houseType){
-        tracer[@"element_from"] = [self elementFromNameByHouseType:[model.houseType intValue]];
+        tracer[@"element_from"] = [self relatedRecommendelEmentFromNameByHouseType:[model.houseType intValue]];
     }
     if(model.setHistory){
         [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:nil];
-        tracer[@"element_from"] = [model.houseType intValue] == self.houseType ? @"associate" : [self elementFromNameByHouseType:[model.houseType intValue]];
-        tracer[@"log_pb"] = model.logPb;
+        tracer[@"element_from"] = [model.houseType intValue] == self.houseType ? @"associate" : [self relatedRecommendelEmentFromNameByHouseType:[model.houseType intValue]];
+        tracer[@"log_pb"] = model.logPb ?: @"be_null";
         tracer[@"card_type"] = @"left_pic";
         tracer[@"rank"] = [NSString stringWithFormat: @"%zi",rank];
     }
@@ -697,8 +697,8 @@
     }
     return @"be_null";
 }
-
-- (NSString *)elementFromNameByHouseType:(NSInteger)houseType{
+//与相关推荐xx房有关的卖点事件的value
+- (NSString *)relatedRecommendelEmentFromNameByHouseType:(NSInteger)houseType{
     if(houseType == FHHouseTypeNewHouse){
         return @"related_new_recommend";
     }else if(houseType == FHHouseTypeSecondHandHouse){
@@ -850,6 +850,11 @@
                 
                 cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1]  font:[UIFont themeFontSemibold:16]];
                 cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1]  font:[UIFont themeFontRegular:14]];
+                if([model.text2 length] <= 0){
+                    [cell.secondarySubLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.centerY.mas_equalTo(cell.label);
+                    }];
+                }
                 cell.sepLine.hidden = indexPath.row == nowsugListData.count - 1;
                 if(model.newtip){
                     cell.secondaryLabel.text = model.newtip.content;
@@ -964,9 +969,17 @@
             }else if (model.cardType == 15) {  //帮我找房卡片高度
                 return 93;
             }else if (model.houseType.intValue == FHHouseTypeNewHouse) {// 新房
-                return 67;
+                if([model.text2 length] <= 0){
+                    return 46.5;
+                }else{
+                    return  67;
+                }
             } else  if (model.houseType.intValue == FHHouseTypeSecondHandHouse) {// 二手房
-                return 68;
+                if([model.tag length]){
+                    return 68;
+                }else{
+                    return 46.5;
+                    }
             }else {
                 if (indexPath.row == nowsugListData.count - 1) {
                     return 61;
@@ -1345,7 +1358,7 @@
     __weak typeof(self) wself = self;
     self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
-            self.jumpHouseType = model.data.jumpHouseType;// 构建数据源
+            wself.jumpHouseType = model.data.jumpHouseType;// 构建数据源
             [wself.sugListData removeAllObjects];
             [wself.othersugListData removeAllObjects];
             [wself.sugListData addObjectsFromArray:model.data.items];
@@ -1353,7 +1366,7 @@
                 FHSuggestionResponseItemModel *tepmodel = [[FHSuggestionResponseItemModel alloc] init];
                 tepmodel.cardType = 18;
                 FHSuggestionResponseItemModel *firstmodel = model.data.otherItems[0];
-                tepmodel.text = [self getTitletext:[firstmodel.houseType intValue]];
+                tepmodel.text = [wself getTitletext:[firstmodel.houseType intValue]];
                 [wself.othersugListData addObject:tepmodel];
                 [wself.othersugListData addObjectsFromArray:model.data.otherItems];
             }
