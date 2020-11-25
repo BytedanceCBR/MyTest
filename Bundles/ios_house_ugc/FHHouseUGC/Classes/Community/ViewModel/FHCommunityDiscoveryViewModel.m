@@ -35,15 +35,22 @@
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(FHCommunityViewController *)viewController {
     self = [super initWithCollectionView:collectionView controller:viewController];
     
-    if ([FHEnvContext isCurrentCityNormalOpen]) {
-        self.currentTabIndex = 1;
-    }else{
+    if (self.viewController.isInHomePage) {
         self.currentTabIndex = 0;
+    }else{
+        self.currentTabIndex = 1;
     }
     
     collectionView.delegate = self;
     collectionView.dataSource = self;
     [self initDataArray];
+    
+    if(self.currentTabIndex > (self.dataArray.count - 1)){
+        self.currentTabIndex = self.dataArray.count - 1;
+        if(self.currentTabIndex < 0){
+            self.currentTabIndex = 0;
+        }
+    }
     
     return self;
 }
@@ -114,8 +121,17 @@
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        
+        if(!self.viewController.isInHomePage){
+            if(self.currentTabIndex == 0){
+                self.viewController.publishBtn.hidden = YES;
+            }else{
+                self.viewController.publishBtn.hidden = NO;
+            }
+        }
     }
 }
+
 
 - (void)initCell:(NSString *)enterType {
     if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityDiscoveryCell class]]){
@@ -123,7 +139,7 @@
         FHCommunityDiscoveryCell *cell = (FHCommunityDiscoveryCell *)self.cellArray[self.currentTabIndex];
         cell.enterType = enterType;
         
-        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
         if(self.currentTabIndex == index){
             cell.withTips = self.viewController.hasFocusTips;
         }else{
@@ -284,6 +300,14 @@
     }
     
     [self initCell:@"flip"];
+    
+    if(!self.viewController.isInHomePage){
+        if(self.currentTabIndex == 0){
+            self.viewController.publishBtn.hidden = YES;
+        }else{
+            self.viewController.publishBtn.hidden = NO;
+        }
+    }
 }
 
 - (NSString *)pageType {

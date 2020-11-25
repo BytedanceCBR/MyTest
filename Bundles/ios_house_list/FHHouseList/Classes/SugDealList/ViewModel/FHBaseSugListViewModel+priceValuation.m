@@ -19,7 +19,7 @@
     self.highlightedText = query;
     __weak typeof(self) wself = self;
     
-    self.sugHttpTask = [FHHouseListAPI requestSuggestionOnlyNeiborhoodCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+    self.sugHttpTask = [FHHouseListAPI requestSuggestionOnlyNeiborhoodCityId:cityId houseType:houseType query:query class:[FHOtherSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHOtherSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (error.code == NSURLErrorCancelled) {
             return ;
         }
@@ -27,7 +27,7 @@
         wself.sugListData = nil;
         if (model != NULL && error == NULL) {
             // 构建数据源
-            wself.sugListData = model.data.items;
+            wself.sugListData = model.data;
             wself.listController.hasValidateData = YES;
             [wself reloadSugTableView];
         } else {

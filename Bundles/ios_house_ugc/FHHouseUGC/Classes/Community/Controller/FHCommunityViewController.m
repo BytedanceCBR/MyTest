@@ -193,9 +193,9 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
+//    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
         [self.viewModel viewWillDisappear];
-    }
+//    }
     
     if (self.loginTipview) {
          [self.loginTipview pauseTimer];
@@ -203,17 +203,17 @@
     if(!self.isInHomePage){
         [self addStayCategoryLog:self.stayTime];
     }else{
-        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
-            [self viewDisAppearForEnterType:1 needReportSubCategory:NO];
-        }
+//        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+//            [self viewDisAppearForEnterType:1 needReportSubCategory:NO];
+//        }
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
+//    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
         [self.viewModel viewWillAppear];
-    }
+//    }
     
     [self initLoginTipView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
@@ -237,9 +237,18 @@
         }
     }
     
-    if(self.isInHomePage){
-        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
-            [self viewAppearForEnterType:1 needReportSubCategory:NO];
+//    if(self.isInHomePage){
+//        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+//            [self viewAppearForEnterType:1 needReportSubCategory:NO];
+//        }
+//    }
+    
+    //视频tab，隐藏发布按钮
+    if(!self.isInHomePage){
+        if(self.viewModel.currentTabIndex == 0){
+            self.publishBtn.hidden = YES;
+        }else{
+            self.publishBtn.hidden = NO;
         }
     }
 }

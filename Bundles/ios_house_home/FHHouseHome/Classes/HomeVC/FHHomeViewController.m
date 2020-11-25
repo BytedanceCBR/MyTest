@@ -40,6 +40,7 @@
 #import "FHUGCCategoryManager.h"
 #import "NSObject+FHTracker.h"
 #import "FHUserTracker.h"
+#import "FHHomeRenderFlow.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -69,6 +70,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self = [super init];
     if (self) {
         _isMainTabVC = YES;
+        [[FHHomeRenderFlow sharedInstance] traceHomeInit];
     }
     return self;
 }
@@ -76,6 +78,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[FHHomeRenderFlow sharedInstance] traceHomeViewDidLoad];
     self.ttNeedIgnoreZoomAnimation = YES;
 
     self.ttTrackStayEnable = YES;
