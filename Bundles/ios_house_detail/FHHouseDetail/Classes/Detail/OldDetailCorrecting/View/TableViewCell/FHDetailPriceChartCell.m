@@ -324,7 +324,6 @@
         make.height.mas_equalTo(207);
         make.bottom.mas_equalTo(self.chartBgView).offset(-20);
     }];
-    self.chartView.backgroundColor = [UIColor whiteColor];
 
 //    [self updateChartConstraints:NO];
 //    [FHUtils addShadowToView:self.priceView withOpacity:0.1 shadowColor:[UIColor blackColor] shadowOffset:CGSizeMake(0, 2) shadowRadius:6 andCornerRadius:4];

@@ -77,7 +77,6 @@
     
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.isShowLoadMore = YES;
-    _headerView.label.backgroundColor = [UIColor whiteColor];
     [self.headerView addTarget:self action:@selector(moreButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.containerView addSubview:_headerView];
     [self.containerView addSubview:_tableView];
