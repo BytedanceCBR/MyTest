@@ -25,6 +25,7 @@ DEC_TASK("FHShareWeChatTask",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
 -(void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [BDUGWeChatShare sharedWeChatShare].delegate =(id <BDUGWechatShareDelegate>) [UIApplication sharedApplication].delegate;
     [BDUGWeChatShare registerWithID:[SharedAppDelegate weixinAppID] universalLink:@"https://i.haoduofangs.com/"];
+    [BDUGWeChatShare registerWechatShareIDIfNeeded];
 }
 
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
