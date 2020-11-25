@@ -62,6 +62,7 @@
         __block CGFloat leftOffset = 15;
         [model.coreInfo enumerateObjectsUsingBlock:^(FHDetailOldDataCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             FHDetailHouseCoreInfoItemView *itemView = [[FHDetailHouseCoreInfoItemView alloc] init];
+            itemView.backgroundColor = [UIColor whiteColor];
             NSMutableAttributedString *text = [[NSMutableAttributedString alloc]initWithString:obj.value.length>obj.attr.length?obj.value:obj.attr attributes:@{NSFontAttributeName: [UIFont themeFontDINAlternateBold:22]}];
             CGSize textSize =[self getStringRect:text size:CGSizeMake(CGFLOAT_MAX, 14)];
             [self.contentView addSubview:itemView];
@@ -143,12 +144,14 @@
 - (void)setupUI {
     _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:22];
     _keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
+    _keyLabel.backgroundColor = [UIColor whiteColor];
 //    _keyLabel.font = [UIFont themeFontMedium:22];
     _keyLabel.font =  [UIFont themeFontDINAlternateBold:[UIScreen mainScreen].bounds.size.width<375?20:22];
     [self addSubview:_keyLabel];
     
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
     _valueLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
+    _valueLabel.backgroundColor = [UIColor whiteColor];
     [self addSubview:_valueLabel];
     
     _lineView = [[UIView alloc]init];

@@ -75,6 +75,7 @@
         UIView *tagBacView = [[UIView alloc]init];
         tagBacView.clipsToBounds = YES;
         [self addSubview:tagBacView];
+        tagBacView.backgroundColor = [UIColor whiteColor];
         _tagBacView = tagBacView;
     }
     return _tagBacView;
@@ -87,6 +88,7 @@
         nameLabel.font = [UIFont themeFontMedium:24];
         nameLabel.numberOfLines = 2;
         [self addSubview:nameLabel];
+        nameLabel.backgroundColor = [UIColor whiteColor];
         _nameLabel = nameLabel;
     }
     return _nameLabel;

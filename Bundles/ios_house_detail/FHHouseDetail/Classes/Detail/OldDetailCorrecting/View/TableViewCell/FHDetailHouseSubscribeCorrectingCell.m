@@ -49,7 +49,7 @@
     }
     self.currentData = data;
     FHDetailHouseSubscribeCorrectingModel *model = (FHDetailHouseSubscribeCorrectingModel *)data;
-    self.shadowImage.image = model.shadowImage;
+    self.shadowImage.image =  model.shadowImage;
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.contentView);

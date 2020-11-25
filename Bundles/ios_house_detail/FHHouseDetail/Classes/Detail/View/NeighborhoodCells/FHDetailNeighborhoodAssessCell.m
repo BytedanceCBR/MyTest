@@ -56,9 +56,11 @@
     
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
+    _containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:20] textColor:[UIColor themeGray1]];
+    _titleLabel.backgroundColor = [UIColor whiteColor];
     _titleLabel.text = @"小区攻略";
     [self.containerView addSubview:_titleLabel];
 

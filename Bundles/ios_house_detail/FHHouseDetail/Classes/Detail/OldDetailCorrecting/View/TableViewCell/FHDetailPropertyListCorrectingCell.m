@@ -407,10 +407,11 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 }
 
 - (void)setupUI {
+    self.backgroundColor = [UIColor whiteColor];
     _nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _nameLabel.textColor = [UIColor themeGray3];
     [self addSubview:_nameLabel];
-
+    _nameLabel.backgroundColor = [UIColor whiteColor];
     
     _infoLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _infoLabel.font = [UIFont themeFontMedium:14];

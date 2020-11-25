@@ -370,6 +370,7 @@
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.label.text = @"推荐经纪人";
+    _headerView.label.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.shadowImage).offset(20);
@@ -379,6 +380,7 @@
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
+    self.containerView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
