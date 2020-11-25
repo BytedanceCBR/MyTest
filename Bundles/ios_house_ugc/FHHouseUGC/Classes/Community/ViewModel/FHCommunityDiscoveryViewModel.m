@@ -121,8 +121,17 @@
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        
+        if(!self.viewController.isInHomePage){
+            if(self.currentTabIndex == 0){
+                self.viewController.publishBtn.hidden = YES;
+            }else{
+                self.viewController.publishBtn.hidden = NO;
+            }
+        }
     }
 }
+
 
 - (void)initCell:(NSString *)enterType {
     if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityDiscoveryCell class]]){
@@ -291,6 +300,14 @@
     }
     
     [self initCell:@"flip"];
+    
+    if(!self.viewController.isInHomePage){
+        if(self.currentTabIndex == 0){
+            self.viewController.publishBtn.hidden = YES;
+        }else{
+            self.viewController.publishBtn.hidden = NO;
+        }
+    }
 }
 
 - (NSString *)pageType {

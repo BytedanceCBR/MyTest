@@ -242,6 +242,15 @@
 //            [self viewAppearForEnterType:1 needReportSubCategory:NO];
 //        }
 //    }
+    
+    //视频tab，隐藏发布按钮
+    if(!self.isInHomePage){
+        if(self.viewModel.currentTabIndex == 0){
+            self.publishBtn.hidden = YES;
+        }else{
+            self.publishBtn.hidden = NO;
+        }
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
