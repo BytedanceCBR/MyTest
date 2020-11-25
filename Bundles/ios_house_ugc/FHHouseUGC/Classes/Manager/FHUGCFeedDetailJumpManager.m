@@ -334,11 +334,11 @@
 
 //小视频
 - (void)jumpToSmallVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
-    [self jumpToSmallVideoDetail:cellModel otherVideos:nil showComment:showComment enterType:enterType extraDic:extraDic];
+    [self jumpToSmallVideoDetail:cellModel otherVideos:nil showComment:showComment enterType:enterType extraDic:extraDic isShowCurrentVideo:YES];
 }
 
 //小视频
-- (void)jumpToSmallVideoDetail:(FHFeedUGCCellModel *)cellModel otherVideos:(NSArray<FHFeedUGCCellModel *> *)otherVideos showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
+- (void)jumpToSmallVideoDetail:(FHFeedUGCCellModel *)cellModel otherVideos:(NSArray<FHFeedUGCCellModel *> *)otherVideos showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic isShowCurrentVideo:(BOOL)isShowCurrentVideo {
 //    if (![TTReachability isNetworkConnected]) {
 //        [[ToastManager manager] showToast:@"网络异常"];
 //        return;
@@ -354,7 +354,7 @@
 //        return [self currentSelectSmallVideoView];
 //    }];
     NSMutableDictionary *info = [NSMutableDictionary dictionaryWithCapacity:2];
-    if(cellModel){
+    if(cellModel && isShowCurrentVideo){
         [info setValue:cellModel forKey:@"current_video"];
     }
     if(otherVideos){

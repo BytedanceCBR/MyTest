@@ -139,6 +139,7 @@
                  type == FHUGCFeedListCellTypeUGCVote ||
                  type == FHUGCFeedListCellTypeUGCSmallVideo ||
                  type == FHUGCFeedListCellTypeUGCSmallVideo2 ||
+                 type == FHUGCFeedListCellTypeUGCSmallVideo3 ||
                  type == FHUGCFeedListCellTypeUGCVoteInfo ||
                  type == FHUGCFeedListCellTypeUGCRecommendCircle ||
                  type == FHUGCFeedListCellTypeUGCEncyclopedias ){
@@ -767,6 +768,16 @@
         [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:3];
         }else {
         [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
+        }
+    } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo3){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeSmallVideoList;
+        if (model.data.count > 0) {
+            NSMutableArray *videoModelArr = [[NSMutableArray alloc]init];
+            for (id content in model.data) {
+                FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:content];
+                [videoModelArr addObject:cellmodel];
+            }
+            cellModel.videoList = [videoModelArr copy];
         }
     } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCRecommendCircle) {
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommendCircle;

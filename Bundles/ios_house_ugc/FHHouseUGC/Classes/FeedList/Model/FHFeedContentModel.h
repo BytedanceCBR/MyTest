@@ -852,6 +852,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, strong , nullable) FHFeedContentImageListModel *middleImage ;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *imageList;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *largeImageList;
+@property (nonatomic, strong , nullable) NSArray *data;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *sourceDesc;
 @property (nonatomic, strong , nullable) FHFeedContentCommunityModel *community ;

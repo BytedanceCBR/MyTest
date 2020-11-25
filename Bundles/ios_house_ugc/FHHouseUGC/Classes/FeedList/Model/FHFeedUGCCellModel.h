@@ -270,9 +270,11 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, strong , nullable) FHFeedContentRawDataCommentBaseActionModel *videoAction;
 @property (nonatomic, strong , nullable) FHFeedContentRawDataSmallVideoShareModel *share;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *animatedImageList;
+@property (nonatomic, strong , nullable) NSArray<FHFeedUGCCellModel *> *videoList;
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, assign ) BOOL userRepin;
 @property (nonatomic, copy, nullable) NSString *videoSourceIcon;
+
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 
