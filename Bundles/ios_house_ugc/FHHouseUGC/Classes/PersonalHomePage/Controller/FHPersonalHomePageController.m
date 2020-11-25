@@ -333,7 +333,7 @@
         clickParams[@"click_position"] = @"blacklist";
         [FHUserTracker writeEvent:@"click_options" params:clickParams];
         
-        UIAlertController *dislikeConfirmActionSheet = [UIAlertController alertControllerWithTitle:@"拉黑后，无法进行评论回复和点赞" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertController *dislikeConfirmActionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         UIAlertAction *dislikeConfirmAction = [UIAlertAction actionWithTitle:@"确认拉黑" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
             [[ToastManager manager] showToast:@"已拉黑该用户"];
             clickParams[@"click_position"] = @"confirm_blacklist";
