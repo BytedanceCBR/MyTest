@@ -1114,19 +1114,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
 }
 
-+ (BOOL)isNewDiscovery {
-    return NO;
-}
-
 + (BOOL)isHomeNewDiscovery {
     return YES;
 }
 
 + (BOOL)isHasVideoList {
-    return YES;
-}
-
-+ (BOOL)isHasShortVideoList {
     return YES;
 }
 

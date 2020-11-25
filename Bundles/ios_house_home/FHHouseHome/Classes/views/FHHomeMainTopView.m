@@ -80,13 +80,6 @@ static const float kMapSearchBtnRightPading = 50;
     _searchBtn.hidden = YES;
     _searchBtn.hitTestEdgeInsets =  UIEdgeInsetsMake(-5, -5, -5, -5);
     [self addSubview:_searchBtn];
-    
-//    WeakSelf;
-//    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
-//        StrongSelf;
-//        [self showUnValibleCity];
-//    }];
-        
 }
 
 - (void)updateMapSearchBtn
@@ -153,7 +146,7 @@ static const float kMapSearchBtnRightPading = 50;
 
 - (void)setupSetmentedControl {
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
-    
+    _segmentControl.hidden = YES;
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
                                           NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
