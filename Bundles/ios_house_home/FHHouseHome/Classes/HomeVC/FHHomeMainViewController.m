@@ -321,9 +321,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
     if (isShowHouse) {
         self.collectionView.scrollEnabled = NO;
     }
-    self.topView.houseSegmentControl.hidden = !isShowHouse;
-    self.topView.searchPanelView.hidden = isShowHouse;
+    
     [self changeTopSearchBtn:isShowHouse];
+
 }
 
 - (void)changeTopSearchBtn:(BOOL)isShow {

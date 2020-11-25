@@ -23,6 +23,7 @@
 #import "TTDeviceHelper.h"
 #import "FHUserTracker.h"
 #import "NSObject+FHTracker.h"
+#import <ByteDanceKit.h>
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
@@ -488,31 +489,40 @@ static const float kMapSearchBtnRightPading = 50;
         return;
     }
     
-    if(isShowSearchBtn){
-        self.searchBtn.hidden = NO;
-        self.mapSearchLabel.hidden = YES;
-        
-        [UIView animateWithDuration:1 animations:^{
+    self.searchBtn.hidden = NO;
+    self.mapSearchLabel.hidden = isShowSearchBtn;
+    self.houseSegmentControl.hidden = NO;
+    self.searchPanelView.hidden = NO;
+    [UIView animateWithDuration:0.25 animations:^{
+        if(isShowSearchBtn){
             self.searchBtn.alpha = 1;
-            [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.right.equalTo(self).offset(-kMapSearchBtnRightPading - ([TTDeviceHelper isScreenWidthLarge320] ? 10 : -3));
-                make.centerY.equalTo(self.searchBtn).offset(0);
-                make.width.height.mas_equalTo(20);
+            self.mapSearchLabel.alpha = 0;
+            self.houseSegmentControl.alpha = 1;
+            self.searchPanelView.alpha = 0;
+            [self.mapSearchBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.right.equalTo(self).offset(-kMapSearchBtnRightPading - ( [UIDevice btd_isScreenWidthLarge320] ? 10 : -3));
             }];
-        }];
-    }else
-    {
-        self.searchBtn.hidden = YES;
-        self.mapSearchLabel.hidden = NO;
-        
-        [UIView animateWithDuration:1 animations:^{
-            [_mapSearchBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            [self.mapSearchLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(0);
+            }];
+        }
+        else {
+            self.searchBtn.alpha = 0;
+            self.mapSearchLabel.alpha = 1;
+            self.houseSegmentControl.alpha = 0;
+            self.searchPanelView.alpha = 1;
+            [self.mapSearchBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
-                make.centerY.equalTo(self.searchBtn).offset(0);
-                make.width.height.mas_equalTo(20);
             }];
-        }];
-    }
+            [self.mapSearchLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.width.mas_equalTo(40);
+            }];
+        }
+        [self.mapSearchBtn setNeedsLayout];
+        [self.mapSearchBtn layoutIfNeeded];
+        [self.mapSearchLabel setNeedsLayout];
+        [self.mapSearchLabel layoutIfNeeded];
+    }];
     
     self.isShowSearchBtn = isShowSearchBtn;
 }
