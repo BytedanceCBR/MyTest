@@ -261,9 +261,8 @@
                 cell.backgroundColor = [UIColor clearColor];
             }
             if (cell) {
-                cell.frame = CGRectMake(0, 0, tableView.frame.size.width, cell.frame.size.height);
                 cell.baseViewModel = self;
-                [cell refreshWithData:data];
+                [(FHDetailBaseCell *)cell refreshWithData:self.items[indexPath.row]];
                 return cell;
             }else{
                 NSLog(@"nil cell for data: %@",data);
@@ -298,7 +297,7 @@
     if (cellHeight) {
         return [cellHeight floatValue];
     }
-    return UITableViewAutomaticDimension;
+    return 200;
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -306,6 +305,7 @@
         //当前是列表页带入的数据，不上报埋点
         return;
     }
+
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
