@@ -101,10 +101,7 @@
 }
 
 - (void)gotoMore {
-    if (self.datas.count > 0 ) {
-        FHFeedUGCCellModel *currentVideo = self.datas[0];
-        [self.detailJumpManager jumpToSmallVideoDetail:currentVideo otherVideos:nil showComment:NO enterType:@"feed_content_blank" extraDic:nil isShowCurrentVideo:NO];
-    }
+    [self.detailJumpManager jumpToSmallVideoDetail:self.currentModel otherVideos:@[] showComment:NO enterType:@"feed_content_blank" extraDic:@{} isShowCurrentVideo:NO];
 }
 
 #pragma mark - collection
@@ -139,7 +136,7 @@
         [otherVideos removeObject:videoModel];
     }
     [otherVideos removeObject:currentVideo];
-    [self.detailJumpManager jumpToSmallVideoDetail:currentVideo otherVideos:otherVideos showComment:NO enterType:@"feed_content_blank" extraDic:nil isShowCurrentVideo:YES];
+    [self.detailJumpManager jumpToSmallVideoDetail:currentVideo otherVideos:otherVideos showComment:NO enterType:@"feed_content_blank" extraDic:@{} isShowCurrentVideo:YES];
 }
 
 // house_show埋点
@@ -155,6 +152,7 @@
         return;
     }
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    self.currentModel = cellModel;
     self.datas = [cellModel.videoList mutableCopy];
     [self.mainCollection reloadData];
 }

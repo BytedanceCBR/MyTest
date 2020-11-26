@@ -778,6 +778,11 @@
                 [videoModelArr addObject:cellmodel];
             }
             cellModel.videoList = [videoModelArr copy];
+        }else {
+            return nil;
+        }
+        if ([model.showMore objectForKey:@"url"]) {
+            cellModel.openUrl = [model.showMore objectForKey:@"url"];
         }
     } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCRecommendCircle) {
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommendCircle;

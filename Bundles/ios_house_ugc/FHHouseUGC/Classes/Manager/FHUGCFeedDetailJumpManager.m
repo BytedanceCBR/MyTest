@@ -334,7 +334,7 @@
 
 //小视频
 - (void)jumpToSmallVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic {
-    [self jumpToSmallVideoDetail:cellModel otherVideos:nil showComment:showComment enterType:enterType extraDic:extraDic isShowCurrentVideo:YES];
+    [self jumpToSmallVideoDetail:cellModel otherVideos:@[] showComment:showComment enterType:enterType extraDic:extraDic isShowCurrentVideo:YES];
 }
 
 //小视频

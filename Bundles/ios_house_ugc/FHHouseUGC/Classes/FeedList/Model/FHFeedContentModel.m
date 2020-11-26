@@ -205,7 +205,8 @@
     @"isStick": @"is_stick",
     @"stickStyle": @"stick_style",
     @"originType": @"origin_type",
-    @"subRawDatas": @"sub_raw_datas"
+    @"subRawDatas": @"sub_raw_datas",
+    @"showMore": @"show_more"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
