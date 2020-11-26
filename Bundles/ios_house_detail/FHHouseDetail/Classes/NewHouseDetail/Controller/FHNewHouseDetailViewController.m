@@ -336,11 +336,7 @@
             return;
         }
         if (change[NSKeyValueChangeNewKey] && [change[NSKeyValueChangeNewKey] isKindOfClass:[NSArray class]]) {
-            [weakSelf updateTitleNames];
-            weakSelf.detailFlowLayout.sectionModels = weakSelf.viewModel.sectionModels;
-            [weakSelf.listAdapter performUpdatesAnimated:NO
-                                              completion:^(BOOL finished) {
-            }];
+            [weakSelf sectionModelsDidUpdate];
         }
     }];
 
@@ -365,9 +361,11 @@
     }];
 }
 
-- (void)updateTitleNames {
+- (void)sectionModelsDidUpdate {
+    
     NSMutableArray *titles = [NSMutableArray array];
-    for (FHNewHouseDetailSectionModel *model in self.viewModel.sectionModels) {
+    NSArray *sectionModels = self.viewModel.sectionModels.copy;
+    for (FHNewHouseDetailSectionModel *model in sectionModels) {
         switch (model.sectionType) {
             case FHNewHouseDetailSectionTypeHeader:
                 
@@ -414,7 +412,13 @@
     if (self.segmentTitleView.selectIndex == 0) {
         self.segmentTitleView.selectIndex = 0;
     }
+    
+    self.detailFlowLayout.sectionModels = sectionModels;
+    [self.listAdapter performUpdatesAnimated:NO
+                                      completion:^(BOOL finished) {
+    }];
 }
+
 
 - (void)scrollToCurrentIndex:(NSInteger )toIndex {
     NSString *title = self.segmentTitleView.titleNames[toIndex];
@@ -468,7 +472,7 @@
         return;
     }
     self.lastIndexPath = [NSIndexPath indexPathForItem:0 inSection:index];
-    FHNewHouseDetailSectionModel *model = self.viewModel.sectionModels[index];
+    FHNewHouseDetailSectionModel *model = sectionModels[index];
     [self clickTabTrackWithEnterType:@"click" sectionType:model.sectionType];
     UICollectionViewLayoutAttributes *attributes = [self.detailFlowLayout layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:self.lastIndexPath];
     if (attributes.frame.size.height < 0.1) {
@@ -721,7 +725,7 @@
  */
 - (NSArray<id<IGListDiffable>> *)objectsForListAdapter:(IGListAdapter *)listAdapter
 {
-    return self.viewModel.sectionModels;
+    return self.viewModel.sectionModels.copy;
 }
 
 /**
@@ -900,9 +904,13 @@
     NSArray *attributesArray = [self.detailFlowLayout layoutAttributesForElementsInRect:CGRectMake(centerPoint.x, centerPoint.y, 1, 1)];
     UICollectionViewLayoutAttributes *attributes = attributesArray.firstObject;
     NSIndexPath *indexPath = attributes.indexPath;
+    NSArray *sectionModels = self.viewModel.sectionModels.copy;
     if (indexPath && self.lastIndexPath.section != indexPath.section) {
         self.lastIndexPath = indexPath;
-        FHNewHouseDetailSectionModel *model = self.viewModel.sectionModels[indexPath.section];
+        if (indexPath.section >= sectionModels.count) {
+            return;
+        }
+        FHNewHouseDetailSectionModel *model = sectionModels[indexPath.section];
         NSString *title = @"";
         switch (model.sectionType) {
             case FHNewHouseDetailSectionTypeHeader:
