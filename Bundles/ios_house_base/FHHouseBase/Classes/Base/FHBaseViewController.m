@@ -47,8 +47,8 @@
         self.needRemoveLastVC = NO;
         self.isResetStatusBar = YES;
         self.ttDisableDragBack = NO;
-//        self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-        self.ttDragBackLeftEdge = TTNavigationControllerDefaultSwapLeftEdge;
+//        self.ttDragBackLeftEdge = TTNavigationControllerDefaultSwapLeftEdge; //屏幕边缘左滑
+        self.ttDragBackLeftEdge = 0; //全屏
 
         self.titleName = [paramObj.allParams objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
