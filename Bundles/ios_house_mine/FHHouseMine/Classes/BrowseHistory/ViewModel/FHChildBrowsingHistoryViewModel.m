@@ -31,6 +31,8 @@
 #import "FHBrowsingHistorySecondCell.h"
 #import "UITableView+FHHouseCard.h"
 #import "FHBrowsingHistoryCardUtils.h"
+#import "NSObject+FHTracker.h"
+#import "FHHouseNewComponentViewModel.h"
 
 @interface FHChildBrowsingHistoryViewModel()<FHBrowsingHistoryEmptyViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -145,9 +147,18 @@
         [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj isKindOfClass:[NSDictionary class]]) {
                 id item = [self historyItemModelByDict:obj];
-                NSObject *entity = [FHBrowsingHistoryCardUtils getEntityFromModel:item];
-                if (entity) {
-                    item = entity;
+                if ([item isKindOfClass:[FHSearchHouseItemModel class]]) {
+                    FHSearchHouseItemModel *theItem = (FHSearchHouseItemModel *)item;
+                    NSObject *entity = [FHBrowsingHistoryCardUtils getEntityFromModel:item];
+                    
+                    if (entity) {
+                        FHTracerModel *tracerModel = [[FHTracerModel alloc] init];
+                        tracerModel.logPb = theItem.logPb;
+                        tracerModel.imprId = theItem.imprId;
+                        tracerModel.Id = theItem.id;
+                        entity.fh_trackModel = tracerModel;
+                        item = entity;
+                    }
                 }
                 [self.historyList addObject:item];
             }
@@ -351,7 +362,7 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < _historyList.count) {
         id cellModel = _historyList[row];
-        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]] || [cellModel isKindOfClass:[FHHouseNewComponentViewModel class]]) {
             [self showHouseDetail:cellModel atIndex:row];
         }
     }
@@ -361,7 +372,7 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < _historyList.count) {
         id cellModel = _historyList[row];
-        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]] || [cellModel isKindOfClass:[FHHouseNewComponentViewModel class]]) {
             [self addHouseShowLog:cellModel withRank:row];
         }
     }
@@ -416,28 +427,40 @@
 }
 
 -(void)showHouseDetail:(id)cellModel atIndex:(NSInteger)index {
-    if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
-        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
+
+    if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]] || [cellModel isKindOfClass:[FHHouseNewComponentViewModel class]]) {
+        
+        NSDictionary *logPb;
+        NSString *houseId;
+        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+            FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
+            logPb = model.logPb ? : @{};
+            houseId = model.id;
+        } else if ([cellModel isKindOfClass:[FHHouseNewComponentViewModel class]]) {
+            FHHouseNewComponentViewModel *model = (FHHouseNewComponentViewModel *)cellModel;
+            logPb = model.fh_trackModel.logPb ? : @{};
+            houseId = model.fh_trackModel.Id;
+        }
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         NSString *urlStr = nil;
         params[@"card_type"] = @"left_pic";
         params[UT_ENTER_FROM] = [self getPageType:self.houseType];
         params[UT_ORIGIN_FROM] = self.viewController.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
         params[UT_SEARCH_ID] = self.searchId ?: @"be_null";
-        params[UT_LOG_PB] = model.logPb;
+        params[UT_LOG_PB] = logPb;
         params[UT_RANK] = @(index);
         switch (self.houseType) {
             case FHHouseTypeRentHouse:
-                urlStr = [NSString stringWithFormat:@"fschema://rent_detail?house_id=%@",  model.id];
+                urlStr = [NSString stringWithFormat:@"fschema://rent_detail?house_id=%@",  houseId];
                 break;
             case FHHouseTypeSecondHandHouse:
-                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", model.id];
+                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", houseId];
                 break;;
             case FHHouseTypeNewHouse:
-                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@", model.id];
+                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@", houseId];
                 break;
             case FHHouseTypeNeighborhood:
-                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", model.id];
+                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", houseId];
                 break;
             default:
                 break;
@@ -477,20 +500,28 @@
     if (self.tracerDictRecord[recordKey] || !self.viewController.isCanTrack) {
         return;
     }
+    NSDictionary *logPb;
+    NSString *imprId;
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
-        NSMutableDictionary *params = @{}.mutableCopy;
-        [params addEntriesFromDictionary:self.viewController.tracerDict];
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
-        self.tracerDictRecord[recordKey] = @(YES);
-        params[UT_PAGE_TYPE] = [self getPageType:self.houseType];
-        params[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
-        params[UT_SEARCH_ID] = self.searchId ? : @"be_null";
-        params[@"impr_id"] = model.imprId ? : @"be_null";
-        params[UT_RANK] = @(rank);
-        params[UT_HOUSE_TYPE] = [self getHouseType:self.houseType];
-        params[@"log_pb"] = model.logPb;
-        TRACK_EVENT(@"house_show", params);
+        logPb = model.logPb ? : @{};
+        imprId = model.imprId;
+    } else if ([cellModel isKindOfClass:[FHHouseNewComponentViewModel class]]) {
+        FHHouseNewComponentViewModel *model = (FHHouseNewComponentViewModel *)cellModel;
+        logPb = model.fh_trackModel.logPb ? : @{};
+        imprId = model.fh_trackModel.imprId;
     }
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:self.viewController.tracerDict];
+    self.tracerDictRecord[recordKey] = @(YES);
+    params[UT_PAGE_TYPE] = [self getPageType:self.houseType];
+    params[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+    params[UT_SEARCH_ID] = self.searchId ? : @"be_null";
+    params[@"impr_id"] = imprId ? : @"be_null";
+    params[UT_RANK] = @(rank);
+    params[UT_HOUSE_TYPE] = [self getHouseType:self.houseType];
+    params[@"log_pb"] = logPb;
+    TRACK_EVENT(@"house_show", params);
 }
 
 - (NSString *)getPageType:(FHHouseType)houseType {

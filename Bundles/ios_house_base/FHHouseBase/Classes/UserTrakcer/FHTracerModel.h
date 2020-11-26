@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , strong) NSDictionary *logPb;
 @property(nonatomic , copy) NSString *searchId;
 @property(nonatomic , copy) NSString *originSearchId;
+@property (nonatomic , copy) NSString *imprId;
+@property (nonatomic , copy) NSString *Id;
 
 
 //@property(nonatomic , copy) NSString *eventName;//事件名称
