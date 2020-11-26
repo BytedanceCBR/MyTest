@@ -489,39 +489,27 @@ static const float kMapSearchBtnRightPading = 50;
         return;
     }
     
-    self.searchBtn.hidden = NO;
+    self.searchBtn.hidden = !isShowSearchBtn;
     self.mapSearchLabel.hidden = isShowSearchBtn;
     self.houseSegmentControl.hidden = NO;
     self.searchPanelView.hidden = NO;
     [UIView animateWithDuration:0.25 animations:^{
         if(isShowSearchBtn){
-            self.searchBtn.alpha = 1;
-            self.mapSearchLabel.alpha = 0;
             self.houseSegmentControl.alpha = 1;
             self.searchPanelView.alpha = 0;
             [self.mapSearchBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.right.equalTo(self).offset(-kMapSearchBtnRightPading - ( [UIDevice btd_isScreenWidthLarge320] ? 10 : -3));
             }];
-            [self.mapSearchLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(0);
-            }];
         }
         else {
-            self.searchBtn.alpha = 0;
-            self.mapSearchLabel.alpha = 1;
             self.houseSegmentControl.alpha = 0;
             self.searchPanelView.alpha = 1;
             [self.mapSearchBtn mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
             }];
-            [self.mapSearchLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(40);
-            }];
         }
         [self.mapSearchBtn setNeedsLayout];
         [self.mapSearchBtn layoutIfNeeded];
-        [self.mapSearchLabel setNeedsLayout];
-        [self.mapSearchLabel layoutIfNeeded];
     }];
     
     self.isShowSearchBtn = isShowSearchBtn;
