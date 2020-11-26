@@ -51,7 +51,7 @@ static BOOL kTTHasReceivedGotCategoryNotification = NO;
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
-    [[TTArticleCategoryManager sharedManager] startGetCategory];
+//    [[TTArticleCategoryManager sharedManager] startGetCategory];
     [[FHUGCCategoryManager sharedManager] startGetCategory];
 }
 
