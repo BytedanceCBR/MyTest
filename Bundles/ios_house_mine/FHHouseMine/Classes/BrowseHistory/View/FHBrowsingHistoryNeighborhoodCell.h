@@ -5,14 +5,11 @@
 //  Created by xubinbin on 2020/11/4.
 //
 
-#import "FHHouseNeighborhoodCell.h"
-#import "FHBrowsingHistoryNeighborhoodCardView.h"
+#import "FHHouseCardTableViewCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHBrowsingHistoryNeighborhoodCell : FHHouseNeighborhoodCell
-
-@property (nonatomic, strong) FHBrowsingHistoryNeighborhoodCardView *cardView;
+@interface FHBrowsingHistoryNeighborhoodCell : FHHouseCardTableViewCell
 
 @end
 

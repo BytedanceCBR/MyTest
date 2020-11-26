@@ -14,8 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign, readonly) BOOL isOffShelf;
 
-@property (nonatomic, strong) FHSearchHouseItemModel *model;
-
 @end
 
 NS_ASSUME_NONNULL_END
