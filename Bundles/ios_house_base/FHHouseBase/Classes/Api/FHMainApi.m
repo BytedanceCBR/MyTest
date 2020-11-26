@@ -22,6 +22,7 @@
 #import "TTTabbarLoadEpidemicSituatioHelper.h"
 #import "FHErrorHubManagerUtil.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHHomeRenderFlow.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -385,16 +386,22 @@
 +(TTHttpTask *)requestHomeRecommend:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(FHHomeHouseModel *model, NSError *error))completion
 {
     NSString *url = QURL(@"/f100/api/v2/recommend?");
-    
+    FHHomeRequestFlow *requestFlow = [[FHHomeRequestFlow alloc] init];
+    [requestFlow traceSendRequest];
     NSDate *startDate = [NSDate date];
     return [[TTNetworkManager shareInstance] requestForBinaryWithResponse:url params:param method:@"GET" needCommonParams:YES callback:^(NSError *error, id obj, TTHttpResponse *response) {
+        [requestFlow traceReceiveRequest];
         if (!completion) {
             return ;
         }
         NSDate *backDate = [NSDate date];
         __block NSError *backError = error;
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            [requestFlow traceBeginParseData];
             FHHomeHouseModel *model = (FHHomeHouseModel *)[self generateModel:obj class:[FHHomeHouseModel class] error:&backError];
+            [requestFlow traceEndParseData];
+            model.requestFlow = requestFlow;
+            
             NSDate *serDate = [NSDate date];
             FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
             NSInteger code = 0;
