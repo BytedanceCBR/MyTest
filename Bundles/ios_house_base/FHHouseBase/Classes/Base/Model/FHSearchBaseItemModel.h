@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 //10. card_type=10猜你想找文本 （猜你想找）
 //11. card_type=11切换城市卡片 （你是不是想找“xxx”的房源？）
 //13. card_type=13 预约顾问
-//16  card_type= 16 sug页房源卡片
+//16. card_type=16 sug页面房源卡片
 //17. card_type=17 浏览历史文本
 
 typedef NS_ENUM(NSUInteger, FHSearchCardType) {
@@ -42,7 +42,7 @@ typedef NS_ENUM(NSUInteger, FHSearchCardType) {
     FHSearchCardTypeReserveAdviser = 13,
     FHSearchCardTypeAgentCard = 14,
     FHSearchCardTypeFindHouseHelper = 15,   //帮我找房卡片
-    FHSuggestionItemCard = 16,
+    FHSearchCardTSuggestionItem = 16,
     FHSearchCardTypeBrowseHistoryTip = 17,
     FHSearchCardTypeDynamicLynx = 20,       //列表页动态Lynx卡片
 };
