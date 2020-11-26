@@ -28,6 +28,9 @@
 #import "FHEnvContext.h"
 #import "FHHouseListSecondRelatedCell.h"
 #import "FHHouseListRentRelatedCell.h"
+#import "UITableView+FHHouseCard.h"
+#import "FHHouseCardUtils.h"
+
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -73,6 +76,7 @@
     [_tableView registerClass:[FHRecommendCourtCell class] forCellReuseIdentifier:NSStringFromClass([FHRecommendCourtCell class])];
     [_tableView registerClass:[FHHouseListSecondRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListSecondRelatedCell class])];
     [_tableView registerClass:[FHHouseListRentRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListRentRelatedCell class])];
+    [self.tableView fhHouseCard_registerCellStyles];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {

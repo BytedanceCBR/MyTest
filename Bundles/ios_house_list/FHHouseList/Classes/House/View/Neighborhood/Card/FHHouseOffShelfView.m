@@ -48,10 +48,4 @@
     }];
 }
 
-- (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
-    [super setViewModel:viewModel];
-    NSString *houseStatus = self.viewModel;
-    self.hidden = (houseStatus.integerValue == 0) ? YES : NO;
-}
-
 @end

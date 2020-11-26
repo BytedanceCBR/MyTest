@@ -1,23 +1,23 @@
 //
-//  FHBrowsingHistorySecondCell.m
-//  FHHouseMine
+//  FHHouseSecondCell.m
+//  FHHouseList
 //
-//  Created by xubinbin on 2020/11/6.
+//  Created by xubinbin on 2020/11/26.
 //
 
-#import "FHBrowsingHistorySecondCell.h"
-#import "FHBrowsingHistorySecondCardView.h"
+#import "FHHouseSecondCell.h"
+#import "FHHouseSecondCardView.h"
 #import "FHHouseSecondCardViewModel.h"
 #import "Masonry.h"
 #import "UIColor+Theme.h"
 
-@interface FHBrowsingHistorySecondCell()
+@interface FHHouseSecondCell()
 
-@property (nonatomic, strong) FHBrowsingHistorySecondCardView *cardView;
+@property (nonatomic, strong) FHHouseSecondCardView *cardView;
 
 @end
 
-@implementation FHBrowsingHistorySecondCell
+@implementation FHHouseSecondCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -31,7 +31,7 @@
 }
 
 - (void)setupUI {
-    self.cardView = [[FHBrowsingHistorySecondCardView alloc] init];
+    self.cardView = [[FHHouseSecondCardView alloc] init];
     self.cardView.layer.cornerRadius = 10;
     self.cardView.layer.masksToBounds = YES;
     self.cardView.backgroundColor = [UIColor whiteColor];

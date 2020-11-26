@@ -9,13 +9,16 @@
 #import "FHHouseNeighborhoodCardViewModel.h"
 #import "FHHouseNeighborhoodCell.h"
 #import "FHSearchHouseModel.h"
+#import "FHHouseSecondCell.h"
+#import "FHHouseSecondCardViewModel.h"
 
 @implementation FHHouseCardUtils
 
 //支持的Cell样式, key: viewModelClassName value: cellClassName
 + (NSDictionary *)supportCellStyleMap {
     return @{
-        NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHHouseNeighborhoodCell.class)
+        NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHHouseNeighborhoodCell.class),
+        NSStringFromClass(FHHouseSecondCardViewModel.class): NSStringFromClass(FHHouseSecondCell.class)
     };
 }
 
@@ -29,6 +32,8 @@
                 }
                 break;
             }
+            case FHSearchCardTypeSecondHouse:
+                return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
             default:
                 break;
         }

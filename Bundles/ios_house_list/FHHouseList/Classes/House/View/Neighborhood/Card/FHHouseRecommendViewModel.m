@@ -6,17 +6,16 @@
 //
 
 #import "FHHouseRecommendViewModel.h"
-#import "FHSearchHouseModel.h"
 
 @interface FHHouseRecommendViewModel()
 
-@property (nonatomic, strong) FHSearchHouseItemModel *model;
+@property (nonatomic, strong) FHHouseListHouseAdvantageTagModel *model;
 
 @end
 
 @implementation FHHouseRecommendViewModel
 
-- (instancetype)initWithModel:(FHSearchHouseItemModel *)model {
+- (instancetype)initWithModel:(FHHouseListHouseAdvantageTagModel *)model {
     self = [super init];
     if (self) {
         _model = model;
@@ -25,16 +24,15 @@
 }
 
 - (NSString *)text {
-    return self.model.advantageDescription.text;
+    return self.model.text;
 }
 
 - (NSString *)url {
-    return self.model.advantageDescription.icon.url;
+    return self.model.icon.url;
 }
 
 - (BOOL)isHidden {
-    FHHouseListHouseAdvantageTagModel *adModel = self.model.advantageDescription;
-    if ([adModel.text length] > 0 || (adModel.icon && [adModel.icon.url length] > 0)) {
+    if ([self.model.text length] > 0 || (self.model.icon && [self.model.icon.url length] > 0)) {
         return NO;
     }
     return YES;

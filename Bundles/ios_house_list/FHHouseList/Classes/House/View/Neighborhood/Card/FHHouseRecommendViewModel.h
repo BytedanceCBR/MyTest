@@ -5,17 +5,16 @@
 //  Created by xubinbin on 2020/11/26.
 //
 
-#import "FHHouseNewComponentView.h"
-
+#import "FHHouseNewComponentViewModel.h"
+#import "FHSearchHouseModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHSearchHouseItemModel;
-@interface FHHouseRecommendViewModel : FHHouseNewComponentView
+@interface FHHouseRecommendViewModel : FHHouseNewComponentViewModel
 
 @property (nonatomic, copy, readonly) NSString *text;
 @property (nonatomic, copy, readonly) NSString *url;
 
-- (instancetype)initWithModel:(FHSearchHouseItemModel *)model;
+- (instancetype)initWithModel:(FHHouseListHouseAdvantageTagModel *)model;
 
 - (CGFloat)showHeight;
 

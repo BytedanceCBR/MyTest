@@ -11,7 +11,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FHHouseTitleAndTagViewModel;
-@class FHSearchHouseItemModel;
 @class FHImageModel;
 @interface FHHouseNeighborhoodCardViewModel : FHHouseNewComponentViewModel
 
