@@ -29,6 +29,8 @@
 #import "FHBrowsingHistoryRentCell.h"
 #import "FHBrowsingHistoryNeighborhoodCell.h"
 #import "FHBrowsingHistorySecondCell.h"
+#import "UITableView+FHHouseCard.h"
+#import "FHBrowsingHistoryCardUtils.h"
 
 @interface FHChildBrowsingHistoryViewModel()<FHBrowsingHistoryEmptyViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -60,6 +62,7 @@
         tableView.delegate = self;
         tableView.dataSource = self;
         [self registerCellClasses];
+        [self.tableView fhHouseCard_registerCellStylesWithDict:[FHBrowsingHistoryCardUtils supportCellStyleMap]];
         __weak typeof(self) wself = self;
         FHRefreshCustomFooter *footer = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             [wself requestData:NO];
@@ -142,6 +145,10 @@
         [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj isKindOfClass:[NSDictionary class]]) {
                 id item = [self historyItemModelByDict:obj];
+                NSObject *entity = [FHBrowsingHistoryCardUtils getEntityFromModel:item];
+                if (entity) {
+                    item = entity;
+                }
                 [self.historyList addObject:item];
             }
         }];
@@ -282,6 +289,8 @@
     if (row >= 0 && row < _historyList.count) {
         id data = _historyList[row];
         NSString *identifier = [self cellIdentifierForEntity:data];
+        UITableViewCell *tcell = [tableView fhHouseCard_cellForEntity:data atIndexPath:indexPath withDict:[FHBrowsingHistoryCardUtils supportCellStyleMap]];
+        if (tcell) return tcell;
         if ([identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNewCell class])] || [identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryRentCell class])] || [identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNeighborhoodCell class])] || [identifier isEqualToString:NSStringFromClass([FHBrowsingHistorySecondCell class])]) {
             FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             [cell refreshWithData:data];
@@ -298,6 +307,9 @@
                 [theCell updateHouseListNewHouseCellModel:data];
                 [theCell updateHouseStatus:data];
             }
+            if (self.houseType != FHHouseTypeRentHouse) {
+                cell.backgroundColor = [UIColor themeGray7];
+            }
             [cell refreshWithData:data];
             if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
                 FHHouseBaseItemCell *theCell = (FHHouseBaseItemCell *)cell;
@@ -312,8 +324,10 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger row = indexPath.row;
     if (row >= 0 && row < _historyList.count) {
-        BOOL isLastCell = NO;
         id data = _historyList[row];
+        CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath withDict:[FHBrowsingHistoryCardUtils supportCellStyleMap]];
+        if (cellHeight > -0.001f) return cellHeight;
+        BOOL isLastCell = NO;
         if (indexPath.row == self.historyList.count - 1) {
             isLastCell = YES;
         }
