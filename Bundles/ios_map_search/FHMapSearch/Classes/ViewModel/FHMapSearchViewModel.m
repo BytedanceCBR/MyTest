@@ -1001,6 +1001,11 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         extraParams[CHANNEL_ID] = CHANNEL_ID_SUBWAY_SEARCH;
     }
+    
+    if (firstTime) {
+        extraParams[@"is_first_request"] = @(1);
+    }
+    
     __weak typeof(self) wself = self;
     TTHttpTask *task = [FHHouseSearcher mapSearch:houseType searchId:self.searchId query:query maxLocation:CLLocationCoordinate2DMake(maxLat, maxLong) minLocation:CLLocationCoordinate2DMake(minLat, minLong) resizeLevel:_mapView.zoomLevel targetType:targetType suggestionParams:nil extraParams:extraParams callback:^(NSError * _Nullable error, FHMapSearchDataModel * _Nullable model) {
         
