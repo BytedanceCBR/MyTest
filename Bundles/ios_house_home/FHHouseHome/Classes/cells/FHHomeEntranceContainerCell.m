@@ -52,10 +52,12 @@
     if (![model isKindOfClass:[FHConfigDataOpDataModel class]]) {
         return 0;
     }
-    NSInteger countPerRow = [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount;
     FHConfigDataOpDataModel *dataModel = (FHConfigDataOpDataModel *)model;
-    NSInteger rows = ((dataModel.items.count+countPerRow-1)/countPerRow);
-    return [self rowHeight]*rows;
+    if ([dataModel.opStyle isEqualToString:@"1"]) {
+        return ceil((SCREEN_WIDTH - 30)/5 * 2);
+    } else {
+        return ceil((SCREEN_WIDTH - 30)/5 * 2) + 16;
+    }
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -82,7 +84,7 @@
 
     
     self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    self.flowLayout.scrollDirection = UICollectionViewScrollDirectionVertical;
+    self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.flowLayout.minimumInteritemSpacing = 0;
     self.flowLayout.minimumLineSpacing = 0;
     self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 0, 16, 0);
@@ -131,12 +133,12 @@
 }
 
 - (void)updateWithItems:(NSArray<FHConfigDataOpDataItemsModel *> *)items {
+    self.bottomSlide.hidden = items.count > 10 ? NO : YES;
     if(items == self.items){
         return;
     }
     self.items = items;
-    __block CGFloat percent = 5 / ceil((float)self.items.count / 2);
-    self.sliderWidth = 32 * percent;
+    self.sliderWidth = 16;
     [_slider mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(self.sliderWidth);
         make.height.mas_equalTo(4);
@@ -154,9 +156,17 @@
 
 #pragma mark - UICollectionViewDataSource
 
+//(index & 1)判断奇偶，改变映射关系，举个例子：
+//背景：首页icon需要横着划，所以datasource只能竖着排 导致原先数据源x = [1,2,3,4,5,6,7,8,9,10]在界面上体现为y = [1,6,2,7,3,8,4,9,5,10]。
+//所以为了使collectionview横向滑动，需要在cellforrow改变映射关系，使y变成x
+- (NSUInteger)getIndexWithCount:(NSUInteger)count withIndex:(NSUInteger)index {
+    return index / 2 + (index & 1) * (count + 1) / 2;
+}
+
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     FHHomeEntranceItemCell *cell = [_entranceCollectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHHomeEntranceItemCell class]) forIndexPath:indexPath];
-    FHConfigDataOpDataItemsModel *model = [self.items objectAtIndex:indexPath.row];
+    NSUInteger row = [self getIndexWithCount:self.items.count withIndex:indexPath.row];
+    FHConfigDataOpDataItemsModel *model = [self.items objectAtIndex:row];
     if (model) {
         [cell bindModel:model];
     }
@@ -183,7 +193,7 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [UIView animateWithDuration:0.5 animations:^{
         [self.slider mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(scrollView.contentOffset.x);
+            make.left.mas_equalTo(scrollView.contentOffset.x / (scrollView.contentSize.width - self.entranceCollectionView.frame.size.width + 0.1) * 16);
             make.width.mas_equalTo(self.sliderWidth);
             make.top.bottom.mas_equalTo(self.bottomSlide);
         }];

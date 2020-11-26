@@ -59,9 +59,9 @@
         return [FHHomeScrollBannerCell cellHeight];
     }
     
-//    if ([identifier isEqualToString:@"FHHomeEntrancesCell"]) {
-//        return [FHHomeEntrancesCell cellHeightForModel:model];
-//    }
+    if ([identifier isEqualToString:@"FHHomeEntrancesCell"]) {
+        return [FHHomeEntrancesCell cellHeightForModel:model];
+    }
     if ([identifier isEqualToString:@"FHHomeEntranceContainerCell"]) {
         return [FHHomeEntranceContainerCell cellHeightForModel:model];
     }
@@ -74,7 +74,7 @@
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-}
+} 
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     

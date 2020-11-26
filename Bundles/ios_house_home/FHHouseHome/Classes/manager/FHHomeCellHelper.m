@@ -338,7 +338,7 @@ static NSMutableArray  * _Nullable identifierArr;
 }
 
 #pragma mark 填充数据 fill data =======================
-+ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:(NSDictionary *)traceParams{
++ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:( NSDictionary * _Nullable )traceParams{
     FHHomeEntrancesCell *cellEntrance = cell;
     NSInteger countItems = model.items.count;
     //    if (countItems > [FHHomeCellHelper sharedInstance].kFHHomeIconRowCount * 2) {
@@ -667,9 +667,10 @@ static NSMutableArray  * _Nullable identifierArr;
 {
     cell.fd_enforceFrameLayout = NO; //
     
-//    if ([cell isKindOfClass:[FHHomeEntrancesCell class]] && [model isKindOfClass:[FHConfigDataOpDataModel class]]) {
-//        [self fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:nil];
-//    }
+    if ([cell isKindOfClass:[FHHomeEntrancesCell class]] && [model isKindOfClass:[FHConfigDataOpDataModel class]]) {
+        [self fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:nil];
+    }
+    
     if ([cell isKindOfClass:[FHHomeEntranceContainerCell class]] && [model isKindOfClass:[FHConfigDataOpDataModel class]]) {
         [self fillFHHomeEntrancesContainerCell:(FHHomeEntranceContainerCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:nil];
     }
@@ -716,7 +717,12 @@ static NSMutableArray  * _Nullable identifierArr;
 //        return NSStringFromClass([FHHomeEntrancesCell class]   );
 //    }
     if ([model isKindOfClass:[FHConfigDataOpDataModel class]]) {
-        return NSStringFromClass([FHHomeEntranceContainerCell class]   );
+        FHConfigDataOpDataModel *opModel = (FHConfigDataOpDataModel *)model;
+        if ([opModel.opStyle isEqualToString:@"1"]) {
+            return NSStringFromClass([FHHomeEntrancesCell class]   );
+        } else if ([opModel.opStyle isEqualToString:@"3"]) {
+            return NSStringFromClass([FHHomeEntranceContainerCell class]   );
+        }
     }
     
     if ([model isKindOfClass:[FHConfigDataOpData2Model class]]) {

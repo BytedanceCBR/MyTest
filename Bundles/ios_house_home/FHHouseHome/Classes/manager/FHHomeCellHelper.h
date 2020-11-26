@@ -120,7 +120,7 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 + (NSArray <NSString *>*)matchHouseSegmentedTitleArray;
 
 
-+ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:(NSDictionary *)traceParams;
++ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:(NSDictionary * _Nullable )traceParams;
 
 @end 
 
