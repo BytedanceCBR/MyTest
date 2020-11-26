@@ -38,7 +38,7 @@
     if (!_shadowView) {
         _shadowView = [[FHShadowView alloc] initWithFrame:CGRectZero];
         [_shadowView setCornerRadius:10];
-        [_shadowView setShadowColor:[UIColor colorWithRed:110.f/255.f green:110.f/255.f blue:110.f/255.f alpha:1]];
+        [_shadowView setShadowColor:[UIColor whiteColor]];
         [_shadowView setShadowOffset:CGSizeMake(0, 2)];
     }
     return _shadowView;
