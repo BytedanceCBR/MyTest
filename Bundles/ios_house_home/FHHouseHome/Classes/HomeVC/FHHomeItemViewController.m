@@ -41,6 +41,8 @@
 #import "NSString+BTDAdditions.h"
 #import "NSArray+BTDAdditions.h"
 #import "FHHomeRentCell.h"
+#import "FHHomeRenderFlow.h"
+
 extern NSString *const INSTANT_DATA_KEY;
 
 NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
@@ -88,6 +90,8 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.renderFlow traceViewDidLoad];
+    
     self.houseDataItemsModel = [NSMutableArray new];
     self.cacheClickIds = [NSMutableArray new];
     self.cacheSimilarIdsDict = [NSMutableDictionary new];
@@ -140,6 +144,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     [self registerCells];
     
+    self.renderFlow.requestType = FHHomeRequestTypeNormal;
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
     
     self.tableView.scrollsToTop = NO;
@@ -359,6 +364,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     if (self.showRequestErrorView) {
         [self showPlaceHolderCells];
+        self.renderFlow.requestType = FHHomeRequestTypeAutoRetryWhenShowing;
         [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
         if (self.panelVM) {
             [self.panelVM fetchSearchPanelRollData];
@@ -531,10 +537,17 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     if (self.requestTask) {
         [self.requestTask cancel];
     }
+    
+    if (isFirst) {
+        [self.renderFlow traceSendRequest];
+    }
+    
     WeakSelf;
     self.requestTask = [FHHomeRequestAPI requestRecommendForLoadMore:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
-        
+        if (isFirst && model) {
+            [self.renderFlow traceReceiveResponse:model.requestFlow];
+        }
         [self.tableView finishPullUpWithSuccess:YES];
         
         //判断下拉刷新
@@ -601,6 +614,11 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         
         self.tableView.hasMore = model.data.hasMore;
         [self updateTableViewWithMoreData:model.data.hasMore];
+        
+        if (isFirst) {
+            [self.renderFlow traceReloadData];
+            [self.renderFlow submit];
+        }
         
         if (isFirst && self.houseType == FHHouseTypeSecondHandHouse) {
             [FHMainApi addUserOpenVCDurationLog:@"pss_homepage" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
@@ -937,6 +955,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                     if (weakSelf.panelVM) {
                         [weakSelf.panelVM fetchSearchPanelRollData];
                     }
+                    weakSelf.renderFlow.requestType = FHHomeRequestTypeClickRetryWhenRequestNoData;
                     [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                 };
             }else
@@ -955,6 +974,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                             if (weakSelf.panelVM) {
                                 [weakSelf.panelVM fetchSearchPanelRollData];
                             }
+                            weakSelf.renderFlow.requestType = FHHomeRequestTypeClickRetryWhenRequestNoData;
                             [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                         }
                     }
@@ -982,6 +1002,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 if (weakSelf.panelVM) {
                     [weakSelf.panelVM fetchSearchPanelRollData];
                 }
+                weakSelf.renderFlow.requestType = FHHomeRequestTypeClickRetryWhenDislikeNoData;
                 [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
             };
             

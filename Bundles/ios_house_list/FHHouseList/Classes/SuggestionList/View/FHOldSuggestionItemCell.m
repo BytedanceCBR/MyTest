@@ -205,9 +205,13 @@
             self.amountLab.textColor = [UIColor colorWithHexStr:@"#999999"];
             self.zoneTypeView.layer.cornerRadius = 2;
             self.zoneTypeLab.font = [UIFont themeFontRegular:10];
-            zoneTypeLabWidth = [model.recallType boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
+            zoneTypeLabWidth = [model.newtip.content boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
             [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(self.titleLab.mas_bottom).offset(3);
+                if([model.tag length] > 0 ){
+                    make.top.equalTo(self.titleLab.mas_bottom).offset(3);
+                }else{
+                    make.centerY.equalTo(self.titleLab);
+                }
                 make.right.equalTo(self.contentView).offset(-15);
             }];
             [self.zoneTypeLab mas_remakeConstraints:^(MASConstraintMaker *make) {

@@ -28,6 +28,7 @@
 #import "FHUtils.h"
 #import "FHHomeMainViewController.h"
 #import <TTUIWidget/TTRefreshAnimationView.h>
+#import "FHHomeRenderFlow.h"
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -294,7 +295,13 @@
     for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
         NSNumber *houseTypeNum = configDataModel.houseTypeList[i];
         if ([houseTypeNum isKindOfClass:[NSNumber class]]) {
+            FHHomeItemRenderFlow *renderFlow = nil;
+            if (i == self.categoryView.segmentedControl.selectedSegmentIndex) {
+                renderFlow = [[FHHomeRenderFlow sharedInstance] traceHomeItemWithHouseType:[houseTypeNum integerValue]];
+            }
+            
             FHHomeItemViewController *itemVC = [[FHHomeItemViewController alloc] initItemWith:self];
+            itemVC.renderFlow = renderFlow;
             itemVC.houseType = [houseTypeNum integerValue];
             itemVC.panelVM = self.panelVM;
             if (houseTypeNum.integerValue == self.houseType) {
