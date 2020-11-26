@@ -90,7 +90,7 @@
     
     [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftImageView).offset(8);
-        make.bottom.mas_equalTo(self.leftAnchor).offset(-8);
+        make.bottom.mas_equalTo(self.leftImageView).offset(-8);
         make.width.height.mas_equalTo(16);
     }];
     

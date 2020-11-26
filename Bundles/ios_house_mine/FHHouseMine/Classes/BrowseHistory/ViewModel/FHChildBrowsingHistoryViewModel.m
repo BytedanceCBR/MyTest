@@ -288,9 +288,9 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < _historyList.count) {
         id data = _historyList[row];
-        NSString *identifier = [self cellIdentifierForEntity:data];
         UITableViewCell *tcell = [tableView fhHouseCard_cellForEntity:data atIndexPath:indexPath withDict:[FHBrowsingHistoryCardUtils supportCellStyleMap]];
         if (tcell) return tcell;
+        NSString *identifier = [self cellIdentifierForEntity:data];
         if ([identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNewCell class])] || [identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryRentCell class])] || [identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNeighborhoodCell class])] || [identifier isEqualToString:NSStringFromClass([FHBrowsingHistorySecondCell class])]) {
             FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             [cell refreshWithData:data];

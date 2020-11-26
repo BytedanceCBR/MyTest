@@ -11,6 +11,8 @@
 #import "FHBrowsingHistoryNeighborhoodCardViewModel.h"
 #import "FHBrowsingHistorySecondCell.h"
 #import "FHHouseSecondCardViewModel.h"
+#import "FHHouseNewCardViewModel.h"
+#import "FHBrowsingHistoryNewCell.h"
 
 @implementation FHBrowsingHistoryCardUtils
 
@@ -18,6 +20,7 @@
     return @{
         NSStringFromClass(FHBrowsingHistoryNeighborhoodCardViewModel.class): NSStringFromClass(FHBrowsingHistoryNeighborhoodCell.class),
         NSStringFromClass(FHHouseSecondCardViewModel.class): NSStringFromClass(FHBrowsingHistorySecondCell.class),
+        NSStringFromClass(FHHouseNewCardViewModel.class): NSStringFromClass(FHBrowsingHistoryNewCell.class),
     };
 }
 
@@ -29,6 +32,8 @@
                 return [[FHBrowsingHistoryNeighborhoodCardViewModel alloc] initWithModel:itemModel];
             case FHSearchCardTypeSecondHouse:
                 return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
+            case FHSearchCardTypeNewHouse:
+                return [[FHHouseNewCardViewModel alloc] initWithModel:itemModel];
             default:
                 break;
         }
