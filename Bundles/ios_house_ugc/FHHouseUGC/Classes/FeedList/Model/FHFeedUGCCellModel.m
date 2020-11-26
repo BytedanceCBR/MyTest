@@ -771,9 +771,9 @@
         }
     } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo3){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeSmallVideoList;
-        if (model.data.count > 0) {
+        if (model.subRawDatas.count > 0) {
             NSMutableArray *videoModelArr = [[NSMutableArray alloc]init];
-            for (id content in model.data) {
+            for (id content in model.subRawDatas) {
                 FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:content];
                 [videoModelArr addObject:cellmodel];
             }
@@ -781,8 +781,8 @@
         }else {
             return nil;
         }
-        if ([model.showMore objectForKey:@"url"]) {
-            cellModel.openUrl = [model.showMore objectForKey:@"url"];
+        if (model.rawData.showMore && [model.rawData.showMore objectForKey:@"url"]) {
+            cellModel.openUrl = [model.rawData.showMore objectForKey:@"url"];
         }
     } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCRecommendCircle) {
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommendCircle;
