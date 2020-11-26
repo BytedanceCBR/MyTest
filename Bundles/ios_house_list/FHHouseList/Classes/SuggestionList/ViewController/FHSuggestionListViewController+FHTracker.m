@@ -10,6 +10,7 @@
 #import "FHSuggestionListModel.h"
 #import <objc/runtime.h>
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "FHSearchBaseItemModel.h"
 
 static NSString *const TrackEventPageShow = @"go_detail";
 static NSString *const TrackEventSuggestionResultShow = @"sug_word_show";
@@ -74,13 +75,13 @@ static const char tabSwitchedKey;
         NSArray *filteredResultArray = [result.data.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
             if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;
             FHSuggestionResponseItemModel *item = (FHSuggestionResponseItemModel *)object;
-            return item.cardType == 16;
+            return item.cardType == FHSearchCardTSuggestionItem;
         }]];
         
         NSArray *filteredOtherResultArray = [result.data.otherItems filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
             if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;
             FHSuggestionResponseItemModel *item = (FHSuggestionResponseItemModel *)object;
-            return item.cardType == 16;
+            return item.cardType == FHSearchCardTSuggestionItem;
         }]];
         
         count = filteredResultArray.count + filteredOtherResultArray.count;
@@ -127,7 +128,7 @@ static const char tabSwitchedKey;
     NSArray *filteredOtherResultArray = [resultArray filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
         if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;
         FHSuggestionResponseItemModel *item = (FHSuggestionResponseItemModel *)object;
-        return [item.houseType intValue] == houseType && item.cardType == 16;
+        return [item.houseType intValue] == houseType && item.cardType == FHSearchCardTSuggestionItem;
     }]];
     return  filteredOtherResultArray.count;
 }
