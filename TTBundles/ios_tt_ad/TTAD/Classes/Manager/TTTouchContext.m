@@ -48,7 +48,7 @@
     NSData *data = [NSJSONSerialization dataWithJSONObject:dict options:0 error:&jsonSeria];
     NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     if (jsonSeria) {
-        LOGE(@"%s %@", __PRETTY_FUNCTION__, jsonSeria);
+//        LOGE(@"%s %@", __PRETTY_FUNCTION__, jsonSeria);
     }
     return json;
 }

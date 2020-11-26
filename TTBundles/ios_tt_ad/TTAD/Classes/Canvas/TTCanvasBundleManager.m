@@ -208,7 +208,7 @@ static NSString *const kCanvasAppBundleInfo = @"kCanvasAppBundleInfo";
         [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
         if (error) {
-            LOGE(@"%@", error.localizedDescription);
+//            LOGE(@"%@", error.localizedDescription);
         }
     }
 }

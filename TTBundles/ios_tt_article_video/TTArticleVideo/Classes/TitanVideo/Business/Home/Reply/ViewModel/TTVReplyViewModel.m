@@ -427,11 +427,11 @@ appendItemsWithModels:(NSArray<id <TTVReplyModelProtocol>> *)models {
 
 - (void)deleteReplyedComment:(NSString *)replyCommentID InHostComment:(NSString *)hostCommentID {
     if ([replyCommentID longLongValue] == 0 || [hostCommentID longLongValue] == 0) {
-        LOGI(@"删除文章评论的ID不能为0");
+//        LOGI(@"删除文章评论的ID不能为0");
         return;
     }
     if (![TTAccountManager isLogin]) {
-        LOGI(@"删除评论必须登录");
+//        LOGI(@"删除评论必须登录");
         return;
     }
     

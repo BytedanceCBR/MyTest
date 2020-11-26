@@ -501,6 +501,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSearchGuessYouWantTipsModel : FHSearchBaseItemModel
 
 @property (nonatomic, copy , nullable) NSString *text;
+@property (nonatomic, copy , nullable) NSString *content;
+@property (nonatomic, copy , nullable) NSString *realSearchOpenUrl;
+@property (nonatomic, copy , nullable) NSString *emphasisContent;
+
 
 @end
 
@@ -522,9 +526,33 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHCourtBillboardPreviewButtonModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *text;
+@end
+
+@protocol FHCourtBillboardPreviewItemModel <NSObject>
+
+@end
+
+@interface FHCourtBillboardPreviewItemModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *courtId;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *subtitle;
+@property (nonatomic, copy , nullable) NSString *pricingPerSqm;
+@property (nonatomic, strong , nullable) FHImageModel *img;
+@property (nonatomic, strong , nullable) NSDictionary *logPb ;
+@end
+
+@interface FHCourtBillboardPreviewModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, strong , nullable) NSArray<FHCourtBillboardPreviewItemModel> *items;
+@property (nonatomic, strong , nullable) FHCourtBillboardPreviewButtonModel *button;
+@end
+
 #pragma mark - zjing 新model
 @interface  FHListSearchHouseDataModel  : JSONModel
-
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, copy , nullable) NSString *houseListOpenUrl;
 @property (nonatomic, copy , nullable) NSString *searchHistoryOpenUrl;
@@ -540,6 +568,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) NSArray<FHSearchBaseItemModel *> *searchItems;
 @property (nonatomic, strong , nullable) FHSearchHouseDataRedirectTipsModel *redirectTips;
 @property (nonatomic, strong, nullable) FHListSearchHouseDataModel *recommendSearchModel;
+@property (nonatomic, strong, nullable) FHSearchGuessYouWantTipsModel *realBussinessSearch;
+@property (nonatomic, strong, nullable) FHCourtBillboardPreviewModel *courtBillboardPreview;
 
 @end
 

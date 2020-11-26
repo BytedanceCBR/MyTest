@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHSuggestionListModel.h"
+#import "YYLabel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -26,9 +27,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSuggestionNewHouseItemCell : UITableViewCell
 
 @property (nonatomic, strong)   UILabel       *label;
-@property (nonatomic, strong)   UILabel       *secondaryLabel;
+@property (nonatomic, strong)   YYLabel       *secondaryLabel;
 @property (nonatomic, strong)   UILabel       *subLabel;
 @property (nonatomic, strong)   UILabel       *secondarySubLabel;
+@property (nonatomic, strong)   UIView        *sepLine;
 
 @end
 
@@ -52,6 +54,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHSuggectionTableView : UITableView
 
 @property (nonatomic, copy)     dispatch_block_t       handleTouch;
+
+@end
+
+@interface FHRecommendtHeaderViewCell : UITableViewCell
+
+@property (nonatomic, strong)  UILabel       *label;
 
 @end
 

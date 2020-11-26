@@ -161,7 +161,14 @@
     self.hasDismissedVC = NO;
     [self setupUI];
     [self addDefaultEmptyViewFullScreen];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(shrinkKeyboard:)];
+    [self.emptyView addGestureRecognizer:tap];
+    
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+}
+
+- (void)shrinkKeyboard:(UITapGestureRecognizer *)tap {
+    [[UIApplication sharedApplication].keyWindow endEditing:YES];
 }
 
 - (void)retryLoadData
@@ -243,12 +250,13 @@
     tableView.dataSource = self.viewModel;
     [tableView registerClass:[FHSuggestionItemCell class] forCellReuseIdentifier:@"suggestItemCell"];
     [tableView registerClass:[FHSuggestionNewHouseItemCell class] forCellReuseIdentifier:@"suggestNewItemCell"];
-        [tableView registerClass:[FHOldSuggestionItemCell class] forCellReuseIdentifier:@"FHOldSuggestionItemCell"];
+    [tableView registerClass:[FHOldSuggestionItemCell class] forCellReuseIdentifier:@"FHOldSuggestionItemCell"];
     [tableView registerClass:[FHSuggestHeaderViewCell class] forCellReuseIdentifier:@"suggestHeaderCell"];
     [tableView registerClass:[FHGuessYouWantCell class] forCellReuseIdentifier:@"guessYouWantCell"];
     [tableView registerClass:[FHSuggestionEmptyCell class] forCellReuseIdentifier:@"suggetEmptyCell"];
     [tableView registerClass:[FHFindHouseHelperCell class] forCellReuseIdentifier:@"helperCell"];
     [tableView registerClass:[FHHouseListRecommendTipCell class] forCellReuseIdentifier:@"tipcell"];
+    [tableView registerClass:[FHRecommendtHeaderViewCell class] forCellReuseIdentifier:@"RecommendtHeaderCell"];
 
     if (@available(iOS 11.0 , *)) {
         tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
@@ -318,6 +326,8 @@
 
 // 输入框执行搜索
 - (void)doTextFieldShouldReturn:(NSString *)text {
+    
+    
     NSString *userInputText = text;
     
     // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
@@ -344,26 +354,28 @@
     // 拼接URL
     NSString * fullText = [userInputText stringByAddingPercentEncodingWithAllowedCharacters:NSCharacterSet.URLQueryAllowedCharacterSet];
     NSString * placeHolderStr = (fullText.length > 0 ? fullText : userInputText);
-    
-    NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",self.houseType,placeHolderStr,placeHolderStr];
-    if (self.suggestDelegate != NULL) {
-        NSDictionary *infos = @{
-                                @"houseSearch":houseSearchParams
-                                };
-        if (self.tracerDict.count > 0) {
-            infos = @{
-                      @"houseSearch":houseSearchParams,
-                      @"tracer": self.tracerDict
-                      };
+    __block NSInteger jumpHouseTpye = -1;
+    WeakSelf;
+    [self.fatherVC.houseTypeArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        StrongSelf;
+        if(self.viewModel.jumpHouseType == [obj intValue]){
+            jumpHouseTpye = self.viewModel.jumpHouseType ;
         }
-        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
-    } else {
-        self.tracerDict[@"category_name"] = [self.viewModel categoryNameByHouseType];
-        NSDictionary *infos = @{@"houseSearch":houseSearchParams,
-                               @"tracer": self.tracerDict
-                               };
-        [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
+    }];
+    jumpHouseTpye = jumpHouseTpye != -1 ? jumpHouseTpye : self.houseType;
+    NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",jumpHouseTpye,placeHolderStr,placeHolderStr];
+    if(jumpHouseTpye != self.houseType){
+        self.tracerDict[@"element_from"] = [self.viewModel relatedRecommendelEmentFromNameByHouseType:self.houseType];
     }
+    self.tracerDict[@"enter_type"] = @"enter";
+    self.tracerDict[@"enter_from"] = @"search_detail";
+    NSDictionary *infos = @{
+        @"houseSearch":houseSearchParams,
+        @"tracer": self.tracerDict,
+        @"pre_house_type":@(self.houseType),
+        @"jump_house_type":@(self.viewModel.jumpHouseType),
+    };
+    [self jumpToCategoryListVCByUrl:openUrl queryText:placeHolderStr placeholder:placeHolderStr infoDict:infos isGoDetail:NO];
 }
 
 - (void)jumpToCategoryListVCByUrl:(NSString *)jumpUrl queryText:(NSString * _Nullable)queryText placeholder:(NSString * _Nullable)placeholder infoDict:(NSDictionary *)infos isGoDetail:(BOOL)isGoDetail{

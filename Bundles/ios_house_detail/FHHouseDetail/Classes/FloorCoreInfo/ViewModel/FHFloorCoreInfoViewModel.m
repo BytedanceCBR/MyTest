@@ -167,7 +167,6 @@
     NSMutableDictionary *lynxParams = [NSMutableDictionary new];
     NSMutableDictionary *lynxParamsAll = [NSMutableDictionary new];
     NSMutableDictionary *dataDict = [model toDictionary];
-    CGFloat top = [self getSafeTop];
 
     if (dataDict && dataDict[@"data"]) {
         lynxParams[@"estate_info"] = dataDict[@"data"];
@@ -203,9 +202,6 @@
         [lynxParams setValue:@(_houseNameModel.tags.count) forKey:@"tags_size"];
 
     }
-    
-  
-    CGRect screenFrame = [UIScreen mainScreen].bounds;
   
     
     
@@ -233,48 +229,25 @@
     });
 }
 
-- (CGFloat)getSafeTop{
-    CGFloat top = 0;
-         if (@available(iOS 13.0 , *)) {
-           top = 44.f + [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
-         } else if (@available(iOS 11.0 , *) && [UIDevice btd_isIPhoneXSeries]) {
-           top = 84;
-         } else {
-           top = 65;
-         }
-    return top;
-}
-
-- (CGFloat)getSafeBottom{
-    CGFloat safeBottomPandding = 0;
-    if (@available(iOS 11.0, *)) {
-        safeBottomPandding = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom;
-    }else{
-        if ([UIDevice btd_isIPhoneXSeries]) {
-            return 20;
-        }
-    }
-    return safeBottomPandding;
-}
-
 - (NSMutableDictionary *)getCommonParams{
-       CGRect screenFrame = [UIScreen mainScreen].bounds;
-      CGFloat top = [self getSafeTop];
-    
-      NSMutableDictionary *dataCommonparmas = [NSMutableDictionary new];
-    
-      [dataCommonparmas setValue:@(screenFrame.size.height - top - 80 - [self getSafeBottom]) forKey:@"display_height"];
-      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"display_width"];
-      [dataCommonparmas setValue:@([UIDevice btd_isIPhoneXSeries]) forKey:@"iOS_iPhoneXSeries"];
-      [dataCommonparmas setValue:@(top) forKey:@"status_bar_height"];
-      NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
-      [dataCommonparmas setValue:buildVersionRaw forKey:@"update_version_code"];
-      [dataCommonparmas setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
-      [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
-      [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
-      [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];
-      [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"screen_width"];
-    
+    CGRect screenFrame = [UIScreen mainScreen].bounds;
+    NSMutableDictionary *dataCommonparmas = [NSMutableDictionary new];
+    FHHouseDetailSubPageViewController *subPage = (FHHouseDetailSubPageViewController *)self.detailController;
+    CGFloat bottomBarHeight = 80 ;
+    if (@available(iOS 11.0, *)) {
+        bottomBarHeight = bottomBarHeight + [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom ;
+    }
+    [dataCommonparmas setValue:@(screenFrame.size.height - [subPage getNaviBar].frame.size.height - bottomBarHeight) forKey:@"display_height"];
+    [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"display_width"];
+    [dataCommonparmas setValue:@([UIDevice btd_isIPhoneXSeries]) forKey:@"iOS_iPhoneXSeries"];
+    [dataCommonparmas setValue:@( [subPage getNaviBar].frame.size.height) forKey:@"status_bar_height"];
+    NSString * buildVersionRaw = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"UPDATE_VERSION_CODE"];
+    [dataCommonparmas setValue:buildVersionRaw forKey:@"update_version_code"];
+    [dataCommonparmas setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
+    [dataCommonparmas setValue:@"iOS" forKey:@"platform"];
+    [dataCommonparmas setValue:@"f100" forKey:@"app_name"];
+    [dataCommonparmas setValue:@(screenFrame.size.height) forKey:@"screen_height"];
+    [dataCommonparmas setValue:@(screenFrame.size.width) forKey:@"screen_width"];
     return dataCommonparmas;
 }
 

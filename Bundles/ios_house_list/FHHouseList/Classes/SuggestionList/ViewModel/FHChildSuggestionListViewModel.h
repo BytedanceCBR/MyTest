@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)   FHEnterSuggestionType       fromPageType;
 @property (nonatomic, copy)     NSString       *pageTypeStr;
 @property (nonatomic, assign)   BOOL isAssociatedCanTrack;
+@property (nonatomic, assign)   NSInteger       jumpHouseType;
 
 - (NSString *)pageTypeString;
 - (NSString *)categoryNameByHouseType;
@@ -37,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestSugSubscribe:(NSInteger)cityId houseType:(NSInteger)houseType;
 - (void)reloadHistoryTableView;
 - (void)viewWillDisappear;
+- (NSString *)relatedRecommendelEmentFromNameByHouseType:(NSInteger)houseType;
 @end
 
 NS_ASSUME_NONNULL_END

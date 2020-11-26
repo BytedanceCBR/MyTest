@@ -39,7 +39,7 @@
 #import <TTBaseLib/UIButton+TTAdditions.h>
 #import "SSCommonLogic.h"
 #import <TTNetworkManager/TTNetworkManager.h>
-#import "UIView+FHTracker.h"
+#import "NSObject+FHTracker.h"
 
 NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotification";
 
@@ -477,7 +477,7 @@ NSString * const TTTopBarMineIconTapNotification = @"TTTopBarMineIconTapNotifica
         CGRect actionBounds = CGRectMake(self.touchOffset, 0, CGRectGetWidth(self.backgroundImageView.bounds), CGRectGetHeight(self.backgroundImageView.bounds));
         if (CGRectContainsPoint(actionBounds, location)) {
             return YES;
-            LOGD(@"searchFieldClick");
+//            LOGD(@"searchFieldClick");
         }
         
         return NO;

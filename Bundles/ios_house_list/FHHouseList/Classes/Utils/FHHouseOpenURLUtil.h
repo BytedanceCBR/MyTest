@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(NSDictionary *)queryDict:(NSString *)url;
 
++ (void)openUrl:(NSString *)openUrl logParams:(NSDictionary *)logParams;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -145,6 +145,7 @@
 "city_market_hot_list"   = "FHCityMarketHotCityListViewController";
 
 "second_house_main"   = "FHBaseMainListViewController";
+"new_house_main" = "FHBaseMainListViewController";
 
 //通勤找房
 "commute_config" = "FHCommuteConfigViewController";
@@ -252,6 +253,6 @@
 "small_video_detail" = "FHUGCShortVideoDetailController";
 
 // linkChat客服页面
-"linkchat_customer_service" = "FHCustomerServicePage";
+"link_chat" = "FHCustomerServicePage";
 "house_detail_report_page" = "FHHouseDetailReportViewController";
 "house_report_additional" = "FHHouseDetailReportAddtionViewController";

@@ -290,6 +290,8 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 
 + (FHFeedUGCCellModel *)modelFromFake3:(BOOL)isList;
 
++ (FHFeedUGCCellModel *)copyFromModel:(FHFeedUGCCellModel *)oldCellModel;
+
 @end
 
 NS_ASSUME_NONNULL_END

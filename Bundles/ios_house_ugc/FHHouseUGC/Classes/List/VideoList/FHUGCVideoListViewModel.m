@@ -21,7 +21,6 @@
 #import "TSVShortVideoDetailExitManager.h"
 #import "HTSVideoPageParamHeader.h"
 #import "FHUGCVideoCell.h"
-#import "TTVFeedPlayMovie.h"
 #import "TTVPlayVideo.h"
 #import "TTVFeedCellWillDisplayContext.h"
 #import "TTVFeedCellAction.h"
@@ -76,10 +75,12 @@
 
 - (void)viewWillAppear {
     self.isViewAppear = YES;
+    [self lazyStartVideoPlay];
 }
 
 - (void)viewWillDisappear {
     self.isViewAppear = NO;
+    [self stopCurrentVideo];
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -498,8 +499,8 @@
         return;
     }
 
-    if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-        FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)cell;
+    if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+        FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
         UIView *view = [vCell cell_movieView];
         if ([view isKindOfClass:[TTVPlayVideo class]]) {
             TTVPlayVideo *movieView = (TTVPlayVideo *)view;
@@ -538,6 +539,12 @@
     }
 }
 
+- (void)lazyStartVideoPlay {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self startVideoPlay];
+    });
+}
+
 - (void)startVideoPlay {
     if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive || !self.isViewAppear) {
         return;
@@ -560,7 +567,10 @@
     if(videoCell){
         videoCell.contentView.userInteractionEnabled = YES;
         self.currentVideoCell = videoCell;
+        [self lazyStartVideoPlay];
     }
+    
+    
 }
 
 - (void)autoPlayCurrentVideo {
@@ -572,8 +582,8 @@
     NSArray *cells = [self.tableView visibleCells];
     for (NSInteger i = 0; i < cells.count; i++) {
         UITableViewCell *cell = cells[i];
-        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [cell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)cell;
+        if([cell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)cell;
             CGRect frame = [vCell.videoView convertRect:vCell.videoView.bounds toView:self.viewController.view];
             if(frame.origin.y >= CGRectGetMaxY(self.viewController.customNavBarView.frame) && (CGRectGetMaxY(frame) - 50) < maxY){
                 return vCell;
@@ -584,47 +594,19 @@
 }
 
 - (void)stopCurrentVideo {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        return;
-    }
-    
     if(self.currentVideoCell){
-        if([self.currentVideoCell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [self.currentVideoCell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)self.currentVideoCell;
-            UIView *view = [vCell cell_movieView];
-            if ([view isKindOfClass:[TTVPlayVideo class]]) {
-                TTVPlayVideo *movieView = (TTVPlayVideo *)view;
-                if (!movieView.player.context.isFullScreen &&
-                    !movieView.player.context.isRotating) {
-                    if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
-                        [movieView stop];
-                    }
-                    [movieView removeFromSuperview];
-                }
-            }
-            [vCell endDisplay];
+        if([self.currentVideoCell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)self.currentVideoCell;
+            [vCell stop];
         }
     }
 }
 
 - (void)pauseCurrentVideo {
-    if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
-        return;
-    }
-    
     if(self.currentVideoCell){
-        if([self.currentVideoCell isKindOfClass:[FHUGCFullScreenVideoCell class]] && [self.currentVideoCell conformsToProtocol:@protocol(TTVFeedPlayMovie)]){
-            FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *vCell = (FHUGCFullScreenVideoCell<TTVFeedPlayMovie> *)self.currentVideoCell;
-            UIView *view = [vCell cell_movieView];
-            if ([view isKindOfClass:[TTVPlayVideo class]]) {
-                TTVPlayVideo *movieView = (TTVPlayVideo *)view;
-                if (!movieView.player.context.isFullScreen &&
-                    !movieView.player.context.isRotating) {
-                    if (movieView.player.context.playbackState != TTVVideoPlaybackStateBreak || movieView.player.context.playbackState != TTVVideoPlaybackStateFinished) {
-                        [movieView.player pause];
-                    }
-                }
-            }
+        if([self.currentVideoCell isKindOfClass:[FHUGCFullScreenVideoCell class]]){
+            FHUGCFullScreenVideoCell *vCell = (FHUGCFullScreenVideoCell *)self.currentVideoCell;
+            [vCell pause];
         }
     }
 }

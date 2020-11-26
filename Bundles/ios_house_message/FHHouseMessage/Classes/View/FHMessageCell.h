@@ -25,6 +25,7 @@ typedef void(^FHMessageCellClick)(id data);
 @property (nonatomic, copy) FHMessageCellClick openEditTrack;
 @property (nonatomic, copy) FHMessageCellClick closeEditTrack;
 @property (nonatomic, strong) IMConversation *conv;
+@property (nonatomic, strong) UILabel *indexLabel; // 仅用于展示调试信息
 
 - (void)updateWithModel:(FHUnreadMsgDataUnreadModel *)model;
 - (void)updateWithChat:(IMConversation*)conversation;

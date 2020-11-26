@@ -30,6 +30,8 @@
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import "FHHouseListBaseItemCell.h"
 #import "FHHouseListBaseItemModel.h"
+#import "FHMapSearchSecondCell.h"
+#import "FHEnvContext.h"
 
 #define kCellId @"singleCellId"
 
@@ -87,6 +89,7 @@
     
 //    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
      [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kCellId];
+     [_tableView registerClass:[FHMapSearchSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHMapSearchSecondCell class])];
     
 }
 
@@ -179,30 +182,20 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
-    BOOL isLastCell = (indexPath.row == _houseList.count - 1);
-//    id model = _houseList[indexPath.row];
     FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
     if([cellModel isKindOfClass:[FHHouseListBaseItemModel class]]){
-//        FHHouseRentDataItemsModel *rentModel = (FHHouseRentDataItemsModel *)model;
-//        FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:rentModel];
-//        if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
-//            FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
-//            [imageInfoCell refreshTopMargin:20];
-//            [imageInfoCell updateWithHouseCellModel:cellModel];
-//        }
+        if ([FHEnvContext isDisplayNewCardType]) {
+            FHMapSearchSecondCell *secondCell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHMapSearchSecondCell class])];
+            [secondCell refreshWithData:cellModel];
+            return secondCell;
+        }
                       FHHouseListBaseItemCell *imageInfoCell = (FHHouseListBaseItemCell *)cell;
-        //                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-        //                [imageInfoCell refreshTopMargin:20];
                         [imageInfoCell refreshWithData:cellModel];
                         
     }else{
         if([cellModel isKindOfClass:[FHSearchHouseDataItemsModel class]]){
-//            FHSearchHouseDataItemsModel *oldModel = (FHSearchHouseDataItemsModel *)model;
-//            FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:oldModel];
             if ([cell isKindOfClass:[FHHouseListBaseItemCell class]]) {
                 FHHouseListBaseItemCell *imageInfoCell = (FHHouseListBaseItemCell *)cell;
-//                CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-//                [imageInfoCell refreshTopMargin:20];
                 [imageInfoCell refreshWithData:cellModel];
                 
             }

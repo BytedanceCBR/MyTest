@@ -60,7 +60,6 @@
 @property (nonatomic, strong) FHDetailNavBar *navBar;
 @property (nonatomic, strong) FHNewHouseDetailFlowLayout *detailFlowLayout;
 @property (nonatomic, strong) FHBaseCollectionView *collectionView;
-@property (nonatomic, strong) UILabel *bottomStatusBar;
 @property (nonatomic, strong) UIView *bottomMaskView;
 @property (nonatomic, strong) FHDetailBottomBar *bottomBar;
 @property (nonatomic, strong) FHDetailUGCGroupChatButton *bottomGroupChatBtn; // 新房群聊入口
@@ -144,9 +143,6 @@
     [self setupViewModel];
     self.isViewDidDisapper = NO;
     [self startLoadData];
-    if (!self.isDisableGoDetail) {
-        [self.viewModel addGoDetailLog];
-    }
     // Push推送过来的状态栏修改
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -235,7 +231,6 @@
         [weakSelf.navigationController popViewControllerAnimated:YES];
     };
     [self.view addSubview:_navBar];
-    self.viewModel.navBar = _navBar;
 
     self.bottomMaskView = [[UIView alloc] init];
     self.bottomMaskView.backgroundColor = [UIColor whiteColor];
@@ -245,30 +240,13 @@
     self.bottomBar = [[FHOldDetailBottomBarView alloc] initWithFrame:CGRectZero];
 
     [self.view addSubview:_bottomBar];
-    self.viewModel.bottomBar = _bottomBar;
+    
     _bottomBar.hidden = YES;
 
     self.bottomGroupChatBtn = [[FHDetailUGCGroupChatButton alloc] initWithFrame:CGRectZero];
     [self.view addSubview:_bottomGroupChatBtn];
     self.bottomBar.bottomGroupChatBtn = _bottomGroupChatBtn; // 这样子改动最小
     _bottomGroupChatBtn.hidden = YES;
-
-    _bottomStatusBar = [[UILabel alloc] init];
-    _bottomStatusBar.textAlignment = NSTextAlignmentCenter;
-    _bottomStatusBar.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
-    _bottomStatusBar.text = @"该房源已停售";
-    _bottomStatusBar.font = [UIFont themeFontRegular:14];
-    _bottomStatusBar.textColor = [UIColor whiteColor];
-    _bottomStatusBar.hidden = YES;
-    [self.view addSubview:_bottomStatusBar];
-    self.viewModel.bottomStatusBar = _bottomStatusBar;
-
-    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
-    self.viewModel.contactViewModel.searchId = self.searchId;
-    self.viewModel.contactViewModel.imprId = self.imprId;
-    self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
-    self.viewModel.contactViewModel.belongsVC = self;
-    self.viewModel.contactViewModel.houseInfoOriginBizTrace = self.bizTrace;
 
     [self addDefaultEmptyViewFullScreen];
 
@@ -284,11 +262,6 @@
         } else {
             make.bottom.mas_equalTo(self.view);
         }
-    }];
-    [_bottomStatusBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.view);
-        make.bottom.mas_equalTo(self.bottomBar.mas_top);
-        make.height.mas_equalTo(0);
     }];
 
     [_bottomMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -334,8 +307,19 @@
     self.viewModel.extraInfo = self.extraInfo;
     self.viewModel.initTimeInterval = self.initTimeInterval;
     self.viewModel.houseType = self.houseType;
+        
+    self.viewModel.contactViewModel = [[FHHouseDetailContactViewModel alloc] initWithNavBar:_navBar bottomBar:_bottomBar houseType:_houseType houseId:_houseId];
+    self.viewModel.contactViewModel.searchId = self.searchId;
+    self.viewModel.contactViewModel.imprId = self.imprId;
+    self.viewModel.contactViewModel.tracerDict = [self makeDetailTracerData];
+    self.viewModel.contactViewModel.belongsVC = self;
+    self.viewModel.contactViewModel.houseInfoOriginBizTrace = self.bizTrace;
+    
     if (self.tracerDict[@"event_tracking_id"] && [self.tracerDict[@"event_tracking_id"] isKindOfClass:[NSString class]]) {
         self.viewModel.trackingId = self.tracerDict[@"event_tracking_id"];
+    }
+    if (!self.isDisableGoDetail) {
+        [self.viewModel addGoDetailLog];
     }
     __weak typeof(self) weakSelf = self;
     [self.viewModel setUpdateLayout:^{
@@ -369,10 +353,13 @@
             if (isShowEmpty) {
                 weakSelf.isLoadingData = NO;
                 weakSelf.hasValidateData = NO;
+                weakSelf.bottomBar.hidden = YES;
                 [weakSelf.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             } else {
                 weakSelf.hasValidateData = YES;
+                weakSelf.bottomBar.hidden = NO;
                 [weakSelf.emptyView hideEmptyView];
+                [weakSelf.navBar showMessageNumber];
             }
         }
     }];
@@ -562,7 +549,6 @@
     }];
     self.bottomBar.hidden = NO;
     self.bottomMaskView.hidden = NO;
-    self.bottomStatusBar.hidden = NO;
     [self.view sendSubviewToBack:self.collectionView];
     [self.view setNeedsUpdateConstraints];
 }

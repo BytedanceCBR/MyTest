@@ -45,7 +45,9 @@
 #import "FHUserTracker.h"
 #import "BDABTestManager.h"
 #import "TTSandBoxHelper.h"
+#import "NSDictionary+BTDAdditions.h"
 #import "FHCommonParamHelper.h"
+#import "SSCommonLogic.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -1125,19 +1127,21 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isHasShortVideoList {
-    id res = [BDABTestManager getExperimentValueForKey:@"discover_type" withExposure:YES];
+    return YES;
+}
+
++ (BOOL)isHasPerLoadForVideo {
+    id res = [BDABTestManager getExperimentValueForKey:@"is_video_perload" withExposure:YES];
     if(res){
         return [res boolValue];
     }
     return NO;
 }
 
-+ (BOOL)isShowHomeHouseCard {
-    id res = [BDABTestManager getExperimentValueForKey:@"home_recommend_card" withExposure:YES];
-    if(res){
-        return [res boolValue];
-    }
-    return NO;
++ (BOOL)isDisplayNewCardType {
+    NSDictionary *fhSettings= [SSCommonLogic fhSettings];
+    BOOL NewCardType = [fhSettings btd_boolValueForKey:@"f_house_card_type" default:NO];
+    return NewCardType;
 }
 
 + (BOOL)isIntroduceOpen {

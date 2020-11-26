@@ -61,19 +61,15 @@
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
             if (model.data) {
-                weakSelf.isShowEmpty = NO;
-                weakSelf.bottomBar.hidden = NO;
-                [weakSelf processDetailData:model];
-                [weakSelf.navBar showMessageNumber];
+                strongSelf.isShowEmpty = NO;
+                [strongSelf processDetailData:model];
             }else {
-                weakSelf.isShowEmpty = YES;
-                weakSelf.bottomBar.hidden = YES;
-                [weakSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
+                strongSelf.isShowEmpty = YES;
+                [strongSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         }else {
-            weakSelf.isShowEmpty = YES;
-            weakSelf.bottomBar.hidden = YES;
-            [weakSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
+            strongSelf.isShowEmpty = YES;
+            [strongSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
         }
     }];
 }

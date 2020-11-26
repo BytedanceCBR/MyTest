@@ -493,6 +493,67 @@
 @end
 
 
+@implementation FHCourtBillboardPreviewButtonModel
+
++ (JSONKeyMapper*)keyMapper {
+    NSDictionary *dict = @{
+       @"openUrl": @"open_url",
+       @"text": @"text",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
+@implementation FHCourtBillboardPreviewItemModel : JSONModel
+
++ (JSONKeyMapper*)keyMapper {
+    NSDictionary *dict = @{
+       @"courtId": @"court_id",
+       @"openUrl": @"open_url",
+       @"title": @"title",
+       @"subtitle": @"subtitle",
+       @"pricingPerSqm": @"pricing_per_sqm",
+       @"img": @"img",
+       @"logPb": @"log_pb",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
+@implementation FHCourtBillboardPreviewModel
+
++ (JSONKeyMapper*)keyMapper {
+    NSDictionary *dict = @{
+       @"title": @"title",
+       @"button": @"button",
+       @"items": @"items",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName {
+    return YES;
+}
+
+@end
+
+
 #pragma mark - 新model
 
 @implementation  FHListSearchHouseModel
@@ -522,7 +583,8 @@
                            @"agencyInfo": @"agency_info",
                            @"topTip":@"top_tip",
                            @"bottomTip":@"bottom_tip",
-                           //                           @"currentItems":@"items",
+                           @"realBussinessSearch":@"real_bussiness_search",
+                           @"courtBillboardPreview": @"court_billboard_preview",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -729,6 +791,7 @@
                            @"skyEyeTag": @"sky_eye_tag",
                            @"advantageDescription":@"advantage_description",
                            @"cellStyles":@"cell_style",
+                           @"cardType": @"card_type",
                            @"tagImage": @"tag_image",
                            
                            @"pricePerSqmNum": @"price_per_sqm_num",
@@ -776,10 +839,10 @@
 {
     switch (houseType) {
         case FHHouseTypeNewHouse:
-            return @"FHHouseBaseNewHouseCell";
+            return @"FHHouseSearchNewHouseCell";
             break;
         case FHHouseTypeSecondHandHouse:
-            return @"FHHouseBaseItemCellSecond";
+            return @"FHHouseSearchSecondHouseCell";
             break;
         case FHHouseTypeRentHouse:
             return @"FHHouseBaseItemCellRent";
@@ -814,7 +877,6 @@
                     }
                     return @"";
                 }];
-                
             }
             if (self.titleTags) {//FHSearchHouseItemTitleTagModel
                 mutablLogPb[@"app_marketing_tags"] = [self.titleTags btd_map:^id _Nullable(id  _Nonnull obj) {
@@ -921,6 +983,16 @@
 // 猜你想找Tips
 @implementation  FHSearchGuessYouWantTipsModel
 
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"realSearchOpenUrl": @"real_search_open_url",
+                           @"emphasisContent": @"emphasis_content",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {

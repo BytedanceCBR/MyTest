@@ -293,7 +293,7 @@ static  NSString * const hasInitKey = @"TTAdWebResURLProtocolKey";
     @try {
         modelDict = [NSKeyedUnarchiver unarchiveObjectWithData:data];
     } @catch (NSException *exception) {
-        LOGE(@"TTAdWebResPreloadManager unarchieve:%@",exception.description);
+//        LOGE(@"TTAdWebResPreloadManager unarchieve:%@",exception.description);
     } @finally {
         
     }

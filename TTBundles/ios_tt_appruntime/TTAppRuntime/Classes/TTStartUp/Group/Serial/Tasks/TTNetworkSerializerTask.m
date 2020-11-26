@@ -58,7 +58,7 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
 + (void)settingNetworkSerializerClass {
     //add by songlu
     Monitorblock block = ^(NSDictionary* data, NSString* logType) {
-        LOGD(@"%s logType %@", __FUNCTION__, logType);
+//        LOGD(@"%s logType %@", __FUNCTION__, logType);
         [[TTMonitor shareManager] trackData:data logTypeStr:logType];
     };
     [TTNetworkManager setMonitorBlock:block];
@@ -92,6 +92,9 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     } else {
         [TTNetworkManager setLibraryImpl:TTNetworkManagerImplTypeAFNetworking];
     }
+    
+    [[TTNetworkManager shareInstance] setDomainHttpDns:@"dig.bdurl.net"];
+    [[TTNetworkManager shareInstance] setDomainNetlog:@"crash.snssdk.com"];
 
 //    // 初始化SafeGuard配置
 //    [[AKSafeGuardHelper sharedInstance] initSafeGuard];
@@ -275,7 +278,7 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     }
     [[TTNetworkManager shareInstance] start];
     
-    LOGI(@"isEncryptQueryInHeader = %d, isEncryptQuery = %d, isKeepPlainQuery = %d", [TTNetworkManager shareInstance].isEncryptQueryInHeader, [TTNetworkManager shareInstance].isEncryptQuery, [TTNetworkManager shareInstance].isKeepPlainQuery);
+//    LOGI(@"isEncryptQueryInHeader = %d, isEncryptQuery = %d, isKeepPlainQuery = %d", [TTNetworkManager shareInstance].isEncryptQueryInHeader, [TTNetworkManager shareInstance].isEncryptQuery, [TTNetworkManager shareInstance].isKeepPlainQuery);
 }
 
 

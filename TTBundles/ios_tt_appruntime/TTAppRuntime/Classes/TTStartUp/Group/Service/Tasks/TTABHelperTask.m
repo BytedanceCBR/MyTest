@@ -11,6 +11,7 @@
 #import <BDABTestSDK/BDABTestBaseExperiment.h>
 #import <BDABTestSDK/BDABTestManager.h>
 #import <TTTracker/TTTracker.h>
+#import "FHEnvContext.h"
 
 #import <TTSettingsManager/TTSettingsManager.h>
 #import "TTLaunchDefine.h"
@@ -87,9 +88,10 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
     // 客户端分层实验在此添加
     [self addShowHouseTest];
     
-    [self addSmallVideoListTest];
+//    [self addSmallVideoListTest];
+
+    [self addVideoPerloadTest];
     
-    [self addHomeHouseCardTest];
     //启动实验引擎，请确保在所有客户端本地分流实验都注册完成后再调用此接口！
     [BDABTestManager launchClientExperimentManager];
     
@@ -99,16 +101,14 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
 
 + (void)preExposureExperiment {
     //获取实验值，同时为了提前把实验曝光
-    id res = [BDABTestManager getExperimentValueForKey:@"discover_type" withExposure:YES];
-    NSLog(@"BDClientABTest discover_type is %@",res);
-    
-    id res2 = [BDABTestManager getExperimentValueForKey:@"home_recommend_card" withExposure:YES];
-    NSLog(@"BDClientABTest home_recommend_card is %@",res2);
     //queryExposureExperiments决定了你上报到alog的实验数据，如果上报时候没有你的vid，则表示上报的不对
 //    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
 //    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
+    
+    id videoPerload = [BDABTestManager getExperimentValueForKey:@"test_video_perload" withExposure:YES];
+    NSLog(@"BDClientABTest test_video_perload is %@",videoPerload);
+    
 }
-
 // test 注册字典类型的客户端分层实验
 + (void)addCardStyleTest
 {
@@ -177,52 +177,28 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
 //    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
 }
 
-//首页二手房、新房卡片实验，实验地址：https://data.bytedance.net/libra/flight/509105/edit
-+ (void)addHomeHouseCardTest {
-    NSInteger count = 2;
-    NSMutableArray *groups = [NSMutableArray arrayWithCapacity:count];
-    for (NSInteger index = 0; index < count; ++index) {
-        NSString *name = [NSString stringWithFormat:@"%ld", 2087053 + index];
-        NSMutableDictionary *params = @{}.mutableCopy;
-        params[@"home_recommend_card"] = @(index);
-        BDClientABTestGroup *group = [[BDClientABTestGroup alloc] initWithName:name minRegion:1000/count*index maxRegion:1000/count*(index + 1) - 1 results:params];
-        if ([group isLegal]) {
-            [groups addObject:group];
-        }
-    }
-    //生成实验层
-    BDClientABTestLayer *clientLayer = [[BDClientABTestLayer alloc] initWithName:@"f_client_layer1" groups:groups];
-    if ([clientLayer isLegal]) {
-        [BDABTestManager registerClientLayer:clientLayer];
-    }
-    BDClientABTestExperiment *clientEXP = [[BDClientABTestExperiment alloc] initWithKey:@"home_recommend_card" owner:@"xubinbin.19971226" description:@"首页推荐列表新房, 二手房卡片样式实验, 命中实验后启用新样式" defaultValue:@(0) valueType:BDABTestValueTypeNumber isSticky:NO clientLayer:clientLayer];
-    [BDABTestManager registerExperiment:clientEXP];
-}
-
-+ (void)addSmallVideoListTest
-{
++ (void)addVideoPerloadTest {
     NSInteger count = 2;
     NSMutableArray *groups = [NSMutableArray arrayWithCapacity:count];
     for (NSInteger index = 0; index < count; ++index) {
         //name:vid
-        NSString *name = [NSString stringWithFormat:@"%ld",2064337 + index]; // Libra对应d实验组vid
+        NSString *name = [NSString stringWithFormat:@"%ld",2117488 + index]; // Libra对应d实验组vid
         NSMutableDictionary *params = @{}.mutableCopy;
-        params[@"discover_type"] = @(index);
+        params[@"is_video_perload"] = @(index);
         BDClientABTestGroup *group = [[BDClientABTestGroup alloc] initWithName:name minRegion:1000/count*index maxRegion:1000/count*(index+1)-1 results:params];
         if ([group isLegal]) {
             [groups addObject:group];
         }
     }
     //生成实验层
-    BDClientABTestLayer *clientLayer = [[BDClientABTestLayer alloc] initWithName:@"test_client2" groups:groups];// 此处name @"test_client" 必须和Libra客户端分层保持一致么？
+    BDClientABTestLayer *clientLayer = [[BDClientABTestLayer alloc] initWithName:@"test_video_perload" groups:groups];// 此处name @"test_client" 必须和Libra客户端分层保持一致么？
     if ([clientLayer isLegal]) {
         //注册实验层
         [BDABTestManager registerClientLayer:clientLayer];
     }
     //生成实验
-    BDClientABTestExperiment *clientEXP = [[BDClientABTestExperiment alloc] initWithKey:@"discover_type" owner:@"fupeidong.rd" description:@"验证小视频在小端的收益" defaultValue:@(0) valueType:BDABTestValueTypeNumber isSticky:NO clientLayer:clientLayer];
+    BDClientABTestExperiment *clientEXP = [[BDClientABTestExperiment alloc] initWithKey:@"is_video_perload" owner:@"fupeidong.rd" description:@"验证小视频预加载" defaultValue:@(0) valueType:BDABTestValueTypeNumber isSticky:NO clientLayer:clientLayer];
     //注册实验
     [BDABTestManager registerExperiment:clientEXP];
 }
-
 @end

@@ -157,7 +157,6 @@
     [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
     [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:self.houseType]];
     _naviBar.searchInput.delegate = self;
-    _naviBar.searchInput.delegate = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
     
     self.containerView = [[UIView alloc] init];
@@ -204,7 +203,7 @@
         self.naviBar.searchInput.text = text;
     }
     [self.viewModel textFieldTextChange:text];
-}
+}                                      
 
 - (void)setupSegmentedControl {
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
