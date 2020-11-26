@@ -283,13 +283,12 @@ static NSMutableArray  * _Nullable identifierArr;
     CGFloat height = 0;
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
         
-        NSInteger countValue = dataModel.opData.items.count;
-        
-//        if (countValue > 0) {
-//            height = [FHHomeEntrancesCell cellHeightForModel:dataModel.opData];
-//        }
-        if (countValue > 0) {
-            height = [FHHomeEntranceContainerCell cellHeightForModel:dataModel.opData];
+        FHConfigDataOpDataModel *opdata = dataModel.opData;
+
+        if ([opdata.opStyle isEqualToString:@"1"]) {
+            height = [FHHomeEntrancesCell cellHeightForModel:opdata];
+        } else if ([opdata.opStyle isEqualToString:@"3"]) {
+            height = [FHHomeEntranceContainerCell cellHeightForModel:opdata];
         }
         
         if (dataModel.mainPageBannerOpData.items.count > 0) {
