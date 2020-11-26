@@ -12,6 +12,7 @@
 #import "UIColor+Theme.h"
 #import "UIViewAdditions.h"
 #import "TTRoute.h"
+#import "FHUserTracker.h"
 
 @interface FHHouseComfortFindHeaderView ()
 @property(nonatomic,strong) NSArray *items;
@@ -103,7 +104,12 @@
     if(index >= 0 && index < self.items.count) {
         FHConfigDataOpDataItemsModel *model = self.items[index];
         
+        [self addIconClickTracerWithModel:model];
+        
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+        tracerDict[@"origin_from"] = self.tracerDict[@"origin_from"];
+        tracerDict[@"enter_from"] = @"f_house_finder";
+        tracerDict[@"enter_type"] = @"click";
         NSDictionary *params = @{@"tracer":tracerDict};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
         
@@ -111,6 +117,31 @@
             NSURL *url = [NSURL URLWithString:model.openUrl];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
+    }
+}
+
+- (void)addIconClickTracerWithModel:(FHConfigDataOpDataItemsModel *)model {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";;
+    params[@"page_type"] = @"f_house_finder";
+    params[@"icon_name"] = [self getIconNameWithTitle:model.title];
+    [FHUserTracker writeEvent:@"click_icon" params:params];
+}
+
+-(NSString *)getIconNameWithTitle:(NSString *)title {
+    if([title isEqualToString:@"帮我找房"]) {
+        return @"driving_find_house";
+    } else if([title isEqualToString:@"地图找房"]) {
+        return @"mapfind";
+    } else if([title isEqualToString:@"查房价"]) {
+        return @"value_info";
+    } else if([title isEqualToString:@"城市行情"]) {
+        return @"city_market";
+    } else if([title isEqualToString:@"房贷计算器"]) {
+        return @"debit_calculator";
+    } else {
+        return @"be_null";
     }
 }
 
