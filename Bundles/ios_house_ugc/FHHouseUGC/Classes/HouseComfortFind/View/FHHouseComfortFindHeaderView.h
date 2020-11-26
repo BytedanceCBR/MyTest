@@ -17,6 +17,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseComfortFindHeaderView : UIView
+@property(nonatomic,strong) NSDictionary *tracerDict;
 @property(nonatomic,assign) NSUInteger itemsCount;
 - (void)loadItemViews;
 @end
