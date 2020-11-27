@@ -36,6 +36,7 @@
 #import "FHHouseUGCHeader.h"
 #import "FHUGCCategoryManager.h"
 #import "FHLoginTipView.h"
+#import "UIDevice+BTDAdditions.h"
 
 @interface FHCommunityViewController ()<FHUGCPostMenuViewDelegate>
 
@@ -193,9 +194,9 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
+//    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
         [self.viewModel viewWillDisappear];
-    }
+//    }
     
     if (self.loginTipview) {
          [self.loginTipview pauseTimer];
@@ -203,43 +204,47 @@
     if(!self.isInHomePage){
         [self addStayCategoryLog:self.stayTime];
     }else{
-        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
-            [self viewDisAppearForEnterType:1 needReportSubCategory:NO];
-        }
+//        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+//            [self viewDisAppearForEnterType:1 needReportSubCategory:NO];
+//        }
     }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
+//    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
         [self.viewModel viewWillAppear];
-    }
+//    }
     
     [self initLoginTipView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 
-    if(self.isUgcOpen){
-        //去掉邻里tab的红点
-        [FHEnvContext hideFindTabRedDots];
-        if(!self.isInHomePage){
-            NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
-            //去掉圈子红点的同时刷新tab
-            if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].ugcFocusHasNew){
-                self.hasFocusTips = NO;
-                [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
-                [self.viewModel refreshCell:YES isClick:NO];
-            }
-        }
-    }else{
-        if (!self.hasShowDots) {
-            [FHEnvContext hideFindTabRedDotsLimitCount];
-            self.hasShowDots = YES;
+    //去掉邻里tab的红点
+    [FHEnvContext hideFindTabRedDots];
+    if(!self.isInHomePage){
+        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
+        //去掉圈子红点的同时刷新tab
+        if(self.viewModel.currentTabIndex == index && [FHUGCConfig sharedInstance].ugcFocusHasNew){
+            self.hasFocusTips = NO;
+            [FHUGCConfig sharedInstance].ugcFocusHasNew = NO;
+            [[FHUGCConfig sharedInstance] recordHideRedPointTime];
+            self.segmentControl.sectionRedPoints = @[@0];
+            [self.viewModel refreshCell:YES isClick:NO];
         }
     }
     
-    if(self.isInHomePage){
-        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
-            [self viewAppearForEnterType:1 needReportSubCategory:NO];
+//    if(self.isInHomePage){
+//        if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+//            [self viewAppearForEnterType:1 needReportSubCategory:NO];
+//        }
+//    }
+    
+    //视频tab，隐藏发布按钮
+    if(!self.isInHomePage){
+        if(self.viewModel.currentTabIndex == 0){
+            self.publishBtn.hidden = YES;
+        }else{
+            self.publishBtn.hidden = NO;
         }
     }
 }
@@ -418,7 +423,7 @@
         if([[UIApplication sharedApplication] statusBarFrame].size.height > 0){
             top += [[UIApplication sharedApplication] statusBarFrame].size.height;
         }else{
-            if([TTDeviceHelper isIPhoneXSeries]){
+            if([UIDevice btd_isIPhoneXSeries]){
                 top += 44;
             }else{
                 top += 20;
@@ -438,7 +443,7 @@
         
         [self.bottomLineView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.bottom.right.equalTo(self.topView);
-            make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
+            make.height.mas_equalTo([UIDevice btd_onePixel]);
         }];
     }
     
@@ -664,29 +669,6 @@
     NSURL* url = [NSURL URLWithString:@"sslocal://ugc_post"];
     [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
 }
-
-//进入搜索页
-//- (void)goToSearch {
-//    [self addGoToSearchLog];
-//    NSString *routeUrl = @"sslocal://ugc_search_list";
-//    NSURL *openUrl = [NSURL URLWithString:routeUrl];
-//    NSMutableDictionary *paramDic = [NSMutableDictionary dictionary];
-//    NSMutableDictionary* searchTracerDict = [NSMutableDictionary dictionary];
-//    searchTracerDict[@"element_type"] = @"community_group";
-//    searchTracerDict[@"enter_from"] = @"neighborhood_tab";
-//    searchTracerDict[@"origin_from"] = @"neighborhood_tab";
-//    paramDic[@"tracer"] = searchTracerDict;
-//    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:paramDic];
-//    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-//}
-//
-//- (void)addGoToSearchLog {
-//    NSMutableDictionary *reportParams = [NSMutableDictionary dictionary];
-//    reportParams[@"page_type"] = @"neighborhood_tab";
-//    reportParams[@"origin_from"] = @"community_search";
-//    reportParams[@"origin_search_id"] = self.tracerDict[@"origin_search_id"] ?: @"be_null";
-//    [FHUserTracker writeEvent:@"click_community_search" params:reportParams];
-//}
 
 - (void)viewAppearForEnterType:(NSInteger)enterType needReportSubCategory:(BOOL)needReportSubCategory {
     self.stayTime = [[NSDate date] timeIntervalSince1970];

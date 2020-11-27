@@ -344,6 +344,10 @@
                         wself.refreshFooter.hidden = YES;
                     }
                     [wself.tableView reloadData];
+                    
+                    if(wself.viewController.requestSuccess){
+                        wself.viewController.requestSuccess(wself.viewController.hasValidateData);
+                    }
 
                     NSString *refreshTip = feedListModel.tips.displayInfo;
                     if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
@@ -768,6 +772,7 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    dict[@"element_from"] = self.viewController.tracerDict[@"element_from"];
     dict[@"page_type"] = [self pageType];
     dict[@"category_name"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;

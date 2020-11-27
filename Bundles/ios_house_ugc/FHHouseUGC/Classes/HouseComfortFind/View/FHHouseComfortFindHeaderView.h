@@ -6,14 +6,20 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FHCommonDefines.h"
 #import <FHHomeEntranceItemView.h>
+
+#define iconWidth        52
+#define itemViewHeight   70
+#define horizontalMargin 20
+#define verticalMargin   12
+#define comfortFindHeaderViewHeight 94
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseComfortFindHeaderView : UIView
+@property(nonatomic,strong) NSDictionary *tracerDict;
 @property(nonatomic,assign) NSUInteger itemsCount;
--(void)refreshView;
+- (void)loadItemViews;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -6,33 +6,44 @@
 //
 
 #import "FHHouseComfortFindHeaderView.h"
+#import "FHCommonDefines.h"
 #import <FHEnvContext.h>
 #import <FHConfigModel.h>
 #import "UIColor+Theme.h"
 #import "UIViewAdditions.h"
-#import "FHCommuteManager.h"
 #import "TTRoute.h"
+#import "FHUserTracker.h"
 
 @interface FHHouseComfortFindHeaderView ()
 @property(nonatomic,strong) NSArray *items;
+@property(nonatomic,weak) FHConfigDataModel *dataModel;
 @end
 
 @implementation FHHouseComfortFindHeaderView
 
-- (instancetype)init{
-    self = [super init];
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
     if (self) {
-        [self initItems];
+        [self setBackgroundColor:[UIColor themeWhite]];
     }
     return self;
 }
 
-- (void)initItems {
+- (void)loadItemViews {
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    if (!dataModel) {
-        dataModel = [[FHEnvContext sharedInstance] readConfigFromLocal];
+    if(self.dataModel == dataModel) {
+        return;
     }
+    self.dataModel = dataModel;
     
+    [self updateItems];
+    [self refreshView];
+}
+
+- (void)updateItems {
+    FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+
     NSArray *itemsName = @[@"地图找房",@"查房价",@"帮我找房",@"城市行情",@"房贷计算"];
     NSMutableArray *items = [NSMutableArray array];
     NSMutableDictionary *itemsDict = [NSMutableDictionary dictionary];
@@ -65,13 +76,11 @@
 }
 
 -(void)refreshView {
-    [self setBackgroundColor:[UIColor themeWhite]];
+    for(UIView *subView in self.subviews){
+        [subView removeFromSuperview];
+    }
     
     UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];;
-    CGFloat iconWidth = 52;
-    CGFloat itemViewHeight = 70;
-    CGFloat horizontalMargin = 20;
-    CGFloat verticalMargin = 12;
     CGFloat iconMargin = (SCREEN_WIDTH - 5 * iconWidth - 2 * horizontalMargin) / 4;
     
     for (NSInteger i = 0 ; i < self.items.count; i++) {
@@ -85,7 +94,7 @@
         [self addSubview:itemView];
     }
     
-    UIView *seprateView = [[UIView alloc] initWithFrame:CGRectMake(horizontalMargin, 94, SCREEN_WIDTH - 2 * horizontalMargin, 0.5)];
+    UIView *seprateView = [[UIView alloc] initWithFrame:CGRectMake(horizontalMargin ,comfortFindHeaderViewHeight ,SCREEN_WIDTH - 2 * horizontalMargin ,0.5)];
     [seprateView setBackgroundColor:[UIColor themeGray6]];
     [self addSubview:seprateView];
 }
@@ -95,7 +104,12 @@
     if(index >= 0 && index < self.items.count) {
         FHConfigDataOpDataItemsModel *model = self.items[index];
         
+        [self addIconClickTracerWithModel:model];
+        
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+        tracerDict[@"origin_from"] = self.tracerDict[@"origin_from"];
+        tracerDict[@"enter_from"] = @"f_house_finder";
+        tracerDict[@"enter_type"] = @"click";
         NSDictionary *params = @{@"tracer":tracerDict};
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:params];
         
@@ -103,6 +117,31 @@
             NSURL *url = [NSURL URLWithString:model.openUrl];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
+    }
+}
+
+- (void)addIconClickTracerWithModel:(FHConfigDataOpDataItemsModel *)model {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";;
+    params[@"page_type"] = @"f_house_finder";
+    params[@"icon_name"] = [self getIconNameWithTitle:model.title];
+    [FHUserTracker writeEvent:@"click_icon" params:params];
+}
+
+-(NSString *)getIconNameWithTitle:(NSString *)title {
+    if([title isEqualToString:@"帮我找房"]) {
+        return @"driving_find_house";
+    } else if([title isEqualToString:@"地图找房"]) {
+        return @"mapfind";
+    } else if([title isEqualToString:@"查房价"]) {
+        return @"value_info";
+    } else if([title isEqualToString:@"城市行情"]) {
+        return @"city_market";
+    } else if([title isEqualToString:@"房贷计算器"]) {
+        return @"debit_calculator";
+    } else {
+        return @"be_null";
     }
 }
 

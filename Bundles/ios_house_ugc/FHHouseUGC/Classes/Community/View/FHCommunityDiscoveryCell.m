@@ -121,6 +121,9 @@
         if([self.vc isKindOfClass:[FHCommunityFeedListController class]]){
             FHCommunityFeedListController *vc = (FHCommunityFeedListController *)self.vc;
             [vc viewWillAppear];
+        }else if([self.vc isKindOfClass:[FHUGCShortVideoListController class]]){
+            FHUGCShortVideoListController *vc = (FHUGCShortVideoListController *)self.vc;
+            [vc viewWillAppear];
         }
     }
 }

@@ -7,11 +7,13 @@
 
 #import "FHHouseComfortFindViewController.h"
 #import "UIViewAdditions.h"
+#import "FHCommonDefines.h"
+#import "FHEnvContext.h"
+#import "FHUserTracker.h"
 
 @interface FHHouseComfortFindViewController ()
 @property(nonatomic,strong) FHHouseComfortFindHeaderView *headerView;
 @property(nonatomic,assign) NSTimeInterval lastRequestTime;
-@property(nonatomic,assign) NSTimeInterval enterTabTimestamp;
 @property(nonatomic,assign) BOOL isOpenByPush;
 @end
 
@@ -19,15 +21,13 @@
 
 -(instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
-        
-        _isOpenByPush =YES;
+        _isOpenByPush = YES;
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initView];
     self.lastRequestTime = [[NSDate date] timeIntervalSince1970];
@@ -38,9 +38,10 @@
     
     //间隔6小时再次进入页面会主动刷新
     if(currentTime > 21600){
-        [self initView];
+        [self.feedVC startLoadData];
         self.lastRequestTime = [[NSDate date] timeIntervalSince1970];
     }
+    
     [self.feedVC viewWillAppear];
 }
 
@@ -49,43 +50,49 @@
 }
 
 - (void)initView {
-    if(!self.feedVC){
-        self.view.backgroundColor = [UIColor whiteColor];
-        self.feedVC =[[FHCommunityFeedListController alloc] init];
-        self.feedVC.listType = FHCommunityFeedListTypeCustom;
-        self.feedVC.category = @"f_house_finder";
-        self.feedVC.tableHeaderView = self.headerView;
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.feedVC =[[FHCommunityFeedListController alloc] init];
+    self.feedVC.listType = FHCommunityFeedListTypeCustom;
+    self.feedVC.category = @"f_house_finder";
+    self.feedVC.needReportEnterCategory = YES;
+    
+    self.headerView = [[FHHouseComfortFindHeaderView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, comfortFindHeaderViewHeight)];
+    WeakSelf;
+    self.feedVC.requestSuccess = ^(BOOL hasFeedData) {
+        StrongSelf;
+        [self updateHeaderView];
+    };
+    
+    if(self.isOpenByPush) {
+        [self setupDefaultNavBar:NO];
+        self.customNavBarView.title.text = @"好房推荐";
+        self.feedVC.tableViewNeedPullDown = NO;
+        self.feedVC.tracerDict = [self.tracerDict mutableCopy];
+        self.headerView.tracerDict = [self.tracerDict mutableCopy];
         
-        if(self.isOpenByPush) {
-            [self setupDefaultNavBar:NO];
-            self.customNavBarView.title.text = @"找好房";
-            
-            CGFloat navBarHeight = [self navBarHeight];
-            CGRect frame = self.view.bounds;
-            frame.size.height = frame.size.height - navBarHeight;
-            frame.origin.y = navBarHeight;
-            self.feedVC.view.frame = frame;
-        } else {
-            self.feedVC.view.frame = self.view.bounds;
-        }
-        
-        [self addChildViewController:self.feedVC];
-        [self.view addSubview:self.feedVC.view];
-        [self.feedVC viewWillAppear];
-    }else{
-        [self.feedVC startLoadData];
+        CGFloat navBarHeight = [self navBarHeight];
+        CGRect frame = self.view.bounds;
+        frame.size.height = frame.size.height - navBarHeight;
+        frame.origin.y = navBarHeight;
+        self.feedVC.view.frame = frame;
+    } else {
+        self.feedVC.view.frame = self.view.bounds;
     }
+    
+    [self addChildViewController:self.feedVC];
+    [self.view addSubview:self.feedVC.view];
+    [self.feedVC viewWillAppear];
 }
 
-- (FHHouseComfortFindHeaderView *)headerView {
-    if(!_headerView) {
-        _headerView = [[FHHouseComfortFindHeaderView alloc] init];
-        if(_headerView.itemsCount){
-            _headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 94);
-            [_headerView refreshView];
+-(void)updateHeaderView {
+    [self.headerView loadItemViews];
+    if(self.headerView.itemsCount) {
+        if(self.feedVC.tableHeaderView != self.headerView) {
+            self.feedVC.tableHeaderView = self.headerView;
         }
+    } else {
+        self.feedVC.tableHeaderView = nil;
     }
-    return _headerView;
 }
 
 -(CGFloat)navBarHeight {
@@ -99,6 +106,11 @@
     }
 }
 
+- (void)setTracerDict:(NSMutableDictionary *)tracerDict {
+    [super setTracerDict:tracerDict];
+    _feedVC.tracerDict = [tracerDict mutableCopy];
+    _headerView.tracerDict = [tracerDict mutableCopy];
+}
 
 
 @end
