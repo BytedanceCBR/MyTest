@@ -147,8 +147,8 @@ static const char tabSwitchedKey;
         if (!name || !name.length) continue;;
         
         firstTag = NO;
-        if (item.recallType && item.recallType.length && houseType == FHHouseTypeSecondHandHouse) {
-            [tagStr appendFormat:@"%@|%@", item.recallType, name];
+        if (item.newtip && item.newtip.content.length && houseType == FHHouseTypeSecondHandHouse) {
+            [tagStr appendFormat:@"%@|%@", item.newtip.content, name];
         } else {
             [tagStr appendFormat:@"%@", name];
         }
