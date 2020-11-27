@@ -38,7 +38,11 @@
     if (self.viewController.isInHomePage) {
         self.currentTabIndex = 0;
     }else{
-        self.currentTabIndex = 1;
+        if([FHEnvContext isCurrentCityNormalOpen]){
+            self.currentTabIndex = 1;
+        }else{
+            self.currentTabIndex = 0;
+        }
     }
     
     collectionView.delegate = self;

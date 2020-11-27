@@ -477,6 +477,19 @@
         [self initViewModel];
         self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
         self.segmentControl.sectionTitles = [self getSegmentTitles];
+    }else{
+        if(!self.isInHomePage){
+            NSInteger currentTabIndex = 0;
+            if([FHEnvContext isCurrentCityNormalOpen]){
+                currentTabIndex = 1;
+            }
+            
+            if(currentTabIndex < self.segmentControl.sectionTitles.count){
+                self.viewModel.currentTabIndex = currentTabIndex;
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:currentTabIndex inSection:0];
+                [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            }
+        }
     }
 }
 
