@@ -101,7 +101,7 @@
 }
 
 - (void)gotoMore {
-    [self.detailJumpManager jumpToSmallVideoDetail:self.currentModel otherVideos:@[] showComment:NO enterType:@"feed_content_blank" extraDic:@{} isShowCurrentVideo:NO];
+    [self.detailJumpManager jumpToSmallVideoDetail:self.currentModel otherVideos:@[] showComment:NO enterType:@"" extraDic:@{} isShowCurrentVideo:NO];
 }
 
 #pragma mark - collection
@@ -136,7 +136,7 @@
         [otherVideos removeObject:videoModel];
     }
     [otherVideos removeObject:currentVideo];
-    [self.detailJumpManager jumpToSmallVideoDetail:currentVideo otherVideos:otherVideos showComment:NO enterType:@"feed_content_blank" extraDic:@{} isShowCurrentVideo:YES];
+    [self.detailJumpManager jumpToSmallVideoDetail:currentVideo otherVideos:otherVideos showComment:NO enterType:@"" extraDic:@{} isShowCurrentVideo:YES];
 }
 
 // house_show埋点
