@@ -44,7 +44,7 @@
 - (void)updateItems {
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
 
-    NSArray *itemsName = @[@"地图找房",@"查房价",@"帮我找房",@"城市行情",@"房贷计算"];
+    NSArray *itemsName = @[@"地图找房",@"房贷计算",@"查房价",@"购房百科",@"城市行情"];
     NSMutableArray *items = [NSMutableArray array];
     NSMutableDictionary *itemsDict = [NSMutableDictionary dictionary];
     
