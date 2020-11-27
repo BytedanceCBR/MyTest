@@ -111,6 +111,7 @@
 }
 
 -(void)jump2DetailPage:(NSIndexPath *)indexPath {
+    return;
     if (indexPath.row >= self.houseList.count) {
         return;
     }
@@ -215,6 +216,8 @@
     if (self.listController.hasValidateData == YES) {
         if (self.houseList.count > indexPath.row) {
 //            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
+            UITableViewCell *tcell = [tableView fhHouseCard_cellForEntity:self.houseList[indexPath.row] atIndexPath:indexPath];
+            if (tcell) return tcell;
             if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
                 FHRecommendCourtCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHRecommendCourtCell class])];
                 BOOL isFirst = (indexPath.row == 0);
@@ -284,23 +287,13 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.listController.hasValidateData) {
-        
-        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         if (indexPath.row < self.houseList.count) {
             
             if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
                 return 104;
             }
-            FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
-            
-//            if (cellModel.isRealHouseTopCell) {
-//                if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-//                    return 71;
-//                }
-//            }
-//            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-//            BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-//            return (isLastCell ? 125 : 106)+reasonHeight;
+            CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:self.houseList[indexPath.row] atIndexPath:indexPath];
+            if (cellHeight > -0.001f) return cellHeight;
             return 88;
         }
     }
@@ -402,15 +395,17 @@
             [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 //                FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
                  FHHouseListBaseItemModel *cellModel = (FHHouseListBaseItemModel *)obj;
+                NSObject *entity = nil;
                 if (cellModel) {
-//                    if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-//                        cellModel.isRealHouseTopCell = YES;
-//                    }else
-//                    {
-                        cellModel.isRealHouseTopCell = NO;
-//                    }
-                    
-                    [self.houseList addObject:cellModel];
+                    cellModel.isRealHouseTopCell = NO;
+                    if (self.listController.neighborListVCType == FHNeighborListVCTypeErshouNearBy) {
+                        entity = [FHHouseCardUtils getEntityFromModel:cellModel];
+                    }
+                    if (entity) {
+                        [self.houseList addObject:entity];
+                    } else {
+                        [self.houseList addObject:cellModel];
+                    }
                 }
             }];
             [self.tableView reloadData];
@@ -546,7 +541,7 @@
 #pragma mark tracer
 
 -(void)addHouseShowLog:(NSIndexPath *)indexPath {
-    
+    return;
     if (self.houseList.count < 1 || indexPath.row >= self.houseList.count) {
         return;
     }

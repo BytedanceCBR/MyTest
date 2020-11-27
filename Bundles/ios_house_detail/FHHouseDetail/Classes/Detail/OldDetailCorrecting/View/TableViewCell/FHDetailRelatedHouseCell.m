@@ -21,6 +21,9 @@
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import "FHOldHouseDetailRelatedSecondCell.h"
 #import "FHEnvContext.h"
+#import "UITableView+FHHouseCard.h"
+#import "FHBrowsingHistoryCardUtils.h"
+#import "NSObject+FHTracker.h"
 
 @interface FHDetailRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 

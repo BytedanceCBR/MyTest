@@ -10,7 +10,10 @@
 @implementation FHHouseSecondCardViewModel (addtion)
 
 - (BOOL)isOffShelf {
-    return self.model.houseStatus.integerValue == 1 ? YES : NO;
+    if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        return ((FHSearchHouseItemModel *)self.model).houseStatus.integerValue == 1 ? YES : NO;
+    }
+    return NO;
 }
 
 @end
