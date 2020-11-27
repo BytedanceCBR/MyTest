@@ -140,7 +140,7 @@ static const char tabSwitchedKey;
     [tagStr appendString:@"{"];
     BOOL firstTag = YES;
     for (FHSuggestionResponseItemModel *item in resultArray) {
-        if(item.cardType != 16){
+        if(item.cardType != FHSearchCardTSuggestionItem){
             continue;
         }
         if (!firstTag) {
