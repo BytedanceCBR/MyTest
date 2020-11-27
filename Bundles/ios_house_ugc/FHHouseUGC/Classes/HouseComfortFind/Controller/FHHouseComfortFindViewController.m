@@ -21,7 +21,6 @@
 
 -(instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
-        self.tracerDict[@"element_from"] = self.tracerDict[@"origin_from"];
         _isOpenByPush = YES;
     }
     return self;
