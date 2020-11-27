@@ -42,6 +42,7 @@
 #import "NSArray+BTDAdditions.h"
 #import "FHHomeRentCell.h"
 #import "FHHomeRenderFlow.h"
+#import "FHHomeItemRequestHelper.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -145,7 +146,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     [self registerCells];
     
     self.renderFlow.requestType = FHHomeRequestTypeNormal;
-    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES isInit:YES];
     
     self.tableView.scrollsToTop = NO;
     
@@ -495,8 +496,12 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 }
 
 #pragma mark 网络请求
+- (void)requestDataForRefresh:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst {
+    [self requestDataForRefresh:pullType andIsFirst:isFirst isInit:NO];
+}
+
 //请求推荐刷新数据，包括上拉和下拉
-- (void)requestDataForRefresh:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst
+- (void)requestDataForRefresh:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst isInit:(BOOL)isInit
 {
     self.currentPullType = pullType;
     
@@ -509,7 +514,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     }
     
     NSMutableDictionary *requestDictonary = [NSMutableDictionary new];
-    [requestDictonary setValue:[FHEnvContext getCurrentSelectCityIdFromLocal] forKey:@"city_id"];
     NSInteger offsetValue = self.lastOffset;
 
     if (isFirst || pullType == FHHomePullTriggerTypePullDown) {
@@ -523,27 +527,13 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         
         [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
     }
-    [requestDictonary setValue:@(self.houseType) forKey:@"house_type"];
-    [requestDictonary setValue:@(self.itemCount) forKey:@"count"];
-    
-    if (self.houseType == FHHouseTypeNewHouse) {
-        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_COURT;
-    } else if (self.houseType == FHHouseTypeSecondHandHouse) {
-        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND;
-    } else if (self.houseType == FHHouseTypeRentHouse) {
-        requestDictonary[CHANNEL_ID] = CHANNEL_ID_RECOMMEND_RENT;
-    }
-
-    if (self.requestTask) {
-        [self.requestTask cancel];
-    }
     
     if (isFirst) {
         [self.renderFlow traceSendRequest];
     }
     
     WeakSelf;
-    self.requestTask = [FHHomeRequestAPI requestRecommendForLoadMore:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
+    void (^completionBlock)(FHHomeHouseModel *, NSError *) = ^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         if (isFirst && model) {
             [self.renderFlow traceReceiveResponse:model.requestFlow];
@@ -637,7 +627,25 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         }
         
         self.isOriginRequest = NO;
-    }];
+    };
+    
+    if ([FHHomeItemRequestManager preloadEnabled]) {
+        if (isInit) {
+            [[FHHomeItemRequestManager getItemRequestHelperWithHouseType:self.houseType] initRequestRecommend:requestDictonary completion:completionBlock];
+        } else {
+            [[FHHomeItemRequestManager getItemRequestHelperWithHouseType:self.houseType] requestRecommend:requestDictonary completion:completionBlock];
+        }
+    } else {
+        if (self.requestTask) {
+            [self.requestTask cancel];
+        }
+
+        NSMutableDictionary *params = [NSMutableDictionary new];
+        [params addEntriesFromDictionary:[FHHomeItemRequestManager commonRequestParams:self.houseType]];
+        [params addEntriesFromDictionary:requestDictonary];
+
+        self.requestTask = [FHHomeRequestAPI requestRecommendForLoadMore:params completion:completionBlock];
+    }
 }
 
 #pragma mark 埋点

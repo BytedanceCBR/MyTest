@@ -206,7 +206,7 @@ static const char fh_renderFlow_key;
     NSMutableDictionary *categoryDict = [NSMutableDictionary new];
     categoryDict[@"house_type"] = @(itemRenderFlow.houseType);
     categoryDict[@"request_type"] = @(itemRenderFlow.requestType);
-    categoryDict[@"op_version"] = @(1);
+    categoryDict[@"op_version"] = @(2);
 
     [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_homepage_v2" metric:metricDict category:categoryDict extra:nil];
 
