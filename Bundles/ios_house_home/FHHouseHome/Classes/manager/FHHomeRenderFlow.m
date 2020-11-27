@@ -207,6 +207,9 @@ static const char fh_renderFlow_key;
     categoryDict[@"house_type"] = @(itemRenderFlow.houseType);
     categoryDict[@"request_type"] = @(itemRenderFlow.requestType);
     categoryDict[@"op_version"] = @(2);
+#if DEBUG
+    categoryDict[@"is_debug"] = @(1);
+#endif
 
     [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_homepage_v2" metric:metricDict category:categoryDict extra:nil];
 
