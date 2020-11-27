@@ -44,11 +44,11 @@
     self.titleLabel.width = 100;
     
     self.rightBtn.top = 20;
-    self.rightBtn.right = self.right -30;
+    self.rightBtn.left = [UIScreen mainScreen].bounds.size.width - 95 ;
     self.rightBtn.height = 22;
     self.rightBtn.width = 80;
-    [self.rightBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, -self.rightBtn.imageView.frame.size.width, 0, self.rightBtn.imageView.frame.size.width)];
-    [self.rightBtn setImageEdgeInsets:UIEdgeInsetsMake(0, self.rightBtn.titleLabel.bounds.size.width, 0, - self.rightBtn.titleLabel.bounds.size.width)];
+    [self.rightBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, -self.rightBtn.imageView.frame.size.width -2, 0, self.rightBtn.imageView.frame.size.width+2)];
+    [self.rightBtn setImageEdgeInsets:UIEdgeInsetsMake(0, self.rightBtn.titleLabel.bounds.size.width +2, 0, - self.rightBtn.titleLabel.bounds.size.width-2)];
     
     self.mainCollection.top = self.titleLabel.bottom + 10;
     self.mainCollection.left = 0;
@@ -57,10 +57,10 @@
     
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
-    [self addSubview:_bottomSepView];
+    [self.contentView addSubview:_bottomSepView];
     
     self.bottomSepView.left = 0;
-    self.bottomSepView.top = self.mainCollection.bottom + 20;
+    self.bottomSepView.top = self.mainCollection.bottom + 15;
     self.bottomSepView.height = 5;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
 }
@@ -82,7 +82,7 @@
         UIButton *rightBtn = [[UIButton alloc] init];
         rightBtn.imageView.contentMode = UIViewContentModeCenter;
         [rightBtn setTitle:@"查看更多" forState:UIControlStateNormal];
-        [rightBtn setImage:[UIImage imageNamed:@"detail_question_right_arror"] forState:UIControlStateNormal];
+        [rightBtn setImage:[UIImage imageNamed:@"feed_small_video_more"] forState:UIControlStateNormal];
         [rightBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
         rightBtn.titleLabel.font = [UIFont themeFontRegular:14];
         [rightBtn addTarget:self action:@selector(gotoMore) forControlEvents:UIControlEventTouchUpInside];
