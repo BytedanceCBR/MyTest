@@ -32,7 +32,7 @@
 }
 
 - (BOOL)isHidden {
-    if ([self.model.text length] > 0 || (self.model.icon && [self.model.icon.url length] > 0)) {
+    if (self.model && ([self.model.text length] > 0 || (self.model.icon && [self.model.icon.url length] > 0))) {
         return NO;
     }
     return YES;

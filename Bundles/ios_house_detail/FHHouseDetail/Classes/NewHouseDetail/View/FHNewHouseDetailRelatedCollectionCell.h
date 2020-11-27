@@ -12,9 +12,6 @@
 
 @interface FHNewHouseDetailRelatedCollectionCell : FHDetailBaseCollectionCell <FHDetailScrollViewDidScrollProtocol>
 
-@property (nonatomic, copy) void(^clickCell)(id data, NSInteger index);
-@property (nonatomic, copy) void(^houseShow)(id data, NSInteger index);
-
 @end
 
 @interface FHNewHouseDetailTRelatedCollectionCellModel : NSObject

@@ -7,6 +7,7 @@
 
 #import "FHHouseNewComponentViewModel.h"
 #import "FHSearchHouseModel.h"
+#import "FHHouseListBaseItemModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -29,13 +30,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) FHHouseRecommendViewModel *recommendViewModel;
 
-@property (nonatomic, assign) BOOL hasVr;
+@property (nonatomic, assign, readonly) BOOL hasVr;
 
-@property (nonatomic, assign) BOOL hasVideo;
+@property (nonatomic, assign, readonly) BOOL hasVideo;
 
-@property (nonatomic, strong) FHSearchHouseItemModel *model;
+@property (nonatomic, strong, readonly) id model;
 
-- (instancetype)initWithModel:(FHSearchHouseItemModel *)model;
+- (instancetype)initWithModel:(id)model;
 
 @end
 
