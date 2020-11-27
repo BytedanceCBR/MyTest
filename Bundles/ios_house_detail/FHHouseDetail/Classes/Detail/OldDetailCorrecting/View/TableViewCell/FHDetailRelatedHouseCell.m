@@ -22,8 +22,10 @@
 #import "FHOldHouseDetailRelatedSecondCell.h"
 #import "FHEnvContext.h"
 #import "UITableView+FHHouseCard.h"
-#import "FHBrowsingHistoryCardUtils.h"
+#import "FHHouseCardUtils.h"
 #import "NSObject+FHTracker.h"
+#import "FHHouseSecondCardViewModel.h"
+#import "FHHouseSecondCardView.h"
 
 @interface FHDetailRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -76,13 +78,17 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
-    CGFloat cellHeight = 88;
     BOOL hasMore = model.relatedHouseData.hasMore;
     CGFloat bottomOffset = 20;
     if (hasMore) {
         bottomOffset = 68;
     }
     self.items = model.relatedHouseData.items;
+    CGFloat totalHeight = 0;
+    for (FHSearchHouseDataItemsModel *item in self.items) {
+        FHHouseSecondCardViewModel *cardViewModel = [[FHHouseSecondCardViewModel alloc] initWithModel:item];
+        totalHeight += [FHHouseSecondCardView calculateViewHeight:cardViewModel] - 10;
+    }
     NSString *title = @"周边房源";
     FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
     if (oldDetail) {
@@ -91,7 +97,6 @@
     _headerView.label.text = title;
     if (model.relatedHouseData.items.count > 0) {
         UITableView *tv = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        tv.estimatedRowHeight = 88;
         tv.estimatedSectionHeaderHeight = 0;
         tv.estimatedSectionFooterHeight = 0;
         tv.backgroundColor = [UIColor clearColor];
@@ -106,7 +111,7 @@
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView);
-            make.height.mas_equalTo(cellHeight * model.relatedHouseData.items.count);
+            make.height.mas_equalTo(totalHeight);
             make.left.right.mas_equalTo(self.containerView);
             make.bottom.mas_equalTo(self.containerView).offset(-bottomOffset);
         }];
@@ -273,11 +278,15 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row >= 0 && indexPath.row < self.items.count) {
+        BOOL isLast = NO;
+        if (indexPath.row == self.items.count - 1) {
+            isLast = YES;
+        }
         FHSearchHouseItemModel *item = self.items[indexPath.row];
         FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
         if ([FHEnvContext isDisplayNewCardType]) {
-            FHHouseBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHOldHouseDetailRelatedSecondCell class])];
-            [cell refreshWithData:cellModel];
+            FHOldHouseDetailRelatedSecondCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHOldHouseDetailRelatedSecondCell class])];
+            [cell refreshWithData:cellModel withLast:isLast];
             return cell;
         }
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];

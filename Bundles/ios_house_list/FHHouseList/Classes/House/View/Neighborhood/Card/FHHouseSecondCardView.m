@@ -73,8 +73,8 @@
     self.pricePerSqmLabel.textColor = [UIColor themeGray3];
     [self addSubview:self.pricePerSqmLabel];
     
-    self.recommendView = [[FHHouseRecommendView alloc] init];
-    [self addSubview:self.recommendView];
+//    self.recommendView = [[FHHouseRecommendView alloc] init];
+//    [self addSubview:self.recommendView];
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
     self.vrLoadingView = [LOTAnimationView animationWithFilePath:path];
@@ -126,12 +126,11 @@
         make.right.mas_equalTo(0);
         make.bottom.mas_equalTo(self.priceLabel);
     }];
-    [self.recommendView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.priceLabel.mas_bottom);
-        make.left.right.mas_equalTo(self.titleAndTagView);
-        make.bottom.mas_equalTo(0);
-    }];
-    
+//    [self.recommendView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.priceLabel.mas_bottom);
+//        make.left.right.mas_equalTo(self.titleAndTagView);
+//        make.bottom.mas_equalTo(0);
+//    }];
 }
 
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
@@ -139,6 +138,10 @@
     FHHouseSecondCardViewModel *secondViewModel = (FHHouseSecondCardViewModel *)viewModel;
     [self.leftImageView setImageModel:secondViewModel.leftImageModel];
     self.titleAndTagView.viewModel = secondViewModel.titleAndTag;
+    CGFloat titleHeight = [FHHouseTitleAndTagView viewHeightWithViewModel:secondViewModel.titleAndTag];
+    [self.titleAndTagView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(titleHeight);
+    }];
     self.subTitleLabel.text = secondViewModel.subtitle;
     self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:secondViewModel.tagList];
     self.priceLabel.text = secondViewModel.price;
@@ -147,15 +150,18 @@
         make.width.mas_equalTo(width);
     }];
     self.pricePerSqmLabel.text = secondViewModel.pricePerSqm;
-    self.recommendView.viewModel = secondViewModel.recommendViewModel;
+//    self.recommendView.viewModel = secondViewModel.recommendViewModel;
     self.vrLoadingView.hidden = !secondViewModel.hasVr;
+    if (!self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
+    }
 }
 
 + (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (![viewModel isKindOfClass:FHHouseSecondCardViewModel.class]) return 0.0f;
     FHHouseSecondCardViewModel *secondViewModel = (FHHouseSecondCardViewModel *)viewModel;
     CGFloat titleHeight = [FHHouseTitleAndTagView viewHeightWithViewModel:secondViewModel.titleAndTag];
-    return titleHeight + 92 + secondViewModel.recommendViewModel.showHeight;
+    return titleHeight + 92 + 10;
 }
 
 @end

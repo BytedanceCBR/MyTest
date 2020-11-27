@@ -25,7 +25,7 @@
         return 0;
     }
     FHHouseSecondCardViewModel *viewModel = [[FHHouseSecondCardViewModel alloc] initWithModel:data];
-    return [FHHouseSecondCardView calculateViewHeight:viewModel];
+    return [FHHouseSecondCardView calculateViewHeight:viewModel] - 10;
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -57,11 +57,16 @@
     }];
     
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
+        make.left.mas_equalTo(30);
+        make.right.mas_equalTo(-30);
         make.height.mas_equalTo(1);
         make.bottom.mas_equalTo(0);
     }];
+}
+
+- (void)refreshWithData:(id)data withLast:(BOOL) isLast {
+    [self refreshWithData:data];
+    self.line.hidden = isLast;
 }
 
 - (void)refreshWithData:(id)data {

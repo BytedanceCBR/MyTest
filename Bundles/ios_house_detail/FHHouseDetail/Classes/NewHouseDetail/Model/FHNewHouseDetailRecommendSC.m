@@ -45,7 +45,11 @@
        FHNewHouseDetailRecommendSM *model = (FHNewHouseDetailRecommendSM *)self.sectionModel;
     FHNewHouseDetailRelatedCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailRelatedCollectionCell class] withReuseIdentifier:NSStringFromClass([model.relatedCellModel class]) forSectionController:self atIndex:index];
     if (index >= 0 && index < model.items.count) {
-        [cell refreshWithData:model.items[index]];
+        BOOL isLast = NO;
+        if (index == model.items.count - 1) {
+            isLast = YES;
+        }
+        [cell refreshWithData:model.items[index] withLast:isLast];
     }
     return cell;
 }

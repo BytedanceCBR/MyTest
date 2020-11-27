@@ -18,6 +18,8 @@
 
 @property (nonatomic, strong) FHHouseNewCardView *cardView;
 
+@property (nonatomic, strong) UIView *line;
+
 @end
 
 @implementation FHNewHouseDetailRelatedCollectionCell
@@ -29,7 +31,6 @@
     }
     return CGSizeZero;
 }
-
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -44,18 +45,29 @@
 
 - (void)setupUI {
     self.cardView = [[FHHouseNewCardView alloc] init];
-    self.cardView.layer.cornerRadius = 10;
-    self.cardView.layer.masksToBounds = YES;
-    self.cardView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:self.cardView];
+    
+    self.line = [[UIView alloc] init];
+    self.line.backgroundColor = [UIColor themeGray7];
+    [self.contentView addSubview:self.line];
 }
 
 - (void)setupConstraints {
     [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo(10);
+        make.edges.mas_equalTo(0);
+    }];
+    
+    [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.height.mas_equalTo(1);
         make.bottom.mas_equalTo(0);
     }];
+}
+
+- (void)refreshWithData:(id)data withLast:(BOOL) isLast {
+    [self refreshWithData:data];
+    self.line.hidden = isLast;
 }
 
 - (void)refreshWithData:(id)data {
@@ -65,6 +77,7 @@
         self.cardView.viewModel = viewModel;
     }
 }
+
 - (NSString *)elementType {
     return @"related";
 }

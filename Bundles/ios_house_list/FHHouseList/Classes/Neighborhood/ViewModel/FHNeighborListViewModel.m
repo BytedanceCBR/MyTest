@@ -30,7 +30,8 @@
 #import "FHHouseListRentRelatedCell.h"
 #import "UITableView+FHHouseCard.h"
 #import "FHHouseCardUtils.h"
-
+#import "NSObject+FHTracker.h"
+#import "FHHouseSecondCardViewModel.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -111,7 +112,6 @@
 }
 
 -(void)jump2DetailPage:(NSIndexPath *)indexPath {
-    return;
     if (indexPath.row >= self.houseList.count) {
         return;
     }
@@ -119,6 +119,11 @@
     if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
         FHRecommendCourtItem  *data = (FHRecommendCourtItem *)self.houseList[indexPath.row];
         cellModel = data.item;
+    } else if ([self.houseList[indexPath.row] isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+        FHHouseSecondCardViewModel *viewModel = self.houseList[indexPath.row];
+        if ([viewModel.model isKindOfClass:[FHHouseListBaseItemModel class]]) {
+            cellModel = (FHHouseListBaseItemModel *)viewModel.model;
+        }
     } else {
         cellModel = self.houseList[indexPath.row];
     }
@@ -215,7 +220,6 @@
 {
     if (self.listController.hasValidateData == YES) {
         if (self.houseList.count > indexPath.row) {
-//            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
             UITableViewCell *tcell = [tableView fhHouseCard_cellForEntity:self.houseList[indexPath.row] atIndexPath:indexPath];
             if (tcell) return tcell;
             if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
@@ -541,7 +545,6 @@
 #pragma mark tracer
 
 -(void)addHouseShowLog:(NSIndexPath *)indexPath {
-    return;
     if (self.houseList.count < 1 || indexPath.row >= self.houseList.count) {
         return;
     }
@@ -552,9 +555,15 @@
     if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
         FHRecommendCourtItem  *data = (FHRecommendCourtItem *)self.houseList[indexPath.row];
         cellModel = data.item;
+    } else if ([self.houseList[indexPath.row] isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+        FHHouseSecondCardViewModel *viewModel = self.houseList[indexPath.row];
+        if ([viewModel.model isKindOfClass:[FHHouseListBaseItemModel class]]) {
+            cellModel = (FHHouseListBaseItemModel *)viewModel.model;
+        }
     } else {
         cellModel = self.houseList[indexPath.row];
     }
+    
     if (!cellModel) {
         return;
     }

@@ -77,8 +77,8 @@
     self.tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [self addSubview:self.tagLabel];
     
-    self.recommendView = [[FHHouseRecommendView alloc] init];
-    [self addSubview:self.recommendView];
+//    self.recommendView = [[FHHouseRecommendView alloc] init];
+//    [self addSubview:self.recommendView];
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
     self.vrLoadingView = [LOTAnimationView animationWithFilePath:path];
@@ -122,7 +122,7 @@
     }];
     
     [self.propertyTagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(0);
+        make.right.mas_equalTo(-15);
         make.top.mas_equalTo(15);
         make.height.mas_equalTo(16);
         make.width.mas_equalTo(0);
@@ -149,11 +149,11 @@
         make.height.mas_equalTo(18);
     }];
     
-    [self.recommendView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.tagLabel.mas_bottom);
-        make.left.right.mas_equalTo(self.priceLabel);
-        make.bottom.mas_equalTo(0);
-    }];
+//    [self.recommendView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self.tagLabel.mas_bottom);
+//        make.left.right.mas_equalTo(self.priceLabel);
+//        make.bottom.mas_equalTo(0);
+//    }];
 }
 
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
@@ -165,8 +165,11 @@
     self.subTitleLabel.text = newViewModel.subtitle;
     self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:newViewModel.tagList];
     self.vrLoadingView.hidden = !newViewModel.hasVr;
+    if (!self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
+    }
     self.videoImageView.hidden = !newViewModel.hasVideo;
-    self.recommendView.viewModel = newViewModel.recommendViewModel;
+//    self.recommendView.viewModel = newViewModel.recommendViewModel;
     if (newViewModel.propertyText.length > 0) {
         self.propertyTagLabel.text = newViewModel.propertyText;
         self.propertyTagLabel.layer.borderColor = [UIColor colorWithHexStr:newViewModel.propertyBorderColor].CGColor;
@@ -183,8 +186,7 @@
 
 + (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (![viewModel isKindOfClass:FHHouseNewCardViewModel.class]) return 0.0f;
-    FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;
-    return 112 + newViewModel.recommendViewModel.showHeight;
+    return 114;
 }
 
 @end

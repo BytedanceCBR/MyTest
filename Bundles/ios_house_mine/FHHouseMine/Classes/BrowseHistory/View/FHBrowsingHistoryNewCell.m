@@ -57,7 +57,7 @@
 
 + (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if ([viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
-        return [FHHouseNewCardView calculateViewHeight:viewModel];
+        return [FHHouseNewCardView calculateViewHeight:viewModel] + 10;
     }
     return 0.0f;
 }

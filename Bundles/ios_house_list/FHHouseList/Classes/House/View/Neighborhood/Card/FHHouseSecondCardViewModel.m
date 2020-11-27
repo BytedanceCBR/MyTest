@@ -14,8 +14,6 @@
 
 @property (nonatomic, strong) FHImageModel *leftImageModel;
 
-@property (nonatomic, strong) FHHouseTitleAndTagViewModel *titleAndTag;
-
 @property (nonatomic, copy) NSString *subtitle;
 
 @property (nonatomic, copy) NSString *price;

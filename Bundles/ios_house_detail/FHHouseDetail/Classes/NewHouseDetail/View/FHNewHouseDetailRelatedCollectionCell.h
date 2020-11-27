@@ -12,6 +12,8 @@
 
 @interface FHNewHouseDetailRelatedCollectionCell : FHDetailBaseCollectionCell <FHDetailScrollViewDidScrollProtocol>
 
+- (void)refreshWithData:(id)data withLast:(BOOL) isLast;
+
 @end
 
 @interface FHNewHouseDetailTRelatedCollectionCellModel : NSObject
