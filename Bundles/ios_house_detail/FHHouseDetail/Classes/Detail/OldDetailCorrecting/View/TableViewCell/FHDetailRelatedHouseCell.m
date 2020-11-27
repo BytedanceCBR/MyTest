@@ -295,7 +295,10 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{ 
+{
+    if (indexPath.row >= 0 && indexPath.row < self.items.count) {
+        return [FHOldHouseDetailRelatedSecondCell heightForData:self.items[indexPath.row]];
+    }
     return 88;
 }
 
