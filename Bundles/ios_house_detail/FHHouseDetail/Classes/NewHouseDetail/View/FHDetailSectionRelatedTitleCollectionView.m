@@ -16,7 +16,7 @@
     [super prepareForReuse];
     self.arrowsImg.hidden = YES;
     self.subTitleLabel.hidden = YES;
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.top.mas_equalTo(20);
     }];
