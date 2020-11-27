@@ -147,7 +147,9 @@ static const char tabSwitchedKey;
         if (!name || !name.length) continue;;
         
         firstTag = NO;
-        if (item.newtip && item.newtip.content.length && houseType == FHHouseTypeSecondHandHouse) {
+        if(!item.isNewStyle && item.recallType && item.recallType.length && [item.houseType intValue]== FHHouseTypeSecondHandHouse){
+            [tagStr appendFormat:@"%@|%@", item.recallType, name];
+        }else if (item.newtip && item.newtip.content.length &&  [item.houseType intValue] == FHHouseTypeSecondHandHouse) {
             [tagStr appendFormat:@"%@|%@", item.newtip.content, name];
         } else {
             [tagStr appendFormat:@"%@", name];
