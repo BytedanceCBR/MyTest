@@ -19,6 +19,7 @@
 @property (strong,nonatomic) NSMutableArray *datas;
 @property(nonatomic, strong) FHFeedUGCCellModel *currentModel;
 @property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
+@property(nonatomic ,strong) UIView *bottomSepView;
 @end
 
 @implementation FHUGCShortVideoListCell
@@ -50,9 +51,18 @@
     [self.rightBtn setImageEdgeInsets:UIEdgeInsetsMake(0, self.rightBtn.titleLabel.bounds.size.width, 0, - self.rightBtn.titleLabel.bounds.size.width)];
     
     self.mainCollection.top = self.titleLabel.bottom + 10;
-    self.mainCollection.left = 15;
-    self.mainCollection.width = [UIScreen mainScreen].bounds.size.width - 15;
+    self.mainCollection.left = 0;
+    self.mainCollection.width = [UIScreen mainScreen].bounds.size.width;
     self.mainCollection.height = 270;
+    
+    self.bottomSepView = [[UIView alloc] init];
+    _bottomSepView.backgroundColor = [UIColor themeGray7];
+    [self addSubview:_bottomSepView];
+    
+    self.bottomSepView.left = 0;
+    self.bottomSepView.top = self.mainCollection.bottom + 20;
+    self.bottomSepView.height = 5;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
 }
 
 - (UILabel *)titleLabel {
@@ -86,13 +96,14 @@
     if (!_mainCollection) {
         UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
         flowLayout.minimumLineSpacing = 5;
+        flowLayout.sectionInset = UIEdgeInsetsMake(0, 20, 0, 20);
         flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         NSString *identifier = NSStringFromClass([FHUGCShortVideoListCollectionCell class]);
         UICollectionView *mainCollection = [[UICollectionView alloc]initWithFrame:CGRectZero collectionViewLayout:flowLayout];
         mainCollection.delegate  = self;
         mainCollection.dataSource = self;
         mainCollection.backgroundColor = [UIColor clearColor];
-        mainCollection.showsVerticalScrollIndicator = NO;
+        mainCollection.showsHorizontalScrollIndicator = NO;
         [mainCollection registerClass:[FHUGCShortVideoListCollectionCell class] forCellWithReuseIdentifier:identifier];
         [self.contentView addSubview:mainCollection];
         _mainCollection = mainCollection;
@@ -203,6 +214,7 @@
     _gradientLayer.colors = @[(id)[[UIColor blackColor] colorWithAlphaComponent:0].CGColor,
                               (id)[[UIColor blackColor] colorWithAlphaComponent:0.56].CGColor];
     [self.blackCoverView.layer addSublayer:_gradientLayer];
+    
 }
 
 - (UIImageView *)videoImage {

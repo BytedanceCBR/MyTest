@@ -139,7 +139,7 @@
                  type == FHUGCFeedListCellTypeUGCVote ||
                  type == FHUGCFeedListCellTypeUGCSmallVideo ||
                  type == FHUGCFeedListCellTypeUGCSmallVideo2 ||
-                 type == FHUGCFeedListCellTypeUGCSmallVideo3 ||
+                 type == FHUGCFeedListCellTypeUGCSmallVideoList ||
                  type == FHUGCFeedListCellTypeUGCVoteInfo ||
                  type == FHUGCFeedListCellTypeUGCRecommendCircle ||
                  type == FHUGCFeedListCellTypeUGCEncyclopedias ){
@@ -769,7 +769,7 @@
         }else {
         [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         }
-    } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideo3){
+    } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideoList){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeSmallVideoList;
         if (model.subRawDatas.count > 0) {
             NSMutableArray *videoModelArr = [[NSMutableArray alloc]init];
