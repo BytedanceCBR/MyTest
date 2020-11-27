@@ -28,6 +28,7 @@
 #import "FHMainOldTopTagsView.h"
 #import "TTNavigationController.h"
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "FHHouseListErrorView.h"
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
@@ -619,7 +620,7 @@
     [_containerView addSubview:self.tableView];
     
     //error view
-    self.errorMaskView = [[FHErrorView alloc] init];
+    self.errorMaskView = [[FHHouseListErrorView alloc] init];
     [self.containerView addSubview:_errorMaskView];
     self.errorMaskView.hidden = YES;
 

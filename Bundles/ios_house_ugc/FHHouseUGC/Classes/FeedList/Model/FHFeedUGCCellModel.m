@@ -648,14 +648,16 @@
         if (cellModel.voteInfo == nil || cellModel.voteInfo.items.count < 2) {
             return nil;
         }
-        //保存一下title原本的内容，为了复制用
-        cellModel.voteInfo.originTitle = cellModel.voteInfo.title;
         
-        if ([cellModel.voteInfo.voteType isEqualToString:@"1"]) {
+        if ([cellModel.voteInfo.voteType isEqualToString:@"1"] && ![cellModel.voteInfo.title hasPrefix:@"【单选】"]) {
             // 单选
+            //保存一下title原本的内容，为了复制用
+            cellModel.voteInfo.originTitle = cellModel.voteInfo.title;
             cellModel.voteInfo.title = [NSString stringWithFormat:@"【单选】%@",cellModel.voteInfo.title];
-        } else if ([cellModel.voteInfo.voteType isEqualToString:@"2"]) {
+        } else if ([cellModel.voteInfo.voteType isEqualToString:@"2"] && ![cellModel.voteInfo.title hasPrefix:@"【多选】"]) {
             // 多选
+            //保存一下title原本的内容，为了复制用
+            cellModel.voteInfo.originTitle = cellModel.voteInfo.title;
             cellModel.voteInfo.title = [NSString stringWithFormat:@"【多选】%@",cellModel.voteInfo.title];
         }
         cellModel.voteInfo.voteState = FHUGCVoteStateNone;
