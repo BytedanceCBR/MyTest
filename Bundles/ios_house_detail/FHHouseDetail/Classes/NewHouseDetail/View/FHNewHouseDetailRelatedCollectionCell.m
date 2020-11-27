@@ -20,6 +20,8 @@
 
 @property (nonatomic, strong) FHHouseNewCardView *cardView;
 
+@property (nonatomic, strong) UIView *backView;
+
 @property (nonatomic, strong) UIView *line;
 
 @end
@@ -40,22 +42,30 @@
     if (self) {
         [self setupUI];
         [self setupConstraints];
-        self.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
 
 - (void)setupUI {
+    self.backView = [[UIView alloc] init];
+    [self.contentView addSubview:self.backView];
+    self.backView.backgroundColor = [UIColor whiteColor];
+    
     self.cardView = [[FHHouseNewCardView alloc] init];
     [self.contentView addSubview:self.cardView];
     
     self.line = [[UIView alloc] init];
     self.line.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:self.line];
+
 }
 
 - (void)setupConstraints {
     [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(0);
+    }];
+    
+    [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(0);
     }];
     
@@ -70,15 +80,15 @@
 - (void)refreshWithData:(id)data withLast:(BOOL) isLast {
     [self refreshWithData:data];
     self.line.hidden = isLast;
-    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH - 30, 86);
+    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH - 30, 114);
     if (isLast) {
         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:frame byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
         maskLayer.frame = frame;
         maskLayer.path = maskPath.CGPath;
-        self.cardView.layer.mask = maskLayer;
+        self.backView.layer.mask = maskLayer;
     } else {
-        self.cardView.layer.mask = nil;
+        self.backView.layer.mask = nil;
     }
 }
 
