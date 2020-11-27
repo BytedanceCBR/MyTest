@@ -28,10 +28,6 @@
 #import "FHEnvContext.h"
 #import "FHHouseListSecondRelatedCell.h"
 #import "FHHouseListRentRelatedCell.h"
-#import "UITableView+FHHouseCard.h"
-#import "FHHouseCardUtils.h"
-#import "NSObject+FHTracker.h"
-#import "FHHouseSecondCardViewModel.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -77,7 +73,6 @@
     [_tableView registerClass:[FHRecommendCourtCell class] forCellReuseIdentifier:NSStringFromClass([FHRecommendCourtCell class])];
     [_tableView registerClass:[FHHouseListSecondRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListSecondRelatedCell class])];
     [_tableView registerClass:[FHHouseListRentRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListRentRelatedCell class])];
-    [self.tableView fhHouseCard_registerCellStyles];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -119,11 +114,6 @@
     if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
         FHRecommendCourtItem  *data = (FHRecommendCourtItem *)self.houseList[indexPath.row];
         cellModel = data.item;
-    } else if ([self.houseList[indexPath.row] isKindOfClass:[FHHouseSecondCardViewModel class]]) {
-        FHHouseSecondCardViewModel *viewModel = self.houseList[indexPath.row];
-        if ([viewModel.model isKindOfClass:[FHHouseListBaseItemModel class]]) {
-            cellModel = (FHHouseListBaseItemModel *)viewModel.model;
-        }
     } else {
         cellModel = self.houseList[indexPath.row];
     }
@@ -220,8 +210,7 @@
 {
     if (self.listController.hasValidateData == YES) {
         if (self.houseList.count > indexPath.row) {
-            UITableViewCell *tcell = [tableView fhHouseCard_cellForEntity:self.houseList[indexPath.row] atIndexPath:indexPath];
-            if (tcell) return tcell;
+//            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
             if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
                 FHRecommendCourtCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHRecommendCourtCell class])];
                 BOOL isFirst = (indexPath.row == 0);
@@ -291,13 +280,23 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.listController.hasValidateData) {
+        
+        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         if (indexPath.row < self.houseList.count) {
             
             if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
                 return 104;
             }
-            CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:self.houseList[indexPath.row] atIndexPath:indexPath];
-            if (cellHeight > -0.001f) return cellHeight;
+            FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
+            
+//            if (cellModel.isRealHouseTopCell) {
+//                if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+//                    return 71;
+//                }
+//            }
+//            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
+//            BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
+//            return (isLastCell ? 125 : 106)+reasonHeight;
             return 88;
         }
     }
@@ -399,17 +398,15 @@
             [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 //                FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
                  FHHouseListBaseItemModel *cellModel = (FHHouseListBaseItemModel *)obj;
-                NSObject *entity = nil;
                 if (cellModel) {
-                    cellModel.isRealHouseTopCell = NO;
-                    if (self.listController.neighborListVCType == FHNeighborListVCTypeErshouNearBy) {
-                        entity = [FHHouseCardUtils getEntityFromModel:cellModel];
-                    }
-                    if (entity) {
-                        [self.houseList addObject:entity];
-                    } else {
-                        [self.houseList addObject:cellModel];
-                    }
+//                    if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+//                        cellModel.isRealHouseTopCell = YES;
+//                    }else
+//                    {
+                        cellModel.isRealHouseTopCell = NO;
+//                    }
+                    
+                    [self.houseList addObject:cellModel];
                 }
             }];
             [self.tableView reloadData];
@@ -545,6 +542,7 @@
 #pragma mark tracer
 
 -(void)addHouseShowLog:(NSIndexPath *)indexPath {
+    
     if (self.houseList.count < 1 || indexPath.row >= self.houseList.count) {
         return;
     }
@@ -555,15 +553,9 @@
     if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
         FHRecommendCourtItem  *data = (FHRecommendCourtItem *)self.houseList[indexPath.row];
         cellModel = data.item;
-    } else if ([self.houseList[indexPath.row] isKindOfClass:[FHHouseSecondCardViewModel class]]) {
-        FHHouseSecondCardViewModel *viewModel = self.houseList[indexPath.row];
-        if ([viewModel.model isKindOfClass:[FHHouseListBaseItemModel class]]) {
-            cellModel = (FHHouseListBaseItemModel *)viewModel.model;
-        }
     } else {
         cellModel = self.houseList[indexPath.row];
     }
-    
     if (!cellModel) {
         return;
     }

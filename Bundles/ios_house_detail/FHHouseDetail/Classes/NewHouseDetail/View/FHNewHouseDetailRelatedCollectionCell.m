@@ -38,7 +38,7 @@
     if (self) {
         [self setupUI];
         [self setupConstraints];
-        self.contentView.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
+        self.contentView.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
