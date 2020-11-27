@@ -35,11 +35,22 @@
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(FHCommunityViewController *)viewController {
     self = [super initWithCollectionView:collectionView controller:viewController];
     
-    self.currentTabIndex = 0;
+    if (self.viewController.isInHomePage) {
+        self.currentTabIndex = 0;
+    }else{
+        self.currentTabIndex = 1;
+    }
     
     collectionView.delegate = self;
     collectionView.dataSource = self;
     [self initDataArray];
+    
+    if(self.currentTabIndex > (self.dataArray.count - 1)){
+        self.currentTabIndex = self.dataArray.count - 1;
+        if(self.currentTabIndex < 0){
+            self.currentTabIndex = 0;
+        }
+    }
     
     return self;
 }
@@ -61,12 +72,18 @@
     self.cellArray = [NSMutableArray array];
     NSMutableArray *dataArray = [NSMutableArray array];
     NSArray *categories = [[FHUGCCategoryManager sharedManager] allCategories];
+    if(self.viewController.isInHomePage){
+        categories = @[[FHUGCCategoryManager sharedManager].recommendCategory];
+    }else{
+        categories = [[FHUGCCategoryManager sharedManager].allCategories copy];
+    }
     self.viewController.categorys = [categories copy];
     for (NSInteger i = 0; i < categories.count; i++) {
         FHUGCCategoryDataDataModel *category = categories[i];
         if(category && category.name.length > 0 && category.category.length > 0){
             [self.cellArray addObject:[NSNull null]];
             FHCommunityDiscoveryCellModel *cellModel = [FHCommunityDiscoveryCellModel cellModelForCategory:category];
+            cellModel.isInHomePage = self.viewController.isInHomePage;
             cellModel.tracerDict = self.viewController.tracerDict;
             [dataArray addObject:cellModel];
         }
@@ -104,8 +121,17 @@
         
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [self.collectionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        
+        if(!self.viewController.isInHomePage){
+            if(self.currentTabIndex == 0){
+                self.viewController.publishBtn.hidden = YES;
+            }else{
+                self.viewController.publishBtn.hidden = NO;
+            }
+        }
     }
 }
+
 
 - (void)initCell:(NSString *)enterType {
     if(self.currentTabIndex < self.cellArray.count && [self.cellArray[self.currentTabIndex] isKindOfClass:[FHCommunityDiscoveryCell class]]){
@@ -113,7 +139,7 @@
         FHCommunityDiscoveryCell *cell = (FHCommunityDiscoveryCell *)self.cellArray[self.currentTabIndex];
         cell.enterType = enterType;
         
-        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_ugc_neighbor"];
+        NSInteger index = [[FHUGCCategoryManager sharedManager] getCategoryIndex:@"f_news_recommend"];
         if(self.currentTabIndex == index){
             cell.withTips = self.viewController.hasFocusTips;
         }else{
@@ -191,7 +217,7 @@
 
 //设置每个item的尺寸
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    if(self.viewController.isNewDiscovery){
+    if(self.viewController.isInHomePage){
         [collectionView layoutIfNeeded];
         return collectionView.frame.size;
     }else{
@@ -274,6 +300,14 @@
     }
     
     [self initCell:@"flip"];
+    
+    if(!self.viewController.isInHomePage){
+        if(self.currentTabIndex == 0){
+            self.viewController.publishBtn.hidden = YES;
+        }else{
+            self.viewController.publishBtn.hidden = NO;
+        }
+    }
 }
 
 - (NSString *)pageType {

@@ -50,11 +50,10 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         // 编辑成功
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
+        // 发帖成功
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
         
         if(self.viewController.isInsertFeedWhenPublish){
-            // 发帖成功
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postThreadSuccess:) name:kTTForumPostThreadSuccessNotification object:nil];
-            
             //防止第一次进入headview高度不对的问题
             [self updateJoinProgressView];
         }
@@ -82,6 +81,10 @@
 
 // 发帖成功，插入数据
 - (void)postThreadSuccess:(NSNotification *)noti {
+    if(!self.viewController.isInsertFeedWhenPublish){
+        return;
+    }
+    
     FHFeedUGCCellModel *cellModel = nil;
     FHFeedContentModel *ugcContent = noti.userInfo[@"feed_content"];
     if(ugcContent && [ugcContent isKindOfClass:[FHFeedContentModel class]]){
@@ -341,6 +344,10 @@
                         wself.refreshFooter.hidden = YES;
                     }
                     [wself.tableView reloadData];
+                    
+                    if(wself.viewController.requestSuccess){
+                        wself.viewController.requestSuccess(wself.viewController.hasValidateData);
+                    }
 
                     NSString *refreshTip = feedListModel.tips.displayInfo;
                     if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
@@ -765,6 +772,7 @@
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"origin_from"] = self.viewController.tracerDict[@"origin_from"] ?: @"be_null";
     dict[@"enter_from"] = self.viewController.tracerDict[@"enter_from"] ?: @"be_null";
+    dict[@"element_from"] = self.viewController.tracerDict[@"element_from"];
     dict[@"page_type"] = [self pageType];
     dict[@"category_name"] = [self pageType];
     dict[@"log_pb"] = cellModel.logPb;
