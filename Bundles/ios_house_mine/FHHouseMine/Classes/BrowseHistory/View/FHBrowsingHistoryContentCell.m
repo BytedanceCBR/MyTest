@@ -38,7 +38,7 @@
     
     [self.timeContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
-        make.centerY.mas_equalTo(self).offset(3);
+        make.centerY.mas_equalTo(self).offset(1);
         make.right.mas_equalTo(0);
     }];
 }
