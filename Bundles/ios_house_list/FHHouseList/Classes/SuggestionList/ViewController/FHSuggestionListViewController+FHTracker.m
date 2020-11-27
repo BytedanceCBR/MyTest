@@ -84,12 +84,13 @@ static const char tabSwitchedKey;
         }]];
         
         count = filteredResultArray.count + filteredOtherResultArray.count;
-        tagsStr = [self resultTagsString:filteredResultArray houseType:houseType];
-        
     }
     NSMutableArray *itemArray = [[NSMutableArray alloc] init];
     [itemArray addObjectsFromArray:result.data.items];
     [itemArray addObjectsFromArray:result.data.otherItems];
+    if(count){
+        tagsStr = [self resultTagsString:itemArray houseType:houseType];
+    }
     NSMutableDictionary *differResultnum = [NSMutableDictionary new];
     NSInteger newNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeNewHouse];
     NSInteger oldNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeSecondHandHouse];
@@ -138,6 +139,9 @@ static const char tabSwitchedKey;
     [tagStr appendString:@"{"];
     BOOL firstTag = YES;
     for (FHSuggestionResponseItemModel *item in resultArray) {
+        if(item.cardType != 16){
+            continue;
+        }
         if (!firstTag) {
             [tagStr appendFormat:@","];
         }
