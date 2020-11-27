@@ -67,7 +67,7 @@
         top = 10;
     }
     [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(10);
+        make.top.mas_equalTo(self).offset(5);
     }];
 //    NSLog(@"xxzxz");
 }
@@ -180,7 +180,7 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).mas_offset(15);
         make.right.mas_equalTo(self).mas_offset(-15);
-        make.top.mas_equalTo(5);
+        make.top.mas_equalTo(self).offset(5);
         make.bottom.mas_equalTo(self).offset(-5);
     }];
 
