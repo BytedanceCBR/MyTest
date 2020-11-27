@@ -13,6 +13,8 @@
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHHouseNewCardView.h"
 #import "FHHouseNewCardViewModel.h"
+#import "FHCommonDefines.h"
+
 
 @interface FHNewHouseDetailRelatedCollectionCell()
 
@@ -38,7 +40,7 @@
     if (self) {
         [self setupUI];
         [self setupConstraints];
-        self.contentView.backgroundColor = [UIColor whiteColor];
+        self.backgroundColor = [UIColor whiteColor];
     }
     return self;
 }
@@ -68,6 +70,16 @@
 - (void)refreshWithData:(id)data withLast:(BOOL) isLast {
     [self refreshWithData:data];
     self.line.hidden = isLast;
+    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH - 30, 86);
+    if (isLast) {
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:frame byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
+        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+        maskLayer.frame = frame;
+        maskLayer.path = maskPath.CGPath;
+        self.cardView.layer.mask = maskLayer;
+    } else {
+        self.cardView.layer.mask = nil;
+    }
 }
 
 - (void)refreshWithData:(id)data {

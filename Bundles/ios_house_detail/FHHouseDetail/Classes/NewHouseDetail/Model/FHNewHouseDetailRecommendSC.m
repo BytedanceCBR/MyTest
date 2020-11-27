@@ -8,7 +8,7 @@
 #import "FHNewHouseDetailRecommendSC.h"
 #import "FHNewHouseDetailRecommendSM.h"
 #import "FHNewHouseDetailRelatedCollectionCell.h"
-#import "FHDetailSectionTitleCollectionView.h"
+#import "FHDetailSectionRelatedTitleCollectionView.h"
 #import "FHNewHouseDetailViewController.h"
 
 @interface FHNewHouseDetailRecommendSC()<IGListSupplementaryViewSource, IGListDisplayDelegate>
@@ -155,7 +155,7 @@
 
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
-    FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
+    FHDetailSectionRelatedTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionRelatedTitleCollectionView class] atIndex:index];
     FHNewHouseDetailRecommendSM *model = (FHNewHouseDetailRecommendSM *)self.sectionModel;
     titleView.titleLabel.font = [UIFont themeFontMedium:18];
     titleView.titleLabel.textColor = [UIColor themeGray1];
@@ -168,7 +168,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61 - 15);
     }
     return CGSizeZero;
 }
