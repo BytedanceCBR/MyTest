@@ -59,6 +59,8 @@
             self.price = item.displayPricePerSqm;
             self.subtitle = item.displaySubtitle;
             self.tagList = item.tags;
+            self.propertyText = item.propertyTag.content;
+            self.propertyBorderColor = item.propertyTag.borderColor;
         }
     }
     return self;

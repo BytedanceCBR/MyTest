@@ -44,7 +44,7 @@
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
         make.top.mas_equalTo(5);
-        make.bottom.mas_equalTo(0);
+        make.bottom.mas_equalTo(-5);
     }];
 }
 
