@@ -68,6 +68,16 @@
     return self;
 }
 
+- (void)updateHeightByIsFirst:(BOOL)isFirst {
+    CGFloat top = 5;
+    if (isFirst) {
+        top = 10;
+    }
+    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(top);
+    }];
+}
+
 - (void)initUI {
 
     self.contentView.clipsToBounds = NO;
@@ -203,7 +213,7 @@
 
     [self.bottomInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.topInfoView.mas_bottom);
-        make.height.mas_equalTo(118);
+        make.bottom.mas_equalTo(self.contentView.mas_bottom);
         make.left.right.mas_equalTo(self.containerView);
     }];
     

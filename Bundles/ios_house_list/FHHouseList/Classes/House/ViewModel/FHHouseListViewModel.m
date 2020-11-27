@@ -1721,7 +1721,6 @@ extern NSString *const INSTANT_DATA_KEY;
         if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
             cell.backgroundColor = [UIColor themeGray7];
         }
-        
         if ([cell isKindOfClass:[FHFindHouseHelperCell class]]) {
             FHFindHouseHelperCell *helperCell = (FHFindHouseHelperCell *) cell;
             helperCell.cellTapAction = ^(NSString *url){
@@ -1743,6 +1742,15 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }
         [cell refreshWithData:data];
+        if([cell isKindOfClass:[FHNeighbourhoodAgencyCardCell class]]){
+            [((FHNeighbourhoodAgencyCardCell *)cell) updateHeightByIsFirst:isFirstCell];
+        }
+        if([cell isKindOfClass:[FHHousReserveAdviserCell class]]){
+            [((FHHousReserveAdviserCell *)cell) updateHeightByIsFirst:isFirstCell];
+        }
+        if([cell isKindOfClass:[FHHouseListRedirectTipCell class]]){
+            [((FHHouseListRedirectTipCell *)cell) updateHeightByIsFirst:isFirstCell];
+        }
         if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
             FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
             if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
@@ -1775,6 +1783,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }else if ([cell isKindOfClass:[FHSuggestionSubscribCell class]]) {
             FHSuggestionSubscribCell *subscribeCell = (FHSuggestionSubscribCell *)cell;
+            [subscribeCell updateHeightByIsFirst: isFirstCell];
             subscribeCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
                 [wself requestAddSubScribe:subscribeText];
             };
