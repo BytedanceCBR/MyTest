@@ -97,8 +97,8 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).mas_offset(15);
         make.right.mas_equalTo(self).mas_offset(-15);
-        make.top.mas_equalTo(self).offset(10);
-        make.bottom.mas_equalTo(self).offset(-10);
+        make.top.mas_equalTo(self).offset(5);
+        make.bottom.mas_equalTo(self).offset(-5);
     }];
     
     [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {

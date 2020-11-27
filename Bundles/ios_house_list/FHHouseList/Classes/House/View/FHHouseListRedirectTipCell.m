@@ -70,8 +70,8 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
-        make.top.mas_equalTo(10);
-        make.bottom.mas_equalTo(-10);
+        make.top.mas_equalTo(5);
+        make.bottom.mas_equalTo(-5);
     }];
     [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.containerView);
