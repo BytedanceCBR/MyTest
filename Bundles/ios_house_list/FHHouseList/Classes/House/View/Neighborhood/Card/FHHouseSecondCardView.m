@@ -32,6 +32,7 @@
 @property (nonatomic, strong) FHHouseRecommendView *recommendView;
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 
+
 @end
 
 @implementation FHHouseSecondCardView
@@ -135,7 +136,7 @@
 
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
-    FHHouseSecondCardViewModel *secondViewModel = (FHHouseSecondCardViewModel *)viewModel;
+    FHHouseSecondCardViewModel *secondViewModel = (FHHouseSecondCardViewModel *)self.viewModel;
     [self.leftImageView setImageModel:secondViewModel.leftImageModel];
     self.titleAndTagView.viewModel = secondViewModel.titleAndTag;
     CGFloat titleHeight = [FHHouseTitleAndTagView viewHeightWithViewModel:secondViewModel.titleAndTag];

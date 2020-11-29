@@ -24,7 +24,7 @@
 @implementation FHHouseTitleAndTagViewModel
 @synthesize attributedTitle = _attributedTitle;
 
-- (instancetype)initWithModel:(FHSearchHouseItemModel *)model {
+- (instancetype)initWithModel:(id)model {
     self = [super init];
     if (self) {
         
