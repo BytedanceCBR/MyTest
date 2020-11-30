@@ -349,7 +349,7 @@
         [dislikeConfirmActionSheet addAction:cancelConfirmAction];
         
         [self presentViewController:dislikeConfirmActionSheet animated:YES completion:nil];
-        popupShowParams[@"popup_show"] = @"confirm_blacklist_popup";
+        popupShowParams[@"popup_name"] = @"confirm_blacklist_popup";
         [FHUserTracker writeEvent:@"popup_show" params:popupShowParams];
     }];
     
@@ -362,7 +362,7 @@
     [dislikeActionSheet addAction:cancelAction];
     
     [self presentViewController:dislikeActionSheet animated:YES completion:nil];
-    popupShowParams[@"popup_show"] = @"blacklist_popup";
+    popupShowParams[@"popup_name"] = @"blacklist_popup";
     [FHUserTracker writeEvent:@"popup_show" params:popupShowParams];
     
 }
