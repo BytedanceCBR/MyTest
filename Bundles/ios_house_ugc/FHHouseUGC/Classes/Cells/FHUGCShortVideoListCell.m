@@ -60,7 +60,7 @@
     [self.contentView addSubview:_bottomSepView];
     
     self.bottomSepView.left = 0;
-    self.bottomSepView.top = self.mainCollection.bottom + 15;
+    self.bottomSepView.top = self.mainCollection.bottom + 20;
     self.bottomSepView.height = 5;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
 }
@@ -170,7 +170,7 @@
 
 + (CGFloat)heightForData:(id)data {
     //默认返回cell的默认值44;
-    return 342;
+    return 347;
 }
 @end
 
