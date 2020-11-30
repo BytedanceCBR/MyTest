@@ -544,12 +544,12 @@
         }
     }
     if([model.houseType intValue] != self.houseType){
-        tracer[@"element_from"] = [self elementFromNameByHouseType:[model.houseType intValue]];
+        tracer[@"element_from"] = [self relatedRecommendelEmentFromNameByHouseType:[model.houseType intValue]];
     }
     if(model.setHistory){
         [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:nil];
-        tracer[@"element_from"] = [model.houseType intValue] == self.houseType ? @"associate" : [self elementFromNameByHouseType:[model.houseType intValue]];
-        tracer[@"log_pb"] = model.logPb;
+        tracer[@"element_from"] = [model.houseType intValue] == self.houseType ? @"associate" : [self relatedRecommendelEmentFromNameByHouseType:[model.houseType intValue]];
+        tracer[@"log_pb"] = model.logPb ?: @"be_null";
         tracer[@"card_type"] = @"left_pic";
         tracer[@"rank"] = [NSString stringWithFormat: @"%zi",rank];
     }
@@ -697,8 +697,8 @@
     }
     return @"be_null";
 }
-
-- (NSString *)elementFromNameByHouseType:(NSInteger)houseType{
+//与相关推荐xx房有关的卖点事件的value
+- (NSString *)relatedRecommendelEmentFromNameByHouseType:(NSInteger)houseType{
     if(houseType == FHHouseTypeNewHouse){
         return @"related_new_recommend";
     }else if(houseType == FHHouseTypeSecondHandHouse){
@@ -1358,7 +1358,7 @@
     __weak typeof(self) wself = self;
     self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
-            self.jumpHouseType = model.data.jumpHouseType;// 构建数据源
+            wself.jumpHouseType = model.data.jumpHouseType;// 构建数据源
             [wself.sugListData removeAllObjects];
             [wself.othersugListData removeAllObjects];
             [wself.sugListData addObjectsFromArray:model.data.items];
@@ -1366,7 +1366,7 @@
                 FHSuggestionResponseItemModel *tepmodel = [[FHSuggestionResponseItemModel alloc] init];
                 tepmodel.cardType = 18;
                 FHSuggestionResponseItemModel *firstmodel = model.data.otherItems[0];
-                tepmodel.text = [self getTitletext:[firstmodel.houseType intValue]];
+                tepmodel.text = [wself getTitletext:[firstmodel.houseType intValue]];
                 [wself.othersugListData addObject:tepmodel];
                 [wself.othersugListData addObjectsFromArray:model.data.otherItems];
             }
