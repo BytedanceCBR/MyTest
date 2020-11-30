@@ -124,7 +124,7 @@ static const char fh_renderFlow_key;
 
 #import <Heimdallr/HMDTTMonitor.h>
 #import "NSDictionary+BTDAdditions.h"
-
+#import "FHUserTracker.h"
 
 @interface FHHomeRenderFlow()<FHHomeItemRenderFlowDelegate>
 @property (nonatomic, assign) long homeMainInitTs;
@@ -219,6 +219,11 @@ static const char fh_renderFlow_key;
 
     NSLog(@"pss_homepage_op %@ %@", categoryString, metricString);
 #endif
+    
+    NSMutableDictionary *logParams = [NSMutableDictionary dictionary];
+    [logParams addEntriesFromDictionary:metricDict];
+    [logParams addEntriesFromDictionary:categoryDict];
+    TRACK_EVENT(@"zzw_pss_homepage_v2", logParams);
 }
 
 #pragma mark - FHHomeItemRenderFlowDelegate
