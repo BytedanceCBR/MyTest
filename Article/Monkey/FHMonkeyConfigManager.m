@@ -8,7 +8,7 @@
 
 #import "FHMonkeyConfigManager.h"
 
-#define MONKEY 1
+//#define MONKEY 1
 
 @implementation FHMonkeyConfigManager
 
