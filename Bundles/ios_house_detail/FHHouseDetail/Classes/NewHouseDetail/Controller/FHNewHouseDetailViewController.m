@@ -346,19 +346,23 @@
         }
         if (change[NSKeyValueChangeNewKey] && [change[NSKeyValueChangeNewKey] isKindOfClass:[NSNumber class]]) {
             BOOL isShowEmpty = [(NSNumber *)change[NSKeyValueChangeNewKey] boolValue];
-            if (isShowEmpty) {
-                weakSelf.isLoadingData = NO;
-                weakSelf.hasValidateData = NO;
-                weakSelf.bottomBar.hidden = YES;
-                [weakSelf.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-            } else {
-                weakSelf.hasValidateData = YES;
-                weakSelf.bottomBar.hidden = NO;
-                [weakSelf.emptyView hideEmptyView];
-                [weakSelf.navBar showMessageNumber];
-            }
+            [weakSelf reloadSubViewStatus:isShowEmpty];
         }
     }];
+}
+
+- (void)reloadSubViewStatus:(BOOL )isShowEmpty {
+    if (isShowEmpty) {
+        self.isLoadingData = NO;
+        self.hasValidateData = NO;
+        self.bottomBar.hidden = YES;
+        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+    } else {
+        self.hasValidateData = YES;
+        self.bottomBar.hidden = NO;
+        [self.emptyView hideEmptyView];
+        [self.navBar showMessageNumber];
+    }
 }
 
 - (void)sectionModelsDidUpdate {
