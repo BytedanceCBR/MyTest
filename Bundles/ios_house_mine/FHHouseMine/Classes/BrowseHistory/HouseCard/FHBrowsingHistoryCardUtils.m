@@ -8,7 +8,7 @@
 #import "FHBrowsingHistoryCardUtils.h"
 #import "FHSearchHouseModel.h"
 #import "FHBrowsingHistoryNeighborhoodCell.h"
-#import "FHBrowsingHistoryNeighborhoodCardViewModel.h"
+#import "FHHouseNeighborhoodCardViewModel.h"
 #import "FHBrowsingHistorySecondCell.h"
 #import "FHHouseSecondCardViewModel.h"
 #import "FHHouseNewCardViewModel.h"
@@ -18,7 +18,7 @@
 
 + (NSDictionary *)supportCellStyleMap {
     return @{
-        NSStringFromClass(FHBrowsingHistoryNeighborhoodCardViewModel.class): NSStringFromClass(FHBrowsingHistoryNeighborhoodCell.class),
+        NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHBrowsingHistoryNeighborhoodCell.class),
         NSStringFromClass(FHHouseSecondCardViewModel.class): NSStringFromClass(FHBrowsingHistorySecondCell.class),
         NSStringFromClass(FHHouseNewCardViewModel.class): NSStringFromClass(FHBrowsingHistoryNewCell.class),
     };
@@ -29,7 +29,7 @@
         FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)model;
         switch (itemModel.cardType) {
             case FHSearchCardTypeNeighborhood:
-                return [[FHBrowsingHistoryNeighborhoodCardViewModel alloc] initWithModel:itemModel];
+                return [[FHHouseNeighborhoodCardViewModel alloc] initWithModel:itemModel];
             case FHSearchCardTypeSecondHouse:
                 return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
             case FHSearchCardTypeNewHouse:

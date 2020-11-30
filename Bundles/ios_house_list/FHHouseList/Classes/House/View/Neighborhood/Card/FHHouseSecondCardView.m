@@ -105,7 +105,7 @@
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.titleAndTagView);
         make.height.mas_equalTo(18);
-        make.top.mas_equalTo(self.titleAndTagView.mas_bottom).offset(4);
+        make.top.mas_equalTo(self.titleAndTagView.mas_bottom).offset(3);
     }];
     
     [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -144,7 +144,7 @@
         make.height.mas_equalTo(titleHeight);
     }];
     self.subTitleLabel.text = secondViewModel.subtitle;
-    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:secondViewModel.tagList];
+    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:secondViewModel.tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152];
     self.priceLabel.text = secondViewModel.price;
     CGFloat width = [self.priceLabel btd_widthWithHeight:22];
     [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {

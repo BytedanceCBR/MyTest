@@ -31,8 +31,8 @@
 }
 
 - (FHHouseNeighborhoodCardViewModel *)cardViewModel {
-    if (![self.viewModel isKindOfClass:FHBrowsingHistoryNeighborhoodCardViewModel.class]) return nil;
-    return (FHBrowsingHistoryNeighborhoodCardViewModel *)self.viewModel;
+    if (![self.viewModel isKindOfClass:FHHouseNeighborhoodCardViewModel.class]) return nil;
+    return (FHHouseNeighborhoodCardViewModel *)self.viewModel;
 }
 
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {

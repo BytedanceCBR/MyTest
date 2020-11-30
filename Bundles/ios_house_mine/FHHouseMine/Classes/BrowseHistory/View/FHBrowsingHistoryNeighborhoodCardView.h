@@ -6,13 +6,13 @@
 //
 
 #import "FHHouseNeighborhoodCardView.h"
-#import "FHBrowsingHistoryNeighborhoodCardViewModel.h"
+#import "FHHouseNeighborhoodCardViewModel+addtion.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHBrowsingHistoryNeighborhoodCardView : FHHouseNeighborhoodCardView
 
-@property (nonatomic, strong) FHBrowsingHistoryNeighborhoodCardViewModel *cardViewModel;
+@property (nonatomic, strong) FHHouseNeighborhoodCardViewModel *cardViewModel;
 
 @end
 

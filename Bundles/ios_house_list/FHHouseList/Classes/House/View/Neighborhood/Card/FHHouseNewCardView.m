@@ -163,7 +163,7 @@
     self.mainTitleLabel.text = newViewModel.title;
     self.priceLabel.text = newViewModel.price;
     self.subTitleLabel.text = newViewModel.subtitle;
-    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:newViewModel.tagList];
+    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:newViewModel.tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152];
     self.vrLoadingView.hidden = !newViewModel.hasVr;
     if (!self.vrLoadingView.hidden) {
         [self.vrLoadingView play];
