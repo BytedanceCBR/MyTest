@@ -70,7 +70,7 @@
             [wself requestData:NO];
         }];
         self.tableView.mj_footer = footer;
-        [footer setUpNoMoreDataText:@"没有更多信息了"];
+        [footer setUpNoMoreDataText:@"已加载全部"];
         footer.hidden = YES;
     }
     return self;
