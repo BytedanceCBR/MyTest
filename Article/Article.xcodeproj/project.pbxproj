@@ -8,6 +8,92 @@
 
 /* Begin PBXBuildFile section */
 		1765A464252192FE00A1A9D8 /* ShortVideoGuide.json in Resources */ = {isa = PBXBuildFile; fileRef = 1765A463252192FD00A1A9D8 /* ShortVideoGuide.json */; };
+		2D1B0A92256A8EE9006091A2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39942270545700AE567D /* AppDelegate.m */; };
+		2D1B0A93256A8EE9006091A2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39912270545700AE567D /* main.m */; };
+		2D1B0A94256A8EE9006091A2 /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
+		2D1B0A97256A8EE9006091A2 /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6B42954E1BA13BB1000B7F10 /* TargetLogicSetting.strings */; };
+		2D1B0A98256A8EE9006091A2 /* IPhoneLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F39922270545700AE567D /* IPhoneLogicSetting.strings */; };
+		2D1B0A99256A8EE9006091A2 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
+		2D1B0A9A256A8EE9006091A2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
+		2D1B0A9B256A8EE9006091A2 /* sound6.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEB1FE007C20093E05D /* sound6.caf */; };
+		2D1B0A9C256A8EE9006091A2 /* ios_asset in Resources */ = {isa = PBXBuildFile; fileRef = 3D325486226D66630002F0AD /* ios_asset */; };
+		2D1B0A9D256A8EE9006091A2 /* fireImages in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55D723ACD43100651456 /* fireImages */; };
+		2D1B0A9E256A8EE9006091A2 /* yw_1222.jpg in Resources */ = {isa = PBXBuildFile; fileRef = FE700DC91B8D98F8004A435E /* yw_1222.jpg */; };
+		2D1B0A9F256A8EE9006091A2 /* tt_video_doubleClickApprove.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */; };
+		2D1B0AA0256A8EE9006091A2 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3B22704CAA00A95FAF /* Icon@2x.png */; };
+		2D1B0AA1256A8EE9006091A2 /* images in Resources */ = {isa = PBXBuildFile; fileRef = FBA5893E23AB64E20053EC79 /* images */; };
+		2D1B0AA2256A8EE9006091A2 /* Settings.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 438724811BE32BB500854877 /* Settings.xcassets */; };
+		2D1B0AA3256A8EE9006091A2 /* sound4.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCEA1FE007C10093E05D /* sound4.caf */; };
+		2D1B0AA4256A8EE9006091A2 /* sound1.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE61FE007BD0093E05D /* sound1.caf */; };
+		2D1B0AA5256A8EE9006091A2 /* house_refresh.json in Resources */ = {isa = PBXBuildFile; fileRef = 6114B09C21B3E78C00331D12 /* house_refresh.json */; };
+		2D1B0AA6256A8EE9006091A2 /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
+		2D1B0AA7256A8EE9006091A2 /* PushNotification.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */; };
+		2D1B0AA8256A8EE9006091A2 /* iconfont_new.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE42265E34900A0780E /* iconfont_new.ttf */; };
+		2D1B0AA9256A8EE9006091A2 /* Weather.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6B50C7B41F5D44EF00BF89A1 /* Weather.xcassets */; };
+		2D1B0AAA256A8EE9006091A2 /* introduce_3.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892123AB64D20053EC79 /* introduce_3.json */; };
+		2D1B0AAB256A8EE9006091A2 /* introduce_2.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892223AB64D20053EC79 /* introduce_2.json */; };
+		2D1B0AAC256A8EE9006091A2 /* sound3.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE71FE007BE0093E05D /* sound3.caf */; };
+		2D1B0AAD256A8EE9006091A2 /* permission_tip.txt in Resources */ = {isa = PBXBuildFile; fileRef = 3DC75FF823BB4ABE00614BFF /* permission_tip.txt */; };
+		2D1B0AAE256A8EE9006091A2 /* introduce_1.json in Resources */ = {isa = PBXBuildFile; fileRef = FBA5892F23AB64D20053EC79 /* introduce_1.json */; };
+		2D1B0AAF256A8EE9006091A2 /* gaode_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D83DD112306A933008B583E /* gaode_style_extra.data */; };
+		2D1B0AB0256A8EE9006091A2 /* BubbleImages.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */; };
+		2D1B0AB1256A8EE9006091A2 /* CommonResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */; };
+		2D1B0AB2256A8EE9006091A2 /* sound2.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE91FE007C00093E05D /* sound2.caf */; };
+		2D1B0AB3256A8EE9006091A2 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3922704CAA00A95FAF /* Icon-72.png */; };
+		2D1B0AB4256A8EE9006091A2 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3A22704CAA00A95FAF /* Icon-72@2x.png */; };
+		2D1B0AB5256A8EE9006091A2 /* sound5.caf in Resources */ = {isa = PBXBuildFile; fileRef = 2E14CCE81FE007BF0093E05D /* sound5.caf */; };
+		2D1B0AB6256A8EE9006091A2 /* gaode_map_style.data in Resources */ = {isa = PBXBuildFile; fileRef = 3D721A9D218FE7FA006C1156 /* gaode_map_style.data */; };
+		2D1B0AB7256A8EE9006091A2 /* firework.json in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55CA23ACD41700651456 /* firework.json */; };
+		2D1B0AB8256A8EE9006091A2 /* gaode_house_detail_style.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DF23965409006D44D2 /* gaode_house_detail_style.data */; };
+		2D1B0AB9256A8EE9006091A2 /* ProjectNightModeThemeUISetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE32265E34900A0780E /* ProjectNightModeThemeUISetting.strings */; };
+		2D1B0ABA256A8EE9006091A2 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
+		2D1B0ABB256A8EE9006091A2 /* ShortVideoGuide.json in Resources */ = {isa = PBXBuildFile; fileRef = 1765A463252192FD00A1A9D8 /* ShortVideoGuide.json */; };
+		2D1B0ABC256A8EE9006091A2 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D7D2F3822704CAA00A95FAF /* Icon.png */; };
+		2D1B0ABD256A8EE9006091A2 /* NewsResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1E15E061D77117900B551D9 /* NewsResource.xcassets */; };
+		2D1B0ABE256A8EE9006091A2 /* FrameworkResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */; };
+		2D1B0ABF256A8EE9006091A2 /* Account.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */; };
+		2D1B0AC0256A8EE9006091A2 /* gaode_house_detail_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */; };
+		2D1B0AC1256A8EE9006091A2 /* AuthorizeHintResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4175CE3C1D16850900F2CFC2 /* AuthorizeHintResource.xcassets */; };
+		2D1B0AC2256A8EE9006091A2 /* default_profile_background_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6BD907021DB877E40072138C /* default_profile_background_image.jpg */; };
+		2D1B0AC3256A8EE9006091A2 /* LynxLocalChannels in Resources */ = {isa = PBXBuildFile; fileRef = D45F59FB2458039E00A14982 /* LynxLocalChannels */; };
+		2D1B0AC4256A8EE9006091A2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E32142652800653188 /* Assets.xcassets */; };
+		2D1B0AC5256A8EE9006091A2 /* ProjectDayModeThemeUISetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE22265E34900A0780E /* ProjectDayModeThemeUISetting.strings */; };
+		2D1B0AC6256A8EE9006091A2 /* IPhoneProjectLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3DB49EE12265E34900A0780E /* IPhoneProjectLogicSetting.strings */; };
+		2D1B0AC7256A8EE9006091A2 /* VideoResource.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */; };
+		2D1B0AC9256A8EE9006091A2 /* AddressBookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D741F2E2255FF5D00E62B4C /* AddressBookUI.framework */; };
+		2D1B0ACA256A8EE9006091A2 /* libresolv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D013795E1DFE8BEF0020C6BD /* libresolv.tbd */; };
+		2D1B0ACB256A8EE9006091A2 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = B119472C1CF7FF4700561B49 /* libbz2.tbd */; };
+		2D1B0ACC256A8EE9006091A2 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A89B0DC91C60C3DA00ECC955 /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		2D1B0ACD256A8EE9006091A2 /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A8350A021BB501AC008D8D92 /* CoreSpotlight.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		2D1B0ACE256A8EE9006091A2 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEE5ED451B26C7EE009F8BA4 /* CoreMotion.framework */; };
+		2D1B0ACF256A8EE9006091A2 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0695AFD018EEEEE50009444F /* ImageIO.framework */; };
+		2D1B0AD0256A8EE9006091A2 /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4846642A174A035F001C44C1 /* libz.1.1.3.dylib */; };
+		2D1B0AD1256A8EE9006091A2 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF3B84B5173BDC690017F4E7 /* Security.framework */; };
+		2D1B0AD2256A8EE9006091A2 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 484664181749CBC2001C44C1 /* EventKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		2D1B0AD3256A8EE9006091A2 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48F7DC0816E9C9140052F809 /* Social.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		2D1B0AD4256A8EE9006091A2 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF666EEB1962EEB700E39BBE /* AddressBook.framework */; };
+		2D1B0AD5256A8EE9006091A2 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFEC869D166EED7700A01DB3 /* AVFoundation.framework */; };
+		2D1B0AD6256A8EE9006091A2 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 483C7438165F8DDE0020A3DD /* libz.dylib */; };
+		2D1B0AD7256A8EE9006091A2 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFECAAD416550AC3006EB51A /* AdSupport.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		2D1B0AD8256A8EE9006091A2 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFF33B0C162FEE8600B947F4 /* MapKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		2D1B0AD9256A8EE9006091A2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFF33B05162FDB1D00B947F4 /* CoreLocation.framework */; };
+		2D1B0ADA256A8EE9006091A2 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA10B47158835A8009876FE /* CoreText.framework */; };
+		2D1B0ADB256A8EE9006091A2 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4842A8A51847800D00A75DBD /* CoreTelephony.framework */; };
+		2D1B0ADC256A8EE9006091A2 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5059815876B1100EB27FA /* CoreData.framework */; };
+		2D1B0ADD256A8EE9006091A2 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5059615876B0D00EB27FA /* QuartzCore.framework */; };
+		2D1B0ADE256A8EE9006091A2 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5059415876B0600EB27FA /* MessageUI.framework */; };
+		2D1B0ADF256A8EE9006091A2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5059215876B0000EB27FA /* AudioToolbox.framework */; };
+		2D1B0AE0256A8EE9006091A2 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5059015876AFA00EB27FA /* CFNetwork.framework */; };
+		2D1B0AE1256A8EE9006091A2 /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5058E15876AF200EB27FA /* libz.1.2.5.dylib */; };
+		2D1B0AE2256A8EE9006091A2 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5058A15876AE000EB27FA /* libsqlite3.0.dylib */; };
+		2D1B0AE3256A8EE9006091A2 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5058815876AD600EB27FA /* SystemConfiguration.framework */; };
+		2D1B0AE4256A8EE9006091A2 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5058415876ACA00EB27FA /* MobileCoreServices.framework */; };
+		2D1B0AE5256A8EE9006091A2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5028415876A1F00EB27FA /* UIKit.framework */; };
+		2D1B0AE6256A8EE9006091A2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5028615876A1F00EB27FA /* Foundation.framework */; };
+		2D1B0AE7256A8EE9006091A2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5028815876A1F00EB27FA /* CoreGraphics.framework */; };
+		2D1B0AE8256A8EE9006091A2 /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AA5058C15876AE500EB27FA /* libz.1.dylib */; };
+		2D1B0AE9256A8EE9006091A2 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C000AF16F7426D00FC365B /* AssetsLibrary.framework */; };
+		2D1B0B0E256BA924006091A2 /* serviceNofExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 619867792223E8EE0056B2EF /* serviceNofExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		30B80968186F20525FA8F916 /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9024DDF5E410548C9797A57D /* libPods-f100.a */; };
 		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
 		3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398E2270545700AE567D /* TargetLogicSetting.strings */; };
@@ -56,7 +142,8 @@
 		619867812223E8EE0056B2EF /* serviceNofExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 619867792223E8EE0056B2EF /* serviceNofExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6198678F2223E9A70056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198678E2223E9A70056B2EF /* NotificationService.m */; };
 		619867932223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		69F0CD392143A278FD9B2268 /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9B09F911EE3F36416D07632 /* libPods-NewsLiteInHouse.a */; };
+		62434B862504F5A59E2D81B7 /* libPods-f100InHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6654741C4CBDCFEE43406548 /* libPods-f100InHouse.a */; };
+		69F0CD392143A278FD9B2268 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		7623E3B12275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
 		7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
 		ACBF787C473BD50F37A42499 /* libPods-com.f100.client.FHNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7EE899B83B71F6E5A068E09 /* libPods-com.f100.client.FHNotificationServiceExtension.a */; };
@@ -192,6 +279,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		2D1B0B0F256BA925006091A2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3AA5027715876A1F00EB27FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 619867782223E8EE0056B2EF;
+			remoteInfo = serviceNofExtension;
+		};
 		6198677F2223E8EE0056B2EF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3AA5027715876A1F00EB27FA /* Project object */;
@@ -209,6 +303,27 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		2D1B0AEB256A8EE9006091A2 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				2D1B0B0E256BA924006091A2 /* serviceNofExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D1B0AEE256A8EE9006091A2 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B373CF062174587A008F9905 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -260,8 +375,12 @@
 		0695AFD018EEEEE50009444F /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		1765A463252192FD00A1A9D8 /* ShortVideoGuide.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ShortVideoGuide.json; sourceTree = "<group>"; };
 		176E29DB25382BB500783D5E /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		1A730A544F462B66C0E814A7 /* Pods-f100InHouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100InHouse.release.xcconfig"; path = "Target Support Files/Pods-f100InHouse/Pods-f100InHouse.release.xcconfig"; sourceTree = "<group>"; };
 		2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = F100BaiduMapKit.framework; path = ../Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework; sourceTree = "<group>"; };
 		2B53A10C24C5787200923B3C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		2D1B0AF6256A8EE9006091A2 /* f100InHouse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = f100InHouse.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D1B0AF7256A8EEA006091A2 /* NewsLiteInHouse copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "NewsLiteInHouse copy-Info.plist"; path = "/Users/xubinbin/myself/ios/ios_bubble/Article/NewsLiteInHouse copy-Info.plist"; sourceTree = "<absolute>"; };
+		2D1B0B0A256BA453006091A2 /* serviceNofExtension copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "serviceNofExtension copy-Info.plist"; path = "/Users/xubinbin/myself/ios/ios_bubble/Article/serviceNofExtension copy-Info.plist"; sourceTree = "<absolute>"; };
 		2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PushNotification.xcassets; sourceTree = "<group>"; };
 		2E14CCE61FE007BD0093E05D /* sound1.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound1.caf; sourceTree = "<group>"; };
 		2E14CCE71FE007BE0093E05D /* sound3.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound3.caf; sourceTree = "<group>"; };
@@ -337,6 +456,7 @@
 		6198678E2223E9A70056B2EF /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
 		619867902223E9A70056B2EF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		619867982223EF910056B2EF /* com.f100.client.FHNotificationServiceExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = com.f100.client.FHNotificationServiceExtension.entitlements; sourceTree = "<group>"; };
+		6654741C4CBDCFEE43406548 /* libPods-f100InHouse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-f100InHouse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B42954E1BA13BB1000B7F10 /* TargetLogicSetting.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = TargetLogicSetting.strings; sourceTree = "<group>"; };
 		6B50C7B41F5D44EF00BF89A1 /* Weather.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Weather.xcassets; sourceTree = "<group>"; };
 		6B9469601BC6846C00FDD128 /* libSDWebImage.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSDWebImage.a; path = "Pods/../build/Debug-iphoneos/libSDWebImage.a"; sourceTree = "<group>"; };
@@ -354,6 +474,7 @@
 		6BF6943D1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = NewsInHouseWatchKitExtension.debug.xcconfig; sourceTree = "<group>"; };
 		6BF6943E1CF2E5A5009997F0 /* NewsInHouseWatchKitExtension.release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = NewsInHouseWatchKitExtension.release.xcconfig; sourceTree = "<group>"; };
 		7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TTVPlayerStyle.plist; sourceTree = "<group>"; };
+		78A1AFDC1A422D5286D4C0CF /* Pods-f100InHouse.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100InHouse.debug.xcconfig"; path = "Target Support Files/Pods-f100InHouse/Pods-f100InHouse.debug.xcconfig"; sourceTree = "<group>"; };
 		78B18348C00B3E953FC5CEA0 /* Pods-NewsLiteInHouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NewsLiteInHouse.release.xcconfig"; path = "Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse.release.xcconfig"; sourceTree = "<group>"; };
 		8416BB2D1C8EAE9A00BB9C97 /* Account.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Account.xcassets; sourceTree = "<group>"; };
 		9024DDF5E410548C9797A57D /* libPods-f100.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-f100.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -362,7 +483,6 @@
 		A83064511BAAEB4E0030D9E9 /* libPods.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libPods.a; path = "Pods/../build/Debug-iphoneos/libPods.a"; sourceTree = "<group>"; };
 		A8350A021BB501AC008D8D92 /* CoreSpotlight.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreSpotlight.framework; path = System/Library/Frameworks/CoreSpotlight.framework; sourceTree = SDKROOT; };
 		A89B0DC91C60C3DA00ECC955 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		A9B09F911EE3F36416D07632 /* libPods-NewsLiteInHouse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NewsLiteInHouse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B119472C1CF7FF4700561B49 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		B1E15E061D77117900B551D9 /* NewsResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = NewsResource.xcassets; sourceTree = "<group>"; };
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
@@ -409,6 +529,47 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2D1B0AC8256A8EE9006091A2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D1B0AC9256A8EE9006091A2 /* AddressBookUI.framework in Frameworks */,
+				2D1B0ACA256A8EE9006091A2 /* libresolv.tbd in Frameworks */,
+				2D1B0ACB256A8EE9006091A2 /* libbz2.tbd in Frameworks */,
+				2D1B0ACC256A8EE9006091A2 /* WebKit.framework in Frameworks */,
+				2D1B0ACD256A8EE9006091A2 /* CoreSpotlight.framework in Frameworks */,
+				2D1B0ACE256A8EE9006091A2 /* CoreMotion.framework in Frameworks */,
+				2D1B0ACF256A8EE9006091A2 /* ImageIO.framework in Frameworks */,
+				2D1B0AD0256A8EE9006091A2 /* libz.1.1.3.dylib in Frameworks */,
+				2D1B0AD1256A8EE9006091A2 /* Security.framework in Frameworks */,
+				2D1B0AD2256A8EE9006091A2 /* EventKit.framework in Frameworks */,
+				2D1B0AD3256A8EE9006091A2 /* Social.framework in Frameworks */,
+				2D1B0AD4256A8EE9006091A2 /* AddressBook.framework in Frameworks */,
+				2D1B0AD5256A8EE9006091A2 /* AVFoundation.framework in Frameworks */,
+				2D1B0AD6256A8EE9006091A2 /* libz.dylib in Frameworks */,
+				2D1B0AD7256A8EE9006091A2 /* AdSupport.framework in Frameworks */,
+				2D1B0AD8256A8EE9006091A2 /* MapKit.framework in Frameworks */,
+				2D1B0AD9256A8EE9006091A2 /* CoreLocation.framework in Frameworks */,
+				2D1B0ADA256A8EE9006091A2 /* CoreText.framework in Frameworks */,
+				2D1B0ADB256A8EE9006091A2 /* CoreTelephony.framework in Frameworks */,
+				2D1B0ADC256A8EE9006091A2 /* CoreData.framework in Frameworks */,
+				2D1B0ADD256A8EE9006091A2 /* QuartzCore.framework in Frameworks */,
+				2D1B0ADE256A8EE9006091A2 /* MessageUI.framework in Frameworks */,
+				2D1B0ADF256A8EE9006091A2 /* AudioToolbox.framework in Frameworks */,
+				2D1B0AE0256A8EE9006091A2 /* CFNetwork.framework in Frameworks */,
+				2D1B0AE1256A8EE9006091A2 /* libz.1.2.5.dylib in Frameworks */,
+				2D1B0AE2256A8EE9006091A2 /* libsqlite3.0.dylib in Frameworks */,
+				2D1B0AE3256A8EE9006091A2 /* SystemConfiguration.framework in Frameworks */,
+				2D1B0AE4256A8EE9006091A2 /* MobileCoreServices.framework in Frameworks */,
+				2D1B0AE5256A8EE9006091A2 /* UIKit.framework in Frameworks */,
+				2D1B0AE6256A8EE9006091A2 /* Foundation.framework in Frameworks */,
+				2D1B0AE7256A8EE9006091A2 /* CoreGraphics.framework in Frameworks */,
+				2D1B0AE8256A8EE9006091A2 /* libz.1.dylib in Frameworks */,
+				2D1B0AE9256A8EE9006091A2 /* AssetsLibrary.framework in Frameworks */,
+				62434B862504F5A59E2D81B7 /* libPods-f100InHouse.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		619867762223E8EE0056B2EF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -504,7 +665,7 @@
 				FEFA5A4E205FB1A8001F50D8 /* CoreGraphics.framework in Frameworks */,
 				FEFA5A50205FB1A8001F50D8 /* libz.1.dylib in Frameworks */,
 				FEFA5A51205FB1A8001F50D8 /* AssetsLibrary.framework in Frameworks */,
-				69F0CD392143A278FD9B2268 /* libPods-NewsLiteInHouse.a in Frameworks */,
+				69F0CD392143A278FD9B2268 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -524,6 +685,8 @@
 				3AA5028115876A1F00EB27FA /* Products */,
 				FEE188E21FFCB587005310BB /* Recovered References */,
 				57D2822B58EC59C9A459008F /* Pods */,
+				2D1B0AF7256A8EEA006091A2 /* NewsLiteInHouse copy-Info.plist */,
+				2D1B0B0A256BA453006091A2 /* serviceNofExtension copy-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
@@ -534,6 +697,7 @@
 				B373CF102174587A008F9905 /* f100.app */,
 				619867792223E8EE0056B2EF /* serviceNofExtension.appex */,
 				6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */,
+				2D1B0AF6256A8EE9006091A2 /* f100InHouse.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -592,10 +756,10 @@
 				48EC02941855A4BB0010847F /* XCTest.framework */,
 				48AE549C19E4F208005B68B1 /* NotificationCenter.framework */,
 				FE524F681DC9BE4F00CDED36 /* IntentsUI.framework */,
-				A9B09F911EE3F36416D07632 /* libPods-NewsLiteInHouse.a */,
 				A7EE899B83B71F6E5A068E09 /* libPods-com.f100.client.FHNotificationServiceExtension.a */,
 				9024DDF5E410548C9797A57D /* libPods-f100.a */,
 				E8F614528BFD84403C72AE68 /* libPods-serviceNofExtension.a */,
+				6654741C4CBDCFEE43406548 /* libPods-f100InHouse.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -668,6 +832,8 @@
 				F628430994DA5273F4C273BE /* Pods-f100.release.xcconfig */,
 				F4E8CF5A26307DAE199946AF /* Pods-serviceNofExtension.debug.xcconfig */,
 				5129D8793788E540E9EC0C24 /* Pods-serviceNofExtension.release.xcconfig */,
+				78A1AFDC1A422D5286D4C0CF /* Pods-f100InHouse.debug.xcconfig */,
+				1A730A544F462B66C0E814A7 /* Pods-f100InHouse.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -813,6 +979,35 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		2D1B0A8B256A8EE9006091A2 /* f100InHouse */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D1B0AF3256A8EE9006091A2 /* Build configuration list for PBXNativeTarget "f100InHouse" */;
+			buildPhases = (
+				2D1B0A8E256A8EE9006091A2 /* [CP] Check Pods Manifest.lock */,
+				2D1B0A8F256A8EE9006091A2 /* Run Script - build revision */,
+				2D1B0A90256A8EE9006091A2 /* [CP-User] sgmpreaction */,
+				2D1B0A91256A8EE9006091A2 /* Sources */,
+				2D1B0A95256A8EE9006091A2 /* Run Script - delete revision */,
+				2D1B0A96256A8EE9006091A2 /* Resources */,
+				2D1B0AC8256A8EE9006091A2 /* Frameworks */,
+				2D1B0AEB256A8EE9006091A2 /* Embed App Extensions */,
+				2D1B0AED256A8EE9006091A2 /* Run Script - Fix Copy Pods Resources Script  */,
+				2D1B0AEE256A8EE9006091A2 /* Embed Watch Content */,
+				2D1B0AEF256A8EE9006091A2 /* ShellScript */,
+				2D1B0AF0256A8EE9006091A2 /* ShellScript */,
+				2D1B0AF1256A8EE9006091A2 /* [CP] Embed Pods Frameworks */,
+				2D1B0AF2256A8EE9006091A2 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2D1B0B10256BA925006091A2 /* PBXTargetDependency */,
+			);
+			name = f100InHouse;
+			productName = Article;
+			productReference = 2D1B0AF6256A8EE9006091A2 /* f100InHouse.app */;
+			productType = "com.apple.product-type.application";
+		};
 		619867782223E8EE0056B2EF /* serviceNofExtension */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 619867822223E8EF0056B2EF /* Build configuration list for PBXNativeTarget "serviceNofExtension" */;
@@ -988,11 +1183,68 @@
 				B373C7F92174587A008F9905 /* f100 */,
 				619867782223E8EE0056B2EF /* serviceNofExtension */,
 				6198678A2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension */,
+				2D1B0A8B256A8EE9006091A2 /* f100InHouse */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2D1B0A96256A8EE9006091A2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D1B0A97256A8EE9006091A2 /* TargetLogicSetting.strings in Resources */,
+				2D1B0A98256A8EE9006091A2 /* IPhoneLogicSetting.strings in Resources */,
+				2D1B0A99256A8EE9006091A2 /* area.plist in Resources */,
+				2D1B0A9A256A8EE9006091A2 /* LaunchScreen.storyboard in Resources */,
+				2D1B0A9B256A8EE9006091A2 /* sound6.caf in Resources */,
+				2D1B0A9C256A8EE9006091A2 /* ios_asset in Resources */,
+				2D1B0A9D256A8EE9006091A2 /* fireImages in Resources */,
+				2D1B0A9E256A8EE9006091A2 /* yw_1222.jpg in Resources */,
+				2D1B0A9F256A8EE9006091A2 /* tt_video_doubleClickApprove.bundle in Resources */,
+				2D1B0AA0256A8EE9006091A2 /* Icon@2x.png in Resources */,
+				2D1B0AA1256A8EE9006091A2 /* images in Resources */,
+				2D1B0AA2256A8EE9006091A2 /* Settings.xcassets in Resources */,
+				2D1B0AA3256A8EE9006091A2 /* sound4.caf in Resources */,
+				2D1B0AA4256A8EE9006091A2 /* sound1.caf in Resources */,
+				2D1B0AA5256A8EE9006091A2 /* house_refresh.json in Resources */,
+				2D1B0AA6256A8EE9006091A2 /* VRImageLoading.json in Resources */,
+				2D1B0AA7256A8EE9006091A2 /* PushNotification.xcassets in Resources */,
+				2D1B0AA8256A8EE9006091A2 /* iconfont_new.ttf in Resources */,
+				2D1B0AA9256A8EE9006091A2 /* Weather.xcassets in Resources */,
+				2D1B0AAA256A8EE9006091A2 /* introduce_3.json in Resources */,
+				2D1B0AAB256A8EE9006091A2 /* introduce_2.json in Resources */,
+				2D1B0AAC256A8EE9006091A2 /* sound3.caf in Resources */,
+				2D1B0AAD256A8EE9006091A2 /* permission_tip.txt in Resources */,
+				2D1B0AAE256A8EE9006091A2 /* introduce_1.json in Resources */,
+				2D1B0AAF256A8EE9006091A2 /* gaode_style_extra.data in Resources */,
+				2D1B0AB0256A8EE9006091A2 /* BubbleImages.xcassets in Resources */,
+				2D1B0AB1256A8EE9006091A2 /* CommonResource.xcassets in Resources */,
+				2D1B0AB2256A8EE9006091A2 /* sound2.caf in Resources */,
+				2D1B0AB3256A8EE9006091A2 /* Icon-72.png in Resources */,
+				2D1B0AB4256A8EE9006091A2 /* Icon-72@2x.png in Resources */,
+				2D1B0AB5256A8EE9006091A2 /* sound5.caf in Resources */,
+				2D1B0AB6256A8EE9006091A2 /* gaode_map_style.data in Resources */,
+				2D1B0AB7256A8EE9006091A2 /* firework.json in Resources */,
+				2D1B0AB8256A8EE9006091A2 /* gaode_house_detail_style.data in Resources */,
+				2D1B0AB9256A8EE9006091A2 /* ProjectNightModeThemeUISetting.strings in Resources */,
+				2D1B0ABA256A8EE9006091A2 /* TTVPlayerStyle.plist in Resources */,
+				2D1B0ABB256A8EE9006091A2 /* ShortVideoGuide.json in Resources */,
+				2D1B0ABC256A8EE9006091A2 /* Icon.png in Resources */,
+				2D1B0ABD256A8EE9006091A2 /* NewsResource.xcassets in Resources */,
+				2D1B0ABE256A8EE9006091A2 /* FrameworkResource.xcassets in Resources */,
+				2D1B0ABF256A8EE9006091A2 /* Account.xcassets in Resources */,
+				2D1B0AC0256A8EE9006091A2 /* gaode_house_detail_style_extra.data in Resources */,
+				2D1B0AC1256A8EE9006091A2 /* AuthorizeHintResource.xcassets in Resources */,
+				2D1B0AC2256A8EE9006091A2 /* default_profile_background_image.jpg in Resources */,
+				2D1B0AC3256A8EE9006091A2 /* LynxLocalChannels in Resources */,
+				2D1B0AC4256A8EE9006091A2 /* Assets.xcassets in Resources */,
+				2D1B0AC5256A8EE9006091A2 /* ProjectDayModeThemeUISetting.strings in Resources */,
+				2D1B0AC6256A8EE9006091A2 /* IPhoneProjectLogicSetting.strings in Resources */,
+				2D1B0AC7256A8EE9006091A2 /* VideoResource.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		619867772223E8EE0056B2EF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1195,6 +1447,145 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# Type a script or drag a script file from your workspace to insert its path.\n APP_PATH=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n\nfind \"$APP_PATH\" -name '*.framework' -type d | while read -r FRAMEWORK\ndo\nFRAMEWORK_EXECUTABLE_NAME=$(defaults read \"$FRAMEWORK/Info.plist\" CFBundleExecutable)\nFRAMEWORK_EXECUTABLE_PATH=\"$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME\"\necho \"Executable is $FRAMEWORK_EXECUTABLE_PATH\"\necho $(lipo -info \"$FRAMEWORK_EXECUTABLE_PATH\")\n\nFRAMEWORK_TMP_PATH=\"$FRAMEWORK_EXECUTABLE_PATH-tmp\"\n\ncase \"${TARGET_BUILD_DIR}\" in\n*\"iphonesimulator\")\n    echo \"No need to remove archs\"\n    ;;\n*)\n    if $(lipo \"$FRAMEWORK_EXECUTABLE_PATH\" -verify_arch \"i386\") ; then\n    lipo -output \"$FRAMEWORK_TMP_PATH\" -remove \"i386\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    echo \"i386 architecture removed\"\n    rm \"$FRAMEWORK_EXECUTABLE_PATH\"\n    mv \"$FRAMEWORK_TMP_PATH\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    fi\n    if $(lipo \"$FRAMEWORK_EXECUTABLE_PATH\" -verify_arch \"x86_64\") ; then\n    lipo -output \"$FRAMEWORK_TMP_PATH\" -remove \"x86_64\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    echo \"x86_64 architecture removed\"\n    rm \"$FRAMEWORK_EXECUTABLE_PATH\"\n    mv \"$FRAMEWORK_TMP_PATH\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    fi\n    ;;\nesac\n\necho \"Completed for executable $FRAMEWORK_EXECUTABLE_PATH\"\necho $(lipo -info \"$FRAMEWORK_EXECUTABLE_PATH\")\n\ndone\n";
+		};
+		2D1B0A8E256A8EE9006091A2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-f100InHouse-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2D1B0A8F256A8EE9006091A2 /* Run Script - build revision */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script - build revision";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "git_version=$(git log -1 --format=\"%h\")\necho \"#define BuildRev \\\"${git_version}\\\"\" > Config/revision.h\n";
+		};
+		2D1B0A90256A8EE9006091A2 /* [CP-User] sgmpreaction */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "[CP-User] sgmpreaction";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh";
+		};
+		2D1B0A95256A8EE9006091A2 /* Run Script - delete revision */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 8;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script - delete revision";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+			shellPath = /bin/sh;
+			shellScript = "rm -f Config/revision.h\n";
+		};
+		2D1B0AED256A8EE9006091A2 /* Run Script - Fix Copy Pods Resources Script  */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script - Fix Copy Pods Resources Script ";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#change Pods-NewsInHouse-resources.sh source code\nsed -i '' 's/OTHER_XCASSETS=\\$(find \\\"\\$PWD\\\" -iname \\\"\\*.xcassets\\\" -type d)/OTHER_XCASSETS=\\$(bundle exec ruby get_all_xcassets.rb \\${SRCROOT} \\${TARGETNAME})/g' \"${SRCROOT}/Pods/Target Support Files/Pods-NewsLiteInHouse/Pods-NewsLiteInHouse-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2D1B0AEF256A8EE9006091A2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n#/bin/sh ${PODS_ROOT}/Heimdallr/Heimdallr/dSYMUpload.sh\necho \"========= upload =========\"\n/bin/sh ${SRCROOT}/dSYMUpload.sh\necho \"========= upload done =======\"\n";
+		};
+		2D1B0AF0256A8EE9006091A2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n# Type a script or drag a script file from your workspace to insert its path.\n APP_PATH=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n\nfind \"$APP_PATH\" -name '*.framework' -type d | while read -r FRAMEWORK\ndo\nFRAMEWORK_EXECUTABLE_NAME=$(defaults read \"$FRAMEWORK/Info.plist\" CFBundleExecutable)\nFRAMEWORK_EXECUTABLE_PATH=\"$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME\"\necho \"Executable is $FRAMEWORK_EXECUTABLE_PATH\"\necho $(lipo -info \"$FRAMEWORK_EXECUTABLE_PATH\")\n\nFRAMEWORK_TMP_PATH=\"$FRAMEWORK_EXECUTABLE_PATH-tmp\"\n\ncase \"${TARGET_BUILD_DIR}\" in\n*\"iphonesimulator\")\n    echo \"No need to remove archs\"\n    ;;\n*)\n    if $(lipo \"$FRAMEWORK_EXECUTABLE_PATH\" -verify_arch \"i386\") ; then\n    lipo -output \"$FRAMEWORK_TMP_PATH\" -remove \"i386\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    echo \"i386 architecture removed\"\n    rm \"$FRAMEWORK_EXECUTABLE_PATH\"\n    mv \"$FRAMEWORK_TMP_PATH\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    fi\n    if $(lipo \"$FRAMEWORK_EXECUTABLE_PATH\" -verify_arch \"x86_64\") ; then\n    lipo -output \"$FRAMEWORK_TMP_PATH\" -remove \"x86_64\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    echo \"x86_64 architecture removed\"\n    rm \"$FRAMEWORK_EXECUTABLE_PATH\"\n    mv \"$FRAMEWORK_TMP_PATH\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    fi\n    ;;\nesac\n\necho \"Completed for executable $FRAMEWORK_EXECUTABLE_PATH\"\necho $(lipo -info \"$FRAMEWORK_EXECUTABLE_PATH\")\n\ndone\n";
+		};
+		2D1B0AF1256A8EE9006091A2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-f100InHouse/Pods-f100InHouse-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-f100InHouse/Pods-f100InHouse-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-f100InHouse/Pods-f100InHouse-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2D1B0AF2256A8EE9006091A2 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-f100InHouse/Pods-f100InHouse-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-f100InHouse/Pods-f100InHouse-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-f100InHouse/Pods-f100InHouse-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		3D396439219ACED0002E9010 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1448,6 +1839,16 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2D1B0A91256A8EE9006091A2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D1B0A92256A8EE9006091A2 /* AppDelegate.m in Sources */,
+				2D1B0A93256A8EE9006091A2 /* main.m in Sources */,
+				2D1B0A94256A8EE9006091A2 /* TTNotificationServiceExtensionBase.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		619867752223E8EE0056B2EF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1489,6 +1890,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		2D1B0B10256BA925006091A2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 619867782223E8EE0056B2EF /* serviceNofExtension */;
+			targetProxy = 2D1B0B0F256BA925006091A2 /* PBXContainerItemProxy */;
+		};
 		619867802223E8EE0056B2EF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 619867782223E8EE0056B2EF /* serviceNofExtension */;
@@ -1532,6 +1938,194 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		2D1B0AF4256A8EE9006091A2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 78A1AFDC1A422D5286D4C0CF /* Pods-f100InHouse.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_OPTIMIZATION = "";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = News/News.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 7.1.2.0;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DEVELOPMENT_TEAM = 7HSS6X2323;
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = "";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "News/News-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+					"SD_WEBP=1",
+					"INHOUSE=1",
+				);
+				GCC_THUMB_SUPPORT = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/AFgzipRequestSerializer\"",
+					"\"${PODS_ROOT}/Headers/Public/AMapSearch\"",
+					"\"${PODS_ROOT}/Headers/Public/Crashlytics\"",
+					"\"${PODS_ROOT}/Headers/Public/FLEX\"",
+					"\"${PODS_ROOT}/Headers/Public/Fabric\"",
+					"\"${PODS_ROOT}/Headers/Public/Godzippa\"",
+					"\"${PODS_ROOT}/Headers/Public/HPGrowingTextView\"",
+					"\"${PODS_ROOT}/Headers/Public/JSONModel\"",
+					"\"${PODS_ROOT}/Headers/Public/Masonry\"",
+					"\"${PODS_ROOT}/Headers/Public/RSSwizzle\"",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+					"\"${PODS_ROOT}/Headers/Public/TTCommonManager\"",
+					"\"${PODS_ROOT}/Headers/Public/TTNetworkManager\"",
+					"\"${PODS_ROOT}/Headers/Public/TTTAttributedLabel\"",
+					"\"${PODS_ROOT}/Headers/Public/UMengAnalytics\"",
+					"\"${PODS_ROOT}/Headers/Public/libwebp\"",
+					"\"$(SRCROOT)/../Components/TTVideo/Pod\"/**",
+					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
+				);
+				INFOPLIST_FILE = "NewsLiteInHouse copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_GENERATE_MAP_FILE = YES;
+				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Libs/MZSDk",
+				);
+				LLVM_LTO = NO;
+				MARKETING_VERSION = 1.1.2;
+				ONLY_ACTIVE_ARCH = YES;
+				ORDER_FILE = "$(SRCROOT)/order_file.txt";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_LIBTOOLFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp100;
+				PRODUCT_MODULE_NAME = Bubble;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE_SPECIFIER = f100_inhouse_dev;
+				SEPARATE_STRIP = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "$(ARCHS_STANDARD)";
+				WARNING_CFLAGS = (
+					"$(inherited)",
+					"-Wno-documentation",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		2D1B0AF5256A8EE9006091A2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1A730A544F462B66C0E814A7 /* Pods-f100InHouse.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_OPTIMIZATION = "";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = NewsInHouse/NewsInHouse.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 7.1.2.0;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEPLOYMENT_POSTPROCESSING = YES;
+				DEVELOPMENT_TEAM = X46375UBYG;
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXCLUDED_SOURCE_FILE_NAMES = (
+					"TTNetworkStub.*",
+					"TTNetworkStubSwitchViewController.*",
+					"TTMagicSwitchTableViewCell.*",
+					NetworkStubItems.plist,
+					"Stub_*",
+					TTFastScrollingAlert,
+				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "News/News-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"SD_WEBP=1",
+					"INHOUSE=1",
+				);
+				GCC_THUMB_SUPPORT = NO;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/AFNetworking\"",
+					"\"${PODS_ROOT}/Headers/Public/AFgzipRequestSerializer\"",
+					"\"${PODS_ROOT}/Headers/Public/AMapSearch\"",
+					"\"${PODS_ROOT}/Headers/Public/Crashlytics\"",
+					"\"${PODS_ROOT}/Headers/Public/FLEX\"",
+					"\"${PODS_ROOT}/Headers/Public/Fabric\"",
+					"\"${PODS_ROOT}/Headers/Public/Godzippa\"",
+					"\"${PODS_ROOT}/Headers/Public/HPGrowingTextView\"",
+					"\"${PODS_ROOT}/Headers/Public/JSONModel\"",
+					"\"${PODS_ROOT}/Headers/Public/Masonry\"",
+					"\"${PODS_ROOT}/Headers/Public/RSSwizzle\"",
+					"\"${PODS_ROOT}/Headers/Public/SDWebImage\"",
+					"\"${PODS_ROOT}/Headers/Public/TTCommonManager\"",
+					"\"${PODS_ROOT}/Headers/Public/TTNetworkManager\"",
+					"\"${PODS_ROOT}/Headers/Public/TTTAttributedLabel\"",
+					"\"${PODS_ROOT}/Headers/Public/UMengAnalytics\"",
+					"\"${PODS_ROOT}/Headers/Public/libwebp\"",
+					"\"$(SRCROOT)/../Components/TTVideo/Pod\"/**",
+					"\"$(SRCROOT)/../Components/TTLive/TTLive/TTlive\"/**",
+				);
+				INFOPLIST_FILE = "NewsLiteInHouse copy-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_GENERATE_MAP_FILE = YES;
+				LD_MAP_FILE_PATH = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/$(PRODUCT_NAME)-LinkMap-$(CURRENT_ARCH).txt";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Libs/MZSDk",
+				);
+				LLVM_LTO = YES_THIN;
+				MARKETING_VERSION = 1.1.2;
+				ONLY_ACTIVE_ARCH = NO;
+				ORDER_FILE = "$(SRCROOT)/order_file.txt";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_LIBTOOLFLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.bytedance.fp1;
+				PRODUCT_MODULE_NAME = Bubble;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.fp1_InHouse;
+				SEPARATE_STRIP = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "$(ARCHS_STANDARD)";
+				WARNING_CFLAGS = (
+					"$(inherited)",
+					"-Wno-documentation",
+				);
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 		3AA5029615876A1F00EB27FA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2210,6 +2804,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2D1B0AF3256A8EE9006091A2 /* Build configuration list for PBXNativeTarget "f100InHouse" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D1B0AF4256A8EE9006091A2 /* Debug */,
+				2D1B0AF5256A8EE9006091A2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		3AA5027A15876A1F00EB27FA /* Build configuration list for PBXProject "Article" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
