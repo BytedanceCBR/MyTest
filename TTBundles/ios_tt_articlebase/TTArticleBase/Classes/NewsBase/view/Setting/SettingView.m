@@ -1350,7 +1350,7 @@ TTEditUserProfileViewControllerDelegate
         }
     } else if (cellType == SettingCellTypeClearCache) {
         [BDTrackerProtocol event:UMENG_SETTINGVIEW_EVENT_ID_STR label:@"clear_cache"];
-        if (_cacheStatus != ArticleSettingViewCacheStatusCalcCompleted && _cacheStatus != ArticleSettingViewCacheStatusNormal) {
+        if (_cacheStatus != ArticleSettingViewCacheStatusCalcCompleted) {
             return;
         }
         
