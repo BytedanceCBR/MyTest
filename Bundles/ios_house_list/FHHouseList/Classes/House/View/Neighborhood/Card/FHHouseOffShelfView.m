@@ -8,6 +8,7 @@
 #import "FHHouseOffShelfView.h"
 #import "Masonry.h"
 #import "UIFont+House.h"
+#import "UIColor+Theme.h"
 
 @interface FHHouseOffShelfView()
 
@@ -29,7 +30,8 @@
 
 - (void)setupUI {
     self.maskView = [[UIView alloc] init];
-    [self.maskView setBackgroundColor:[UIColor colorWithRed:170.0/255 green:170.0/255 blue:170.0/255 alpha:0.8]];
+    [self.maskView setBackgroundColor:[UIColor themeGray2]];
+    self.maskView.layer.opacity = 0.65;
     self.maskView.layer.shadowOffset = CGSizeMake(4, 6);
     self.maskView.layer.cornerRadius = 4;
     self.maskView.clipsToBounds = YES;
