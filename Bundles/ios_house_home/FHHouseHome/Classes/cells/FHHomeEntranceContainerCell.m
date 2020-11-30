@@ -17,6 +17,7 @@
 #import "FHHomeCellHelper.h"
 #import <FHHouseBase/FHHomeEntranceItemView.h>
 
+static const CGFloat sliderWidth = 16.f;
 
 @interface FHHomeEntranceContainerCell()<UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate>
 
@@ -31,33 +32,17 @@
 //data
 @property (nonatomic , strong) NSArray *items;
 
-@property (atomic, assign) float sliderWidth;
-
 @end
 
 @implementation FHHomeEntranceContainerCell
-
-
-+ (CGFloat)rowHeight {
-    if ([[FHEnvContext sharedInstance] getConfigFromCache].mainPageBannerOpData.items.count > 0){
-//        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW - 15;
-        return ceil(((SCREEN_WIDTH - 30) / 5) + 8);
-    } else {
-//        return ceil(SCREEN_WIDTH/375.f*NORMAL_ICON_WIDTH+NORMAL_NAME_HEIGHT)+TOP_MARGIN_PER_ROW + 10;
-        return ceil((SCREEN_WIDTH - 30) / 5)  + 8 + 10 ;
-    }
-}
 
 + (CGFloat)cellHeightForModel:(id)model {
     if (![model isKindOfClass:[FHConfigDataOpDataModel class]]) {
         return 0;
     }
     FHConfigDataOpDataModel *dataModel = (FHConfigDataOpDataModel *)model;
-    if ([dataModel.opStyle isEqualToString:@"1"]) {
-        return ceil((SCREEN_WIDTH - 30)/5 * 2);
-    } else {
-        return ceil((SCREEN_WIDTH - 30)/5 * 2) + 16;
-    }
+//    return ceil((SCREEN_WIDTH - 30)/5 * 2) + dataModel.items.count > 10 ? 16 : 8;
+    return dataModel.items.count > 10 ? ceil((SCREEN_WIDTH - 30)/5 * 2) + 16 : ceil((SCREEN_WIDTH - 30)/5 * 2) + 8;
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -87,7 +72,6 @@
     self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.flowLayout.minimumInteritemSpacing = 0;
     self.flowLayout.minimumLineSpacing = 0;
-    self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 0, 16, 0);
     self.flowLayout.itemSize = CGSizeMake((SCREEN_WIDTH - 30)/5, (SCREEN_WIDTH - 30)/5);
     
     _entranceCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.flowLayout];
@@ -138,15 +122,18 @@
         return;
     }
     self.items = items;
-    self.sliderWidth = 16;
     [_slider mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(self.sliderWidth);
+        make.width.mas_equalTo(sliderWidth);
         make.height.mas_equalTo(4);
         make.bottom.mas_equalTo(0);
     }];
+    [_entranceCollectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.mas_equalTo(0);
+        make.top.mas_equalTo(0);
+        make.bottom.mas_equalTo(self).offset(self.bottomSlide.hidden ? -8 : -16);
+    }];
     
     [self.entranceCollectionView reloadData];
-    
 }
 
 - (void)dealloc {
@@ -157,7 +144,7 @@
 #pragma mark - UICollectionViewDataSource
 
 //(index & 1)判断奇偶，改变映射关系，举个例子：
-//背景：首页icon需要横着划，所以datasource只能竖着排 导致原先数据源x = [1,2,3,4,5,6,7,8,9,10]在界面上体现为y = [1,6,2,7,3,8,4,9,5,10]。
+//背景：首页icon需要横着划，所以datasource只能竖着排(collectionview) 导致原先数据源x = [1,2,3,4,5,6,7,8,9,10]在界面上体现为y = [1,6,2,7,3,8,4,9,5,10]。
 //所以为了使collectionview横向滑动，需要在cellforrow改变映射关系，使y变成x
 - (NSUInteger)getIndexWithCount:(NSUInteger)count withIndex:(NSUInteger)index {
     return index / 2 + (index & 1) * (count + 1) / 2;
@@ -181,10 +168,11 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if (self.clickBlock) {
         FHConfigDataOpDataItemsModel *model = nil;
-        if(_items.count > indexPath.row){
-            model = _items[indexPath.row];
+        NSUInteger row = [self getIndexWithCount:self.items.count withIndex:indexPath.row];
+        if(_items.count > row){
+            model = _items[row];
         }
-        self.clickBlock(indexPath.row , model);
+        self.clickBlock(row , model);
     }
 }
 
@@ -194,7 +182,7 @@
     [UIView animateWithDuration:0.5 animations:^{
         [self.slider mas_updateConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(scrollView.contentOffset.x / (scrollView.contentSize.width - self.entranceCollectionView.frame.size.width + 0.1) * 16);
-            make.width.mas_equalTo(self.sliderWidth);
+            make.width.mas_equalTo(sliderWidth);
             make.top.bottom.mas_equalTo(self.bottomSlide);
         }];
     }];
