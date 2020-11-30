@@ -40,6 +40,7 @@
 #import "FHNeighborhoodDetailOwnerSellHouseSC.h"
 #import "FHNeighborhoodDetailOwnerSellHouseSM.h"
 #import "FHNeighborhoodDetailSurroundingSM.h"
+#import <FHHouseBase/NSObject+FHOptimize.h>
 
 @interface FHNeighborhoodDetailViewModel ()
 
@@ -281,6 +282,10 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.sectionModels = sectionModels.copy;
         });
+        __weak typeof(self) weakSelf = self;
+        [self executeOnce:^{
+            [weakSelf addPageLoadLog];
+        } token:FHExecuteOnceUniqueTokenForCurrentContext];
     });
     
 }
@@ -504,7 +509,7 @@
             NSMutableDictionary *metricDict = [NSMutableDictionary dictionary];
             //单位 秒 -> 毫秒
             metricDict[@"total_duration"] = @(duration * 1000);
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_new_house_detail" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
+            [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_neighborhood_detail" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
         }
     });
 }

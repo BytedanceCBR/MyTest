@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1765A464252192FE00A1A9D8 /* ShortVideoGuide.json in Resources */ = {isa = PBXBuildFile; fileRef = 1765A463252192FD00A1A9D8 /* ShortVideoGuide.json */; };
+		2B12857E2574D47700EAF2D8 /* FHMonkeyConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B12857C2574D47700EAF2D8 /* FHMonkeyConfigManager.m */; };
 		2D1B0A92256A8EE9006091A2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39942270545700AE567D /* AppDelegate.m */; };
 		2D1B0A93256A8EE9006091A2 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39912270545700AE567D /* main.m */; };
 		2D1B0A94256A8EE9006091A2 /* TTNotificationServiceExtensionBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D97BE7C226D753E0063C39A /* TTNotificationServiceExtensionBase.m */; };
@@ -375,6 +376,8 @@
 		0695AFD018EEEEE50009444F /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		1765A463252192FD00A1A9D8 /* ShortVideoGuide.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ShortVideoGuide.json; sourceTree = "<group>"; };
 		176E29DB25382BB500783D5E /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		2B12857C2574D47700EAF2D8 /* FHMonkeyConfigManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHMonkeyConfigManager.m; sourceTree = "<group>"; };
+		2B12857D2574D47700EAF2D8 /* FHMonkeyConfigManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHMonkeyConfigManager.h; sourceTree = "<group>"; };
 		1A730A544F462B66C0E814A7 /* Pods-f100InHouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100InHouse.release.xcconfig"; path = "Target Support Files/Pods-f100InHouse/Pods-f100InHouse.release.xcconfig"; sourceTree = "<group>"; };
 		2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = F100BaiduMapKit.framework; path = ../Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework; sourceTree = "<group>"; };
 		2B53A10C24C5787200923B3C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
@@ -672,9 +675,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2B12857B2574D47700EAF2D8 /* Monkey */ = {
+			isa = PBXGroup;
+			children = (
+				2B12857D2574D47700EAF2D8 /* FHMonkeyConfigManager.h */,
+				2B12857C2574D47700EAF2D8 /* FHMonkeyConfigManager.m */,
+			);
+			path = Monkey;
+			sourceTree = "<group>";
+		};
 		3AA5027515876A1F00EB27FA = {
 			isa = PBXGroup;
 			children = (
+				2B12857B2574D47700EAF2D8 /* Monkey */,
 				B388C9D82142652800653188 /* Bubble */,
 				A8323FED1B81B59600DD5533 /* Targets-Config */,
 				A8A57F531B16F44D00783AA9 /* Resource */,
@@ -1881,6 +1894,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B12857E2574D47700EAF2D8 /* FHMonkeyConfigManager.m in Sources */,
 				3D2F39A12270546B00AE567D /* AppDelegate.m in Sources */,
 				3D2F39A52270547F00AE567D /* main.m in Sources */,
 				3D97BE7E226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */,
