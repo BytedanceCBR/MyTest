@@ -431,6 +431,7 @@ extern NSString *const INSTANT_DATA_KEY;
 -(void)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend
 {
     if (isRefresh) {
+        self.maskView.hidden = YES;
         self.showPlaceHolder = YES;
         [self.tableView reloadData];
     }
