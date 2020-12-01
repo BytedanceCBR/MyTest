@@ -40,7 +40,9 @@
 @property (nonatomic, assign) BOOL floatIconAnimation;
 @property (nonatomic, assign) BOOL clickShowIcon;
 @property(nonatomic, assign) CGPoint tableviewBeginOffSet;
-
+@property (nonatomic) NSTimeInterval lastTime;
+@property (nonatomic,strong) CADisplayLink *link;
+@property (nonatomic,assign) bool canNslog;
 
 @end
 
@@ -67,9 +69,37 @@
     return viewModel;
 }
 
+- (void)getfirstFps{
+    self.canNslog = false;
+    self.isRefreshData = false;
+    _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(tick:)];
+    [_link addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+}
+
+- (void)tick:(CADisplayLink *)link {
+    if (_lastTime == 0) {
+        _lastTime = link.timestamp;
+        return;
+    }
+    
+    NSTimeInterval delta = link.timestamp - _lastTime;
+    if(self.canNslog){
+        NSLog(@"xzfps:%f",delta);
+        [_link removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+        _link = nil;
+        self.canNslog = false;
+    }
+    if(self.isRefreshData){
+        self.isRefreshData = false;
+        self.canNslog = true;
+    }
+    _lastTime = link.timestamp;
+}
+
 -(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType {
     self = [super init];
     if (self) {
+        [self getfirstFps];
         _detailTracerDic = [NSMutableDictionary new];
         _items = [NSMutableArray new];
         _cellHeightCaches = [NSMutableDictionary new];
@@ -262,7 +292,8 @@
             }
             if (cell) {
                 cell.baseViewModel = self;
-                [(FHDetailBaseCell *)cell refreshWithData:self.items[indexPath.row]];
+                [cell refreshWithData:data];
+                self.isRefreshData = true;
                 return cell;
             }else{
                 NSLog(@"nil cell for data: %@",data);
