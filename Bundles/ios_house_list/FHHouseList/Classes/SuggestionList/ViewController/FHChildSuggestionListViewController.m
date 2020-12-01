@@ -22,7 +22,6 @@
 #import "FHFindHouseHelperCell.h"
 #import "FHHouseListRecommendTipCell.h"
 #import "UIDevice+BTDAdditions.h"
-#import <NSString+BTDAdditions.h>
 
 @interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -329,7 +328,7 @@
 - (void)doTextFieldShouldReturn:(NSString *)text {
     
     
-    NSString *userInputText = [text btd_stringByRemoveAllCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"+ "]] ;
+    NSString *userInputText = text;
     
     // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
     NSString *rollText = self.homePageRollDic[@"text"];
@@ -366,7 +365,7 @@
     jumpHouseTpye = jumpHouseTpye != -1 ? jumpHouseTpye : self.houseType;
     NSString *openUrl = [NSString stringWithFormat:@"fschema://house_list?house_type=%zi&full_text=%@&placeholder=%@",jumpHouseTpye,placeHolderStr,placeHolderStr];
     if(jumpHouseTpye != self.houseType){
-        self.tracerDict[@"element_from"] = [self.viewModel elementFromNameByHouseType:self.houseType];
+        self.tracerDict[@"element_from"] = [self.viewModel relatedRecommendelEmentFromNameByHouseType:self.houseType];
     }
     self.tracerDict[@"enter_type"] = @"enter";
     self.tracerDict[@"enter_from"] = @"search_detail";

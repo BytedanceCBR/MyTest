@@ -184,6 +184,8 @@ extern NSString *const INSTANT_DATA_KEY;
         self.isFirstHavetip = YES;
         self.tableView = tableView;
         self.isShowSubscribeCell = NO;
+        //prehousetype表示从sug页面所在的housetype
+        //jumphousetype表示sug页面网络请求期待跳向的housetype,该housetype不一定开通
         self.preHouseType = [paramObj.allParams[@"pre_house_type"] intValue];
         self.jumpHouseType = [paramObj.allParams[@"jump_house_type"] intValue];
         self.filterOpenUrlMdodel = [FHSearchFilterOpenUrlModel instanceFromUrl:[paramObj.sourceURL absoluteString]];
@@ -429,6 +431,7 @@ extern NSString *const INSTANT_DATA_KEY;
 -(void)loadData:(BOOL)isRefresh fromRecommend:(BOOL)isFromRecommend
 {
     if (isRefresh) {
+        self.maskView.hidden = YES;
         self.showPlaceHolder = YES;
         [self.tableView reloadData];
     }
@@ -503,10 +506,12 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     NSString *searchId = self.searchId;
 
-    NSInteger prehousetype = self.preHouseType ?: self.houseType;
-    query = [query stringByAppendingString:[NSString stringWithFormat:@"&pre_house_type=%ld",(long)prehousetype]];
-    NSInteger jumpHousetype = self.jumpHouseType ?: self.houseType;
-    query = [query stringByAppendingString:[NSString stringWithFormat:@"&jump_house_type=%ld",(long)jumpHousetype]];
+    if(self.preHouseType){
+        query = [query stringByAppendingFormat:@"&pre_house_type=%ld",self.preHouseType];
+    }
+    if(self.jumpHouseType){
+        query = [query stringByAppendingFormat:@"&jump_house_type=%ld",(long)self.jumpHouseType];
+    }
     if (self.isCommute) {
         [self requestCommute:isRefresh query:query offset:offset searchId:searchId];
         return;
@@ -865,6 +870,7 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if (self.isRefresh) {
         [self.houseList removeAllObjects];
+        self.isFirstHavetip = YES;
         [self.sugesstHouseList removeAllObjects];
         [self.tableView.mj_footer endRefreshing];
     }
@@ -1692,7 +1698,7 @@ extern NSString *const INSTANT_DATA_KEY;
                         StrongSelf;
                         NSMutableDictionary *infos = [NSMutableDictionary new];
                         NSMutableDictionary *tracer = [NSMutableDictionary new];
-                        tracer[@"element_from"] = [self elementFromNameByhouseType:self.preHouseType];
+                        tracer[@"element_from"] = [self channelSwitchElementFromNameByhouseType:self.preHouseType];
                         tracer[@"enter_from"] = [self categoryName];
                         tracer[@"enter_type"] = @"click";
                         tracer[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
@@ -1707,7 +1713,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
                     self.tableView.scrollEnabled = NO;
                     self.tableView.backgroundColor = [UIColor whiteColor];
-                    ((FHHouseListRecommendTipCell *)cell).errorView.hidden = NO;
+                    [((FHHouseListRecommendTipCell *)cell) showErrorView];
                 }
                 return cell;
             }
@@ -1716,7 +1722,6 @@ extern NSString *const INSTANT_DATA_KEY;
         if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
             cell.backgroundColor = [UIColor themeGray7];
         }
-        
         if ([cell isKindOfClass:[FHFindHouseHelperCell class]]) {
             FHFindHouseHelperCell *helperCell = (FHFindHouseHelperCell *) cell;
             helperCell.cellTapAction = ^(NSString *url){
@@ -1738,19 +1743,28 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }
         [cell refreshWithData:data];
+        if([cell isKindOfClass:[FHNeighbourhoodAgencyCardCell class]]){
+            [((FHNeighbourhoodAgencyCardCell *)cell) updateHeightByIsFirst:isFirstCell];
+        }
+        if([cell isKindOfClass:[FHHousReserveAdviserCell class]]){
+            [((FHHousReserveAdviserCell *)cell) updateHeightByIsFirst:isFirstCell];
+        }
+        if([cell isKindOfClass:[FHHouseListRedirectTipCell class]]){
+            [((FHHouseListRedirectTipCell *)cell) updateHeightByIsFirst:isFirstCell];
+        }
         if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
             FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
             if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
                 self.tableView.scrollEnabled = NO;
                 self.tableView.backgroundColor = [UIColor whiteColor];
-                ((FHHouseListRecommendTipCell *)cell).errorView.hidden = NO;
-                    }
+                [((FHHouseListRecommendTipCell *)cell) showErrorView];
+            }
             WeakSelf;
             ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
                 StrongSelf;
                 NSMutableDictionary *infos = [NSMutableDictionary new];
                 NSMutableDictionary *tracer = [NSMutableDictionary new];
-                tracer[@"element_from"] = [self elementFromNameByhouseType:self.preHouseType];
+                tracer[@"element_from"] = [self channelSwitchElementFromNameByhouseType:self.preHouseType];
                 tracer[@"enter_from"] = [self categoryName];
                 tracer[@"enter_type"] = @"click";
                 tracer[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
@@ -1770,6 +1784,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }else if ([cell isKindOfClass:[FHSuggestionSubscribCell class]]) {
             FHSuggestionSubscribCell *subscribeCell = (FHSuggestionSubscribCell *)cell;
+            [subscribeCell updateHeightByIsFirst: isFirstCell];
             subscribeCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
                 [wself requestAddSubScribe:subscribeText];
             };
@@ -2137,8 +2152,8 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     return _houseShowCache;
 }
-
-- (NSString *)elementFromNameByhouseType:(NSInteger)houseType{
+//仅仅适用于sug页面跳转不一致时的频道切换“点击查看xx房结果”
+- (NSString *)channelSwitchElementFromNameByhouseType:(NSInteger)houseType{
     if(houseType == FHHouseTypeNewHouse){
         return @"channel_switch_new_result";
     }else if(houseType == FHHouseTypeSecondHandHouse){

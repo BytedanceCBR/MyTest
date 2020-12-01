@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , copy) void (^channelSwitchBlock)(void);
 @property (nonatomic, strong) FHErrorView *errorView;
 
+-(void)showErrorView;
+
 @end
 
 NS_ASSUME_NONNULL_END
