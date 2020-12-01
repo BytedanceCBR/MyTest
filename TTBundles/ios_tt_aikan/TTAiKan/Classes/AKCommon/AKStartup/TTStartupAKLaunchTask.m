@@ -19,8 +19,9 @@
 #import <BDInstall/BDInstall.h>
 #import <TTAccount.h>
 #import "FHEnvContext.h"
+#import <BDInstall/BDInstallIDFAManager.h>
 
-DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeService,TASK_PRIORITY_HIGH+15);
+DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+17);
 
 
 @interface TTStartupAKLaunchTask() <TTAccountMulticastProtocol>
@@ -85,12 +86,18 @@ DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeService,TASK_PRIORITY_HIGH+15);
     NSString *installId = [BDTrackerProtocol installID];
     NSString *channel = [TTSandBoxHelper getCurrentChannel];
     NSString *sessionId = [[TTAccount sharedAccount] sessionKey];
-    NSString *idfaString = [UIDevice btd_idfaString]; // 未授权idfa为全0
     MSMLClientType clientType = MS_ML_CLIENT_TYPE_INHOUSE;
     
     NSString *appId = [TTSandBoxHelper ssAppID];
     MSConfigML* msConfig = [[MSConfigML alloc] initWithAppID:appId License: [self safeSDKLicense]];
-    msConfig.setClientType(clientType).setChannel(channel).setIDFA(idfaString);
+    msConfig.setClientType(clientType).setChannel(channel);
+    
+    // 设置IDFA
+    BDInstallAuthorizationStatus idfaStatus = [BDInstallIDFAManager authorizationStatus];
+    if(idfaStatus == BDInstallAuthorizationStatusAuthorized) {
+        NSString *idfaString = [UIDevice btd_idfaString];
+        msConfig.setIDFA(idfaString);
+    }
     
     // 用户是否已经同意隐私弹窗协议
     BOOL hasConfirmPermission = [FHEnvContext sharedInstance].hasConfirmPermssionProtocol;
