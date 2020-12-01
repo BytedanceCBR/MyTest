@@ -311,6 +311,7 @@ static const CGFloat kFloatingViewOriginY = 230;
             if ([self.dataFetchManager respondsToSelector:@selector(dataDidChangeBlock)]) {
                 self.dataFetchManager.dataDidChangeBlock = ^{
                     @strongify(self);
+                    [self endLoading];
                     if ([self.dataFetchManager numberOfShortVideoItems] == 0) {
                         [self.emptyView showEmptyWithTip:@"数据走丢了" errorImageName:@"short_video_nodata" showRetry:YES];
                         return;
@@ -433,7 +434,11 @@ static const CGFloat kFloatingViewOriginY = 230;
         @weakify(self)
         controller.loadMoreBlock = ^(BOOL preload) {
             @strongify(self);
-            [self loadMoreAutomatically:preload];
+            [self loadMoreAutomatically:preload showLoading:NO];
+        };
+        controller.didScroll = ^{
+            @strongify(self);
+            [self loadVideoDataIfNeeded];
         };
         controller.detailPromptManager = self.detailPromptManager;
         controller.configureOverlayViewController = ^(id<TSVControlOverlayViewController> _Nonnull viewController) {
@@ -473,6 +478,17 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.view addSubview:self.videoContainerViewController.view];
     [self.videoContainerViewController didMoveToParentViewController:self];
 
+    [self addDefaultEmptyViewFullScreen];
+    self.emptyView.backgroundColor = [UIColor clearColor];
+    self.emptyView.retryBlock = ^{
+        @strongify(self);
+        self.emptyView.hidden = YES;
+        [self loadMoreAutomatically:YES showLoading:YES];
+    };
+    [self.emptyView.retryButton setBackgroundImage:[FHUtils createImageWithColor:[UIColor clearColor]] forState:UIControlStateNormal];
+    [self.emptyView.retryButton setBackgroundImage:[FHUtils createImageWithColor:[UIColor clearColor]] forState:UIControlStateHighlighted];
+    [self.emptyView.retryButton setTitle:@"重新加载" forState:UIControlStateNormal];
+    
     self.topBarView = [[UIView alloc] init];
     self.topBarView.frame = CGRectMake(15, topInset, CGRectGetWidth(self.view.bounds) -30, 64.0);
     self.topBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
@@ -611,7 +627,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([self.dataFetchManager numberOfShortVideoItems]) {
         self.model = [self.dataFetchManager itemAtIndex:[self.dataFetchManager currentIndex]];
     } else {
-        [self loadMoreAutomatically:YES];
+        [self loadMoreAutomatically:YES showLoading:YES];
     }
     
 //    }
@@ -644,15 +660,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     RAC(self, viewModel.commonTrackingParameter) = RACObserve(self, commonTrackingParameter);
     RAC(self, videoContainerViewController.viewModel) = RACObserve(self, viewModel);
     
-    [self addDefaultEmptyViewFullScreen];
-    self.emptyView.backgroundColor = [UIColor clearColor];
-    self.emptyView.retryBlock = ^{
-        @strongify(self);
-        [self loadMoreAutomatically:YES];
-    };
-    [self.emptyView.retryButton setBackgroundImage:[FHUtils createImageWithColor:[UIColor clearColor]] forState:UIControlStateNormal];
-    [self.emptyView.retryButton setBackgroundImage:[FHUtils createImageWithColor:[UIColor clearColor]] forState:UIControlStateHighlighted];
-    [self.emptyView.retryButton setTitle:@"重新加载" forState:UIControlStateNormal];
 }
 
 
@@ -839,9 +846,12 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.videoContainerViewController refresh];
 }
 
-- (void)loadMoreAutomatically:(BOOL)isAuto
+- (void)loadMoreAutomatically:(BOOL)isAuto showLoading:(BOOL)showLoading
 {
     if(![TTReachability isNetworkConnected]){
+        if (showLoading) {
+            [self.emptyView showEmptyWithTip:@"数据走丢了" errorImageName:@"short_video_nodata" showRetry:YES];
+        }
         return;
     }
 
@@ -850,9 +860,13 @@ static const CGFloat kFloatingViewOriginY = 230;
     }
 
     @weakify(self);
+    if (showLoading && self.dataFetchManager.numberOfShortVideoItems== 0) {
+        [self startLoading];
+    }
+    
     [self.dataFetchManager requestDataAutomatically:isAuto finishBlock:^(NSUInteger increaseCount, NSError *error) {
         @strongify(self);
-
+        [self endLoading];
         if (error || increaseCount == 0) {
 //
             return;
@@ -877,7 +891,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 {
     NSInteger numberOfItemLeft = self.dataFetchManager.numberOfShortVideoItems - self.dataFetchManager.currentIndex;
     if (numberOfItemLeft <= 4 ) {
-        [self loadMoreAutomatically:YES];
+        [self loadMoreAutomatically:YES showLoading:NO];
     }
 }
 
@@ -1627,6 +1641,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([scrollView isEqual:self.tableView]) {
         self.commentBeginDragContentOffsetY = scrollView.contentOffset.y;
     }
+    [self loadVideoDataIfNeeded];
 }
 
 #pragma mark - handle slideGesture
