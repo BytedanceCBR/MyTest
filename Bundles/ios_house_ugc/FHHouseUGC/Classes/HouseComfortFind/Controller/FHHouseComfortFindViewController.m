@@ -21,6 +21,13 @@
 
 -(instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     if(self = [super initWithRouteParamObj:paramObj]) {
+        NSDictionary *params = paramObj.allParams;
+        if(params[@"origin_from"]){
+            self.tracerDict[@"origin_from"] = params[@"origin_from"];
+        }
+        if(params[@"element_from"]){
+            self.tracerDict[@"element_from"] = params[@"element_from"];
+        }
         _isOpenByPush = YES;
     }
     return self;
