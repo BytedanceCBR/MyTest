@@ -1873,7 +1873,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [dict setValue:answerEntity.ansid forKey:@"group_id"];
     [dict setValue:answerEntity.user.userID forKey:@"user_id"];
     [dict setValue:@(10) forKey:@"group_source"];
-    [dict setValue:@"feed_detail" forKey:@"click_position"];
+    [dict setValue:@"detail_like" forKey:@"click_position"];
     [dict setValue:@"house_app2c_v2" forKey:@"event_type"];
     
     if (self.detailModel.answerEntity.isDigg) {
