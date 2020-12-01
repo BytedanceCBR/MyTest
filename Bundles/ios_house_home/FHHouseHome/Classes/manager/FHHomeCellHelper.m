@@ -207,6 +207,7 @@ static NSMutableArray  * _Nullable identifierArr;
             }
             [dictTraceParams setValue:@"house_app2c_v2" forKey:@"event_type"];
             [dictTraceParams setValue:@"maintab" forKey:@"page_type"];
+            [dictTraceParams setValue:@(idx) forKey:@"rank"];
             [FHUserTracker writeEvent:@"operation_show" params:dictTraceParams];
         }];
     }
