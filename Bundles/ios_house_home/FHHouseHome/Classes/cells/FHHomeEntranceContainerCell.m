@@ -103,14 +103,14 @@ static const CGFloat sliderWidth = 16.f;
         make.bottom.mas_equalTo(self).offset(-9);
     }];
     
-    _slider = [[UIView alloc] init];
-    _slider.backgroundColor = [UIColor themeOrange4];
-    _slider.layer.cornerRadius = 2.f;
-    _slider.layer.masksToBounds = YES;
+    self.slider = [[UIView alloc] init];
+    self.slider.backgroundColor = [UIColor themeOrange4];
+    self.slider.layer.cornerRadius = 2.f;
+    self.slider.layer.masksToBounds = YES;
     [self.bottomSlide addSubview:self.slider];
     
-    [_slider mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(32);
+    [self.slider mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.width.mas_equalTo(sliderWidth);
         make.height.mas_equalTo(4);
         make.left.bottom.mas_equalTo(0);
     }];
@@ -122,17 +122,11 @@ static const CGFloat sliderWidth = 16.f;
         return;
     }
     self.items = items;
-    [_slider mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(sliderWidth);
-        make.height.mas_equalTo(4);
-        make.bottom.mas_equalTo(0);
-    }];
     [_entranceCollectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(0);
         make.bottom.mas_equalTo(self).offset(self.bottomSlide.hidden ? -8 : -16);
     }];
-    
     [self.entranceCollectionView reloadData];
 }
 
