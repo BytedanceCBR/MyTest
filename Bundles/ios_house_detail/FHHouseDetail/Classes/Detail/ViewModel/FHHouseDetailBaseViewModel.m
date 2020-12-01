@@ -40,9 +40,11 @@
 @property (nonatomic, assign) BOOL floatIconAnimation;
 @property (nonatomic, assign) BOOL clickShowIcon;
 @property(nonatomic, assign) CGPoint tableviewBeginOffSet;
-@property (nonatomic) NSTimeInterval lastTime;
-@property (nonatomic,strong) CADisplayLink *link;
-@property (nonatomic,assign) bool canNslog;
+@property(nonatomic, strong) CADisplayLink *link;
+@property(nonatomic, assign) bool canNslog;
+@property(nonatomic, assign) NSTimeInterval lastTime;
+@property(nonatomic, assign) NSTimeInterval startTime;
+@property(nonatomic, assign) NSTimeInterval tableViewLoadTime;
 
 @end
 
@@ -79,12 +81,15 @@
 - (void)tick:(CADisplayLink *)link {
     if (_lastTime == 0) {
         _lastTime = link.timestamp;
+        _startTime = link.timestamp;
         return;
     }
     
     NSTimeInterval delta = link.timestamp - _lastTime;
-    if(self.canNslog){
-        NSLog(@"xzfps:%f",delta);
+    if(self.canNslog && !self.tableViewLoadTime){
+        self.tableViewLoadTime = delta;
+        [self addPageLoadLog];
+//        NSLog(@"xzsumfps:%f",link.timestamp - _startTime);
         [_link removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
         _link = nil;
         self.canNslog = false;
@@ -775,7 +780,7 @@
                 NSMutableDictionary *metricDict = [NSMutableDictionary dictionary];
                 //单位 秒 -> 毫秒
                 metricDict[@"total_duration"] = @(duration * 1000);
-                
+                metricDict[@"tableView_duration"] = @(self.tableViewLoadTime * 1000);
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_house_detail_old" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
             }
         }

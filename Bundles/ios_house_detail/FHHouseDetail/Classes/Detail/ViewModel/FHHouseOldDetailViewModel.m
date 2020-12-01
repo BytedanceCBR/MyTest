@@ -809,7 +809,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
                 [self reloadData];
             }
             self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
-            [self addPageLoadLog];
             [self.detailController updateLayout:model.isInstantData];
         });
     });
