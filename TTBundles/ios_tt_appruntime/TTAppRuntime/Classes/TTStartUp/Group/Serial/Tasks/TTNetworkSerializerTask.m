@@ -21,8 +21,6 @@
 #import <CommonCrypto/CommonCrypto.h>
 #import "SSCookieManager.h"
 #import "AKTaskSettingHelper.h"
-#import <SecGuard/SGMSafeGuardManager.h>
-//#import "AKSafeGuardHelper.h"
 #import "FHEnvContext.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import <TTMonitor/TTMonitor.h>
@@ -95,19 +93,6 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     
     [[TTNetworkManager shareInstance] setDomainHttpDns:@"dig.bdurl.net"];
     [[TTNetworkManager shareInstance] setDomainNetlog:@"crash.snssdk.com"];
-
-//    // 初始化SafeGuard配置
-//    [[AKSafeGuardHelper sharedInstance] initSafeGuard];
-//
-//    // 启动自动防护
-//    [[SGMSafeGuardManager sharedManager] sgm_scheduleSafeGuard];
-
-    // 请求验证
-    TTURLHashBlock hash = ^(NSURL *url, NSDictionary *formData) {
-        return [[SGMSafeGuardManager sharedManager] sgm_encryptURLWithURL:url formData:formData];
-    };
-
-    [[TTNetworkManager shareInstance] setUrlHashBlock:hash];
 
     // 网络库default serializer初始化
     [[TTNetworkManager shareInstance] setDefaultRequestSerializerClass:[BDTDefaultHTTPRequestSerializer class]];

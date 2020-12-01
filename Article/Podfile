@@ -153,7 +153,7 @@ def appPods
     pod 'TTImagePicker', '7.5.5.12'
     pod 'TTImagePickerBase', '1.0.4'
   
-    pod_binary 'SecGuard' , '0.8.16.9'
+    pod 'MetaSecML', '4.1.12'
     
     pod_binary 'IESGeckoKit', '0.4.0'
     pod_binary 'IESWebKit', '0.2.0-rc.3'
@@ -632,8 +632,6 @@ target 'NewsLiteInHouse' do
     fhPods
     appPods
     appDevelopPods
-    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
-
 end
 
 target 'f100' do
@@ -642,7 +640,6 @@ target 'f100' do
     fhPods
     appPods
     appDevelopPods
-    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
 end
 
 target 'serviceNofExtension' do
