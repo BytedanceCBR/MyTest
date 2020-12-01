@@ -25,9 +25,8 @@ static const CGFloat sliderWidth = 16.f;
 @property (nonatomic, strong) UIView *backdropView;
 
 @property (nonatomic, strong) UICollectionView *entranceCollectionView;
-@property (nonatomic, strong) UICollectionViewFlowLayout *flowLayout;
 
-//@property (nonatomic, strong) FHHomeEntranceContainerLayout *newlayout;
+@property (nonatomic, strong) FHHomeEntranceContainerLayout *newlayout;
 
 @property (nonatomic, strong) UIView *bottomSlide;
 @property (nonatomic, strong) UIView *slider;
@@ -70,15 +69,9 @@ static const CGFloat sliderWidth = 16.f;
         make.right.mas_equalTo(self).offset(- 15.f);
     }];
 
+    self.newlayout = [[FHHomeEntranceContainerLayout alloc] init];
     
-    self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    self.flowLayout.minimumInteritemSpacing = 0;
-    self.flowLayout.minimumLineSpacing = 0;
-    self.flowLayout.itemSize = CGSizeMake((SCREEN_WIDTH - 30)/5, (SCREEN_WIDTH - 30)/5);
-//    self.newlayout = [[FHHomeEntranceContainerLayout alloc] init];
-    
-    _entranceCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.flowLayout];
+    _entranceCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.newlayout];
     _entranceCollectionView.backgroundColor = [UIColor clearColor];
     [self.backdropView addSubview:_entranceCollectionView];
     [_entranceCollectionView registerClass:[FHHomeEntranceItemCell class] forCellWithReuseIdentifier:NSStringFromClass([FHHomeEntranceItemCell class])];
