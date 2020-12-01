@@ -6,6 +6,8 @@
   Created by Zhang Leonardo on 13-1-8.
 
 */
+//应用启动任务调试信息页面
+"launch_task_debug_info" = "TTLaunchManagerDebugInfoViewController";
 
 // f100
 "house_list"            = "FHHouseListViewController";
