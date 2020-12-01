@@ -16,6 +16,7 @@
 #import "FHEnvContext.h"
 #import "FHHomeCellHelper.h"
 #import <FHHouseBase/FHHomeEntranceItemView.h>
+#import "FHHomeEntranceContainerLayout.h"
 
 static const CGFloat sliderWidth = 16.f;
 
@@ -25,6 +26,8 @@ static const CGFloat sliderWidth = 16.f;
 
 @property (nonatomic, strong) UICollectionView *entranceCollectionView;
 @property (nonatomic, strong) UICollectionViewFlowLayout *flowLayout;
+
+//@property (nonatomic, strong) FHHomeEntranceContainerLayout *newlayout;
 
 @property (nonatomic, strong) UIView *bottomSlide;
 @property (nonatomic, strong) UIView *slider;
@@ -73,6 +76,7 @@ static const CGFloat sliderWidth = 16.f;
     self.flowLayout.minimumInteritemSpacing = 0;
     self.flowLayout.minimumLineSpacing = 0;
     self.flowLayout.itemSize = CGSizeMake((SCREEN_WIDTH - 30)/5, (SCREEN_WIDTH - 30)/5);
+//    self.newlayout = [[FHHomeEntranceContainerLayout alloc] init];
     
     _entranceCollectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.flowLayout];
     _entranceCollectionView.backgroundColor = [UIColor clearColor];
@@ -89,6 +93,8 @@ static const CGFloat sliderWidth = 16.f;
         make.top.mas_equalTo(0);
         make.bottom.mas_equalTo(self.bottomSlide.mas_top).offset(0);
     }];
+    
+
     
     _bottomSlide = [[UIView alloc] init];
     _bottomSlide.backgroundColor = [UIColor themeGray5];
@@ -118,7 +124,7 @@ static const CGFloat sliderWidth = 16.f;
 
 - (void)updateWithItems:(NSArray<FHConfigDataOpDataItemsModel *> *)items {
     self.bottomSlide.hidden = items.count > 10 ? NO : YES;
-    if(items == self.items){
+    if(items == self.items) {
         return;
     }
     self.items = items;
@@ -128,6 +134,7 @@ static const CGFloat sliderWidth = 16.f;
         make.bottom.mas_equalTo(self).offset(self.bottomSlide.hidden ? -8 : -16);
     }];
     [self.entranceCollectionView reloadData];
+    [self.entranceCollectionView setContentOffset:CGPointMake(0, 0)];
 }
 
 - (void)dealloc {
