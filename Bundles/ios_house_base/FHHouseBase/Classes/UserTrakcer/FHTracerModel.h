@@ -34,7 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *pageType; //当前页面名称
 @property (nonatomic, copy) NSString *elementType; //当前页面 组件名称
 @property(nonatomic , copy) NSString *categoryName; //当前页面名称
-@property(nonatomic , strong) NSDictionary *logPb;
+@property(nonatomic , strong, nullable) NSDictionary *logPb;
 @property(nonatomic , copy) NSString *searchId;
 @property(nonatomic , copy) NSString *originSearchId;
 @property (nonatomic , copy) NSString *imprId;

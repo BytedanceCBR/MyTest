@@ -622,6 +622,7 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     
     if (isHead) {
+        self.errorMaskView.hidden = YES;
         self.showPlaceHolder = YES;
         [self.tableView reloadData];
     }
@@ -678,7 +679,7 @@ extern NSString *const INSTANT_DATA_KEY;
             if (![TTReachability isNetworkConnected]) {
                 tip = FHEmptyMaskViewTypeNoNetWorkAndRefresh;
             }
-            [self showErrorMask:YES tip:tip enableTap:NO ];
+            [self showErrorMask:YES tip:tip enableTap:YES ];
         }
     }
     [self.tableView.mj_footer endRefreshing];

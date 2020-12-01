@@ -4,8 +4,6 @@
 //
 //  Created by 张静 on 2019/11/12.
 //
-#define WeakSelf   __weak typeof(self) wself = self
-#define StrongSelf __strong typeof(wself) self = wself
 
 #import "FHHouseListRecommendTipCell.h"
 #import "Masonry.h"
@@ -64,9 +62,9 @@
         [attrText yy_setAlignment:NSTextAlignmentCenter range:NSMakeRange(0, attrText.length)];
         if(model.content){
             NSRange tapRange = [attrText.string rangeOfString:model.emphasisContent];
-            WeakSelf;
+            __weak typeof(self) wself = self;
             [attrText yy_setTextHighlightRange:tapRange color:[UIColor colorWithHexStr:@"#fe5500"] backgroundColor:nil tapAction:^(UIView * _Nonnull containerView, NSAttributedString * _Nonnull text, NSRange range, CGRect rect) {
-                StrongSelf;
+                __strong typeof(wself) self = wself;
                 if(self.channelSwitchBlock){
                     self.channelSwitchBlock();
                 }
