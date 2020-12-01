@@ -26,7 +26,7 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self setupUI];
         [self setupConstraints];
-        self.contentView.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
+        self.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
     }
     return self;
 }
