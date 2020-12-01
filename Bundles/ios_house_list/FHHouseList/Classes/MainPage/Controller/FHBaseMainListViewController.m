@@ -20,6 +20,7 @@
 #import "FHMainRentTopView.h"
 #import "FHMainListTableView.h"
 #import "FHHouseNewTopContainer.h"
+#import "FHHouseListErrorView.h"
 
 #define TOP_HOR_PADDING 3
 
@@ -168,7 +169,7 @@
 
     _viewModel.viewController = self;
     _viewModel.navbar = self.navbar;
-    _errorView = [[FHErrorView alloc] init];
+    _errorView = [[FHHouseListErrorView alloc] init];
     [self.containerView addSubview:_errorView];
     _viewModel.errorMaskView = _errorView;
     _errorView.hidden = YES;
