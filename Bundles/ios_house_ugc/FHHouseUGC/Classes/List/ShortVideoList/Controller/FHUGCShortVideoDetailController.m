@@ -1126,6 +1126,9 @@ static const CGFloat kFloatingViewOriginY = 230;
             [self.orderedData setValue:@(self.model.userRepin) forKeyPath:@"originalData.userRepined"];
             
             contentItem.selected = self.model.userRepin;
+            
+            
+            
             if(self.model.userRepin) {
                 TTIndicatorView * indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleImage
                                                                                     indicatorText:NSLocalizedString(@"收藏成功", nil)
@@ -1139,6 +1142,9 @@ static const CGFloat kFloatingViewOriginY = 230;
                                                                                    dismissHandler:nil];
                 [indicatorView showFromParentView:activityPanelControllerWindow];
             }
+            
+            [FHShortVideoTracerUtil clickFavoriteBtn:self.model favorite:self.model.userRepin];
+            
             if (groupID.length > 0 ) {
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"group_id"] = groupID;
