@@ -98,7 +98,7 @@
     [self.titleAndTagView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftImageView.mas_right).offset(8);
         make.top.mas_equalTo(12);
-        make.right.mas_equalTo(0);
+        make.right.mas_equalTo(-15);
         make.height.mas_equalTo(22);
     }];
     
