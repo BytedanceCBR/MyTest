@@ -38,12 +38,24 @@
     return YES;
 }
 
-- (CGFloat)showHeight {
+- (CGFloat)showSecondHouseHeight {
     if (![self isHidden]) {
-        return 35;
+        return 25;
     } else {
-        return 10;
+        return 0;
     }
+}
+
+- (CGFloat)showNewHouseHeight {
+    if (![self isHidden]) {
+        return 22;
+    } else {
+        return 0;
+    }
+}
+
+- (CGFloat)showHeight {
+    return 0;
 }
 
 @end

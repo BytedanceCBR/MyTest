@@ -141,8 +141,10 @@
                 id item = [self historyItemModelByDict:obj];
                 if ([item isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *theItem = (FHSearchHouseItemModel *)item;
-                    NSObject *entity = [FHBrowsingHistoryCardUtils getEntityFromModel:item];
-                    
+                    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNewHouse) {
+                        theItem.advantageDescription = nil;
+                    }
+                    NSObject *entity = [FHBrowsingHistoryCardUtils getEntityFromModel:theItem];
                     if (entity) {
                         FHTracerModel *tracerModel = [[FHTracerModel alloc] init];
                         tracerModel.logPb = theItem.logPb;

@@ -77,8 +77,8 @@
     self.tagLabel.lineBreakMode = NSLineBreakByWordWrapping;
     [self addSubview:self.tagLabel];
     
-//    self.recommendView = [[FHHouseRecommendView alloc] init];
-//    [self addSubview:self.recommendView];
+    self.recommendView = [[FHHouseRecommendView alloc] init];
+    [self addSubview:self.recommendView];
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"VRImageLoading" ofType:@"json"];
     self.vrLoadingView = [LOTAnimationView animationWithFilePath:path];
@@ -149,11 +149,11 @@
         make.height.mas_equalTo(18);
     }];
     
-//    [self.recommendView mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.top.mas_equalTo(self.tagLabel.mas_bottom);
-//        make.left.right.mas_equalTo(self.priceLabel);
-//        make.bottom.mas_equalTo(0);
-//    }];
+    [self.recommendView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.tagLabel.mas_bottom);
+        make.left.right.mas_equalTo(self.priceLabel);
+        make.bottom.mas_equalTo(0);
+    }];
 }
 
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
@@ -169,7 +169,8 @@
         [self.vrLoadingView play];
     }
     self.videoImageView.hidden = !newViewModel.hasVideo;
-//    self.recommendView.viewModel = newViewModel.recommendViewModel;
+    self.recommendView.hidden = newViewModel.recommendViewModel.isHidden;
+    self.recommendView.viewModel = newViewModel.recommendViewModel;
     if (newViewModel.propertyText.length > 0) {
         self.propertyTagLabel.text = newViewModel.propertyText;
         self.propertyTagLabel.layer.borderColor = [UIColor colorWithHexStr:newViewModel.propertyBorderColor].CGColor;
@@ -186,7 +187,8 @@
 
 + (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (![viewModel isKindOfClass:FHHouseNewCardViewModel.class]) return 0.0f;
-    return 114;
+    FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;
+    return 114 + newViewModel.recommendViewModel.showNewHouseHeight;
 }
 
 @end

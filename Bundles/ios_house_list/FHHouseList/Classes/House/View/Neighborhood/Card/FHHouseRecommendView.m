@@ -71,6 +71,9 @@
 }
 
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
+    if (!viewModel) {
+        return;
+    }
     [super setViewModel:viewModel];
     FHHouseRecommendViewModel *recommendViewModel = (FHHouseRecommendViewModel *)viewModel;
     [self.iconImageView bd_setImageWithURL:[NSURL URLWithString:recommendViewModel.url]];

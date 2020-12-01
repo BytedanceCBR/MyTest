@@ -18,6 +18,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (CGFloat)showHeight;
 
+- (CGFloat)showSecondHouseHeight;
+
+- (CGFloat)showNewHouseHeight;
+
 - (BOOL)isHidden;
 
 @end

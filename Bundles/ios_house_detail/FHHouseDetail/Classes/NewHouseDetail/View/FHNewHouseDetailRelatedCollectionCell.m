@@ -30,8 +30,10 @@
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
     if (data && [data isKindOfClass:[FHHouseListBaseItemModel class]]) {
-        FHHouseNewCardViewModel *viewModel = [[FHHouseNewCardViewModel alloc] initWithModel:data];
-        return CGSizeMake(width, [FHHouseNewCardView calculateViewHeight:viewModel]);
+        FHHouseListBaseItemModel *model = (FHHouseListBaseItemModel *)data;
+        model.advantageDescription = nil;
+        FHHouseNewCardViewModel *viewModel = [[FHHouseNewCardViewModel alloc] initWithModel:model];
+        return CGSizeMake(width, [FHHouseNewCardView calculateViewHeight:viewModel] + 1);
     }
     return CGSizeZero;
 }
@@ -95,7 +97,9 @@
 - (void)refreshWithData:(id)data {
     self.currentData = data;
     if([data isKindOfClass:[FHHouseListBaseItemModel class]]) {
-        FHHouseNewCardViewModel *viewModel = [[FHHouseNewCardViewModel alloc] initWithModel:data];
+        FHHouseListBaseItemModel *model = (FHHouseListBaseItemModel *)data;
+        model.advantageDescription = nil;
+        FHHouseNewCardViewModel *viewModel = [[FHHouseNewCardViewModel alloc] initWithModel:model];
         self.cardView.viewModel = viewModel;
     }
 }
