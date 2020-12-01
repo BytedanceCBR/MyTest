@@ -63,13 +63,14 @@
         [self updateHeaderView];
     };
     
+    self.feedVC.tracerDict = [self.tracerDict mutableCopy];
+    self.headerView.tracerDict = [self.tracerDict mutableCopy];
+    
     if(self.isOpenByPush) {
         [self setupDefaultNavBar:NO];
         self.customNavBarView.title.text = @"好房推荐";
         self.feedVC.tableViewNeedPullDown = NO;
-        self.feedVC.tracerDict = [self.tracerDict mutableCopy];
-        self.headerView.tracerDict = [self.tracerDict mutableCopy];
-        
+
         CGFloat navBarHeight = [self navBarHeight];
         CGRect frame = self.view.bounds;
         frame.size.height = frame.size.height - navBarHeight;
