@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)bindData:(FHHouseReserveAdviserModel *)model traceParams:(NSDictionary *)params;
 
+- (void)updateHeightByIsFirst:(BOOL)isFirst;
+
 @end
 
 NS_ASSUME_NONNULL_END
