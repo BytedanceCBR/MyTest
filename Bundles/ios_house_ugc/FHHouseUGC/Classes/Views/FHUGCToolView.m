@@ -340,6 +340,7 @@
 - (void)trackClickLike {
     NSMutableDictionary *dict = [self.cellModel.tracerDic mutableCopy];
     NSInteger user_digg = [self.cellModel.userDigg integerValue];
+    dict[@"click_position"] = @"feed_like";
     if(user_digg == 1){
         TRACK_EVENT(@"click_dislike", dict);
     }else{

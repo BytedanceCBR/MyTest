@@ -771,6 +771,9 @@
     }else if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCSmallVideo){
         dict[@"video_type"] = @"small_video";
     }
+    if (cellModel.cellSubType == FHUGCFeedListCellSubTypeSmallVideoList ) {
+        dict[@"group_id"] = cellModel.originGroupId;
+    }
     TRACK_EVENT(@"feed_client_show", dict);
     
     if(cellModel.attachCardInfo){

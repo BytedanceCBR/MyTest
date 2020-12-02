@@ -44,7 +44,7 @@
 - (void)updateItems {
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
 
-    NSArray *itemsName = @[@"地图找房",@"查房价",@"帮我找房",@"城市行情",@"房贷计算"];
+    NSArray *itemsName = @[@"地图找房",@"房贷计算",@"查房价",@"城市行情",@"购房百科"];
     NSMutableArray *items = [NSMutableArray array];
     NSMutableDictionary *itemsDict = [NSMutableDictionary dictionary];
     
@@ -130,15 +130,15 @@
 }
 
 -(NSString *)getIconNameWithTitle:(NSString *)title {
-    if([title isEqualToString:@"帮我找房"]) {
-        return @"driving_find_house";
+    if([title isEqualToString:@"购房百科"]) {
+        return @"new_user_guide";
     } else if([title isEqualToString:@"地图找房"]) {
         return @"mapfind";
     } else if([title isEqualToString:@"查房价"]) {
         return @"value_info";
     } else if([title isEqualToString:@"城市行情"]) {
         return @"city_market";
-    } else if([title isEqualToString:@"房贷计算器"]) {
+    } else if([title isEqualToString:@"房贷计算"]) {
         return @"debit_calculator";
     } else {
         return @"be_null";

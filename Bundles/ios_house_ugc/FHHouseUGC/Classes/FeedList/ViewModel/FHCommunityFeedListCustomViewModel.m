@@ -514,6 +514,11 @@
         
         cell.delegate = self;
         cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
+        if (cellModel.cellSubType == FHUGCFeedListCellSubTypeSmallVideoList) {
+            for (FHFeedUGCCellModel *model in cellModel.videoList) {
+                model.tracerDic = cellModel.tracerDic;
+            }
+        }
         cellModel.cell = cell;
 
         if(indexPath.row < self.dataList.count){
@@ -703,6 +708,9 @@
         dict[@"video_type"] = @"video";
     }else if(cellModel.cellSubType == FHUGCFeedListCellSubTypeUGCSmallVideo){
         dict[@"video_type"] = @"small_video";
+    }
+    if (cellModel.cellSubType == FHUGCFeedListCellSubTypeSmallVideoList ) {
+        dict[@"group_id"] = cellModel.originGroupId;
     }
     dict[@"event_tracking_id"] = @"93415";
     TRACK_EVENT(@"feed_client_show", dict);

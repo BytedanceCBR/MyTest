@@ -149,9 +149,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
                         retryGetLightCount--;
                         [[FHUGCCategoryManager sharedManager] startGetCategory];
                     }
-                    if ([[paramsExtra description] isKindOfClass:[NSString class]]) {
-                        BDALOG_WARN_TAG(@"get_light_error_reason", [paramsExtra description]);
-                    }
                 }];
                 
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:0 extra:paramsExtra];

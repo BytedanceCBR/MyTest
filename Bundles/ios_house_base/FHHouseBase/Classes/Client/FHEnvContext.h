@@ -295,7 +295,7 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
  tab_message,
  tab_mine
  */
-+ (NSDictionary *)defaultTabName;
++ (NSString *)defaultTabName;
 
 /*
  返回当前tab的埋点值

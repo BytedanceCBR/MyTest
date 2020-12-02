@@ -175,6 +175,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         [self loadFollowData];
     }
     
+    [FHUtils setContent:@(0) forKey:lastRedPointShowKey];
     [self setFocusTimerState];
     [self loadUGCConfigData];
     [[TTForumPostThreadStatusViewModel sharedInstance_tt] checkCityPostData];
@@ -535,7 +536,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
 - (void)onAccountStatusChanged:(TTAccountStatusChangedReasonType)reasonType platform:(NSString *)platformName
 {
     //切换账号时记录的时间清零，重新显示小红点
-    [FHUtils setContent:@(0) forKey:lastRedPointShowKey];
+//    [FHUtils setContent:@(0) forKey:lastRedPointShowKey];
     [self loadUGCConfigData];
     
     if ([TTAccountManager isLogin]) {
@@ -549,7 +550,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
     [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCUpdateFollowDataAfterAccountStatuschangedNotification object:nil];
     // 重新加载
     [self loadFollowData];
-    [self setFocusTimerState];
+//    [self setFocusTimerState];
 }
 
 

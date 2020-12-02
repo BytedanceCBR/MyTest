@@ -370,7 +370,7 @@
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentControl.isNeedNetworkCheck = NO;
-    _segmentControl.firstLeftMargain = 15;
+    _segmentControl.firstLeftMargain = 8;
     _segmentControl.lastRightMargin = 10;
     _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(9, 20, 0, 8);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
@@ -472,12 +472,9 @@
 
 
 - (void)updateSegmentView {
-    BOOL same = [[FHUGCCategoryManager sharedManager] isSameCategory:self.categorys];
-    if(!same){
-        [self initViewModel];
-        self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
-        self.segmentControl.sectionTitles = [self getSegmentTitles];
-    }
+    [self initViewModel];
+    self.segmentControl.selectedSegmentIndex = self.viewModel.currentTabIndex;
+    self.segmentControl.sectionTitles = [self getSegmentTitles];
 }
 
 - (void)refreshData {
