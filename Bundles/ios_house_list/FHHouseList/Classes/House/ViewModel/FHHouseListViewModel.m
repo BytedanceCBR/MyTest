@@ -1008,7 +1008,7 @@ extern NSString *const INSTANT_DATA_KEY;
                         model.topMargin = 5;
                     }
                     if (model.houseType.integerValue == FHHouseTypeNewHouse || model.houseType.integerValue == FHHouseTypeSecondHandHouse) {
-                        tracerModel.elementType = @"search_related";
+                        tracerModel.elementType = @"be_null";
                     }
                 }
                 
@@ -1132,7 +1132,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     tracerModel.pageType = [self pageTypeString];
                     tracerModel.categoryName = [self categoryName];
                         if (itemModel.houseType.integerValue == FHHouseTypeNewHouse || itemModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
-                            tracerModel.elementType = @"be_null";
+                            tracerModel.elementType = @"search_related";
                             tracerModel.searchId = self.recommendSearchId ? : @"be_null";
                         }
 
