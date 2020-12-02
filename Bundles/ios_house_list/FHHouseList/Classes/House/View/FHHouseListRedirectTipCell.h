@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseListRedirectTipCell : FHListBaseCell
 
+- (void)updateHeightByIsFirst:(BOOL)isFirst;
+
 @end
 
 NS_ASSUME_NONNULL_END

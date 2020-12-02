@@ -24,6 +24,8 @@
 #import "TTVFeedItem+TTVArticleProtocolSupport.h"
 #import "UIImage+FIconFont.h"
 #import "UIButton+FHUGCMultiDigg.h"
+#import <TTWebImageManager.h>
+#import <FHShareManager.h>
 
 @interface FHUGCToolView ()<TTVVideoDetailCollectServiceDelegate>
 
@@ -196,6 +198,10 @@
 }
 
 - (void)shareBtnClicked {
+    if([[FHShareManager shareInstance] isShareOptimization]) {
+        [self showSharePanel];
+        return;
+    }
     [self addClickShareLog];
     self.moreActionMananger = [[TTVFeedCellMoreActionManager alloc] init];
     self.moreActionMananger.categoryId = self.cellModel.videoItem.categoryId;
@@ -212,6 +218,41 @@
     [self.moreActionMananger shareButtonClickedWithModel:[TTVFeedCellMoreActionModel modelWithArticle:self.cellModel.videoItem.originData] activityAction:^(NSString *type) {
         
     }];
+}
+
+- (void)showSharePanel {
+    TTShareModel *shareModel = [TTShareModel shareModelWithFeedItem:self.cellModel.videoItem.originData];
+    
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
+    
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = shareModel.title;
+    commonDataModel.desc = shareModel.abstract;
+    commonDataModel.shareUrl = shareModel.shareURL ?: shareModel.downloadURL;
+    commonDataModel.thumbImage = [TTWebImageManager imageForModel:shareModel.infosModel];
+    commonDataModel.imageUrl  = [shareModel.infosModel urlStringAtIndex:0];
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDataModel = commonDataModel;
+
+    NSArray *contentItemArray = @[
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)],
+        @[@(FHShareChannelTypeDislike),@(FHShareChannelTypeBlock)],
+    ];
+    
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self shareParams]];
+}
+
+- (NSDictionary *)shareParams {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *tracerDict = self.cellModel.tracerDic;
+    params[@"origin_from"] = tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = tracerDict[@"page_type"] ?: @"be_null";
+    params[@"group_id"] = tracerDict[@"group_id"] ?: @"be_bull";
+    params[@"group_source"] = tracerDict[@"group_source"] ?: @"be_bull";
+    params[@"impr_id"] = tracerDict[@"impr_id"] ?: @"be_null";
+    return params;
 }
 
 - (void)collectionBtnClicked {// 网络
