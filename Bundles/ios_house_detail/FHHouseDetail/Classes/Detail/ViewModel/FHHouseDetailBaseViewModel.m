@@ -104,7 +104,9 @@
 -(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType {
     self = [super init];
     if (self) {
-        [self getfirstFps];
+        if(houseType == FHHouseTypeSecondHandHouse){
+            [self getfirstFps];
+        }
         _detailTracerDic = [NSMutableDictionary new];
         _items = [NSMutableArray new];
         _cellHeightCaches = [NSMutableDictionary new];

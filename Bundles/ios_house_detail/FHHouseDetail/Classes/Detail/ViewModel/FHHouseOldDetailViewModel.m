@@ -808,10 +808,10 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
             }else{
                 [self reloadData];
             }
-            self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
             [self.detailController updateLayout:model.isInstantData];
         });
     });
+    self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"old_detail"}];
     });
