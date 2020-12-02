@@ -771,6 +771,7 @@
         }
     } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideoList){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeSmallVideoList;
+        cellModel.groupId = model.rawData.groupId;
         if (model.subRawDatas.count > 0) {
             NSMutableArray *videoModelArr = [[NSMutableArray alloc]init];
             for (id content in model.subRawDatas) {
@@ -794,7 +795,7 @@
         if(cellModel.hotSocialList.count <= 0){
             [[HMDTTMonitor defaultManager] hmdTrackService:kHotRecommendCircleListNil metric:nil category:@{
                 @"version_code": [TTSandBoxHelper fhVersionCode],
-                @"isEmpty":@(1)
+                @"isEmptOjumpy":@(1)
             } extra:@{
                 
             }];

@@ -514,6 +514,11 @@
         
         cell.delegate = self;
         cellModel.tracerDic = [self trackDict:cellModel rank:indexPath.row];
+        if (cellModel.cellSubType == FHUGCFeedListCellSubTypeSmallVideoList) {
+            for (FHFeedUGCCellModel *model in cellModel.videoList) {
+                model.tracerDic = cellModel.tracerDic;
+            }
+        }
         cellModel.cell = cell;
 
         if(indexPath.row < self.dataList.count){
