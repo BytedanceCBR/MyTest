@@ -172,8 +172,12 @@
 
 }
 
++ (NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList {
+    return [self tagsStringWithTagList:tagList withInset:UIEdgeInsetsMake(0, -4, 0, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 170];
+    
+}
 
-+(NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList {
++ (NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList withInset:(UIEdgeInsets)inset withMaxWidth:(CGFloat)maxWidth {
     
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
     if (tagList.count > 0) {
@@ -187,7 +191,7 @@
                 
                 UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor colorWithHexString:@"#f85959"];
                 UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor colorWithRed:248/255.0 green:89/255.0 blue:89/255.0 alpha:0.08];
-                NSAttributedString *attr = [self.class createTagAttrString:element.content isFirst:idx == 0 textColor:textColor backgroundColor:backgroundColor];
+                NSAttributedString *attr = [self.class createTagAttrString:element.content isFirst:idx == 0 textColor:textColor backgroundColor:backgroundColor withInsets:inset];
                 [attrTexts addObject:attr];
             }
         }];
@@ -198,7 +202,7 @@
             NSAttributedString *attr = obj;
             [text appendAttributedString:attr];
             
-            YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:CGSizeMake([UIScreen mainScreen].bounds.size.width - 170, CGFLOAT_MAX) text:text];
+            YYTextLayout *tagLayout = [YYTextLayout layoutWithContainerSize:CGSizeMake(maxWidth, CGFLOAT_MAX) text:text];
             CGFloat lineHeight = tagLayout.textBoundingSize.height;
             if (lineHeight > height) {
                 
@@ -360,7 +364,8 @@
     return text;
 }
 
-+(NSAttributedString *)createTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
+
++(NSAttributedString *)createTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor withInsets:(UIEdgeInsets)inset{
     
     NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc]initWithString:[NSString stringWithFormat:@"  %@  ",text]];
     attributeText.yy_font = [UIFont themeFontRegular:10];
@@ -368,11 +373,10 @@
     NSRange substringRange = [attributeText.string rangeOfString:text];
     [attributeText yy_setTextBinding:[YYTextBinding bindingWithDeleteConfirm:NO] range:substringRange];
     YYTextBorder *border = [YYTextBorder borderWithFillColor:backgroundColor cornerRadius:2];
-    [border setInsets:UIEdgeInsetsMake(0, -4, 0, -4)];
+    [border setInsets:inset];
     
     [attributeText yy_setTextBackgroundBorder:border range:substringRange];
     return attributeText;
-    
 }
 
 +(NSAttributedString *)createSmallTagAttrString:(NSString *)text isFirst:(BOOL)isFirst textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor {
