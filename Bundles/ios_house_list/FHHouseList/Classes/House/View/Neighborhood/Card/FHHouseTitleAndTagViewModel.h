@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, readonly) NSArray<FHHouseTagViewModel *> *tags;
 @property (nonatomic, assign) CGFloat maxWidth;
 
-- (instancetype)initWithModel:(FHSearchHouseItemModel *)model;
+- (instancetype)initWithModel:(id)model;
 
 - (CGFloat)showHeight;
 
