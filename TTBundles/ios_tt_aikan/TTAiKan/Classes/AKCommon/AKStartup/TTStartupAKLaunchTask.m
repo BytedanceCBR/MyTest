@@ -7,7 +7,7 @@
 
 #import "TTStartupAKLaunchTask.h"
 #import "AKHelper.h"
-#import <SecGuard/SGMSafeGuardManager.h>
+#import <MetaSecML/MSManager.h>
 #import "TTRoute.h"
 #import "CommonURLSetting.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
@@ -15,65 +15,17 @@
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTLaunchDefine.h"
 #import <CoreLocation/CoreLocation.h>
-#import <SecGuard/SGMHostManager.h>
+#import <ByteDanceKit.h>
+#import <BDInstall/BDInstall.h>
+#import <TTAccount.h>
+#import "FHEnvContext.h"
+#import <BDInstall/BDInstallIDFAManager.h>
 
-DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeService,TASK_PRIORITY_HIGH+15);
+DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+17);
 
-@interface PreFcAction : NSObject<UIAlertViewDelegate>
-{
-    dispatch_semaphore_t _sema;
-}
-+(instancetype)shareInstance;
--(void)setSema:(dispatch_semaphore_t)sema;
-@end
 
-@implementation PreFcAction
-
-+ (instancetype)shareInstance {
-    static PreFcAction* instance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        instance = [[PreFcAction alloc] init];
-    });
-    return instance;
-
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    NSString *urlStr = [NSString stringWithFormat:@"https://itunes.apple.com/cn/app/id%@", @"1434642658"];
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:urlStr]];
-    dispatch_semaphore_signal(_sema);
-}
-
-- (void)setSema:(dispatch_semaphore_t)sema {
-    _sema = sema;
-}
-
-@end
-
-void fhPreFcActionAlert(forceCrashMask mask)
-{
-    if (mask & forceCrashMaskRebuild) {
-        dispatch_semaphore_t sema = dispatch_semaphore_create(0);
-        if ([NSThread isMainThread]) {
-            PreFcAction* action = [PreFcAction shareInstance];
-            [action setSema:sema];
-            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到您当前安装的软件为非官方版本，为保证正常安全浏览请前往App Store下载安装官方版本" delegate:action cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
-            [alert show];
-        } else {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                PreFcAction* action = [PreFcAction shareInstance];
-                [action setSema:sema];
-                UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到您当前安装的软件为非官方版本，为保证正常安全浏览请前往App Store下载安装官方版本" delegate:action cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
-                [alert show];
-            });
-        }
-        dispatch_wait(sema, DISPATCH_TIME_FOREVER);
-    }
-}
-
-@interface TTStartupAKLaunchTask ()<SGMSafeGuardDelegate>
-
+@interface TTStartupAKLaunchTask() <TTAccountMulticastProtocol>
+@property (nonatomic, strong) MSManagerML* msManager;
 @end
 
 @implementation TTStartupAKLaunchTask
@@ -92,12 +44,12 @@ void fhPreFcActionAlert(forceCrashMask mask)
 {
     [super startWithApplication:application options:launchOptions];
     
-    // 初始化设置并启动设备指纹sdk
-    [self registerSafeGuardService];
+    // 初始化安全SDK MetaSecML
+    [self registerSafeSDKService];
     
     // 注册路由action
     [self registerRouteActions];
-
+    
 }
 
 - (void)registerRouteActions
@@ -113,86 +65,109 @@ void fhPreFcActionAlert(forceCrashMask mask)
     } withIdentifier:@"change_tab"];
 }
 
-- (void)registerSafeGuardService
-{
-    [[SGMSafeGuardManager sharedManager]setHostDic:@{@(SGMHostCategoryInfo):[CommonURLSetting xlogBaseURL]}];
-    SGMSafeGuardConfig *config = [SGMSafeGuardConfig configWithPlatform:SGMSafeGuardPlatformAweme
-                                                                  appID:@"1370"
-                                                               hostType:SGMSafeGuardHostTypeDomestic
-                                                              secretKey:[self secretKey]];
-    [[SGMSafeGuardManager sharedManager] sgm_startWithConfig:config delegate:self];
-    // 安全组@liuzhanluan and @libo 说用火山的appid和spname
-//    IESSafeGuardConfig *config = [IESSafeGuardConfig configWithPlatform:IESSafeGuardPlatformCommon
-//                                                                  appID:@"1370"
-//                                                                 spname:@"hotsoon"
-//                                                              secretKey:[self secretKey]];
-////    [IESSafeGuardManager startWithConfig:config delegate:self.class];
-//
-//    IESDeviceFingerprintPlatform internalPlatform = (IESDeviceFingerprintPlatform)(config.platform);
-//    [IESDeviceFingerprintManager registerPlatform:internalPlatform];
-//    [IESDeviceFingerprintManager registerDelegate:self.class];
-//
-//    [IESSafeGuardManager scheduleSafeGuard];
-//    [IESSafeGuardManager startForScene:@"launch"];
-    [[SGMSafeGuardManager sharedManager] sgm_scheduleSafeGuard];
-    [[SGMSafeGuardManager sharedManager] setPreFcActionPtr:fhPreFcActionAlert];
+- (NSString *)safeSDKLicense {
+    // 线上License配置平台：https://aqua.bytedance.net/control-panel/69/sec_sdk/list
+    NSString *license = @"ninsJbBFN80nNZX3DsWI3fFgJFBqFrDdFEoAEmNvTXSFRZ6pRpSqhAVbWjiibeGRUjmUrrCgeLWYza5twTc6bTaE1COjVM/NzavWMB/rqFAt3qUC/Cn1OX6geg5KWiCstOSGDMk8WU17knoUQtSN9s231ZqObCrbE8HW/Tk5UwpEdCIIm/KQfkD4aj97xvuLLmPjE6KV/N9kLxCFHQwTkcZkoArs+WtoSWas5Up29ECiAiflwUmW2q/M8mel2QBRJaEyDW39eoH7Ke3Ie66b43xUwO1itb0WJ6rquI0ZEl9ozNRvpOHMiwSs4R6f3aYUWjop4Q==";
+    
+    
+    BOOL isBOE = [TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"BOE_OPEN_KEY"];
+    if(isBOE) {
+        // BOELicense配置平台: https://aqua.boe.bytedance.net/control-panel/378/sec_sdk/list
+        license = @"DnCBTV/k+YM/xyfI9QTpojsVfJYZR7pqILvcny1R6co91i5f6pg2CK+AHmvL5cOGlFy/YbzsVWhChpVT4pR4nJY5rBGpah/4ZUt/4U5jMgP7qeVXjRcBdFzoiFPoK4OJyyv6wnhPZfpypO7rsHUi6eSz5CRIHhXeK0jxJ2E/aJD/pznAtTAbaxoarmEW3XHDzQSd8TAuhhZ2HsJrNCmLIoJPo3XG7B3BdUxybMmVx3maE5/Qo85JhPVNIMxPpi/Tl3KtwFeHaodupttXv0ugorUsGyCf/4lHXs+DqYVHAFWG1HOZDX+KFsYelmJNUcNZs44ELA==";
+    }
+    
+    return license;
 }
 
-- (NSString *)secretKey
-{
-    return @"2a35c29661d45a80fdf0e73ba5015be19f919081b023e952c7928006fa7a11b3";
+- (void)registerSafeSDKService {
+    
+    // 接入安全SDK文档： https://bytedance.feishu.cn/docs/doccnCyieen7rxMOUcK4RBzpGKf
+    NSString *deviceId = [BDTrackerProtocol deviceID];
+    NSString *installId = [BDTrackerProtocol installID];
+    NSString *channel = [TTSandBoxHelper getCurrentChannel];
+    NSString *sessionId = [[TTAccount sharedAccount] sessionKey];
+    MSMLClientType clientType = MS_ML_CLIENT_TYPE_INHOUSE;
+    
+    NSString *appId = [TTSandBoxHelper ssAppID];
+    MSConfigML* msConfig = [[MSConfigML alloc] initWithAppID:appId License: [self safeSDKLicense]];
+    msConfig.setClientType(clientType).setChannel(channel);
+    
+    // 设置IDFA
+    BDInstallAuthorizationStatus idfaStatus = [BDInstallIDFAManager authorizationStatus];
+    if(idfaStatus == BDInstallAuthorizationStatusAuthorized) {
+        NSString *idfaString = [UIDevice btd_idfaString];
+        msConfig.setIDFA(idfaString);
+    }
+    
+    // 用户是否已经同意隐私弹窗协议
+    BOOL hasConfirmPermission = [FHEnvContext sharedInstance].hasConfirmPermssionProtocol;
+    if(!hasConfirmPermission) { // 用户同意隐私弹窗后才可以设置did和iid
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userHasConfirmPermission:) name:PERMISSION_PROTOCOL_CONFIRMED_NOTIFICATION object:nil];
+    } else {
+        if(deviceId.length > 0) {
+            msConfig.setDeviceID(deviceId);
+        }
+        
+        if(installId.length > 0) {
+            msConfig.setInstallID(installId);
+        }
+    }
+    
+    if(sessionId.length > 0) {
+        msConfig.setSessionID(sessionId);
+    }
+    
+    // 监听用户登录成功事件
+    [TTAccount addMulticastDelegate:self];
+    
+    // 如果冷启动时候applog还没获取到deviceid,则可以先初始化MetaSec,msConfig中先不设置deviceid，后续did有更新必须通过msManager 设置下deviceID
+    self.msManager = [[MSManagerML alloc] initWithConfig:msConfig];
+    if(deviceId.length <= 0 || installId.length <= 0) {
+        [[BDInstall sharedInstance] observeDeviceDidRegistered:^(NSString * _Nonnull deviceID, NSString * _Nonnull installID) {
+            [self updateSafeSDKDid:deviceID installId:installID forScene:@"did-iid-update"];
+        }];
+    }
 }
 
-- (void)stop
-{
-//    [IESDeviceFingerprintManager stop];
+- (void)userHasConfirmPermission:(NSNotification *)notification {
+    NSString *deviceId = [BDTrackerProtocol deviceID];
+    NSString *installId = [BDTrackerProtocol installID];
+    [self updateSafeSDKDid:deviceId installId:installId forScene:@"did-iid-update-user-confirm-permission"];
 }
 
-#pragma mark - IESDeviceFingerprintDelegate
+#pragma mark - TTAccountMulticastProtocol
 
-+ (NSString *)customDeviceID
-{
-    return [BDTrackerProtocol deviceID];
+- (void)onAccountLogin {
+    [self updateSafeSDKAccountSessionIdForScene:@"sessionId-update-on-login"];
+}
+#pragma mark - 工具函数
+
+- (void)updateSafeSDKDid:(NSString *)deviceId installId:(NSString *)installId forScene:(NSString *)reportScene {
+    NSAssert(deviceId.length > 0 && installId.length > 0, @"did 和 iid 须不为空");
+    // 用户是否已经同意隐私弹窗协议
+    BOOL hasConfirmPermission = [FHEnvContext sharedInstance].hasConfirmPermssionProtocol;
+    //必填项:deviceid、did，如果初始化时没有获取到did可以不设置该接口。但是后续did有更新，要求通过 MSManagerML 再次填入，
+    //必填项:installid,如果初始化时没有获取到或者installid有更新，后续要求必须通过 MSManagerML 再次填入，并调用 reportForScence接口,上报更改
+    if(hasConfirmPermission && deviceId.length > 0 && installId.length > 0) {
+        self.msManager.setDeviceID(deviceId);
+        self.msManager.setInstallID(installId);
+        [self safeSDKReportForScene:reportScene];
+    }
 }
 
-+ (NSString *)installID
-{
-    return [BDTrackerProtocol installID];
+- (void)updateSafeSDKAccountSessionIdForScene:(NSString *)reportScene {
+    NSString *sessionId = [[TTAccount sharedAccount] sessionKey];
+    if(sessionId.length > 0) {
+        //必填项:用户组件TTAccountSDK 生成的sessionid,非uid,当前uid登录时生成的session,如果初始化时没有获取到可以不设置该接口。但是后续用户有登入登出行为导致sessionid有更新，后续要求必须通过 MSManagerML 再次填入，并调用 reportForScence接口,上报更改
+        self.msManager.setSessionID(sessionId);
+        [self safeSDKReportForScene:reportScene];
+    }
 }
 
-+ (NSString *)sessionID
-{
-    return [[TTAccount sharedAccount] sessionKey];
+- (void)safeSDKReportForScene:(NSString *)reportScene {
+    NSAssert(reportScene.length > 0, @"reportScene长度必须不为0，否则会crash");
+    if(reportScene.length > 0) {
+        [self.msManager reportForScene:reportScene];
+    }
 }
-
-+ (NSString *)installChannel
-{
-    return [TTSandBoxHelper getCurrentChannel];
-}
-
-+ (CLLocation *)currentLocation;
-{
-    return nil;
-}
-
-- (nullable CLLocation *)sgm_currentLocation {
-    return nil;
-}
-
-- (nonnull NSString *)sgm_customDeviceID {
-    return [BDTrackerProtocol deviceID];
-}
-
-- (nonnull NSString *)sgm_installChannel {
-    return [TTSandBoxHelper getCurrentChannel];
-}
-
-- (nonnull NSString *)sgm_installID {
-    return [BDTrackerProtocol installID];
-}
-
-- (nonnull NSString *)sgm_sessionID {
-    return [[TTAccount sharedAccount] sessionKey];
-}
-
 @end
