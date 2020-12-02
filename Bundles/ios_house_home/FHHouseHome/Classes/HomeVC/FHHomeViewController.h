@@ -11,7 +11,6 @@
 #import "UIScrollView+Refresh.h"
 #import "UIViewController+Track.h"
 #import "FHHomeBaseTableView.h"
-#import "TTTopBar.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,7 +24,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isMainTabVC;
 @property (nonatomic, strong) FHHomeBaseScrollView *scrollView;
 @property (nonatomic, assign) BOOL isShowRefreshTip;
-@property (nonatomic, strong) TTTopBar *topBar;
 
 - (void)pullAndRefresh;
 

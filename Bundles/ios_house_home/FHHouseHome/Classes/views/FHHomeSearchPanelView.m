@@ -19,33 +19,29 @@
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import "NSObject+FHTracker.h"
+#import <ByteDanceKit.h>
 
 @interface FHHomeSearchPanelView()
-{
-}
 @property(nonatomic, strong) UIImageView * bgView;
-@property(nonatomic, strong) UILabel * categoryPlaceholderLabel;
-@property(nonatomic, strong) UILabel * categoryLabel1;
-@property(nonatomic, strong) UILabel * categoryLabel2;
-@property(nonatomic, strong) UIView * categoryBgView;
-@property(nonatomic, assign) NSUInteger searchTitleIndex;
-@property(nonatomic, strong)   NSTimer       *timer;
-@property(nonatomic, strong) UIImageView * cityImageButtonLeftIcon;
-@property(nonatomic, strong) UIImageView * areaImageButtonLeftIcon;
-
+@property(nonatomic, strong) UILabel        * categoryPlaceholderLabel;
+@property(nonatomic, strong) UILabel        * categoryLabel1;
+@property(nonatomic, strong) UILabel        * categoryLabel2;
+@property(nonatomic, strong) UIView         * categoryBgView;
+@property(nonatomic, assign) NSUInteger       searchTitleIndex;
+@property(nonatomic, strong) NSTimer        * timer;
+@property(nonatomic, strong) UIImageView    * cityImageButtonLeftIcon;
+@property(nonatomic, strong) UIImageView    * areaImageButtonLeftIcon;
 @end
-
 
 @implementation FHHomeSearchPanelView
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor themeHomeColor];
         [self setSearchArea];
         
         NSDictionary *fhSettings= [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
-        BOOL boolOffline = [fhSettings tt_boolValueForKey:@"f_home_scroll_title_fps"];
+        BOOL boolOffline = [fhSettings btd_boolValueForKey:@"f_home_scroll_title_fps"];
         if (!boolOffline) {
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
@@ -55,25 +51,7 @@
     return self;
 }
 
--(void)willMoveToWindow:(UIWindow *)newWindow
-{
-    [super willMoveToWindow:newWindow];
-    if(!_cityImageButtonLeftIcon.image){
-        _cityImageButtonLeftIcon.image = [UIImage imageNamed:@"combined-shape-1"];
-    }
-    
-    if(!_areaImageButtonLeftIcon.image){
-        _areaImageButtonLeftIcon.image = ICON_FONT_IMG(16,@"\U0000e675",[UIColor themeGray5]);
-    }
-}
-
-- (void)updateCountryLabelLayout:(NSString *)labelText
-{
- 
-}
-
-- (void)setSearchArea
-{
+- (void)setSearchArea {
     UIButton *searchButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.searchBtn = searchButton;
     [self addSubview:searchButton];
@@ -81,7 +59,6 @@
     searchButton.layer.cornerRadius = 17;
     searchButton.layer.shadowColor = [UIColor themeGray9].CGColor;
     searchButton.layer.shadowOffset = CGSizeMake(0.f, 0.f);
-//    searchButton.layer.shadowRadius = 3.f;
     searchButton.layer.shadowOpacity = 0.1f;
     searchButton.layer.borderWidth = 0.5;
     searchButton.layer.borderColor = [UIColor themeGray9].CGColor;
@@ -97,7 +74,6 @@
     UIImageView *imageButtonLeftIcon = [UIImageView new];
     [searchButton addSubview:imageButtonLeftIcon];
     self.areaImageButtonLeftIcon = imageButtonLeftIcon;
-//    [imageButtonLeftIcon setImage:[UIImage imageNamed:@"search-name"]];
     [imageButtonLeftIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(searchButton).offset(20);
         make.height.mas_equalTo(16);
@@ -167,8 +143,18 @@
     
 }
 
-- (void)searchBtnClick
-{
+- (void)willMoveToWindow:(UIWindow *)newWindow {
+    [super willMoveToWindow:newWindow];
+    if(!_cityImageButtonLeftIcon.image){
+        _cityImageButtonLeftIcon.image = [UIImage imageNamed:@"combined-shape-1"];
+    }
+    
+    if(!_areaImageButtonLeftIcon.image){
+        _areaImageButtonLeftIcon.image = ICON_FONT_IMG(16,@"\U0000e675",[UIColor themeGray5]);
+    }
+}
+
+- (void)searchBtnClick {
     SETTRACERKV(UT_ORIGIN_FROM,@"maintab_search");
     NSString *rollText = @"be_null";
     if (self.searchTitleIndex >= 0 && self.searchTitleIndex < self.searchTitles.count) {
@@ -227,8 +213,7 @@
     [FHUserTracker writeEvent:@"click_house_search" params:tracerDic];
 }
 
-- (void)setUpRollScreenTimer
-{
+- (void)setUpRollScreenTimer {
    if (self.timer)
    {
        [self.timer invalidate];
@@ -239,6 +224,7 @@
 }
 
 #pragma mark  埋点
+
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
     [self removeTimer];
 }
@@ -257,9 +243,7 @@
     }
 }
 
-
-- (void)animateTitle
-{
+- (void)animateTitle {
     if (self.categoryBgView.isHidden) {
         return;
     }
@@ -281,15 +265,13 @@
     }];
 }
 
-- (void)nextTitleIndex
-{
+- (void)nextTitleIndex {
     if (_searchTitleIndex >= 0 && _searchTitles.count > 0 && _searchTitleIndex < _searchTitles.count) {
         self.searchTitleIndex = (_searchTitleIndex + 1) % _searchTitles.count;
     }
 }
 
-- (void)updateTitleText
-{
+- (void)updateTitleText {
     if (_searchTitleIndex >= 0 && _searchTitles.count > 0 && _searchTitleIndex < _searchTitles.count) {
         self.categoryLabel1.text = _searchTitles[_searchTitleIndex];
         NSInteger tempIndex = (_searchTitleIndex + 1) % _searchTitles.count;
@@ -297,8 +279,7 @@
     }
 }
 
-- (void)setSearchTitles:(NSMutableArray<NSString *> *)searchTitles
-{
+- (void)setSearchTitles:(NSMutableArray<NSString *> *)searchTitles {
     _searchTitles = searchTitles;
     if (kIsNSArray(searchTitles)) {
         self.searchTitleIndex = 0;
@@ -317,10 +298,49 @@
     }
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [_timer invalidate];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+@end
+
+
+@implementation FHHomeSearchPanelView(AdjustLocation)
+
+- (void)adjustLayoutFor:(FHHomeSearchPanelViewLocation)location {
+    switch (location) {
+        case FHHomeSearchPanelViewLocation_HomeNavBar:
+        {
+            [self.searchBtn mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.edges.equalTo(self.searchBtn.superview);
+            }];
+            
+            [self.areaImageButtonLeftIcon mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(self.searchBtn).offset(9);
+                make.width.height.mas_equalTo(16);
+                make.centerY.equalTo(self.areaImageButtonLeftIcon.superview);
+            }];
+            
+            self.categoryPlaceholderLabel.font = [UIFont themeFontRegular:14];
+            self.categoryPlaceholderLabel.textColor = [UIColor themeGray3];
+            [self.categoryPlaceholderLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.left.equalTo(self.areaImageButtonLeftIcon.mas_right).offset(4);
+                make.centerY.equalTo(self.areaImageButtonLeftIcon);
+                make.height.mas_equalTo(16);
+                make.right.equalTo(self.categoryPlaceholderLabel.superview).offset(-4);
+            }];
+            
+            [self.categoryBgView mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.left.right.equalTo(self.categoryPlaceholderLabel);
+                make.height.equalTo(self.searchBtn);
+            }];
+            
+        }
+            break;
+        default:
+            break;
+    }
 }
 
 @end

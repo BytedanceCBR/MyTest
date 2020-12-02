@@ -18,10 +18,11 @@ typedef NS_ENUM (NSInteger , FHHomeCategoryTraceType){
     FHHomeCategoryTraceTypeRefresh = 3  //刷新
 };
 
-static const NSUInteger kFHHomeListHeaderSearchSection = 0;
-static const NSUInteger kFHHomeListHeaderBaseViewSection = 1;
-static const NSUInteger kFHHomeListHouseTypeBannerViewSection = 2;
-static const NSUInteger kFHHomeListHouseBaseViewSection = 3;
+typedef NS_ENUM(NSUInteger, FHHomeListSectionType) {
+    FHHomeListSectionType_HeaderBaseView,
+    FHHomeListSectionType_HouseTypeBannerView,
+    FHHomeListSectionType_HouseBaseView,
+};
 
 static const NSUInteger kFHHomeHeaderViewSectionHeight = 45;
 
