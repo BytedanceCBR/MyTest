@@ -22,6 +22,8 @@
 #import "FHFindHouseHelperCell.h"
 #import "FHHouseListRecommendTipCell.h"
 #import "UIDevice+BTDAdditions.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -518,6 +520,16 @@
  搜索中间页顶部tab切换时发起重复sug词的请求
  */
 - (BOOL)shouldReloadSuggestionWord:(NSString *)word {
+    ///加个开关，万一有问题直接关了这个优化
+    BOOL disableSugOptimization = NO;
+    NSDictionary *settings = [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    if (settings && [settings isKindOfClass:[NSDictionary class]]) {
+        disableSugOptimization = [settings btd_boolValueForKey:@"f_disable_sug_word_show_optimization"];
+        if (disableSugOptimization) {
+            return YES;
+        }
+    }
+    
     if (![self.lastSearchWord isEqualToString:word]) {
         self.lastSearchWord = word;
         return YES;
