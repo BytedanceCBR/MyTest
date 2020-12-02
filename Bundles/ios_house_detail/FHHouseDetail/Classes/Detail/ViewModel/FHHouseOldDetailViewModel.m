@@ -62,6 +62,7 @@
 #import "FHDetailSurveyAgentListCell.h"
 #import "FHOldDetailOwnerSellHouseCell.h"
 #import "SSCommonLogic.h"
+#import "BDABTestManager.h"
 
 extern NSString *const kFHSubscribeHouseCacheKey;
 
@@ -767,6 +768,21 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         infoModel.analyzeModel = model.data.priceAnalyze;
         infoModel.rangeModel = model.data.neighborhoodPriceRange;
         [self.items addObject:infoModel];
+    }
+    
+    //芜湖交换ab实验
+    if([[FHEnvContext getCurrentSelectCityIdFromLocal] isEqual:@"10416"] && [[BDABTestManager getExperimentValueForKey:@"f_wuhu_detail_card_order" withExposure:YES] intValue]){
+        __block NSInteger FHhouseDetailRGCListCellIndex = -1,FHDetailAgentListIndex = -1;
+        [self.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if([obj isKindOfClass:[FHhouseDetailRGCListCellModel class]]){
+                FHhouseDetailRGCListCellIndex = idx;
+            }else if([obj isKindOfClass:[FHDetailAgentListModel class]]){
+                FHDetailAgentListIndex = idx;
+            }
+        }];
+        if(FHhouseDetailRGCListCellIndex != -1 && FHDetailAgentListIndex != -1){
+            [self.items exchangeObjectAtIndex:FHhouseDetailRGCListCellIndex withObjectAtIndex:FHDetailAgentListIndex];
+        }
     }
     //帮我卖房数据
     self.saleHouseEntranceData = model.data.saleHouseEntrance;

@@ -29,6 +29,7 @@
 #import "TTTrackerWrapper.h"
 #import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHCityOpenUrlJumpAction : NSObject
 @property (nonatomic, strong) NSURL* openUrl;
@@ -71,16 +72,27 @@
     if (self) {
         self.navBarViewModel = [[FHImmersionNavBarViewModel alloc] init];
         _actions = [[NSMutableArray alloc] init];
-        self.tracerDict[@"enter_from"] = paramObj.allParams[@"enter_from"];
-        self.tracerDict[@"origin_from"] = paramObj.allParams[@"origin_from"];
-        self.tracerDict[@"origin_search_id"] = paramObj.allParams[@"origin_search_id"];
-        self.tracerDict[@"search_id"] = paramObj.allParams[@"search_id"];
-
+        if (paramObj.allParams[@"enter_from"]) {
+            self.tracerDict[@"enter_from"] = paramObj.allParams[@"enter_from"];
+        }
+        if (paramObj.allParams[@"origin_from"]) {
+            self.tracerDict[@"origin_from"] = paramObj.allParams[@"origin_from"];
+        }
+        if (paramObj.allParams[@"origin_search_id"]) {
+            self.tracerDict[@"origin_search_id"] = paramObj.allParams[@"origin_search_id"];
+        }
+        if (paramObj.allParams[@"search_id"]) {
+            self.tracerDict[@"search_id"] = paramObj.allParams[@"search_id"];
+        }
         _headerViewModel = [[FHCityMarketTrendHeaderViewModel alloc] init];
         _headerViewModel.delegate = self;
         [_headerViewModel requestData];
     }
     return self;
+}
+
+- (NSString *)fh_pageType {
+    return @"city_market";
 }
 
 - (void)viewDidLoad {
@@ -151,12 +163,9 @@
 }
 
 -(void)logGoDetail {
-    [TTTrackerWrapper eventV3:@"go_detail" params:@{
-                                                    @"event_type": @"house_app2c_v2",
-                                                    @"page_type": @"city_market",
-//                                                    @"enter_from": self.tracerDict[@"enter_from"] ? : @"be_null",
-                                                    @"enter_from": @"maintab_operation",
-                                                    }];
+    NSMutableDictionary *params = self.tracerDict.mutableCopy;
+    params[@"page_type"] = [self fh_pageType] ?: @"be_null";
+    [TTTrackerWrapper eventV3:@"go_detail" params:params.copy];
 }
 
 -(void)initNavBar {
@@ -285,7 +294,9 @@
 }
 
 -(void)fillDataToBottomBar {
-    TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:[self traceParams]];
+    NSMutableDictionary *tracer = self.tracerDict.mutableCopy;
+    tracer[@"page_type"] = [self fh_pageType] ?: @"be_null";
+    TTRouteUserInfo* info = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer.copy}];
     NSArray<FHCityMarketBottomBarItem*>* items = [_headerViewModel.model.data.bottomButtons rx_mapWithBlock:^id(FHCityMarketDetailResponseBottomButton* each) {
         FHCityMarketBottomBarItem* item = [[FHCityMarketBottomBarItem alloc] init];
         item.titleLabel.text = each.text;
@@ -324,17 +335,10 @@
     NSParameterAssert(elementType);
     NSMutableDictionary* tracer = [self.tracerDict mutableCopy];
     tracer[@"rank"] = @"be_null";
-    tracer[@"page_type"] = @"city_market";
+    tracer[@"page_type"] = [self fh_pageType] ?: @"be_null";
     tracer[@"element_type"] = elementType;
     tracer[@"enter_from"] = nil;
     [FHUserTracker writeEvent:@"element_show" params:tracer];
-}
-
--(NSDictionary*)traceParams {
-    self.tracerDict[@"enter_from"] = @"city_market";
-    self.tracerDict[@"origin_from"] = @"city_market";
-    NSDictionary *tracer = @{@"tracer":[self.tracerDict copy] ? : @{}};
-    return tracer;
 }
 
 -(void)onDataArrived {
