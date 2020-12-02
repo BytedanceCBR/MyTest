@@ -69,10 +69,16 @@
 #import "FHHouseCardUtils.h"
 #import "NSObject+FHTracker.h"
 #import "FHHouseListRentCell.h"
+#import "FHHouseTableView.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
 #define NO_HOUSE_CELL_ID @"no_house_cell"
+
+
+@interface FHHouseListViewModel(FHHouseTableView)<FHHouseTableViewDataSource>
+
+@end
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -2688,5 +2694,35 @@ extern NSString *const INSTANT_DATA_KEY;
     return itemModel;
 }
 
+
+@end
+
+@implementation FHHouseListViewModel(FHHouseTableView)
+
+- (NSArray<NSArray<id<FHHouseNewComponentViewModelProtocol>> *> *)fhHouse_dataList {
+    if (self.showPlaceHolder) {
+        NSInteger count = 10;
+        NSArray *placeholderViewModels = @[];
+        if (self.houseType == FHHouseTypeNewHouse) {
+            placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle1 count:count];
+        } else {
+            if (self.commute){
+                placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle3 count:count];
+            } else {
+                placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle2 count:count];
+            }
+        }
+        
+        return @[placeholderViewModels];
+    }
+    
+    return @[self.houseList.count ? self.houseList : @[],
+        self.sugesstHouseList.count ? self.sugesstHouseList : @[]
+    ];
+}
+
+- (NSDictionary<NSString *, NSString *> *)fhHouse_supportCellStyles {
+    return [FHHouseCardUtils supportCellStyleMap];
+}
 
 @end

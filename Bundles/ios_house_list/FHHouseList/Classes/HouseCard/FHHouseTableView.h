@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHHouseNewComponentViewModelProtocol;
-@protocol FHHouseTableViewDataSource <UITableViewDataSource>
+@protocol FHHouseTableViewDataSource <NSObject>
 
 - (NSArray<NSArray<id<FHHouseNewComponentViewModelProtocol>> *> *)fhHouse_dataList;
 
@@ -20,14 +20,9 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-@protocol FHHouseTableViewDelegate <UITableViewDelegate>
-
-@end
-
 @interface FHHouseTableView : FHBaseTableView
 
 @property (nonatomic, weak) id<FHHouseTableViewDataSource> fhHouse_dataSource;
-@property (nonatomic, weak) id<FHHouseTableViewDelegate> fhHouse_delegate;
 
 @end
 

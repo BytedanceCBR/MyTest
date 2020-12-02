@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHHouseCardTableViewCellProtocol <FHHouseNewComponentViewProtocol>
 
+@optional
 //曝光
 - (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath;
 

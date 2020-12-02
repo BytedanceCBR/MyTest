@@ -16,6 +16,11 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FHHouseCardCellViewModelProtocol <FHHouseNewComponentViewModelProtocol>
 
 @optional
+
+@property (nonatomic, assign) NSInteger cardIndex;
+
+@property (nonatomic, assign) NSInteger cardCount;
+
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)hideCardAtIndexPath:(NSIndexPath *)indexPath;
