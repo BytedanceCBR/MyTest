@@ -37,6 +37,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *displayPrice;
 @property (nonatomic, strong, nullable) FHHouseItemHouseExternalModel *externalInfo;
 @property (nonatomic, strong, nullable) FHSearchHouseVRModel *vrInfo;
+@property (nonatomic, strong, nullable) FHSearchHouseVideoModel *videoInfo;
 @property (nonatomic, copy , nullable) FHSearchHouseDataItemsFakeReasonModel *fakeReason;
 @property (nonatomic, strong , nullable) FHSearchHouseDataItemsBaseInfoMapModel *baseInfoMap ;
 //@property (nonatomic, strong , nullable) NSArray<FHHouseCoreInfoModel> *coreInfo;

@@ -75,6 +75,8 @@
             self.tagList = item.tags;
             self.propertyText = item.propertyTag.content;
             self.propertyBorderColor = item.propertyTag.borderColor;
+            self.hasVr = item.vrInfo.hasVr;
+            self.hasVideo = !self.hasVr && item.videoInfo.hasVideo;
         }
     }
     return self;
