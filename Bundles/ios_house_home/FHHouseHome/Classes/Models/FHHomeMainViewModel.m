@@ -19,7 +19,7 @@
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property(nonatomic , weak) FHHomeMainViewController *viewController;
 @property(nonatomic , weak) FHHomeViewController *homeListVC;
-@property(nonatomic , strong) NSMutableArray *dataArray;
+@property(nonatomic , strong) NSArray *dataArray;
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
 @property(nonatomic , strong) NSMutableDictionary *traceDict;
@@ -65,7 +65,7 @@
 - (void)resetDataArray
 {
     if ([FHEnvContext isCurrentCityNormalOpen]) {
-        self.dataArray = @[@(kFHHomeMainCellTypeHouse),@(kFHHomeMainCellTypeFeed)];
+        self.dataArray = @[@(kFHHomeMainCellTypeHouse)];
     }else
     {
         self.dataArray = @[@(kFHHomeMainCellTypeFeed)];
@@ -104,7 +104,7 @@
     }
 
     FHHomeMainBaseCollectionCell *cell = (FHHomeMainBaseCollectionCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-
+    
     if (cell.contentVC && ![self.viewController.childViewControllers containsObject:cell.contentVC]) {
         [self.viewController addChildViewController:cell.contentVC];
     }
@@ -114,7 +114,7 @@
     }
     
     if ([cell.contentVC isKindOfClass:[FHHomeViewController class]]) {
-        self.homeListVC = cell.contentVC;
+        self.homeListVC = (FHHomeViewController *)cell.contentVC;
     }
     
     return cell;
@@ -145,7 +145,6 @@
     }
     
     [self.viewController.topView changeBackColor:(scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width) > 0.5 ? 1 : 0];
-    [self.homeListVC.topBar changeBackColor:(scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width) > 0.5 ? 1 : 0];
 
     if(tabIndex != self.viewController.topView.segmentControl.selectedSegmentIndex){
         self.viewController.currentTabIndex = tabIndex;

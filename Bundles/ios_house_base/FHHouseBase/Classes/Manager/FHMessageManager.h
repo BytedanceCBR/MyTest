@@ -20,6 +20,12 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSInteger)getTotalUnreadMessageCount;
 
 -(void)setUnreadSystemMsgCount:(NSUInteger)count;
+
+-(void)refreshBadgeNumber;
+
+- (NSInteger)systemMsgUnreadNumber;
+- (NSInteger)ugcMsgUnreadNumber;
+- (NSInteger)chatMsgUnreadNumber;
 @end
 
 NS_ASSUME_NONNULL_END

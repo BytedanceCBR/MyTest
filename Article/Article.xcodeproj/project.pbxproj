@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0FEAB6ADE065D893FAFB6FAF /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F0B4AFFE1D1710A463352C86 /* libPods-NewsLiteInHouse.a */; };
 		1765A464252192FE00A1A9D8 /* ShortVideoGuide.json in Resources */ = {isa = PBXBuildFile; fileRef = 1765A463252192FD00A1A9D8 /* ShortVideoGuide.json */; };
 		2B12857E2574D47700EAF2D8 /* FHMonkeyConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B12857C2574D47700EAF2D8 /* FHMonkeyConfigManager.m */; };
 		2D1B0A92256A8EE9006091A2 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D2F39942270545700AE567D /* AppDelegate.m */; };
@@ -144,7 +145,7 @@
 		6198678F2223E9A70056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198678E2223E9A70056B2EF /* NotificationService.m */; };
 		619867932223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		62434B862504F5A59E2D81B7 /* libPods-f100InHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6654741C4CBDCFEE43406548 /* libPods-f100InHouse.a */; };
-		69F0CD392143A278FD9B2268 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		69F0CD392143A278FD9B2268 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		7623E3B12275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
 		7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
 		97C0565662A4B157017B8064 /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF1494101960A7ABFD802FAE /* libPods-NewsLiteInHouse.a */; };
@@ -515,6 +516,7 @@
 		EFECAAD416550AC3006EB51A /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		EFF33B05162FDB1D00B947F4 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		EFF33B0C162FEE8600B947F4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		F0B4AFFE1D1710A463352C86 /* libPods-NewsLiteInHouse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NewsLiteInHouse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4E8CF5A26307DAE199946AF /* Pods-serviceNofExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-serviceNofExtension.debug.xcconfig"; path = "Target Support Files/Pods-serviceNofExtension/Pods-serviceNofExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		F628430994DA5273F4C273BE /* Pods-f100.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100.release.xcconfig"; path = "Target Support Files/Pods-f100/Pods-f100.release.xcconfig"; sourceTree = "<group>"; };
 		F8893C801FCE5F4100C76EBB /* tt_video_doubleClickApprove.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = tt_video_doubleClickApprove.bundle; sourceTree = "<group>"; };
@@ -670,8 +672,8 @@
 				FEFA5A4E205FB1A8001F50D8 /* CoreGraphics.framework in Frameworks */,
 				FEFA5A50205FB1A8001F50D8 /* libz.1.dylib in Frameworks */,
 				FEFA5A51205FB1A8001F50D8 /* AssetsLibrary.framework in Frameworks */,
-				69F0CD392143A278FD9B2268 /* (null) in Frameworks */,
-				97C0565662A4B157017B8064 /* libPods-NewsLiteInHouse.a in Frameworks */,
+				69F0CD392143A278FD9B2268 /* BuildFile in Frameworks */,
+				0FEAB6ADE065D893FAFB6FAF /* libPods-NewsLiteInHouse.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -776,7 +778,7 @@
 				9024DDF5E410548C9797A57D /* libPods-f100.a */,
 				E8F614528BFD84403C72AE68 /* libPods-serviceNofExtension.a */,
 				6654741C4CBDCFEE43406548 /* libPods-f100InHouse.a */,
-				DF1494101960A7ABFD802FAE /* libPods-NewsLiteInHouse.a */,
+				F0B4AFFE1D1710A463352C86 /* libPods-NewsLiteInHouse.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

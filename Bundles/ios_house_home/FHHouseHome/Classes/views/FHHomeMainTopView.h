@@ -7,12 +7,14 @@
 
 #import <UIKit/UIKit.h>
 #import "HMSegmentedControl.h"
+#import "FHHomeSearchPanelView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeMainTopView : UIView
 @property(nonatomic,strong)HMSegmentedControl *segmentControl;
 @property(nonatomic,strong)HMSegmentedControl *houseSegmentControl;
+@property(nonatomic,strong)FHHomeSearchPanelView *searchPanelView;
 @property (nonatomic, strong) UIButton *searchBtn;
 @property (nonatomic, strong) UIButton *mapSearchBtn;
 @property (nonatomic, strong) UILabel *mapSearchLabel;
