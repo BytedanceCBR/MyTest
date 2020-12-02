@@ -11,7 +11,7 @@
 //#import <TTAccountAuthTencent.h>
 #import "TTLaunchDefine.h"
 
-DEC_TASK("TTQQShareOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH+2);
+//DEC_TASK("TTQQShareOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_HIGH+2);
 
 @implementation TTQQShareOpenURLTask
 
