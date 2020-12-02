@@ -13,9 +13,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHFloorPanDetailViewModel : FHHouseDetailBaseViewModel
 
 @property (nonatomic, strong)   NSDictionary       *logPB;
--(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId;
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId realtorId:(NSString *)realtorId;
 
 @property (copy, readonly, nonatomic) NSString *floorPanId;
+@property (nonatomic, copy) NSString *realtorId;
 
 - (void)startLoadData;
 
