@@ -49,6 +49,7 @@
 #import "FHFeedUGCCellModel.h"
 #import "FHShortVideoTracerUtil.h"
 #import "TTAccountManager.h"
+#import <FHShareManager.h>
 
 NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
 
@@ -255,7 +256,9 @@ NSString *const TSVLastShareActivityName = @"TSVLastShareActivityName";
     if (self.moreButtonDidClick) {
         self.moreButtonDidClick();
     }
-    [FHShortVideoTracerUtil clickshareBtn:self.model];
+    if(![[FHShareManager shareInstance] isShareOptimization]) {
+        [FHShortVideoTracerUtil clickshareBtn:self.model];
+    }
 }
 
 - (void)clickWriteCommentButton

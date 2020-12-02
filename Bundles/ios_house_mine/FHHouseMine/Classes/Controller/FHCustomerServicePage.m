@@ -35,7 +35,7 @@
     [FHMineAPI requestLinkChatPageUrlWithParams:nil completion:^(NSError * _Nonnull error, id  _Nonnull obj) {
         if(error) {
             [[ToastManager manager] showToast:@"网络不给力，请重试"];
-            return;;
+            return;
         }
         if(obj) {
             NSError *error = nil;
