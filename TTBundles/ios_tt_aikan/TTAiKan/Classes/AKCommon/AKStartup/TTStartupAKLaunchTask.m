@@ -92,13 +92,20 @@ DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+17);
     MSConfigML* msConfig = [[MSConfigML alloc] initWithAppID:appId License: [self safeSDKLicense]];
     msConfig.setClientType(clientType).setChannel(channel);
     
-    // 设置IDFA
+    /// 处理IDFA的配置
     BDInstallAuthorizationStatus idfaStatus = [BDInstallIDFAManager authorizationStatus];
     if(idfaStatus == BDInstallAuthorizationStatusAuthorized) {
         NSString *idfaString = [UIDevice btd_idfaString];
         msConfig.setIDFA(idfaString);
     }
+    else {
+        // TODO: 待新宇的IDFA需求完成后，监听用户授权IDFA完成的状态后，更新IDFA设置，使用
+        // [self updateSafeSDKIDFAWithStatus:status forSence:@"idfa-update-request-user"];
+        // status为授权状态
+    }
     
+    /// MARK: 处理DeviceID和InstallID的配置
+
     // 用户是否已经同意隐私弹窗协议
     BOOL hasConfirmPermission = [FHEnvContext sharedInstance].hasConfirmPermssionProtocol;
     if(!hasConfirmPermission) { // 用户同意隐私弹窗后才可以设置did和iid
@@ -112,14 +119,6 @@ DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+17);
             msConfig.setInstallID(installId);
         }
     }
-    
-    if(sessionId.length > 0) {
-        msConfig.setSessionID(sessionId);
-    }
-    
-    // 监听用户登录成功事件
-    [TTAccount addMulticastDelegate:self];
-    
     // 如果冷启动时候applog还没获取到deviceid,则可以先初始化MetaSec,msConfig中先不设置deviceid，后续did有更新必须通过msManager 设置下deviceID
     self.msManager = [[MSManagerML alloc] initWithConfig:msConfig];
     if(deviceId.length <= 0 || installId.length <= 0) {
@@ -127,6 +126,13 @@ DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+17);
             [self updateSafeSDKDid:deviceID installId:installID forScene:@"did-iid-update"];
         }];
     }
+    
+    /// MARK: 处理登录SessionID的配置
+    if(sessionId.length > 0) {
+        msConfig.setSessionID(sessionId);
+    }
+    // 监听用户登录成功事件
+    [TTAccount addMulticastDelegate:self];
 }
 
 - (void)userHasConfirmPermission:(NSNotification *)notification {
@@ -141,6 +147,14 @@ DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+17);
     [self updateSafeSDKAccountSessionIdForScene:@"sessionId-update-on-login"];
 }
 #pragma mark - 工具函数
+
+- (void)updateSafeSDKIDFAWithStatus:(BDInstallAuthorizationStatus)idfaStatus forSence:(NSString *)reportScene {
+    if(idfaStatus == BDInstallAuthorizationStatusAuthorized) {
+        NSString *idfaString = [UIDevice btd_idfaString];
+        self.msManager.setIDFA(idfaString);
+        [self safeSDKReportForScene:reportScene];
+    }
+}
 
 - (void)updateSafeSDKDid:(NSString *)deviceId installId:(NSString *)installId forScene:(NSString *)reportScene {
     NSAssert(deviceId.length > 0 && installId.length > 0, @"did 和 iid 须不为空");

@@ -144,9 +144,10 @@
 		6198678F2223E9A70056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198678E2223E9A70056B2EF /* NotificationService.m */; };
 		619867932223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		62434B862504F5A59E2D81B7 /* libPods-f100InHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6654741C4CBDCFEE43406548 /* libPods-f100InHouse.a */; };
-		69F0CD392143A278FD9B2268 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		69F0CD392143A278FD9B2268 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		7623E3B12275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
 		7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
+		97C0565662A4B157017B8064 /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF1494101960A7ABFD802FAE /* libPods-NewsLiteInHouse.a */; };
 		ACBF787C473BD50F37A42499 /* libPods-com.f100.client.FHNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7EE899B83B71F6E5A068E09 /* libPods-com.f100.client.FHNotificationServiceExtension.a */; };
 		B373CE892174587A008F9905 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		B373CE8A2174587A008F9905 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
@@ -376,9 +377,9 @@
 		0695AFD018EEEEE50009444F /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		1765A463252192FD00A1A9D8 /* ShortVideoGuide.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ShortVideoGuide.json; sourceTree = "<group>"; };
 		176E29DB25382BB500783D5E /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		1A730A544F462B66C0E814A7 /* Pods-f100InHouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100InHouse.release.xcconfig"; path = "Target Support Files/Pods-f100InHouse/Pods-f100InHouse.release.xcconfig"; sourceTree = "<group>"; };
 		2B12857C2574D47700EAF2D8 /* FHMonkeyConfigManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FHMonkeyConfigManager.m; sourceTree = "<group>"; };
 		2B12857D2574D47700EAF2D8 /* FHMonkeyConfigManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FHMonkeyConfigManager.h; sourceTree = "<group>"; };
-		1A730A544F462B66C0E814A7 /* Pods-f100InHouse.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-f100InHouse.release.xcconfig"; path = "Target Support Files/Pods-f100InHouse/Pods-f100InHouse.release.xcconfig"; sourceTree = "<group>"; };
 		2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = F100BaiduMapKit.framework; path = ../Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework; sourceTree = "<group>"; };
 		2B53A10C24C5787200923B3C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		2D1B0AF6256A8EE9006091A2 /* f100InHouse.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = f100InHouse.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -502,6 +503,7 @@
 		D45F59FB2458039E00A14982 /* LynxLocalChannels */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LynxLocalChannels; sourceTree = "<group>"; };
 		D48E93C0233CF142005A42CD /* VRImageLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VRImageLoading.json; sourceTree = "<group>"; };
 		D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoResource.xcassets; sourceTree = "<group>"; };
+		DF1494101960A7ABFD802FAE /* libPods-NewsLiteInHouse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NewsLiteInHouse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E34D4345B7726A4914383123 /* Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-com.f100.client.FHNotificationServiceExtension/Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		E8F614528BFD84403C72AE68 /* libPods-serviceNofExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-serviceNofExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF3B84B5173BDC690017F4E7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -668,7 +670,8 @@
 				FEFA5A4E205FB1A8001F50D8 /* CoreGraphics.framework in Frameworks */,
 				FEFA5A50205FB1A8001F50D8 /* libz.1.dylib in Frameworks */,
 				FEFA5A51205FB1A8001F50D8 /* AssetsLibrary.framework in Frameworks */,
-				69F0CD392143A278FD9B2268 /* (null) in Frameworks */,
+				69F0CD392143A278FD9B2268 /* BuildFile in Frameworks */,
+				97C0565662A4B157017B8064 /* libPods-NewsLiteInHouse.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -773,6 +776,7 @@
 				9024DDF5E410548C9797A57D /* libPods-f100.a */,
 				E8F614528BFD84403C72AE68 /* libPods-serviceNofExtension.a */,
 				6654741C4CBDCFEE43406548 /* libPods-f100InHouse.a */,
+				DF1494101960A7ABFD802FAE /* libPods-NewsLiteInHouse.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
