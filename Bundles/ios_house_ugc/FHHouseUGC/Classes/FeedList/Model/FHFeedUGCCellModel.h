@@ -156,6 +156,9 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentRecommendSocialGroupListModel> *recommendSocialGroupList;
 //唯一Id
 @property (nonatomic, copy , nullable) NSString *groupId;
+
+//小视频cell唯一性判断
+@property (nonatomic, copy , nullable) NSString *originGroupId;
 //频道Id
 @property (nonatomic, copy , nullable) NSString *categoryId;
 //是否需要插入了引导页

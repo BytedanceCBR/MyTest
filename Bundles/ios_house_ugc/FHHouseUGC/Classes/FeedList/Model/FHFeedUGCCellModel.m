@@ -771,7 +771,10 @@
         }
     } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideoList){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeSmallVideoList;
-        cellModel.groupId = model.rawData.groupId;
+        double currentTime =  [[NSDate date] timeIntervalSince1970]*1000;
+        NSString *strTime = [NSString stringWithFormat:@"%.0f",currentTime];
+        cellModel.groupId = [model.rawData.groupId stringByAppendingString:strTime];
+        cellModel.originGroupId = model.rawData.groupId;
         if (model.subRawDatas.count > 0) {
             NSMutableArray *videoModelArr = [[NSMutableArray alloc]init];
             for (id content in model.subRawDatas) {
