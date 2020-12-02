@@ -38,6 +38,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithModel:(id)model;
 
+- (void)showCardAtIndexPath:(NSIndexPath *)indexPath;
+
+- (void)clickCardAtIndexPath:(NSIndexPath *)indexPath;
+
 @end
 
 NS_ASSUME_NONNULL_END

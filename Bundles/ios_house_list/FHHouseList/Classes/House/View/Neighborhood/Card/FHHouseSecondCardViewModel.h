@@ -30,11 +30,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) FHHouseRecommendViewModel *recommendViewModel;
 
-@property (nonatomic, strong, readonly) FHSearchHouseItemModel *model;
+@property (nonatomic, strong, readonly) id model;
 
 @property (nonatomic, assign, readonly) BOOL hasVr;
 
+@property (nonatomic, assign, readonly) BOOL isFirst;
+
 - (instancetype)initWithModel:(id)model;
+
+- (void)showCardAtIndexPath:(NSIndexPath *)indexPath;
+
+- (void)clickCardAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
