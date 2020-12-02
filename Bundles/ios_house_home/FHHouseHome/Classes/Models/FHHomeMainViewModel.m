@@ -104,7 +104,7 @@
     }
 
     FHHomeMainBaseCollectionCell *cell = (FHHomeMainBaseCollectionCell *)[collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-
+    
     if (cell.contentVC && ![self.viewController.childViewControllers containsObject:cell.contentVC]) {
         [self.viewController addChildViewController:cell.contentVC];
     }
@@ -145,7 +145,6 @@
     }
     
     [self.viewController.topView changeBackColor:(scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width) > 0.5 ? 1 : 0];
-    [self.homeListVC.topBar changeBackColor:(scrollView.contentOffset.x / [UIScreen mainScreen].bounds.size.width) > 0.5 ? 1 : 0];
 
     if(tabIndex != self.viewController.topView.segmentControl.selectedSegmentIndex){
         self.viewController.currentTabIndex = tabIndex;
