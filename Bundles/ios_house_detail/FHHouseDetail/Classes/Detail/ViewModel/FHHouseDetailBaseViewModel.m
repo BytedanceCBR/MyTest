@@ -40,7 +40,12 @@
 @property (nonatomic, assign) BOOL floatIconAnimation;
 @property (nonatomic, assign) BOOL clickShowIcon;
 @property(nonatomic, assign) CGPoint tableviewBeginOffSet;
-
+@property(nonatomic, strong) CADisplayLink *link;
+@property(nonatomic, assign) bool canNslog;
+@property(nonatomic, assign) bool isRefreshData;
+@property(nonatomic, assign) NSTimeInterval lastTime;
+@property(nonatomic, assign) NSTimeInterval startTime;
+@property(nonatomic, assign) NSTimeInterval tableViewLoadTime;
 
 @end
 
@@ -66,10 +71,41 @@
     }
     return viewModel;
 }
+- (void)getfirstFps{
+    self.canNslog = false;
+    self.isRefreshData = false;
+    _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(tick:)];
+    [_link addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+}
+
+- (void)tick:(CADisplayLink *)link {
+    if (_lastTime == 0) {
+        _lastTime = link.timestamp;
+        _startTime = link.timestamp;
+        return;
+    }
+    
+    NSTimeInterval delta = link.timestamp - _lastTime;
+    if(self.canNslog && !self.tableViewLoadTime){
+        self.tableViewLoadTime = delta;
+        [self addPageLoadLog];
+//        NSLog(@"xzsumfps:%f",link.timestamp - _startTime);
+        [_link removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+        _link = nil;
+        self.canNslog = false;
+    }
+    if(self.isRefreshData){
+        self.isRefreshData = false;
+        self.canNslog = true;
+    }
+    _lastTime = link.timestamp;
+}
 
 -(instancetype)initWithController:(FHHouseDetailViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType {
     self = [super init];
     if (self) {
+        if(houseType == FHHouseTypeSecondHandHouse)
+        [self getfirstFps];
         _detailTracerDic = [NSMutableDictionary new];
         _items = [NSMutableArray new];
         _cellHeightCaches = [NSMutableDictionary new];
@@ -264,6 +300,7 @@
                 cell.frame = CGRectMake(0, 0, tableView.frame.size.width, cell.frame.size.height);
                 cell.baseViewModel = self;
                 [cell refreshWithData:data];
+                self.isRefreshData = true;
                 return cell;
             }else{
                 NSLog(@"nil cell for data: %@",data);
@@ -744,7 +781,7 @@
                 NSMutableDictionary *metricDict = [NSMutableDictionary dictionary];
                 //单位 秒 -> 毫秒
                 metricDict[@"total_duration"] = @(duration * 1000);
-                
+                metricDict[@"tableView_duration"] = @(self.tableViewLoadTime * 1000);
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_house_detail_old" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
             }
         }
