@@ -175,6 +175,7 @@ static const NSString *kFHUGCPublisherHistoryDataKey = @"key_ugc_publisher_histo
         [self loadFollowData];
     }
     
+    [FHUtils setContent:@(0) forKey:lastRedPointShowKey];
     [self setFocusTimerState];
     [self loadUGCConfigData];
     [[TTForumPostThreadStatusViewModel sharedInstance_tt] checkCityPostData];
