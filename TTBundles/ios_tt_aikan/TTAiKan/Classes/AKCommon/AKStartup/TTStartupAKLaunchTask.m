@@ -67,13 +67,13 @@ DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+17);
 
 - (NSString *)safeSDKLicense {
     // 线上License配置平台：https://aqua.bytedance.net/control-panel/69/sec_sdk/list
-    NSString *license = @"qD9Z5hYj0MFcxgesfwpBS8dsg5Lcy7OM3cuJpUNuCBQCFsjjO6qEUMz7Z/POHC44VFkD0WXdrZ+m7f2GRLptDg6Kf4kB2n1Q2d1uudJeLe81CupjJincf4p89OXTHnHLIZntUG+JzLsYYea+akU6CvOPYoGtgqpjm75tHb4LiG/aQbVN1u2uRa/Lt3i2tOBFEplalz/eAigysUgjsV/EcIQ3zIvc8QdntlP6X5gRBXtfztGD24Jud/V7DHIQi8yRd/vdShYV4gBq5r5AIbaORa1gG2eWFV8EBdjFcSmCy5QcBgqBK5cUYReQbWj+oZTwjEgy3KJV6QD7RcxXqXyxB+A+jLj7JQMPcVApWMEjq9vHAzho";
+    NSString *license = @"df4Q4J0gAB4Uxj8MkapZv7+I25GPKhsn0SqGHt7uxS3OZHB6qFP9o1VeKBzPAA8OsQUGVsEjESfXdct84tRaZc6NAPBidhdmyFBtVNlbvWabhvr2MZ0+LzjPBLD66ZmZBOb25EP5bPA8fD0oGTe2GX2iGjQ3qVPHKxuCqo0lUamgx0CVLvYyvKhnJzU643Bdso/UP/DS3f/3UeQPBytz2IZKo/b4I8o/CuAPuboRX5n2a7GneE6rYnuXRuq2W8KVExz6ywU7fLEYZ/CviKVSW8S2Q5U4s7Gb5EerzynCrKwnU0XMNeK1CprOU5kUu7ubd+eWmg==";
     
     
     BOOL isBOE = [TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"BOE_OPEN_KEY"];
     if(isBOE) {
         // BOELicense配置平台: https://aqua.boe.bytedance.net/control-panel/378/sec_sdk/list
-        license = @"5JGEfmyYBtCrS0pIXhVWTiTnz2cwN1cM8+qZRFwrUITV5RtAd3f7y/dDHDJFqJtlBQmDsoGxEPdV9LPXWIN3RO70GTYpgGqNe1VcMIvs0ZeZBSENoej6IP9N/+lcZIQ373IqErLxdXo1UWWGEwa8ZVDG8EL8GbuDC9hXtAqlqY5kiAf2JJfy+GtEGpwPArXfd8ubZU1HhXZmKksWpI7VkXK204ys9YFUv831d06yEDOjSjCELV/dQ1fxTWmOLlSplGphrKC3zfD1ceicpnPRnDLl/jCR/zcUyuZVx+NKbHrcsX4eESF5ke3gT2sG0dYN7gGMSTzd0pzH1BIrsu1NCCWSyKws+x8k8AbxIfvoyzYAdgaK";
+        license = @"8YPku5k3BHdCbULRMNOSj9KJ4JRnWIarXZwis9zbtEtFc7yQb+Zpev1EWPVxkYhC8RvkcG/Cu9kdnbk0kM/QYa0YtS8O79x6tkDTKWfloPeTVy+wlB0Pu1gUczealL3daH4UEQNw68ia7iUr6UfT4mKuA+CK3QuyVT42PhBRykrNsnXACdSAzmICZFih0ZWvzqHIx6kJnYK4fpX8jd/GCqnz6beIYzmFaDkI6dM+ASP0/m3vVTLWVjoVjfwIlumbml2JILmidQQJSsKmx+YFXwZbfl9mSxLrcY15uwz2J3+OFS5ns1N9W21i0nCfAavZbtd6FA==";
     }
     
     return license;
