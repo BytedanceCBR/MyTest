@@ -13,8 +13,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)fhHouseCard_registerCellStyles;
 
+- (void)fhHouseCard_registerCellStylesWithDict:(NSDictionary *)dict;
+
 - (UITableViewCell *)fhHouseCard_cellForEntity:(id)entity atIndexPath:(NSIndexPath *)indexPath;
+
+- (UITableViewCell *)fhHouseCard_cellForEntity:(id)entity atIndexPath:(NSIndexPath *)indexPath withDict:(NSDictionary *)dict;
+
 - (CGFloat)fhHouseCard_heightForEntity:(id)entity atIndexPath:(NSIndexPath *)indexPath;
+
+- (CGFloat)fhHouseCard_heightForEntity:(id)entity atIndexPath:(NSIndexPath *)indexPath withDict:(NSDictionary *)dict;
+
 - (BOOL)fhHouseCard_willShowCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)fhHouseCard_didClickCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 

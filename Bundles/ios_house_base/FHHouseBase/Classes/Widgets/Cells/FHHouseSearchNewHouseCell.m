@@ -243,7 +243,7 @@
         [self updatePropertyTag:model.propertyTag];
         self.priceLabel.text = model.displayPricePerSqm;
         self.subTitleLabel.text = model.displayDescription;
-        NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
+        NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152];
         self.tagLabel.attributedText = attributeString;
         if ([model.displayPricePerSqm isKindOfClass:[NSString class]] && [model.displayPricePerSqm isEqualToString:@"暂无报价"]) {
             self.priceLabel.textColor = [UIColor themeGray3];
@@ -263,7 +263,7 @@
         [self updatePropertyTag:model.propertyTag];
         self.priceLabel.text = model.displayPricePerSqm;
         self.subTitleLabel.text = model.displayDescription;
-        NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags];
+        NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152];
         self.tagLabel.attributedText = attributeString;
         if ([model.displayPricePerSqm isKindOfClass:[NSString class]] && [model.displayPricePerSqm isEqualToString:@"暂无报价"]) {
             self.priceLabel.textColor = [UIColor themeGray3];
