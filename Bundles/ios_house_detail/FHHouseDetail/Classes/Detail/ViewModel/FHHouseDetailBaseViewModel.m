@@ -90,7 +90,6 @@
     if(self.canNslog && !self.tableViewLoadTime){
         self.tableViewLoadTime = delta;
         [self addPageLoadLog];
-//        NSLog(@"xzsumfps:%f",link.timestamp - _startTime);
         [_link removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
         _link = nil;
         self.canNslog = false;
@@ -292,6 +291,7 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.items.count) {
         id data = self.items[row];
+        sleep(1);
         NSString *identifier = NSStringFromClass([data class]);//[self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];

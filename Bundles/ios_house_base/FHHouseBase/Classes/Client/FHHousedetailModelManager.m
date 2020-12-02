@@ -1,0 +1,62 @@
+//
+//  FHHousedetailModelManager.m
+//  FHHouseBase
+//
+//  Created by bytedance on 2020/12/2.
+//
+
+#import "FHHousedetailModelManager.h"
+#import "FHDetailNewModel.h"
+#import "YYCache.h"
+
+@interface FHHousedetailModelManager ()
+
+@property (nonatomic, strong) YYCache   *houseDtailManagerCache;
+
+@end
+
+@implementation FHHousedetailModelManager
+
++(instancetype)sharedInstance
+{
+    static id manager = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        manager = [[self alloc] init];
+    });
+    
+    return manager;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+    }
+    return self;
+}
+
+- (YYCache *)houseDtailManagerCache{
+    if(! _houseDtailManagerCache){
+        _houseDtailManagerCache = [[YYCache alloc] initWithName:@"old_house_detail_cache"];
+    }
+    return  _houseDtailManagerCache;
+}
+
+- (void)saveHouseDetailModel:(id)model With:(NSString *)key{
+    if([model isKindOfClass:[FHDetailOldModel class]] && key){
+        [self.houseDtailManagerCache setObject:model forKey:key];
+    }
+}
+
+- (id)getHouseDetailModelWith:(NSString *)key{
+    if ([self.houseDtailManagerCache containsObjectForKey:key]) {
+        id value = [self.houseDtailManagerCache objectForKey:key];
+        if([value isKindOfClass:[FHDetailOldModel class]]){
+            return value;
+        }
+    }
+    return nil;
+}
+
+@end

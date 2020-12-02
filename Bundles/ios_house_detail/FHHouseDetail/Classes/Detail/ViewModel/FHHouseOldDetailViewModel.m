@@ -63,6 +63,7 @@
 #import "FHOldDetailOwnerSellHouseCell.h"
 #import "SSCommonLogic.h"
 #import "BDABTestManager.h"
+#import "FHHousedetailModelManager.h"
 
 extern NSString *const kFHSubscribeHouseCacheKey;
 
@@ -141,24 +142,40 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 }
 // 网络数据请求
 - (void)startLoadData {
-    
+    BOOL isCache = NO;
+    FHDetailOldModel *model = [[FHHousedetailModelManager sharedInstance] getHouseDetailModelWith:self.houseId];
     // 详情页数据-Main
+    if(model){
+        isCache = YES;
+        [self processDetailData:model];
+        self.detailController.hasValidateData = YES;
+        [self.detailController.emptyView hideEmptyView];
+        self.bottomBar.hidden = NO;
+        [self handleBottomBarStatus:model.data.status];
+        NSString *neighborhoodId = model.data.neighborhoodInfo.id;
+        self.neighborhoodId = neighborhoodId;
+        [self requestRelatedData:neighborhoodId];
+        self.contactViewModel.imShareInfo = (FHDetailImShareInfoModel*)model.data.imShareInfo;
+    }
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestOldDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId bizTrace:self.detailController.bizTrace
 logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
-                [wSelf processDetailData:model];
-                // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
-                wSelf.detailController.hasValidateData = YES;
-                [wSelf.detailController.emptyView hideEmptyView];
-                wSelf.bottomBar.hidden = NO;
-                [wSelf handleBottomBarStatus:model.data.status];
-                NSString *neighborhoodId = model.data.neighborhoodInfo.id;
-                wSelf.neighborhoodId = neighborhoodId;
-                // 周边数据请求
-                [wSelf requestRelatedData:neighborhoodId];
-                wSelf.contactViewModel.imShareInfo = model.data.imShareInfo;
+                [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:wSelf.houseId];
+                if(!isCache){
+                    [wSelf processDetailData:model];
+                    // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
+                    wSelf.detailController.hasValidateData = YES;
+                    [wSelf.detailController.emptyView hideEmptyView];
+                    wSelf.bottomBar.hidden = NO;
+                    [wSelf handleBottomBarStatus:model.data.status];
+                    NSString *neighborhoodId = model.data.neighborhoodInfo.id;
+                    wSelf.neighborhoodId = neighborhoodId;
+                    // 周边数据请求
+                    [wSelf requestRelatedData:neighborhoodId];
+                    wSelf.contactViewModel.imShareInfo = (FHDetailImShareInfoModel*)model.data.imShareInfo;
+                }
             } else {
                 wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
@@ -812,11 +829,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         });
     });
     self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
-<<<<<<< HEAD
-=======
     [self.detailController updateLayout:model.isInstantData];
-    
->>>>>>> d33b000b6070980c7521d37ab8da20451d490906
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"old_detail"}];
     });
