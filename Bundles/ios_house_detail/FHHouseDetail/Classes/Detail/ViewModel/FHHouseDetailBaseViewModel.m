@@ -42,6 +42,7 @@
 @property(nonatomic, assign) CGPoint tableviewBeginOffSet;
 @property(nonatomic, strong) CADisplayLink *link;
 @property(nonatomic, assign) bool canNslog;
+@property(nonatomic, assign) bool isRefreshData;
 @property(nonatomic, assign) NSTimeInterval lastTime;
 @property(nonatomic, assign) NSTimeInterval startTime;
 @property(nonatomic, assign) NSTimeInterval tableViewLoadTime;
