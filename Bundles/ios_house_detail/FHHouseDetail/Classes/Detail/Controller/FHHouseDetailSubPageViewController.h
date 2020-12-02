@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setNavBarTitle:(NSString *)navTitle;
 //获取导航bar
-- (UIView *)getNaviBar;
+- (FHDetailNavBar *)getNaviBar;
 
 //获取底部bar
 - (UIView *)getBottomBar;
