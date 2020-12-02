@@ -72,6 +72,7 @@
 #import "TTDislikeContentItem.h"
 #import "TTBlockContentItem.h"
 #import "TTReportContentItem.h"
+#import <FHShareManager.h>
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -1456,10 +1457,52 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
     [self p_removeIndicatorPolicyView];
     
+    if([[FHShareManager shareInstance] isShareOptimization]) {
+        [self showSharePanel];
+        return;
+    }
+
     NSMutableArray *contentItems = @[].mutableCopy;
     [contentItems addObject:[self.natantViewModel wd_shareItems]];
     [self.shareManager displayActivitySheetWithContent:[contentItems copy]];
 }
+
+- (void)showSharePanel {
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
+    
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = [self.natantViewModel shareTitle];
+    commonDataModel.desc = [self.natantViewModel shareDesc];
+    commonDataModel.imageUrl = [self.natantViewModel shareImgUrl];
+    commonDataModel.thumbImage = [self.natantViewModel shareImage];
+    commonDataModel.shareUrl = [self.natantViewModel shareUrl];
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDataModel = commonDataModel;
+    
+    NSArray *contentItemArray = @[
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)],
+        @[@(FHShareChannelTypeDislike),@(FHShareChannelTypeReport),@(FHShareChannelTypeBlock)],
+    ];
+    
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self shareParams]];
+}
+
+- (NSDictionary *)shareParams {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *tracerDict = self.detailModel.gdExtJsonDict;
+    params[@"origin_from"] = tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = @"answer";
+    params[@"group_id"] = self.detailModel.answerEntity.ansid;
+    params[@"group_source"] = @"10";
+    NSDictionary *logPb = tracerDict[@"log_pb"];
+    if([logPb isKindOfClass:[NSDictionary class]]) {
+        params[@"impr_id"] = logPb[@"impr_id"] ?: @"be_null";
+    }
+    return params;
+}
+
 
 #pragma mark - Tracker
 

@@ -22,6 +22,8 @@
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import "FHUGCShareManager.h"
 #import "UIImage+FIconFont.h"
+#import <FHShareManager.h>
+#import <BDImageCache.h>
 
 @interface FHPostDetailViewController ()
 
@@ -376,8 +378,56 @@
 // 分享按钮点击
 - (void)shareButtonClicked:(UIButton *)btn {
     if (self.viewModel.shareInfo && self.tracerDict) {
+        if([[FHShareManager shareInstance] isShareOptimization]) {
+            [self showSharePanel];
+            return;
+        }
         [[FHUGCShareManager sharedManager] shareActionWithInfo:self.viewModel.shareInfo tracerDic:self.tracerDict];
     }
 }
+
+
+- (void)showSharePanel {
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
+    
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = self.viewModel.shareInfo.title;
+    commonDataModel.desc = self.viewModel.shareInfo.desc;
+    commonDataModel.shareUrl = self.viewModel.shareInfo.shareUrl;
+    commonDataModel.thumbImage = [[BDImageCache sharedImageCache]imageFromDiskCacheForKey:self.viewModel.shareInfo.coverImage];
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDataModel = commonDataModel;
+
+    NSArray *contentItemArray = @[
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)]
+    ];
+    
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self shareParams]];
+}
+
+- (NSDictionary *)shareParams
+{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *tracerDict = self.tracerDict;
+    params[@"page_type"] = tracerDict[@"page_type"] ? : @"be_null";
+    params[@"enter_from"] = tracerDict[@"enter_from"] ? : @"be_null";
+    params[@"element_from"] = tracerDict[@"element_from"] ? : @"be_null";
+    params[@"log_pb"] = tracerDict[@"log_pb"] ? : @"be_null";
+    if (tracerDict[@"rank"]) {
+        params[@"rank"] = tracerDict[@"rank"] ? : @"be_null";
+    }
+    if (tracerDict[@"origin_from"]) {
+        params[@"origin_from"] = tracerDict[@"origin_from"] ? : @"be_null";
+    }
+    if (tracerDict[@"origin_search_id"]) {
+        params[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? : @"be_null";
+    }
+    if (tracerDict[@"card_type"]) {
+        params[@"card_type"] = tracerDict[@"card_type"] ? : @"be_null";
+    }
+    return params;
+}
+
 
 @end
