@@ -1429,6 +1429,9 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)isEnableLinkChatPage;
 @end
 
+@interface SSCommonLogic (FHShare)
++ (BOOL)isShareOptimization;
+@end
 
 
 #endif

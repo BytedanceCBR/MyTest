@@ -32,7 +32,7 @@ typedef NS_ENUM (NSInteger , FHHouseModelType){
     FHHouseModelTypeAgentlist,
     ///二手房实勘经纪人
     FHHouseModelTypeSurveyAgentlist,
-    ///二手房房源评价
+    ///二手房房源评价/经纪人评测
     FHHouseModelTypeHousingEvaluation,
     ///小区信息
     FHHouseModelTypeNeighborhoodInfo,

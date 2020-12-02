@@ -276,7 +276,7 @@
     NSMutableDictionary *tracer = [NSMutableDictionary new];
     tracer[@"enter_type"] = @"click";
     tracer[@"element_from"] = @"search_detail";
-    tracer[@"enter_from"] = @"search_detail";
+    tracer[@"enter_from"] = [self enterFromString];
     if (self.listController.tracerDict[@"origin_from"]) {
         tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
     }
@@ -295,7 +295,7 @@
 
 // 订阅搜索item点击
 - (void)subscribeItemClick:(FHSugSubscribeDataDataItemsModel *)model {
-    NSString *enter_from = @"search_detail";
+    NSString *enter_from = [self enterFromString];
     NSString *element_from = @"be_null";
     switch (self.houseType) {
         case FHHouseTypeSecondHandHouse:
@@ -318,24 +318,24 @@
 
 // 搜索订阅组合列表页cell点击：FHSugSubscribeListViewController
 - (void)cellSubscribeItemClick:(FHSugSubscribeDataDataItemsModel *)model {
-    NSString *enter_from = @"be_null";
+    NSString *enter_from = [self enterFromString];
     NSString *element_from = @"be_null";
-    switch (self.houseType) {
-        case FHHouseTypeSecondHandHouse:
-            enter_from = @"old_subscribe_list";
-            break;
-        case FHHouseTypeNewHouse:
-            enter_from = @"new_subscribe_list";
-            break;
-        case FHHouseTypeRentHouse:
-            enter_from = @"rent_subscribe_list";
-            break;
-        case FHHouseTypeNeighborhood:
-            enter_from = @"neighborhood_subscribe_list";
-            break;
-        default:
-            break;
-    }
+//    switch (self.houseType) {
+//        case FHHouseTypeSecondHandHouse:
+//            enter_from = @"old_subscribe_list";
+//            break;
+//        case FHHouseTypeNewHouse:
+//            enter_from = @"new_subscribe_list";
+//            break;
+//        case FHHouseTypeRentHouse:
+//            enter_from = @"rent_subscribe_list";
+//            break;
+//        case FHHouseTypeNeighborhood:
+//            enter_from = @"neighborhood_subscribe_list";
+//            break;
+//        default:
+//            break;
+//    }
     [self jumpCategoryListVCFromSubscribeItem:model enterFrom:enter_from elementFrom:element_from];
 }
 
@@ -407,9 +407,9 @@
         if (self.listController.tracerDict[@"element_from"]) {
             tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];
         }
-        if (self.listController.tracerDict[@"enter_from"]) {
-            tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
-        }
+//        if (self.listController.tracerDict[@"enter_from"]) {
+//            tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
+//        }
         if (self.listController.tracerDict[@"origin_from"]) {
             tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
         }
@@ -417,11 +417,12 @@
     if(model.setHistory){
         [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:model.extinfo];
         tracer[@"element_from"] = @"history";
-        tracer[@"enter_from"] = @"search_detail";
+//        tracer[@"enter_from"] = [self enterFromString];
         tracer[@"card_type"] = @"left_pic";
         tracer[@"log_pb"] = model.logPb;
         tracer[@"rank"] = [NSString stringWithFormat: @"%zi",index];
     }
+    tracer[@"enter_from"] = [self enterFromString];
     infos[@"tracer"] = tracer;
     [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos isGoDetail:model.setHistory];
 }
@@ -466,9 +467,9 @@
             if (self.listController.tracerDict[@"element_from"]) {
                 tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];
             }
-            if (self.listController.tracerDict[@"enter_from"]) {
-                tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
-            }
+//            if (self.listController.tracerDict[@"enter_from"]) {
+//                tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
+//            }
             if (self.listController.tracerDict[@"origin_from"]) {
                 tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
             }
@@ -476,11 +477,12 @@
         if(model.setHistory){
             [self setHistoryWithURl:jumpUrl displayText:model.text extInfo:model.extinfo];
             tracer[@"element_from"] = @"hot";
-            tracer[@"enter_from"] = @"search_detail";
+//            tracer[@"enter_from"] = @"search_detail";
             tracer[@"log_pb"] = model.logPb;
             tracer[@"card_type"] = @"left_pic";
             tracer[@"rank"] = [NSString stringWithFormat: @"%zi",rank];
         }
+        tracer[@"enter_from"] = [self enterFromString];
         infos[@"tracer"] = tracer;
         [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:queryText placeholder:queryText infoDict:infos isGoDetail:model.setHistory];
     }
@@ -536,24 +538,24 @@
         if (self.listController.tracerDict[@"element_from"]) {
             tracer[@"element_from"] = self.listController.tracerDict[@"element_from"];
         }
-        if (self.listController.tracerDict[@"enter_from"]) {
-            tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
-        }
+//        if (self.listController.tracerDict[@"enter_from"]) {
+//            tracer[@"enter_from"] = self.listController.tracerDict[@"enter_from"];
+//        }
         if (self.listController.tracerDict[@"origin_from"]) {
             tracer[@"origin_from"] = self.listController.tracerDict[@"origin_from"];
         }
     }
     if([model.houseType intValue] != self.houseType){
-        tracer[@"element_from"] = [self elementFromNameByHouseType:[model.houseType intValue]];
+        tracer[@"element_from"] = [self relatedRecommendelEmentFromNameByHouseType:[model.houseType intValue]];
     }
     if(model.setHistory){
         [self setHistoryWithURl:model.openUrl displayText:model.text extInfo:nil];
-        tracer[@"element_from"] = [model.houseType intValue] == self.houseType ? @"associate" : [self elementFromNameByHouseType:[model.houseType intValue]];
-        tracer[@"log_pb"] = model.logPb;
+        tracer[@"element_from"] = [model.houseType intValue] == self.houseType ? @"associate" : [self relatedRecommendelEmentFromNameByHouseType:[model.houseType intValue]];
+        tracer[@"log_pb"] = model.logPb ?: @"be_null";
         tracer[@"card_type"] = @"left_pic";
         tracer[@"rank"] = [NSString stringWithFormat: @"%zi",rank];
     }
-    tracer[@"enter_from"] = @"search_detail";
+    tracer[@"enter_from"] = [self enterFromString];
     infos[@"tracer"] = tracer;
     [self.listController jumpToCategoryListVCByUrl:jumpUrl queryText:model.text placeholder:model.text infoDict:infos isGoDetail:model.setHistory];
 }
@@ -697,8 +699,8 @@
     }
     return @"be_null";
 }
-
-- (NSString *)elementFromNameByHouseType:(NSInteger)houseType{
+//与相关推荐xx房有关的卖点事件的value
+- (NSString *)relatedRecommendelEmentFromNameByHouseType:(NSInteger)houseType{
     if(houseType == FHHouseTypeNewHouse){
         return @"related_new_recommend";
     }else if(houseType == FHHouseTypeSecondHandHouse){
@@ -717,7 +719,7 @@
         NSString *originFrom = self.listController.tracerDict[@"origin_from"] ?: @"be_null";
         NSDictionary *tracerInfo = @{
             @"element_from": from.length > 0 ? from : @"be_null",
-            @"enter_from": @"search_detail",
+            @"enter_from": [self enterFromString],
             @"origin_from":  originFrom,
         };
         NSURL *openUrl = [NSURL URLWithString:url];
@@ -725,6 +727,11 @@
         userInfo.allInfo = @{@"tracer": tracerInfo};
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
     }
+}
+
+/// 搜索中间页enter_from参数
+- (NSString *)enterFromString {
+    return [self.listController.fatherVC fh_pageType];
 }
 
 #pragma mark - Action
@@ -760,7 +767,12 @@
 #pragma mark - tableview delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1 + (self.othersugListData.count > 0);
+    if(tableView.tag == 2){
+        return 1 + (self.othersugListData.count > 0);
+    }else if(tableView.tag == 1){
+        return  1;
+    }
+    return 0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -816,18 +828,18 @@
         }
         //服务端会同时下发cardType=9和cardType=16mcardType=15三种类型的卡片数据
         FHSuggestionResponseItemModel *model = nowsugListData[indexPath.row];
-        if(model.cardType == 18){
+        if(model.cardType == FHSearchCardTypeGuessYouWantContent){
             FHRecommendtHeaderViewCell *cell = (FHRecommendtHeaderViewCell *)[tableView dequeueReusableCellWithIdentifier:@"RecommendtHeaderCell" forIndexPath:indexPath];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell.label.text = model.text;
             return cell;
-        }else if (model.cardType == 9) {
+        }else if (model.cardType == FHSearchCardTypeGuessYouWantTip) {
             FHHouseListRecommendTipCell *tipCell = (FHHouseListRecommendTipCell *)[tableView dequeueReusableCellWithIdentifier:@"tipcell" forIndexPath:indexPath];
             FHSearchGuessYouWantTipsModel *tipModel = [[FHSearchGuessYouWantTipsModel alloc] init];
             tipModel.text = model.text;
             [tipCell refreshWithData:tipModel];
             return tipCell;
-        } else if (model.cardType == 15) {
+        } else if (model.cardType == FHSearchCardTypeFindHouseHelper) {
             __weak typeof(self) weakSelf = self;
             FHFindHouseHelperCell *helperCell = (FHFindHouseHelperCell *)[tableView dequeueReusableCellWithIdentifier:@"helperCell" forIndexPath:indexPath];
             helperCell.cellTapAction = ^(NSString *url) {
@@ -835,7 +847,7 @@
             };
             [helperCell updateWithData:model];
             return helperCell;
-        }else if(model.cardType == 16) {
+        }else if(model.cardType == FHSearchCardTSuggestionItem) {
             // 新房
             if (model.houseType.intValue == FHHouseTypeNewHouse) {
                 FHSuggestionNewHouseItemCell *cell = (FHSuggestionNewHouseItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestNewItemCell" forIndexPath:indexPath];
@@ -845,6 +857,11 @@
                 
                 cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1]  font:[UIFont themeFontSemibold:16]];
                 cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1]  font:[UIFont themeFontRegular:14]];
+                if([model.text2 length] <= 0){
+                    [cell.secondarySubLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                        make.centerY.mas_equalTo(cell.label);
+                    }];
+                }
                 cell.sepLine.hidden = indexPath.row == nowsugListData.count - 1;
                 if(model.newtip){
                     cell.secondaryLabel.text = model.newtip.content;
@@ -909,7 +926,7 @@
         NSMutableArray<FHSuggestionResponseItemModel>  *nowsugListData = indexPath.section == 0 ?self.sugListData:self.othersugListData;
         if (indexPath.row < nowsugListData.count) {
             FHSuggestionResponseItemModel *model  = nowsugListData[indexPath.row];
-            if(model.cardType == 16){
+            if(model.cardType == FHSearchCardTSuggestionItem){
                 [self associateWordCellClick:model rank:model.rank];
             }
         }
@@ -952,16 +969,24 @@
                 return 0;
             }
             FHSuggestionResponseItemModel *model = nowsugListData[indexPath.row];
-            if(model.cardType == 18){//相关推荐高度
+            if(model.cardType == FHSearchCardTypeGuessYouWantContent){//相关推荐高度
                 return 42;
-            }else if (model.cardType == 9) {//tips高度
+            }else if (model.cardType == FHSearchCardTypeGuessYouWantTip) {//tips高度
                 return 60;
-            }else if (model.cardType == 15) {  //帮我找房卡片高度
+            }else if (model.cardType == FHSearchCardTypeFindHouseHelper) {  //帮我找房卡片高度
                 return 93;
             }else if (model.houseType.intValue == FHHouseTypeNewHouse) {// 新房
-                return 67;
+                if([model.text2 length] <= 0){
+                    return 46.5;
+                }else{
+                    return  67;
+                }
             } else  if (model.houseType.intValue == FHHouseTypeSecondHandHouse) {// 二手房
-                return 68;
+                if([model.tag length]){
+                    return 68;
+                }else{
+                    return 46.5;
+                    }
             }else {
                 if (indexPath.row == nowsugListData.count - 1) {
                     return 61;
@@ -1069,7 +1094,7 @@
         NSMutableArray<FHSuggestionResponseItemModel>  *nowsugListData = indexPath.section == 0 ? self.sugListData:self.othersugListData;
         if (indexPath.row < nowsugListData.count) {
             FHSuggestionResponseItemModel *model  = nowsugListData[indexPath.row];
-            if(model.cardType == 16){
+            if(model.cardType == FHSearchCardTSuggestionItem){
             [[self fatherVC] trackSugWordClickWithmodel:model eventName:@"search_detail_show"];
             }
         }
@@ -1142,6 +1167,7 @@
         [self.sugHttpTask cancel];
     }
     self.sugListData = NULL;
+    self.othersugListData = NULL;
     [self reloadSugTableView];
 }
 
@@ -1339,15 +1365,15 @@
     __weak typeof(self) wself = self;
     self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         if (model != NULL && error == NULL) {
-            self.jumpHouseType = model.data.jumpHouseType;// 构建数据源
+            wself.jumpHouseType = model.data.jumpHouseType;// 构建数据源
             [wself.sugListData removeAllObjects];
             [wself.othersugListData removeAllObjects];
             [wself.sugListData addObjectsFromArray:model.data.items];
             if(model.data.otherItems.count > 0){
                 FHSuggestionResponseItemModel *tepmodel = [[FHSuggestionResponseItemModel alloc] init];
-                tepmodel.cardType = 18;
+                tepmodel.cardType = FHSearchCardTypeGuessYouWantContent;
                 FHSuggestionResponseItemModel *firstmodel = model.data.otherItems[0];
-                tepmodel.text = [self getTitletext:[firstmodel.houseType intValue]];
+                tepmodel.text = [wself getTitletext:[firstmodel.houseType intValue]];
                 [wself.othersugListData addObject:tepmodel];
                 [wself.othersugListData addObjectsFromArray:model.data.otherItems];
             }

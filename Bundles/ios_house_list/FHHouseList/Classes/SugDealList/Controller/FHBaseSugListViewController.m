@@ -122,7 +122,6 @@
 {
     if (self.searchType == FHSugListSearchTypePriceValuation) {
         [self setupDefaultNavBar:NO];
-        self.customNavBarView.title.text = @"查房价";
         return;
     }
     _naviBar = [[FHSearchBar alloc] init];

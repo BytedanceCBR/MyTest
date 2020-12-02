@@ -19,6 +19,7 @@
     imageView.layer.masksToBounds = YES;
     imageView.layer.borderWidth = 0.5;
     imageView.layer.borderColor = [UIColor themeGray7].CGColor;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
     return imageView;
 }
 
