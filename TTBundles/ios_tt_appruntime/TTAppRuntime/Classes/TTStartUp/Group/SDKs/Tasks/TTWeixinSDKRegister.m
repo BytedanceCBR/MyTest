@@ -14,7 +14,7 @@
 //#import "SSPayManager.h"
 #import "TTLaunchDefine.h"
 
-DEC_TASK("TTWeixinSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
+//DEC_TASK("TTWeixinSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH);
 
 @implementation TTWeixinSDKRegister
 

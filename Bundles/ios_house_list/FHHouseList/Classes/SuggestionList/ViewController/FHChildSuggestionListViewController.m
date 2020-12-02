@@ -22,6 +22,8 @@
 #import "FHFindHouseHelperCell.h"
 #import "FHHouseListRecommendTipCell.h"
 #import "UIDevice+BTDAdditions.h"
+#import "TTSettingsManager.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -38,6 +40,8 @@
 
 @property (nonatomic, assign)   BOOL isShowHistory;
 @property (nonatomic, copy)     NSString *textFieldText;
+
+@property (nonatomic, copy)     NSString *lastSearchWord;
 
 @end
 
@@ -500,12 +504,38 @@
         self.isLoadingData = NO;
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     } else {
+        if (![self shouldReloadSuggestionWord:text]) {
+            return;
+        }
         self.isLoadingData = YES;
         NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
         if (cityId) {
             [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
         }
     }
+}
+
+/**
+ Sug词有变化时发起请求，否则不发请求，用于避免
+ 搜索中间页顶部tab切换时发起重复sug词的请求
+ */
+- (BOOL)shouldReloadSuggestionWord:(NSString *)word {
+    ///加个开关，万一有问题直接关了这个优化
+    BOOL disableSugOptimization = NO;
+    NSDictionary *settings = [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:YES];
+    if (settings && [settings isKindOfClass:[NSDictionary class]]) {
+        disableSugOptimization = [settings btd_boolValueForKey:@"f_disable_sug_word_show_optimization"];
+        if (disableSugOptimization) {
+            return YES;
+        }
+    }
+    
+    if (![self.lastSearchWord isEqualToString:word]) {
+        self.lastSearchWord = word;
+        return YES;
+    }
+    
+    return NO;
 }
 
 #pragma mark - dealloc
