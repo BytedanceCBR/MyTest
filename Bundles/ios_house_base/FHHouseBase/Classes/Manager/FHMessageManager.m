@@ -132,6 +132,16 @@
     return _unreadSystemMsgCount + _unreadChatMsgCount + [[FHMessageNotificationTipsManager sharedManager] unreadNumber];
 }
 
+- (NSInteger)systemMsgUnreadNumber {
+    return  self.unreadSystemMsgCount;
+}
+- (NSInteger)ugcMsgUnreadNumber {
+    return [[FHMessageNotificationTipsManager sharedManager] unreadNumber];
+}
+- (NSInteger)chatMsgUnreadNumber {
+    return self.unreadChatMsgCount;
+}
+
 #pragma ugc
 -(void)onUgcMessageUnreadCountChanged{
     [self refreshBadgeNumber];

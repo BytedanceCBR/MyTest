@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL needCellularAlert;
 @property (nonatomic, readonly) BOOL loadingCellOnScreen;
 @property (nonatomic, nullable, copy) void (^loadMoreBlock)(BOOL preload);
+@property (nonatomic, nullable, copy) void (^didScroll)(void);
 @property (nonatomic, strong) TSVVideoDetailPromptManager *detailPromptManager;
 
 //外面传的埋点信息 by xsm

@@ -24,6 +24,38 @@
 #import "TTAccountManager.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "FHCommonDefines.h"
+#import "TTTabBarManager.h"
+#import "TTTabBarItem.h"
+#import <ReactiveObjC/ReactiveObjC.h>
+#import "FHEnvContext.h"
+#import "FHMessageManager.h"
+
+@interface FHMessageBadgetNumberMonitorHelper : NSObject
+@property (nonatomic, assign, readonly) NSInteger sysUnreadNumber;
+@property (nonatomic, assign, readonly) NSInteger chatMsgUnreadNumber;
++ (instancetype)shared;
+- (void)updateSystemUnreadNumber:(NSInteger)systemNumber chatUnreadNumber:(NSInteger)chatNumber;
+@end
+@interface FHMessageBadgetNumberMonitorHelper()
+@property (nonatomic, assign) NSInteger sysUnreadNumber;
+@property (nonatomic, assign) NSInteger chatMsgUnreadNumber;
+@end
+static FHMessageBadgetNumberMonitorHelper *_shared = nil;
+@implementation FHMessageBadgetNumberMonitorHelper
++ (instancetype)shared {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        if(!_shared) {
+            _shared = [[FHMessageBadgetNumberMonitorHelper alloc] init];
+        }
+    });
+    return _shared;
+}
+- (void)updateSystemUnreadNumber:(NSInteger)systemNumber chatUnreadNumber:(NSInteger)chatNumber {
+    self.sysUnreadNumber = systemNumber;
+    self.chatMsgUnreadNumber = chatNumber;
+}
+@end
 
 typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     FHSegmentedControllerAnimatedTransitionDirectionUnknown,
@@ -480,6 +512,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
         _loginStateChange = YES;
     }
     _isLogin = YES;
+    [self refreshUnreadNumberManually];
 }
 
 - (void)didLogout {
@@ -487,6 +520,13 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
         _loginStateChange = YES;
     }
     _isLogin = NO;
+    [self refreshUnreadNumberManually];
+}
+
+- (void)refreshUnreadNumberManually {
+    [self.viewControllers enumerateObjectsUsingBlock:^(FHMessageViewController   * _Nonnull vc, NSUInteger idx, BOOL * _Nonnull stop) {
+            [vc startLoadData];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -527,6 +567,44 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     NSInteger boolNumber = hasRedPoint ? 1 : 0;
     self.segmentedControl.sectionMessageTips = @[@(systemMessageNumber), @(chatNumber)];
     self.segmentedControl.sectionRedPoints = @[@0, @(boolNumber)];
+    
+    // 先添加监控息tab的未读数更新逻辑
+    [self monitorBadgetNumberAndReport:systemMessageNumber chatNumber:chatNumber];
+    // 用单例记录一下系统消息未读数和微聊消息未读数，用于之后比较消息tab未读数
+    [[FHMessageBadgetNumberMonitorHelper shared] updateSystemUnreadNumber:systemMessageNumber chatUnreadNumber:chatNumber];
+    // 刷新消息tab未读数
+    [[FHEnvContext sharedInstance].messageManager refreshBadgeNumber];
+}
+
+- (void)monitorBadgetNumberAndReport:(NSInteger)systemMessageNumber chatNumber:(NSInteger)chatNumber {
+    // 监听消息tab的未读数变化事件，每次变化比较和当前系统通知未读数与微聊未读数的和是否相等，不相等就上报
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        TTTabBarItem *tabBarItem = [[TTTabBarManager sharedTTTabBarManager] tabItemWithIdentifier:kFHouseMessageTabKey];
+        [[[[RACObserve(tabBarItem.ttBadgeView, badgeNumber) distinctUntilChanged] throttle:1] deliverOnMainThread] subscribeNext:^(id  _Nullable x) {
+            NSInteger messageTabBadgeNumber = [x integerValue];
+            NSInteger sysUnreadNumber = [FHMessageBadgetNumberMonitorHelper shared].sysUnreadNumber;
+            NSInteger chatUnreadNumber = [FHMessageBadgetNumberMonitorHelper shared].chatMsgUnreadNumber;
+            if(sysUnreadNumber + chatUnreadNumber != messageTabBadgeNumber) {
+                NSLog(@"test badget number: %@ + %@ = %@", @(sysUnreadNumber), @(chatUnreadNumber), @(messageTabBadgeNumber));
+                NSMutableDictionary *categoryDict = [NSMutableDictionary dictionary];
+                categoryDict[@"error"] = @"1";
+                categoryDict[@"reason"] = @"消息tab未读数与分段页面未读数之和不相等";
+                NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
+                extraDict[@"sysUnreadNumber"] = @(sysUnreadNumber).stringValue;
+                extraDict[@"chatUnreadNumber"] = @(chatUnreadNumber).stringValue;
+                extraDict[@"msgTabBadgeNumber"] = @(messageTabBadgeNumber).stringValue;
+                extraDict[@"contextTotalNumber"] = @([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]).stringValue;
+                extraDict[@"sysMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager systemMsgUnreadNumber]).stringValue;
+                extraDict[@"ugcMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager ugcMsgUnreadNumber]).stringValue;
+                extraDict[@"chatMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager chatMsgUnreadNumber]).stringValue;
+                [[HMDTTMonitor defaultManager] hmdTrackService:@"f_message_tab_badget_number_display_error"
+                                                        metric:nil
+                                                      category:categoryDict.copy
+                                                         extra:extraDict.copy];
+            }
+        }];
+    });
 }
 
 - (void)applicationDidBecomeActive

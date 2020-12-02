@@ -229,6 +229,9 @@
 - (nonnull UICollectionViewCell<IGListBindable> *)sectionController:(nonnull IGListBindingSectionController *)sectionController cellForViewModel:(nonnull id)viewModel atIndex:(NSInteger)index {
     __weak typeof(self) weakSelf = self;
     FHNeighborhoodDetailSurroundingSM *model = (FHNeighborhoodDetailSurroundingSM *)self.sectionModel;
+    if (index >= model.dataItems.count) {
+        return [super defaultCellAtIndex:index];
+    }
     if (model.dataItems[index] == model.mapCellModel) {
         FHNewHouseDetailMapCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailMapCollectionCell class] withReuseIdentifier:NSStringFromClass([model.mapCellModel class]) forSectionController:self atIndex:index];
         [cell refreshWithData:model.mapCellModel];

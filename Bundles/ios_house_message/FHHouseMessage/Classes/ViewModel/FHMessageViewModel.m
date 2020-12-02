@@ -87,7 +87,7 @@
     WeakSelf;
     self.requestTask = [FHMessageAPI requestMessageListWithCompletion:^(id <FHBaseModelProtocol> _Nonnull model, NSError *_Nonnull error) {
         StrongSelf;
-        [wself requestUgcUnread:model error:error];
+        [self requestUgcUnread:model error:error];
     }];
 }
 
@@ -99,7 +99,7 @@
     WeakSelf;
     [[FHMessageNotificationManager sharedManager] fetchUnreadMessageWithChannel:nil callback:^(FHUnreadMsgDataUnreadModel *model) {
         StrongSelf;
-        [wself dataLoaded:unreadMsg error:error ugcUnread:model];
+        [self dataLoaded:unreadMsg error:error ugcUnread:model];
     }];
 }
 
@@ -111,14 +111,6 @@
         [self.viewController.fatherVC.combiner resetConversations:allConversations];
     };
     [self.viewController endLoading];
-    
-    if (error && [self.viewController.fatherVC.combiner allItems].count == 0) {
-        //TODO: show handle error
-        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-        [self clearBadgeNumber];
-        return;
-    }
-
     [self.viewController.emptyView hideEmptyView];
 
     self.viewController.fatherVC.dataList = [unreadMsg.data.unread mutableCopy];
@@ -142,6 +134,7 @@
         [self reloadData];
     } else {
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeEmptyChatMessage];
+        [self reloadData];
         [self clearBadgeNumber];
     }
 }
@@ -236,13 +229,11 @@
         if ([item isKindOfClass:[FHUnreadMsgDataUnreadModel class]]) {
             FHUnreadMsgDataUnreadModel *theModel = item;
             if ([theModel.unread integerValue] > 0) {
-                // Tab消息个数减少
-                //        [[NSNotificationCenter defaultCenter] postNotificationName:@"changeMessageTabBarBadge" object:model.unread];
-                [[self messageBridgeInstance] reduceMessageTabBarBadgeNumber:[theModel.unread integerValue]];
-
                 theModel.unread = @"0";
                 FHMessageCell *cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
                 cell.unreadView.badgeNumber = TTBadgeNumberHidden;
+                [self reloadData];
+                [[self messageBridgeInstance] reduceMessageTabBarBadgeNumber:[theModel.unread integerValue]];
             }
             NSURL *url = [NSURL URLWithString:[theModel.openUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
             

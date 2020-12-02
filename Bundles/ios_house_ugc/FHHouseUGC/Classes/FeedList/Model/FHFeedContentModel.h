@@ -764,7 +764,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *animatedImageList;
 @property (nonatomic, strong , nullable) NSArray<FHFeedContentImageListModel> *detailCoverImageModel;
 
-
+@property (nonatomic, strong , nullable) NSDictionary *showMore;
 @end
 
 @interface FHFeedContentVideoDetailInfoModel : JSONModel

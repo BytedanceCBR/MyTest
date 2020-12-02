@@ -158,7 +158,7 @@
 - (void)click_answer_like {
     if (self.gdExtJson && [self.gdExtJson isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *tracerDict = self.gdExtJson.mutableCopy;
-        tracerDict[@"click_position"] = @"feed_detail";
+        tracerDict[@"click_position"] = @"feed_like";
         NSString *ansid = self.ansEntity.ansid;
         if (ansid.length > 0) {
             tracerDict[@"group_id"] = ansid ?: @"be_null";
@@ -172,7 +172,7 @@
 - (void)click_answer_dislike {
     if (self.gdExtJson && [self.gdExtJson isKindOfClass:[NSDictionary class]]) {
         NSMutableDictionary *tracerDict = self.gdExtJson.mutableCopy;
-        tracerDict[@"click_position"] = @"feed_detail";
+        tracerDict[@"click_position"] = @"feed_like";
         NSString *ansid = self.ansEntity.ansid;
         if (ansid.length > 0) {
             tracerDict[@"group_id"] = ansid ?: @"be_null";

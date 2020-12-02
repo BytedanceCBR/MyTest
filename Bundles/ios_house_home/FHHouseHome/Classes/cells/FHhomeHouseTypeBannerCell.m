@@ -231,6 +231,7 @@
                         NSString *stringName =  itemModel.logPb[@"operation_name"];
                         clickParam[@"operation_name"] = stringName ?: @"be_null";
                     }
+                    clickParam[@"rank"] = @(tapView.tag);
                     clickParam[@"page_type"] = @"maintab";
                     [FHUserTracker writeEvent:@"operation_click" params:clickParam.copy];
                 }

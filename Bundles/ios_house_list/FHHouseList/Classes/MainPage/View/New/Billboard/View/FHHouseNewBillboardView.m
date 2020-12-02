@@ -14,7 +14,7 @@
 #import "FHHouseNewBillboardViewModel.h"
 
 @interface FHHouseNewBillboardView()<FHHouseNewBillboardViewModelObserver>
-@property (nonatomic, strong) FHHouseNewBillboardPlaceholderView *placeholderView;
+//@property (nonatomic, strong) FHHouseNewBillboardPlaceholderView *placeholderView;
 @property (nonatomic, strong) FHHouseNewBillboardContentView *contentView;
 @property (nonatomic, strong) FHHouseNewBillboardViewModel *billboardViewModel;
 @end
@@ -24,7 +24,7 @@
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (!viewModel || ![viewModel isKindOfClass:FHHouseNewBillboardViewModel.class] || ![viewModel isValid]) return 0.0f;
     FHHouseNewBillboardViewModel *billboardViewModel = (FHHouseNewBillboardViewModel *)viewModel;
-    if (billboardViewModel.loading) return [FHHouseNewBillboardPlaceholderView viewHeight];
+//    if (billboardViewModel.loading) return [FHHouseNewBillboardPlaceholderView viewHeight];
     if (![billboardViewModel.contentViewModel isValid]) return 0.0f;
     return [FHHouseNewBillboardContentView viewHeightWithViewModel:billboardViewModel.contentViewModel];
 }
@@ -40,27 +40,27 @@
 
 - (void)setupUI {
     self.backgroundColor = [UIColor whiteColor];
-    [self addSubview:self.placeholderView];
+//    [self addSubview:self.placeholderView];
     [self addSubview:self.contentView];
 }
 
 - (void)setupConstraints {
-    [self.placeholderView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.top.bottom.mas_equalTo(0);
-    }];
+//    [self.placeholderView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.top.bottom.mas_equalTo(0);
+//    }];
     
     [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.mas_equalTo(0);
     }];
 }
 
-- (FHHouseNewBillboardPlaceholderView *)placeholderView {
-    if (!_placeholderView) {
-        _placeholderView = [[FHHouseNewBillboardPlaceholderView alloc] init];
-        _placeholderView.hidden = YES;
-    }
-    return _placeholderView;
-}
+//- (FHHouseNewBillboardPlaceholderView *)placeholderView {
+//    if (!_placeholderView) {
+//        _placeholderView = [[FHHouseNewBillboardPlaceholderView alloc] init];
+//        _placeholderView.hidden = YES;
+//    }
+//    return _placeholderView;
+//}
 
 - (FHHouseNewBillboardContentView *)contentView {
     if (!_contentView) {
@@ -80,8 +80,9 @@
 }
 
 - (void)refreshUI {
-    self.placeholderView.hidden = !self.billboardViewModel.loading;
-    self.contentView.hidden = self.billboardViewModel.loading;
+//    self.placeholderView.hidden = !self.billboardViewModel.loading;
+//    self.contentView.hidden = self.billboardViewModel.loading;
+    self.contentView.hidden = ![self.billboardViewModel.contentViewModel isValid];
     if (!self.contentView.hidden) {
         self.contentView.viewModel = self.billboardViewModel.contentViewModel;
     }

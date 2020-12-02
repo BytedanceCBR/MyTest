@@ -986,14 +986,14 @@
 // 详情 点赞
 - (void)click_feed_like {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"feed_detail";
+    tracerDict[@"click_position"] = @"detail_like";
     [FHUserTracker writeEvent:@"click_like" params:tracerDict];
 }
 
 // 详情页 取消点赞
 - (void)click_feed_dislike {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"feed_detail";
+    tracerDict[@"click_position"] = @"detail_like";
     [FHUserTracker writeEvent:@"click_dislike" params:tracerDict];
 }
 

@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) NSString *suggestionParams;
 @property(nonatomic , copy) NSString *mapOpenUrl;
 @property(nonatomic , assign) BOOL enterFromList;
+@property (nonatomic, copy) NSArray *neighborhoodId;
 
 @property(nonatomic , copy) NSString *conditionQuery;//conditaionParams转换成的query
 
