@@ -59,13 +59,9 @@
     [super setViewModel:viewModel];
     FHHouseTitleAndTagViewModel *titleAndTagViewModel = (FHHouseTitleAndTagViewModel *)self.viewModel;
     self.titleLabel.attributedText = titleAndTagViewModel.attributedTitle;
-    
-    
     if (_titleTagViews.count < titleAndTagViewModel.tags.count) {
         for (NSInteger index = _titleTagViews.count; index < [titleAndTagViewModel.tags count]; index++) {
-            FHHouseTagViewModel *tagViewModel = titleAndTagViewModel.tags[index];
-            FHHouseTagView *tagView = [[FHHouseTagView alloc] initWithFrame:CGRectMake(0, 3, tagViewModel.tagWidth, tagViewModel.tagHeight)];
-            tagView.viewModel = tagViewModel;
+            FHHouseTagView *tagView = [[FHHouseTagView alloc] init];
             [_titleTagViews addObject:tagView];
         }
     } else if (_titleTagViews.count > titleAndTagViewModel.tags.count) {
@@ -73,17 +69,17 @@
             FHHouseTagView *tagView = _titleTagViews[index];
             [tagView removeFromSuperview];
         }
-        
         [_titleTagViews removeObjectsInRange:NSMakeRange(titleAndTagViewModel.tags.count, _titleTagViews.count - titleAndTagViewModel.tags.count)];
     }
-    
     CGFloat left = 0.0f;
     for (NSInteger index = 0; index < [_titleTagViews count]; index++) {
+        FHHouseTagViewModel *tagViewModel = titleAndTagViewModel.tags[index];
         FHHouseTagView *tagView = _titleTagViews[index];
         if (index > 0) {
             left += 2;
         }
-        tagView.left = left;
+        tagView.frame = CGRectMake(left, 3, tagViewModel.tagWidth, tagViewModel.tagHeight);
+        tagView.viewModel = tagViewModel;
         [self addSubview:tagView];
         left += tagView.width;
     }

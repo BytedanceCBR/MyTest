@@ -69,6 +69,7 @@
 #import "FHHouseCardUtils.h"
 #import "NSObject+FHTracker.h"
 #import "FHHouseListRentCell.h"
+#import "FHHouseNewComponentViewModel.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -981,6 +982,7 @@ extern NSString *const INSTANT_DATA_KEY;
             
             NSObject *entity = [FHHouseCardUtils getEntityFromModel:theItemModel];
             if (entity) {
+                
                 FHTracerModel *tracerModel = [[FHTracerModel alloc] init];
                 tracerModel.originSearchId = self.originSearchId;
                 tracerModel.searchId = self.searchId;
@@ -990,6 +992,25 @@ extern NSString *const INSTANT_DATA_KEY;
                 tracerModel.elementType = self.tracerModel.elementType;
                 tracerModel.pageType = [self pageTypeString];
                 tracerModel.categoryName = [self categoryName];
+                if ([entity conformsToProtocol:@protocol(FHHouseNewComponentViewModelProtocol)]) {
+                    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+                    dict[@"search_type"] = @(self.searchType);
+                    dict[@"house_type"] = @(self.houseType);
+                    dict[@"is_first_havetip"] = @(self.isFirstHavetip);
+                    NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = (NSObject<FHHouseNewComponentViewModelProtocol> *)entity;
+                    viewModel.context = dict;
+                }
+                if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+                    FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)theItemModel;
+                    if ([wself.houseList count] == 0) {
+                        model.topMargin = 10;
+                    } else {
+                        model.topMargin = 5;
+                    }
+                    if (model.houseType.integerValue == FHHouseTypeNewHouse || model.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+                        tracerModel.elementType = @"be_null";
+                    }
+                }
                 
                 entity.fh_trackModel = tracerModel;
                 theItemModel = entity;
@@ -1094,6 +1115,39 @@ extern NSString *const INSTANT_DATA_KEY;
                 itemModel.isRecommendCell = YES;
                 itemModel.isLastCell = (idx == itemArray.count - 1);
                 theItemModel = itemModel;
+                NSObject *entity = [FHHouseCardUtils getEntityFromModel:theItemModel];
+                if (entity) {
+                    if ([wself.sugesstHouseList count] == 0) {
+                        itemModel.topMargin = 10;
+                    } else {
+                        itemModel.topMargin = 5;
+                    }
+                    FHTracerModel *tracerModel = [[FHTracerModel alloc] init];
+                    tracerModel.originSearchId = self.originSearchId;
+                    tracerModel.searchId = self.searchId;
+                    tracerModel.originFrom = self.tracerModel.originFrom;
+                    tracerModel.enterFrom = self.tracerModel.enterFrom;
+                    tracerModel.elementFrom = self.tracerModel.elementFrom;
+                    tracerModel.elementType = self.tracerModel.elementType;
+                    tracerModel.pageType = [self pageTypeString];
+                    tracerModel.categoryName = [self categoryName];
+                        if (itemModel.houseType.integerValue == FHHouseTypeNewHouse || itemModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
+                            tracerModel.elementType = @"search_related";
+                            tracerModel.searchId = self.recommendSearchId ? : @"be_null";
+                        }
+
+                    if ([entity conformsToProtocol:@protocol(FHHouseNewComponentViewModelProtocol)]) {
+                        NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+                        dict[@"search_type"] = @(self.searchType);
+                        dict[@"house_type"] = @(self.houseType);
+                        dict[@"is_first_havetip"] = @(self.isFirstHavetip);
+                        NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = (NSObject<FHHouseNewComponentViewModelProtocol> *)entity;
+                        viewModel.context = dict;
+                    }
+                    entity.fh_trackModel = tracerModel;
+                    theItemModel = entity;
+                }
+                
             }
             if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
                 FHSugListRealHouseTopInfoModel *infoModel = theItemModel;

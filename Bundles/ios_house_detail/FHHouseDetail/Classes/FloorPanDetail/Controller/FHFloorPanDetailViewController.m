@@ -17,6 +17,7 @@
 #import "UIViewController+Track.h"
 #import "FHFloorCoreInfoViewModel.h"
 #import <FHHouseBase/FHBaseTableView.h>
+#import <ByteDanceKit.h>
 
 @interface FHFloorPanDetailViewController ()
 
@@ -24,7 +25,7 @@
 @property (nonatomic , strong) UITableView *infoListTable;
 @property (nonatomic , strong) FHFloorPanDetailViewModel *coreInfoListViewModel;
 @property (nonatomic, assign) CGPoint lastContentOffset;
-
+@property (nonatomic, copy) NSString *realtorId;
 @end
 
 @implementation FHFloorPanDetailViewController
@@ -35,7 +36,7 @@
         self.isResetStatusBar = NO;
         self.ttTrackStayEnable = YES;
         _floorPanId = paramObj.allParams[@"floor_plan_id"];
-        
+        self.realtorId = [paramObj.allParams btd_stringValueForKey:@"realtor_id"];
         [self processTracerData:paramObj.allParams[@"tracer"]];
     }
     return self;
@@ -44,12 +45,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.isViewDidDisapper = NO;
-    FHDetailNavBar *navbar = [self  getNaviBar];
+    FHDetailNavBar *navbar = [self getNaviBar];
     [navbar refreshAlpha:0];
     [self setUpinfoListTable];
     [self addDefaultEmptyViewFullScreen];
 
-    _coreInfoListViewModel = [[FHFloorPanDetailViewModel alloc] initWithController:self tableView:_infoListTable floorPanId:_floorPanId];
+    _coreInfoListViewModel = [[FHFloorPanDetailViewModel alloc] initWithController:self tableView:_infoListTable floorPanId:_floorPanId realtorId:self.realtorId];
     _coreInfoListViewModel.navBar = navbar;
     self.coreInfoListViewModel.detailTracerDic = [self makeDetailTracerData];
     
