@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) FHImageModel *leftImageModel;
 
+@property (nonatomic, strong, readonly) FHImageModel *tagImageModel;
+
 @property (nonatomic, copy, readonly) NSString *title;
 
 @property (nonatomic, copy, readonly) NSString *propertyText;

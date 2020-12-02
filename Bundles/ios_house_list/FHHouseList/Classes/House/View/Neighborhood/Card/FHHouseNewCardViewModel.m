@@ -24,6 +24,8 @@
 
 @property (nonatomic, strong) FHImageModel *leftImageModel;
 
+@property (nonatomic, strong) FHImageModel *tagImageModel;
+
 @property (nonatomic, copy) NSString *title;
 
 @property (nonatomic, copy) NSString *propertyText;
@@ -62,6 +64,7 @@
             self.hasVideo = !self.hasVr && item.videoInfo.hasVideo;
             self.propertyText = item.propertyTag.content;
             self.propertyBorderColor = item.propertyTag.borderColor;
+            self.tagImageModel = item.tagImage.firstObject;
         } else if ([model isKindOfClass:[FHHouseListBaseItemModel class]]) {
             FHHouseListBaseItemModel *item = (FHHouseListBaseItemModel *)model;
             _recommendViewModel = [[FHHouseRecommendViewModel alloc] initWithModel:item.advantageDescription];
@@ -80,7 +83,6 @@
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
-        NSNumber *houseTypeNum = [self.context btd_numberValueForKey:@"house_type"];
         NSString *urlStr = nil;
         NSNumber *isFirstHavetipNum = [self.context btd_numberValueForKey:@"is_first_havetip"];
         NSInteger row = indexPath.row;

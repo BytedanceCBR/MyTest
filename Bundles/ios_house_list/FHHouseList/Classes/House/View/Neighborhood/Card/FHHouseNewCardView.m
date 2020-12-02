@@ -18,6 +18,7 @@
 #import "FHSingleImageInfoCellModel.h"
 #import <lottie-ios/Lottie/LOTAnimationView.h>
 #import "FHHouseNewCardViewModel.h"
+#import <BDWebImage/UIImageView+BDWebImage.h>
 
 @interface FHHouseNewCardView()
 
@@ -30,7 +31,7 @@
 @property (nonatomic, strong) FHHouseRecommendView *recommendView;
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 @property (nonatomic, strong) UIImageView *videoImageView;
-@property (nonatomic, strong) UIImageView *imageTag;
+@property (nonatomic, strong) UIImageView *tagImage;
 
 @end
 
@@ -88,8 +89,8 @@
     self.videoImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"video_image"]];
     [self addSubview:self.videoImageView];
     
-    self.imageTag = [[UIImageView alloc] init];
-    [self addSubview:self.imageTag];
+    self.tagImage = [[UIImageView alloc] init];
+    [self addSubview:self.tagImage];
 }
 
 - (void)setupConstraints {
@@ -104,11 +105,11 @@
         make.width.height.mas_equalTo(16);
     }];
     
-    [self.vrLoadingView mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.videoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.vrLoadingView);
     }];
     
-    [self.imageTag mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.tagImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.mas_equalTo(self.leftImageView);
         make.width.mas_equalTo(26);
         make.height.mas_equalTo(16);
@@ -160,6 +161,12 @@
     [super setViewModel:viewModel];
     FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;
     [self.leftImageView setImageModel:newViewModel.leftImageModel];
+    if (newViewModel.tagImageModel) {
+        self.tagImage.hidden = NO;
+        [self.tagImage bd_setImageWithURL:[NSURL URLWithString:newViewModel.tagImageModel.url]];
+    } else {
+        self.tagImage.hidden = YES;
+    }
     self.mainTitleLabel.text = newViewModel.title;
     self.priceLabel.text = newViewModel.price;
     self.subTitleLabel.text = newViewModel.subtitle;
