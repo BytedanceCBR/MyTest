@@ -1391,6 +1391,7 @@ static const CGFloat kFloatingViewOriginY = 230;
                                                                                    dismissHandler:nil];
                 [indicatorView showFromParentView:activityPanelControllerWindow];
             }
+            [FHShortVideoTracerUtil clickFavoriteBtn:self.model favorite:self.model.userRepin];
             if (groupID.length > 0 ) {
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"group_id"] = groupID;

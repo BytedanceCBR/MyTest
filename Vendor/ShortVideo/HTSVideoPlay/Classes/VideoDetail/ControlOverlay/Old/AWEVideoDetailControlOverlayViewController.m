@@ -762,6 +762,10 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
             [animationView removeFromSuperview];
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
         }];
+        if(![self.model.userDigg boolValue]) {
+            NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
+            [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:@"click_like" eventPosition:@"video" eventModel:self.model eventIndex:rank commentId:nil];
+        }
     }
     if ([self alertIfNotValid]) {
         return;

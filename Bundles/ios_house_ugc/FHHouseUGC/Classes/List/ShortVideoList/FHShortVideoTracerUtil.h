@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)clicksharePlatForm:(FHFeedUGCCellModel *)model eventPlantFrom:(NSString *)platFrom;
 
++ (void)clickFavoriteBtn:(FHFeedUGCCellModel *)model favorite:(BOOL)isFavorite;
+
 - (void)flushStayPageTime;
 - (NSTimeInterval)timeIntervalForStayPage;
 
