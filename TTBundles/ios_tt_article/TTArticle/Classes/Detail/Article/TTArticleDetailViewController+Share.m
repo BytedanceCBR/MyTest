@@ -46,6 +46,8 @@
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTArticleBase/Log.h>
+#import <TTShareMethodUtil.h>
+#import <FHShareManager.h>
 
 extern BOOL ttvs_isShareIndividuatioEnable(void);
 
@@ -54,6 +56,11 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 @dynamic navMoreShareView, toolbarShareView, activityActionManager, curShareSourceType;
 
 - (void)p_showMorePanel {
+    if([[FHShareManager shareInstance] isShareOptimization]) {
+        [self showSharePanel];
+        return;
+    }
+    
     if ([self.detailView.detailViewModel tt_articleDetailType] != TTDetailArchTypeSimple) {
         [self.activityActionManager clearCondition];
         if (!self.activityActionManager) {
@@ -116,6 +123,11 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 - (void)p_willShowSharePannel
 {
     
+    if([[FHShareManager shareInstance] isShareOptimization]) {
+        [self showSharePanel];
+        return;
+    }
+    
     [self.activityActionManager clearCondition];
     if (!self.activityActionManager) {
         self.activityActionManager = [[TTActivityShareManager alloc] init];
@@ -158,6 +170,50 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     self.curShareSourceType = TTShareSourceObjectTypeArticle;
     self.activityActionManager.copyText = self.detailModel.article.shareURL;
 //    [self.detailModel sendDetailTrackEventWithTag:@"detail" label:@"share_button"];
+}
+
+- (void)showSharePanel {
+    Article *articleModel = self.detailModel.article;
+    
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
+    
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = articleModel.title;
+    commonDataModel.desc = isEmptyString(articleModel.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : articleModel.abstract;
+    commonDataModel.shareUrl = articleModel.shareURL;
+    commonDataModel.thumbImage = [TTShareMethodUtil weixinSharedImageForArticle:articleModel];
+    commonDataModel.imageUrl  = [TTShareMethodUtil weixinSharedImageURLForArticle:articleModel];
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDataModel = commonDataModel;
+
+    FHShareReportDataModel *reportDataModel = [[FHShareReportDataModel alloc] init];
+    WeakSelf;
+    reportDataModel.reportBlcok = ^{
+        StrongSelf;
+        self.toolbarShareView = nil;
+        [self report_showReportOnSharePannel];
+    };
+    dataModel.reportDataModel = reportDataModel;
+    
+    NSArray *contentItemArray = @[
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)],
+        @[@(FHShareChannelTypeDislike),@(FHShareChannelTypeReport),@(FHShareChannelTypeBlock)],
+    ];
+    
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self shareParams]];
+}
+
+- (NSDictionary *)shareParams {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *tracerDict = self.detailModel.reportParams;
+    params[@"origin_from"] = tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = tracerDict[@"page_type"] ?: @"be_null";
+    params[@"group_id"] = tracerDict[@"group_id"] ?: @"be_bull";
+    params[@"group_source"] = tracerDict[@"group_source"] ?: @"be_bull";
+    params[@"impr_id"] = tracerDict[@"impr_id"] ?: @"be_null";
+    return params;
 }
 
 - (UIImage *)createNonInterpolatedUIImageFormCIImage:(CIImage *)image withSize:(CGFloat) size
