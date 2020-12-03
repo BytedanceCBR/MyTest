@@ -1669,7 +1669,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         
         __weak typeof(self)wself = self;
-        if ([FHEnvContext isDisplayNewCardType] && self.houseType == FHHouseTypeRentHouse) {
+        if ([FHEnvContext isDisplayNewCardType] && [identifier isEqualToString:NSStringFromClass([FHHouseListRentCell class])]) {
             FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             [cell refreshWithData:data];
             return cell;
