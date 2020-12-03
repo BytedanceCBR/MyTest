@@ -328,6 +328,11 @@
     }
 }
 
+- (void)textFieldWillClear {
+    ///点击textField清空按钮时清空上次的sug词
+    self.lastSearchWord = nil;
+}
+
 // 输入框执行搜索
 - (void)doTextFieldShouldReturn:(NSString *)text {
     
