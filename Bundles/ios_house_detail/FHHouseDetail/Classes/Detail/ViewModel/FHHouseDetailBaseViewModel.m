@@ -47,6 +47,7 @@
 @property(nonatomic, assign) NSTimeInterval startTime;
 @property(nonatomic, assign) NSTimeInterval tableViewLoadTime;
 
+
 @end
 
 @implementation FHHouseDetailBaseViewModel
@@ -89,7 +90,9 @@
     NSTimeInterval delta = link.timestamp - _lastTime;
     if(self.canNslog && !self.tableViewLoadTime){
         self.tableViewLoadTime = delta;
-        [self addPageLoadLog];
+        if(!self.isCache){
+            [self addPageLoadLog];
+        }
         [_link removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
         _link = nil;
         self.canNslog = false;
@@ -291,7 +294,6 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.items.count) {
         id data = self.items[row];
-        sleep(1);
         NSString *identifier = NSStringFromClass([data class]);//[self cellIdentifierForEntity:data];
         if (identifier.length > 0) {
             FHDetailBaseCell *cell = (FHDetailBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];

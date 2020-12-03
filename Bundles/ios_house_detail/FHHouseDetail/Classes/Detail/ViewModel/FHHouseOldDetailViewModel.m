@@ -142,11 +142,11 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 }
 // 网络数据请求
 - (void)startLoadData {
-    BOOL isCache = NO;
+   self.isCache = NO ;
     FHDetailOldModel *model = [[FHHousedetailModelManager sharedInstance] getHouseDetailModelWith:self.houseId];
     // 详情页数据-Main
     if(model){
-        isCache = YES;
+        self.isCache = YES;
         [self processDetailData:model];
         self.detailController.hasValidateData = YES;
         [self.detailController.emptyView hideEmptyView];
@@ -163,7 +163,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         if (model && error == NULL) {
             if (model.data) {
                 [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:wSelf.houseId];
-                if(!isCache){
+                if(!wSelf.isCache){
                     [wSelf processDetailData:model];
                     // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
                     wSelf.detailController.hasValidateData = YES;
