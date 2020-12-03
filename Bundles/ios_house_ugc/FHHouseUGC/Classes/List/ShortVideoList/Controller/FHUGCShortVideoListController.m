@@ -81,8 +81,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)viewWillAppear {
     [self.viewModel viewWillAppear];
     
     if ([[NSDate date]timeIntervalSince1970] - _enterTabTimestamp > 24*60*60) {
@@ -100,21 +99,32 @@
         [self scrollToTopAndRefreshAllData];
     }
     
-    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
-        [self viewAppearForEnterType:1];
-    }
+//    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+//        [self viewAppearForEnterType:1];
+//    }
+    [self addEnterCategoryLog];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+//    [self viewWillAppear];
+}
+
+- (void)viewWillDisappear {
     [self.viewModel viewWillDisappear];
-    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
-        [self viewDisAppearForEnterType:1];
-    }
+//    if (![FHEnvContext sharedInstance].isShowingHomeHouseFind) {
+//        [self viewDisAppearForEnterType:1];
+//    }
+    [self addStayCategoryLog];
     [FHFeedOperationView dismissIfVisible];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+//    [self viewWillDisappear];
 }
 
 - (void)initView {
@@ -281,7 +291,7 @@
 
 - (void)applicationDidEnterBackground {
     if(self.needReportEnterCategory){
-        [self addStayCategoryLog:nil];
+        [self addStayCategoryLog];
     }
 }
 
@@ -319,24 +329,22 @@
 
 #pragma mark - 埋点
 
-- (void)addEnterCategoryLog:(NSString *)enterType {
+- (void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = self.category;
-    tracerDict[@"enter_type"] = enterType;
     tracerDict[@"event_tracking_id"] = @"110838";
     TRACK_EVENT(@"enter_category", tracerDict);
     
     self.enterTabTimestamp = [[NSDate date] timeIntervalSince1970];
 }
 
-- (void)addStayCategoryLog:(NSString *)enterType {
+- (void)addStayCategoryLog {
     NSTimeInterval duration = [[NSDate date] timeIntervalSince1970] - _enterTabTimestamp;
     if (duration <= 0 || duration >= 24*60*60) {
         return;
     }
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"category_name"] = self.category;
-    tracerDict[@"enter_type"] = enterType;
     tracerDict[@"stay_time"] = [NSNumber numberWithInteger:(duration * 1000)];
     tracerDict[@"event_tracking_id"] = @"110839";
     TRACK_EVENT(@"stay_category", tracerDict);
@@ -356,7 +364,7 @@
     tracerDict[@"category_name"] = self.tracerDict[@"category_name"] ?: @"be_null";
     [FHEnvContext recordEvent:tracerDict andEventKey:@"enter_category"];
     
-    [self addEnterCategoryLog:tracerDict[@"enter_type"]];
+//    [self addEnterCategoryLog:tracerDict[@"enter_type"]];
 }
 
 - (void)viewDisAppearForEnterType:(NSInteger)enterType
@@ -376,7 +384,7 @@
         [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_category"];
     }
     
-    [self addStayCategoryLog:tracerDict[@"enter_type"]];
+//    [self addStayCategoryLog:tracerDict[@"enter_type"]];
 }
 
 @end

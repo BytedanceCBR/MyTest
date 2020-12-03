@@ -560,8 +560,10 @@ extern NSString *const kFHDetailFollowUpNotification;
             }
             if ([identifier length] > 0) {
                 FHHouseBaseUsuallyCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-                FHHouseListBaseItemModel *cellModel = self.dataList[indexPath.row];
-                [cell refreshWithData:cellModel];
+                if (indexPath.row < self.dataList.count) {
+                    FHHouseListBaseItemModel *cellModel = self.dataList[indexPath.row];
+                    [cell refreshWithData:cellModel];
+                }
                 return cell;
             }
         }

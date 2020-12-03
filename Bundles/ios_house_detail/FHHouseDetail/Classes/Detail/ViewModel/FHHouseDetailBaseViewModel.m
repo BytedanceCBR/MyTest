@@ -41,7 +41,7 @@
 @property (nonatomic, assign) BOOL clickShowIcon;
 @property(nonatomic, assign) CGPoint tableviewBeginOffSet;
 @property(nonatomic, strong) CADisplayLink *link;
-@property(nonatomic, assign) bool canNslog;
+@property(nonatomic, assign) bool canaddPageLoadLog;
 @property(nonatomic, assign) bool isRefreshData;
 @property(nonatomic, assign) NSTimeInterval lastTime;
 @property(nonatomic, assign) NSTimeInterval startTime;
@@ -74,7 +74,7 @@
 }
 
 - (void)getfirstFps{
-    self.canNslog = false;
+    self.canaddPageLoadLog = false;
     self.isRefreshData = false;
     _link = [CADisplayLink displayLinkWithTarget:self selector:@selector(tick:)];
     [_link addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
@@ -88,16 +88,16 @@
     }
     
     NSTimeInterval delta = link.timestamp - _lastTime;
-    if(self.canNslog && !self.tableViewLoadTime){
+    if(self.canaddPageLoadLog && !self.tableViewLoadTime){
         self.tableViewLoadTime = delta;
         [self addPageLoadLog];
         [_link removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
         _link = nil;
-        self.canNslog = false;
+        self.canaddPageLoadLog = false;
     }
     if(self.isRefreshData){
         self.isRefreshData = false;
-        self.canNslog = true;
+        self.canaddPageLoadLog = true;
     }
     _lastTime = link.timestamp;
 }

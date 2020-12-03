@@ -6,7 +6,6 @@
 //
 
 #import "FHHouseNeighborhoodCardViewModel.h"
-#import "FHSearchHouseModel.h"
 #import "NSObject+FHTracker.h"
 #import "FHUserTracker.h"
 #import "TTRoute.h"
@@ -14,7 +13,6 @@
 #import "FHCommonDefines.h"
 
 @interface FHHouseNeighborhoodCardViewModel()
-@property (nonatomic, strong) FHSearchHouseItemModel *model;
 @property (nonatomic, assign) BOOL showed;
 @end
 

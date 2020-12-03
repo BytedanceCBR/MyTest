@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat cachedHeight;
 @property (nonatomic, assign) BOOL needCalculateHeight;
 
+@property (nonatomic, copy) NSDictionary *context;
+
 - (void)setNeedCalculateHeight;
 
 - (void)addObserver:(id<FHHouseNewComponentViewModelObserver>)observer;
@@ -33,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseNewComponentViewModel : NSObject<FHHouseNewComponentViewModelProtocol> {
     NSHashTable *_observers;
 }
-
+@property (nonatomic, copy) NSDictionary *context;
 @end
 
 NS_ASSUME_NONNULL_END

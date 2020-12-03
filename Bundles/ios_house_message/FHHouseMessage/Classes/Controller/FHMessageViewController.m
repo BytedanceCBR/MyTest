@@ -29,6 +29,7 @@
 #import <FHMessageNotificationManager.h>
 #import "FHEnvContext.h"
 #import <FHPopupViewCenter/FHPopupViewManager.h>
+#import "TTAccountManager.h"
 
 @interface FHMessageViewController ()
 
@@ -181,7 +182,12 @@
 
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
-        [_viewModel requestData];
+        if(self.dataType == FHMessageRequestDataTypeIM && ![TTAccountManager isLogin]) {
+            [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+            return;
+        } else {
+            [self.viewModel requestData];
+        }
     } else {
         if(!self.hasValidateData){
             [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];

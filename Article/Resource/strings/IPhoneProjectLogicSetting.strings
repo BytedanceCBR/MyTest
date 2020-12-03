@@ -256,3 +256,6 @@
 "link_chat" = "FHCustomerServicePage";
 "house_detail_report_page" = "FHHouseDetailReportViewController";
 "house_report_additional" = "FHHouseDetailReportAddtionViewController";
+
+//找好房页面
+"house_comfort_find" = "FHHouseComfortFindViewController";

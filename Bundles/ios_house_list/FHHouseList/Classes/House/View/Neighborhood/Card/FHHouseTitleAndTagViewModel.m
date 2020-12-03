@@ -12,23 +12,44 @@
 #import "UIFont+House.h"
 #import "FHHouseTagView.h"
 #import "FHCommonDefines.h"
+#import "FHHouseListBaseItemModel.h"
+#import "FHSingleImageInfoCellModel.h"
 
 @interface FHHouseTitleAndTagViewModel()
-@property (nonatomic, strong) FHSearchHouseItemModel *model;
+
+@property (nonatomic, copy) NSString *displayTitle;
+
 @end
 
 @implementation FHHouseTitleAndTagViewModel
 @synthesize attributedTitle = _attributedTitle;
 
-- (instancetype)initWithModel:(FHSearchHouseItemModel *)model {
+- (instancetype)initWithModel:(id)model {
     self = [super init];
     if (self) {
-        _model = model;
         
         NSMutableArray *tags = [NSMutableArray array];
-        for (FHSearchHouseItemTitleTagModel *tagModel in model.titleTags) {
-            FHHouseTagViewModel *tagViewModel = [[FHHouseTagViewModel alloc] initWithModel:tagModel];
-            [tags addObject:tagViewModel];
+        if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+            FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)model;
+            for (FHSearchHouseItemTitleTagModel *tagModel in item.titleTags) {
+                FHHouseTagViewModel *tagViewModel = [[FHHouseTagViewModel alloc] initWithModel:tagModel];
+                [tags addObject:tagViewModel];
+            }
+            self.displayTitle = item.displayTitle;
+        } else if ([model isKindOfClass:[FHHouseListBaseItemModel class]]) {
+            FHHouseListBaseItemModel *item = (FHHouseListBaseItemModel *)model;
+            for (FHSearchHouseItemTitleTagModel *tagModel in item.titleTags) {
+                FHHouseTagViewModel *tagViewModel = [[FHHouseTagViewModel alloc] initWithModel:tagModel];
+                [tags addObject:tagViewModel];
+            }
+            self.displayTitle = item.title;
+        } else if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+            FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)model;
+            for (FHSearchHouseItemTitleTagModel *tagModel in item.titleTags) {
+                FHHouseTagViewModel *tagViewModel = [[FHHouseTagViewModel alloc] initWithModel:tagModel];
+                [tags addObject:tagViewModel];
+            }
+            self.displayTitle = item.displayTitle;
         }
         
         _tags = tags;
@@ -97,7 +118,7 @@
 
 - (NSAttributedString *)attributedTitle {
     if (!_attributedTitle) {
-        NSString *title = self.model.displayTitle;
+        NSString *title = self.displayTitle;
         if (title == nil) title = @"";
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:title];
         [attrStr addAttributes:@{NSFontAttributeName:self.titleFont, NSParagraphStyleAttributeName:[self paragraphStyle]} range:NSMakeRange(0, title.length)];
@@ -110,7 +131,7 @@
 - (CGFloat)showHeight {
     CGFloat lineHeight = self.titleFont.lineHeight;
     CGFloat indent = [self titleIndent];
-    NSString *title = self.model.displayTitle;
+    NSString *title = self.displayTitle;
     if (title == nil) title = @"";
     CGFloat titleWidth = [title btd_widthWithFont:[self titleFont] height:lineHeight];
     if (indent + titleWidth > self.maxWidth) {

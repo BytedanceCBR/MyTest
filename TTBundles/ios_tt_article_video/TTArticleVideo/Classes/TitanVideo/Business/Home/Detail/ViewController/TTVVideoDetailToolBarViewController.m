@@ -82,7 +82,7 @@
 
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTArticleBase/CommonURLSetting.h>
-#import <ReactiveObjC/ReactiveObjC.h>
+#import <FHShareManager.h>
 
 extern BOOL ttvs_isShareIndividuatioEnable(void);
 extern NSInteger ttvs_isShareTimelineOptimize(void);
@@ -671,6 +671,11 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 // 播放器结束页面分享动作
 - (void)_videoOverShareActionFired
 {
+    if([[FHShareManager shareInstance] isShareOptimization]) {
+        [self showSharePanel];
+        return;
+    }
+    
     if (ttvs_isShareIndividuatioEnable()) {
         [self new_shareActionFired];
     }else{
@@ -694,6 +699,12 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 // 底部分享动作
 - (void)_bottomShareActionFired
 {
+    
+    if([[FHShareManager shareInstance] isShareOptimization]) {
+        [self showSharePanel];
+        return;
+    }
+    
 //    if ([[TTKitchenMgr sharedInstance] getBOOL:kKCShareBoardDisplayRepost]) {
 //        [self showforwardSharePanel];
 //    } else {
@@ -1895,5 +1906,48 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 //    // 文章详情页的转发，实际转发对象为文章，操作对象为文章
 //    [[TTRoute sharedRoute] openURLByPresentViewController:[NSURL URLWithString:@"sslocal://repost_page"] userInfo:TTRouteUserInfoWithDict([self repostParams])];
 //}
+
+- (void)showSharePanel {
+    Article *articleModel = [self.videoInfo ttv_convertedArticle];
+    
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
+    
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = articleModel.title;
+    commonDataModel.desc = isEmptyString(articleModel.abstract) ? NSLocalizedString(@"好房就在幸福里", nil) : articleModel.abstract;
+    commonDataModel.shareUrl = articleModel.shareURL;
+    commonDataModel.thumbImage = [TTShareMethodUtil weixinSharedImageForArticle:articleModel];
+    commonDataModel.imageUrl  = [TTShareMethodUtil weixinSharedImageURLForArticle:articleModel];
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDataModel = commonDataModel;
+    
+    FHShareReportDataModel *reportDataModel = [[FHShareReportDataModel alloc] init];
+    WeakSelf;
+    reportDataModel.reportBlcok = ^{
+        StrongSelf;
+        [self reportAction];
+    };
+    dataModel.reportDataModel = reportDataModel;
+
+    NSArray *contentItemArray = @[
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)],
+        @[@(FHShareChannelTypeDislike),@(FHShareChannelTypeReport),@(FHShareChannelTypeBlock)],
+    ];
+
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self shareParams]];
+}
+
+- (NSDictionary *)shareParams {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSDictionary *tracerDict = self.detailModel.reportParams;
+    params[@"origin_from"] = tracerDict[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = tracerDict[@"enter_from"] ?: @"be_null";
+    params[@"page_type"] = @"video_detail";
+    params[@"group_id"] = tracerDict[@"group_id"] ?: @"be_bull";
+    params[@"group_source"] = tracerDict[@"group_source"] ?: @"be_bull";
+    params[@"impr_id"] = tracerDict[@"impr_id"] ?: @"be_null";
+    return params;
+}
 
 @end

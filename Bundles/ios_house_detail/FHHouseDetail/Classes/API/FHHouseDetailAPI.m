@@ -436,6 +436,7 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
 }
 
 +(TTHttpTask*)requestFloorPanDetailCoreInfoSearch:(NSString*)floorPanId
+                                        realtorId:(nonnull NSString *)realtorId
                                        completion:(void(^)(FHDetailFloorPanDetailInfoModel * _Nullable model , NSError * _Nullable error))completion
 {
     if (![floorPanId isKindOfClass:[NSString class]]) {
@@ -444,6 +445,9 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingFormat:@"/f100/api/floorplan/info?floorplan_id=%@",floorPanId];
+    if(realtorId.length > 0) {
+        url = [url stringByAppendingFormat:@"&realtor_id=%@", realtorId];
+    }
     
     return [FHMainApi getRequest:url query:nil params:nil jsonClass:[FHDetailFloorPanDetailInfoModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
         if (completion) {
