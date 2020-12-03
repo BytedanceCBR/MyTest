@@ -29,35 +29,45 @@
 - (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
         id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
-        [cardViewModel showCardAtIndexPath:indexPath];
+        if ([cardViewModel respondsToSelector:@selector(showCardAtIndexPath:)]) {
+            [cardViewModel showCardAtIndexPath:indexPath];
+        }
     }
 }
 
 - (void)cellDidEndShowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
         id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
-        [cardViewModel hideCardAtIndexPath:indexPath];
+        if ([cardViewModel respondsToSelector:@selector(hideCardAtIndexPath:)]) {
+            [cardViewModel hideCardAtIndexPath:indexPath];
+        }
     }
 }
 
 - (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
         id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
-        [cardViewModel clickCardAtIndexPath:indexPath];
+        if ([cardViewModel respondsToSelector:@selector(clickCardAtIndexPath:)]) {
+            [cardViewModel clickCardAtIndexPath:indexPath];
+        }
     }
 }
 
 - (void)cellWillEnterForground {
     if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
         id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
-        [cardViewModel cardWillEnterForground];
+        if ([cardViewModel respondsToSelector:@selector(cardWillEnterForground)]) {
+            [cardViewModel cardWillEnterForground];
+        }
     }
 }
 
 - (void)cellDidEnterBackground {
     if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
         id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
-        [cardViewModel cardDidEnterBackground];
+        if ([cardViewModel respondsToSelector:@selector(cardDidEnterBackground)]) {
+            [cardViewModel cardDidEnterBackground];
+        }
     }
 }
 

@@ -9,12 +9,4 @@
 
 @implementation FHHouseSearchSecondHouseViewModel
 
-- (instancetype)initWithModel:(FHSearchHouseItemModel *)model {
-    self = [super init];
-    if (self) {
-        _model = model;
-    }
-    return self;
-}
-
 @end

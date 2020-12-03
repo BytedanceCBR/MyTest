@@ -1,24 +1,27 @@
 //
-//  FHHouseSearchSecondHouseCell+HouseCard.m
+//  FHDynamicLynxCell+HouseCard.m
 //  FHHouseList
 //
-//  Created by bytedance on 2020/12/1.
+//  Created by bytedance on 2020/12/2.
 //
 
-#import "FHHouseSearchSecondHouseCell+HouseCard.h"
+#import "FHDynamicLynxCell+HouseCard.h"
 #import <objc/runtime.h>
-#import "FHHouseSearchSecondHouseViewModel.h"
+#import "FHHouseLynxViewModel.h"
 #import "FHHouseNewComponentViewModel+HouseCard.h"
 
-@implementation FHHouseSearchSecondHouseCell(HouseCard)
+@implementation FHDynamicLynxCell(HouseCard)
 
 static const char view_model_key;
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
-    FHHouseSearchSecondHouseViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseSearchSecondHouseViewModel.class] ? (FHHouseSearchSecondHouseViewModel *)viewModel : nil;
+    FHHouseLynxViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseLynxViewModel.class] ? (FHHouseLynxViewModel *)viewModel : nil;
     objc_setAssociatedObject(self, &view_model_key, cardViewModel, OBJC_ASSOCIATION_RETAIN);
     if (cardViewModel) {
-//        self.backgroundColor = [UIColor themeGray7];
-        [self updateHeightByIsFirst:cardViewModel.cardIndex == 0];
+        FHDynamicLynxCellModel *cellModel = cardViewModel.model;
+        if (cellModel && [cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
+            cellModel.cell = self;
+            [self updateWithCellModel:cellModel];
+        }
         [self refreshWithData:cardViewModel.model];
     }
 }
@@ -54,8 +57,8 @@ static const char view_model_key;
 
 
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
-    if (![viewModel isKindOfClass:FHHouseSearchSecondHouseViewModel.class]) return 0.0f;
-    FHHouseSearchSecondHouseViewModel *cardViewModel = (FHHouseSearchSecondHouseViewModel *)viewModel;
+    if (![viewModel isKindOfClass:FHHouseLynxViewModel.class]) return 0.0f;
+    FHHouseLynxViewModel *cardViewModel = (FHHouseLynxViewModel *)viewModel;
     return [self heightForData:cardViewModel.model];
 }
 

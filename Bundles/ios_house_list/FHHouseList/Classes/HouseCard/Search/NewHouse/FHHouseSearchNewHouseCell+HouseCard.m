@@ -1,20 +1,20 @@
 //
-//  FHHouseSearchSecondHouseCell+HouseCard.m
+//  FHHouseSearchNewHouseCell+HouseCard.m
 //  FHHouseList
 //
-//  Created by bytedance on 2020/12/1.
+//  Created by bytedance on 2020/12/2.
 //
 
-#import "FHHouseSearchSecondHouseCell+HouseCard.h"
+#import "FHHouseSearchNewHouseCell+HouseCard.h"
 #import <objc/runtime.h>
-#import "FHHouseSearchSecondHouseViewModel.h"
+#import "FHHouseSearchNewHouseViewModel.h"
 #import "FHHouseNewComponentViewModel+HouseCard.h"
 
-@implementation FHHouseSearchSecondHouseCell(HouseCard)
+@implementation FHHouseSearchNewHouseCell(HouseCard)
 
 static const char view_model_key;
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
-    FHHouseSearchSecondHouseViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseSearchSecondHouseViewModel.class] ? (FHHouseSearchSecondHouseViewModel *)viewModel : nil;
+    FHHouseSearchNewHouseViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseSearchNewHouseViewModel.class] ? (FHHouseSearchNewHouseViewModel *)viewModel : nil;
     objc_setAssociatedObject(self, &view_model_key, cardViewModel, OBJC_ASSOCIATION_RETAIN);
     if (cardViewModel) {
 //        self.backgroundColor = [UIColor themeGray7];
@@ -54,8 +54,8 @@ static const char view_model_key;
 
 
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
-    if (![viewModel isKindOfClass:FHHouseSearchSecondHouseViewModel.class]) return 0.0f;
-    FHHouseSearchSecondHouseViewModel *cardViewModel = (FHHouseSearchSecondHouseViewModel *)viewModel;
+    if (![viewModel isKindOfClass:FHHouseSearchNewHouseViewModel.class]) return 0.0f;
+    FHHouseSearchNewHouseViewModel *cardViewModel = (FHHouseSearchNewHouseViewModel *)viewModel;
     return [self heightForData:cardViewModel.model];
 }
 

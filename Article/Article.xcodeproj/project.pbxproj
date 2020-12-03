@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1765A464252192FE00A1A9D8 /* ShortVideoGuide.json in Resources */ = {isa = PBXBuildFile; fileRef = 1765A463252192FD00A1A9D8 /* ShortVideoGuide.json */; };
+		2B8A6CA72577794B00CE2469 /* house_test.json in Resources */ = {isa = PBXBuildFile; fileRef = 2B8A6CA62577794A00CE2469 /* house_test.json */; };
+		2B8A6CA82577794B00CE2469 /* house_test.json in Resources */ = {isa = PBXBuildFile; fileRef = 2B8A6CA62577794A00CE2469 /* house_test.json */; };
 		30B80968186F20525FA8F916 /* libPods-f100.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9024DDF5E410548C9797A57D /* libPods-f100.a */; };
 		3D2F39962270545700AE567D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398A2270545700AE567D /* InfoPlist.strings */; };
 		3D2F39982270545700AE567D /* TargetLogicSetting.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D2F398E2270545700AE567D /* TargetLogicSetting.strings */; };
@@ -262,6 +264,7 @@
 		176E29DB25382BB500783D5E /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = F100BaiduMapKit.framework; path = ../Bundles/BaiduMapKit/BaiduMapKit/F100BaiduMapKit.framework; sourceTree = "<group>"; };
 		2B53A10C24C5787200923B3C /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		2B8A6CA62577794A00CE2469 /* house_test.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = house_test.json; sourceTree = "<group>"; };
 		2D33175D1F30AE6D009D2936 /* PushNotification.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = PushNotification.xcassets; sourceTree = "<group>"; };
 		2E14CCE61FE007BD0093E05D /* sound1.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound1.caf; sourceTree = "<group>"; };
 		2E14CCE71FE007BE0093E05D /* sound3.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = sound3.caf; sourceTree = "<group>"; };
@@ -723,6 +726,7 @@
 		A8A57F531B16F44D00783AA9 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				2B8A6CA62577794A00CE2469 /* house_test.json */,
 				FB6C55C923ACD41700651456 /* fireworks */,
 				FBA5892023AB64D20053EC79 /* introduce */,
 				D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */,
@@ -1040,6 +1044,7 @@
 				D37495E323965409006D44D2 /* gaode_house_detail_style.data in Resources */,
 				3DB7A73021A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
 				B373CEAF2174587A008F9905 /* CommonResource.xcassets in Resources */,
+				2B8A6CA82577794B00CE2469 /* house_test.json in Resources */,
 				B373CEB02174587A008F9905 /* sound2.caf in Resources */,
 				3D7D2F4222704CAB00A95FAF /* Icon-72.png in Resources */,
 				D37495E123965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */,
@@ -1094,6 +1099,7 @@
 				FBA5893D23AB64D20053EC79 /* introduce_1.json in Resources */,
 				3D83DD122306A933008B583E /* gaode_style_extra.data in Resources */,
 				3DB7A72F21A4136D00B4D017 /* BubbleImages.xcassets in Resources */,
+				2B8A6CA72577794B00CE2469 /* house_test.json in Resources */,
 				FEFA59FB205FB1A8001F50D8 /* CommonResource.xcassets in Resources */,
 				FEFA59FC205FB1A8001F50D8 /* sound2.caf in Resources */,
 				3D7D2F4122704CAB00A95FAF /* Icon-72.png in Resources */,

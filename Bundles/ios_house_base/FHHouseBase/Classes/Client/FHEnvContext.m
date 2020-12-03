@@ -1144,6 +1144,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return NewCardType;
 }
 
++ (BOOL)isHouseListComponentEnable {
+    static BOOL isHouseListComponentEnable = NO;
+    static dispatch_once_t isHouseListComponentEnableOnceToken;
+    dispatch_once(&isHouseListComponentEnableOnceToken, ^{
+        //命中实验添加打点
+        isHouseListComponentEnable = NO;
+    });
+    return isHouseListComponentEnable;
+}
+
 + (BOOL)isIntroduceOpen {
     return YES;
 }

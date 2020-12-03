@@ -406,8 +406,12 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(void)configTableView
 {
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
+    if ([FHEnvContext isHouseListComponentEnable]) {
+        [(FHHouseTableView *)self.tableView setFhHouse_dataSource:self];
+    } else {
+        self.tableView.delegate = self;
+        self.tableView.dataSource = self;
+    }
     
     __weak typeof(self)wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
@@ -422,7 +426,9 @@ extern NSString *const INSTANT_DATA_KEY;
     
     [self.tableView fhHouseCard_registerCellStyles];
     
-    [self registerCellClasses];
+    if (![FHEnvContext isHouseListComponentEnable]) {
+        [self registerCellClasses];
+    }
 }
 
 - (BOOL)isNeighborhoodList {
@@ -867,6 +873,12 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRecommendSearch:(BOOL)isRecommendSearch
 {
+    if ([FHEnvContext isHouseListComponentEnable]) {
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"house_test" ofType:@"json"];
+        NSData *data = [NSData dataWithContentsOfFile:path];
+        NSError *error0 = nil;
+        model = (FHListSearchHouseModel *)[FHHouseListAPI generateModel:data class:FHListSearchHouseModel.class error:&error0];
+    }
     
     if (error) {
         

@@ -10,17 +10,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHousePlaceholderStyle1ViewModel : FHHouseNewComponentViewModel<FHHouseCardCellViewModelProtocol>
+@interface FHHousePlaceholderStyle1ViewModel : FHHouseNewComponentViewModel
 
 @end
 
-@interface FHHousePlaceholderStyle2ViewModel : FHHouseNewComponentViewModel<FHHouseCardCellViewModelProtocol>
+@interface FHHousePlaceholderStyle2ViewModel : FHHouseNewComponentViewModel
 
 - (CGFloat)topOffset;
 
 @end
 
-@interface FHHousePlaceholderStyle3ViewModel : FHHouseNewComponentViewModel<FHHouseCardCellViewModelProtocol>
+@interface FHHousePlaceholderStyle3ViewModel : FHHouseNewComponentViewModel
 
 
 @end

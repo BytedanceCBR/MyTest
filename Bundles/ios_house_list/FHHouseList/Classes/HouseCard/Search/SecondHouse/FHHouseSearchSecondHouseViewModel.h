@@ -6,20 +6,10 @@
 //
 
 #import "FHHouseNewComponentViewModel.h"
-#import "FHHouseCardCellViewModelProtocol.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHSearchHouseItemModel;
-@interface FHHouseSearchSecondHouseViewModel : FHHouseNewComponentViewModel<FHHouseCardCellViewModelProtocol>
-
-@property (nonatomic, strong, readonly) FHSearchHouseItemModel *model;
-
-@property (nonatomic, assign) NSInteger cardIndex;
-
-@property (nonatomic, assign) NSInteger cardCount;
-
-- (instancetype)initWithModel:(FHSearchHouseItemModel *)model;
+@interface FHHouseSearchSecondHouseViewModel : FHHouseNewComponentViewModel
 
 @end
 

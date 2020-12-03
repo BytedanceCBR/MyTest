@@ -29,6 +29,7 @@
 #import "TTNavigationController.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "FHHouseListErrorView.h"
+#import "FHHouseTableView.h"
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
@@ -735,8 +736,11 @@
 
 -(UITableView *)tableView {
     if (!_tableView) {
-        
-        _tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds];
+        if ([FHEnvContext isHouseListComponentEnable]) {
+            _tableView = [[FHHouseTableView alloc] initWithFrame:self.view.bounds];
+        } else {
+            _tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds];
+        }
         if (@available(iOS 11.0, *)) {
             
             _tableView.estimatedRowHeight = 0;
