@@ -143,7 +143,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 // 网络数据请求
 - (void)startLoadData {
    self.isCache = NO ;
-    FHDetailOldModel *model = [[FHHousedetailModelManager sharedInstance] getHouseDetailModelWith:self.houseId];
+    NSString *key = [NSString stringWithFormat:@"%@+%@+%@",self.houseId,self.ridcode,self.realtorId];
+    FHDetailOldModel *model = [[FHHousedetailModelManager sharedInstance] getHouseDetailModelWith:key.copy];
     // 详情页数据-Main
     if(model){
         self.isCache = YES;
@@ -162,7 +163,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
-                [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:wSelf.houseId];
+                [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:key.copy];
                 if(!wSelf.isCache){
                     [wSelf processDetailData:model];
                     // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
