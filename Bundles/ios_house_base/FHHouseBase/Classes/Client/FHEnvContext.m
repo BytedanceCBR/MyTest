@@ -48,6 +48,7 @@
 #import "NSDictionary+BTDAdditions.h"
 #import "FHCommonParamHelper.h"
 #import "SSCommonLogic.h"
+#import "FHHousedetailModelManager.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 

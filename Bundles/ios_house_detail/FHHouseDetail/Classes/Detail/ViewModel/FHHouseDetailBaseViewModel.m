@@ -90,9 +90,7 @@
     NSTimeInterval delta = link.timestamp - _lastTime;
     if(self.canNslog && !self.tableViewLoadTime){
         self.tableViewLoadTime = delta;
-        if(!self.isCache){
-            [self addPageLoadLog];
-        }
+        [self addPageLoadLog];
         [_link removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
         _link = nil;
         self.canNslog = false;
@@ -784,8 +782,11 @@
                 //为了避免出现特别大的无效数据 App切换前后台的时候数据大的也不添加
                 NSMutableDictionary *metricDict = [NSMutableDictionary dictionary];
                 //单位 秒 -> 毫秒
-                metricDict[@"total_duration"] = @(duration * 1000);
-                metricDict[@"tableView_duration"] = @(self.tableViewLoadTime * 1000);
+                if(!self.isCache){
+                    metricDict[@"total_duration"] = @(duration * 1000);
+                    metricDict[@"tableView_duration"] = @(self.tableViewLoadTime * 1000);
+                }
+                metricDict[@"isCache"] = @(self.isCache);
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_house_detail_old" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
             }
         }
