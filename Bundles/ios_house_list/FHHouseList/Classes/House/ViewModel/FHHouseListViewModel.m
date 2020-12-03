@@ -2020,11 +2020,12 @@ extern NSString *const INSTANT_DATA_KEY;
                       [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
                   }
         }
-    }else {
-        if (self.houseType == FHHouseTypeSecondHandHouse && ![cellModel isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
-            [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
-        }
     }
+//    else {
+//        if (self.houseType == FHHouseTypeSecondHandHouse && ![cellModel isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
+//            [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+//        }
+//    }
 }
 
 #pragma mark - 详情页跳转
