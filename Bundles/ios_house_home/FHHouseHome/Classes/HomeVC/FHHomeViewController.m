@@ -41,6 +41,7 @@
 #import "NSObject+FHTracker.h"
 #import "FHUserTracker.h"
 #import "FHHomeRenderFlow.h"
+#import "FHTrackingManager.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -108,6 +109,8 @@ static CGFloat const kSectionHeaderHeight = 38;
             self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
         }
     }];
+    
+    [self showTrackingAuthenticationPopup];
 }
 
 - (void)bindIndexChangedBlock
@@ -524,6 +527,12 @@ static CGFloat const kSectionHeaderHeight = 38;
 #pragma mark - Tracker相关
 - (NSString *)fh_pageType {
     return @"maintab";
+}
+
+#pragma mark - IDFA授权弹窗
+
+- (void)showTrackingAuthenticationPopup {
+    [[FHTrackingManager sharedInstance] showTrackingServicePopup];
 }
 
 @end

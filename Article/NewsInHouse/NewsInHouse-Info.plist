@@ -207,6 +207,8 @@
 	<string>以便您正常发送、发布及保存图片</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>以便您正常发送、发布及保存图片</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>请放心，开启权限不会获取你在其他站点的隐私信息，仅用于标识设备并保障服务安全与提升浏览体验</string>
 	<key>SSAppID</key>
 	<string>1370</string>
 	<key>SSMID</key>
