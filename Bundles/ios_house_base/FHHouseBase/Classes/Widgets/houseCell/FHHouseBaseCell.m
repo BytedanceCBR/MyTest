@@ -10,12 +10,7 @@
 @implementation FHHouseBaseCell
 
 + (UIImage *)placeholderImage {
-    static UIImage *placeholderImage = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        placeholderImage = [UIImage imageNamed: @"default_image"];
-    });
-    return placeholderImage;
+    return [UIImage imageNamed: @"default_image"];
 }
 
 + (CGFloat)heightForData:(id)data {
