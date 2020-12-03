@@ -389,15 +389,8 @@
     }
     if (self.suggestDelegate != NULL && ![openUrl containsString:@"webview"] && !isGoDetail) {
         // 1、suggestDelegate说明需要回传sug数据
-        // 2、如果是从租房大类页和二手房大类页向下个页面跳转，则需要移除搜索列表相关的页面
-        // 3、如果是从列表页和找房Tab列表页进入搜索，则还需pop到对应的列表页
-        NSMutableDictionary *tempInfos = [NSMutableDictionary dictionaryWithDictionary:infos];
-        if (self.backListVC == nil && (self.fromSource == FHEnterSuggestionTypeOldMain || self.fromSource == FHEnterSuggestionTypeRenting)) {
-            // 需要移除搜索列表相关页面
-            tempInfos[@"fh_needRemoveLastVC_key"] = @(YES);
-            tempInfos[@"fh_needRemoveedVCNamesString_key"] = @[@"FHSuggestionListViewController",@"FHSugSubscribeListViewController"];
-        }
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:tempInfos];
+        // 2、如果是从列表页和找房Tab列表页进入搜索，则还需pop到对应的列表页
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
         // 回传数据，外部pop 页面
         TTRouteObject *obj = [[TTRoute sharedRoute] routeObjWithOpenURL:[NSURL URLWithString:openUrl] userInfo:userInfo];
         if ([self.suggestDelegate respondsToSelector:@selector(suggestionSelected:)]) {
@@ -411,7 +404,7 @@
         // 不需要回传sug数据，以及自己控制页面跳转和移除逻辑
         NSMutableDictionary *tempInfos = [NSMutableDictionary dictionaryWithDictionary:infos];
         // 跳转页面之后需要移除当前页面，如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
-        if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault || self.fromSource == FHEnterSuggestionTypeOldMain) {
+        if (self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault || self.fromSource == FHEnterSuggestionTypeMapSearch) {
             UIViewController *topVC = self.navigationController.viewControllers.lastObject;
             if (![topVC isKindOfClass:[FHSugSubscribeListViewController class]]) {
                 tempInfos[@"fh_needRemoveLastVC_key"] = @(YES);

@@ -21,6 +21,7 @@
 #import "FHCommonDefines.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "FHSuggestionListViewController+FHTracker.h"
+#import "FHSuggestionDefines.h"
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
