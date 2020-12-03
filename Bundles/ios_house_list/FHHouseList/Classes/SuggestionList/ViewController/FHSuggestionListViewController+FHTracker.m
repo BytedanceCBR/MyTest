@@ -61,7 +61,6 @@ static const char tabSwitchedKey;
     if([eventName isEqualToString:@"search_detail_show"]){
         [parameters removeObjectForKey:@"result_num"];
         [parameters removeObjectForKey:@"differ_result_num"];
-        [parameters removeObjectForKey:@"rank"];
     }
     TRACK_EVENT(eventName, parameters);
 }
