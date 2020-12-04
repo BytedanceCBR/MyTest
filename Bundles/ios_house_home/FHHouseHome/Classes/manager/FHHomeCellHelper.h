@@ -24,8 +24,6 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 
 #define kFHHomeBannerDefaultHeight 60.0 //banner高度
 
-#define kFHHomeSearchbarHeight 50.0 //searchBar高度
-
 #define kFHHomeHouseItemHeight 88.0 //banner高度
 
 //#define kFHHomeIconRowCount 5 //每行icon个数
@@ -122,7 +120,7 @@ typedef NS_ENUM(NSUInteger, FHHomeCellViewType) {
 + (NSArray <NSString *>*)matchHouseSegmentedTitleArray;
 
 
-+ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:(NSDictionary *)traceParams;
++ (void)fillFHHomeEntrancesCell:(FHHomeEntrancesCell *)cell withModel:(FHConfigDataOpDataModel *)model withTraceParams:(NSDictionary * _Nullable )traceParams;
 
 @end 
 

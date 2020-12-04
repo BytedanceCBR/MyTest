@@ -6,11 +6,11 @@
 //
 
 #import "FHHouseNewComponentViewModel.h"
+#import "FHSearchHouseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class FHHouseTitleAndTagViewModel;
-@class FHSearchHouseItemModel;
 @class FHImageModel;
 @interface FHHouseNeighborhoodCardViewModel : FHHouseNewComponentViewModel
 
@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) FHHouseTitleAndTagViewModel *titleAndTag;
 
+@property (nonatomic, strong) FHSearchHouseItemModel *model;
 
 - (instancetype)initWithModel:(FHSearchHouseItemModel *)model;
 

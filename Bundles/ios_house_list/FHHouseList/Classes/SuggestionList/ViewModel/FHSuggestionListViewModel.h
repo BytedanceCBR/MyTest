@@ -29,6 +29,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)textFieldTextChange:(NSString *)text;
 
+-(void)textFieldWillClear;
+
 -(void)updateSubVCTrackStatus;
 
 @end

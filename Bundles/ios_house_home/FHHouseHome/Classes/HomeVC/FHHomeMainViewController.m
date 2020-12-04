@@ -31,6 +31,7 @@
 #import <FHHouseBase/NSObject+FHOptimize.h>
 #import "FHAppUpdateView.h"
 #import <FHHouseBase/FHUserTracker.h>
+#import "FHHomeRenderFlow.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -56,13 +57,15 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         dispatch_once(&onceToken, ^{
             [self checkLocalTestUpgradeVersionAlert];
         });
+    
+        [[FHHomeRenderFlow sharedInstance] traceHomeMainInit];
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [[FHHomeRenderFlow sharedInstance] traceHomeMainViewDidLoad];
     [self initView]; //初始化视图
     [self initConstraints]; //更新约束
     [self initViewModel]; //创建viewModel
@@ -317,12 +320,13 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 
 - (void)changeTopStatusShowHouse:(BOOL)isShowHouse
 {
-    self.topView.segmentControl.hidden = isShowHouse;
-    self.topView.houseSegmentControl.hidden = !isShowHouse;
     //房源显示时，禁止滑动
     if (isShowHouse) {
         self.collectionView.scrollEnabled = NO;
     }
+    
+    [self changeTopSearchBtn:isShowHouse];
+
 }
 
 - (void)changeTopSearchBtn:(BOOL)isShow {

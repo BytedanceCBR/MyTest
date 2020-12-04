@@ -12,7 +12,7 @@
 #import "TTProjectLogicManager.h"
 #import "TTLaunchDefine.h"
 
-DEC_TASK("TTQQSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH+2);
+//DEC_TASK("TTQQSDKRegister",FHTaskTypeSDKs,TASK_PRIORITY_HIGH+2);
 
 @implementation TTQQSDKRegister
 

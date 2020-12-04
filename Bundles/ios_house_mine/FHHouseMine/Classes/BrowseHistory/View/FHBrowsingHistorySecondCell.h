@@ -5,11 +5,11 @@
 //  Created by xubinbin on 2020/11/6.
 //
 
-#import "FHHouseBaseUsuallyCell.h"
+#import "FHHouseCardTableViewCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHBrowsingHistorySecondCell : FHHouseBaseUsuallyCell
+@interface FHBrowsingHistorySecondCell : FHHouseCardTableViewCell
 
 @end
 
