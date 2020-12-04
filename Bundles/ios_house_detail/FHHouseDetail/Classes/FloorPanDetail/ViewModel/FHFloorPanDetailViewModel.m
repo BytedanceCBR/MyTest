@@ -37,7 +37,7 @@
 @end
 @implementation FHFloorPanDetailViewModel
 
--(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView floorPanId:(NSString *)floorPanId realtorId:(nonnull NSString *)realtorId
 {
     self = [super init];
     if (self) {
@@ -46,6 +46,7 @@
         _subPageVC = viewController;
         _infoListTable = tableView;
         _floorPanId = floorPanId;
+        self.realtorId = realtorId;
         [self configTableView];
         WeakSelf;
         FHDetailBottomBar *bottomBar = [_subPageVC getBottomBar];
@@ -120,7 +121,9 @@
         [self.detailController startLoading];
         __weak typeof(self) wSelf = self;
         self.bottomBar.hidden = YES;
-        [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
+        [FHHouseDetailAPI requestFloorPanDetailCoreInfoSearch:_floorPanId
+                                                    realtorId:self.realtorId
+                                                   completion:^(FHDetailFloorPanDetailInfoModel * _Nullable model, NSError * _Nullable error) {
             if(model.data && !error)
             {
                 [wSelf.navBar showMessageNumber];

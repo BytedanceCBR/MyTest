@@ -269,6 +269,9 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     self.scrollViewExceeedsBoundary = scrollViewExceedsBoundary;
     
     [self.detailPromptManager hidePrompt];
+    if (self.didScroll) {
+        self.didScroll();
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

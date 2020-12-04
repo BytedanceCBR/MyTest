@@ -374,7 +374,7 @@
             NSInteger count = ((self.dataList.count - indexPath.row - 1) > 3) ? 3 : (self.dataList.count - indexPath.row - 1);
             otherCellModels = [self.dataList subarrayWithRange:NSMakeRange(indexPath.row + 1, count)];
         }
-        [self.detailJumpManager jumpToSmallVideoDetail:cellModel otherVideos:otherCellModels showComment:NO enterType:@"feed_content_blank" extraDic:nil];
+        [self.detailJumpManager jumpToSmallVideoDetail:cellModel otherVideos:otherCellModels showComment:NO enterType:@"feed_content_blank" extraDic:nil isShowCurrentVideo:YES];
     }
 }
 

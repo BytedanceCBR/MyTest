@@ -56,6 +56,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)viewDisAppearForEnterType:(NSInteger)enterType;
 
+- (void)viewWillAppear;
+
+- (void)viewWillDisappear;
+
 - (void)reloadData;
 
 @end

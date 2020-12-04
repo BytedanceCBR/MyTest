@@ -14,8 +14,11 @@
 @implementation UITableView(FHHouseCard)
 
 - (void)fhHouseCard_registerCellStyles {
-    NSDictionary *supportCellStyles = [FHHouseCardUtils supportCellStyleMap];
-    for (NSString *cellClassName in [supportCellStyles allValues]) {
+    [self fhHouseCard_registerCellStylesWithDict:[FHHouseCardUtils supportCellStyleMap]];
+}
+
+- (void)fhHouseCard_registerCellStylesWithDict:(NSDictionary *)dict {
+    for (NSString *cellClassName in [dict allValues]) {
         Class cellClass = NSClassFromString(cellClassName);
         if (cellClass) {
             [self registerClass:cellClass forCellReuseIdentifier:cellClassName];
@@ -24,12 +27,15 @@
 }
 
 - (UITableViewCell *)fhHouseCard_cellForEntity:(id)entity atIndexPath:(NSIndexPath *)indexPath {
+    return [self fhHouseCard_cellForEntity:entity atIndexPath:indexPath withDict:[FHHouseCardUtils supportCellStyleMap]];
+}
+
+- (UITableViewCell *)fhHouseCard_cellForEntity:(id)entity atIndexPath:(NSIndexPath *)indexPath withDict:(nonnull NSDictionary *)dict{
     if (!entity) return nil;
     
-    NSDictionary *supportCellStyles = [FHHouseCardUtils supportCellStyleMap];
     NSString *entityClassName = NSStringFromClass(((NSObject *)entity).class);
     if (entityClassName) {
-        NSString *cellClassName = [supportCellStyles btd_stringValueForKey:entityClassName];
+        NSString *cellClassName = [dict btd_stringValueForKey:entityClassName];
         if (cellClassName) {
             UITableViewCell *cell = [self dequeueReusableCellWithIdentifier:cellClassName];
             if ([cell conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)] && [entity conformsToProtocol:@protocol(FHHouseNewComponentViewModelProtocol)]) {
@@ -42,13 +48,11 @@
     return nil;
 }
 
-- (CGFloat)fhHouseCard_heightForEntity:(id)entity atIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)fhHouseCard_heightForEntity:(id)entity atIndexPath:(NSIndexPath *)indexPath withDict:(nonnull NSDictionary *)dict {
     if (!entity) return -1.0f;
-    
-    NSDictionary *supportCellStyles = [FHHouseCardUtils supportCellStyleMap];
     NSString *entityClassName = NSStringFromClass(((NSObject *)entity).class);
     if (entityClassName) {
-        NSString *cellClassName = [supportCellStyles btd_stringValueForKey:entityClassName];
+        NSString *cellClassName = [dict btd_stringValueForKey:entityClassName];
         if (cellClassName) {
             Class cellClass = NSClassFromString(cellClassName);
             if (cellClass && [cellClass conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)] && [entity conformsToProtocol:@protocol(FHHouseNewComponentViewModelProtocol)]) {
@@ -56,8 +60,11 @@
             }
         }
     }
-    
     return -1.0f;
+}
+
+- (CGFloat)fhHouseCard_heightForEntity:(id)entity atIndexPath:(NSIndexPath *)indexPath {
+    return [self fhHouseCard_heightForEntity:entity atIndexPath:indexPath withDict:[FHHouseCardUtils supportCellStyleMap]];
 }
 
 - (BOOL)fhHouseCard_willShowCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {

@@ -79,6 +79,7 @@
     }];
     self.evaluationHeader.headerItemSelectAction = ^(void) {
         [wself.listController.emptyView hideEmptyView];
+        [self.elementShowCaches removeAllObjects];
         [wself.dataList removeAllObjects];
         self.refreshFooter.hidden = YES;
         [wself.tableView reloadData];

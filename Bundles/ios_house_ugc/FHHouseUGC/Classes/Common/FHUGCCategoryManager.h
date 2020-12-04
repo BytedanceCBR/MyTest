@@ -22,6 +22,10 @@ NS_ASSUME_NONNULL_BEGIN
 *  所有频道信息
 */
 @property(nonatomic, strong) NSMutableArray *allCategories;
+/**
+*  推荐频道
+*/
+@property(nonatomic, strong) FHUGCCategoryDataDataModel *recommendCategory;
 
 /**
  *  请求频道回调

@@ -16,10 +16,8 @@
 #import "FHDetailNeighborhoodModel.h"
 #import <NSDictionary+BTDAdditions.h>
 #import "FHSearchBaseItemModel.h"
-#import "FHHouseBaseItemCell.h"
 #import "FHBrowsingHistoryContentCell.h"
 #import <FHCommonUI/FHRefreshCustomFooter.h>
-#import "FHHouseBaseNewHouseCell.h"
 #import "FHEnvContext.h"
 #import <FHHouseBase/FHMainManager+Toast.h>
 #import "FHUserTracker.h"
@@ -29,6 +27,10 @@
 #import "FHBrowsingHistoryRentCell.h"
 #import "FHBrowsingHistoryNeighborhoodCell.h"
 #import "FHBrowsingHistorySecondCell.h"
+#import "UITableView+FHHouseCard.h"
+#import "FHBrowsingHistoryCardUtils.h"
+#import "NSObject+FHTracker.h"
+#import "FHHouseNewComponentViewModel.h"
 
 @interface FHChildBrowsingHistoryViewModel()<FHBrowsingHistoryEmptyViewDelegate, UITableViewDelegate, UITableViewDataSource>
 
@@ -60,12 +62,13 @@
         tableView.delegate = self;
         tableView.dataSource = self;
         [self registerCellClasses];
+        [self.tableView fhHouseCard_registerCellStylesWithDict:[FHBrowsingHistoryCardUtils supportCellStyleMap]];
         __weak typeof(self) wself = self;
         FHRefreshCustomFooter *footer = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
             [wself requestData:NO];
         }];
         self.tableView.mj_footer = footer;
-        [footer setUpNoMoreDataText:@"没有更多信息了"];
+        [footer setUpNoMoreDataText:@"已加载全部"];
         footer.hidden = YES;
     }
     return self;
@@ -80,15 +83,9 @@
 }
 
 - (void)registerCellClasses {
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHouseBaseItemCellSecond"];
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeRentHouse]];
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:[FHSearchHouseItemModel cellIdentifierByHouseType:FHHouseTypeNeighborhood]];
-    [_tableView registerClass:[FHHouseBaseNewHouseCell class] forCellReuseIdentifier:@"FHHouseBaseNewHouseCell"];
     [_tableView registerClass:[FHBrowsingHistoryContentCell class] forCellReuseIdentifier:@"FHBrowsingHistoryContentCell"];
-    [_tableView registerClass:[FHBrowsingHistoryNewCell class] forCellReuseIdentifier:NSStringFromClass([FHBrowsingHistoryNewCell class])];
     [_tableView registerClass:[FHBrowsingHistoryRentCell class] forCellReuseIdentifier:NSStringFromClass([FHBrowsingHistoryRentCell class])];
-    [_tableView registerClass:[FHBrowsingHistoryNeighborhoodCell class] forCellReuseIdentifier:NSStringFromClass([FHBrowsingHistoryNeighborhoodCell class])];
-    [_tableView registerClass:[FHBrowsingHistorySecondCell class] forCellReuseIdentifier:NSStringFromClass([FHBrowsingHistorySecondCell class])];
+    [_tableView registerClass:[FHListBaseCell class] forCellReuseIdentifier:NSStringFromClass([FHListBaseCell class])];
 }
 
 - (void)requestData:(BOOL)isHead {
@@ -142,6 +139,21 @@
         [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if ([obj isKindOfClass:[NSDictionary class]]) {
                 id item = [self historyItemModelByDict:obj];
+                if ([item isKindOfClass:[FHSearchHouseItemModel class]]) {
+                    FHSearchHouseItemModel *theItem = (FHSearchHouseItemModel *)item;
+                    if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNewHouse) {
+                        theItem.advantageDescription = nil;
+                    }
+                    NSObject *entity = [FHBrowsingHistoryCardUtils getEntityFromModel:theItem];
+                    if (entity) {
+                        FHTracerModel *tracerModel = [[FHTracerModel alloc] init];
+                        tracerModel.logPb = theItem.logPb;
+                        tracerModel.imprId = theItem.imprId;
+                        tracerModel.Id = theItem.id;
+                        entity.fh_trackModel = tracerModel;
+                        item = entity;
+                    }
+                }
                 [self.historyList addObject:item];
             }
         }];
@@ -205,29 +217,11 @@
 }
 
 - (Class)cellClassForEntity:(id)model {
-    if ([FHEnvContext isDisplayNewCardType]) {
-        if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
-            FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
-            if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
-                return [FHBrowsingHistoryNewCell class];
-            }
-            if (houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
-                return [FHBrowsingHistoryRentCell class];
-            }
-            if (houseModel.houseType.integerValue == FHHouseTypeNeighborhood) {
-                return [FHBrowsingHistoryNeighborhoodCell class];
-            }
-            if (houseModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
-                return [FHBrowsingHistorySecondCell class];
-            }
-        }
-    }
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
-        if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
-            return [FHHouseBaseNewHouseCell class];
+        if (houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
+            return [FHBrowsingHistoryRentCell class];
         }
-        return [FHHouseBaseItemCell class];
     } else if ([model isKindOfClass:[FHBrowseHistoryContentModel class]]) {
         return [FHBrowsingHistoryContentCell class];
     }
@@ -235,36 +229,15 @@
 }
 
 - (NSString *)cellIdentifierForEntity:(id)model {
-    if ([FHEnvContext isDisplayNewCardType]) {
-        if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
-            FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
-            if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
-                return NSStringFromClass([FHBrowsingHistoryNewCell class]);
-            }
-            if (houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
-                return NSStringFromClass([FHBrowsingHistoryRentCell class]);
-            }
-            if (houseModel.houseType.integerValue == FHHouseTypeNeighborhood) {
-                return NSStringFromClass([FHBrowsingHistoryNeighborhoodCell class]);
-            }
-            if (houseModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
-                return NSStringFromClass([FHBrowsingHistorySecondCell class]);
-            }
-        }
-    }
-    if ([model isKindOfClass:[FHBrowseHistoryContentModel class]]) {
-        return @"FHBrowsingHistoryContentCell";
-    } else if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+    if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)model;
-        if (houseModel.houseType.integerValue == FHHouseTypeNewHouse) {
-            return @"FHHouseBaseNewHouseCell";
+        if (houseModel.houseType.integerValue == FHHouseTypeRentHouse) {
+            return NSStringFromClass([FHBrowsingHistoryRentCell class]);
         }
-        if (houseModel.houseType.integerValue == FHHouseTypeSecondHandHouse) {
-            return @"FHHouseBaseItemCellSecond";
-        }
-        return [FHSearchHouseItemModel cellIdentifierByHouseType:houseModel.houseType.integerValue];
+    } else if ([model isKindOfClass:[FHBrowseHistoryContentModel class]]) {
+        return @"FHBrowsingHistoryContentCell";
     }
-    return @"";
+    return NSStringFromClass([FHListBaseCell class]);
 }
 
 #pragma mark UITableViewDelegate
@@ -281,28 +254,20 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < _historyList.count) {
         id data = _historyList[row];
+        UITableViewCell *tcell = [tableView fhHouseCard_cellForEntity:data atIndexPath:indexPath withDict:[FHBrowsingHistoryCardUtils supportCellStyleMap]];
+        if (tcell) return tcell;
         NSString *identifier = [self cellIdentifierForEntity:data];
-        if ([identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNewCell class])] || [identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryRentCell class])] || [identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryNeighborhoodCell class])] || [identifier isEqualToString:NSStringFromClass([FHBrowsingHistorySecondCell class])]) {
+        if ([identifier isEqualToString:NSStringFromClass([FHBrowsingHistoryRentCell class])]) {
             FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             [cell refreshWithData:data];
             return cell;
         }
         if (identifier.length > 0) {
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-            FHSearchHouseItemModel *houseModel = nil;
-            if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
-                houseModel = (FHSearchHouseItemModel *)data;
-            }
-            if ([cell isKindOfClass:[FHHouseBaseNewHouseCell class]]) {
-                FHHouseBaseNewHouseCell *theCell = (FHHouseBaseNewHouseCell *)cell;
-                [theCell updateHouseListNewHouseCellModel:data];
-                [theCell updateHouseStatus:data];
+            if (self.houseType != FHHouseTypeRentHouse) {
+                cell.backgroundColor = [UIColor themeGray7];
             }
             [cell refreshWithData:data];
-            if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
-                FHHouseBaseItemCell *theCell = (FHHouseBaseItemCell *)cell;
-                [theCell updateHouseStatus:data];
-            }
             return cell;
         }
     }
@@ -312,8 +277,10 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger row = indexPath.row;
     if (row >= 0 && row < _historyList.count) {
-        BOOL isLastCell = NO;
         id data = _historyList[row];
+        CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath withDict:[FHBrowsingHistoryCardUtils supportCellStyleMap]];
+        if (cellHeight > -0.001f) return cellHeight;
+        BOOL isLastCell = NO;
         if (indexPath.row == self.historyList.count - 1) {
             isLastCell = YES;
         }
@@ -337,7 +304,7 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < _historyList.count) {
         id cellModel = _historyList[row];
-        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]] || [cellModel isKindOfClass:[FHHouseNewComponentViewModel class]]) {
             [self showHouseDetail:cellModel atIndex:row];
         }
     }
@@ -347,7 +314,7 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < _historyList.count) {
         id cellModel = _historyList[row];
-        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]] || [cellModel isKindOfClass:[FHHouseNewComponentViewModel class]]) {
             [self addHouseShowLog:cellModel withRank:row];
         }
     }
@@ -402,28 +369,40 @@
 }
 
 -(void)showHouseDetail:(id)cellModel atIndex:(NSInteger)index {
-    if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
-        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
+
+    if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]] || [cellModel isKindOfClass:[FHHouseNewComponentViewModel class]]) {
+        
+        NSDictionary *logPb;
+        NSString *houseId;
+        if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+            FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
+            logPb = model.logPb ? : @{};
+            houseId = model.id;
+        } else if ([cellModel isKindOfClass:[FHHouseNewComponentViewModel class]]) {
+            FHHouseNewComponentViewModel *model = (FHHouseNewComponentViewModel *)cellModel;
+            logPb = model.fh_trackModel.logPb ? : @{};
+            houseId = model.fh_trackModel.Id;
+        }
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         NSString *urlStr = nil;
         params[@"card_type"] = @"left_pic";
         params[UT_ENTER_FROM] = [self getPageType:self.houseType];
         params[UT_ORIGIN_FROM] = self.viewController.tracerDict[UT_ORIGIN_FROM] ?: @"be_null";
         params[UT_SEARCH_ID] = self.searchId ?: @"be_null";
-        params[UT_LOG_PB] = model.logPb;
+        params[UT_LOG_PB] = logPb;
         params[UT_RANK] = @(index);
         switch (self.houseType) {
             case FHHouseTypeRentHouse:
-                urlStr = [NSString stringWithFormat:@"fschema://rent_detail?house_id=%@",  model.id];
+                urlStr = [NSString stringWithFormat:@"fschema://rent_detail?house_id=%@",  houseId];
                 break;
             case FHHouseTypeSecondHandHouse:
-                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", model.id];
+                urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", houseId];
                 break;;
             case FHHouseTypeNewHouse:
-                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@", model.id];
+                urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@", houseId];
                 break;
             case FHHouseTypeNeighborhood:
-                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", model.id];
+                urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@", houseId];
                 break;
             default:
                 break;
@@ -463,20 +442,28 @@
     if (self.tracerDictRecord[recordKey] || !self.viewController.isCanTrack) {
         return;
     }
+    NSDictionary *logPb;
+    NSString *imprId;
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
-        NSMutableDictionary *params = @{}.mutableCopy;
-        [params addEntriesFromDictionary:self.viewController.tracerDict];
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
-        self.tracerDictRecord[recordKey] = @(YES);
-        params[UT_PAGE_TYPE] = [self getPageType:self.houseType];
-        params[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
-        params[UT_SEARCH_ID] = self.searchId ? : @"be_null";
-        params[@"impr_id"] = model.imprId ? : @"be_null";
-        params[UT_RANK] = @(rank);
-        params[UT_HOUSE_TYPE] = [self getHouseType:self.houseType];
-        params[@"log_pb"] = model.logPb;
-        TRACK_EVENT(@"house_show", params);
+        logPb = model.logPb ? : @{};
+        imprId = model.imprId;
+    } else if ([cellModel isKindOfClass:[FHHouseNewComponentViewModel class]]) {
+        FHHouseNewComponentViewModel *model = (FHHouseNewComponentViewModel *)cellModel;
+        logPb = model.fh_trackModel.logPb ? : @{};
+        imprId = model.fh_trackModel.imprId;
     }
+    NSMutableDictionary *params = @{}.mutableCopy;
+    [params addEntriesFromDictionary:self.viewController.tracerDict];
+    self.tracerDictRecord[recordKey] = @(YES);
+    params[UT_PAGE_TYPE] = [self getPageType:self.houseType];
+    params[UT_ORIGIN_SEARCH_ID] = self.originSearchId ? : @"be_null";
+    params[UT_SEARCH_ID] = self.searchId ? : @"be_null";
+    params[@"impr_id"] = imprId ? : @"be_null";
+    params[UT_RANK] = @(rank);
+    params[UT_HOUSE_TYPE] = [self getHouseType:self.houseType];
+    params[@"log_pb"] = logPb;
+    TRACK_EVENT(@"house_show", params);
 }
 
 - (NSString *)getPageType:(FHHouseType)houseType {

@@ -7,8 +7,15 @@
 
 #import "FHMapSearchConfigModel.h"
 #import "FHHouseType.h"
+#import "NSMutableDictionary+FHQueryItems.h"
 
 @implementation FHMapSearchConfigModel
+
+- (instancetype)initWithDictionary:(NSDictionary *)dict error:(NSError *__autoreleasing *)err {
+    NSMutableDictionary *validDict = [dict mutableCopy];
+    [validDict fh_clearInvalidKeysIfNeed];
+    return [super initWithDictionary:validDict error:err];
+}
 
 +(JSONKeyMapper *)keyMapper
 {
