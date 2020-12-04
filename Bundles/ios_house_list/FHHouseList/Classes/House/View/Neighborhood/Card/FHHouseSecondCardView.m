@@ -129,7 +129,8 @@
     }];
     [self.recommendView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.priceLabel.mas_bottom);
-        make.left.right.mas_equalTo(self.titleAndTagView);
+        make.right.mas_equalTo(self.titleAndTagView);
+        make.left.mas_equalTo(self.titleAndTagView).offset(-4);
         make.bottom.mas_equalTo(0);
     }];
 }
