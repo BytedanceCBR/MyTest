@@ -152,8 +152,9 @@
     
     [self.recommendView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.tagLabel.mas_bottom);
-        make.left.right.mas_equalTo(self.priceLabel);
+        make.right.mas_equalTo(self.priceLabel);
         make.bottom.mas_equalTo(0);
+        make.left.mas_equalTo(self.priceLabel).offset(-4);
     }];
 }
 
