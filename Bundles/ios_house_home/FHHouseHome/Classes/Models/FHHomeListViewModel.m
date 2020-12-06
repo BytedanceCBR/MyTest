@@ -880,9 +880,6 @@
                     self.superScrollEnable = YES;
                 }
             }
-           if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
-               vc.tableView.contentOffset = CGPointZero;
-           }
         }
     }
     self.childResetZeroStatus = isShowTopHouse;
