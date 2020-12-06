@@ -213,7 +213,7 @@
     self.collectionView = [[FHSuggestionCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
-    _collectionView.bounces = NO;
+    _collectionView.bounces = YES;
     _collectionView.scrollEnabled = YES;
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor themeGray7];
