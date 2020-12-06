@@ -6,7 +6,6 @@
 //
 
 #import "FHFlutterEmptyViewController.h"
-#import "FHBMainDefine.h"
 #import <UIColor+Theme.h>
 #import "NSDictionary+BTDAdditions.h"
 #import "FHFlutterConsts.h"
@@ -19,6 +18,8 @@
 #import "PackageRouteManager.h"
 #import <UIViewController+Refresh_ErrorHandler.h>
 #import <Lottie/LOTAnimationView.h>
+#import <TTBaseLib/TTBaseMacro.h>
+#import <FHCommonDefines.h>
 
 @interface FHFlutterEmptyViewController ()
 
