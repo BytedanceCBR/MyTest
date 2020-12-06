@@ -416,7 +416,7 @@ def appPods
       'AES'
     ]
     #-----iOS14 IDFA授权弹窗库-----
-    pod 'BDInstallPopup',:subspecs => [
+    pod 'BDInstallPopup', '0.0.3',:subspecs => [
       'Core',
       'URLConfig/China'
     ]

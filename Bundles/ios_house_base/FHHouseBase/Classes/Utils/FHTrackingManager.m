@@ -52,6 +52,7 @@
     config.cancelBtnText = @"取消";
     config.title = @"权限申请";
     config.appID = 1370;
+    config.appName = @"幸福里";
     config.service = [BDInstallPopupURLChina class];
     config.iid = ^NSString * _Nonnull{
         return installID;
