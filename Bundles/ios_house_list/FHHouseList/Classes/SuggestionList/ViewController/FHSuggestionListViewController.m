@@ -251,6 +251,11 @@
     return YES;
 }
 
+- (BOOL)textFieldShouldClear:(UITextField *)textField {
+    [self.viewModel textFieldWillClear];
+    return YES;
+}
+
 -(void)bindTopIndexChanged
 {
     WeakSelf;

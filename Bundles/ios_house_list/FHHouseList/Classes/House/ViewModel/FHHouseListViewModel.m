@@ -1743,36 +1743,40 @@ extern NSString *const INSTANT_DATA_KEY;
     }
     __weak typeof(self)wself = self;
     if (identifier.length > 0) {
-        if ([FHEnvContext isDisplayNewCardType]) {
-            if (self.houseType == FHHouseTypeRentHouse) {
+        if (self.houseType == FHHouseTypeRentHouse) {
+            if ([identifier isEqualToString:NSStringFromClass([FHHouseListRentCell class])]) {
                 FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-                FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
-                if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && model.realSearchOpenUrl){
-                    WeakSelf;
-                    ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
-                        StrongSelf;
-                        NSMutableDictionary *infos = [NSMutableDictionary new];
-                        NSMutableDictionary *tracer = [NSMutableDictionary new];
-                        tracer[@"element_from"] = [self channelSwitchElementFromNameByhouseType:self.preHouseType];
-                        tracer[@"enter_from"] = [self categoryName];
-                        tracer[@"enter_type"] = @"click";
-                        tracer[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
-                        infos[@"tracer"] = tracer;
-                        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
-                        if(model.realSearchOpenUrl){
-                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:model.realSearchOpenUrl] userInfo:userInfo];
-                        }
-                    };
-                }
                 [cell refreshWithData:data];
-                if(self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
+                return cell;
+            }
+            FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
+            if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && model.realSearchOpenUrl){
+                WeakSelf;
+                ((FHHouseListRecommendTipCell *)cell).channelSwitchBlock = ^{
+                    StrongSelf;
+                    NSMutableDictionary *infos = [NSMutableDictionary new];
+                    NSMutableDictionary *tracer = [NSMutableDictionary new];
+                    tracer[@"element_from"] = [self channelSwitchElementFromNameByhouseType:self.preHouseType];
+                    tracer[@"enter_from"] = [self categoryName];
+                    tracer[@"enter_type"] = @"click";
+                    tracer[@"origin_from"] = self.tracerModel.originFrom ? : @"be_null";
+                    infos[@"tracer"] = tracer;
+                    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
+                    if(model.realSearchOpenUrl){
+                        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:model.realSearchOpenUrl] userInfo:userInfo];
+                    }
+                };
+            }
+            [cell refreshWithData:data];
+            if (self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
                     self.tableView.scrollEnabled = NO;
                     self.tableView.backgroundColor = [UIColor whiteColor];
                     [((FHHouseListRecommendTipCell *)cell) showErrorView];
-                }
-                return cell;
             }
+            return cell;
         }
+
         FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
         if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
             cell.backgroundColor = [UIColor themeGray7];
@@ -2021,11 +2025,12 @@ extern NSString *const INSTANT_DATA_KEY;
                       [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
                   }
         }
-    }else {
-        if (self.houseType == FHHouseTypeSecondHandHouse && ![cellModel isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
-            [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
-        }
     }
+//    else {
+//        if (self.houseType == FHHouseTypeSecondHandHouse && ![cellModel isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
+//            [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+//        }
+//    }
 }
 
 #pragma mark - 详情页跳转

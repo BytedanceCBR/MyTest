@@ -21,12 +21,7 @@
 }
 
 + (UIImage *)placeholderImage {
-    static UIImage *placeholderImage = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        placeholderImage = [UIImage imageNamed: @"house_cell_placeholder"];
-    });
-    return placeholderImage;
+    return [UIImage imageNamed: @"house_cell_placeholder"];
 }
 
 - (void)updateMainImageWithUrl:(NSString *)url {
