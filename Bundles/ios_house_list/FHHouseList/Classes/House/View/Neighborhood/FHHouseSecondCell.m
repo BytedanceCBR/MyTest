@@ -69,20 +69,4 @@
     return 0.0f;
 }
 
-- (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    [super cellWillShowAtIndexPath:indexPath];
-    if ([self.viewModel isKindOfClass:[FHHouseSecondCardViewModel class]]) {
-        FHHouseSecondCardViewModel *cardViewModel = (FHHouseSecondCardViewModel *)self.viewModel;
-        [cardViewModel showCardAtIndexPath:indexPath];
-    }
-}
-
-- (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
-    [super cellDidClickAtIndexPath:indexPath];
-    if ([self.viewModel isKindOfClass:[FHHouseSecondCardViewModel class]]) {
-        FHHouseSecondCardViewModel *cardViewModel = (FHHouseSecondCardViewModel *)self.viewModel;
-        [cardViewModel clickCardAtIndexPath:indexPath];
-    }
-}
-
 @end

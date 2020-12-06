@@ -1047,7 +1047,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     static dispatch_once_t isHouseListComponentEnableOnceToken;
     dispatch_once(&isHouseListComponentEnableOnceToken, ^{
         //命中实验添加打点
-        isHouseListComponentEnable = NO;
+        isHouseListComponentEnable = YES;
     });
     return isHouseListComponentEnable;
 }

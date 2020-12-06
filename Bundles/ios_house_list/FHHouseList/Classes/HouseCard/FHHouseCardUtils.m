@@ -13,10 +13,6 @@
 #import "FHSearchHouseModel.h"
 #import "FHHousePlaceholderCell.h"
 #import "FHHousePlaceholderViewModel.h"
-#import "FHHouseSearchNewHouseViewModel.h"
-#import "FHHouseSearchNewHouseCell.h"
-#import "FHHouseSearchSecondHouseViewModel.h"
-#import "FHHouseSearchSecondHouseCell.h"
 #import "FHHouseSearchRentHouseViewModel.h"
 #import "FHHouseListRentCell.h"
 #import "FHHouseSubscribeViewModel.h"
@@ -75,15 +71,6 @@
             default:
                 break;
         }
-    } else if ([model isKindOfClass:[FHHouseListBaseItemModel class]]) {
-        FHHouseListBaseItemModel *itemModel = (FHHouseListBaseItemModel *)model;
-        return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
-//        switch (itemModel.cardType) {
-//            case FHSearchCardTypeSecondHouse:
-//                return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
-//            default:
-//                break;
-//        }
     }
 
     return nil;
@@ -94,8 +81,8 @@
         NSStringFromClass(FHHousePlaceholderStyle1ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle1Cell.class),
         NSStringFromClass(FHHousePlaceholderStyle2ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle2Cell.class),
         NSStringFromClass(FHHousePlaceholderStyle3ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle3Cell.class),
-        NSStringFromClass(FHHouseSearchSecondHouseViewModel.class): NSStringFromClass(FHHouseSearchSecondHouseCell.class),
-        NSStringFromClass(FHHouseSearchNewHouseViewModel.class): NSStringFromClass(FHHouseSearchNewHouseCell.class),
+        NSStringFromClass(FHHouseSecondCardViewModel.class): NSStringFromClass(FHHouseSecondCell.class),
+        NSStringFromClass(FHHouseNewCardViewModel.class): NSStringFromClass(FHHouseNewCell.class),
         NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHHouseNeighborhoodCell.class),
         NSStringFromClass(FHHouseSearchRentHouseViewModel.class): NSStringFromClass(FHHouseListRentCell.class),
         NSStringFromClass(FHHouseSubscribeViewModel.class): NSStringFromClass(FHSuggestionSubscribCell.class),
@@ -114,11 +101,11 @@
         FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)model;
         switch (itemModel.cardType) {
             case FHSearchCardTypeNewHouse: {
-                return [[FHHouseSearchNewHouseViewModel alloc] initWithModel:itemModel];
+                return [[FHHouseNewCardViewModel alloc] initWithModel:itemModel];
                 break;
             }
             case FHSearchCardTypeSecondHouse: {
-                return [[FHHouseSearchSecondHouseViewModel alloc] initWithModel:itemModel];
+                return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
                 break;
             }
             case FHSearchCardTypeNeighborhood: {
