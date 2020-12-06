@@ -106,7 +106,7 @@
     
     [[BDFlutterPackageManager sharedInstance] reloadAllPackages];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(packageDownloadProgressNotification:) name:BDFlutterPackageInstallProgressNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(packageDownloadProgressNotification:) name:BDFlutterPackageInstallProgressNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(packageDownloadAndInstalledNotification:) name:BDFlutterPackageInstallResultNotification object:nil];
 }
 

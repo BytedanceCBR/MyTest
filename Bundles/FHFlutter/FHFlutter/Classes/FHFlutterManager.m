@@ -61,7 +61,7 @@ static NSString *const kFModulePacakgeName = @"BFlutterBusiness";
     
     [[BDPMSManager sharedInstance] setConfig:config];
     
-    [[BDFlutterPackageManager sharedInstance] configNotificationProgressEnable:YES];
+//    [[BDFlutterPackageManager sharedInstance] configNotificationProgressEnable:YES];
     [[BDFlutterPackageManager sharedInstance] loadPackagesWithCallback:^(BOOL success) {
         NSLog(@"BDFlutterPackageManager初始化%@", success ? @"成功" : @"失败");
     }];
