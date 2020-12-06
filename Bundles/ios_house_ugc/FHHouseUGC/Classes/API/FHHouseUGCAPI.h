@@ -86,6 +86,9 @@ NS_ASSUME_NONNULL_BEGIN
 //请求个人主页  个人信息
 + (TTHttpTask *)requestHomePageInfoWithUserId:(NSString *)userId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+//请求个人主页tab列表
++(TTHttpTask *)requestPersonalHomePageTabList:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
 + (TTHttpTask *)requestHomePageFeedListWithUserId:(NSString *)userId offset:(NSInteger)offset count:(NSInteger)count completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 + (TTHttpTask *)requestFocusListWithUserId:(NSString *)userId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
