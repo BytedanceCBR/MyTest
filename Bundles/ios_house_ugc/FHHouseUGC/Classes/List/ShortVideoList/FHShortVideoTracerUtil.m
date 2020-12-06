@@ -180,6 +180,20 @@
     [FHUserTracker writeEvent:@"share_platfrom" params:dic];
 }
 
++ (void)clickFavoriteBtn:(FHFeedUGCCellModel *)model favorite:(BOOL)isFavorite {
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
+    NSDictionary *logPb = [model.logPb copy];
+    [dic setObject:model.groupId?:@"" forKey:@"group_id"];
+    [dic setObject:[FHShortVideoTracerUtil pageType] forKey:@"page_type"];
+    [dic setObject:[FHShortVideoTracerUtil categoryName] forKey:@"category_name"];
+    [dic setObject:logPb[@"group_source"]?:@"" forKey:@"group_source"];
+    [dic setObject:logPb?:@"" forKey:@"log_pb"];
+    [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"impr_id"];
+    [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
+    [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
+    [FHUserTracker writeEvent:isFavorite?@"cilck_favorite":@"cilck_disfavorite" params:dic];
+}
+
 + (NSString *)categoryName {
     return @"f_house_smallvideo_flow";
 }

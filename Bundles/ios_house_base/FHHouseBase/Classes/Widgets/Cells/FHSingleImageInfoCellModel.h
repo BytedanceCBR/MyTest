@@ -41,13 +41,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable, readonly) NSAttributedString *tagsAttrStr;
 @property (nonatomic, strong , nullable, readonly) NSAttributedString *originPriceAttrStr;
 
-+(NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList;
++ (NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList;
 
-+(NSAttributedString *)tagsStringSmallImageWithTagList:(NSArray<FHHouseTagsModel *> *)tagList;
++ (NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList withInset:(UIEdgeInsets)inset withMaxWidth:(CGFloat)maxWidth;
 
-+(NSAttributedString *)createTagAttrString:(NSString *)text textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor;
++ (NSAttributedString *)tagsStringSmallImageWithTagList:(NSArray<FHHouseTagsModel *> *)tagList;
 
-+(NSAttributedString *)newTagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList maxWidth:(CGFloat)maxWidth;
++ (NSAttributedString *)createTagAttrString:(NSString *)text textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor;
+
++ (NSAttributedString *)newTagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList maxWidth:(CGFloat)maxWidth;
 
 #pragma mark log
 -(NSString *)imprId;

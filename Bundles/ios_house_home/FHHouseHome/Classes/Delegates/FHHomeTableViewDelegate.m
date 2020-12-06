@@ -12,6 +12,7 @@
 #import "FHHomeScrollBannerCell.h"
 #import "FHHomeEntrancesCell.h"
 #import "UIColor+Theme.h"
+#import "FHHomeEntranceContainerCell.h"
 
 @interface FHHomeTableViewDelegate()
 {
@@ -61,6 +62,9 @@
     if ([identifier isEqualToString:@"FHHomeEntrancesCell"]) {
         return [FHHomeEntrancesCell cellHeightForModel:model];
     }
+    if ([identifier isEqualToString:@"FHHomeEntranceContainerCell"]) {
+        return [FHHomeEntranceContainerCell cellHeightForModel:model];
+    }
     
 //    [tableView fd_heightForCellWithIdentifier:identifier cacheByKey:identifier configuration:^(FHHomeBaseTableCell *cell) {
 //        [FHHomeCellHelper configureCell:cell withJsonModel:model];
@@ -70,7 +74,7 @@
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-}
+} 
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     

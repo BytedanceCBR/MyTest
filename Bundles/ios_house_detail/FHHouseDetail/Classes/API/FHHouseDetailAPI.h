@@ -124,6 +124,7 @@ completion:(void(^)(FHListResultHouseModel *model , NSError *error))completion;
 
 // 新房-楼盘户型详情信息
 +(TTHttpTask*)requestFloorPanDetailCoreInfoSearch:(NSString*)floorPanId
+                                        realtorId: (NSString *)realtorId
                                        completion:(void(^)(FHDetailFloorPanDetailInfoModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 新房-楼盘户型列表信息

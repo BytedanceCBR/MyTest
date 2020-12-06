@@ -34,6 +34,10 @@
 #import "FHDynamicLynxCell.h"
 #import "FHHouseRedirectTipViewModel.h"
 #import "FHHouseListRedirectTipCell.h"
+#import "FHHouseSecondCell.h"
+#import "FHHouseSecondCardViewModel.h"
+#import "FHHouseNewCell.h"
+#import "FHHouseNewCardViewModel.h"
 
 @implementation FHHouseCardUtils
 
@@ -44,7 +48,9 @@
     }
     
     return @{
-        NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHHouseNeighborhoodCell.class)
+        NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHHouseNeighborhoodCell.class),
+        NSStringFromClass(FHHouseSecondCardViewModel.class): NSStringFromClass(FHHouseSecondCell.class),
+        NSStringFromClass(FHHouseNewCardViewModel.class): NSStringFromClass(FHHouseNewCell.class),
     };
 }
 
@@ -62,9 +68,22 @@
                 }
                 break;
             }
+            case FHSearchCardTypeSecondHouse:
+                return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
+            case FHSearchCardTypeNewHouse:
+                return [[FHHouseNewCardViewModel alloc] initWithModel:itemModel];
             default:
                 break;
         }
+    } else if ([model isKindOfClass:[FHHouseListBaseItemModel class]]) {
+        FHHouseListBaseItemModel *itemModel = (FHHouseListBaseItemModel *)model;
+        return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
+//        switch (itemModel.cardType) {
+//            case FHSearchCardTypeSecondHouse:
+//                return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
+//            default:
+//                break;
+//        }
     }
 
     return nil;

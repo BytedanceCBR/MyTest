@@ -263,11 +263,6 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 + (BOOL)isLongShortTicketOpen;
 
 /*
-是否开启发现和UGC合并，默认NO
- */
-+ (BOOL)isNewDiscovery;
-
-/*
 是否首页替换为新发现，默认NO
  */
 + (BOOL)isHomeNewDiscovery;
@@ -278,12 +273,6 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 + (BOOL)isHasVideoList;
 
 /*
-是否开启小视频频道实验，默认NO
- */
-+ (BOOL)isHasShortVideoList;
-
-/*
- 
  是否开启视频预加载实验，默认NO
   */
  + (BOOL)isHasPerLoadForVideo;
@@ -311,7 +300,7 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
  tab_message,
  tab_mine
  */
-+ (NSDictionary *)defaultTabName;
++ (NSString *)defaultTabName;
 
 /*
  返回当前tab的埋点值

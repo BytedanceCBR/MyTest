@@ -130,11 +130,6 @@
             agentSM.sectionType = FHNewHouseDetailSectionTypeAgent;
             [sectionModels addObject:agentSM];
         }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.sectionModels = sectionModels.copy;
-            self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
-        });
 
         //楼盘动态
         if (model.data.timeline.list.count > 0) {
@@ -196,6 +191,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             self.sectionModels = sectionModels.copy;
+            self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
             if (self.updateLayout) {
                 self.updateLayout();
             }

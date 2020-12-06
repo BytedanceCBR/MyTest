@@ -126,7 +126,7 @@
     self.view.hidden = NO;
     
     [UIView animateWithDuration:0.3 animations:^{
-        self.view.top =  floor(self.view.superview.height/2);
+        self.view.top =  floor(self.view.superview.height/2 - 12);
     }];
 
     [self.viewModel updateWithHouseData:nil neighbor:neighbor bubble:bubble];
@@ -140,7 +140,7 @@
     self.view.hidden = NO;
     
     [UIView animateWithDuration:0.3 animations:^{
-        self.view.top = floor(self.view.superview.height/2);
+        self.view.top = floor(self.view.superview.height/2 - 12);
     }];
     
     [self.parentViewController.view addSubview:self.view];
@@ -153,7 +153,7 @@
 
 -(CGFloat)initialTop
 {
-    return floor(self.view.superview.height/2);
+    return floor(self.view.superview.height/2 - 12);
 }
 
 -(CGFloat)minTop

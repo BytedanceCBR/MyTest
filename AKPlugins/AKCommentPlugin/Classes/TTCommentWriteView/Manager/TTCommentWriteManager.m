@@ -595,6 +595,7 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                     }
                     
                     [BDTrackerProtocol eventV3:@"rt_post_comment" params:paramsDict];
+                    [FHUserTracker writeEvent:@"click_submit_comment" params:paramsDict];
                 }
 
                 if (self.publishStatusForTrack == 1) {

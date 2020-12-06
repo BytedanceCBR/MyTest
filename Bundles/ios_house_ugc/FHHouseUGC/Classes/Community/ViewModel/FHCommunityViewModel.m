@@ -15,7 +15,7 @@
 #import "FHUGCConfig.h"
 
 #define kCellId @"cellId"
-#define maxCellCount 2
+#define maxCellCount 1
 
 @interface FHCommunityViewModel ()<UICollectionViewDelegate,UICollectionViewDataSource>
 
@@ -34,11 +34,7 @@
 - (instancetype)initWithCollectionView:(UICollectionView *)collectionView controller:(FHCommunityViewController *)viewController {
     self = [super initWithCollectionView:collectionView controller:viewController];
     
-    if([FHEnvContext isHasVideoList] && ![FHEnvContext isHasShortVideoList]){
-        self.currentTabIndex = 0;
-    }else{
-        self.currentTabIndex = 1;
-    }
+    self.currentTabIndex = 0;
     
     collectionView.delegate = self;
     collectionView.dataSource = self;

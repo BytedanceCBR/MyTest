@@ -10,6 +10,7 @@
 #import "FHSuggestionListModel.h"
 #import <objc/runtime.h>
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "FHSearchBaseItemModel.h"
 
 static NSString *const TrackEventPageShow = @"go_detail";
 static NSString *const TrackEventSuggestionResultShow = @"sug_word_show";
@@ -60,7 +61,6 @@ static const char tabSwitchedKey;
     if([eventName isEqualToString:@"search_detail_show"]){
         [parameters removeObjectForKey:@"result_num"];
         [parameters removeObjectForKey:@"differ_result_num"];
-        [parameters removeObjectForKey:@"rank"];
     }
     TRACK_EVENT(eventName, parameters);
 }
@@ -74,22 +74,23 @@ static const char tabSwitchedKey;
         NSArray *filteredResultArray = [result.data.items filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
             if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;
             FHSuggestionResponseItemModel *item = (FHSuggestionResponseItemModel *)object;
-            return item.cardType == 16;
+            return item.cardType == FHSearchCardTSuggestionItem;
         }]];
         
         NSArray *filteredOtherResultArray = [result.data.otherItems filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
             if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;
             FHSuggestionResponseItemModel *item = (FHSuggestionResponseItemModel *)object;
-            return item.cardType == 16;
+            return item.cardType == FHSearchCardTSuggestionItem;
         }]];
         
         count = filteredResultArray.count + filteredOtherResultArray.count;
-        tagsStr = [self resultTagsString:filteredResultArray houseType:houseType];
-        
     }
     NSMutableArray *itemArray = [[NSMutableArray alloc] init];
     [itemArray addObjectsFromArray:result.data.items];
     [itemArray addObjectsFromArray:result.data.otherItems];
+    if(count){
+        tagsStr = [self resultTagsString:itemArray houseType:houseType];
+    }
     NSMutableDictionary *differResultnum = [NSMutableDictionary new];
     NSInteger newNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeNewHouse];
     NSInteger oldNum = [self getDifferResultnum:itemArray houseType:FHHouseTypeSecondHandHouse];
@@ -127,7 +128,7 @@ static const char tabSwitchedKey;
     NSArray *filteredOtherResultArray = [resultArray filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id object, NSDictionary *bindings) {
         if (![object isKindOfClass:FHSuggestionResponseItemModel.class]) return NO;
         FHSuggestionResponseItemModel *item = (FHSuggestionResponseItemModel *)object;
-        return [item.houseType intValue] == houseType && item.cardType == 16;
+        return [item.houseType intValue] == houseType && item.cardType == FHSearchCardTSuggestionItem;
     }]];
     return  filteredOtherResultArray.count;
 }
@@ -138,6 +139,9 @@ static const char tabSwitchedKey;
     [tagStr appendString:@"{"];
     BOOL firstTag = YES;
     for (FHSuggestionResponseItemModel *item in resultArray) {
+        if(item.cardType != FHSearchCardTSuggestionItem){
+            continue;
+        }
         if (!firstTag) {
             [tagStr appendFormat:@","];
         }
@@ -147,8 +151,10 @@ static const char tabSwitchedKey;
         if (!name || !name.length) continue;;
         
         firstTag = NO;
-        if (item.recallType && item.recallType.length && houseType == FHHouseTypeSecondHandHouse) {
+        if(!item.isNewStyle && item.recallType && item.recallType.length && [item.houseType intValue]== FHHouseTypeSecondHandHouse){
             [tagStr appendFormat:@"%@|%@", item.recallType, name];
+        }else if (item.newtip && item.newtip.content.length &&  [item.houseType intValue] == FHHouseTypeSecondHandHouse) {
+            [tagStr appendFormat:@"%@|%@", item.newtip.content, name];
         } else {
             [tagStr appendFormat:@"%@", name];
         }
