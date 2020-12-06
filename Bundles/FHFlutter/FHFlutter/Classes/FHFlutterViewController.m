@@ -21,18 +21,48 @@
 #import "NSDictionary+BTDAdditions.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "BDPMSManager.h"
+#import "MBProgressHUD.h"
+#import "FHBMainDefine.h"
+#import <UIColor+Theme.h>
+#import "PackageRouteManager.h"
+#import <TTBaseMacro.h>
 
 @interface FHFlutterViewController()
 
 @property (nonatomic, strong) XGFlutterProxyGestureRecognizer *proxyGR;
+@property (nonatomic, assign) BOOL loadDynamicartNoPackage;
+@property (nonatomic, weak) TTRouteParamObj *paramObj;
 
 @end
 
 @implementation FHFlutterViewController
 
+
++ (NSURL * _Nonnull )redirectURLWithRouteParamObj:(nullable TTRouteParamObj *)paramObj
+{
+    NSMutableDictionary *queryDict = [[NSMutableDictionary alloc] initWithDictionary:paramObj.allParams];
+    BOOL hasAot = [paramObj.allParams btd_boolValueForKey:kFHFlutterchemaAOTSKey default:YES];
+    NSString *pluginName = [paramObj.allParams btd_stringValueForKey:kFHFlutterchemaPluginNameKey];
+     
+    if(!hasAot && pluginName){
+        BOOL canFlutterDynamicart =  [FHFlutterManager isCanFlutterDynamicart];
+        id<PackageRoutePackageProtocol> _packageInfo = [[PackageRouteManager sharedManager] getPackageRoutePackageInfo:pluginName];
+
+        if(!_packageInfo){
+            NSString *str = paramObj.sourceURL.absoluteString;
+            NSString *changeStr = [str stringByReplacingOccurrencesOfString:@"sslocal://flutter" withString:@"sslocal://flutter_empty"];
+            NSURL *flutterEmptyUrl = [NSURL URLWithString:changeStr];
+            return flutterEmptyUrl;
+        }
+    }
+    return paramObj.sourceURL;
+}
+
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
     self = [super initWithRouteParams:[self processSchemaPrams:paramObj]];
     if (self) {
+        self.paramObj = paramObj;
         FlutterMethodChannel* batteryChannel = [FlutterMethodChannel
             methodChannelWithName:@"plugins.f.io/common_channel"
                                                 binaryMessenger:self.flutterVC];
@@ -85,14 +115,31 @@
     
     NSArray *validPackages = [[BDFlutterPackageManager sharedInstance] allValidPackages];
 
-    BOOL hasAot = [paramObj.allParams btd_boolValueForKey:kFHFlutterchemaAOTSKey default:NO];
+    BOOL hasAot = [paramObj.allParams btd_boolValueForKey:kFHFlutterchemaAOTSKey default:YES];
     
-    if([[BDFlutterPackageManager sharedInstance] validPackageWithName:@"BFlutterBusiness"] && [FHFlutterManager isCanFlutterDynamicart]){
-        NSString *flutterUrl = [NSString stringWithFormat:@"local-flutter://BFlutterBusiness%@",[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"]];
+    NSString *pluginName = paramObj.allParams[kFHFlutterchemaPluginNameKey];
+    
+    
+    BDPMSPackage * hasLocalPackage = [[BDFlutterPackageManager sharedInstance] validPackageWithName:pluginName];
+    BOOL canFlutterDynamicart =  [FHFlutterManager isCanFlutterDynamicart];
+
+    _loadDynamicartNoPackage = NO;
+
+    if(hasLocalPackage && canFlutterDynamicart && !isEmptyString(pluginName)){
+        NSString *flutterUrl = [NSString stringWithFormat:@"local-flutter://%@%@",pluginName,[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"]];
        [resultPrams setValue:flutterUrl forKey:@"url"];
     }else{
         if(!hasAot){
+            NSString *flutterUrl = [NSString stringWithFormat:@"local-flutter://%@%@",pluginName,[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"]];
+            [resultPrams setValue:flutterUrl forKey:@"url"];
             
+            if(canFlutterDynamicart){
+                _loadDynamicartNoPackage = YES;
+            }else{
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.navigationController popViewControllerAnimated:NO];
+                });
+            }
         }else{
           [resultPrams setValue:[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"] forKey:@"url"];
         }
@@ -104,6 +151,7 @@
         if ([paramsDict isKindOfClass:[NSDictionary class]]) {
             [resultPrams addEntriesFromDictionary:paramsDict];
         }
+        
     }
     NSString *reportStr = resultPrams[@"report_params"];
 
@@ -112,9 +160,23 @@
         resultPrams[@"report_params"] = reportStr;
     }
     
+    if (![resultPrams.allKeys containsObject:kFHFlutterchemaViewTokenKey]) {
+        if (isEmptyString(pluginName)) {
+            [resultPrams setValue:kFHFlutterBDefaultModuleName forKey:kFHFlutterchemaViewTokenKey];
+        }else{
+            [resultPrams setValue:pluginName forKey:kFHFlutterchemaViewTokenKey];
+        }
+    }
+    
+    if (isEmptyString(pluginName)) {
+        [resultPrams setValue:kFHFlutterBDefaultModuleName forKey:kFHFlutterchemaPluginNameKey];
+    }
+    
+    
     NSDate *datenow = [NSDate date];//现在时间
     NSNumber *timeSpNum = @([[NSString stringWithFormat:@"%ld", (long)([datenow timeIntervalSince1970]*1000)] longLongValue]);
     [resultPrams setValue:timeSpNum forKey:@"start_timestamp"];
+
         
     return resultPrams;
 }

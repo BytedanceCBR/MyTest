@@ -52,7 +52,6 @@ static NSString *const kFModulePacakgeName = @"BFlutterBusiness";
     config.aid = @"1370";
     config.channel = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CHANNEL_NAME"];;
     config.deviceId = [BDTrackerProtocol deviceID];
-    
     //手动赋值版本号
     NSString *shortVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     NSString *bundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
@@ -61,6 +60,8 @@ static NSString *const kFModulePacakgeName = @"BFlutterBusiness";
     }
     
     [[BDPMSManager sharedInstance] setConfig:config];
+    
+    [[BDFlutterPackageManager sharedInstance] configNotificationProgressEnable:YES];
     [[BDFlutterPackageManager sharedInstance] loadPackagesWithCallback:^(BOOL success) {
         NSLog(@"BDFlutterPackageManager初始化%@", success ? @"成功" : @"失败");
     }];
@@ -90,45 +91,6 @@ static NSString *const kFModulePacakgeName = @"BFlutterBusiness";
    
 }
 
-+(void)jumpToCustomerDetail:(NSDictionary *)params{
-    NSString *rootPath = [[BDPMSFileManager sharedInstance] rootPath];
-    
-    NSLog(@"NSHomeDirectory = %@",NSHomeDirectory());
-    
-    NSMutableDictionary *flutterParams = [NSMutableDictionary new];
-    
-    [flutterParams setValue:[params btd_stringValueForKey:@"customer_id"] forKey:@"customer_id"];
-    [flutterParams setValue:[params btd_stringValueForKey:@"lead_id"] forKey:@"lead_id"];
-    [flutterParams setValue:[params btd_stringValueForKey:@"associate_id"] forKey:@"associate_id"];
-    [flutterParams setValue:[params btd_stringValueForKey:@"assignment_id"] forKey:@"assignment_id"];
-    [flutterParams setValue:[params btd_stringValueForKey:@"pool_item_id"] forKey:@"pool_item_id"];
-
-    
-    NSDictionary *reportPrarams = [params btd_dictionaryValueForKey:@"report_params"];
-    if ([reportPrarams isKindOfClass:[NSDictionary class]]) {
-       [flutterParams setValue:[[reportPrarams btd_jsonStringEncoded] btd_stringByURLEncode] forKey:@"report_params"];
-//        [flutterParams setValue:reportPrarams forKey:@"report_params"];
-    }
-    
-//    [flutterParams setValue:[params btd_stringValueForKey:@"customer_id" forKey:@"customer_id"]];
-
-    
-    NSString *routeStr = @"/customer_detail";
-
-    NSMutableString *schemaStr =[NSMutableString stringWithString:@"sslocal://flutter?plugin_name=CustomerDetail&view_token=CustomerDetail&has_aot=1"];
-    
-    if (routeStr) {
-        [schemaStr appendFormat:@"&route=%@",[routeStr btd_stringByURLEncode]];
-    }
-    
-    if (params) {
-        [schemaStr appendFormat:@"&params=%@",[[flutterParams btd_jsonStringEncoded] btd_stringByURLEncode]];
-    }
-    
-    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:nil];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:schemaStr] userInfo:userInfo];
-        
-}
 
 + (void)loadLocalPackage:(UIViewController *)vc {
     NSString *localPcakgePath = [[NSBundle mainBundle].bundlePath stringByAppendingPathComponent:@"dynamic.zip"];
@@ -184,6 +146,8 @@ static NSString *const kFModulePacakgeName = @"BFlutterBusiness";
 
 +(BOOL)checkPackageIsAvailad{
    NSArray *validPackages = [[BDFlutterPackageManager sharedInstance] allValidPackages];
+   
+    
     return YES;
 }
 

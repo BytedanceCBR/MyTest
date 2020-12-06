@@ -12,7 +12,7 @@
 
 - (void)sendEvent:(NSString *)event label:(NSString *)label value:(id)value extValue:(id)extValue extValue2:(id)extValue2 dict:(NSDictionary *)aDict {
     NSMutableDictionary *pramsTotal = [NSMutableDictionary new];
-    [pramsTotal setValue:@"house_app2b" forKey:@"event_type"];
+    [pramsTotal setValue:@"house_app2c" forKey:@"event_type"];
     if ([aDict isKindOfClass:[NSDictionary class]]) {
           [pramsTotal addEntriesFromDictionary:aDict];
     }
@@ -22,7 +22,7 @@
 
 - (void)sendEventV3:(NSString *)eventName params:(NSDictionary *)params {
     NSMutableDictionary *pramsTotal = [NSMutableDictionary new];
-    [pramsTotal setValue:@"house_app2b" forKey:@"event_type"];
+    [pramsTotal setValue:@"house_app2c" forKey:@"event_type"];
     
     if ([params isKindOfClass:[NSDictionary class]]) {
         [pramsTotal addEntriesFromDictionary:params];
