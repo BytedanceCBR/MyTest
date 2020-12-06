@@ -214,6 +214,8 @@
 		D45F59FD2458039F00A14982 /* LynxLocalChannels in Resources */ = {isa = PBXBuildFile; fileRef = D45F59FB2458039E00A14982 /* LynxLocalChannels */; };
 		D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
+		D4A37AE925654D14002B01F5 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4A37AE825654D14002B01F5 /* SafariServices.framework */; };
+		D4A37AEA25654D21002B01F5 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4A37AE825654D14002B01F5 /* SafariServices.framework */; };
 		F85629476F410FEDF98AB2BA /* libPods-serviceNofExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8F614528BFD84403C72AE68 /* libPods-serviceNofExtension.a */; };
 		FB6C55CF23ACD41800651456 /* firework.json in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55CA23ACD41700651456 /* firework.json */; };
 		FB6C55D023ACD41800651456 /* firework.json in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55CA23ACD41700651456 /* firework.json */; };
@@ -502,6 +504,7 @@
 		D37495DF23965409006D44D2 /* gaode_house_detail_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_house_detail_style.data; sourceTree = "<group>"; };
 		D45F59FB2458039E00A14982 /* LynxLocalChannels */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LynxLocalChannels; sourceTree = "<group>"; };
 		D48E93C0233CF142005A42CD /* VRImageLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VRImageLoading.json; sourceTree = "<group>"; };
+		D4A37AE825654D14002B01F5 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoResource.xcassets; sourceTree = "<group>"; };
 		E34D4345B7726A4914383123 /* Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-com.f100.client.FHNotificationServiceExtension/Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		E8F614528BFD84403C72AE68 /* libPods-serviceNofExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-serviceNofExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -595,6 +598,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4A37AEA25654D21002B01F5 /* SafariServices.framework in Frameworks */,
 				3D741F2F2255FF5D00E62B4C /* AddressBookUI.framework in Frameworks */,
 				B373CEDC2174587A008F9905 /* libresolv.tbd in Frameworks */,
 				B373CEDD2174587A008F9905 /* libbz2.tbd in Frameworks */,
@@ -637,6 +641,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D4A37AE925654D14002B01F5 /* SafariServices.framework in Frameworks */,
 				3D741F302255FF7200E62B4C /* AddressBookUI.framework in Frameworks */,
 				FEFA5A26205FB1A8001F50D8 /* libresolv.tbd in Frameworks */,
 				FEFA5A27205FB1A8001F50D8 /* libbz2.tbd in Frameworks */,
@@ -721,6 +726,7 @@
 		3AA5028315876A1F00EB27FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D4A37AE825654D14002B01F5 /* SafariServices.framework */,
 				176E29DB25382BB500783D5E /* libc++.tbd */,
 				2B53A10C24C5787200923B3C /* libsqlite3.tbd */,
 				2B1A0B4B24C053C2009D40FF /* F100BaiduMapKit.framework */,
