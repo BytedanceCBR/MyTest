@@ -36,8 +36,6 @@ NS_ASSUME_NONNULL_BEGIN
 //埋点上报
 //是否是通过点击触发刷新
 @property(nonatomic, assign) BOOL isRefreshTypeClicked;
-//是否需要强插
-@property(nonatomic, assign) BOOL isInsertFeedWhenPublish;
 @property(nonatomic, assign) CGFloat headerViewHeight;
 //圈子详情页使用
 //空态页具体顶部offset

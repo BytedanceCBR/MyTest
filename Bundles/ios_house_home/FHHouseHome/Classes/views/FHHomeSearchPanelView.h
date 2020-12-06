@@ -12,16 +12,17 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHomeSearchPanelView : UIView
-{
-    
-}
-
 @property(nonatomic, strong) UIButton * searchBtn;
 @property(nonatomic, strong) NSMutableArray <NSString *> * searchTitles;
-@property (nonatomic, strong)   NSArray<FHHomeRollDataDataModel>      *rollDatas;
+@property(nonatomic, strong) NSArray<FHHomeRollDataDataModel>  *rollDatas;
+@end
 
-- (void)updateCountryLabelLayout:(NSString *)labelText;
+typedef NS_ENUM(NSUInteger, FHHomeSearchPanelViewLocation) {
+    FHHomeSearchPanelViewLocation_HomeNavBar, // 首页导航条
+};
 
+@interface FHHomeSearchPanelView(AdjustLocation)
+- (void)adjustLayoutFor:(FHHomeSearchPanelViewLocation)location;
 @end
 
 NS_ASSUME_NONNULL_END

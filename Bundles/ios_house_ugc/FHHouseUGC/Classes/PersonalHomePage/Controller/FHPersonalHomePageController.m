@@ -32,6 +32,7 @@
 #import "UIViewController+Track.h"
 #import "TTAccountManager.h"
 #import "UIImage+FIconFont.h"
+#import <ToastManager.h>
 
 @interface FHPersonalHomePageController ()<UIScrollViewDelegate,TTUIViewControllerTrackProtocol,SSImpressionProtocol>
 
@@ -142,7 +143,13 @@
     
     [self setupDefaultNavBar:NO];
     self.customNavBarView.title.text = [[TTAccountManager userID] isEqualToString:self.userId] ? @"我的主页" : @"TA的主页";
-     
+    
+    UIButton *moreButton = [[UIButton alloc] init];
+    [moreButton setBackgroundImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
+    moreButton.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+    [moreButton addTarget:self action:@selector(moreButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    [self.customNavBarView addRightViews:@[moreButton] viewsWidth:@[@(20)] viewsHeight:@[@(20)] viewsRightOffset:@[@(20)]];
+
     self.defaultTopHeight = 100;
     
     // _mainScrollView
@@ -308,6 +315,56 @@
         self.subScrollView.frame = CGRectMake(0, self.topHeightOffset, SCREEN_WIDTH, self.maxSubScrollViewHeight);
         self.mainScrollView.contentSize = CGSizeMake(SCREEN_WIDTH, self.maxSubScrollViewHeight + self.topHeightOffset);
     }
+}
+
+- (void)moreButtonClick {
+    
+    __block NSMutableDictionary *clickParams = [NSMutableDictionary dictionary];
+    __block NSMutableDictionary *popupShowParams = [NSMutableDictionary dictionary];
+    clickParams[@"page_type"] = @"personal_homepage_detail";
+    popupShowParams[@"page_type"] = @"personal_homepage_detail";
+    
+    clickParams[@"click_position"] = @"feed_more";
+    [FHUserTracker writeEvent:@"click_options" params:clickParams];
+    
+    UIAlertController *dislikeActionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    UIAlertAction *dislikeAction = [UIAlertAction actionWithTitle:@"拉黑" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        clickParams[@"click_position"] = @"blacklist";
+        [FHUserTracker writeEvent:@"click_options" params:clickParams];
+        
+        UIAlertController *dislikeConfirmActionSheet = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *dislikeConfirmAction = [UIAlertAction actionWithTitle:@"确认拉黑" style:UIAlertActionStyleDestructive handler:^(UIAlertAction * _Nonnull action) {
+            [[ToastManager manager] showToast:@"已拉黑该用户"];
+            clickParams[@"click_position"] = @"confirm_blacklist";
+            [FHUserTracker writeEvent:@"click_options" params:clickParams];
+        }];
+
+        UIAlertAction *cancelConfirmAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            clickParams[@"click_position"] = @"cancel";
+            [FHUserTracker writeEvent:@"click_options" params:clickParams];
+        }];
+
+        [dislikeConfirmActionSheet addAction:dislikeConfirmAction];
+        [dislikeConfirmActionSheet addAction:cancelConfirmAction];
+        
+        [self presentViewController:dislikeConfirmActionSheet animated:YES completion:nil];
+        popupShowParams[@"popup_name"] = @"confirm_blacklist_popup";
+        [FHUserTracker writeEvent:@"popup_show" params:popupShowParams];
+    }];
+    
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        clickParams[@"click_position"] = @"cancel";
+        [FHUserTracker writeEvent:@"click_options" params:clickParams];
+    }];
+    
+    [dislikeActionSheet addAction:dislikeAction];
+    [dislikeActionSheet addAction:cancelAction];
+    
+    [self presentViewController:dislikeActionSheet animated:YES completion:nil];
+    popupShowParams[@"popup_name"] = @"blacklist_popup";
+    [FHUserTracker writeEvent:@"popup_show" params:popupShowParams];
+    
 }
 
 - (void)dealloc {

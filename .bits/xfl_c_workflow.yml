@@ -1,0 +1,93 @@
+type: pipeline
+
+jobs:
+#  build:
+#    type: service
+#    service_name: build
+#    display_name: 覆盖率测试包
+#    failed_approvers:
+#      - lizhuoli@bytedance.com
+#      - langminglang@bytedance.com
+#    settings:
+#      build_config_id: 3850
+#    only:
+#      variables:
+#        - $CUSTOM_CI_MR_TYPE == "feature"
+
+    feature_size:
+        type: service
+        service_name: build
+        display_name: 开发分支包
+        failed_approvers:
+            - wangxinyu.kevin@bytedance.com
+            - xielei.233@bytedance.com
+        settings:
+            POD_COMMAND: "pod install --repo-update"
+            cert_url: "http://tosv.byted.org/obj/compilecluster/NetWorkInHousePriv220723.p12"
+            EXPORTOPTION_PLIST : "exportOptionFInHouse.plist"
+            build_config_id: 3949
+            build_size_ipa: true
+        except:
+            variables:
+            - $CUSTOM_CI_MR_TYPE == "merge"
+    prebuild:
+        type: service
+        service_name: build
+        display_name: 预编译包
+        failed_approvers:
+            - wangxinyu.kevin@bytedance.com
+            - xielei.233@bytedance.com
+        settings:
+            POD_COMMAND: "pod install --repo-update"
+            cert_url: "http://tosv.byted.org/obj/compilecluster/NetWorkInHousePriv220723.p12"
+            EXPORTOPTION_PLIST : "exportOptionFInHouse.plist"
+            build_config_id: 3949
+            merge_target: true
+    merge_base_build:
+        type: service
+        service_name: build
+        display_name: 包大小基准包
+        failed_approvers:
+            - wangxinyu.kevin@bytedance.com
+            - xielei.233@bytedance.com
+        settings:
+          POD_COMMAND: "pod install --repo-update"
+          cert_url: "http://tosv.byted.org/obj/compilecluster/NetWorkInHousePriv220723.p12"
+          EXPORTOPTION_PLIST : "exportOptionFInHouse.plist"
+          merge_base: true
+          build_size_ipa: true
+          build_config_id: 3949
+        except:
+          variables:
+            - $CUSTOM_CI_MR_TYPE == "merge"
+    app_size:
+        type: service
+        service_name: package_size
+        display_name: 包检测
+        failed_approvers:
+            - wangxinyu.kevin@bytedance.com
+            - xielei.233@bytedance.com
+        depends_on:
+            - feature_size
+            - merge_base_build
+        settings:
+            POD_COMMAND: "pod install --repo-update"
+            cert_url: "http://tosv.byted.org/obj/compilecluster/NetWorkInHousePriv220723.p12"
+            EXPORTOPTION_PLIST : "exportOptionFInHouse.plist"
+            build_config_id: 3949
+            app_id: 137001
+    code_check:
+        type: service
+        service_name: code_check
+        display_name: 静态检测
+        failed_approvers:
+            - wangxinyu.kevin@bytedance.com
+            - xielei.233@bytedance.com
+        settings:
+          POD_COMMAND: "pod install --repo-update"
+          cert_url: "http://tosv.byted.org/obj/compilecluster/NetWorkInHousePriv220723.p12"
+          EXPORTOPTION_PLIST : "exportOptionFInHouse.plist"
+          build_config_id: 3949
+        except:
+          variables:
+            - $CUSTOM_CI_MR_TYPE == "merge"

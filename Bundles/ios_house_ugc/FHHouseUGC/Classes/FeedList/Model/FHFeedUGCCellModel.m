@@ -139,6 +139,7 @@
                  type == FHUGCFeedListCellTypeUGCVote ||
                  type == FHUGCFeedListCellTypeUGCSmallVideo ||
                  type == FHUGCFeedListCellTypeUGCSmallVideo2 ||
+                 type == FHUGCFeedListCellTypeUGCSmallVideoList ||
                  type == FHUGCFeedListCellTypeUGCVoteInfo ||
                  type == FHUGCFeedListCellTypeUGCRecommendCircle ||
                  type == FHUGCFeedListCellTypeUGCEncyclopedias ){
@@ -768,6 +769,25 @@
         }else {
         [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         }
+    } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideoList){
+        cellModel.cellSubType = FHUGCFeedListCellSubTypeSmallVideoList;
+        double currentTime =  [[NSDate date] timeIntervalSince1970]*1000;
+        NSString *strTime = [NSString stringWithFormat:@"%.0f",currentTime];
+        cellModel.groupId = [model.rawData.groupId stringByAppendingString:strTime];
+        cellModel.originGroupId = model.rawData.groupId;
+        if (model.subRawDatas.count > 0) {
+            NSMutableArray *videoModelArr = [[NSMutableArray alloc]init];
+            for (id content in model.subRawDatas) {
+                FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel modelFromFeed:content];
+                [videoModelArr addObject:cellmodel];
+            }
+            cellModel.videoList = [videoModelArr copy];
+        }else {
+            return nil;
+        }
+        if (model.rawData.showMore && [model.rawData.showMore objectForKey:@"url"]) {
+            cellModel.openUrl = [model.rawData.showMore objectForKey:@"url"];
+        }
     } else if (cellModel.cellType == FHUGCFeedListCellTypeUGCRecommendCircle) {
         cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCRecommendCircle;
         cellModel.hotSocialList = model.rawData.hotSocialList;
@@ -778,7 +798,7 @@
         if(cellModel.hotSocialList.count <= 0){
             [[HMDTTMonitor defaultManager] hmdTrackService:kHotRecommendCircleListNil metric:nil category:@{
                 @"version_code": [TTSandBoxHelper fhVersionCode],
-                @"isEmpty":@(1)
+                @"isEmptOjumpy":@(1)
             } extra:@{
                 
             }];

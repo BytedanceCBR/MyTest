@@ -130,6 +130,7 @@
 #import "FHShortVideoPerLoaderManager.h"
 #import "FHHouseUGCAPI.h"
 #import "FHUtils.h"
+#import <FHShareManager.h>
 #define kPostMessageFinishedNotification    @"kPostMessageFinishedNotification"
 
 @import AVFoundation;
@@ -311,6 +312,7 @@ static const CGFloat kFloatingViewOriginY = 230;
             if ([self.dataFetchManager respondsToSelector:@selector(dataDidChangeBlock)]) {
                 self.dataFetchManager.dataDidChangeBlock = ^{
                     @strongify(self);
+                    [self endLoading];
                     if ([self.dataFetchManager numberOfShortVideoItems] == 0) {
                         [self.emptyView showEmptyWithTip:@"数据走丢了" errorImageName:@"short_video_nodata" showRetry:YES];
                         return;
@@ -433,7 +435,11 @@ static const CGFloat kFloatingViewOriginY = 230;
         @weakify(self)
         controller.loadMoreBlock = ^(BOOL preload) {
             @strongify(self);
-            [self loadMoreAutomatically:preload];
+            [self loadMoreAutomatically:preload showLoading:NO];
+        };
+        controller.didScroll = ^{
+            @strongify(self);
+            [self loadVideoDataIfNeeded];
         };
         controller.detailPromptManager = self.detailPromptManager;
         controller.configureOverlayViewController = ^(id<TSVControlOverlayViewController> _Nonnull viewController) {
@@ -473,6 +479,17 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.view addSubview:self.videoContainerViewController.view];
     [self.videoContainerViewController didMoveToParentViewController:self];
 
+    [self addDefaultEmptyViewFullScreen];
+    self.emptyView.backgroundColor = [UIColor clearColor];
+    self.emptyView.retryBlock = ^{
+        @strongify(self);
+        self.emptyView.hidden = YES;
+        [self loadMoreAutomatically:YES showLoading:YES];
+    };
+    [self.emptyView.retryButton setBackgroundImage:[FHUtils createImageWithColor:[UIColor clearColor]] forState:UIControlStateNormal];
+    [self.emptyView.retryButton setBackgroundImage:[FHUtils createImageWithColor:[UIColor clearColor]] forState:UIControlStateHighlighted];
+    [self.emptyView.retryButton setTitle:@"重新加载" forState:UIControlStateNormal];
+    
     self.topBarView = [[UIView alloc] init];
     self.topBarView.frame = CGRectMake(15, topInset, CGRectGetWidth(self.view.bounds) -30, 64.0);
     self.topBarView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
@@ -611,7 +628,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([self.dataFetchManager numberOfShortVideoItems]) {
         self.model = [self.dataFetchManager itemAtIndex:[self.dataFetchManager currentIndex]];
     } else {
-        [self loadMoreAutomatically:YES];
+        [self loadMoreAutomatically:YES showLoading:YES];
     }
     
 //    }
@@ -644,15 +661,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     RAC(self, viewModel.commonTrackingParameter) = RACObserve(self, commonTrackingParameter);
     RAC(self, videoContainerViewController.viewModel) = RACObserve(self, viewModel);
     
-    [self addDefaultEmptyViewFullScreen];
-    self.emptyView.backgroundColor = [UIColor clearColor];
-    self.emptyView.retryBlock = ^{
-        @strongify(self);
-        [self loadMoreAutomatically:YES];
-    };
-    [self.emptyView.retryButton setBackgroundImage:[FHUtils createImageWithColor:[UIColor clearColor]] forState:UIControlStateNormal];
-    [self.emptyView.retryButton setBackgroundImage:[FHUtils createImageWithColor:[UIColor clearColor]] forState:UIControlStateHighlighted];
-    [self.emptyView.retryButton setTitle:@"重新加载" forState:UIControlStateNormal];
 }
 
 
@@ -839,9 +847,12 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.videoContainerViewController refresh];
 }
 
-- (void)loadMoreAutomatically:(BOOL)isAuto
+- (void)loadMoreAutomatically:(BOOL)isAuto showLoading:(BOOL)showLoading
 {
     if(![TTReachability isNetworkConnected]){
+        if (showLoading) {
+            [self.emptyView showEmptyWithTip:@"数据走丢了" errorImageName:@"short_video_nodata" showRetry:YES];
+        }
         return;
     }
 
@@ -850,9 +861,13 @@ static const CGFloat kFloatingViewOriginY = 230;
     }
 
     @weakify(self);
+    if (showLoading && self.dataFetchManager.numberOfShortVideoItems== 0) {
+        [self startLoading];
+    }
+    
     [self.dataFetchManager requestDataAutomatically:isAuto finishBlock:^(NSUInteger increaseCount, NSError *error) {
         @strongify(self);
-
+        [self endLoading];
         if (error || increaseCount == 0) {
 //
             return;
@@ -877,7 +892,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 {
     NSInteger numberOfItemLeft = self.dataFetchManager.numberOfShortVideoItems - self.dataFetchManager.currentIndex;
     if (numberOfItemLeft <= 4 ) {
-        [self loadMoreAutomatically:YES];
+        [self loadMoreAutomatically:YES showLoading:NO];
     }
 }
 
@@ -1112,6 +1127,9 @@ static const CGFloat kFloatingViewOriginY = 230;
             [self.orderedData setValue:@(self.model.userRepin) forKeyPath:@"originalData.userRepined"];
             
             contentItem.selected = self.model.userRepin;
+            
+            
+            
             if(self.model.userRepin) {
                 TTIndicatorView * indicatorView = [[TTIndicatorView alloc] initWithIndicatorStyle:TTIndicatorViewStyleImage
                                                                                     indicatorText:NSLocalizedString(@"收藏成功", nil)
@@ -1125,6 +1143,9 @@ static const CGFloat kFloatingViewOriginY = 230;
                                                                                    dismissHandler:nil];
                 [indicatorView showFromParentView:activityPanelControllerWindow];
             }
+            
+            [FHShortVideoTracerUtil clickFavoriteBtn:self.model favorite:self.model.userRepin];
+            
             if (groupID.length > 0 ) {
                 NSMutableDictionary *userInfo = @{}.mutableCopy;
                 userInfo[@"group_id"] = groupID;
@@ -1448,9 +1469,89 @@ static const CGFloat kFloatingViewOriginY = 230;
 //        if ([self.model isAd]) {
 //            shareType = AWEVideoShareTypeAd;
 //        }
+
+        if([[FHShareManager shareInstance] isShareOptimization]) {
+            [self showSharePanel:image];
+            return;
+        }
+        
         AWEVideoShareModel *shareModel = [[AWEVideoShareModel alloc] initWithModel:self.model image:image shareType:shareType];
         [self.shareManager displayActivitySheetWithContent:[shareModel shareContentItems]];
     }];
+}
+
+- (void)showSharePanel:(UIImage *)image {
+    FHFeedContentRawDataSmallVideoShareModel *shareModel = self.model.share;
+    
+    NSString *shareTitle = nil;
+    if (shareModel.shareTitle.length > 0) {
+        shareTitle = shareModel.shareTitle;
+    } else {
+        shareTitle = [NSString stringWithFormat:@"%@的精彩视频", self.model.user.name];
+    }
+    
+    NSString *desc = shareModel.shareDesc;
+    if (desc.length > 0) {
+        desc = [desc length] > 30 ? [[desc substringToIndex:30] stringByAppendingString:@"..."] : desc;
+    } else {
+        desc = @"这是我私藏的视频。一般人我才不分享！";
+    }
+
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
+
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = shareTitle;
+    commonDataModel.desc = desc;
+    commonDataModel.shareUrl = shareModel.shareUrl;
+    commonDataModel.thumbImage = image;
+    commonDataModel.imageUrl  = [self.model.video.originCover.urlList firstObject];
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDataModel = commonDataModel;
+
+    FHShareReportDataModel *reportDataModel = [[FHShareReportDataModel alloc] init];
+    WeakSelf;
+    reportDataModel.reportBlcok = ^{
+        StrongSelf;
+        [self handleReportVideo];
+    };
+    dataModel.reportDataModel = reportDataModel;
+    
+    FHShareCollectDataModel *collectDataModel = [[FHShareCollectDataModel alloc] init];
+    collectDataModel.collected = self.model.userRepin;
+    collectDataModel.collectBlcok = ^{
+        StrongSelf;
+        [self handleFavoriteVideoWithContentItem:nil];
+    };
+    dataModel.collectDataModel = collectDataModel;
+    
+    NSArray *contentItemArray = @[
+        @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)],
+        @[@(FHShareChannelTypeCollect),@(FHShareChannelTypeDislike),@(FHShareChannelTypeReport),@(FHShareChannelTypeBlock)],
+    ];
+    
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self shareParams]];
+}
+
+- (NSDictionary *)shareParams {
+    FHFeedUGCCellModel *model = self.model;
+    NSDictionary *logPb = [model.logPb copy];
+    
+    NSMutableDictionary *params = @{}.mutableCopy;
+    params[@"group_id"] = model.groupId ?: @"be_bull";
+    params[@"group_source"] = logPb[@"group_source"] ?: @"be_bull";
+    params[@"impr_id"] = logPb[@"impr_id"] ?: @"be_bull";
+    params[@"origin_from"] = model.tracerDic[@"origin_from"] ?: @"be_null";
+    params[@"enter_from"] = model.tracerDic[@"enter_from"] ?: @"be_null";
+    params[@"category_name"] = @"f_house_smallvideo_flow";
+    params[@"page_type"] = @"small_video_detail";
+
+    NSDictionary *tracerDict = self.pageParams;
+    NSDictionary *extraDic = tracerDict[@"extraDic"];
+    if([extraDic isKindOfClass:[NSDictionary class]]) {
+        params[@"element_type"] = extraDic[@"element_type"] ?: @"be_null";
+    }
+    return params;
 }
 
 #pragma mark -
@@ -1627,6 +1728,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([scrollView isEqual:self.tableView]) {
         self.commentBeginDragContentOffsetY = scrollView.contentOffset.y;
     }
+    [self loadVideoDataIfNeeded];
 }
 
 #pragma mark - handle slideGesture

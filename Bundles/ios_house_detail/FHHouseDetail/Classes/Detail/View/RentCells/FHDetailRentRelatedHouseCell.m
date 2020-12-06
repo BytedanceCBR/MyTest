@@ -237,27 +237,17 @@
 {
     if (indexPath.row >= 0 && indexPath.row < self.items.count) {
         
-//        FHHouseRentDataItemsModel *item = self.items[indexPath.row];
-//        FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
-//        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
-//        if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
-//            FHHouseBaseItemCell *imageInfoCell = (FHHouseBaseItemCell *)cell;
-//            [imageInfoCell refreshTopMargin:0];
-//            [imageInfoCell updateWithHouseCellModel:cellModel];
-//        }
-                FHHouseListBaseItemModel *item = self.items[indexPath.row];
-//                FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
+        FHHouseListBaseItemModel *item = self.items[indexPath.row];
         if ([FHEnvContext isDisplayNewCardType]) {
             FHHouseListRentRelatedCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHouseListRentRelatedCell class])];
             [cell refreshWithData:item];
             return cell;
         }
-                UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
-                if ([cell isKindOfClass:[FHHouseListBaseItemCell class]]) {
-                    FHHouseListBaseItemCell *imageInfoCell = (FHHouseListBaseItemCell *)cell;
-//                    [imageInfoCell refreshTopMargin:0];
-                    [imageInfoCell refreshWithData:item];
-                }
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHSingleImageInfoCell"];
+        if ([cell isKindOfClass:[FHHouseListBaseItemCell class]]) {
+            FHHouseListBaseItemCell *imageInfoCell = (FHHouseListBaseItemCell *)cell;
+            [imageInfoCell refreshWithData:item];
+        }
         return cell;
     }
     

@@ -5540,5 +5540,16 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
 }
 @end
 
+@implementation SSCommonLogic (FHShare)
++ (BOOL)isShareOptimization {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_share_optimization"] != nil) {
+        BOOL isShareOptimization = [[fhSettings objectForKey:@"f_share_optimization"] boolValue];
+        return isShareOptimization;
+    }
+    return NO;
+}
+@end
+
 #endif
 

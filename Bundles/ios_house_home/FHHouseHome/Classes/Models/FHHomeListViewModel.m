@@ -28,14 +28,13 @@
 #import "FHUtils.h"
 #import "FHHomeMainViewController.h"
 #import <TTUIWidget/TTRefreshAnimationView.h>
+#import "FHHomeRenderFlow.h"
 
 #define KFHScreenWidth [UIScreen mainScreen].bounds.size.width
 #define KFHScreenHeight [UIScreen mainScreen].bounds.size.height
 #define KFHHomeSectionHeight 30
-#define KFHHomeSearchBarHeight 50
 
 #define KFHHomeHeaderCellId @"kHouseListCellid"
-#define KFHHomeSearchCellId @"kHouseSearchCellid"
 #define KFHHomeCategoryCellId @"kCategoryCellid"
 #define KFHHomeHouseListCellId @"kHouseListCellid"
 
@@ -296,7 +295,13 @@
     for (int i = 0; i < configDataModel.houseTypeList.count; i++) {
         NSNumber *houseTypeNum = configDataModel.houseTypeList[i];
         if ([houseTypeNum isKindOfClass:[NSNumber class]]) {
+            FHHomeItemRenderFlow *renderFlow = nil;
+            if (i == self.categoryView.segmentedControl.selectedSegmentIndex) {
+                renderFlow = [[FHHomeRenderFlow sharedInstance] traceHomeItemWithHouseType:[houseTypeNum integerValue]];
+            }
+            
             FHHomeItemViewController *itemVC = [[FHHomeItemViewController alloc] initItemWith:self];
+            itemVC.renderFlow = renderFlow;
             itemVC.houseType = [houseTypeNum integerValue];
             itemVC.panelVM = self.panelVM;
             if (houseTypeNum.integerValue == self.houseType) {
@@ -586,7 +591,7 @@
           }
       }
       
-      if (self.tableViewV.contentOffset.y < (self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
+      if (self.tableViewV.contentOffset.y < (self.headerHeight + KFHHomeSectionHeight)) {
           vc.tableView.contentOffset = CGPointMake(0, 0);
           vc.childScrollEnable = NO;
       }else{
@@ -642,31 +647,12 @@
 #pragma mark tableView 代理
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 4;
+    return 3;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (indexPath.row == kFHHomeListHeaderSearchSection) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:KFHHomeSearchCellId];
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:KFHHomeSearchCellId];
-        }
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        if (![cell.contentView.subviews containsObject:self.homeViewController.topBar]) {
-            [cell.contentView addSubview:self.homeViewController.topBar];
-            [self.homeViewController.topBar mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(0);
-                make.centerX.mas_equalTo(0);
-                make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width);
-                make.height.mas_equalTo(50);
-            }];
-        }
-        [cell.contentView setBackgroundColor:[UIColor themeHomeColor]];
-        return cell;
-    }
-    
-    if (indexPath.row == kFHHomeListHeaderBaseViewSection) {
+        
+    if (indexPath.row == FHHomeListSectionType_HeaderBaseView) {
         JSONModel *model = [[FHEnvContext sharedInstance] getConfigFromCache];
         if (!model) {
             model = [[FHEnvContext sharedInstance] readConfigFromLocal];
@@ -678,7 +664,7 @@
         return cell;
     }
     
-    if (indexPath.row == kFHHomeListHouseTypeBannerViewSection) {
+    if (indexPath.row == FHHomeListSectionType_HouseTypeBannerView) {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:KFHHomeCategoryCellId];
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:KFHHomeCategoryCellId];
@@ -703,16 +689,12 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
-    if (indexPath.row == kFHHomeListHeaderSearchSection) {
-        return KFHHomeSearchBarHeight;
-    }
-    
-    if (indexPath.row == kFHHomeListHeaderBaseViewSection) {
+        
+    if (indexPath.row == FHHomeListSectionType_HeaderBaseView) {
         return [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType];
     }
     
-    if (indexPath.row == kFHHomeListHouseTypeBannerViewSection) {
+    if (indexPath.row == FHHomeListSectionType_HouseTypeBannerView) {
         return KFHHomeSectionHeight;
     }
     
@@ -742,8 +724,6 @@
 
     if (self.tableViewV == scrollView) {
         
-        [self changeTopSearchBtn:scrollView.contentOffset.y > KFHHomeSearchBarHeight];
-        
         if(self.tableViewV.contentOffset.y == 0){
             for (FHHomeItemViewController *vc in self.itemsVCArray) {
                  vc.childScrollEnable = NO;
@@ -751,14 +731,14 @@
         }
         
         if (!_superScrollEnable) {
-            scrollView.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
+            scrollView.contentOffset = CGPointMake(0, self.headerHeight + KFHHomeSectionHeight);
            for (FHHomeItemViewController *vc in self.itemsVCArray) {
                 vc.childScrollEnable = YES;
            }
             [self changeHouseCategoryStatus:NO];
         }else{
-            if (scrollView.contentOffset.y >= (self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight)) {
-                scrollView.contentOffset = CGPointMake(0.0, self.headerHeight + KFHHomeSectionHeight + KFHHomeSearchBarHeight);
+            if (scrollView.contentOffset.y >= (self.headerHeight + KFHHomeSectionHeight)) {
+                scrollView.contentOffset = CGPointMake(0.0, self.headerHeight + KFHHomeSectionHeight);
                 if ((self.childVCScrollView.contentSize.height >= [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]) && self.childVCScrollView.contentOffset.y != 0) {
                     self.superScrollEnable = NO;
                 }else{
@@ -776,7 +756,7 @@
         
         CGFloat offSetY = scrollView.contentOffset.y;
         
-        if (offSetY < self.headerHeight + 80) {
+        if (offSetY < self.headerHeight + KFHHomeSectionHeight) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"headerViewToTop" object:nil];
             if (self.isShowTopTabbar) {
                 [[FHHomeConfigManager sharedInstance].fhHomeBridgeInstance isShowTabbarScrollToTop:NO];
@@ -790,7 +770,7 @@
             }
         }
     } else if (scrollView == self.homeViewController.scrollView) {
-        
+        self.superScrollEnable = NO;
         CGFloat contentWidth = (KFHScreenWidth * [FHEnvContext sharedInstance].generalBizConfig.configCache.houseTypeList.count) - KFHScreenWidth;
         if (scrollView.contentOffset.x >= contentWidth) {
             scrollView.contentOffset = CGPointMake(contentWidth, 0);
@@ -892,7 +872,6 @@
     };
     [self.categoryView showOriginStyle:isShowTopHouse];
     [mainVC changeTopStatusShowHouse:!isShowTopHouse];
-    
     if (isShowTopHouse && (self.childResetZeroStatus != isShowTopHouse)) {
         for (FHHomeItemViewController *vc in self.itemsVCArray) {
             if (vc.houseType == self.houseType) {
@@ -901,21 +880,9 @@
                     self.superScrollEnable = YES;
                 }
             }
-           if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
-               vc.tableView.contentOffset = CGPointZero;
-           }
         }
     }
     self.childResetZeroStatus = isShowTopHouse;
-}
-
-- (void)changeTopSearchBtn:(BOOL)isShow
-{
-    FHHomeMainViewController *mainVC = nil;
-    if ([self.homeViewController.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
-        mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
-    };
-    [mainVC changeTopSearchBtn:isShow];
 }
 
 - (void)dealloc

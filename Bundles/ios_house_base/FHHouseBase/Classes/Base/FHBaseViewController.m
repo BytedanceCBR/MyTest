@@ -21,6 +21,7 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "UIImage+FIconFont.h"
+#import <TTUIWidget/TTNavigationController.h>
 
 @interface FHBaseViewController ()<TTRouteInitializeProtocol, UIViewControllerErrorHandler>
 
@@ -45,7 +46,9 @@
         self.isFirstViewDidAppear = YES;
         self.needRemoveLastVC = NO;
         self.isResetStatusBar = YES;
-        self.ttDragBackLeftEdge = UIScreen.mainScreen.bounds.size.width * 0.2;
+        self.ttDisableDragBack = NO;
+//        self.ttDragBackLeftEdge = TTNavigationControllerDefaultSwapLeftEdge; //屏幕边缘左滑
+        self.ttDragBackLeftEdge = 0; //全屏
 
         self.titleName = [paramObj.allParams objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];

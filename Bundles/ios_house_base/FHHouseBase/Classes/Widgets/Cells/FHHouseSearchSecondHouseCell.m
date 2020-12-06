@@ -242,7 +242,7 @@
         make.right.mas_equalTo(0);
         make.left.mas_equalTo(4);
         make.height.mas_equalTo(18);
-        make.top.mas_equalTo(self.mainTitleView.mas_bottom).offset(4);
+        make.top.mas_equalTo(self.mainTitleView.mas_bottom).offset(3);
     }];
     
     _tagContainerView = [[UIView alloc] init];
@@ -465,7 +465,7 @@
 }
 
 - (void)updateTagContainerView:(NSArray<FHHouseTagsModel *> *)tagList {
-    NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:tagList];
+    NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152];
     self.tagLabel.attributedText = attributeString;
 }
 
