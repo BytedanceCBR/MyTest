@@ -23,6 +23,40 @@
 #import "FHSuggestionListViewController+FHTracker.h"
 #import "FHSuggestionDefines.h"
 
+@interface FHSuggestionListViewController(FHDragBack)
+
+- (void)fixDragBackConfict;
+
+@end
+
+@implementation FHSuggestionListViewController(FHDragBack)
+
+//处理侧滑返回手势和collectionView手势冲突
+- (void)fixDragBackConfict {
+    if ([self.navigationController isKindOfClass:TTNavigationController.class]) {
+        TTNavigationController *naviController = (TTNavigationController *)self.navigationController;
+        if (naviController.panRecognizer && naviController.panRecognizer.enabled) {
+            [self.collectionView.panGestureRecognizer requireGestureRecognizerToFail:naviController.panRecognizer];
+        }
+    }
+}
+
+//支持边缘侧滑返回
+- (NSInteger)ttDragBackLeftEdge {
+    return TTNavigationControllerDefaultSwapLeftEdge;
+}
+
+//边缘滑动时，往左滑动禁止返回
+- (BOOL)shouldEnableBackActionWhenPanRight:(id)panRightValue {
+    BOOL enableBackAction = NO;
+    if ([panRightValue respondsToSelector:@selector(boolValue)]) {
+        enableBackAction = [panRightValue boolValue];
+    }
+    return enableBackAction;
+}
+
+@end
+
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
 @property (nonatomic, strong)   FHSuggestionListViewModel      *viewModel;
@@ -102,6 +136,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.houseTypeArray = [NSMutableArray new];
     [self setupUI];
+    [self fixDragBackConfict];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     if (self.autoFillInputText) {
         self.naviBar.searchInput.text = self.autoFillInputText;
