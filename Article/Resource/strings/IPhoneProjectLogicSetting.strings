@@ -260,4 +260,4 @@
 //找好房页面
 "house_comfort_find" = "FHHouseComfortFindViewController";
 //flutter页面
-"flutter" = "FHFlutterViewController"
+"flutter" = "FHFlutterViewController";
