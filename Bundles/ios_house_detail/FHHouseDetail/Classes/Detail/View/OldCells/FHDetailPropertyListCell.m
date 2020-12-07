@@ -531,45 +531,6 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         
 }
 
--(void)updateWithDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)detectiveModel
-{
-    self.data = detectiveModel;
-    _nameLabel.text = detectiveModel.baseTitle;
-    
-    NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
-    if (!IS_EMPTY_STRING(detectiveModel.content)) {
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:detectiveModel.content attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
-        [minfoAttrStr appendAttributedString:infoStr];
-    }
-
-    if (!IS_EMPTY_STRING(detectiveModel.warnContent)) {
-        NSAttributedString *warnStr = [[NSAttributedString alloc] initWithString:detectiveModel.warnContent attributes:@{NSForegroundColorAttributeName:[UIColor themeOrange1],NSFontAttributeName:[UIFont themeFontRegular:14]}];
-        [minfoAttrStr appendAttributedString:warnStr];
-    }
-    
-    _infoLabel.attributedText = minfoAttrStr;
-    
-    _logoImageView.image = nil;
-    [_logoImageView bd_setImageWithURL:[NSURL URLWithString:detectiveModel.icon]];
-    
-    _indicatorLabel.text = detectiveModel.tips;
-    
-    [_indicatorLabel sizeToFit];
-    
-    CGSize size = _indicatorLabel.bounds.size;
-    _indicatorLabel.hidden = NO;
-    
-    [_indicatorLabel  mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(size.width);
-    }];
-    
-    [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-(31+size.width));
-        make.size.mas_equalTo(CGSizeMake(15, 15));
-    }];
-    
-}
-
 -(void)updateWithSecurityInfo:(FHRentDetailDataBaseExtraSecurityInformationModel *)securityInfo
 {
     self.data = securityInfo;

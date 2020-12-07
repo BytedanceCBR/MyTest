@@ -250,23 +250,6 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             lastView = rowView;
         }
         
-        if (model.extraInfo.detective) {
-            rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
-            [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
-            [self.contentView addSubview:rowView];
-            [rowView updateWithDetectiveData:model.extraInfo.detective];
-            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
-                if (lastView) {
-                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-                }else{
-                    make.top.mas_equalTo(10);
-                }
-                make.left.mas_equalTo(31);
-                make.right.mas_equalTo(-31);
-                make.height.mas_equalTo(20);
-            }];
-            lastView = rowView;
-        }
         if (model.extraInfo.houseCertificationInfo) {
             rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
             [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
@@ -584,45 +567,6 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     self.indicatorLabel.hidden = YES;
         
-}
-
--(void)updateWithDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)detectiveModel
-{
-    self.data = detectiveModel;
-    _nameLabel.text = detectiveModel.baseTitle;
-    
-    NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
-    if (!IS_EMPTY_STRING(detectiveModel.content)) {
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:detectiveModel.content attributes:@{NSForegroundColorAttributeName:[UIColor themeGray2],NSFontAttributeName:[UIFont themeFontMedium:14]}];
-        [minfoAttrStr appendAttributedString:infoStr];
-    }
-
-    if (!IS_EMPTY_STRING(detectiveModel.warnContent)) {
-        NSAttributedString *warnStr = [[NSAttributedString alloc] initWithString:detectiveModel.warnContent attributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexStr:@"#ff9629"],NSFontAttributeName:[UIFont themeFontMedium:14]}];
-        [minfoAttrStr appendAttributedString:warnStr];
-    }
-    
-    _infoLabel.attributedText = minfoAttrStr;
-    
-    _logoImageView.image = nil;
-    [_logoImageView bd_setImageWithURL:[NSURL URLWithString:detectiveModel.icon]];
-    
-    _indicatorLabel.text = detectiveModel.tips;
-    
-    [_indicatorLabel sizeToFit];
-    
-    CGSize size = _indicatorLabel.bounds.size;
-    _indicatorLabel.hidden = NO;
-    
-    [_indicatorLabel  mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(size.width);
-    }];
-    
-    [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-(31+size.width));
-        make.size.mas_equalTo(CGSizeMake(15, 15));
-    }];
-    
 }
 
 -(void)updateWithSecurityInfo:(FHRentDetailDataBaseExtraSecurityInformationModel *)securityInfo

@@ -1093,12 +1093,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         //        trackInfo[UT_ENTER_FROM] = position;
         [popLayer showDetectiveReasonInfoData:(FHDetailDataBaseExtraDetectiveReasonInfo *)model trackInfo:trackInfo];
     }
-        else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-            position = @"happiness_eye";
-            trackInfo[UT_ENTER_FROM] = position;
-            [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model trackInfo:trackInfo];
-    
-        }
     
     [self addClickOptionLog:position];
     
