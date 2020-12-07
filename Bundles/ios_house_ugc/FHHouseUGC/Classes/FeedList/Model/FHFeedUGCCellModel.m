@@ -279,6 +279,7 @@
             user.avatarUrl = model.userInfo.avatarUrl;
             user.userId = model.userInfo.userId;
             user.schema = model.userInfo.schema;
+            user.fverifyShow = model.userInfo.fverifyShow;
             cellModel.user = user;
             
             if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
@@ -363,6 +364,7 @@
         user.avatarUrl = model.rawData.content.user.avatarUrl;
         user.userId = model.rawData.content.user.userId;
         user.schema = model.rawData.content.user.userSchema;
+        user.fverifyShow = model.rawData.content.user.fverifyShow;
         cellModel.user = user;
         
         cellModel.title = model.rawData.content.question.title;
@@ -439,6 +441,7 @@
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.name = model.rawData.content.user.uname;
         user.avatarUrl = model.rawData.content.user.avatarUrl;
+        user.fverifyShow = model.rawData.content.user.fverifyShow;
         user.userId = model.rawData.content.user.userId;
         user.schema = model.rawData.content.user.userSchema;
         cellModel.user = user;
@@ -499,6 +502,7 @@
         user.avatarUrl = model.rawData.commentBase.user.info.avatarUrl;
         user.userId = model.rawData.commentBase.user.info.userId;
         user.schema = model.rawData.commentBase.user.info.schema;
+        user.fverifyShow = model.rawData.content.user.fverifyShow;
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
@@ -683,6 +687,7 @@
         user.avatarUrl = model.rawData.user.info.avatarUrl;
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
+        user.fverifyShow = model.rawData.content.user.fverifyShow;
         cellModel.user = user;
         
         // 时间以及距离
@@ -749,6 +754,7 @@
         user.relationCount = [model.rawData.user.relationCount copy];
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
+        user.fverifyShow = model.rawData.content.user.fverifyShow;
         cellModel.user = user;
         
         cellModel.diggCount = model.rawData.action.diggCount;
@@ -811,6 +817,7 @@
         cellModel.openUrl = model.rawData.schema;
         cellModel.logPb = model.logPb;
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.fverifyShow = model.rawData.content.user.fverifyShow;;
         user.name = model.rawData.userName;
         user.avatarUrl = model.rawData.icon;
         cellModel.user = user;
@@ -924,6 +931,7 @@
         user.userBackgroundColor = model.user.userBackgroundColor;
         user.userBorderColor = model.user.userBorderColor;
         user.userFontColor = model.user.userFontColor;
+        user.fverifyShow = model.user.fverifyShow;
     } else if(model.rawData.user) {
         user.name = model.rawData.user.name;
         user.avatarUrl = model.rawData.user.avatarUrl;
@@ -933,6 +941,7 @@
         user.userBackgroundColor = model.rawData.user.userBackgroundColor;
         user.userBorderColor = model.rawData.user.userBorderColor;
         user.userFontColor = model.rawData.user.userFontColor;
+        user.fverifyShow = model.rawData.user.fverifyShow;
     }
 
     

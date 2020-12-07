@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHUGCCellUserInfoView : UIView
 
 @property(nonatomic ,strong) FHRealtorAvatarView *avatarView;
+@property(nonatomic ,strong) UIImageView *avatarTag;
+@property(nonatomic ,strong) UIImageView *questionIcon;
 @property(nonatomic ,strong) UILabel *userName;
 @property(nonatomic ,strong) UILabel *userAuthLabel;
 @property(nonatomic ,strong) UILabel *descLabel;

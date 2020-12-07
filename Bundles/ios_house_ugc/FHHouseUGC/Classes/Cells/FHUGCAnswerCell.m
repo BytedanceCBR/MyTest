@@ -34,6 +34,9 @@
 @interface FHUGCAnswerCell ()<TTUGCAsyncLabelDelegate>
 
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
+@property(nonatomic, strong) TTAsyncCornerImageView *userIma;
+@property(nonatomic, strong) UILabel *username;
+@property(nonatomic, strong) UIImageView *userTag;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *singleImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
@@ -72,6 +75,26 @@
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
     
+    
+    self.userIma = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20) allowCorner:YES];
+    _userIma.placeholderName = @"fh_mine_avatar";
+    _userIma.cornerRadius = 10;
+    _userIma.contentMode = UIViewContentModeScaleAspectFill;
+//    _userIma.borderWidth = 1;
+//    _userIma.borderColor = [UIColor themeGray6];
+    [self addSubview:self.userIma];
+    
+    self.userTag = [[UIImageView alloc]init];
+    self.userTag.contentMode = UIViewContentModeScaleAspectFit;
+    self.userTag.image = [UIImage imageNamed:@"ugc_v_tag"];
+    [self addSubview:self.userTag];
+    self.userTag.hidden = YES;
+    
+    self.username = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
+    self.username.textAlignment = NSTextAlignmentLeft;
+    self.username.userInteractionEnabled = YES;
+    [self addSubview:_username];
+    
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
@@ -79,13 +102,6 @@
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.contentImage = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20) allowCorner:YES];
-    _contentImage.placeholderName = @"fh_mine_avatar";
-    _contentImage.cornerRadius = 10;
-    _contentImage.contentMode = UIViewContentModeScaleAspectFill;
-    _contentImage.borderWidth = 1;
-    _contentImage.borderColor = [UIColor themeGray6];
-    [self.contentLabel addSubview:self.contentImage];
     
     self.multiImageView = [[FHUGCCellMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0) count:3];
     _multiImageView.hidden = YES;
@@ -116,7 +132,22 @@
     self.userInfoView.width = [UIScreen mainScreen].bounds.size.width;
     self.userInfoView.height = userInfoViewHeight;
     
-    self.contentLabel.top = self.userInfoView.bottom + 10;
+    self.userIma.top =  self.userInfoView.bottom + 10;
+    self.userIma.left = leftMargin;
+    self.userIma.width = 20;
+    self.userIma.height = 20;
+    
+    self.userTag.top =  self.userIma.top + 12;
+    self.userTag.left = self.userIma.left + 12;
+    self.userTag.width = 8;
+    self.userTag.height = 8;
+    
+    self.username.centerY =  self.userIma.centerY;
+    self.username.left = self.userIma.right + 4;
+    self.username.height = 18;
+    
+    
+    self.contentLabel.top = self.userIma.bottom + 10;
     self.contentLabel.left = leftMargin;
     self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.contentLabel.height = 0;
@@ -126,12 +157,12 @@
     self.contentImage.width = 20;
     self.contentImage.height = 20;
     
-    self.multiImageView.top = self.userInfoView.bottom + 10;
+    self.multiImageView.top = self.contentLabel.bottom + 10;
     self.multiImageView.left = leftMargin;
     self.multiImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.multiImageView.height = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
     
-    self.singleImageView.top = self.userInfoView.bottom + 10;
+    self.singleImageView.top = self.contentLabel.bottom + 10;
     self.singleImageView.left = leftMargin;
     self.singleImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.singleImageView.height = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
@@ -147,6 +178,7 @@
     self.attachCardView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.attachCardView.height = attachCardViewHeight;
 }
+
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
@@ -190,8 +222,8 @@
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
         self.contentLabel.height = 0;
-        self.multiImageView.top = self.userInfoView.bottom + 10;
-        self.singleImageView.top = self.userInfoView.bottom + 10;
+        self.multiImageView.top = self.userIma.bottom + 10;
+        self.singleImageView.top = self.userIma.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
         self.contentLabel.height = cellModel.contentHeight;
@@ -199,12 +231,10 @@
                    contentColor:[UIColor themeGray1]
                           color:[UIColor themeRed3]];
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel truncatedToken:more];
-        self.multiImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
-        self.singleImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
+        self.multiImageView.top = self.userIma.bottom + 20 + cellModel.contentHeight;
+        self.singleImageView.top = self.userIma.bottom + 20 + cellModel.contentHeight;
     }
-    
-    [self.contentImage tt_setImageWithURLString:cellModel.user.avatarUrl];
-    
+
     UIView *lastView = self.contentLabel;
     CGFloat topOffset = 10;
     //图片
@@ -243,10 +273,12 @@
 
 - (void)updateUserInfoView:(FHFeedUGCCellModel *)cellModel {
     [self.userInfoView setTitleModel:cellModel];
-    NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
+    self.username.text = cellModel.user.name;
+    self.userTag.hidden = !cellModel.user.fverifyShow;
+    [self.userIma tt_setImageWithURLString:cellModel.user.avatarUrl];
+    NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    问题：%@",cellModel.originItemModel.content] : @"";
     CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
     CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
-    CGFloat userInfoHeight = 0;
     if(size.width > maxTitleLabelSizeWidth){
         self.userInfoView.height = 50;
     }else {
@@ -256,11 +288,16 @@
 }
 
 - (void)updateFarme {
-      self.contentLabel.top = self.userInfoView.bottom + 10;
-      self.multiImageView.top = self.userInfoView.bottom + 10;
-      self.singleImageView.top = self.userInfoView.bottom + 10;
-      self.bottomView.top = self.multiImageView.bottom + 10;
-      self.attachCardView.top = self.multiImageView.bottom + 10;
+    self.userIma.top =  self.userInfoView.bottom + 10;
+    self.userTag.top =  self.userIma.top + 12;
+    CGSize size = [self.username.text sizeWithFont:[UIFont themeFontRegular:14] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
+    self.username.width = size.width;
+    self.username.centerY =  self.userIma.centerY;
+    self.contentLabel.top = self.userIma.bottom + 10;
+    self.multiImageView.top = self.contentLabel.bottom + 10;
+    self.singleImageView.top = self.contentLabel.bottom + 10;
+    self.bottomView.top = self.multiImageView.bottom + 10;
+    self.attachCardView.top = self.multiImageView.bottom + 10;
 }
 
 + (CGFloat)heightForData:(id)data {
@@ -275,7 +312,7 @@
         }else {
             userInfoHeight = 30;
         }
-        CGFloat height = userInfoHeight + bottomViewHeight + topMargin + 10;
+        CGFloat height = userInfoHeight + bottomViewHeight + topMargin + 10 +userInfoViewHeight;
         
         if(!isEmptyString(cellModel.content)){
             height += (cellModel.contentHeight + 10);
@@ -360,4 +397,5 @@
         }
     }
 }
+
 @end

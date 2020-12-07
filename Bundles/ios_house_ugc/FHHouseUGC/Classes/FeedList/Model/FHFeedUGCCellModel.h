@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *userBorderColor;
 @property (nonatomic, copy , nullable) NSString *userFontColor;
 @property (nonatomic, copy , nullable) NSString *desc;
+@property (nonatomic, assign ) BOOL fverifyShow;
 @property (nonatomic, copy, nullable) FHFeedContentRawDataCommentRelationModel *relation;
 @property (nonatomic, copy, nullable) FHFeedContentRawDataCommentRelationCountModel *relationCount;
 @end

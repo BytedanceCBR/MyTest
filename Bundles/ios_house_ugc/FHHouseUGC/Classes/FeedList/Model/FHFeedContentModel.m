@@ -319,6 +319,7 @@
     @"avatarUrl": @"avatar_url",
     @"userId": @"user_id",
     @"userVerified": @"user_verified",
+    @"fverifyShow":@"f_verify_show",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -556,6 +557,7 @@
                            @"isFollowing": @"is_following",
                            @"vIcon": @"v_icon",
                            @"userAuthInfo": @"user_auth_info",
+                           @"fverifyShow":@"f_verify_show",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -692,6 +694,7 @@
                            @"userBackgroundColor": @"user_background_color",
                            @"userBorderColor": @"user_border_color",
                            @"userFontColor": @"user_font_color",
+                           @"fverifyShow":@"f_verify_show",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
