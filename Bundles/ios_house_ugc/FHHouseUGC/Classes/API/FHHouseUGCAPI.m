@@ -1283,7 +1283,7 @@
 }
 
 +(TTHttpTask *)requestPersonalHomePageTabList:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion {
-    NSString *queryPath = @"/f100/api/personal/home_page/?";
+    NSString *queryPath = @"/f100/ugc/feed_tab";
         
     Class cls = NSClassFromString(@"FHPersonalHomePageTabListModel");
     return [FHMainApi queryData:queryPath params:param class:cls completion:completion];

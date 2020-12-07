@@ -6,18 +6,45 @@
 //
 
 #import "FHPersonalHomePageFeedViewController.h"
+#import "FHPersonalHomePageFeedViewModel.h"
 #import "UIColor+Theme.h"
 
-@interface FHPersonalHomePageFeedViewController ()
-
+@interface FHPersonalHomePageFeedViewController () 
+@property(nonatomic,strong) UICollectionView *collectionView;
+@property(nonatomic,strong) FHPersonalHomePageFeedViewModel *viewModel;
 @end
 
 @implementation FHPersonalHomePageFeedViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor themeWhite];
-    // Do any additional setup after loading the view.
+    [self initView];
+    [self initViewModel];
 }
+
+- (void)initView {
+    self.view.backgroundColor = [UIColor themeWhite];
+    
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    layout.sectionHeadersPinToVisibleBounds = YES;
+    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    self.collectionView.backgroundColor = [UIColor clearColor];
+    self.collectionView.pagingEnabled = YES;
+    self.collectionView.showsHorizontalScrollIndicator = NO;
+    self.collectionView.showsVerticalScrollIndicator = NO;
+    [self.view addSubview:self.collectionView];
+}
+
+- (void)initViewModel {
+    self.viewModel = [[FHPersonalHomePageFeedViewModel alloc] initWithController:self collectionView:self.collectionView];
+}
+
+-(void)updateWithHeaderViewMdoel:(FHPersonalHomePageTabListModel *)model {
+    [self.viewModel updateWithHeaderViewMdoel:model];
+}
+
+
+
 
 @end

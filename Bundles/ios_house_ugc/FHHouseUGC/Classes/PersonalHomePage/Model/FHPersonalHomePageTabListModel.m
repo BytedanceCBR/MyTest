@@ -11,8 +11,7 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-            @"showName": @"show_name",
-            @"tabName":@"tab_name",
+        @"showName": @"show_name"
     };
     return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -29,7 +28,8 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-        @"ugcTabList": @"ugc_tab_list",
+        @"tabList": @"tab_list",
+        @"isVerifyShow": @"f_verify_show"
     };
     return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

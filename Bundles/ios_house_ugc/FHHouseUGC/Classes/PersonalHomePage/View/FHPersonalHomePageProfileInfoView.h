@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHPersonalHomePageProfileInfoView : UIView
 @property(nonatomic,strong) FHPersonalHomePageProfileInfoImageView *shadowView;
 @property(nonatomic,assign) CGFloat viewHeight;
-- (void)updateWithModel:(FHPersonalHomePageProfileInfoModel *)model;
+- (void)updateWithModel:(FHPersonalHomePageProfileInfoModel *)model isVerifyShow:(BOOL)isVerifyShow;
 @end
 
 NS_ASSUME_NONNULL_END

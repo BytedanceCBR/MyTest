@@ -150,18 +150,12 @@
     [FHUserTracker writeEvent:@"popup_show" params:popupShowParams];
 }
 
-
--(void)updateProfileInfoViewWithMdoel:(FHPersonalHomePageProfileInfoModel *)model {
-    [self.profileInfoView updateWithModel:model];
+-(void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel {
+    [self.profileInfoView updateWithModel:profileInfoModel isVerifyShow:[tabListModel.data.isVerifyShow boolValue]];
     CGFloat profileInfoViewHeight = [self.profileInfoView viewHeight];
     self.profileInfoView.frame = CGRectMake(0, 0, SCREEN_WIDTH, profileInfoViewHeight);
-    dispatch_semaphore_signal(self.viewModel.mutex);
-    
-}
-
--(void)updateFeedViewControllerWithMdoel:(FHPersonalHomePageTabListModel *)model {
-    CGFloat profileInfoViewHeight = [self.profileInfoView viewHeight];
     self.feedViewController.view.frame = CGRectMake(0, profileInfoViewHeight, SCREEN_WIDTH, SCREEN_HEIGHT - profileInfoViewHeight);
+    [self.feedViewController updateWithHeaderViewMdoel:tabListModel];
 }
 
 

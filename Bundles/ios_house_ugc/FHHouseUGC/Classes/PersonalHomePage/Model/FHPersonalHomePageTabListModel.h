@@ -15,14 +15,15 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHPersonalHomePageTabItemModel : JSONModel
 
 @property (nonatomic, copy, nullable) NSString *showName;
-@property (nonatomic, copy, nullable) NSString *tabName;
+@property (nonatomic, copy, nullable) NSString *name;
 @property (nonatomic, copy, nullable) NSString *count;
 
 @end
 
 
 @interface FHPersonalHomePageTabListDataModel : JSONModel
-@property (nonatomic, strong, nullable) NSArray <FHPersonalHomePageTabItemModel> *ugcTabList;
+@property (nonatomic, strong, nullable) NSArray <FHPersonalHomePageTabItemModel> *tabList;
+@property (nonatomic, copy , nullable) NSString *isVerifyShow;
 @end
 
 

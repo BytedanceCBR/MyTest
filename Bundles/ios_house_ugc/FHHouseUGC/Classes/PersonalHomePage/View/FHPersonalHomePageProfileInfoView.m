@@ -91,7 +91,7 @@
     [self.backView addSubview:self.changeButton];
 }
 
-- (void)updateWithModel:(FHPersonalHomePageProfileInfoModel *)model {
+- (void)updateWithModel:(FHPersonalHomePageProfileInfoModel *)model isVerifyShow:(BOOL)isVerifyShow{
     CGFloat backViewHeight = 90 - 8 + 15;
     
     [self.shadowView updateWithUrl:model.data.avatarUrl];

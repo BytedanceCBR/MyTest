@@ -11,8 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPersonalHomePageViewController : FHBaseViewController
-- (void)updateProfileInfoViewWithMdoel:(FHPersonalHomePageProfileInfoModel *)model;
-- (void)updateFeedViewControllerWithMdoel:(FHPersonalHomePageTabListModel *)model;
+- (void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel;
 @end
 
 NS_ASSUME_NONNULL_END
