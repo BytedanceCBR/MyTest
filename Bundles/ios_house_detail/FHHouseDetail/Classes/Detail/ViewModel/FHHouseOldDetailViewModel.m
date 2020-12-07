@@ -467,16 +467,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     }
     NSString *houseType = [NSString stringWithFormat:@"%ld", (long)self.houseType];
     NSString *houseDes = [NSString stringWithFormat:@"%@/%@/%@", area, face, tag];
-//    // 幸福天眼
-//    __weak typeof(self)wself = self;
-//    if (model.data.baseExtra.detective) {
-//        FHDetailDetectiveModel *detectiveModel = [[FHDetailDetectiveModel alloc] init];
-//        detectiveModel.detective = model.data.baseExtra.detective;
-//        detectiveModel.feedBack = ^(NSInteger type, id  _Nonnull data, void (^ _Nonnull compltion)(BOOL)) {
-//            [wself poplayerFeedBack:data type:type completion:compltion];
-//        };
-//        [self.items addObject:detectiveModel];
-//    }
+
     // 房源概况
     if (model.data.houseOverreview.list.count > 0) {        
         FHDetailHouseOutlineInfoCorrectingModel *infoModel = [[FHDetailHouseOutlineInfoCorrectingModel alloc] init];
