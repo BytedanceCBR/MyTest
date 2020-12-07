@@ -320,6 +320,7 @@
     @"userId": @"user_id",
     @"userVerified": @"user_verified",
     @"fverifyShow":@"f_verify_show",
+    @"verifiedContent":@"verified_content",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;
@@ -558,6 +559,7 @@
                            @"vIcon": @"v_icon",
                            @"userAuthInfo": @"user_auth_info",
                            @"fverifyShow":@"f_verify_show",
+                           @"verifiedContent":@"verified_content",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

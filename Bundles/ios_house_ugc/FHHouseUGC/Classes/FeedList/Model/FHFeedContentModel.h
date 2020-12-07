@@ -387,6 +387,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, assign) BOOL userVerified;
 @property (nonatomic, copy , nullable) NSString *name;
 @property (nonatomic , assign) BOOL fverifyShow;
+@property (nonatomic, copy , nullable) NSString *verifiedContent;
 @end
 
 @interface FHFeedContentMediaInfoModel : JSONModel 
@@ -481,6 +482,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *vIcon;
 @property (nonatomic, copy , nullable) NSString *userAuthInfo;
 @property (nonatomic , assign) BOOL fverifyShow;
+@property (nonatomic, copy , nullable) NSString *verifiedContent;
 
 @end
 

@@ -280,6 +280,7 @@
             user.userId = model.userInfo.userId;
             user.schema = model.userInfo.schema;
             user.fverifyShow = model.userInfo.fverifyShow;
+            user.verifiedContent = model.userInfo.verifiedContent;
             cellModel.user = user;
             
             if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
@@ -365,6 +366,7 @@
         user.userId = model.rawData.content.user.userId;
         user.schema = model.rawData.content.user.userSchema;
         user.fverifyShow = model.rawData.content.user.fverifyShow;
+        user.verifiedContent = model.rawData.content.user.verifiedContent;
         cellModel.user = user;
         
         cellModel.title = model.rawData.content.question.title;
@@ -444,6 +446,7 @@
         user.fverifyShow = model.rawData.content.user.fverifyShow;
         user.userId = model.rawData.content.user.userId;
         user.schema = model.rawData.content.user.userSchema;
+        user.verifiedContent = model.rawData.content.user.verifiedContent;
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
@@ -503,6 +506,7 @@
         user.userId = model.rawData.commentBase.user.info.userId;
         user.schema = model.rawData.commentBase.user.info.schema;
         user.fverifyShow = model.rawData.content.user.fverifyShow;
+        user.verifiedContent = model.rawData.content.user.verifiedContent;
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
@@ -688,6 +692,7 @@
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
         user.fverifyShow = model.rawData.content.user.fverifyShow;
+        user.verifiedContent = model.rawData.content.user.verifiedContent;
         cellModel.user = user;
         
         // 时间以及距离
@@ -755,6 +760,7 @@
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
         user.fverifyShow = model.rawData.content.user.fverifyShow;
+        user.verifiedContent = model.rawData.content.user.verifiedContent;
         cellModel.user = user;
         
         cellModel.diggCount = model.rawData.action.diggCount;
@@ -818,6 +824,7 @@
         cellModel.logPb = model.logPb;
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.fverifyShow = model.rawData.content.user.fverifyShow;;
+        user.verifiedContent = model.rawData.content.user.verifiedContent;
         user.name = model.rawData.userName;
         user.avatarUrl = model.rawData.icon;
         cellModel.user = user;
@@ -932,6 +939,7 @@
         user.userBorderColor = model.user.userBorderColor;
         user.userFontColor = model.user.userFontColor;
         user.fverifyShow = model.user.fverifyShow;
+        user.verifiedContent = model.user.verifiedContent;
     } else if(model.rawData.user) {
         user.name = model.rawData.user.name;
         user.avatarUrl = model.rawData.user.avatarUrl;
@@ -942,6 +950,7 @@
         user.userBorderColor = model.rawData.user.userBorderColor;
         user.userFontColor = model.rawData.user.userFontColor;
         user.fverifyShow = model.rawData.user.fverifyShow;
+        user.verifiedContent = model.rawData.user.verifiedContent;
     }
 
     
@@ -1088,11 +1097,17 @@
 + (NSAttributedString *)generateArticleDesc:(FHFeedContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     
-    if(!isEmptyString(model.readCount) && [model.readCount integerValue] != 0){
-        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
-        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
+//    if(!isEmptyString(model.readCount) && [model.readCount integerValue] != 0){
+//        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
+//        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
+//        [desc appendAttributedString:readAStr];
+//    }
+    if(!isEmptyString(model.userInfo.name) ){
+//        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
+        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:model.userInfo.name];
         [desc appendAttributedString:readAStr];
     }
+    
     
     if(!isEmptyString(model.commentCount)){
         NSString *comment = [NSString stringWithFormat:@"%@评论",[TTBusinessManager formatCommentCount:[model.commentCount longLongValue]]];

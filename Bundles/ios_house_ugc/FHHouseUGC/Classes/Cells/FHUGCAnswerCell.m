@@ -36,6 +36,7 @@
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic, strong) TTAsyncCornerImageView *userIma;
 @property(nonatomic, strong) UILabel *username;
+@property(nonatomic, strong) UILabel *useride;
 @property(nonatomic, strong) UIImageView *userTag;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *singleImageView;
@@ -95,6 +96,11 @@
     self.username.userInteractionEnabled = YES;
     [self addSubview:_username];
     
+    self.useride = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
+    self.useride.textAlignment = NSTextAlignmentLeft;
+    self.useride.userInteractionEnabled = YES;
+    [self addSubview:_useride];
+    
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
@@ -145,6 +151,10 @@
     self.username.centerY =  self.userIma.centerY;
     self.username.left = self.userIma.right + 4;
     self.username.height = 18;
+    
+    self.useride.centerY =  self.userIma.centerY;
+    self.useride.left = self.username.right + 4;
+    self.useride.height = 18;
     
     
     self.contentLabel.top = self.userIma.bottom + 10;
@@ -274,6 +284,7 @@
 - (void)updateUserInfoView:(FHFeedUGCCellModel *)cellModel {
     [self.userInfoView setTitleModel:cellModel];
     self.username.text = cellModel.user.name;
+    self.useride.text = cellModel.user.verifiedContent;
     self.userTag.hidden = !cellModel.user.fverifyShow;
     [self.userIma tt_setImageWithURLString:cellModel.user.avatarUrl];
     NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    问题：%@",cellModel.originItemModel.content] : @"";
@@ -292,6 +303,7 @@
     self.userTag.top =  self.userIma.top + 12;
     CGSize size = [self.username.text sizeWithFont:[UIFont themeFontRegular:14] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
     self.username.width = size.width;
+    self.useride.width =  [UIScreen mainScreen].bounds.size.width-15 -20 -size.width;
     self.username.centerY =  self.userIma.centerY;
     self.contentLabel.top = self.userIma.bottom + 10;
     self.multiImageView.top = self.contentLabel.bottom + 10;
