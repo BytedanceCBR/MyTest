@@ -65,8 +65,15 @@
     } else {
         self.subTitleLabel.hidden = YES;
     }
+}
 
-
+- (void)setupNeighborhoodDetailStyle {
+    self.titleLabel.font = [UIFont themeFontSemibold:16];
+    self.titleLabel.textColor = [UIColor themeGray1];
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(12);
+        make.centerY.mas_equalTo(self);
+    }];
 }
 
 - (void)moreAction:(UITapGestureRecognizer *)tapGesture {

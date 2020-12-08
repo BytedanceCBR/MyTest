@@ -26,7 +26,6 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.inset = UIEdgeInsetsMake(0, 15, 12, 15);
         self.supplementaryViewSource = self;
         self.displayDelegate = self;
         _canElementShow = YES;
