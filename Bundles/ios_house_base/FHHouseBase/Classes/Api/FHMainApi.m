@@ -23,6 +23,7 @@
 #import "FHErrorHubManagerUtil.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "FHHomeRenderFlow.h"
+#import "FHUtils.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -66,7 +67,10 @@
     if ([gCityName isKindOfClass:[NSString class]]){
         requestParam[@"city_name"] = gCityName;
     }
-
+    if ([[FHEnvContext sharedInstance] isColdStart] && [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue]) {
+        [requestParam setValue:@(1) forKey:@"is_cold_start"];
+        [[FHEnvContext sharedInstance] setColdStart];
+    }
     if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
         requestParam[@"app_first_start"] = @(1);
     }else

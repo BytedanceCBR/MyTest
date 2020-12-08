@@ -382,7 +382,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 {
     [super viewDidAppear:animated];
     //开屏广告启动不会展示，保留逻辑代码
-    if (!self.adColdHadJump && [TTSandBoxHelper isAPPFirstLaunchForAd]) {
+    if (!self.adColdHadJump) {
         self.adColdHadJump = YES;
         FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
