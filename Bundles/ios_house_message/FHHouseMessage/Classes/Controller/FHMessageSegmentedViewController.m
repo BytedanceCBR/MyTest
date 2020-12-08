@@ -591,15 +591,17 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                 categoryDict[@"error"] = @"1";
                 categoryDict[@"reason"] = @"消息tab未读数与分段页面未读数之和不相等";
                 NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
-                extraDict[@"sysUnreadNumber"] = @(sysUnreadNumber).stringValue;
-                extraDict[@"chatUnreadNumber"] = @(chatUnreadNumber).stringValue;
-                extraDict[@"msgTabBadgeNumber"] = @(messageTabBadgeNumber).stringValue;
-                extraDict[@"contextTotalNumber"] = @([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]).stringValue;
-                extraDict[@"sysMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager systemMsgUnreadNumber]).stringValue;
-                extraDict[@"ugcMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager ugcMsgUnreadNumber]).stringValue;
-                extraDict[@"chatMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager chatMsgUnreadNumber]).stringValue;
-                extraDict[@"unmutedUnreadNumber"] = @([[IMManager shareInstance] chatUnmuteUnreadTotalNumber]);
-                extraDict[@"mutedUnreadNumber"]  = @([[IMManager shareInstance] chatMutedUnreadTotalNumber]);
+                extraDict[@"顶部通知Tab未读数"] = @(sysUnreadNumber).stringValue;
+                extraDict[@"顶部微聊Tab未读数"] = @(chatUnreadNumber).stringValue;
+                extraDict[@"底部消息Tab未读数"] = @(messageTabBadgeNumber).stringValue;
+                extraDict[@"未读管理器总数"] = @([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]).stringValue;
+                extraDict[@"未读管理器系统消息未读数"] = @([[FHEnvContext sharedInstance].messageManager systemMsgUnreadNumber]).stringValue;
+                extraDict[@"未读管理器互动消息未读数"] = @([[FHEnvContext sharedInstance].messageManager ugcMsgUnreadNumber]).stringValue;
+                extraDict[@"未读管理器微聊消息未读数"] = @([[FHEnvContext sharedInstance].messageManager chatMsgUnreadNumber]).stringValue;
+                extraDict[@"IM非免打扰会话未读总数"] = @([[IMManager shareInstance] chatUnmuteUnreadTotalNumber]);
+                extraDict[@"IM免打扰会话未读总数"]  = @([[IMManager shareInstance] chatMutedUnreadTotalNumber]);
+                extraDict[@"IM非免打扰会话未读明细(业务读取)"] = [[IMManager shareInstance].chatService allConversationsInfoDict];
+                extraDict[@"IM非免打扰会话未读明细(数据库存储)"] = [[IMManager shareInstance].chatService allTIMOConversationsInfoDict];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"f_message_tab_badget_number_display_error"
                                                         metric:nil
                                                       category:categoryDict.copy
