@@ -255,7 +255,6 @@ extern NSString *const kFHToastCountKey;
     NSDictionary *reportParams = associateReport.reportParams;
     
     params[@"page_type"] = reportParams[@"page_type"] ? : @"be_null";
-    params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
     params[@"enter_from"] = reportParams[@"enter_from"] ? : @"be_null";
     params[@"element_from"] = reportParams[@"element_from"] ? : @"be_null";
     params[@"rank"] = reportParams[@"rank"] ? : @"be_null";
@@ -274,6 +273,7 @@ extern NSString *const kFHToastCountKey;
     if (reportParams[@"picture_type"]) {
         params[@"picture_type"] = reportParams[@"picture_type"];
     }
+    params[@"element_type"] = @"";
 
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }

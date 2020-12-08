@@ -10,15 +10,22 @@
 #import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHNewHouseDetailReleatorCollectionCell ()
-@property (nonatomic, strong)   FHRealtorAvatarView *avatorView;
-@property (nonatomic, strong)   UIButton    *licenceIcon;
-@property (nonatomic, strong)   UIButton    *callBtn;
-@property (nonatomic, strong)   UIButton    *imBtn;
-@property (nonatomic, strong)   UILabel     *name;
-@property (nonatomic, strong)   UILabel     *agency;
-@property (nonatomic, strong)   UIImageView *agencyBac;
-@property (nonatomic, strong)   UIView      *agencyDescriptionBac;
-@property (nonatomic, strong)   UILabel     *agencyDescriptionLabel;//公司介绍
+
+@property (nonatomic, strong) FHRealtorAvatarView *avatorView;
+
+@property (nonatomic, strong) UIButton *callBtn;
+@property (nonatomic, strong) UIButton *imBtn;
+
+@property (nonatomic, strong) UILabel *nameLabel;
+
+@property (nonatomic, strong) UILabel *agencyLabel; //经济公司
+@property (nonatomic, strong) UIImageView *agencyBac;
+
+@property (nonatomic, strong) UILabel *scoreLabel; //服务分
+
+@property (nonatomic, strong) UILabel *agencyDescriptionLabel;//公司介绍
+@property (nonatomic, strong) UIImageView *agencyDescriptionBac;
+
 @end
 
 @implementation FHNewHouseDetailReleatorCollectionCell
@@ -26,104 +33,103 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.avatorView = [[FHRealtorAvatarView alloc] init];
-        [self addSubview:self.avatorView];
+        [self.contentView addSubview:self.avatorView];
         [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.width.mas_equalTo(50);
             make.left.mas_equalTo(16);
-            make.top.mas_equalTo(0);
+            make.centerY.mas_equalTo(self.contentView);
         }];
         
-        self.name = [[UILabel alloc] init];
-        self.name.textColor = [UIColor themeBlack];
-        self.name.font = [UIFont themeFontMedium:16];
-        self.name.textAlignment = NSTextAlignmentLeft;
-        [self addSubview:self.name];
-        [self.name mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.avatorView.mas_right).offset(14);
-            make.top.mas_equalTo(self.avatorView.mas_top).mas_offset(4);
-            make.height.mas_equalTo(22);
+        self.nameLabel = [[UILabel alloc] init];
+        self.nameLabel.textColor = [UIColor themeGray1];
+        self.nameLabel.font = [UIFont themeFontMedium:16];
+        self.nameLabel.textAlignment = NSTextAlignmentLeft;
+        [self.nameLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];  //这个好神奇！！！
+        [self.contentView addSubview:self.nameLabel];
+        [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
+            make.top.mas_equalTo(12);
         }];
         
         __weak typeof(self) weakSelf = self;
-        self.callBtn = [[UIButton alloc] init];
-        [self.callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal_new"] forState:UIControlStateNormal];
-        [self.callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateSelected];
-        [self.callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateHighlighted];
+        CGFloat phoneButtonWidth = 36;
+        self.callBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.callBtn.imageView.contentMode = UIViewContentModeCenter;
+        [self.callBtn setImage:[UIImage imageNamed:@"detail_agent_phone_icon"] forState:UIControlStateNormal];
+        self.callBtn.backgroundColor = [UIColor colorWithHexString:@"fff6ee"];
+        self.callBtn.layer.masksToBounds = YES;
+        self.callBtn.layer.cornerRadius = phoneButtonWidth/2;
         [self.callBtn btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
             if (weakSelf.phoneClickBlock) {
                 weakSelf.phoneClickBlock(weakSelf.currentData);
             }
         }];
-        [self addSubview:self.callBtn];
+        [self.contentView addSubview:self.callBtn];
         [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.height.mas_equalTo(26);
-            make.right.mas_equalTo(-15);
-            make.top.mas_equalTo(self.name);
+            make.width.height.mas_equalTo(phoneButtonWidth);
+            make.right.mas_equalTo(-16);
+            make.centerY.mas_equalTo(self.avatorView.mas_centerY);
         }];
         
-        self.imBtn = [[UIButton alloc] init];
-        [self.imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
-        [self.imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateSelected];
-        [self.imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateHighlighted];
+        self.imBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.imBtn.imageView.contentMode = UIViewContentModeCenter;
+        [self.imBtn setImage:[UIImage imageNamed:@"detail_agent_im_icon"] forState:UIControlStateNormal];
+        self.imBtn.backgroundColor = [UIColor colorWithHexString:@"fff6ee"];
+        self.imBtn.layer.masksToBounds = YES;
+        self.imBtn.layer.cornerRadius = phoneButtonWidth/2;
         [self.imBtn btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
             if (weakSelf.imClickBlock) {
                 weakSelf.imClickBlock(weakSelf.currentData);
             }
         }];
-        [self addSubview:self.imBtn];
+        [self.contentView addSubview:self.imBtn];
         [self.imBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.width.height.mas_equalTo(26);
-            make.right.mas_equalTo(self.callBtn.mas_left).offset(-38);
-            make.top.mas_equalTo(self.name);
-        }];
-
-        self.licenceIcon = [[UIButton alloc] init];
-        [self.licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateNormal];
-        [self.licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateSelected];
-        [self.licenceIcon setImage:[UIImage imageNamed:@"detail_contact"] forState:UIControlStateHighlighted];
-        [self.licenceIcon btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
-            if (weakSelf.licenseClickBlock) {
-                weakSelf.licenseClickBlock(weakSelf.currentData);
-            }
-        }];
-        [self addSubview:self.licenceIcon];
-        [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.name.mas_right).offset(4);
-            make.width.height.mas_equalTo(20);
-            make.centerY.mas_equalTo(self.name);
-            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+            make.width.height.mas_equalTo(phoneButtonWidth);
+            make.right.mas_equalTo(self.callBtn.mas_left).offset(-16);
+            make.centerY.mas_equalTo(self.avatorView.mas_centerY);
         }];
         
-        self.agencyBac = [[UIImageView alloc]init];
+        self.agencyBac = [[UIImageView alloc] init];
         self.agencyBac.image = [UIImage imageNamed:@"realtor_name_bac"];
         self.agencyBac.layer.borderWidth = 0.5;
         self.agencyBac.layer.borderColor = [[UIColor colorWithHexString:@"#d6d6d6"] CGColor];
         self.agencyBac.layer.cornerRadius = 2.0;
         self.agencyBac.layer.masksToBounds = YES;
-        [self addSubview:self.agencyBac];
+        [self.contentView addSubview:self.agencyBac];
+        [self.agencyBac mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self.nameLabel);
+            make.height.mas_equalTo(16);
+            make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
+            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+        }];
         
-        self.agency = [[UILabel alloc] init];
-        self.agency.textColor = [UIColor colorWithHexString:@"#929292"];
-        self.agency.font = [UIFont themeFontMedium:10];
-        self.agency.textAlignment = NSTextAlignmentLeft;
-        [self addSubview:self.agency];
-        [self.agency mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.agencyBac).offset(3);
-            make.bottom.mas_equalTo(self.agencyBac).offset(-3);
-            make.left.mas_equalTo(self.agencyBac).offset(5);
-            make.right.mas_equalTo(self.agencyBac).offset(-5);
+        self.agencyLabel = [[UILabel alloc] init];
+        self.agencyLabel.textColor = [UIColor colorWithHexString:@"#929292"];
+        self.agencyLabel.font = [UIFont themeFontMedium:10];
+        self.agencyLabel.textAlignment = NSTextAlignmentCenter;
+        [self.agencyBac addSubview:self.agencyLabel];
+        [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsMake(3, 5, 3, 5));
+        }];
+        
+        self.scoreLabel = [[UILabel alloc] init];
+        [self.contentView addSubview:self.scoreLabel];
+        [self.scoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.nameLabel.mas_left);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(8);
         }];
        
-        self.agencyDescriptionBac = [[UIView alloc]init];
-        self.agencyDescriptionBac.backgroundColor = [UIColor colorWithHexString:@"#fefaf4"];
+        self.agencyDescriptionBac = [[UIImageView alloc] init];
+//        self.agencyDescriptionBac.backgroundColor = [UIColor colorWithHexString:@"#fefaf4"];
+        self.agencyDescriptionBac.image = [UIImage fh_gradientImageWithColors:@[(id)[UIColor colorWithHexString:@"eef4fe"].CGColor, (id)[UIColor colorWithHexString:@"eff4fc"].CGColor, (id)[UIColor colorWithHexString:@"f5f7fc"].CGColor] startPoint:CGPointMake(0, 0.5) endPoint:CGPointMake(1, 0.5) size:CGSizeMake(100, 18) usedInClass:NSStringFromClass([self class])];
         self.agencyDescriptionBac.layer.cornerRadius = 2.0;
         self.agencyDescriptionBac.layer.masksToBounds = YES;
-        [self addSubview:self.agencyDescriptionBac];
+        [self.contentView addSubview:self.agencyDescriptionBac];
         [self.agencyDescriptionBac mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.avatorView.mas_right).offset(8);
+            make.left.mas_equalTo(self.nameLabel.mas_left);
             make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left);
             make.height.mas_equalTo(18);
-            make.bottom.mas_equalTo(self.avatorView);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(28);
         }];
         
         self.agencyDescriptionLabel = [[UILabel alloc] init];
@@ -132,41 +138,12 @@
         self.agencyDescriptionLabel.textColor = [UIColor themeBlack];
         self.agencyDescriptionLabel.textAlignment = NSTextAlignmentCenter;
         [self.agencyDescriptionLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-        [self addSubview:self.agencyDescriptionLabel];
+        [self.agencyDescriptionBac addSubview:self.agencyDescriptionLabel];
         [self.agencyDescriptionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.agencyDescriptionBac).offset(3);
-            make.bottom.mas_equalTo(self.agencyDescriptionBac).offset(-3);
-            make.left.mas_equalTo(self.agencyDescriptionBac).offset(10);
-            make.right.mas_equalTo(self.agencyDescriptionBac).offset(-10);
+            make.edges.mas_equalTo(UIEdgeInsetsMake(3, 10, 3, 10));
         }];
     }
     return self;
-}
-
--(void)newHouseModifiedLayoutNameNeedShowCenter:(BOOL )showCenter{
-
-    [self.name mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.avatorView.mas_right).offset(10);
-        if (showCenter) {
-            make.centerY.mas_equalTo(self.avatorView);
-        } else {
-            make.top.mas_equalTo(self.avatorView.mas_top).mas_offset(4);
-        }
-        make.height.mas_equalTo(20);
-    }];
-    
-    [self.name setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];  //这个好神奇！！！
-    
-    [self.agencyBac mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.name);
-        make.height.mas_equalTo(16);
-        make.left.mas_equalTo(self.name.mas_right).offset(4);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
-    }];
-    
-    //[self.agency setContentCompressionResistancePriority:UILayoutPriorityDragThatCannotResizeScene forAxis:UILayoutConstraintAxisHorizontal];
-    self.agency.textAlignment = NSTextAlignmentCenter;
-    
 }
 
 - (void)bindViewModel:(id)viewModel {
@@ -180,25 +157,71 @@
     self.currentData = data;
     FHDetailContactModel *model = (FHDetailContactModel *)data;
     
-    self.name.text = model.realtorName;
-    self.agency.text = model.agencyName;
+    self.nameLabel.text = model.realtorName;
+    self.agencyLabel.text = model.agencyName;
     [self.avatorView updateAvatarWithModel:model];
     
-    [self newHouseModifiedLayoutNameNeedShowCenter:model.agencyDescription.length <= 0];
+    
+    if (model.agencyDescription.length && model.realtorScoreDisplay.length) {
+        //3行全有
+        [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
+            make.top.mas_equalTo(12);
+            make.height.mas_equalTo(16);
+        }];
+        
+        [self.agencyDescriptionBac mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.nameLabel.mas_left);
+            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).mas_offset(-10);
+            make.height.mas_equalTo(18);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(28);
+        }];
+    } else if (model.agencyDescription.length || model.realtorScoreDisplay.length) {
+        //2行
+        CGFloat topMargin = 0;
+        if (model.agencyDescription.length) {
+            topMargin = 16;
+        } else {
+            topMargin = 19;
+        }
+        [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
+            make.top.mas_equalTo(topMargin);
+            make.height.mas_equalTo(16);
+        }];
+        
+        if (model.agencyDescription.length) {
+            [self.agencyDescriptionBac mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self.nameLabel.mas_left);
+                make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).mas_offset(-10);
+                make.height.mas_equalTo(18);
+                make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(8);
+            }];
+        }
+    } else {
+        //1行 namelabel居中
+        [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
+            make.centerY.mas_equalTo(self.avatorView);
+            make.height.mas_equalTo(16);
+        }];
+    }
     if (model.agencyDescription.length > 0) {
         self.agencyDescriptionBac.hidden = NO;
     } else {
         self.agencyDescriptionBac.hidden = YES;
     }
     self.agencyDescriptionLabel.text = model.agencyDescription;
-    BOOL result  = NO;
-    if (model.businessLicense.length > 0) {
-        result = YES;
+    
+    if (model.realtorScoreDisplay.length > 0) {
+        self.scoreLabel.hidden = NO;
+        
+        NSMutableAttributedString *scoreString = [[NSMutableAttributedString alloc] initWithString:model.realtorScoreDisplay ?: @"" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexString:@"FE5500"], NSFontAttributeName: [UIFont themeFontRegular:12]}];
+        [scoreString appendAttributedString:[[NSAttributedString alloc] initWithString:@" 服务分" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:12]}]];
+        self.scoreLabel.attributedText = scoreString.copy;
+    } else {
+        self.scoreLabel.hidden = YES;
     }
-    if (model.certificate.length > 0) {
-        result = YES;
-    }
-    self.licenceIcon.hidden = !result;
 }
 
 - (NSString *)elementType {

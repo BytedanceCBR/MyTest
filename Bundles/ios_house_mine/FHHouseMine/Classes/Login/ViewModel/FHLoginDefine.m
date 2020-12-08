@@ -36,6 +36,7 @@ NSString *const FHLoginTrackLoginSuggestMethodKey = @"FHLoginTrackLoginSuggestMe
     if (suggestLoginMethod) {
         trackDict[@"login_suggest_method"] = suggestLoginMethod;
     }
+    trackDict[@"element_type"] = @"be_null";
     trackDict[@"params_for_special"] = @"uc_login";
     TRACK_EVENT(@"uc_login_notify", trackDict.copy);
 }

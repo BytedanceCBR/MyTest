@@ -13,25 +13,38 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailAgentItemView : UIControl
 
 @property (nonatomic, strong)   FHRealtorAvatarView *avatorView;
-@property (nonatomic, strong)   UIButton    *licenseIcon;
+
+@property (nonatomic, strong)   UILabel     *nameLabel;
 @property (nonatomic, strong)   UIButton    *callBtn;
 @property (nonatomic, strong)   UIButton    *imBtn;
-@property (nonatomic, strong)   UILabel     *name;
-@property (nonatomic, strong)   UIView      *vSepLine;
-@property (nonatomic, strong)   UILabel     *agency;
+
+@property (nonatomic, strong)   UIButton    *licenseButton; //认证按钮
+@property (nonatomic, strong)   UILabel     *agencyLabel; //经纪公司
 @property (nonatomic, strong)   UIImageView *agencyBac;
-@property (nonatomic, strong)   UILabel     *score;
-@property (nonatomic, strong)   UILabel     *scoreDescription;
-@property (nonatomic, strong)   UILabel     *realtorEvaluate;  // 话术
-@property (nonatomic, strong)   UIView      *agencyDescriptionBac;
-@property (nonatomic, strong)   UILabel     *agencyDescriptionLabel;//公司介绍
+
+@property (nonatomic, strong)   UILabel     *scoreLabel; //服务分 + 小区熟悉度
 
 
 -(instancetype)initWithModel:(FHDetailContactModel *)model topMargin:(CGFloat )topMargin;
 
--(void)configForLicenceIconWithHidden:(BOOL)isHidden;
--(void)configForNewLicenseIconStyle:(BOOL)showLicense imageURL:(NSURL *)imageURL;
+@end
+
+@interface FHDetailAgentItemTagsFlowLayout : UICollectionViewFlowLayout
+
+@property (nonatomic, assign) CGFloat maximumInteritemSpacing;
 
 @end
+
+@interface FHDetailAgentItemTagsViewCell: UICollectionViewCell
+
+@property (nonatomic, strong) UILabel *tagLabel;
+@property (nonatomic, strong) UIImageView *tagImageView;
+
++ (NSString *)reuseIdentifier;
+
+- (void)refreshWithData:(id)data;
+
+@end
+
 
 NS_ASSUME_NONNULL_END
