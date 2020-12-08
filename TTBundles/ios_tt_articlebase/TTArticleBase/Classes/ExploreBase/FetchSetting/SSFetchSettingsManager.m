@@ -45,6 +45,10 @@ static SSFetchSettingsManager * manager;
     [[self shareInstance] startFetchDefaultSettingsWithDefaultInfo:![self hasFetchedDefaultInfo]];
 }
 
++ (void)manualForceRefreshDefaultInfoIfNeed {
+    [[self shareInstance] startFetchDefaultSettingsWithDefaultInfo:![self hasFetchedDefaultInfo] forceRefresh:YES];
+}
+
 + (SSFetchSettingsManager *)shareInstance
 {
     static dispatch_once_t onceToken;
