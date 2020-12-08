@@ -17,6 +17,7 @@ static const char view_model_key;
     FHHouseLynxViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseLynxViewModel.class] ? (FHHouseLynxViewModel *)viewModel : nil;
     objc_setAssociatedObject(self, &view_model_key, cardViewModel, OBJC_ASSOCIATION_RETAIN);
     if (cardViewModel) {
+        self.backgroundColor = [UIColor clearColor];
         FHDynamicLynxCellModel *cellModel = cardViewModel.model;
         if (cellModel && [cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
             cellModel.cell = self;
@@ -30,29 +31,13 @@ static const char view_model_key;
     return objc_getAssociatedObject(self, &view_model_key);
 }
 
-//曝光
 - (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//结束曝光
-- (void)cellDidEndShowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//点击
-- (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//回到前台
-- (void)cellWillEnterForground {
-    
-}
-
-//进入后台
-- (void)cellDidEnterBackground {
-    
+    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
+        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
+        if ([cardViewModel respondsToSelector:@selector(showCardAtIndexPath:)]) {
+            [cardViewModel showCardAtIndexPath:indexPath];
+        }
+    }
 }
 
 

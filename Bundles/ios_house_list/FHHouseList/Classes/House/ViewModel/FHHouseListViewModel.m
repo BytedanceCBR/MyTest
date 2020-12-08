@@ -77,7 +77,7 @@ extern NSString *const INSTANT_DATA_KEY;
 #define NO_HOUSE_CELL_ID @"no_house_cell"
 
 
-@interface FHHouseListViewModel(FHHouseTableView)<FHHouseTableViewDataSource>
+@interface FHHouseListViewModel(FHHouseTableView)<FHHouseTableViewDataSource, FHHouseNewComponentViewModelDelegate>
 
 @end
 
@@ -874,12 +874,12 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRecommendSearch:(BOOL)isRecommendSearch
 {
-    if ([FHEnvContext isHouseListComponentEnable]) {
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"house_test" ofType:@"json"];
-        NSData *data = [NSData dataWithContentsOfFile:path];
-        NSError *error0 = nil;
-        model = (FHListSearchHouseModel *)[FHHouseListAPI generateModel:data class:FHListSearchHouseModel.class error:&error0];
-    }
+//    if ([FHEnvContext isHouseListComponentEnable]) {
+//        NSString *path = [[NSBundle mainBundle] pathForResource:@"house_test" ofType:@"json"];
+//        NSData *data = [NSData dataWithContentsOfFile:path];
+//        NSError *error0 = nil;
+//        model = (FHListSearchHouseModel *)[FHHouseListAPI generateModel:data class:FHListSearchHouseModel.class error:&error0];
+//    }
     
     if (error) {
         
@@ -1010,14 +1010,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 tracerModel.elementType = self.tracerModel.elementType;
                 tracerModel.pageType = [self pageTypeString];
                 tracerModel.categoryName = [self categoryName];
-                if ([entity conformsToProtocol:@protocol(FHHouseNewComponentViewModelProtocol)]) {
-                    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-                    dict[@"search_type"] = @(self.searchType);
-                    dict[@"house_type"] = @(self.houseType);
-                    dict[@"is_first_havetip"] = @(self.isFirstHavetip);
-                    NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = (NSObject<FHHouseNewComponentViewModelProtocol> *)entity;
-                    viewModel.context = dict;
-                }
                 if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                     FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)theItemModel;
                     if ([wself.houseList count] == 0) {
@@ -1031,6 +1023,26 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
                 
                 entity.fh_trackModel = tracerModel;
+                
+                if ([entity conformsToProtocol:@protocol(FHHouseNewComponentViewModelProtocol)]) {
+                    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+                    dict[@"search_type"] = @(self.searchType);
+                    dict[@"house_type"] = @(self.houseType);
+                    dict[@"pre_house_type"] = @(self.preHouseType);
+                    dict[@"is_first_havetip"] = @(self.isFirstHavetip);
+                    dict[@"has_filter_condition"] = @(self.isHasFilterCondition);
+                    if (self.subScribeQuery) {
+                        dict[@"subscribe_query"] = self.subScribeQuery;
+                    }
+                    dict[@"subscribe_offset"] = @(self.subScribeOffset);
+                    if (self.subScribeSearchId) {
+                        dict[@"subscribe_search_id"] = self.subScribeSearchId;
+                    }
+                    
+                    NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = (NSObject<FHHouseNewComponentViewModelProtocol> *)entity;
+                    viewModel.delegate = self;
+                    viewModel.context = dict;
+                }
                 theItemModel = entity;
             } else if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                 FHSearchHouseItemModel *itemModel = theItemModel;
@@ -1158,8 +1170,11 @@ extern NSString *const INSTANT_DATA_KEY;
                         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
                         dict[@"search_type"] = @(self.searchType);
                         dict[@"house_type"] = @(self.houseType);
+                        dict[@"pre_house_type"] = @(self.preHouseType);
                         dict[@"is_first_havetip"] = @(self.isFirstHavetip);
+                        dict[@"has_filter_condition"] = @(self.isHasFilterCondition);
                         NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = (NSObject<FHHouseNewComponentViewModelProtocol> *)entity;
+                        viewModel.delegate = self;
                         viewModel.context = dict;
                     }
                     entity.fh_trackModel = tracerModel;
@@ -1224,13 +1239,22 @@ extern NSString *const INSTANT_DATA_KEY;
 
         BOOL addNoHouseCell = NO;
         if(self.houseList.count == 1 && self.sugesstHouseList.count == 0){
-            //只有一个筛选提示时 增加无数据提示
-            if ([self.houseList.firstObject isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
-                //add place holder
-                FHHouseListNoHouseCellModel *cellModel = [[FHHouseListNoHouseCellModel alloc] init];
-                cellModel.cellHeight = self.tableView.height - 64 - 121;
-                [self.houseList addObject:cellModel];
-                addNoHouseCell = YES;
+            if ([FHEnvContext isHouseListComponentEnable]) {
+                id existModel = self.houseList.firstObject;
+                id noResultViewModel = [FHHouseCardUtils getNoResultViewModelWithExistModel:existModel containerHeight:self.tableView.height];
+                if (noResultViewModel) {
+                    [self.houseList addObject:noResultViewModel];
+                    addNoHouseCell = YES;
+                }
+            } else {
+                //只有一个筛选提示时 增加无数据提示
+                if ([self.houseList.firstObject isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+                    //add place holder
+                    FHHouseListNoHouseCellModel *cellModel = [[FHHouseListNoHouseCellModel alloc] init];
+                    cellModel.cellHeight = self.tableView.height - 64 - 121;
+                    [self.houseList addObject:cellModel];
+                    addNoHouseCell = YES;
+                }
             }
         }
         [self.tableView reloadData];
@@ -2803,6 +2827,19 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (NSDictionary<NSString *, NSString *> *)fhHouse_supportCellStyles {
     return [FHHouseCardUtils supportCellStyleMap];
+}
+
+#pragma mark - FHHouseReserveAdviserViewModelDelegate
+- (NSMutableDictionary *)belongSubscribeCache {
+    return self.subscribeCache;
+}
+
+- (UIViewController *)belongsVC {
+    return self.listVC;
+}
+
+- (UITableView *)belongTableView {
+    return self.tableView;
 }
 
 @end

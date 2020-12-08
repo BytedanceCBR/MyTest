@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSObject *)getEntityFromModel:(id)model;
 
++ (id)getNoResultViewModelWithExistModel:(id)existModel containerHeight:(CGFloat)containerHeight;
+
 @end
 
 NS_ASSUME_NONNULL_END

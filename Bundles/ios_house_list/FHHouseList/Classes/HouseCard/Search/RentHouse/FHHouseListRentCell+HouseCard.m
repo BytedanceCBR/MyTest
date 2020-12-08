@@ -25,31 +25,23 @@ static const char view_model_key;
     return objc_getAssociatedObject(self, &view_model_key);
 }
 
-//曝光
 - (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
+        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
+        if ([cardViewModel respondsToSelector:@selector(showCardAtIndexPath:)]) {
+            [cardViewModel showCardAtIndexPath:indexPath];
+        }
+    }
 }
 
-//结束曝光
-- (void)cellDidEndShowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//点击
 - (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
-    
+    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
+        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
+        if ([cardViewModel respondsToSelector:@selector(clickCardAtIndexPath:)]) {
+            [cardViewModel clickCardAtIndexPath:indexPath];
+        }
+    }
 }
-
-//回到前台
-- (void)cellWillEnterForground {
-    
-}
-
-//进入后台
-- (void)cellDidEnterBackground {
-    
-}
-
 
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (![viewModel isKindOfClass:FHHouseSearchRentHouseViewModel.class]) return 0.0f;

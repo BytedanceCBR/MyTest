@@ -17,7 +17,9 @@ static const char view_model_key;
     FHHouseReserveAdviserViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseReserveAdviserViewModel.class] ? (FHHouseReserveAdviserViewModel *)viewModel : nil;
     objc_setAssociatedObject(self, &view_model_key, cardViewModel, OBJC_ASSOCIATION_RETAIN);
     if (cardViewModel) {
+        self.backgroundColor = [UIColor clearColor];
         [self refreshWithData:cardViewModel.model];
+        [self updateHeightByIsFirst:cardViewModel.cardIndex == 0];
     }
 }
 
@@ -25,29 +27,13 @@ static const char view_model_key;
     return objc_getAssociatedObject(self, &view_model_key);
 }
 
-//曝光
 - (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//结束曝光
-- (void)cellDidEndShowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//点击
-- (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//回到前台
-- (void)cellWillEnterForground {
-    
-}
-
-//进入后台
-- (void)cellDidEnterBackground {
-    
+    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
+        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
+        if ([cardViewModel respondsToSelector:@selector(showCardAtIndexPath:)]) {
+            [cardViewModel showCardAtIndexPath:indexPath];
+        }
+    }
 }
 
 

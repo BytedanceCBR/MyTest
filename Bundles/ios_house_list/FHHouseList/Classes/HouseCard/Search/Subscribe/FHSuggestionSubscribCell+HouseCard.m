@@ -17,8 +17,18 @@ static const char view_model_key;
     FHHouseSubscribeViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseSubscribeViewModel.class] ? (FHHouseSubscribeViewModel *)viewModel : nil;
     objc_setAssociatedObject(self, &view_model_key, cardViewModel, OBJC_ASSOCIATION_RETAIN);
     if (cardViewModel) {
-//        self.backgroundColor = [UIColor themeGray7];
+        self.backgroundColor = [UIColor clearColor];
         [self refreshWithData:cardViewModel.model];
+        [self updateHeightByIsFirst:cardViewModel.cardIndex == 0];
+        
+        __weak typeof(self) wself = self;
+        self.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
+            [wself requestAddSubScribe:subscribeText];
+        };
+        
+        self.deleteSubscribeAction = ^(NSString * _Nonnull subscribeId) {
+            [wself requestDeleteSubScribe:subscribeId];
+        };
     }
 }
 
@@ -26,29 +36,23 @@ static const char view_model_key;
     return objc_getAssociatedObject(self, &view_model_key);
 }
 
-//曝光
+- (void)requestAddSubScribe:(NSString *)text {
+    FHHouseSubscribeViewModel *cardViewModel = [self.viewModel isKindOfClass:FHHouseSubscribeViewModel.class] ? (FHHouseSubscribeViewModel *)self.viewModel : nil;
+    [cardViewModel requestAddSubScribe:text];
+}
+
+- (void)requestDeleteSubScribe:(NSString *)subscribeId {
+    FHHouseSubscribeViewModel *cardViewModel = [self.viewModel isKindOfClass:FHHouseSubscribeViewModel.class] ? (FHHouseSubscribeViewModel *)self.viewModel : nil;
+    [cardViewModel requestDeleteSubScribe:subscribeId];
+}
+
 - (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//结束曝光
-- (void)cellDidEndShowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//点击
-- (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//回到前台
-- (void)cellWillEnterForground {
-    
-}
-
-//进入后台
-- (void)cellDidEnterBackground {
-    
+    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
+        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
+        if ([cardViewModel respondsToSelector:@selector(showCardAtIndexPath:)]) {
+            [cardViewModel showCardAtIndexPath:indexPath];
+        }
+    }
 }
 
 

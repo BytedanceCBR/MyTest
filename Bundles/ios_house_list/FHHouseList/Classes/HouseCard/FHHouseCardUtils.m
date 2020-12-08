@@ -8,6 +8,8 @@
 #import "FHHouseCardUtils.h"
 #import "FHHouseNewComponentViewModel+HouseCard.h"
 #import "FHEnvContext.h"
+#import "NSDictionary+BTDAdditions.h"
+#import "FHHouseCardCellViewModelProtocol.h"
 #import "FHHouseNeighborhoodCardViewModel.h"
 #import "FHHouseNeighborhoodCell.h"
 #import "FHSearchHouseModel.h"
@@ -34,6 +36,8 @@
 #import "FHHouseSecondCardViewModel.h"
 #import "FHHouseNewCell.h"
 #import "FHHouseNewCardViewModel.h"
+#import "FHHouseNoResultViewModel.h"
+#import "FHHouseNoResultCell.h"
 
 @implementation FHHouseCardUtils
 
@@ -93,6 +97,7 @@
         NSStringFromClass(FHHouseFindHouseHelperViewModel.class): NSStringFromClass(FHFindHouseHelperCell.class),
         NSStringFromClass(FHHouseLynxViewModel.class): NSStringFromClass(FHDynamicLynxCell.class),
         NSStringFromClass(FHHouseRedirectTipViewModel.class): NSStringFromClass(FHHouseListRedirectTipCell.class),
+        NSStringFromClass(FHHouseNoResultViewModel.class): NSStringFromClass(FHHouseNoResultCell.class),
     };
 }
 
@@ -135,6 +140,41 @@
         return [[FHHouseLynxViewModel alloc] initWithModel:model];
     } else if ([model isKindOfClass:[FHHouseReserveAdviserModel class]]) {
         return [[FHHouseReserveAdviserViewModel alloc] initWithModel:model];
+    }
+    
+    return nil;
+}
+
++ (id)getNoResultViewModelWithExistModel:(id)existModel containerHeight:(CGFloat)containerHeight {
+    NSArray *canShowNoResultList = @[
+        @"FHHouseGuessYouWantTipViewModel",
+        @"FHHouseSubscribeViewModel"
+    ];
+    
+    if (existModel && [existModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
+        BOOL canShowNoResult = NO;
+        NSString *viewModelClassName = NSStringFromClass(((NSObject *)existModel).class);
+        for (NSString *className in canShowNoResultList) {
+            if ([viewModelClassName isEqualToString:className]) {
+                canShowNoResult = YES;
+                break;
+            }
+        }
+        
+        if (!canShowNoResult) return nil;
+        NSString *cellClassName = [[self houseList_supportCellStyleMap] btd_stringValueForKey:viewModelClassName];
+        if (cellClassName) {
+            Class cellClass = NSClassFromString(cellClassName);
+            if (cellClass && [cellClass conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)] && [cellClass respondsToSelector:@selector(viewHeightWithViewModel:)]) {
+                CGFloat height = [cellClass viewHeightWithViewModel:(id<FHHouseCardCellViewModelProtocol> )existModel];
+                if (containerHeight > height) {
+                    FHHouseNoResultViewModel *model = [[FHHouseNoResultViewModel alloc] init];
+                    model.viewHeight = containerHeight - height;
+                    return model;
+                }
+            }
+        }
+        
     }
     
     return nil;

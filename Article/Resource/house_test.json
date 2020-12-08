@@ -4,1202 +4,933 @@
         "house_list_open_url": "sslocal://house_list?display_text=%E5%8D%97%E6%B9%96%E5%B0%8F%E5%8C%BA\u0026house_type=2\u0026neighborhood_id%5B%5D=6751675030985244686",
         "items": [
             {
-            "card_type": 1,
-            "id": "6832136828087173133",
-            "impr_id": "20201113170117010198062171091933CD",
-            "search_id": "20201113170117010198062171091933CD",
-            "title": "招商.臻珑府",
-            "upload_at": 0,
-            "display_title": "招商.臻珑府",
-            "display_subtitle": "大兴-次渠/北京市亦庄经济技术开发区经海七路与科创十街交汇处",
-            "display_description": "大兴 次渠 | 建面 57-139㎡",
-            "display_price": "653万",
-            "display_price_per_sqm": "47000元/平",
-            "price_per_sqm_num": "47000",
-            "price_per_sqm_unit": "元/平",
-            "advantage_description": {
-            "icon": {
-            "uri": "3301d0010f684211456cd/",
-            "url": "https://p3.pstatp.com/origin/3301d0010f684211456cd",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p3.pstatp.com/origin/3301d0010f684211456cd"
-            ],
-            "image_type": 0
-            },
-            "text": "央企精工，静音格局，建华学校在旁",
-            "background_color": "#ffffff",
-            "text_color": "#333333",
-            "border_color": "#ffffff"
-            },
-            "core_info": null,
-            "house_type": 1,
-            "tags": [
-            {
-            "id": 1100001,
-            "content": "品牌地产",
-            "background_color": "#ffeee5",
-            "text_color": "#fe5500"
-            },
-            {
-            "id": 1100001,
-            "content": "小户型",
-            "background_color": "#f5f5f5",
-            "text_color": "#333333"
-            },
-            {
-            "id": 1100001,
-            "content": "限竞房",
-            "background_color": "#f5f5f5",
-            "text_color": "#333333"
-            }
-            ],
-            "images": [
-            {
-            "uri": "f100-image/1c50d45f23112df1ec6ac78d511c1dd9",
-            "url": "https://p1.haoduofangs.com/f100-image/1c50d45f23112df1ec6ac78d511c1dd9~tplv-u148heywkg-xfl-default-v2:0:0:0:1605523624.jpeg?sig=iEdXmyh6vgpYdUqtY8PvmV297kU=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/1c50d45f23112df1ec6ac78d511c1dd9~tplv-u148heywkg-xfl-default-v2:0:0:0:1605523624.jpeg?sig=iEdXmyh6vgpYdUqtY8PvmV297kU="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/82256ac992a1a4dbf71cdef78496d10b",
-            "url": "https://p1.haoduofangs.com/f100-image/82256ac992a1a4dbf71cdef78496d10b~tplv-u148heywkg-xfl-default-v2:0:0:0:1605532122.jpeg?sig=aFHkT6IAW_tHC_xpWz5P82-Vh24=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/82256ac992a1a4dbf71cdef78496d10b~tplv-u148heywkg-xfl-default-v2:0:0:0:1605532122.jpeg?sig=aFHkT6IAW_tHC_xpWz5P82-Vh24="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/0b65eda6c7c5aae64d7df46da334a405",
-            "url": "https://p1.haoduofangs.com/f100-image/0b65eda6c7c5aae64d7df46da334a405~tplv-u148heywkg-xfl-default-v2:0:0:0:1605500377.jpeg?sig=YEQX1E6UCtVzmM7kU-EC76HsiKk=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/0b65eda6c7c5aae64d7df46da334a405~tplv-u148heywkg-xfl-default-v2:0:0:0:1605500377.jpeg?sig=YEQX1E6UCtVzmM7kU-EC76HsiKk="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/e3bdd00f1c9d30e7e2761d5d099ee026",
-            "url": "https://p1.haoduofangs.com/f100-image/e3bdd00f1c9d30e7e2761d5d099ee026~tplv-u148heywkg-xfl-default-v2:0:0:0:1605528765.jpeg?sig=j6Wmz7TZct5b2JdHcW0k0Ehvrnc=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/e3bdd00f1c9d30e7e2761d5d099ee026~tplv-u148heywkg-xfl-default-v2:0:0:0:1605528765.jpeg?sig=j6Wmz7TZct5b2JdHcW0k0Ehvrnc="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/9a28a810edabdf9af93de99fe650c003",
-            "url": "https://p1.haoduofangs.com/f100-image/9a28a810edabdf9af93de99fe650c003~tplv-u148heywkg-xfl-default-v2:0:0:0:1605521222.jpeg?sig=b2I5PC5Svsyu0n1Twb6OA88vxPo=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/9a28a810edabdf9af93de99fe650c003~tplv-u148heywkg-xfl-default-v2:0:0:0:1605521222.jpeg?sig=b2I5PC5Svsyu0n1Twb6OA88vxPo="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/eab6f473e18bc31a5b50e954ef176577",
-            "url": "https://p1.haoduofangs.com/f100-image/eab6f473e18bc31a5b50e954ef176577~tplv-u148heywkg-xfl-default-v2:0:0:0:1605538052.jpeg?sig=BYJaEpq8mToTM6IScchARnJVJpA=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/eab6f473e18bc31a5b50e954ef176577~tplv-u148heywkg-xfl-default-v2:0:0:0:1605538052.jpeg?sig=BYJaEpq8mToTM6IScchARnJVJpA="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/0d8783864cd8e6da38b773fefadf5cc0",
-            "url": "https://p1.haoduofangs.com/f100-image/0d8783864cd8e6da38b773fefadf5cc0~tplv-u148heywkg-xfl-default-v2:0:0:0:1605518953.jpeg?sig=N1OCmZnStIk38tqpy9F8EWACquI=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/0d8783864cd8e6da38b773fefadf5cc0~tplv-u148heywkg-xfl-default-v2:0:0:0:1605518953.jpeg?sig=N1OCmZnStIk38tqpy9F8EWACquI="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/b19fc23ab10cac4722494798ee505d12",
-            "url": "https://p1.haoduofangs.com/f100-image/b19fc23ab10cac4722494798ee505d12~tplv-u148heywkg-xfl-default-v2:0:0:0:1605525005.jpeg?sig=GNmd0qCydRapuBGjhT1UJRnN_OU=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/b19fc23ab10cac4722494798ee505d12~tplv-u148heywkg-xfl-default-v2:0:0:0:1605525005.jpeg?sig=GNmd0qCydRapuBGjhT1UJRnN_OU="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/724ae265a65a3dd1361aa65bbd7a2416",
-            "url": "https://p1.haoduofangs.com/f100-image/724ae265a65a3dd1361aa65bbd7a2416~tplv-u148heywkg-xfl-default-v2:0:0:0:1605521410.jpeg?sig=xuxnPQ47uWoa3JvShEFU5fMdZhg=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/724ae265a65a3dd1361aa65bbd7a2416~tplv-u148heywkg-xfl-default-v2:0:0:0:1605521410.jpeg?sig=xuxnPQ47uWoa3JvShEFU5fMdZhg="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/34a0351670608e7f73cdf681199c107b",
-            "url": "https://p1.haoduofangs.com/f100-image/34a0351670608e7f73cdf681199c107b~tplv-u148heywkg-xfl-default-v2:0:0:0:1605525023.jpeg?sig=mJQEd_zjTTGKVMaFZx_1v7JluQ8=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/34a0351670608e7f73cdf681199c107b~tplv-u148heywkg-xfl-default-v2:0:0:0:1605525023.jpeg?sig=mJQEd_zjTTGKVMaFZx_1v7JluQ8="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/01b5b71bfa2f59f71f74a272596a941a",
-            "url": "https://p1.haoduofangs.com/f100-image/01b5b71bfa2f59f71f74a272596a941a~tplv-u148heywkg-xfl-default-v2:0:0:0:1605521113.jpeg?sig=7BVS36tHUbXLG2nMM1pxEs-cvN8=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/01b5b71bfa2f59f71f74a272596a941a~tplv-u148heywkg-xfl-default-v2:0:0:0:1605521113.jpeg?sig=7BVS36tHUbXLG2nMM1pxEs-cvN8="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/68d3d4fe166b3df035fc49679ce8c30f",
-            "url": "https://p1.haoduofangs.com/f100-image/68d3d4fe166b3df035fc49679ce8c30f~tplv-u148heywkg-xfl-default-v2:0:0:0:1605508051.jpeg?sig=QUIXwDczkp8Dg0qWa042lfHxYUw=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/68d3d4fe166b3df035fc49679ce8c30f~tplv-u148heywkg-xfl-default-v2:0:0:0:1605508051.jpeg?sig=QUIXwDczkp8Dg0qWa042lfHxYUw="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/7023113d17c7f066cb800a00664f3580",
-            "url": "https://p1.haoduofangs.com/f100-image/7023113d17c7f066cb800a00664f3580~tplv-u148heywkg-xfl-default-v2:0:0:0:1605505898.jpeg?sig=h6yKt3f0WXbrc0CRhloAM01SemU=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/7023113d17c7f066cb800a00664f3580~tplv-u148heywkg-xfl-default-v2:0:0:0:1605505898.jpeg?sig=h6yKt3f0WXbrc0CRhloAM01SemU="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/9b487a2306338e57ea459bd31c37a72e",
-            "url": "https://p1.haoduofangs.com/f100-image/9b487a2306338e57ea459bd31c37a72e~tplv-u148heywkg-xfl-default-v2:0:0:0:1605534396.jpeg?sig=tGiWZEE8oYEkNhBNSp6tQGJDBzY=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/9b487a2306338e57ea459bd31c37a72e~tplv-u148heywkg-xfl-default-v2:0:0:0:1605534396.jpeg?sig=tGiWZEE8oYEkNhBNSp6tQGJDBzY="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/0fb7df7c4c9a8f1546316f51e58388ea",
-            "url": "https://p1.haoduofangs.com/f100-image/0fb7df7c4c9a8f1546316f51e58388ea~tplv-u148heywkg-xfl-default-v2:0:0:0:1605519944.jpeg?sig=J7iyfGhrzlMirjCJR96ndG2awwU=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/0fb7df7c4c9a8f1546316f51e58388ea~tplv-u148heywkg-xfl-default-v2:0:0:0:1605519944.jpeg?sig=J7iyfGhrzlMirjCJR96ndG2awwU="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/08a588704d3b8d3af0e14a25ae79af37",
-            "url": "https://p1.haoduofangs.com/f100-image/08a588704d3b8d3af0e14a25ae79af37~tplv-u148heywkg-xfl-default-v2:0:0:0:1605525554.jpeg?sig=fbiyk2yD6mq4HpsrbKbZ_43yLPo=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/08a588704d3b8d3af0e14a25ae79af37~tplv-u148heywkg-xfl-default-v2:0:0:0:1605525554.jpeg?sig=fbiyk2yD6mq4HpsrbKbZ_43yLPo="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/a08eea0ca97f7a3492ab2cf34145b4c5",
-            "url": "https://p1.haoduofangs.com/f100-image/a08eea0ca97f7a3492ab2cf34145b4c5~tplv-u148heywkg-xfl-default-v2:0:0:0:1605529836.jpeg?sig=O5hBjy353HOkHUQhHmbqRjcgJUA=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/a08eea0ca97f7a3492ab2cf34145b4c5~tplv-u148heywkg-xfl-default-v2:0:0:0:1605529836.jpeg?sig=O5hBjy353HOkHUQhHmbqRjcgJUA="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/fe8eaf7f75058d1912b550037637035e",
-            "url": "https://p1.haoduofangs.com/f100-image/fe8eaf7f75058d1912b550037637035e~tplv-u148heywkg-xfl-default-v2:0:0:0:1605528748.jpeg?sig=W4bff5RnycVAxweg_q8zbcAAC2I=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/fe8eaf7f75058d1912b550037637035e~tplv-u148heywkg-xfl-default-v2:0:0:0:1605528748.jpeg?sig=W4bff5RnycVAxweg_q8zbcAAC2I="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/11cbf260c87f021c8e38571c25dd22ac",
-            "url": "https://p1.haoduofangs.com/f100-image/11cbf260c87f021c8e38571c25dd22ac~tplv-u148heywkg-xfl-default-v2:0:0:0:1605505981.jpeg?sig=f0M457F5m_hkU79DiHIUW9F8qvU=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/11cbf260c87f021c8e38571c25dd22ac~tplv-u148heywkg-xfl-default-v2:0:0:0:1605505981.jpeg?sig=f0M457F5m_hkU79DiHIUW9F8qvU="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/8e3be6d86d409aba5fae52cd4d2f120d",
-            "url": "https://p1.haoduofangs.com/f100-image/8e3be6d86d409aba5fae52cd4d2f120d~tplv-u148heywkg-xfl-default-v2:0:0:0:1605533443.jpeg?sig=U-5R-yLcUpR-i5CiOGvQzHc5NNA=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/8e3be6d86d409aba5fae52cd4d2f120d~tplv-u148heywkg-xfl-default-v2:0:0:0:1605533443.jpeg?sig=U-5R-yLcUpR-i5CiOGvQzHc5NNA="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/44209aee729220ee1f1941849a3a5902",
-            "url": "https://p1.haoduofangs.com/f100-image/44209aee729220ee1f1941849a3a5902~tplv-u148heywkg-xfl-default-v2:0:0:0:1605514761.jpeg?sig=OUshBsYxVbu9F7gRAKS__AhCRzE=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/44209aee729220ee1f1941849a3a5902~tplv-u148heywkg-xfl-default-v2:0:0:0:1605514761.jpeg?sig=OUshBsYxVbu9F7gRAKS__AhCRzE="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/2c42c63c4a48a7eda474f7f0cfca4bd5",
-            "url": "https://p1.haoduofangs.com/f100-image/2c42c63c4a48a7eda474f7f0cfca4bd5~tplv-u148heywkg-xfl-default-v2:0:0:0:1605517568.jpeg?sig=pXQWnYd_WvZ-Y7OdCQSGjIbAxZo=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/2c42c63c4a48a7eda474f7f0cfca4bd5~tplv-u148heywkg-xfl-default-v2:0:0:0:1605517568.jpeg?sig=pXQWnYd_WvZ-Y7OdCQSGjIbAxZo="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/c977702cc9de4326b1bb376e5707f421",
-            "url": "https://p1.haoduofangs.com/f100-image/c977702cc9de4326b1bb376e5707f421~tplv-u148heywkg-xfl-default-v2:0:0:0:1605538937.jpeg?sig=O_513UAOuHi3VGizC7gnQ20g5rk=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/c977702cc9de4326b1bb376e5707f421~tplv-u148heywkg-xfl-default-v2:0:0:0:1605538937.jpeg?sig=O_513UAOuHi3VGizC7gnQ20g5rk="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/b9ddb901b462900b3c87c61d16f99e06",
-            "url": "https://p1.haoduofangs.com/f100-image/b9ddb901b462900b3c87c61d16f99e06~tplv-u148heywkg-xfl-default-v2:0:0:0:1605527556.jpeg?sig=j4kjf8jYE6mef-vXimtu7Cy2RlM=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/b9ddb901b462900b3c87c61d16f99e06~tplv-u148heywkg-xfl-default-v2:0:0:0:1605527556.jpeg?sig=j4kjf8jYE6mef-vXimtu7Cy2RlM="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/cc7dc2d1338105aa207534f627016446",
-            "url": "https://p1.haoduofangs.com/f100-image/cc7dc2d1338105aa207534f627016446~tplv-u148heywkg-xfl-default-v2:0:0:0:1605538223.jpeg?sig=L6Z-iAIKGusZQwPNzyPPWxuxxhI=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/cc7dc2d1338105aa207534f627016446~tplv-u148heywkg-xfl-default-v2:0:0:0:1605538223.jpeg?sig=L6Z-iAIKGusZQwPNzyPPWxuxxhI="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/RxRHXWzGqftpRbXia0z1",
-            "url": "https://p1.haoduofangs.com/f100-image/RxRHXWzGqftpRbXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605535011.jpeg?sig=lvy9gWucKrhLSjXrO2onpRfgtAk=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RxRHXWzGqftpRbXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605535011.jpeg?sig=lvy9gWucKrhLSjXrO2onpRfgtAk="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/RxRHXXY1HZBNUmXia0z1",
-            "url": "https://p1.haoduofangs.com/f100-image/RxRHXXY1HZBNUmXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605502754.jpeg?sig=3O4jePeYxUtu5bA4AIf--L6WPaI=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RxRHXXY1HZBNUmXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605502754.jpeg?sig=3O4jePeYxUtu5bA4AIf--L6WPaI="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/RxRHXYH2eaQyjUXia0z1",
-            "url": "https://p1.haoduofangs.com/f100-image/RxRHXYH2eaQyjUXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605532264.jpeg?sig=tTF-AWW_VAW_EQbpJoc31J6NgUk=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RxRHXYH2eaQyjUXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605532264.jpeg?sig=tTF-AWW_VAW_EQbpJoc31J6NgUk="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/RxRHXYw7wsAEsOXia0z1",
-            "url": "https://p1.haoduofangs.com/f100-image/RxRHXYw7wsAEsOXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605533873.jpeg?sig=hYcvGPOX4fXfJn03MMalO7NBDqI=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RxRHXYw7wsAEsOXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605533873.jpeg?sig=hYcvGPOX4fXfJn03MMalO7NBDqI="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/RxRHXZaCrZbrbGXia0z1",
-            "url": "https://p1.haoduofangs.com/f100-image/RxRHXZaCrZbrbGXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605541879.jpeg?sig=NzU1isrlJ4X3-Q2tpaHFENJo7zY=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RxRHXZaCrZbrbGXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605541879.jpeg?sig=NzU1isrlJ4X3-Q2tpaHFENJo7zY="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/RxRHXa26lj3pAZXia0z1",
-            "url": "https://p1.haoduofangs.com/f100-image/RxRHXa26lj3pAZXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605519195.jpeg?sig=9811cVl6NxhWh4mvmjDpvYk8ljA=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RxRHXa26lj3pAZXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605519195.jpeg?sig=9811cVl6NxhWh4mvmjDpvYk8ljA="
-            ],
-            "image_type": 0
-            }
-            ],
-            "timeline": null,
-            "comment": null,
-            "global_pricing": null,
-            "floorpan_list": null,
-            "contact": null,
-            "user_status": null,
-            "status": 0,
-            "cell_style": 8,
-            "log_pb": {
-            "group_id": "6832136828087173133",
-            "has_vr": false,
-            "impr_id": "20201113170117010198062171091933CD",
-            "search_id": "20201113170117010198062171091933CD"
-            },
-            "discount_text": "",
-            "tag_image": null,
-            "display_price_color": "#fe5500",
-            "realtor_info": null,
-            "vr_info": {
-            "has_vr": false,
-            "vr_image": null
-            },
-            "video_info": {
-            "has_video": true
-            },
-            "recommend_type": 0,
-            "property_tag": {
-            "id": 1100074,
-            "content": "普通住宅",
-            "background_color": "#ffffff",
-            "text_color": "#4a4139",
-            "border_color": "#4a4139"
-            },
-            "property_management_type": "普通住宅",
-            "url": "/bj/loupan/6832136828087173133"
-            },
-            {
-            "base_info": [
-            {
-            "attr": "面积",
-            "value": "68平"
-            },
-            {
-            "attr": "挂牌",
-            "value": "2020-09-26"
-            },
-            {
-            "attr": "朝向",
-            "value": "南北"
-            },
-            {
-            "attr": "楼层",
-            "value": "中楼层/共23层"
-            },
-            {
-            "attr": "装修",
-            "value": "精装修"
-            },
-            {
-            "attr": "电梯",
-            "value": "有"
-            },
-            {
-            "attr": "楼型",
-            "value": "-"
-            },
-            {
-            "attr": "类型",
-            "value": "普通住宅"
-            },
-            {
-            "attr": "权属",
-            "value": "-"
-            },
-            {
-            "attr": "年代",
-            "value": "-"
-            },
-            {
-            "attr": "首付",
-            "value": "66万"
-            }
-            ],
-            "base_info_map": {
-            "pricing": "2200000",
-            "pricing_per_sqm": "32102"
-            },
-            "biz_trace": {
-            "biz_parent_id": "",
-            "biz_span_id": "689453004531156583200002",
-            "biz_trace_id": "689453004531156583200002",
-            "extra": "{\"show_lead_claim_types\":\"1\"}",
-            "report_params": ""
-            },
-            "card_type": 2,
-            "cell_style": 7,
-            "core_info": [
-            {
-            "attr": "售价",
-            "value": "220万"
-            },
-            {
-            "attr": "房型",
-            "value": "2室1厅"
-            },
-            {
-            "attr": "建筑面积",
-            "value": "68平"
-            },
-            {
-            "attr": "居室",
-            "value": "2"
-            },
-            {
-            "attr": "小区名",
-            "value": "金隅滨和园1号院"
-            }
-            ],
-            "dislike_info": [
-            {
-            "id": 1,
-            "mutual_exclusive_ids": [
-            2
-            ],
-            "text": "价格过高"
-            },
-            {
-            "id": 2,
-            "mutual_exclusive_ids": [
-            1
-            ],
-            "text": "价格过低"
-            },
-            {
-            "id": 3,
-            "mutual_exclusive_ids": [
-            4
-            ],
-            "text": "面积过大"
-            },
-            {
-            "id": 4,
-            "mutual_exclusive_ids": [
-            3
-            ],
-            "text": "面积过小"
-            },
-            {
-            "id": 5,
-            "mutual_exclusive_ids": [],
-            "text": "不喜欢该户型"
-            },
-            {
-            "id": 6,
-            "mutual_exclusive_ids": [],
-            "text": "不喜欢该小区"
-            }
-            ],
-            "display_built_year": "",
-            "display_description": "石景山-古城",
-            "display_new_neighborhood_title": "2室1厅 68m² 南北",
-            "display_price": "220万",
-            "display_price_per_sqm": "32,102元/平",
-            "display_same_neighborhood_title": "",
-            "display_subtitle": "68㎡ | 南 北 | 石景山 古城",
-            "display_title": "2室1厅 金隅滨和园1号院",
-            "external_info": null,
-            "fake_reason": null,
-            "group_id": "",
-            "house_image": [
-            {
-            "height": 480,
-            "image_type": 4,
-            "uri": "f100-image/SBh9nAM18rfpS3",
-            "url": "https://p1.haoduofangs.com/f100-image/SBh9nAM18rfpS3~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=ijuMsaAuMH7i8gqj-zq57cmnwJU=",
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/SBh9nAM18rfpS3~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=ijuMsaAuMH7i8gqj-zq57cmnwJU="
-            ],
-            "width": 540
-            },
-            {
-            "height": 480,
-            "image_type": 4,
-            "uri": "f100-image/SBh9ntJDZGPIz7",
-            "url": "https://p1.haoduofangs.com/f100-image/SBh9ntJDZGPIz7~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=N93d1pCV43QytMMlpHUVoFzxi8E=",
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/SBh9ntJDZGPIz7~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=N93d1pCV43QytMMlpHUVoFzxi8E="
-            ],
-            "width": 540
-            },
-            {
-            "height": 480,
-            "image_type": 4,
-            "uri": "f100-image/SBh9o5EBtbbLfs",
-            "url": "https://p1.haoduofangs.com/f100-image/SBh9o5EBtbbLfs~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=HrfhA-BhLszmcriPlC6HcbHVoxg=",
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/SBh9o5EBtbbLfs~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=HrfhA-BhLszmcriPlC6HcbHVoxg="
-            ],
-            "width": 540
-            },
-            {
-            "height": 480,
-            "image_type": 4,
-            "uri": "f100-image/SBh9nyyFeXOu3s",
-            "url": "https://p1.haoduofangs.com/f100-image/SBh9nyyFeXOu3s~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=MJW4TBl-rfrVnNI8KUJYYQdqBG0=",
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/SBh9nyyFeXOu3s~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=MJW4TBl-rfrVnNI8KUJYYQdqBG0="
-            ],
-            "width": 540
-            },
-            {
-            "height": 480,
-            "image_type": 4,
-            "uri": "f100-image/SBh9nRmIYQZzrz",
-            "url": "https://p1.haoduofangs.com/f100-image/SBh9nRmIYQZzrz~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=x6NZS0R7DK7SNay3tw49ZRAS7RU=",
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/SBh9nRmIYQZzrz~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=x6NZS0R7DK7SNay3tw49ZRAS7RU="
-            ],
-            "width": 540
-            },
-            {
-            "height": 480,
-            "image_type": 4,
-            "uri": "f100-image/SBh9nXaAEcsYPj",
-            "url": "https://p1.haoduofangs.com/f100-image/SBh9nXaAEcsYPj~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=02vgcmStgLyKjNph2g3tH9iS0kU=",
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/SBh9nXaAEcsYPj~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=02vgcmStgLyKjNph2g3tH9iS0kU="
-            ],
-            "width": 540
-            },
-            {
-            "height": 480,
-            "image_type": 4,
-            "uri": "f100-image/SBh9nGXEcDxkkv",
-            "url": "https://p1.haoduofangs.com/f100-image/SBh9nGXEcDxkkv~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=SESN_BKC2jVna0eXkXVE-Me8t5k=",
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/SBh9nGXEcDxkkv~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=SESN_BKC2jVna0eXkXVE-Me8t5k="
-            ],
-            "width": 540
-            },
-            {
-            "height": 480,
-            "image_type": 2,
-            "uri": "f100-image/SBh9oCm4d17Qb",
-            "url": "https://p1.haoduofangs.com/f100-image/SBh9oCm4d17Qb~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=AF7AgVj-NPMQcAROPJwUbrwh_64=",
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/SBh9oCm4d17Qb~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=AF7AgVj-NPMQcAROPJwUbrwh_64="
-            ],
-            "width": 540
-            }
-            ],
-            "house_status": 0,
-            "house_type": 2,
-            "house_video": {
-            "has_video": false
-            },
-            "id": "6876765706432561415",
-            "impr_id": "202011131658080101980651075C19084D",
-            "log_pb": {
-            "data_source_id": 22103,
-            "group_id": "6876765706432561415",
-            "has_video": false,
-            "has_vr": false,
-            "house_ad_flow_ctrl": "",
-            "impr_id": "202011131658080101980651075C19084D",
-            "origin_image_num": 8,
-            "recall_reason": "{\"CY\":57}",
-            "search_id": "202011131658080101980651075C19084D"
-            },
-            "price_num": "2200000",
-            "realtor_info": null,
-            "reason_tags": null,
-            "recommend_tags": null,
-            "recommend_text": "",
-            "school_info": null,
-            "search_id": "202011131658080101980651075C19084D",
-            "sky_eye_tag": null,
-            "status": 0,
-            "tag_image": null,
-            "tags": [
-            {
-            "background_color": "#f5f5f5",
-            "content": "南北通透",
-            "id": 6883045423204794379,
-            "text_color": "#333333"
-            },
-            {
-            "background_color": "#f5f5f5",
-            "content": "有电梯",
-            "id": 6883045421334134787,
-            "text_color": "#333333"
-            },
-            {
-            "background_color": "#f5f5f5",
-            "content": "临近地铁",
-            "id": 6883045419098570764,
-            "text_color": "#333333"
-            },
-            {
-            "background_color": "#f5f5f5",
-            "content": "环境优雅",
-            "id": 6883045420054872068,
-            "text_color": "#333333"
-            }
-            ],
-            "title": "2室1厅 金隅滨和园1号院",
-            "title_tag": null,
-            "title_tags": [],
-            "upload_at": 1601049600,
-            "url": "/bj/ershoufang/6876765706432561415",
-            "vr_info": {
-            "has_vr": false,
-            "vr_image": null
-            }
-            },
-            {
-            "card_type": 3,
-            "id": "6650358076006236168",
-            "impr_id": "202011131710070101980601391D1B6144",
-            "search_id": "202011131710070101980601391D1B6144",
-            "title": "整租 保德小区",
-            "subtitle": "2室1厅/60平/高楼层",
-            "pricing": "2000元/月",
-            "pricing_num": "2000",
-            "pricing_unit": "元/月",
-            "house_type": 3,
-            "tags": null,
-            "url": "",
-            "house_image": [
-            {
-            "uri": "f100-image/RFojPPuDbGala",
-            "url": "https://p1.haoduofangs.com/f100-image/RFojPPuDbGala~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=141aoivVasdydErCkJzyjoz7M6s=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RFojPPuDbGala~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=141aoivVasdydErCkJzyjoz7M6s="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/RFLcJlyERs8hoE",
-            "url": "https://p1.haoduofangs.com/f100-image/RFLcJlyERs8hoE~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=X9uJK-Phyes8A7Qt9LsbPUNBKco=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RFLcJlyERs8hoE~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=X9uJK-Phyes8A7Qt9LsbPUNBKco="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/RFojQGsBHDcSHJ",
-            "url": "https://p1.haoduofangs.com/f100-image/RFojQGsBHDcSHJ~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=80BIk2hhktVpEyW9n0nsHFr2_8A=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RFojQGsBHDcSHJ~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=80BIk2hhktVpEyW9n0nsHFr2_8A="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/RFojPwg1vkGmBr",
-            "url": "https://p1.haoduofangs.com/f100-image/RFojPwg1vkGmBr~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=AvTBsR7iFNQ3SbpnqlUiyAuNYZM=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RFojPwg1vkGmBr~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=AvTBsR7iFNQ3SbpnqlUiyAuNYZM="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/RFojQ6Q8oUT6C6",
-            "url": "https://p1.haoduofangs.com/f100-image/RFojQ6Q8oUT6C6~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=73fu79rwVY6bzdySDbvO-k4jB0g=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RFojQ6Q8oUT6C6~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=73fu79rwVY6bzdySDbvO-k4jB0g="
-            ],
-            "image_type": 0
-            },
-            {
-            "uri": "f100-image/RFojPlu9aAFH1p",
-            "url": "https://p1.haoduofangs.com/f100-image/RFojPlu9aAFH1p~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=TJjiXcaiFTHedv23AhloG4tIllk=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/RFojPlu9aAFH1p~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=TJjiXcaiFTHedv23AhloG4tIllk="
-            ],
-            "image_type": 0
-            }
-            ],
-            "status": 0,
-            "log_pb": {
-            "group_id": "6650358076006236168",
-            "impr_id": "202011131710070101980601391D1B6144",
-            "search_id": "202011131710070101980601391D1B6144"
-            },
-            "cell_style": 1,
-            "core_info": [
-            {
-            "attr": "押二付三",
-            "value": "2000元/月"
-            },
-            {
-            "attr": "房型",
-            "value": "2室1厅"
-            },
-            {
-            "attr": "面积",
-            "value": "60平"
-            }
-            ],
-            "base_info": [
-            {
-            "attr": "发布",
-            "value": "2018-12-30",
-            "is_single": false
-            },
-            {
-            "attr": "朝向",
-            "value": "北",
-            "is_single": false
-            },
-            {
-            "attr": "楼层",
-            "value": "高楼层",
-            "is_single": false
-            },
-            {
-            "attr": "装修",
-            "value": "精装修",
-            "is_single": false
-            }
-            ],
-            "facilities": [
-            {
-            "id": "5",
-            "name": "床",
-            "icon_url": "http://p9.pstatp.com/origin/db120005402e3ad53d89",
-            "enabled": true
-            },
-            {
-            "id": "9",
-            "name": "衣柜",
-            "icon_url": "http://p3.pstatp.com/origin/da8f00097efb85e19056",
-            "enabled": false
-            },
-            {
-            "id": "6",
-            "name": "冰箱",
-            "icon_url": "http://p1.pstatp.com/origin/da64000f387251817525",
-            "enabled": true
-            },
-            {
-            "id": "4",
-            "name": "洗衣机",
-            "icon_url": "http://p1.pstatp.com/origin/db1500067c146811eb6f",
-            "enabled": true
-            },
-            {
-            "id": "10",
-            "name": "热水器",
-            "icon_url": "http://p9.pstatp.com/origin/db000005334af6ec8b7a",
-            "enabled": true
-            },
-            {
-            "id": "7",
-            "name": "空调",
-            "icon_url": "http://p9.pstatp.com/origin/dacb000504ed2c47e250",
-            "enabled": true
-            },
-            {
-            "id": "8",
-            "name": "暖气",
-            "icon_url": "http://p3.pstatp.com/origin/dacf000630c278e9e8f3",
-            "enabled": true
-            },
-            {
-            "id": "11",
-            "name": "天然气",
-            "icon_url": "http://p99.pstatp.com/origin/da7300052d0691a0de41",
-            "enabled": false
-            },
-            {
-            "id": "12",
-            "name": "卫生间",
-            "icon_url": "http://p1.pstatp.com/origin/dad900086316da238f33",
-            "enabled": false
-            },
-            {
-            "id": "1",
-            "name": "WiFi",
-            "icon_url": "http://p1.pstatp.com/origin/da52000c889439b7584a",
-            "enabled": true
-            }
-            ],
-            "dislike_info": [
-            {
-            "id": 1,
-            "text": "价格过高",
-            "mutual_exclusive_ids": [
-            2
-            ]
-            },
-            {
-            "id": 2,
-            "text": "价格过低",
-            "mutual_exclusive_ids": [
-            1
-            ]
-            },
-            {
-            "id": 3,
-            "text": "面积过大",
-            "mutual_exclusive_ids": [
-            4
-            ]
-            },
-            {
-            "id": 4,
-            "text": "面积过小",
-            "mutual_exclusive_ids": [
-            3
-            ]
-            },
-            {
-            "id": 5,
-            "text": "不喜欢该户型",
-            "mutual_exclusive_ids": []
-            },
-            {
-            "id": 6,
-            "text": "不喜欢该小区",
-            "mutual_exclusive_ids": []
-            }
-            ],
-            "addr_data": "静安彭浦"
-            },
-            {
-            "card_type": 4,
-            "id": "6587273830215975181",
-            "impr_id": "20201112202219010198082091443CACA9",
-            "search_id": "2020111214551801019806705232FA6E01",
-            "name": "松榆西里",
-            "images": [
-            {
-            "uri": "f100-image/7c223d4d66a39c0ad098259d95832840",
-            "url": "https://p1.haoduofangs.com/f100-image/7c223d4d66a39c0ad098259d95832840~tplv-u148heywkg-xfl-default-v2:0:0:0:1605414301.jpeg?sig=7Jdfs-z0jVUSyyLD2p2lIRyFaBg=",
-            "width": 540,
-            "height": 480,
-            "url_list": [
-            "https://p1.haoduofangs.com/f100-image/7c223d4d66a39c0ad098259d95832840~tplv-u148heywkg-xfl-default-v2:0:0:0:1605414301.jpeg?sig=7Jdfs-z0jVUSyyLD2p2lIRyFaBg="
-            ],
-            "image_type": 0
-            }
-            ],
-            "address": "松榆南路",
-            "display_title": "松榆西里",
-            "display_subtitle": "朝阳-华威桥/2001年建",
-            "display_description": "朝阳-华威桥/2001年建",
-            "display_price": "60952元/平",
-            "display_price_per_sqm": "60952元/平",
-            "display_built_year": "2001年建",
-            "display_stats_info": "在售59套",
-            "house_type": 4,
-            "base_info_map": {
-            "built_year": "2001",
-            "pricing_per_sqm": "6095200"
-            },
-            "gaode_lng": "116.4646504965",
-            "gaode_lat": "116.4646504965",
-            "status": 0,
-            "house_status": 0,
-            "log_pb": {
-            "group_id": "6587273830215975181",
-            "has_video": false,
-            "impr_id": "20201112202219010198082091443CACA9",
-            "recommend_type": "normal",
-            "search_id": "2020111214551801019806705232FA6E01"
-            },
-            "display_distance_info": {
-            "text": ">3km",
-            "icon": null
-            },
-            "cell_style": 10,
-            "price_per_sqm_num": "60952",
-            "price_per_sqm_unit": "元/平",
-            "base_info": [
-            {
-            "attr": "建造年代",
-            "is_single": false,
-            "value": "2001年"
-            },
-            {
-            "attr": "产权描述",
-            "is_single": false,
-            "value": "40年/50年"
-            },
-            {
-            "attr": "绿化率",
-            "is_single": false,
-            "value": "30%"
-            },
-            {
-            "attr": "物业费用",
-            "is_single": false,
-            "value": "0.50元/平/月"
-            },
-            {
-            "attr": "房屋总数",
-            "is_single": false,
-            "value": "6281户"
-            },
-            {
-            "attr": "楼栋总数",
-            "is_single": false,
-            "value": "60栋"
-            },
-            {
-            "attr": "容积率",
-            "is_single": false,
-            "value": "1.40"
-            },
-            {
-            "attr": "开发商",
-            "is_single": true,
-            "value": "北京住总房地产开发有限责任公司"
-            },
-            {
-            "attr": "物业公司",
-            "is_single": true,
-            "value": "北京市榆光城物业管理有限公司"
-            },
-            {
-            "attr": "交易权属",
-            "is_single": false,
-            "value": "商品房"
-            },
-            {
-            "attr": "建筑类型",
-            "is_single": false,
-            "value": "多层"
-            },
-            {
-            "attr": "车位个数",
-            "is_single": false,
-            "value": "2000"
-            },
-            {
-            "attr": "建筑面积",
-            "is_single": false,
-            "value": "-"
-            }
-            ],
-            "neighborhood_info": {
-            "id": "6587273830215975181",
-            "name": "松榆西里",
-            "pricing_per_sqm": "60952元/平",
-            "pricing_per_sqm_v": 0,
-            "month_up": -0.0078,
-            "address": "松榆南路",
-            "gaode_lng": "116.4646504965",
-            "gaode_lat": "39.8737104303",
-            "gaode_image_url": "https://p1.haoduofangs.com/f100-gaode-static/4e2adb7f339ed6c312c80a415b59bc8f~tplv-u148heywkg-default-v1:0:0:0:0:1605440320.jpeg?sig=1ehtvpiGISap-Mc2igehYC7KUBo=",
-            "city_id": 122,
-            "district_id": 123,
-            "area_id": 166,
-            "search_id": "2020111214551801019806705232FA6E01",
-            "impr_id": "20201112202219010198082091443CACA9",
-            "group_id": "6587273830215975181",
-            "district_name": "朝阳",
-            "area_name": "华威桥",
-            "location_full_name": "朝阳-华威桥",
-            "status": 0,
-            "neighborhood_images": null
-            },
-            "house_video": {
-            "has_video": false
-            },
-            "title_tags": [
-            {
-            "text": "小区测评",
-            "is_gradient": true,
-            "top_background_color": "#eeca99",
-            "bottom_background_color": "#dd9c43",
-            "background_color": "",
-            "text_color": "#ffffff"
-            }
-            ]
-            },
-            {
-            "card_type": 5,
-            "cell_style": 0,
-            "is_subscribe": false,
-            "subscribe_id": 0,
-            "text": "当前选择: VR看房"
-            },
-            {
-            "card_type": 6,
-            "cell_style": 0,
-            "neighborhood_id": 6677365840196665612,
-            "neighborhood_name": "幸福西里",
-            "district_area_name": "北区-玄武大街",
-            "neighborhood_price": "179337元/平",
-            "display_status_info": "在售69套",
-            "realtor_info": {
-            "phone": "phone",
-            "enable_phone": true,
-            "realtor_name": "窦金龙",
-            "realtor_image": "",
-            "avatar_url": "https://p3.pstatp.com/large/tos-cn-i-0022/31c3c3385fc44f73b4c88b51120df038",
-            "agency_name": "",
-            "agency_id": 6664800605690658823,
-            "realtor_id": "1697301769230382",
-            "chat_openurl": "sslocal://open_single_chat?target_user_id=1697301769230382&chat_title=%E7%AA%A6%E9%87%91%E9%BE%99&target_id=6677365840196665612&target_type=4&auto_text=%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%83%B3%E5%92%8C%E4%BD%A0%E4%BA%86%E8%A7%A3%E4%B8%8B%E5%B9%B8%E7%A6%8F%E8%A5%BF%E9%87%8C%E5%B0%8F%E5%8C%BA",
-            "main_page_info": "https://i.haoduofangs.com/f100/client/realtor_detail?realtor_id=1697301769230382&im_params=%7B%22auto_text%22%3A%22%25E4%25BD%25A0%25E5%25A5%25BD%25EF%25BC%258C%25E6%2583%25B3%25E5%2592%258C%25E4%25BD%25A0%25E4%25BA%2586%25E8%25A7%25A3%25E4%25B8%258B%25E5%25B9%25B8%25E7%25A6%258F%25E8%25A5%25BF%25E9%2587%258C%25E5%25B0%258F%25E5%258C%25BA%22%2C%22chat_title%22%3A%22%25E7%25AA%25A6%25E9%2587%2591%25E9%25BE%2599%22%2C%22target_id%22%3A%226677365840196665612%22%2C%22target_type%22%3A4%2C%22target_user_id%22%3A1697301769230382%7D",
-            "realtor_log_pb": {
-            "realtor_id": 1697301769230382,
-            "realtor_type": 1
-            },
-            "realtor_score_display": "4.3分",
-            "realtor_score_description": "超过100%的同行",
-            "realtor_description": "",
-            "realtor_tag": null,
-            "area_list": null,
-            "image_tag": {
-            "image_url": "http://p9.pstatp.com/origin/33a110001b22a1c233046"
-            }
-            },
-            "log_pb": {
-            "group_id": "6677365840196665612",
-            "impr_id": "202011131806540101980650530E28988B",
-            "search_id": "202011131806540101980650530E28988B"
-            },
-            "realtor_type": 4,
-            "tip_text": "",
-            "realtor_tag": "",
-            "associate_info": {
-            "im_info": {
-            "id": 25,
-            "from": "app_neighborhood_aladdin",
-            "source": "1.42",
-            "endpoint": 1,
-            "page": 42,
-            "target_type": 4,
-            "target_id": 6677365840196665612,
-            "extra_info": ""
-            },
-            "phone_info": {
-            "id": 126,
-            "from": "app_neighborhood_aladdin",
-            "source": "1.52",
-            "endpoint": 1,
-            "page": 52,
-            "target_type": 4,
-            "target_id": 6677365840196665612,
-            "extra_info": ""
-            },
-            "report_form_info": null
-            }
-            },
-            {
-            "card_type": 9,
-            "cell_style": 0,
-            "text": "没有找到相关楼盘，猜你想找下面这些？"
-            },
-            {
-            "card_type": 10,
-            "cell_style": 0,
-            "text": "猜你想找"
-            },
-            {
-            "card_type": 11,
-            "cell_style": 0,
-            "text": "你是不是想找“北京市”房源?",
-            "text2": "切换城市",
-            "open_url": "fschema://fhomepage?city_id=122"
-            },
-            {
-            "card_type": 13,
-            "cell_style": 0,
-            "tip_text": "高效找房，为你推荐专属找房顾问",
-            "realtor_type": 4,
-            "target_id": 6587281861834178824,
-            "target_name": "南师大西山",
-            "district_area_name": "鼓楼-宁海路",
-            "area_price": "93769元/平",
-            "display_status_info": "在售1套",
-            "log_pb": {
-            "group_id": "6587281861834178824",
-            "impr_id": "202011131757070101980650830C268E0D",
-            "search_id": "202011131757070101980650830C268E0D"
-            },
-            "associate_info": {
-            "im_info": null,
-            "phone_info": null,
-            "report_form_info": {
-            "id": 177,
-            "from": "app_search_esf",
-            "source": "1.95",
-            "endpoint": 1,
-            "page": 95,
-            "target_type": 4,
-            "target_id": 6587281861834178824,
-            "extra_info": ""
-            }
-            }
-            },
-            {
-            "card_type": 15,
-            "title": "坐享定制找房服务",
-            "text": "即刻查看专属好房",
-            "button_text": "帮我找房",
-            "open_url": "sslocal://house_find"
-            },
-            {
-            "lynx_data": {
-            "report_params": {
-            "element_from": "driving_find_house_card",
-            "element_type": "driving_find_house_card",
-            "enter_from": "maintab",
-            "origin_from": "maintab_search",
-            "page_type": "new_list",
-            "search_id": "20201113172726010198023086401F5504"
-            },
-            "title": "坐享定制找房服务",
-            "subtitle": "即刻查看专属好房",
-            "button_text": "帮我找房",
-            "open_url": "sslocal://house_find?house_type=1&origin_from=maintab_search&enter_from=new_list&page_type=new_list&click_option=driving_find_house_button&element_type=driving_find_house_card&element_from=driving_find_house_card"
-            },
-            "channel": "lynx_house_find_card",
-            "cell_style": 9,
-            "card_type": 20,
-            "height": 83
+                "card_type": 1,
+                "id": "6832136828087173133",
+                "impr_id": "20201113170117010198062171091933CD",
+                "search_id": "20201113170117010198062171091933CD",
+                "title": "招商.臻珑府",
+                "upload_at": 0,
+                "display_title": "招商.臻珑府",
+                "display_subtitle": "大兴-次渠/北京市亦庄经济技术开发区经海七路与科创十街交汇处",
+                "display_description": "大兴 次渠 | 建面 57-139㎡",
+                "display_price": "653万",
+                "display_price_per_sqm": "47000元/平",
+                "price_per_sqm_num": "47000",
+                "price_per_sqm_unit": "元/平",
+                "advantage_description": {
+                    "icon": {
+                        "uri": "3301d0010f684211456cd/",
+                        "url": "https://p3.pstatp.com/origin/3301d0010f684211456cd",
+                        "width": 540,
+                        "height": 480,
+                        "url_list": [
+                            "https://p3.pstatp.com/origin/3301d0010f684211456cd"
+                        ],
+                        "image_type": 0
+                    },
+                    "text": "央企精工，静音格局，建华学校在旁",
+                    "background_color": "#ffffff",
+                    "text_color": "#333333",
+                    "border_color": "#ffffff"
+                },
+                "core_info": null,
+                "house_type": 1,
+                "tags": [
+                    {
+                    "id": 1100001,
+                    "content": "品牌地产",
+                    "background_color": "#ffeee5",
+                    "text_color": "#fe5500"
+                    },
+                    {
+                    "id": 1100001,
+                    "content": "小户型",
+                    "background_color": "#f5f5f5",
+                    "text_color": "#333333"
+                    },
+                    {
+                    "id": 1100001,
+                    "content": "限竞房",
+                    "background_color": "#f5f5f5",
+                    "text_color": "#333333"
+                    }
+                ],
+                "images": [
+                    {
+                        "uri": "f100-image/1c50d45f23112df1ec6ac78d511c1dd9",
+                        "url": "https://p1.haoduofangs.com/f100-image/1c50d45f23112df1ec6ac78d511c1dd9~tplv-u148heywkg-xfl-default-v2:0:0:0:1605523624.jpeg?sig=iEdXmyh6vgpYdUqtY8PvmV297kU=",
+                        "width": 540,
+                        "height": 480,
+                        "url_list": [
+                        "https://p1.haoduofangs.com/f100-image/1c50d45f23112df1ec6ac78d511c1dd9~tplv-u148heywkg-xfl-default-v2:0:0:0:1605523624.jpeg?sig=iEdXmyh6vgpYdUqtY8PvmV297kU="
+                        ],
+                        "image_type": 0
+                    },
+                    {
+                        "uri": "f100-image/82256ac992a1a4dbf71cdef78496d10b",
+                        "url": "https://p1.haoduofangs.com/f100-image/82256ac992a1a4dbf71cdef78496d10b~tplv-u148heywkg-xfl-default-v2:0:0:0:1605532122.jpeg?sig=aFHkT6IAW_tHC_xpWz5P82-Vh24=",
+                        "width": 540,
+                        "height": 480,
+                        "url_list": [
+                        "https://p1.haoduofangs.com/f100-image/82256ac992a1a4dbf71cdef78496d10b~tplv-u148heywkg-xfl-default-v2:0:0:0:1605532122.jpeg?sig=aFHkT6IAW_tHC_xpWz5P82-Vh24="
+                        ],
+                        "image_type": 0
+                    },
+                    
+                    {
+                        "uri": "f100-image/RxRHXZaCrZbrbGXia0z1",
+                        "url": "https://p1.haoduofangs.com/f100-image/RxRHXZaCrZbrbGXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605541879.jpeg?sig=NzU1isrlJ4X3-Q2tpaHFENJo7zY=",
+                        "width": 540,
+                        "height": 480,
+                        "url_list": [
+                        "https://p1.haoduofangs.com/f100-image/RxRHXZaCrZbrbGXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605541879.jpeg?sig=NzU1isrlJ4X3-Q2tpaHFENJo7zY="
+                        ],
+                        "image_type": 0
+                    },
+                    {
+                        "uri": "f100-image/RxRHXa26lj3pAZXia0z1",
+                        "url": "https://p1.haoduofangs.com/f100-image/RxRHXa26lj3pAZXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605519195.jpeg?sig=9811cVl6NxhWh4mvmjDpvYk8ljA=",
+                        "width": 540,
+                        "height": 480,
+                        "url_list": [
+                        "https://p1.haoduofangs.com/f100-image/RxRHXa26lj3pAZXia0z1~tplv-u148heywkg-xfl-default-v2:0:0:0:1605519195.jpeg?sig=9811cVl6NxhWh4mvmjDpvYk8ljA="
+                        ],
+                        "image_type": 0
+                    }
+                ],
+                "timeline": null,
+                "comment": null,
+                "global_pricing": null,
+                "floorpan_list": null,
+                "contact": null,
+                "user_status": null,
+                "status": 0,
+                "cell_style": 8,
+                "log_pb": {
+                    "group_id": "6832136828087173133",
+                    "has_vr": false,
+                    "impr_id": "20201113170117010198062171091933CD",
+                    "search_id": "20201113170117010198062171091933CD"
+                },
+                "discount_text": "",
+                "tag_image": null,
+                "display_price_color": "#fe5500",
+                "realtor_info": null,
+                "vr_info": {
+                    "has_vr": false,
+                    "vr_image": null
+                },
+                "video_info": {
+                    "has_video": true
+                },
+                "recommend_type": 0,
+                "property_tag": {
+                    "id": 1100074,
+                    "content": "普通住宅",
+                    "background_color": "#ffffff",
+                    "text_color": "#4a4139",
+                    "border_color": "#4a4139"
+                },
+                "property_management_type": "普通住宅",
+                "url": "/bj/loupan/6832136828087173133"
+            },
+            {
+                "base_info": [
+                {
+                "attr": "面积",
+                "value": "68平"
+                },
+                {
+                "attr": "挂牌",
+                "value": "2020-09-26"
+                },
+                {
+                "attr": "朝向",
+                "value": "南北"
+                },
+                {
+                "attr": "楼层",
+                "value": "中楼层/共23层"
+                },
+                {
+                "attr": "装修",
+                "value": "精装修"
+                },
+                {
+                "attr": "电梯",
+                "value": "有"
+                },
+                {
+                "attr": "楼型",
+                "value": "-"
+                },
+                {
+                "attr": "类型",
+                "value": "普通住宅"
+                },
+                {
+                "attr": "权属",
+                "value": "-"
+                },
+                {
+                "attr": "年代",
+                "value": "-"
+                },
+                {
+                "attr": "首付",
+                "value": "66万"
+                }
+                ],
+                "base_info_map": {
+                "pricing": "2200000",
+                "pricing_per_sqm": "32102"
+                },
+                "biz_trace": {
+                "biz_parent_id": "",
+                "biz_span_id": "689453004531156583200002",
+                "biz_trace_id": "689453004531156583200002",
+                "extra": "{\"show_lead_claim_types\":\"1\"}",
+                "report_params": ""
+                },
+                "card_type": 2,
+                "cell_style": 7,
+                "core_info": [
+                {
+                "attr": "售价",
+                "value": "220万"
+                },
+                {
+                "attr": "房型",
+                "value": "2室1厅"
+                },
+                {
+                "attr": "建筑面积",
+                "value": "68平"
+                },
+                {
+                "attr": "居室",
+                "value": "2"
+                },
+                {
+                "attr": "小区名",
+                "value": "金隅滨和园1号院"
+                }
+                ],
+                "dislike_info": [
+                {
+                "id": 1,
+                "mutual_exclusive_ids": [
+                2
+                ],
+                "text": "价格过高"
+                },
+                {
+                "id": 2,
+                "mutual_exclusive_ids": [
+                1
+                ],
+                "text": "价格过低"
+                },
+                {
+                "id": 3,
+                "mutual_exclusive_ids": [
+                4
+                ],
+                "text": "面积过大"
+                },
+                {
+                "id": 4,
+                "mutual_exclusive_ids": [
+                3
+                ],
+                "text": "面积过小"
+                },
+                {
+                "id": 5,
+                "mutual_exclusive_ids": [],
+                "text": "不喜欢该户型"
+                },
+                {
+                "id": 6,
+                "mutual_exclusive_ids": [],
+                "text": "不喜欢该小区"
+                }
+                ],
+                "display_built_year": "",
+                "display_description": "石景山-古城",
+                "display_new_neighborhood_title": "2室1厅 68m² 南北",
+                "display_price": "220万",
+                "display_price_per_sqm": "32,102元/平",
+                "display_same_neighborhood_title": "",
+                "display_subtitle": "68㎡ | 南 北 | 石景山 古城",
+                "display_title": "2室1厅 金隅滨和园1号院",
+                "external_info": null,
+                "fake_reason": null,
+                "group_id": "",
+                "house_image": [
+                {
+                "height": 480,
+                "image_type": 4,
+                "uri": "f100-image/SBh9nAM18rfpS3",
+                "url": "https://p1.haoduofangs.com/f100-image/SBh9nAM18rfpS3~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=ijuMsaAuMH7i8gqj-zq57cmnwJU=",
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/SBh9nAM18rfpS3~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=ijuMsaAuMH7i8gqj-zq57cmnwJU="
+                ],
+                "width": 540
+                },
+                {
+                "height": 480,
+                "image_type": 4,
+                "uri": "f100-image/SBh9ntJDZGPIz7",
+                "url": "https://p1.haoduofangs.com/f100-image/SBh9ntJDZGPIz7~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=N93d1pCV43QytMMlpHUVoFzxi8E=",
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/SBh9ntJDZGPIz7~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=N93d1pCV43QytMMlpHUVoFzxi8E="
+                ],
+                "width": 540
+                },
+                {
+                "height": 480,
+                "image_type": 4,
+                "uri": "f100-image/SBh9o5EBtbbLfs",
+                "url": "https://p1.haoduofangs.com/f100-image/SBh9o5EBtbbLfs~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=HrfhA-BhLszmcriPlC6HcbHVoxg=",
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/SBh9o5EBtbbLfs~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=HrfhA-BhLszmcriPlC6HcbHVoxg="
+                ],
+                "width": 540
+                },
+                {
+                "height": 480,
+                "image_type": 4,
+                "uri": "f100-image/SBh9nyyFeXOu3s",
+                "url": "https://p1.haoduofangs.com/f100-image/SBh9nyyFeXOu3s~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=MJW4TBl-rfrVnNI8KUJYYQdqBG0=",
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/SBh9nyyFeXOu3s~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=MJW4TBl-rfrVnNI8KUJYYQdqBG0="
+                ],
+                "width": 540
+                },
+                {
+                "height": 480,
+                "image_type": 4,
+                "uri": "f100-image/SBh9nRmIYQZzrz",
+                "url": "https://p1.haoduofangs.com/f100-image/SBh9nRmIYQZzrz~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=x6NZS0R7DK7SNay3tw49ZRAS7RU=",
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/SBh9nRmIYQZzrz~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=x6NZS0R7DK7SNay3tw49ZRAS7RU="
+                ],
+                "width": 540
+                },
+                {
+                "height": 480,
+                "image_type": 4,
+                "uri": "f100-image/SBh9nXaAEcsYPj",
+                "url": "https://p1.haoduofangs.com/f100-image/SBh9nXaAEcsYPj~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=02vgcmStgLyKjNph2g3tH9iS0kU=",
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/SBh9nXaAEcsYPj~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=02vgcmStgLyKjNph2g3tH9iS0kU="
+                ],
+                "width": 540
+                },
+                {
+                "height": 480,
+                "image_type": 4,
+                "uri": "f100-image/SBh9nGXEcDxkkv",
+                "url": "https://p1.haoduofangs.com/f100-image/SBh9nGXEcDxkkv~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=SESN_BKC2jVna0eXkXVE-Me8t5k=",
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/SBh9nGXEcDxkkv~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=SESN_BKC2jVna0eXkXVE-Me8t5k="
+                ],
+                "width": 540
+                },
+                {
+                "height": 480,
+                "image_type": 2,
+                "uri": "f100-image/SBh9oCm4d17Qb",
+                "url": "https://p1.haoduofangs.com/f100-image/SBh9oCm4d17Qb~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=AF7AgVj-NPMQcAROPJwUbrwh_64=",
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/SBh9oCm4d17Qb~tplv-u148heywkg-default-v3:0:424:0:0.jpeg?sig=AF7AgVj-NPMQcAROPJwUbrwh_64="
+                ],
+                "width": 540
+                }
+                ],
+                "house_status": 0,
+                "house_type": 2,
+                "house_video": {
+                "has_video": false
+                },
+                "id": "6876765706432561415",
+                "impr_id": "202011131658080101980651075C19084D",
+                "log_pb": {
+                    "data_source_id": 22103,
+                    "group_id": "6876765706432561415",
+                    "has_video": false,
+                    "has_vr": false,
+                    "house_ad_flow_ctrl": "",
+                    "impr_id": "202011131658080101980651075C19084D",
+                    "origin_image_num": 8,
+                    "recall_reason": "{\"CY\":57}",
+                    "search_id": "202011131658080101980651075C19084D"
+                },
+                "price_num": "2200000",
+                "realtor_info": null,
+                "reason_tags": null,
+                "recommend_tags": null,
+                "recommend_text": "",
+                "school_info": null,
+                "search_id": "202011131658080101980651075C19084D",
+                "sky_eye_tag": null,
+                "status": 0,
+                "tag_image": null,
+                "tags": [
+                {
+                "background_color": "#f5f5f5",
+                "content": "南北通透",
+                "id": 6883045423204794379,
+                "text_color": "#333333"
+                },
+                {
+                "background_color": "#f5f5f5",
+                "content": "有电梯",
+                "id": 6883045421334134787,
+                "text_color": "#333333"
+                },
+                {
+                "background_color": "#f5f5f5",
+                "content": "临近地铁",
+                "id": 6883045419098570764,
+                "text_color": "#333333"
+                },
+                {
+                "background_color": "#f5f5f5",
+                "content": "环境优雅",
+                "id": 6883045420054872068,
+                "text_color": "#333333"
+                }
+                ],
+                "title": "2室1厅 金隅滨和园1号院",
+                "title_tag": null,
+                "title_tags": [],
+                "upload_at": 1601049600,
+                "url": "/bj/ershoufang/6876765706432561415",
+                "vr_info": {
+                "has_vr": false,
+                "vr_image": null
+                }
+            },
+            {
+                "card_type": 3,
+                "id": "6650358076006236168",
+                "impr_id": "202011131710070101980601391D1B6144",
+                "search_id": "202011131710070101980601391D1B6144",
+                "title": "整租 保德小区",
+                "subtitle": "2室1厅/60平/高楼层",
+                "pricing": "2000元/月",
+                "pricing_num": "2000",
+                "pricing_unit": "元/月",
+                "house_type": 3,
+                "tags": null,
+                "url": "",
+                "house_image": [
+                {
+                "uri": "f100-image/RFojPPuDbGala",
+                "url": "https://p1.haoduofangs.com/f100-image/RFojPPuDbGala~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=141aoivVasdydErCkJzyjoz7M6s=",
+                "width": 540,
+                "height": 480,
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/RFojPPuDbGala~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=141aoivVasdydErCkJzyjoz7M6s="
+                ],
+                "image_type": 0
+                },
+                {
+                "uri": "f100-image/RFLcJlyERs8hoE",
+                "url": "https://p1.haoduofangs.com/f100-image/RFLcJlyERs8hoE~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=X9uJK-Phyes8A7Qt9LsbPUNBKco=",
+                "width": 540,
+                "height": 480,
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/RFLcJlyERs8hoE~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=X9uJK-Phyes8A7Qt9LsbPUNBKco="
+                ],
+                "image_type": 0
+                },
+                {
+                "uri": "f100-image/RFojQGsBHDcSHJ",
+                "url": "https://p1.haoduofangs.com/f100-image/RFojQGsBHDcSHJ~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=80BIk2hhktVpEyW9n0nsHFr2_8A=",
+                "width": 540,
+                "height": 480,
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/RFojQGsBHDcSHJ~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=80BIk2hhktVpEyW9n0nsHFr2_8A="
+                ],
+                "image_type": 0
+                },
+                {
+                "uri": "f100-image/RFojPwg1vkGmBr",
+                "url": "https://p1.haoduofangs.com/f100-image/RFojPwg1vkGmBr~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=AvTBsR7iFNQ3SbpnqlUiyAuNYZM=",
+                "width": 540,
+                "height": 480,
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/RFojPwg1vkGmBr~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=AvTBsR7iFNQ3SbpnqlUiyAuNYZM="
+                ],
+                "image_type": 0
+                },
+                {
+                "uri": "f100-image/RFojQ6Q8oUT6C6",
+                "url": "https://p1.haoduofangs.com/f100-image/RFojQ6Q8oUT6C6~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=73fu79rwVY6bzdySDbvO-k4jB0g=",
+                "width": 540,
+                "height": 480,
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/RFojQ6Q8oUT6C6~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=73fu79rwVY6bzdySDbvO-k4jB0g="
+                ],
+                "image_type": 0
+                },
+                {
+                "uri": "f100-image/RFojPlu9aAFH1p",
+                "url": "https://p1.haoduofangs.com/f100-image/RFojPlu9aAFH1p~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=TJjiXcaiFTHedv23AhloG4tIllk=",
+                "width": 540,
+                "height": 480,
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/RFojPlu9aAFH1p~tplv-u148heywkg-default-v3:0:424:0:0.webp?sig=TJjiXcaiFTHedv23AhloG4tIllk="
+                ],
+                "image_type": 0
+                }
+                ],
+                "status": 0,
+                "log_pb": {
+                "group_id": "6650358076006236168",
+                "impr_id": "202011131710070101980601391D1B6144",
+                "search_id": "202011131710070101980601391D1B6144"
+                },
+                "cell_style": 1,
+                "core_info": [
+                {
+                "attr": "押二付三",
+                "value": "2000元/月"
+                },
+                {
+                "attr": "房型",
+                "value": "2室1厅"
+                },
+                {
+                "attr": "面积",
+                "value": "60平"
+                }
+                ],
+                "base_info": [
+                {
+                "attr": "发布",
+                "value": "2018-12-30",
+                "is_single": false
+                },
+                {
+                "attr": "朝向",
+                "value": "北",
+                "is_single": false
+                },
+                {
+                "attr": "楼层",
+                "value": "高楼层",
+                "is_single": false
+                },
+                {
+                "attr": "装修",
+                "value": "精装修",
+                "is_single": false
+                }
+                ],
+                "facilities": [
+                {
+                "id": "5",
+                "name": "床",
+                "icon_url": "http://p9.pstatp.com/origin/db120005402e3ad53d89",
+                "enabled": true
+                },
+                {
+                "id": "9",
+                "name": "衣柜",
+                "icon_url": "http://p3.pstatp.com/origin/da8f00097efb85e19056",
+                "enabled": false
+                },
+                {
+                "id": "6",
+                "name": "冰箱",
+                "icon_url": "http://p1.pstatp.com/origin/da64000f387251817525",
+                "enabled": true
+                },
+                {
+                "id": "4",
+                "name": "洗衣机",
+                "icon_url": "http://p1.pstatp.com/origin/db1500067c146811eb6f",
+                "enabled": true
+                },
+                {
+                "id": "10",
+                "name": "热水器",
+                "icon_url": "http://p9.pstatp.com/origin/db000005334af6ec8b7a",
+                "enabled": true
+                },
+                {
+                "id": "7",
+                "name": "空调",
+                "icon_url": "http://p9.pstatp.com/origin/dacb000504ed2c47e250",
+                "enabled": true
+                },
+                {
+                "id": "8",
+                "name": "暖气",
+                "icon_url": "http://p3.pstatp.com/origin/dacf000630c278e9e8f3",
+                "enabled": true
+                },
+                {
+                "id": "11",
+                "name": "天然气",
+                "icon_url": "http://p99.pstatp.com/origin/da7300052d0691a0de41",
+                "enabled": false
+                },
+                {
+                "id": "12",
+                "name": "卫生间",
+                "icon_url": "http://p1.pstatp.com/origin/dad900086316da238f33",
+                "enabled": false
+                },
+                {
+                "id": "1",
+                "name": "WiFi",
+                "icon_url": "http://p1.pstatp.com/origin/da52000c889439b7584a",
+                "enabled": true
+                }
+                ],
+                "dislike_info": [
+                {
+                "id": 1,
+                "text": "价格过高",
+                "mutual_exclusive_ids": [
+                2
+                ]
+                },
+                {
+                "id": 2,
+                "text": "价格过低",
+                "mutual_exclusive_ids": [
+                1
+                ]
+                },
+                {
+                "id": 3,
+                "text": "面积过大",
+                "mutual_exclusive_ids": [
+                4
+                ]
+                },
+                {
+                "id": 4,
+                "text": "面积过小",
+                "mutual_exclusive_ids": [
+                3
+                ]
+                },
+                {
+                "id": 5,
+                "text": "不喜欢该户型",
+                "mutual_exclusive_ids": []
+                },
+                {
+                "id": 6,
+                "text": "不喜欢该小区",
+                "mutual_exclusive_ids": []
+                }
+                ],
+                "addr_data": "静安彭浦"
+            },
+            {
+                "card_type": 4,
+                "id": "6587273830215975181",
+                "impr_id": "20201112202219010198082091443CACA9",
+                "search_id": "2020111214551801019806705232FA6E01",
+                "name": "松榆西里",
+                "images": [
+                {
+                "uri": "f100-image/7c223d4d66a39c0ad098259d95832840",
+                "url": "https://p1.haoduofangs.com/f100-image/7c223d4d66a39c0ad098259d95832840~tplv-u148heywkg-xfl-default-v2:0:0:0:1605414301.jpeg?sig=7Jdfs-z0jVUSyyLD2p2lIRyFaBg=",
+                "width": 540,
+                "height": 480,
+                "url_list": [
+                "https://p1.haoduofangs.com/f100-image/7c223d4d66a39c0ad098259d95832840~tplv-u148heywkg-xfl-default-v2:0:0:0:1605414301.jpeg?sig=7Jdfs-z0jVUSyyLD2p2lIRyFaBg="
+                ],
+                "image_type": 0
+                }
+                ],
+                "address": "松榆南路",
+                "display_title": "松榆西里",
+                "display_subtitle": "朝阳-华威桥/2001年建",
+                "display_description": "朝阳-华威桥/2001年建",
+                "display_price": "60952元/平",
+                "display_price_per_sqm": "60952元/平",
+                "display_built_year": "2001年建",
+                "display_stats_info": "在售59套",
+                "house_type": 4,
+                "base_info_map": {
+                "built_year": "2001",
+                "pricing_per_sqm": "6095200"
+                },
+                "gaode_lng": "116.4646504965",
+                "gaode_lat": "116.4646504965",
+                "status": 0,
+                "house_status": 0,
+                "log_pb": {
+                "group_id": "6587273830215975181",
+                "has_video": false,
+                "impr_id": "20201112202219010198082091443CACA9",
+                "recommend_type": "normal",
+                "search_id": "2020111214551801019806705232FA6E01"
+                },
+                "display_distance_info": {
+                "text": ">3km",
+                "icon": null
+                },
+                "cell_style": 10,
+                "price_per_sqm_num": "60952",
+                "price_per_sqm_unit": "元/平",
+                "base_info": [
+                {
+                "attr": "建造年代",
+                "is_single": false,
+                "value": "2001年"
+                },
+                {
+                "attr": "产权描述",
+                "is_single": false,
+                "value": "40年/50年"
+                },
+                {
+                "attr": "绿化率",
+                "is_single": false,
+                "value": "30%"
+                },
+                {
+                "attr": "物业费用",
+                "is_single": false,
+                "value": "0.50元/平/月"
+                },
+                {
+                "attr": "房屋总数",
+                "is_single": false,
+                "value": "6281户"
+                },
+                {
+                "attr": "楼栋总数",
+                "is_single": false,
+                "value": "60栋"
+                },
+                {
+                "attr": "容积率",
+                "is_single": false,
+                "value": "1.40"
+                },
+                {
+                "attr": "开发商",
+                "is_single": true,
+                "value": "北京住总房地产开发有限责任公司"
+                },
+                {
+                "attr": "物业公司",
+                "is_single": true,
+                "value": "北京市榆光城物业管理有限公司"
+                },
+                {
+                "attr": "交易权属",
+                "is_single": false,
+                "value": "商品房"
+                },
+                {
+                "attr": "建筑类型",
+                "is_single": false,
+                "value": "多层"
+                },
+                {
+                "attr": "车位个数",
+                "is_single": false,
+                "value": "2000"
+                },
+                {
+                "attr": "建筑面积",
+                "is_single": false,
+                "value": "-"
+                }
+                ],
+                "neighborhood_info": {
+                "id": "6587273830215975181",
+                "name": "松榆西里",
+                "pricing_per_sqm": "60952元/平",
+                "pricing_per_sqm_v": 0,
+                "month_up": -0.0078,
+                "address": "松榆南路",
+                "gaode_lng": "116.4646504965",
+                "gaode_lat": "39.8737104303",
+                "gaode_image_url": "https://p1.haoduofangs.com/f100-gaode-static/4e2adb7f339ed6c312c80a415b59bc8f~tplv-u148heywkg-default-v1:0:0:0:0:1605440320.jpeg?sig=1ehtvpiGISap-Mc2igehYC7KUBo=",
+                "city_id": 122,
+                "district_id": 123,
+                "area_id": 166,
+                "search_id": "2020111214551801019806705232FA6E01",
+                "impr_id": "20201112202219010198082091443CACA9",
+                "group_id": "6587273830215975181",
+                "district_name": "朝阳",
+                "area_name": "华威桥",
+                "location_full_name": "朝阳-华威桥",
+                "status": 0,
+                "neighborhood_images": null
+                },
+                "house_video": {
+                "has_video": false
+                },
+                "title_tags": [
+                {
+                "text": "小区测评",
+                "is_gradient": true,
+                "top_background_color": "#eeca99",
+                "bottom_background_color": "#dd9c43",
+                "background_color": "",
+                "text_color": "#ffffff"
+                }
+                ]
+            },
+            {
+                "card_type": 5,
+                "cell_style": 0,
+                "is_subscribe": false,
+                "subscribe_id": 0,
+                "text": "当前选择: VR看房"
+            },
+            {
+                "card_type": 6,
+                "cell_style": 0,
+                "neighborhood_id": 6677365840196665612,
+                "neighborhood_name": "幸福西里",
+                "district_area_name": "北区-玄武大街",
+                "neighborhood_price": "179337元/平",
+                "display_status_info": "在售69套",
+                "realtor_info": {
+                "phone": "phone",
+                "enable_phone": true,
+                "realtor_name": "窦金龙",
+                "realtor_image": "",
+                "avatar_url": "https://p3.pstatp.com/large/tos-cn-i-0022/31c3c3385fc44f73b4c88b51120df038",
+                "agency_name": "",
+                "agency_id": 6664800605690658823,
+                "realtor_id": "1697301769230382",
+                "chat_openurl": "sslocal://open_single_chat?target_user_id=1697301769230382&chat_title=%E7%AA%A6%E9%87%91%E9%BE%99&target_id=6677365840196665612&target_type=4&auto_text=%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%83%B3%E5%92%8C%E4%BD%A0%E4%BA%86%E8%A7%A3%E4%B8%8B%E5%B9%B8%E7%A6%8F%E8%A5%BF%E9%87%8C%E5%B0%8F%E5%8C%BA",
+                "main_page_info": "https://i.haoduofangs.com/f100/client/realtor_detail?realtor_id=1697301769230382&im_params=%7B%22auto_text%22%3A%22%25E4%25BD%25A0%25E5%25A5%25BD%25EF%25BC%258C%25E6%2583%25B3%25E5%2592%258C%25E4%25BD%25A0%25E4%25BA%2586%25E8%25A7%25A3%25E4%25B8%258B%25E5%25B9%25B8%25E7%25A6%258F%25E8%25A5%25BF%25E9%2587%258C%25E5%25B0%258F%25E5%258C%25BA%22%2C%22chat_title%22%3A%22%25E7%25AA%25A6%25E9%2587%2591%25E9%25BE%2599%22%2C%22target_id%22%3A%226677365840196665612%22%2C%22target_type%22%3A4%2C%22target_user_id%22%3A1697301769230382%7D",
+                "realtor_log_pb": {
+                "realtor_id": 1697301769230382,
+                "realtor_type": 1
+                },
+                "realtor_score_display": "4.3分",
+                "realtor_score_description": "超过100%的同行",
+                "realtor_description": "",
+                "realtor_tag": null,
+                "area_list": null,
+                "image_tag": {
+                "image_url": "http://p9.pstatp.com/origin/33a110001b22a1c233046"
+                }
+                },
+                "log_pb": {
+                "group_id": "6677365840196665612",
+                "impr_id": "202011131806540101980650530E28988B",
+                "search_id": "202011131806540101980650530E28988B"
+                },
+                "realtor_type": 4,
+                "tip_text": "",
+                "realtor_tag": "",
+                "associate_info": {
+                "im_info": {
+                "id": 25,
+                "from": "app_neighborhood_aladdin",
+                "source": "1.42",
+                "endpoint": 1,
+                "page": 42,
+                "target_type": 4,
+                "target_id": 6677365840196665612,
+                "extra_info": ""
+                },
+                "phone_info": {
+                "id": 126,
+                "from": "app_neighborhood_aladdin",
+                "source": "1.52",
+                "endpoint": 1,
+                "page": 52,
+                "target_type": 4,
+                "target_id": 6677365840196665612,
+                "extra_info": ""
+                },
+                "report_form_info": null
+                }
+            },
+            {
+                "card_type": 9,
+                "cell_style": 0,
+                "text": "没有找到相关楼盘，猜你想找下面这些？"
+            },
+            {
+                "card_type": 10,
+                "cell_style": 0,
+                "text": "猜你想找"
+            },
+            {
+                "card_type": 11,
+                "cell_style": 0,
+                "text": "你是不是想找“北京市”房源?",
+                "text2": "切换城市",
+                "open_url": "fschema://fhomepage?city_id=122"
+            },
+            {
+                "card_type": 13,
+                "cell_style": 0,
+                "tip_text": "高效找房，为你推荐专属找房顾问",
+                "realtor_type": 4,
+                "target_id": 6587281861834178824,
+                "target_name": "南师大西山",
+                "district_area_name": "鼓楼-宁海路",
+                "area_price": "93769元/平",
+                "display_status_info": "在售1套",
+                "log_pb": {
+                "group_id": "6587281861834178824",
+                "impr_id": "202011131757070101980650830C268E0D",
+                "search_id": "202011131757070101980650830C268E0D"
+                },
+                "associate_info": {
+                "im_info": null,
+                "phone_info": null,
+                "report_form_info": {
+                "id": 177,
+                "from": "app_search_esf",
+                "source": "1.95",
+                "endpoint": 1,
+                "page": 95,
+                "target_type": 4,
+                "target_id": 6587281861834178824,
+                "extra_info": ""
+                }
+                }
+            },
+            {
+                "card_type": 15,
+                "title": "坐享定制找房服务",
+                "text": "即刻查看专属好房",
+                "button_text": "帮我找房",
+                "open_url": "sslocal://house_find"
+                },
+            {
+                "lynx_data": {
+                "report_params": {
+                "element_from": "driving_find_house_card",
+                "element_type": "driving_find_house_card",
+                "enter_from": "maintab",
+                "origin_from": "maintab_search",
+                "page_type": "new_list",
+                "search_id": "20201113172726010198023086401F5504"
+                },
+                "title": "坐享定制找房服务",
+                "subtitle": "即刻查看专属好房",
+                "button_text": "帮我找房",
+                "open_url": "sslocal://house_find?house_type=1&origin_from=maintab_search&enter_from=new_list&page_type=new_list&click_option=driving_find_house_button&element_type=driving_find_house_card&element_from=driving_find_house_card"
+                },
+                "channel": "lynx_house_find_card",
+                "cell_style": 9,
+                "card_type": 20,
+                "height": 83
             }
         ]
 ,

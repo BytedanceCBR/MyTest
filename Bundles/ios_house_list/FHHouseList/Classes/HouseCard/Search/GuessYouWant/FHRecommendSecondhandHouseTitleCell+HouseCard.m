@@ -14,9 +14,10 @@
 
 static const char view_model_key;
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
-    FHHouseGuessYouWantTipViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseGuessYouWantTipViewModel.class] ? (FHHouseGuessYouWantTipViewModel *)viewModel : nil;
+    FHHouseGuessYouWantContentViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseGuessYouWantContentViewModel.class] ? (FHHouseGuessYouWantContentViewModel *)viewModel : nil;
     objc_setAssociatedObject(self, &view_model_key, cardViewModel, OBJC_ASSOCIATION_RETAIN);
     if (cardViewModel) {
+        self.backgroundColor = [UIColor clearColor];
         [self refreshWithData:cardViewModel.model];
     }
 }
@@ -25,35 +26,10 @@ static const char view_model_key;
     return objc_getAssociatedObject(self, &view_model_key);
 }
 
-//曝光
-- (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//结束曝光
-- (void)cellDidEndShowAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//点击
-- (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
-    
-}
-
-//回到前台
-- (void)cellWillEnterForground {
-    
-}
-
-//进入后台
-- (void)cellDidEnterBackground {
-    
-}
-
 
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
-    if (![viewModel isKindOfClass:FHHouseGuessYouWantTipViewModel.class]) return 0.0f;
-    FHHouseGuessYouWantTipViewModel *cardViewModel = (FHHouseGuessYouWantTipViewModel *)viewModel;
+    if (![viewModel isKindOfClass:FHHouseGuessYouWantContentViewModel.class]) return 0.0f;
+    FHHouseGuessYouWantContentViewModel *cardViewModel = (FHHouseGuessYouWantContentViewModel *)viewModel;
     return [self heightForData:cardViewModel.model];
 }
 @end
