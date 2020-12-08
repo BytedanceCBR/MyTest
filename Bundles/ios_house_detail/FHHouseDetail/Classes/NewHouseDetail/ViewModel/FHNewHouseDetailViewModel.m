@@ -190,7 +190,12 @@
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.sectionModels = sectionModels.copy;
+            self.sectionModels = [sectionModels btd_filter:^BOOL(id  _Nonnull obj) {
+                if (obj && [obj isKindOfClass:[FHNewHouseDetailSectionModel class]]) {
+                    return YES;
+                }
+                return NO;
+            }];
             self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
             if (self.updateLayout) {
                 self.updateLayout();
