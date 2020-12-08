@@ -6,25 +6,30 @@
 //
 
 #import "FHPersonalHomePageFeedListViewController.h"
+#import "FHPersonalHomePageFeedListViewModel.h"
 
 @interface FHPersonalHomePageFeedListViewController ()
-
+@property(nonatomic,strong) UITableView *tableView;
+@property(nonatomic,strong) FHPersonalHomePageFeedListViewModel *viewModel;
 @end
 
 @implementation FHPersonalHomePageFeedListViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self initView];
+    [self initViewModel];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)initView {
+    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+    self.tableView.alwaysBounceVertical = YES;
+    self.tableView.bounces = YES;
+    [self.view addSubview:self.tableView];
 }
-*/
+
+- (void)initViewModel {
+    self.viewModel = [[FHPersonalHomePageFeedListViewModel alloc] initWithController:self tableView:self.tableView];
+}
 
 @end

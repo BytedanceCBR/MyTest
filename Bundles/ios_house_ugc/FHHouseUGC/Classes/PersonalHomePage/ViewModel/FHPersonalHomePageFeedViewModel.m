@@ -6,7 +6,6 @@
 //
 
 #import "FHPersonalHomePageFeedViewModel.h"
-#import "FHPersonalHomePageFeedHeaderView.h"
 #import "FHPersonalHomePageFeedCollectionViewCell.h"
 #import "FHCommonDefines.h"
 
@@ -15,8 +14,8 @@
 @property(nonatomic,weak) FHPersonalHomePageFeedViewController *viewController;
 @property(nonatomic,weak) UICollectionView *collectionView;
 @property(nonatomic,strong) NSArray *titleArray;
+@property(nonatomic,weak) FHPersonalHomePageFeedCollectionViewCell *currentCell;
 @end
-
 
 @implementation FHPersonalHomePageFeedViewModel
 
@@ -26,7 +25,6 @@
         _collectionView = collectionView;
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
-        [self.collectionView registerClass:[FHPersonalHomePageFeedHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHPersonalHomePageFeedHeaderView class])];
     }
     return self;
 }
@@ -48,13 +46,19 @@
         }
     }
     self.titleArray = titleArray;
+    self.viewController.headerView.sectionTitles = self.titleArray;
+
     [self.collectionView reloadData];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
-    });
+    [self updateSelectCell:0];
 }
 
-
+- (void)updateSelectCell:(NSInteger)index {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if(index >= 0 && index < self.titleArray.count) {
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        }
+    });
+}
 
 #pragma mark collectionView protocol
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
@@ -69,26 +73,15 @@
     NSString *cellClassName = NSStringFromClass([FHPersonalHomePageFeedCollectionViewCell class]);
     NSString *identifier = [NSString stringWithFormat:@"%@_%zd",cellClassName,indexPath.row];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    if([cell isKindOfClass:[FHPersonalHomePageFeedCollectionViewCell class]]) {
+        FHPersonalHomePageFeedCollectionViewCell *feedListCell = (FHPersonalHomePageFeedCollectionViewCell *)cell;
+        feedListCell.viewController = self.viewController;
+    }
     return cell;
 }
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGSize cellSize = self.viewController.view.bounds.size;
-    cellSize.height -= 44;
+    CGSize cellSize = self.collectionView.bounds.size;
     return cellSize;
-}
-
--(UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
-    UICollectionReusableView *reusableView = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHPersonalHomePageFeedHeaderView class]) forIndexPath:indexPath];
-    if([reusableView isKindOfClass:[FHPersonalHomePageFeedHeaderView class]]) {
-        FHPersonalHomePageFeedHeaderView *headerView = (FHPersonalHomePageFeedHeaderView *)reusableView;
-        [headerView updateWithTitles:self.titleArray];
-        headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 44);
-    }
-    return reusableView;
-}
-
--(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout referenceSizeForHeaderInSection:(NSInteger)section {
-    return CGSizeMake(SCREEN_WIDTH, 44);
 }
 
 @end

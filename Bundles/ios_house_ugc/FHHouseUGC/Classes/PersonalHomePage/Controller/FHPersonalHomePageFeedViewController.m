@@ -7,9 +7,25 @@
 
 #import "FHPersonalHomePageFeedViewController.h"
 #import "FHPersonalHomePageFeedViewModel.h"
+#import "FHPersonalHomePageFeedCollectionViewCell.h"
+#import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 
-@interface FHPersonalHomePageFeedViewController () 
+
+@interface FHPersonalHomePageCollectionView : UICollectionView <UIGestureRecognizerDelegate>
+
+@end
+
+@implementation FHPersonalHomePageCollectionView
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    return NO;
+}
+
+@end
+
+
+@interface FHPersonalHomePageFeedViewController ()
 @property(nonatomic,strong) UICollectionView *collectionView;
 @property(nonatomic,strong) FHPersonalHomePageFeedViewModel *viewModel;
 @end
@@ -25,14 +41,56 @@
 - (void)initView {
     self.view.backgroundColor = [UIColor themeWhite];
     
+    [self initHeaderView];
+    [self initCollectionView];
+}
+
+- (void)initHeaderView {
+    _headerView = [[HMSegmentedControl alloc] initWithFrame:CGRectMake(0, 5, SCREEN_WIDTH, 34)];
+    _headerView.type = HMSegmentedControlTypeText;
+    
+    NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
+            NSForegroundColorAttributeName: [UIColor themeGray1]};
+    _headerView.titleTextAttributes = titleTextAttributes;
+
+    NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontMedium:18],
+            NSForegroundColorAttributeName: [UIColor themeGray1]};
+    _headerView.selectedTitleTextAttributes = selectedTitleTextAttributes;
+    
+    _headerView.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
+    _headerView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
+    _headerView.isNeedNetworkCheck = NO;
+    _headerView.firstLeftMargain = 42;
+    _headerView.lastRightMargin = 42;
+    _headerView.segmentEdgeInset = UIEdgeInsetsMake(5, 14, 0, 14);
+    
+    _headerView.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
+    _headerView.selectionIndicatorWidth = 20.0f;
+    _headerView.selectionIndicatorHeight = 4.0f;
+    _headerView.selectionIndicatorCornerRadius = 2.0f;
+    _headerView.shouldFixedSelectPosition = YES;
+    _headerView.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+    _headerView.bounces = NO;
+    
+    WeakSelf;
+    _headerView.indexChangeBlock = ^(NSInteger index) {
+        StrongSelf;
+        [self.viewModel updateSelectCell:index];
+    };
+    
+    [self.view addSubview:self.headerView];
+}
+
+
+- (void)initCollectionView {
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.minimumLineSpacing = 0.0;
     layout.minimumInteritemSpacing = 0.0;
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    layout.sectionHeadersPinToVisibleBounds = YES;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
+    self.collectionView = [[FHPersonalHomePageCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.collectionView.pagingEnabled = YES;
+    self.collectionView.bounces = NO;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.collectionView];
@@ -43,10 +101,9 @@
 }
 
 -(void)updateWithHeaderViewMdoel:(FHPersonalHomePageTabListModel *)model {
-    self.collectionView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
+    self.collectionView.frame = CGRectMake(0, 44, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 44);
     [self.viewModel updateWithHeaderViewMdoel:model];
 }
-
 
 
 

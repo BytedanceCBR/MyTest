@@ -15,7 +15,9 @@
 #import "FHCommonDefines.h"
 #import "UIViewAdditions.h"
 #import "FHUserTracker.h"
+#import "TTAccountManager.h"
 #import <ToastManager.h>
+
 
 @interface FHPersonalHomePageViewController () <UIScrollViewDelegate>
 @property(nonatomic,strong) UIScrollView *scrollView;
@@ -41,6 +43,8 @@
     [super viewDidLoad];
     [self initView];
     [self initViewModel];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableScrollChange) name:kFHPersonalHomePageEnableScrollChangeNotification object:nil];
     
     [self startLoadData];
 }
@@ -74,6 +78,8 @@
     self.customNavBarView = [[FHNavBarView alloc] init];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_page_back_arrow"] forState:UIControlStateNormal];
     [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_page_back_arrow"] forState:UIControlStateHighlighted];
+    self.customNavBarView.title.text = [[TTAccountManager userID] isEqualToString:self.userId] ? @"我的主页" : @"TA的主页";
+    self.customNavBarView.title.alpha = 0;
     self.customNavBarView.bgView.alpha = 0;
     self.customNavBarView.seperatorLine.alpha = 0;
     [self.view addSubview:self.customNavBarView];
@@ -188,6 +194,7 @@
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.y;
     CGFloat tabListOffset = self.profileInfoView.viewHeight - self.customNavBarView.height;
+    CGFloat backViewOffset = 120 - self.customNavBarView.height;
     
     if(offset < 0) {
         CGFloat shadowViewHeight = 160;
@@ -198,13 +205,28 @@
     }else if(offset >= tabListOffset) {
         self.scrollView.contentOffset = CGPointMake(0, tabListOffset);
         self.enableScroll = NO;
+        self.feedViewController.enableScroll = YES;
     }else {
         if(!self.enableScroll) {
             self.scrollView.contentOffset = CGPointMake(0, tabListOffset);
         }
-        offset = self.scrollView.contentOffset.y;
-        self.customNavBarView.bgView.alpha = offset / tabListOffset;
     };
+    
+    offset = self.scrollView.contentOffset.y;
+    if(offset < 0) {
+        self.customNavBarView.bgView.alpha = 0;
+        self.customNavBarView.title.alpha = 0;
+    } else if(offset <= backViewOffset) {
+        self.customNavBarView.bgView.alpha = offset / backViewOffset;
+        self.customNavBarView.title.alpha = offset / backViewOffset;
+    } else {
+        self.customNavBarView.bgView.alpha = 1;
+        self.customNavBarView.title.alpha = 1;
+    }
+}
+
+- (void)enableScrollChange {
+    self.enableScroll = YES;
 }
 
 @end
