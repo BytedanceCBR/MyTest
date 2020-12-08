@@ -66,9 +66,9 @@ def fhPods
 #    'DelegateForC'
 #    ]
     
-#    pod 'ios_house_im' , :path => '../../../im/bugfix', :inhibit_warnings => false
+    pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
 #   pod 'ios_house_im' ,'0.9.0.20', :inhibit_warnings => false
-pod 'ios_house_im' ,'0.9.0.21', :inhibit_warnings => false
+#   pod 'ios_house_im' ,'0.9.0.21', :inhibit_warnings => false
 
 end
 
