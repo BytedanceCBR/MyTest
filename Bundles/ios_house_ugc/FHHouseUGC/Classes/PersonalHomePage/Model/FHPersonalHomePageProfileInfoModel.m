@@ -13,8 +13,9 @@
   NSDictionary *dict = @{
     @"userId": @"user_id",
     @"avatarUrl": @"avatar_url",
-    @"logPb": @"log_pb",
     @"desc": @"description",
+    @"verifiedContent": @"verified_content",
+    @"logPb": @"log_pb",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

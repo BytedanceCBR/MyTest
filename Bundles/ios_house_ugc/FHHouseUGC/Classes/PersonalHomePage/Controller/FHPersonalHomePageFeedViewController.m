@@ -26,9 +26,11 @@
     self.view.backgroundColor = [UIColor themeWhite];
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.minimumLineSpacing = 0.0;
+    layout.minimumInteritemSpacing = 0.0;
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     layout.sectionHeadersPinToVisibleBounds = YES;
-    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:layout];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.collectionView.pagingEnabled = YES;
     self.collectionView.showsHorizontalScrollIndicator = NO;
@@ -41,6 +43,7 @@
 }
 
 -(void)updateWithHeaderViewMdoel:(FHPersonalHomePageTabListModel *)model {
+    self.collectionView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
     [self.viewModel updateWithHeaderViewMdoel:model];
 }
 

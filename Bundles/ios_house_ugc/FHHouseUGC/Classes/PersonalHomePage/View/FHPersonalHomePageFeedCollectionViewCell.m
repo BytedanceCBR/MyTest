@@ -9,4 +9,11 @@
 
 @implementation FHPersonalHomePageFeedCollectionViewCell
 
+-(instancetype)initWithFrame:(CGRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        self.contentView.backgroundColor = [UIColor grayColor];
+    }
+    return self;
+}
+
 @end

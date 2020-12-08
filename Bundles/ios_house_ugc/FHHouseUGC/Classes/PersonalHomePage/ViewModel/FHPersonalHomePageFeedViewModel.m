@@ -49,20 +49,14 @@
     }
     self.titleArray = titleArray;
     [self.collectionView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    });
 }
 
 
 
 #pragma mark collectionView protocol
-- (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
-    NSString *cellClassName = NSStringFromClass([FHPersonalHomePageFeedCollectionViewCell class]);
-    NSString *identifier = [NSString stringWithFormat:@"%@_%zd",cellClassName,indexPath.row];
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
-    
-    
-    return cell;
-}
-
 -(NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
@@ -71,11 +65,24 @@
     return self.titleArray.count;
 }
 
+- (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    NSString *cellClassName = NSStringFromClass([FHPersonalHomePageFeedCollectionViewCell class]);
+    NSString *identifier = [NSString stringWithFormat:@"%@_%zd",cellClassName,indexPath.row];
+    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+    return cell;
+}
+-(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    CGSize cellSize = self.viewController.view.bounds.size;
+    cellSize.height -= 44;
+    return cellSize;
+}
+
 -(UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
     UICollectionReusableView *reusableView = [self.collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:NSStringFromClass([FHPersonalHomePageFeedHeaderView class]) forIndexPath:indexPath];
     if([reusableView isKindOfClass:[FHPersonalHomePageFeedHeaderView class]]) {
         FHPersonalHomePageFeedHeaderView *headerView = (FHPersonalHomePageFeedHeaderView *)reusableView;
         [headerView updateWithTitles:self.titleArray];
+        headerView.frame = CGRectMake(0, 0, SCREEN_WIDTH, 44);
     }
     return reusableView;
 }

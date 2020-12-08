@@ -6,6 +6,7 @@
 //
 
 #import "FHPersonalHomePageViewController.h"
+#import "FHPersonalHomePageScrollView.h"
 #import "FHPersonalHomePageViewModel.h"
 #import "FHPersonalHomePageProfileInfoView.h"
 #import "FHPersonalHomePageFeedViewController.h"
@@ -21,6 +22,7 @@
 @property(nonatomic,strong) FHPersonalHomePageProfileInfoView *profileInfoView;
 @property(nonatomic,strong) FHPersonalHomePageFeedViewController *feedViewController;
 
+@property(nonatomic,assign) BOOL enableScroll;
 @property(nonatomic,strong) NSString *userId;
 @property(nonatomic,strong) FHPersonalHomePageViewModel *viewModel;
 @end
@@ -46,7 +48,7 @@
 - (void)initView {
     [self initNavBar];
     
-    self.scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+    self.scrollView = [[FHPersonalHomePageScrollView alloc] initWithFrame:self.view.bounds];
     self.scrollView.backgroundColor = [UIColor themeWhite];
     self.scrollView.contentSize = self.view.bounds.size;
     if (@available(iOS 11.0, *)) {
@@ -55,6 +57,7 @@
     }
     self.scrollView.delegate = self;
     self.scrollView.alwaysBounceVertical = YES;
+    self.enableScroll = YES;
     [self.view addSubview:self.scrollView];
     
     self.profileInfoView = [[FHPersonalHomePageProfileInfoView alloc] initWithFrame:CGRectZero];
@@ -69,8 +72,8 @@
 
 - (void)initNavBar {
     self.customNavBarView = [[FHNavBarView alloc] init];
-    [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage forState:UIControlStateNormal];
-    [self.customNavBarView.leftBtn setBackgroundImage:FHBackWhiteImage forState:UIControlStateHighlighted];
+    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_page_back_arrow"] forState:UIControlStateNormal];
+    [self.customNavBarView.leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_page_back_arrow"] forState:UIControlStateHighlighted];
     self.customNavBarView.bgView.alpha = 0;
     self.customNavBarView.seperatorLine.alpha = 0;
     [self.view addSubview:self.customNavBarView];
@@ -154,8 +157,10 @@
     [self.profileInfoView updateWithModel:profileInfoModel isVerifyShow:[tabListModel.data.isVerifyShow boolValue]];
     CGFloat profileInfoViewHeight = [self.profileInfoView viewHeight];
     self.profileInfoView.frame = CGRectMake(0, 0, SCREEN_WIDTH, profileInfoViewHeight);
-    self.feedViewController.view.frame = CGRectMake(0, profileInfoViewHeight, SCREEN_WIDTH, SCREEN_HEIGHT - profileInfoViewHeight);
+    self.feedViewController.view.frame = CGRectMake(0, profileInfoViewHeight, SCREEN_WIDTH, SCREEN_HEIGHT);
     [self.feedViewController updateWithHeaderViewMdoel:tabListModel];
+    
+    self.scrollView.contentSize = CGSizeMake(SCREEN_WIDTH, profileInfoViewHeight + SCREEN_HEIGHT);
 }
 
 
@@ -182,13 +187,24 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.y;
+    CGFloat tabListOffset = self.profileInfoView.viewHeight - self.customNavBarView.height;
+    
     if(offset < 0) {
         CGFloat shadowViewHeight = 160;
         self.profileInfoView.shadowView.transform = CGAffineTransformMakeScale(1 + offset/(-shadowViewHeight), 1 + offset/(-shadowViewHeight));
         CGRect frame = self.profileInfoView.shadowView.frame;
         frame.origin.y = offset;
         self.profileInfoView.shadowView.frame = frame;
-    }
+    }else if(offset >= tabListOffset) {
+        self.scrollView.contentOffset = CGPointMake(0, tabListOffset);
+        self.enableScroll = NO;
+    }else {
+        if(!self.enableScroll) {
+            self.scrollView.contentOffset = CGPointMake(0, tabListOffset);
+        }
+        offset = self.scrollView.contentOffset.y;
+        self.customNavBarView.bgView.alpha = offset / tabListOffset;
+    };
 }
 
 @end

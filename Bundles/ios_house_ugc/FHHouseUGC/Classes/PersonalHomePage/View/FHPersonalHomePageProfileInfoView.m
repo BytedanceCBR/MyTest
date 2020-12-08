@@ -35,6 +35,8 @@
 @property(nonatomic,strong) UIView *backView;
 @property(nonatomic,strong) UIImageView *iconView;
 @property(nonatomic,strong) UILabel *userNameLabel;
+@property(nonatomic,strong) UIImageView *verifyIconView;
+@property(nonatomic,strong) UILabel *verifyContentLabel;
 @property(nonatomic,strong) UILabel *descLabel;
 @property(nonatomic,strong) UIButton *changeButton;
 @property(nonatomic,strong) UIView *seperatorView;
@@ -70,7 +72,17 @@
     self.descLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.descLabel.textColor = [UIColor themeGray2];
     self.descLabel.font = [UIFont themeFontRegular:14];
+    self.descLabel.numberOfLines = 0;
     
+    self.verifyIconView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 92, 16, 16)];
+    self.verifyIconView.image = [UIImage imageNamed:@"ugc_v_tag"];
+    self.verifyIconView.hidden = YES;
+    
+    self.verifyContentLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 90, SCREEN_WIDTH - 40, 20)];
+    self.verifyContentLabel.font = [UIFont themeFontRegular:14];
+    self.verifyContentLabel.textColor = [UIColor themeGray1];
+    self.verifyContentLabel.hidden = YES;
+
     self.changeButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 92, 14, 72, 30)];
     self.changeButton.titleLabel.font = [UIFont themeFontRegular:13];
     self.changeButton.layer.cornerRadius = 15;
@@ -87,6 +99,8 @@
     [self addSubview:self.seperatorView];
     
     [self.backView addSubview:self.userNameLabel];
+    [self.backView addSubview:self.verifyIconView];
+    [self.backView addSubview:self.verifyContentLabel];
     [self.backView addSubview:self.descLabel];
     [self.backView addSubview:self.changeButton];
 }
@@ -97,18 +111,24 @@
     [self.shadowView updateWithUrl:model.data.avatarUrl];
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:model.data.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     self.userNameLabel.text = model.data.name;
+    
+    if(isVerifyShow) {
+        self.verifyContentLabel.text = model.data.verifiedContent;
+        self.verifyContentLabel.hidden = NO;
+        self.verifyIconView.hidden = NO;
+        backViewHeight = backViewHeight + 8 + 20;
+    }
    
     if(!isEmptyString(model.data.desc)) {
         CGSize descLabelSize = [model.data.desc btd_sizeWithFont:[UIFont themeFontRegular:14] width:SCREEN_WIDTH - 40];
         self.descLabel.text = model.data.desc;
-        self.descLabel.frame = CGRectMake(20, 90, descLabelSize.width, descLabelSize.height);
+        CGFloat offset = isVerifyShow ? 118 : 90;
+        self.descLabel.frame = CGRectMake(20, offset, descLabelSize.width, descLabelSize.height);
         backViewHeight = backViewHeight + 8 + descLabelSize.height;
     }
 
     if([model.data.userId isEqualToString:[TTAccountManager userID]]) {
         self.changeButton.hidden = NO;
-    } else {
-        self.changeButton.hidden = YES;
     }
     
     self.backView.frame = CGRectMake(0, 110, SCREEN_WIDTH, backViewHeight);
