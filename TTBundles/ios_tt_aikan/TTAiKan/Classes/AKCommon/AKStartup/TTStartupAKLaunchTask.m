@@ -157,7 +157,6 @@ DEC_TASK("TTStartupAKLaunchTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+17);
 }
 
 - (void)updateSafeSDKDid:(NSString *)deviceId installId:(NSString *)installId forScene:(NSString *)reportScene {
-    NSAssert(deviceId.length > 0 && installId.length > 0, @"did 和 iid 须不为空");
     // 用户是否已经同意隐私弹窗协议
     BOOL hasConfirmPermission = [FHEnvContext sharedInstance].hasConfirmPermssionProtocol;
     //必填项:deviceid、did，如果初始化时没有获取到did可以不设置该接口。但是后续did有更新，要求通过 MSManagerML 再次填入，
