@@ -71,56 +71,6 @@ extern NSString *const kFHToastCountKey;
 
 }
 
-// 表单展示
-//+ (void)addInformShowLog:(FHHouseFillFormConfigModel *)configModel
-//{
-//    NSMutableDictionary *params = @{}.mutableCopy;
-//    params[@"page_type"] = configModel.pageType ? : @"be_null";
-//    params[@"card_type"] = configModel.cardType ? : @"be_null";
-//    params[@"enter_from"] = configModel.enterFrom ? : @"be_null";
-//    params[@"element_from"] = configModel.elementFrom ? : @"be_null";
-//    params[@"rank"] = configModel.rank ? : @"be_null";
-//    params[@"origin_from"] = configModel.originFrom ? : @"be_null";
-//    params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
-//    params[@"log_pb"] = configModel.logPb ? : @"be_null";
-//    params[@"position"] = configModel.position ? : @"button";
-//    if (configModel.itemId.length > 0) {
-//        params[@"item_id"] = configModel.itemId;
-//    }
-//    params[@"growth_deepevent"] = @(1);
-//    [FHUserTracker writeEvent:@"inform_show" params:params];
-//}
-
-// 表单提交
-//+ (void)addClickConfirmLog:(FHHouseFillFormConfigModel *)configModel alertView:(FHDetailNoticeAlertView *)alertView
-//{
-//    NSMutableDictionary *params = @{}.mutableCopy;
-//    params[@"page_type"] = configModel.pageType ? : @"be_null";
-//    params[@"card_type"] = configModel.cardType ? : @"be_null";
-//    params[@"enter_from"] = configModel.enterFrom ? : @"be_null";
-//    params[@"element_from"] = configModel.elementFrom ? : @"be_null";
-//    params[@"rank"] = configModel.rank ? : @"be_null";
-//    params[@"origin_from"] = configModel.originFrom ? : @"be_null";
-//    params[@"origin_search_id"] = configModel.originSearchId ? : @"be_null";
-//    params[@"log_pb"] = configModel.logPb ? : @"be_null";
-//    params[@"position"] = configModel.position ? : @"button";
-//
-//    if (configModel.itemId.length > 0) {
-//        params[@"item_id"] = configModel.itemId;
-//    }
-//
-//    NSMutableDictionary *dict = @{}.mutableCopy;
-//    NSArray *selectAgencyList = [alertView selectAgencyList] ? : configModel.chooseAgencyList;
-//    for (FHFillFormAgencyListItemModel *item in selectAgencyList) {
-//        if (item.agencyId.length > 0) {
-//            [dict setValue:[NSNumber numberWithInt:item.checked] forKey:item.agencyId];
-//        }
-//    }
-//    params[@"agency_list"] = dict.count > 0 ? dict : @"be_null";
-//    params[@"growth_deepevent"] = @(1);
-//    [FHUserTracker writeEvent:@"click_confirm" params:params];
-//}
-
 #pragma mark - associate refactor
 + (void)fillFormActionWithAssociateReport:(NSDictionary *)associateReportDict
 {
@@ -143,30 +93,6 @@ extern NSString *const kFHToastCountKey;
     [self addInformShowLogWithAssociateReport:associateReport];
     __weak typeof(self)wself = self;
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
-    if (associateReport.chooseAgencyList.count > 0) {
-        NSInteger selectCount = 0;
-        for (FHFillFormAgencyListItemModel *item in associateReport.chooseAgencyList) {
-            if (![item isKindOfClass:[FHFillFormAgencyListItemModel class]]) {
-                continue;
-            }
-            if (item.checked) {
-                selectCount += 1;
-            }
-        }
-        [alertView updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
-        alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
-            
-            [alert endEditing:YES];
-            NSMutableDictionary *info = @{}.mutableCopy;
-            info[@"choose_agency_list"] = [alert selectAgencyList] ? : associateReport.chooseAgencyList;
-            NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-            [delegateTable addObject:alert];
-            info[@"delegate"] = delegateTable;
-            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
-            NSURL *url = [NSURL URLWithString:@"fschema://house_agency_list"];
-            [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
-        };
-    }
     alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
         [wself fillFormRequestWithAssociateReport:associateReport phone:phoneNum alertView:alert];
@@ -174,9 +100,8 @@ extern NSString *const kFHToastCountKey;
     };
 
     alertView.tipClickBlock = ^{
-        
         NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
-        NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *urlStr = [privateUrlStr btd_stringByURLEncode];
         NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
         [[TTRoute sharedRoute]openURLByPushViewController:url];
     };
@@ -200,8 +125,7 @@ extern NSString *const kFHToastCountKey;
         [[ToastManager manager] showToast:@"网络异常"];
         return;
     }
-    NSArray *selectAgencyList = [alertView selectAgencyList] ? : associateReport.chooseAgencyList;
-    [FHMainApi requestCallReportByHouseId:associateReport.houseId phone:phone from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:associateReport.associateInfo agencyList:selectAgencyList extraInfo:associateReport.extraInfo completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:associateReport.houseId phone:phone from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:associateReport.associateInfo agencyList:nil extraInfo:associateReport.extraInfo completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
             [FHUserInfoManager savePhoneNumber:phone];
@@ -299,14 +223,6 @@ extern NSString *const kFHToastCountKey;
     if (reportParams[@"picture_type"]) {
         params[@"picture_type"] = reportParams[@"picture_type"];
     }
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    NSArray *selectAgencyList = [alertView selectAgencyList] ? : associateReport.chooseAgencyList;
-    for (FHFillFormAgencyListItemModel *item in selectAgencyList) {
-        if (item.agencyId.length > 0) {
-            [dict setValue:[NSNumber numberWithInt:item.checked] forKey:item.agencyId];
-        }
-    }
-    params[@"agency_list"] = dict.count > 0 ? dict : @"be_null";
     params[@"growth_deepevent"] = @(1);
     if (reportParams[@"event_tracking_id"]) {
         params[@"event_tracking_id"] = reportParams[@"event_tracking_id"];

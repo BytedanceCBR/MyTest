@@ -402,7 +402,7 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
     }else if (from.length > 0) {
         paramDic[@"from"] = from;
     }
-    if (agencyList.count > 0) {
+    if (agencyList && agencyList.count > 0) {
         NSMutableArray *array = @[].mutableCopy;
         for (FHFillFormAgencyListItemModel *item in agencyList) {
             NSMutableDictionary *dict = @{}.mutableCopy;

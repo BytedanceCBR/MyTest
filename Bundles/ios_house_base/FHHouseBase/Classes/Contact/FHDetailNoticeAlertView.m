@@ -11,13 +11,11 @@
 #import "Masonry.h"
 #import "TTUIResponderHelper.h"
 #import "UIView+House.h"
-#import <FHHouseBase/FHHouseAgencyListSugDelegate.h>
-#import "FHFillFormAgencyListItemModel.h"
 #import "UIImage+FIconFont.h"
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
 #import "FHUserInfoManager.h"
 
-@interface FHDetailNoticeAlertView () <UITextFieldDelegate, FHHouseAgencyListSugDelegate>
+@interface FHDetailNoticeAlertView () <UITextFieldDelegate>
 
 @property(nonatomic , strong) UIView *bgView;
 @property(nonatomic , strong) UIView *contentView;
@@ -31,12 +29,6 @@
 @property(nonatomic , strong) UIButton *submitBtn;
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , copy) NSString *originPhoneNumber;
-
-@property(nonatomic , strong) UIControl *agencyView;
-@property(nonatomic , strong) UILabel *agencyLabel;
-@property(nonatomic , strong) UIView *line1;
-@property(nonatomic , strong) UIImageView *rightArrow;
-@property(nonatomic , strong) NSArray *agencyList;
 
 @end
 
@@ -55,73 +47,6 @@
         [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
-}
-
-//- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle leftBtnTitle:(NSString *)leftBtnTitle
-//{
-//    self = [self initWithFrame:[UIScreen mainScreen].bounds];
-//    if (self) {
-//        [self setupUI];
-//        self.titleLabel.text = title;
-//        self.subtitleLabel.text = subtitle;
-//        [self.submitBtn setTitle:btnTitle forState:UIControlStateNormal];
-//        [self.submitBtn setTitle:btnTitle forState:UIControlStateHighlighted];
-//        if (leftBtnTitle.length > 0) {
-//
-//            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateNormal];
-//            [self.leftBtn setTitle:leftBtnTitle forState:UIControlStateHighlighted];
-//            [self.leftBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-//                make.left.mas_equalTo(20);
-//                make.width.height.centerY.mas_equalTo(self.submitBtn);
-//            }];
-//            [self.submitBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-//                make.height.mas_equalTo(40);
-//                make.top.mas_equalTo(self.agencyView.mas_bottom).mas_offset(20);
-//                make.left.mas_equalTo(self.leftBtn.mas_right).mas_offset(10);
-//                make.right.mas_equalTo(-20);
-//            }];
-//            [self.submitBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-//        } else {
-//            [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-//        }
-//    }
-//    return self;
-//}
-
-- (void)updateAgencyTitle:(NSString *)agencyTitle
-{
-    if (agencyTitle.integerValue == 0) {
-        return;
-    }
-    CGFloat height = 45;
-    self.agencyView.hidden = NO;
-    self.agencyLabel.hidden = NO;
-    self.line1.hidden = NO;
-    self.rightArrow.hidden = NO;
-    self.agencyLabel.text = [NSString stringWithFormat:@"已选%@家服务方",agencyTitle];
-    [self.agencyView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(height);
-    }];
-}
-
-- (void)agencySelected:(NSArray *)agencyList
-{
-    _agencyList = agencyList;
-    NSInteger selectCount = 0;
-    for (FHFillFormAgencyListItemModel *item in agencyList) {
-        if (![item isKindOfClass:[FHFillFormAgencyListItemModel class]]) {
-            continue;
-        }
-        if (item.checked) {
-            selectCount += 1;
-        }
-    }
-    [self updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
-}
-
-- (NSArray *)selectAgencyList
-{
-    return _agencyList;
 }
 
 - (void)setPhoneNum:(NSString *)phoneNum {
@@ -185,11 +110,9 @@
     [self.contentView addSubview:self.agencyView];
     [self.agencyView addSubview:self.agencyLabel];
     [self.agencyView addSubview:self.line1];
-    [self.agencyView addSubview:self.rightArrow];
     self.agencyView.hidden = YES;
     self.agencyLabel.hidden = YES;
     self.line1.hidden = YES;
-    self.rightArrow.hidden = YES;
     [self.agencyView addTarget:self action:@selector(agencyBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -230,17 +153,10 @@
         make.right.mas_equalTo(-20);
         make.height.mas_equalTo(0);
     }];
-    [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.bottom.mas_equalTo(0);
-        make.right.mas_equalTo(self.rightArrow.mas_left).mas_offset(-10);
-    }];
+
     [self.line1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(0.5);
         make.left.right.bottom.mas_equalTo(0);
-    }];
-    [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(0);
-        make.centerY.mas_equalTo(self.agencyView);        
     }];
     
     [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -406,13 +322,6 @@
     }
 }
 
-- (void)agencyBtnDidClick:(UIControl *)btn
-{
-    if (self.agencyClickBlock) {
-        self.agencyClickBlock(self);
-    }
-}
-
 - (void)showErrorText
 {
     self.errorTextLabel.hidden = NO;
@@ -568,14 +477,6 @@
         _line1.backgroundColor = [UIColor themeGray6];
     }
     return _line1;
-}
-
-- (UIImageView *)rightArrow
-{
-    if (!_rightArrow) {
-        _rightArrow = [[UIImageView alloc]initWithImage:ICON_FONT_IMG(10, @"\U0000e670", nil)];//house_right_arrow
-    }
-    return _rightArrow;
 }
 
 - (UIButton *)submitBtn
