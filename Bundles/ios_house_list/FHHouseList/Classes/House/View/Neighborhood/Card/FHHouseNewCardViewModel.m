@@ -144,7 +144,7 @@
         tracerDict[@"group_id"] = model.id ? : @"be_null";
         tracerDict[@"impr_id"] = model.imprId ? : @"be_null";
         tracerDict[UT_LOG_PB] = model.logPbWithTags ? : @"be_null";
-        tracerDict[@"house_type"] = @"old";
+        tracerDict[@"house_type"] = @"new";
         tracerDict[@"biz_trace"] = [self.model bizTrace] ? : @"be_null";
         tracerDict[@"card_type"] = @"left_pic";
         if (self.fh_trackModel.elementFrom && ![self.fh_trackModel.elementFrom isEqualToString:@"be_null"]) {
