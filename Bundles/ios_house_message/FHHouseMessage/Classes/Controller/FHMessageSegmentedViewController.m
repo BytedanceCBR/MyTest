@@ -598,6 +598,8 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                 extraDict[@"sysMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager systemMsgUnreadNumber]).stringValue;
                 extraDict[@"ugcMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager ugcMsgUnreadNumber]).stringValue;
                 extraDict[@"chatMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager chatMsgUnreadNumber]).stringValue;
+                extraDict[@"unmutedUnreadNumber"] = @([[IMManager shareInstance] chatUnmuteUnreadTotalNumber]);
+                extraDict[@"mutedUnreadNumber"]  = @([[IMManager shareInstance] chatMutedUnreadTotalNumber]);
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"f_message_tab_badget_number_display_error"
                                                         metric:nil
                                                       category:categoryDict.copy
