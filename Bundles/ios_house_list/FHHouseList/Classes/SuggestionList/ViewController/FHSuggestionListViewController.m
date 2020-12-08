@@ -216,7 +216,7 @@
     _collectionView.bounces = YES;
     _collectionView.scrollEnabled = YES;
     _collectionView.showsHorizontalScrollIndicator = NO;
-    _collectionView.backgroundColor = [UIColor themeGray7];
+    _collectionView.backgroundColor = [UIColor whiteColor];
     [self.containerView addSubview:_collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.mas_equalTo(0);
