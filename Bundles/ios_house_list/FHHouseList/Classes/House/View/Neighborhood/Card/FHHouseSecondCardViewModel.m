@@ -20,6 +20,8 @@
 #import "FHHouseListViewModel.h"
 #import "FHHouseEnvContextBridge.h"
 #import "FHHouseBridgeManager.h"
+#import "FHHouseNeighborAgencyViewModel.h"
+#import "FHHouseReserveAdviserViewModel.h"
 
 @interface FHHouseSecondCardViewModel()
 
@@ -48,6 +50,7 @@
         
         if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
             FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)model;
+            item.topMargin = 5;
             _recommendViewModel = [[FHHouseRecommendViewModel alloc] initWithModel:item.advantageDescription];
             self.leftImageModel = [item.houseImage firstObject];
             self.price = item.displayPrice;
@@ -94,16 +97,15 @@
         [contextBridge setTraceValue:self.fh_trackModel.originSearchId forKey:@"origin_search_id"];
         
         NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[UT_ENTER_FROM] = self.fh_trackModel.pageType ? : @"be_null";
-        traceParam[UT_ELEMENT_FROM] = @"be_null";
-        traceParam[UT_LOG_PB] = model.logPbWithTags ? : @"be_null";;
-        traceParam[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : @"be_null";
-        traceParam[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : @"be_null";
+        traceParam[UT_ENTER_FROM] = self.fh_trackModel.pageType ? : UT_BE_NULL;
+        traceParam[UT_ELEMENT_FROM] = self.fh_trackModel.elementType ? : UT_BE_NULL;
+        traceParam[UT_LOG_PB] = model.logPbWithTags ? : UT_BE_NULL;
+        traceParam[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
+        traceParam[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
         traceParam[@"rank"] = @(row);
         traceParam[@"card_type"] = @"left_pic";
-        if (model.isRecommendCell) {
-            traceParam[UT_ELEMENT_FROM] = @"search_related";
-        }
+        
+        
         if (model.externalInfo.externalUrl && model.externalInfo.isExternalSite.boolValue) {
             NSMutableDictionary * dictRealWeb = [NSMutableDictionary new];
             [dictRealWeb setValue:houseTypeNum forKey:@"house_type"];
@@ -124,7 +126,7 @@
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{
                 @"house_type":@(model.houseType.integerValue) ,
                 @"tracer": traceParam,
-                @"biz_trace": [model bizTrace] ? : @"be_null"
+                @"biz_trace": [model bizTrace] ? : UT_BE_NULL
             }];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
@@ -149,21 +151,41 @@
         }
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
         tracerDict[@"rank"] = @(row);
-        tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : @"be_null";
-        tracerDict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : @"be_null";
-        tracerDict[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : @"be_null";
-        tracerDict[UT_ELEMENT_TYPE] = self.fh_trackModel.elementType ? : @"be_null";
-        tracerDict[UT_SEARCH_ID] = self.fh_trackModel.searchId ? : @"be_null";
-        tracerDict[@"group_id"] = model.id ? : @"be_null";
-        tracerDict[@"impr_id"] = model.imprId ? : @"be_null";
-        tracerDict[UT_LOG_PB] = model.logPbWithTags ? : @"be_null";
+        tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
+        tracerDict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
+        tracerDict[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : UT_BE_NULL;
+        tracerDict[UT_ELEMENT_TYPE] = self.fh_trackModel.elementType ? : UT_BE_NULL;
+        tracerDict[UT_SEARCH_ID] = self.fh_trackModel.searchId ? : UT_BE_NULL;
+        tracerDict[@"group_id"] = model.id ? : UT_BE_NULL;
+        tracerDict[@"impr_id"] = model.imprId ? : UT_BE_NULL;
+        tracerDict[UT_LOG_PB] = model.logPbWithTags ? : UT_BE_NULL;
         tracerDict[@"house_type"] = @"old";
-        tracerDict[@"biz_trace"] = [self.model bizTrace] ? : @"be_null";
+        tracerDict[@"biz_trace"] = [self.model bizTrace] ? : UT_BE_NULL;
         tracerDict[@"card_type"] = @"left_pic";
-        if (self.fh_trackModel.elementFrom && ![self.fh_trackModel.elementFrom isEqualToString:@"be_null"]) {
+        if (self.fh_trackModel.elementFrom && ![self.fh_trackModel.elementFrom isEqualToString:UT_BE_NULL]) {
             tracerDict[UT_ELEMENT_FROM] = self.fh_trackModel.elementFrom;
         }
         [FHUserTracker writeEvent:@"house_show" params:tracerDict];
+    }
+}
+
+- (void)adjustIfNeedWithPreviousViewModel:(id<FHHouseCardCellViewModelProtocol>)viewModel {
+    if (viewModel == nil) {
+        //如果在首位，topMargin=10
+        if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
+            FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
+            model.topMargin = 10;
+        }
+        
+        return;
+    }
+    
+    //如果前面是小区专家卡片或者预约顾问卡片，topMargin=0
+    if ([viewModel isKindOfClass:FHHouseNeighborAgencyViewModel.class] || [viewModel isKindOfClass:FHHouseReserveAdviserViewModel.class]) {
+        if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
+            FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
+            model.topMargin = 0;
+        }
     }
 }
 

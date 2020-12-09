@@ -12,37 +12,27 @@
 #import "FHUserTracker.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "TTRoute.h"
+#import "FHHouseNeighborAgencyViewModel.h"
+#import "FHHouseReserveAdviserViewModel.h"
+
 
 @implementation FHHouseSearchRentHouseViewModel
 
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath {
     
     BOOL isFirstHavetip = [self.context btd_boolValueForKey:@"is_first_havetip"];
-    NSInteger houseType = [self.context btd_integerValueForKey:@"house_type"];
     NSInteger rank = indexPath.row;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"rank"] = @(!isFirstHavetip ? rank - 1 :rank);
     tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
     tracerDict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
-    
     tracerDict[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : UT_BE_NULL;
     tracerDict[UT_SEARCH_ID] = self.fh_trackModel.searchId ? : UT_BE_NULL;
-    
-    
     tracerDict[UT_ENTER_FROM] = self.fh_trackModel.enterFrom ? : UT_BE_NULL;
     tracerDict[UT_ELEMENT_FROM] = self.fh_trackModel.elementFrom ? : UT_BE_NULL;
-    if (houseType == FHHouseTypeNeighborhood) {
-        tracerDict[UT_ELEMENT_TYPE] = @"neighborhood_expert_card";
-    } else {
-        tracerDict[UT_ELEMENT_TYPE] = @"area_expert_card";
-    }
+    tracerDict[UT_ELEMENT_TYPE] = self.fh_trackModel.elementType ? : UT_BE_NULL;
     
     FHSearchHouseItemModel *houseModel = (FHSearchHouseItemModel *)self.model;
-    if (houseModel.isRecommendCell) {
-        tracerDict[UT_ELEMENT_TYPE] = @"search_related";
-    } else {
-        tracerDict[UT_ELEMENT_TYPE] = UT_BE_NULL;
-    }
     tracerDict[@"group_id"] = houseModel.id ? : @"be_null";
     tracerDict[@"impr_id"] = houseModel.imprId ? : @"be_null";
     tracerDict[UT_LOG_PB] = houseModel.logPbWithTags ? : @"be_null";

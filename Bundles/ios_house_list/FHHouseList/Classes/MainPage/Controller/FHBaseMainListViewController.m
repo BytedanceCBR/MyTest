@@ -21,6 +21,8 @@
 #import "FHMainListTableView.h"
 #import "FHHouseNewTopContainer.h"
 #import "FHHouseListErrorView.h"
+#import "FHEnvContext.h"
+#import "FHHouseTableView.h"
 
 #define TOP_HOR_PADDING 3
 
@@ -82,7 +84,12 @@
 -(UITableView *)tableView
 {
     if (!_tableView) {
-        _tableView = [[FHMainListTableView alloc] init];
+        if ([FHEnvContext isHouseListComponentEnable]) {
+            _tableView = [[FHHouseTableView alloc] init];
+        } else {
+            _tableView = [[FHMainListTableView alloc] init];
+        }
+        
         if (@available(iOS 11.0 , *)) {
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
             UIEdgeInsets inset = UIEdgeInsetsZero;

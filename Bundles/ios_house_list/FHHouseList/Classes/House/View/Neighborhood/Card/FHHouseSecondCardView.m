@@ -163,7 +163,7 @@
     if (![viewModel isKindOfClass:FHHouseSecondCardViewModel.class]) return 0.0f;
     FHHouseSecondCardViewModel *secondViewModel = (FHHouseSecondCardViewModel *)viewModel;
     CGFloat titleHeight = [FHHouseTitleAndTagView viewHeightWithViewModel:secondViewModel.titleAndTag];
-    return titleHeight + 92 + secondViewModel.recommendViewModel.showSecondHouseHeight;
+    return ceilf(titleHeight + 92 + secondViewModel.recommendViewModel.showSecondHouseHeight);
 }
 
 @end
