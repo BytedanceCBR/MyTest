@@ -41,6 +41,7 @@
 #import "NSObject+FHTracker.h"
 #import "FHUserTracker.h"
 #import "FHHomeRenderFlow.h"
+#import "FHFirstPageManager.h"
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -71,6 +72,8 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (self) {
         _isMainTabVC = YES;
         [[FHHomeRenderFlow sharedInstance] traceHomeInit];
+        FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+        [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:@"maintab" withUrl:@"" withTabName:currentDataModel.jumpPageOnStartup withPriority:0];
     }
     return self;
 }
@@ -390,6 +393,7 @@ static CGFloat const kSectionHeaderHeight = 38;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
+                        [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:@"" withUrl:currentDataModel.jump2AdRecommend withTabName:@"" withPriority:1];
                         [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
                         if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
                             //通勤找房
@@ -403,7 +407,7 @@ static CGFloat const kSectionHeaderHeight = 38;
             });
         }
     }
-    
+    [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
     [TTSandBoxHelper setAppFirstLaunchForAd];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
