@@ -8,7 +8,6 @@
 #import "FHDetailPriceChangeNoticeCell.h"
 #import "UILabel+House.h"
 #import "FHURLSettings.h"
-#import "FHHouseFillFormHelper.h"
 #import "FHHouseFollowUpConfigModel.h"
 #import "FHHouseFollowUpHelper.h"
 @interface FHDetailPriceChangeNoticeCell()

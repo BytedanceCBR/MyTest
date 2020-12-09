@@ -14,6 +14,7 @@
 #import "UIImage+FIconFont.h"
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
 #import "FHUserInfoManager.h"
+#import "SSCommonLogic.h"
 
 @interface FHDetailNoticeAlertView () <UITextFieldDelegate>
 
@@ -25,7 +26,6 @@
 @property(nonatomic , strong) UITextField *phoneTextField;
 @property(nonatomic , strong) UIView *seperateLine;
 @property(nonatomic , strong) UILabel *errorTextLabel;
-@property(nonatomic , strong) UIButton *leftBtn;
 @property(nonatomic , strong) UIButton *submitBtn;
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , copy) NSString *originPhoneNumber;
@@ -74,6 +74,8 @@
 
 - (void)setupUI
 {
+    self.bgView = [[UIView alloc]init];
+    self.bgView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.35];
     [self addSubview:self.bgView];
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self);
@@ -87,7 +89,6 @@
     [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(self);
         make.width.mas_equalTo(width);
-
     }];
     
     self.bgView.alpha = 0;
@@ -103,18 +104,9 @@
     [self.contentView addSubview:self.phoneTextField];
     [self.contentView addSubview:self.seperateLine];
     [self.contentView addSubview:self.errorTextLabel];
-    [self.contentView addSubview:self.leftBtn];
     [self.contentView addSubview:self.submitBtn];
     [self.contentView addSubview:self.tipLabel];
-    
-    [self.contentView addSubview:self.agencyView];
-    [self.agencyView addSubview:self.agencyLabel];
-    [self.agencyView addSubview:self.line1];
-    self.agencyView.hidden = YES;
-    self.agencyLabel.hidden = YES;
-    self.line1.hidden = YES;
-    [self.agencyView addTarget:self action:@selector(agencyBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-    
+        
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(34);
         make.right.mas_equalTo(self.contentView).mas_offset(-5);
@@ -147,21 +139,9 @@
         make.right.mas_equalTo(self.contentView).mas_offset(-20);
     }];
     
-    [self.agencyView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.seperateLine.mas_bottom);
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-        make.height.mas_equalTo(0);
-    }];
-
-    [self.line1 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(0.5);
-        make.left.right.bottom.mas_equalTo(0);
-    }];
-    
     [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(40);
-        make.top.mas_equalTo(self.agencyView.mas_bottom).mas_offset(20);
+        make.top.mas_equalTo(self.seperateLine.mas_bottom).mas_offset(20);
         make.left.mas_equalTo(self.subtitleLabel);
         make.right.mas_equalTo(-20);
     }];
@@ -172,7 +152,6 @@
         make.centerX.mas_equalTo(self.contentView);
     }];
     [self.closeBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
-    [self.leftBtn addTarget:self action:@selector(leftBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
 
     UITapGestureRecognizer *tipTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tipBtnDidClick)];
     self.tipLabel.userInteractionEnabled = YES;
@@ -180,8 +159,6 @@
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(keyboardFrameWillChange:) name:UIKeyboardWillChangeFrameNotification object:nil];
-
-
 }
 
 - (void)keyboardFrameWillChange:(NSNotification *)noti
@@ -247,8 +224,6 @@
 {
     self.submitBtn.enabled = YES;
     self.submitBtn.alpha = 1;
-    self.leftBtn.enabled = YES;
-    self.leftBtn.alpha = 1;
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -302,18 +277,6 @@
     }
 }
 
-- (void)leftBtnDidClick:(UIButton *)btn
-{
-//    NSString *phoneNum = [self currentInputPhoneNumber];
-//    if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [self isPureInt:phoneNum]) {
-//        if (self.leftClickBlock) {
-//            self.leftClickBlock(phoneNum,self);
-//        }
-//    }else {
-//        [self showErrorText];
-//    }
-}
-
 - (void)rightBtnDidClick:(UIButton *)btn
 
 {    NSString *phoneNum = [self currentInputPhoneNumber];
@@ -359,15 +322,6 @@
         make.height.mas_equalTo(anotherView.height);
     }];
     [self layoutIfNeeded];
-}
-
-- (UIView *)bgView
-{
-    if (!_bgView) {
-        _bgView = [[UIView alloc]init];
-        _bgView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.35];
-    }
-    return _bgView;
 }
 
 - (UIView *)contentView
@@ -451,34 +405,6 @@
     return _errorTextLabel;
 }
 
-- (UIControl *)agencyView
-{
-    if (!_agencyView) {
-        _agencyView = [[UIControl alloc]init];
-    }
-    return _agencyView;
-}
-
-- (UILabel *)agencyLabel
-{
-    if (!_agencyLabel) {
-        _agencyLabel = [[UILabel alloc]init];
-        _agencyLabel.font = [UIFont themeFontRegular:14];
-        _agencyLabel.textColor = [UIColor themeGray2];
-        _agencyLabel.numberOfLines = 1;
-    }
-    return _agencyLabel;
-}
-
-- (UIView *)line1
-{
-    if (!_line1) {
-        _line1 = [[UIView alloc]init];
-        _line1.backgroundColor = [UIColor themeGray6];
-    }
-    return _line1;
-}
-
 - (UIButton *)submitBtn
 {
     if (!_submitBtn) {
@@ -492,19 +418,6 @@
         _submitBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
     }
     return _submitBtn;
-}
-
-- (UIButton *)leftBtn
-{
-    if (!_leftBtn) {
-        _leftBtn = [[UIButton alloc]init];
-        [_leftBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [_leftBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-        _leftBtn.titleLabel.font = [UIFont themeFontRegular:16];
-        _leftBtn.layer.cornerRadius = 4;
-        _leftBtn.backgroundColor = [UIColor themeRed3];
-    }
-    return _leftBtn;
 }
 
 - (UILabel *)tipLabel

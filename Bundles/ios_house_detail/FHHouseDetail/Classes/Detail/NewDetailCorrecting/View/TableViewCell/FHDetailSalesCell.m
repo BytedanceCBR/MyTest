@@ -10,7 +10,6 @@
 #import <ByteDanceKit/UIImage+BTDAdditions.h>
 #import "FHDetailNewModel.h"
 #import <TTBaseLib/UIViewAdditions.h>
-#import "FHHouseFillFormHelper.h"
 #import "FHUIAdaptation.h"
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <FHWebView/SSWebViewController.h>

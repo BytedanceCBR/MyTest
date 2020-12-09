@@ -31,6 +31,7 @@
 #import "SSCommonLogic.h"
 #import "TTAccountLoginManager.h"
 #import <TTAccountSDK/TTAccount.h>
+#import <FHHouseBase/FHHouseFillFormHelper.h>
 
 @interface FHHousReserveAdviserCell ()<UITextFieldDelegate>
 
@@ -407,8 +408,22 @@
 
 - (void)subscribe {
     if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        void(^jumpFormReportHelper)(void) = ^(void) {
+            FHAssociateFormReportModel *formReportModel = [[FHAssociateFormReportModel alloc] init];
+            formReportModel.associateInfo = self.modelData.associateInfo.reportFormInfo;
+            NSMutableDictionary *tracerDic = self.modelData.tracerDict.mutableCopy;
+            tracerDic[@"position"] = @"card";
+            formReportModel.reportParams = tracerDic.copy;
+            formReportModel.houseType = FHHouseTypeNeighborhood;
+            formReportModel.title = @"免费预约";
+            formReportModel.btnTitle = @"立即预约";
+            formReportModel.subtitle = @"预约后，我们将为您匹配专业的顾问为您提供接待服务。";
+            formReportModel.topViewController = self.modelData.belongsVC;
+            [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:formReportModel];
+        };
         if ([[TTAccount sharedAccount] isLogin]) {
             //弹框
+            jumpFormReportHelper();
         } else {
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             params[@"enter_from"] = self.traceParams[@"page_type"] ?: @"be_null";
@@ -421,6 +436,7 @@
                     if ([[TTAccount sharedAccount] isLogin]) {
                         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                             //弹框
+                            jumpFormReportHelper();
                         });
                     }
                 }

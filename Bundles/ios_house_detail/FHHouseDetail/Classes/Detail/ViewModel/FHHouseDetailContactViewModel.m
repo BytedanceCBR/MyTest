@@ -640,17 +640,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     WeakSelf;
 //    NSDictionary *associateInfoDict = associatePhone.associateInfo;
     NSDictionary *reportParamsDict = associatePhone.reportParams;
-    // 圈子电话咨询数据备份
-    self.socialContactConfig = nil;
-    if (associatePhone.houseType == FHHouseTypeNewHouse) {
-        // 拨打电话 弹窗显示的话 本数据保留，否则 删除 nil
-        self.socialContactConfig = [[FHAssociatePhoneModel alloc]init];
-        
-        self.socialContactConfig.houseType = associatePhone.houseType;
-        self.socialContactConfig.houseId = associatePhone.houseId;
-        //        self.socialContactConfig.phone = self.contactPhone.phone;
-        self.socialContactConfig.realtorId = associatePhone.realtorId;
-    }
+
     NSString *realtorId = associatePhone.realtorId;
     [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         
@@ -658,10 +648,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *)wself.phoneCallViewModel.belongsVC;
             vc.isPhoneCallShow = YES;
             vc.phoneCallRealtorId = realtorId;
-            
             vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
-        } else {
-            wself.socialContactConfig = nil;
         }
     }];
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:reportParamsDict error:nil];
@@ -717,25 +704,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     associateReport.reportParams = reportParamsDict;
     associateReport.associateInfo = associateInfoDict;
     associateReport.chooseAgencyList = self.chooseAgencyList;
-    if (self.houseInfoBizTrace) {
-        associateReport.extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
-    }
-    [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];
     
-}
-
-// 新房 拨打电话后是否需要添加弹窗 留资入口
-- (void)checkSocialPhoneCall {
-    if (self.socialContactConfig) {
-        if (self.socialContactConfig.houseType == FHHouseTypeNewHouse && [self.belongsVC isKindOfClass:[FHHouseDetailViewController class]]) {
-            FHHouseDetailViewController *detailVC = (FHHouseDetailViewController *)self.belongsVC;
-            FHHouseNewDetailViewModel *viewModel = (FHHouseNewDetailViewModel *)detailVC.viewModel;
-            if ([viewModel needShowSocialInfoForm:self.socialContactConfig]) {
-                [viewModel showUgcSocialEntrance:nil];
-            }
-        }
-        self.socialContactConfig = nil;
-    }
+    NSMutableDictionary *extraInfo = @{}.mutableCopy;
+    extraInfo[@"biz_trace"] = self.houseInfoBizTrace.length ? self.houseInfoBizTrace : @"be_null";
+    extraInfo[@"origin_from"] = reportParamsDict[@"origin_from"] ?: @"be_null";
+    associateReport.extraInfo = extraInfo.copy;
+    
+    [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];
 }
 
 - (void)imAction {
