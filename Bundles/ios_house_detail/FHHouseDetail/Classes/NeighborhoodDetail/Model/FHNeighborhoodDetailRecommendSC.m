@@ -9,6 +9,7 @@
 #import "FHNeighborhoodDetailRecommendSM.h"
 #import "FHNeighborhoodDetailRecommendCell.h"
 #import "FHNeighborhoodDetailRecommendTitleView.h"
+#import "FHHouseSecondCardViewModel.h"
 
 @interface FHNeighborhoodDetailRecommendSC()<IGListSupplementaryViewSource, IGListDisplayDelegate>
 
@@ -32,7 +33,7 @@
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 30;
+    CGFloat width = self.collectionContext.containerSize.width - 18;
     FHNeighborhoodDetailRecommendSM *SM = (FHNeighborhoodDetailRecommendSM *)self.sectionModel;
     if (index >= 0 && index < SM.items.count) {
         return [FHNeighborhoodDetailRecommendCell cellSizeWithData:SM.items[index] width:width];
@@ -44,7 +45,7 @@
     FHNeighborhoodDetailRecommendSM *SM = (FHNeighborhoodDetailRecommendSM *)self.sectionModel;
     FHNeighborhoodDetailRecommendCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailRecommendCell class] withReuseIdentifier:NSStringFromClass([SM.recommendCellModel class]) forSectionController:self atIndex:index];
     if (index >= 0 && index < SM.items.count) {
-        [cell refreshWithData:SM.items[index]];
+        [cell refreshWithData:SM.items[index] withLast:(index == SM.items.count - 1) ? YES : NO];
     }
     return cell;
 }
@@ -52,28 +53,35 @@
 - (void)didSelectItemAtIndex:(NSInteger)index {
     FHNeighborhoodDetailRecommendSM *SM = (FHNeighborhoodDetailRecommendSM *)self.sectionModel;
     if (index >= 0 && index < SM.items.count) {
-        FHSearchHouseDataItemsModel *model = SM.items[index];
-        NSMutableDictionary *traceParam = [NSMutableDictionary new];
-        traceParam[@"log_pb"] = [model logPb] ? : UT_BE_NULL;;
-        traceParam[@"element_from"] = @"recommend_house";
-        traceParam[@"origin_from"] = self.detailTracerDict[@"origin_from"] ? : UT_BE_NULL;
-        traceParam[@"origin_search_id"] = model.searchId ? : UT_BE_NULL;
-        traceParam[@"search_id"] = model.searchId ? : UT_BE_NULL;
-        traceParam[@"rank"] = @(index);
-        traceParam[@"enter_from"] = @"neighborhood_detail";
-        NSMutableDictionary *dict = @{@"house_type":@(2),
-                              @"tracer": traceParam
-                              }.mutableCopy;
-        
-        if (model.hid) {
-            NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", model.hid]];
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-            [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+        FHHouseSecondCardViewModel *item = SM.items[index];
+        if ([item.model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+            FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)item.model;
+            NSMutableDictionary *traceParam = [NSMutableDictionary new];
+            traceParam[@"log_pb"] = [model logPb] ? : UT_BE_NULL;;
+            traceParam[@"element_from"] = @"recommend_house";
+            traceParam[@"origin_from"] = self.detailTracerDict[@"origin_from"] ? : UT_BE_NULL;
+            traceParam[@"origin_search_id"] = model.searchId ? : UT_BE_NULL;
+            traceParam[@"search_id"] = model.searchId ? : UT_BE_NULL;
+            traceParam[@"rank"] = @(index);
+            traceParam[@"enter_from"] = @"neighborhood_detail";
+            NSMutableDictionary *dict = @{@"house_type":@(2),
+                                  @"tracer": traceParam
+                                  }.mutableCopy;
+            
+            if (model.hid) {
+                NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", model.hid]];
+                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+            }
         }
     }
 }
 
-- (void)addHouseShowByIndex:(NSInteger)index dataItem:(FHSearchHouseDataItemsModel *)model {
+- (void)addHouseShowByIndex:(NSInteger)index dataItem:(FHHouseSecondCardViewModel *)item {
+    if (![item.model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        return;
+    }
+    FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)item.model;
     NSString *tempKey = [NSString stringWithFormat:@"%@_%ld", NSStringFromClass([self class]), index];
     if ([self.elementShowCaches valueForKey:tempKey]) {
         return;
