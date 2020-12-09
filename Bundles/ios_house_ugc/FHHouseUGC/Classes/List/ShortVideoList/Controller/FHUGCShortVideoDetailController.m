@@ -717,6 +717,9 @@ static const CGFloat kFloatingViewOriginY = 230;
                            params:[parameters copy]];
     }
     
+//    [self.commentWriteView.inputTextView resignFirstResponder];
+    
+    [self.commentWriteView dismissAnimated:YES];
     dispatch_async(dispatch_get_main_queue(), ^{
         UIViewController *visibleVC = [TSVUIResponderHelper topmostViewController];
         if (![visibleVC isKindOfClass:[self class]]) {
