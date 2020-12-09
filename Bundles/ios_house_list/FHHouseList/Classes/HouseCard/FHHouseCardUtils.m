@@ -61,7 +61,7 @@
     
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)model;
-        switch (itemModel.cardType) {
+        switch ([itemModel.houseType integerValue]) {//有些接口数据没有返回cardType, 这里用houseType保险点
             case FHSearchCardTypeNeighborhood: {
                 if (itemModel.cellStyles == 10) {
                     return [[FHHouseNeighborhoodCardViewModel alloc] initWithModel:itemModel];
@@ -104,7 +104,7 @@
 + (id)houseList_getEntityFromModel:(id)model {
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)model;
-        switch (itemModel.cardType) {
+        switch ([itemModel.houseType integerValue]) { //有些接口数据没有返回cardType, 这里用houseType保险点
             case FHSearchCardTypeNewHouse: {
                 return [[FHHouseNewCardViewModel alloc] initWithModel:itemModel];
                 break;

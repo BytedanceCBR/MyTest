@@ -208,7 +208,7 @@ extern NSString *const INSTANT_DATA_KEY;
             self.houseType = FHHouseTypeRentHouse;
             self.commute = YES;
         }
-        if ([paramObj.host isEqualToString:@"neighborhood_deal_list"]) {
+        if ([paramObj.host isEqualToString:@"neighborhood_deal_list"]) { //和冯康确认过，这个功能已经下线了
             self.houseType = FHHouseTypeNeighborhood;
             self.searchType = FHHouseListSearchTypeNeighborhoodDeal;
         }
