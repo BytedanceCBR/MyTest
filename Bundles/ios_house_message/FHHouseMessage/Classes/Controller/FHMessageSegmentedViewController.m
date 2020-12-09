@@ -628,6 +628,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                 }];
                 extraDict[@"6.diffTIMOConvDict"] = diffDict2;
                 
+                extraDict[@"7.currentTab"] = [FHEnvContext getCurrentTabIdentifier];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"f_message_tab_badget_number_display_error"
                                                         metric:nil
                                                       category:categoryDict.copy
