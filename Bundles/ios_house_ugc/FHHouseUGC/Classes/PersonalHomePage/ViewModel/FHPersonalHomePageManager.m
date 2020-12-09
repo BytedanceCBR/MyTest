@@ -74,7 +74,7 @@
     CGFloat backViewOffset = 120 - self.navBar.height;
     
 
-    if(offset > tabListOffset) {
+    if(offset >= tabListOffset) {
         scrollView.contentOffset = CGPointMake(0, tabListOffset);
         self.scrollViewScrollEnable = self.isFeedError;
         self.tableViewScrollEnable = !self.isFeedError;

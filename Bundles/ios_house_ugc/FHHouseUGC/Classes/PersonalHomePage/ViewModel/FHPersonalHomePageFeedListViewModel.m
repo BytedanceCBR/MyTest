@@ -8,6 +8,7 @@
 #import "FHPersonalHomePageFeedListViewModel.h"
 #import "FHPersonalHomePageViewModel.h"
 #import "FHPersonalHomePageManager.h"
+#import "UIScrollView+Refresh.h"
 #import "FHRefreshCustomFooter.h"
 #import "FHUGCCellManager.h"
 #import "FHFeedUGCCellModel.h"
@@ -124,16 +125,13 @@
         }
         if(model){
             NSArray *resultArr = [self convertModel:feedListModel.data];
-            if(isHead && feedListModel.hasMore){
-                [self.dataList removeAllObjects];
-            }
             if(isHead){
                 [self.dataList removeAllObjects];
                 [self.dataList addObjectsFromArray:resultArr];
             }else{
                 [self.dataList addObjectsFromArray:resultArr];
             }
-//            self.tableView.hasMore = feedListModel.hasMore;
+            self.tableView.hasMore = feedListModel.hasMore;
             if(self.dataList.count > 0){
                 [self updateTableViewWithMoreData:feedListModel.hasMore];
                 [self.viewController.emptyView hideEmptyView];

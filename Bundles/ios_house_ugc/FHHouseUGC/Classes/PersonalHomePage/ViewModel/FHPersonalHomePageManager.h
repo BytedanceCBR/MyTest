@@ -21,7 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)reset;
 @property(nonatomic,assign) NSInteger currentIndex;
 @property(nonatomic,copy) NSString *userId;
-@property(nonatomic,strong) NSMutableArray *feedErrorArray;
+@property(nonatomic,strong) NSMutableArray<NSNumber *> *feedErrorArray;
 @property(nonatomic,weak) FHPersonalHomePageViewController *viewController;
 @property(nonatomic,weak) FHPersonalHomePageFeedViewController *feedViewController;
 @property(nonatomic,strong) NSMutableArray<FHPersonalHomePageFeedListViewController *> *feedListVCArray;
