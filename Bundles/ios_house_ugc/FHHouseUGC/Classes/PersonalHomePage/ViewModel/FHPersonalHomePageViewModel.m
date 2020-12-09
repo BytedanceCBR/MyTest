@@ -85,6 +85,22 @@
 
 }
 
+-(void)requestProfileInfoAfterChange {
+    if ([TTReachability isNetworkConnected]) {
+        [self.viewController startLoading];
+        self.viewController.isLoadingData = YES;
+        [self requestProfileInfo];
+
+        dispatch_group_notify(self.personalHomePageGroup, dispatch_get_main_queue(), ^{
+            [self.viewController endLoading];
+            [[FHPersonalHomePageManager shareInstance] updateProfileInfoWithMdoel:self.profileInfoModel];
+        });
+    } else {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    }
+    
+}
+
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [[FHPersonalHomePageManager shareInstance] scrollViewScroll:scrollView];
 }

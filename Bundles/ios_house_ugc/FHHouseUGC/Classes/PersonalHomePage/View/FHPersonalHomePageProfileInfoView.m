@@ -6,6 +6,8 @@
 //
 
 #import "FHPersonalHomePageProfileInfoView.h"
+#import "TTPhotoScrollViewController.h"
+#import "TTInteractExitHelper.h"
 #import "TTAccountManager.h"
 #import "UIImageView+BDWebImage.h"
 #import "NSString+BTDAdditions.h"
@@ -40,6 +42,8 @@
 @property(nonatomic,strong) UILabel *descLabel;
 @property(nonatomic,strong) UIButton *changeButton;
 @property(nonatomic,strong) UIView *seperatorView;
+@property(nonatomic,assign) CGSize descLabelSize;
+@property (nonatomic, copy , nullable) NSString *bigAvatarUrl;
 @end
 
 @implementation FHPersonalHomePageProfileInfoView
@@ -63,6 +67,8 @@
     self.iconView.layer.borderColor = [UIColor themeWhite].CGColor;
     self.iconView.layer.borderWidth = 2;
     self.iconView.layer.masksToBounds = YES;
+    self.iconView.userInteractionEnabled = YES;
+    [self.iconView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showBigAvatar:)]];
     [self addSubview:self.iconView];
     
     self.userNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 54, SCREEN_WIDTH - 40 , 28)];
@@ -110,6 +116,7 @@
     
     [self.shadowView updateWithUrl:model.data.avatarUrl];
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:model.data.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    self.bigAvatarUrl = model.data.bigAvatarUrl;
     self.userNameLabel.text = model.data.name;
     
     if(isVerifyShow) {
@@ -140,6 +147,38 @@
 - (void)changeProfileInfo {
     NSURL* url = [NSURL URLWithString:@"sslocal://editUserProfile"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+}
+
+
+- (void)showBigAvatar:(UIView *)sender {
+    TTPhotoScrollViewController * controller = [[TTPhotoScrollViewController alloc] init];
+    controller.mode = PhotosScrollViewSupportBrowse;
+    controller.finishBackView = [TTInteractExitHelper getSuitableFinishBackViewWithCurrentContext];
+    NSMutableArray * infoModels = [NSMutableArray arrayWithCapacity:10];
+   
+    TTImageInfosModel * iModel = [[TTImageInfosModel alloc] initWithURL:self.bigAvatarUrl];
+    if (iModel) {
+        [infoModels addObject:iModel];
+    }
+
+    controller.imageInfosModels = infoModels;
+    [controller setStartWithIndex:0];
+    
+    NSMutableArray * frames = [NSMutableArray arrayWithCapacity:9];
+    CGRect frame = [self.iconView convertRect:self.iconView.bounds toView:nil];
+    [frames addObject:[NSValue valueWithCGRect:frame]];
+        
+    controller.placeholderSourceViewFrames = frames;
+    controller.placeholders = [self photoObjs];
+    [controller presentPhotoScrollView];
+}
+
+- (NSArray *)photoObjs {
+    NSMutableArray *photoObjs = [NSMutableArray array];
+    if (self.iconView.image) {
+        [photoObjs addObject:self.iconView.image];
+    }
+    return photoObjs;
 }
 
 @end

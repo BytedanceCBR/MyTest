@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHPersonalHomePageViewModel : NSObject
 -(instancetype)initWithController:(FHPersonalHomePageViewController *)viewController;
 - (void)startLoadData;
+- (void)requestProfileInfoAfterChange;
 @end
 
 NS_ASSUME_NONNULL_END

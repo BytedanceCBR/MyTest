@@ -47,6 +47,7 @@
 -(void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel {
     self.tabListModel = tabListModel;
     
+    self.viewController.customNavBarView.title.text = profileInfoModel.data.name;
     [self.profileInfoView updateWithModel:profileInfoModel isVerifyShow:[tabListModel.data.isVerifyShow boolValue]];
     CGFloat profileInfoViewHeight = [self.profileInfoView viewHeight];
     self.profileInfoView.frame = CGRectMake(0, 0, SCREEN_WIDTH, profileInfoViewHeight);
@@ -57,6 +58,17 @@
     [self initFeedStatus:tabListModel.data.tabList.count];
     
     [self.feedViewController updateWithHeaderViewMdoel:tabListModel];
+    self.scrollView.contentSize = CGSizeMake(SCREEN_WIDTH, profileInfoViewHeight + feedViewControllerHeight);
+}
+
+-(void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel {
+    self.viewController.customNavBarView.title.text = profileInfoModel.data.name;
+    [self.profileInfoView updateWithModel:profileInfoModel isVerifyShow:[self.tabListModel.data.isVerifyShow boolValue]];
+    CGFloat profileInfoViewHeight = [self.profileInfoView viewHeight];
+    self.profileInfoView.frame = CGRectMake(0, 0, SCREEN_WIDTH, profileInfoViewHeight);
+    
+    CGFloat feedViewControllerHeight = SCREEN_HEIGHT - self.navBar.height;
+    self.feedViewController.view.frame = CGRectMake(0, profileInfoViewHeight, SCREEN_WIDTH, feedViewControllerHeight);
     self.scrollView.contentSize = CGSizeMake(SCREEN_WIDTH, profileInfoViewHeight + feedViewControllerHeight);
 }
 

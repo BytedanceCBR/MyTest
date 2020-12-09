@@ -174,8 +174,9 @@
 - (void)loadMoreError {
     [[ToastManager manager] showToast:@"网络异常"];
     self.refreshFooter.hidden = NO;
-    [self.refreshFooter setUpNoMoreDataText:@"- 没有更多数据了 -" offsetY:-3];
-    [self.tableView.mj_footer endRefreshingWithNoMoreData];
+    [self.tableView.mj_footer endRefreshing];
+//    [self.refreshFooter setUpNoMoreDataText:@"- 没有更多数据了 -" offsetY:-3];
+//    [self.tableView.mj_footer endRefreshingWithNoMoreData];
 }
 
 

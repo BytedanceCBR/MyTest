@@ -29,6 +29,7 @@
 @property(nonatomic,strong) FHPersonalHomePageFeedViewController *feedViewController;
 @property(nonatomic,copy) NSString *userId;
 @property(nonatomic,strong) FHPersonalHomePageViewModel *viewModel;
+@property(nonatomic,assign) BOOL userInfoChange;
 @end
 
 @implementation FHPersonalHomePageViewController
@@ -37,7 +38,11 @@
     if(self = [super initWithRouteParamObj:paramObj]) {
         NSDictionary *params = paramObj.allParams;
         self.userId = params[@"uid"];
-        self.userId = @"2559307071627528";
+        self.userInfoChange = NO;
+        BOOL isTest = YES;
+        if(isTest) {
+            self.userId = @"2559307071627528";
+        }
     }
     return self;
 }
@@ -59,9 +64,33 @@
     [self startLoadData];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    if(self.userInfoChange) {
+        [self.viewModel requestProfileInfoAfterChange];
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    self.userInfoChange = YES;
+}
+
 - (void)initView {
-    [self initNavBar];
+
+    [self initScrollView];
+
+    self.profileInfoView = [[FHPersonalHomePageProfileInfoView alloc] initWithFrame:CGRectZero];
+    [self.scrollView addSubview:self.profileInfoView];
     
+    self.feedViewController = [[FHPersonalHomePageFeedViewController alloc] init];
+    self.feedViewController.view.frame = CGRectZero;
+    [self.scrollView addSubview:self.feedViewController.view];
+    
+    [self initNavBar];
+    [self addDefaultEmptyViewFullScreen];
+}
+
+
+- (void)initScrollView {
     self.scrollView = [[FHPersonalHomePageScrollView alloc] initWithFrame:self.view.bounds];
     self.scrollView.backgroundColor = [UIColor themeWhite];
     self.scrollView.contentSize = self.view.bounds.size;
@@ -72,15 +101,6 @@
     self.scrollView.alwaysBounceVertical = YES;
     self.scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.scrollView];
-    
-    self.profileInfoView = [[FHPersonalHomePageProfileInfoView alloc] initWithFrame:CGRectZero];
-    [self.scrollView addSubview:self.profileInfoView];
-    
-    self.feedViewController = [[FHPersonalHomePageFeedViewController alloc] init];
-    self.feedViewController.view.frame = CGRectZero;
-    [self.scrollView addSubview:self.feedViewController.view];
-    
-    [self addDefaultEmptyViewFullScreen];
 }
 
 - (void)initNavBar {

@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)scrollViewScroll:(UIScrollView *)scrollView;
 -(void)tableViewScroll:(UIScrollView *)scrollView;
 - (void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel;
+- (void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel;
 @end
 
 NS_ASSUME_NONNULL_END

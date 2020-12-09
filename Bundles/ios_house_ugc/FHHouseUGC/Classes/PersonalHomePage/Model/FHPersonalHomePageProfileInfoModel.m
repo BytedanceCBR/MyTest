@@ -15,6 +15,7 @@
     @"avatarUrl": @"avatar_url",
     @"desc": @"description",
     @"verifiedContent": @"verified_content",
+    @"bigAvatarUrl": @"big_avatar_url",
     @"logPb": @"log_pb",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
