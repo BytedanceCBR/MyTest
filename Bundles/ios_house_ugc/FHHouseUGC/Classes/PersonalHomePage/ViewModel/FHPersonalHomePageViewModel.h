@@ -10,8 +10,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+
 @interface FHPersonalHomePageViewModel : NSObject
-@property (nonatomic,strong) NSString *userId;
 -(instancetype)initWithController:(FHPersonalHomePageViewController *)viewController;
 - (void)startLoadData;
 @end

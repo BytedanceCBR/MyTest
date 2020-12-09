@@ -11,7 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPersonalHomePageFeedCollectionViewCell : UICollectionViewCell
-@property(nonatomic,weak) FHPersonalHomePageFeedViewController *viewController;
+- (void)updateTabName:(NSString *)tabName index:(NSInteger)index;
 @end
 
 NS_ASSUME_NONNULL_END

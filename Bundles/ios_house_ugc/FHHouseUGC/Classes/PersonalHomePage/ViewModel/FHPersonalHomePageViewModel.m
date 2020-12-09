@@ -8,11 +8,14 @@
 #import "FHPersonalHomePageViewModel.h"
 #import "FHPersonalHomePageProfileInfoModel.h"
 #import "FHPersonalHomePageTabListModel.h"
+#import "FHPersonalHomePageManager.h"
+#import "UIViewAdditions.h"
 #import "FHHouseUGCAPI.h"
 #import "FHCommonDefines.h"
+#import "FHPersonalHomePageManager.h"
 
 
-@interface FHPersonalHomePageViewModel () 
+@interface FHPersonalHomePageViewModel () <UIScrollViewDelegate>
 @property(nonatomic,weak) FHPersonalHomePageViewController *viewController;
 @property(nonatomic,strong) FHPersonalHomePageProfileInfoModel *profileInfoModel;
 @property(nonatomic,strong) FHPersonalHomePageTabListModel *tabListModel;
@@ -24,6 +27,8 @@
 -(instancetype)initWithController:(FHPersonalHomePageViewController *)viewController {
     if(self = [super init]) {
         self.viewController = viewController;
+        self.viewController.scrollView.delegate = self;
+
         self.personalHomePageGroup = dispatch_group_create();
     }
     return self;
@@ -35,14 +40,15 @@
     
     dispatch_group_notify(self.personalHomePageGroup, dispatch_get_main_queue(), ^{
         [self.viewController endLoading];
-        [self.viewController updateProfileInfoWithMdoel:self.profileInfoModel tabListWithMdoel:self.tabListModel];
+        [[FHPersonalHomePageManager shareInstance] updateProfileInfoWithMdoel:self.profileInfoModel tabListWithMdoel:self.tabListModel];
     });
 }
 
 - (void)requestProfileInfo {
     dispatch_group_enter(self.personalHomePageGroup);
     WeakSelf;
-   [FHHouseUGCAPI requestHomePageInfoWithUserId:self.userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    NSString *userId = [FHPersonalHomePageManager shareInstance].userId;
+   [FHHouseUGCAPI requestHomePageInfoWithUserId:userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
        StrongSelf;
        if(!error && [model isKindOfClass:[FHPersonalHomePageProfileInfoModel class]]) {
            FHPersonalHomePageProfileInfoModel *profileInfoModel = (FHPersonalHomePageProfileInfoModel *) model;
@@ -57,7 +63,7 @@
 - (void)requestFeedTabList {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"channel_id"] = @"94349558589";
-    params[@"user_id"] = self.userId;
+    params[@"user_id"] = [FHPersonalHomePageManager shareInstance].userId;
     
     dispatch_group_enter(self.personalHomePageGroup);
     WeakSelf;
@@ -71,5 +77,16 @@
     }];
 
 }
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [[FHPersonalHomePageManager shareInstance] scrollViewScroll:scrollView];
+}
+
+-(BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
+    [[FHPersonalHomePageManager shareInstance] scrollsToTop];
+    return YES;
+}
+
+
 
 @end

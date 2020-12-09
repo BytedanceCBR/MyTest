@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPersonalHomePageFeedListViewModel : NSObject
 - (instancetype)initWithController:(FHPersonalHomePageFeedListViewController *)viewController tableView:(UITableView *)tableView;
+- (void)requestData:(BOOL)isHead first:(BOOL)isFirst;
 @end
 
 NS_ASSUME_NONNULL_END

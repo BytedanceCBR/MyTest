@@ -6,10 +6,9 @@
 //
 
 #import "FHPersonalHomePageViewController.h"
-#import "FHPersonalHomePageScrollView.h"
 #import "FHPersonalHomePageViewModel.h"
-#import "FHPersonalHomePageProfileInfoView.h"
 #import "FHPersonalHomePageFeedViewController.h"
+#import "FHPersonalHomePageManager.h"
 #import "UIImage+FIconFont.h"
 #import "TTReachability.h"
 #import "FHCommonDefines.h"
@@ -18,14 +17,18 @@
 #import "TTAccountManager.h"
 #import <ToastManager.h>
 
+@interface FHPersonalHomePageScrollView : UIScrollView <UIGestureRecognizerDelegate>
+@end
+
+@implementation FHPersonalHomePageScrollView
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+@end
 
 @interface FHPersonalHomePageViewController () <UIScrollViewDelegate>
-@property(nonatomic,strong) UIScrollView *scrollView;
-@property(nonatomic,strong) FHPersonalHomePageProfileInfoView *profileInfoView;
 @property(nonatomic,strong) FHPersonalHomePageFeedViewController *feedViewController;
-
-@property(nonatomic,assign) BOOL enableScroll;
-@property(nonatomic,strong) NSString *userId;
+@property(nonatomic,copy) NSString *userId;
 @property(nonatomic,strong) FHPersonalHomePageViewModel *viewModel;
 @end
 
@@ -35,8 +38,13 @@
     if(self = [super initWithRouteParamObj:paramObj]) {
         NSDictionary *params = paramObj.allParams;
         self.userId = params[@"uid"];
+        self.userId = @"2559307071627528";
     }
     return self;
+}
+
+-(void)dealloc {
+    [[FHPersonalHomePageManager shareInstance].feedListVCArray removeAllObjects];
 }
 
 - (void)viewDidLoad {
@@ -44,7 +52,10 @@
     [self initView];
     [self initViewModel];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enableScrollChange) name:kFHPersonalHomePageEnableScrollChangeNotification object:nil];
+    [[FHPersonalHomePageManager shareInstance] reset];
+    [FHPersonalHomePageManager shareInstance].userId = self.userId;
+    [FHPersonalHomePageManager shareInstance].viewController = self;
+    [FHPersonalHomePageManager shareInstance].feedViewController = self.feedViewController;
     
     [self startLoadData];
 }
@@ -59,9 +70,8 @@
         self.scrollView.insetsLayoutMarginsFromSafeArea = NO;
         self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    self.scrollView.delegate = self;
     self.scrollView.alwaysBounceVertical = YES;
-    self.enableScroll = YES;
+    self.scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.scrollView];
     
     self.profileInfoView = [[FHPersonalHomePageProfileInfoView alloc] initWithFrame:CGRectZero];
@@ -159,20 +169,9 @@
     [FHUserTracker writeEvent:@"popup_show" params:popupShowParams];
 }
 
--(void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel {
-    [self.profileInfoView updateWithModel:profileInfoModel isVerifyShow:[tabListModel.data.isVerifyShow boolValue]];
-    CGFloat profileInfoViewHeight = [self.profileInfoView viewHeight];
-    self.profileInfoView.frame = CGRectMake(0, 0, SCREEN_WIDTH, profileInfoViewHeight);
-    self.feedViewController.view.frame = CGRectMake(0, profileInfoViewHeight, SCREEN_WIDTH, SCREEN_HEIGHT);
-    [self.feedViewController updateWithHeaderViewMdoel:tabListModel];
-    
-    self.scrollView.contentSize = CGSizeMake(SCREEN_WIDTH, profileInfoViewHeight + SCREEN_HEIGHT);
-}
-
 
 - (void)initViewModel {
     self.viewModel = [[FHPersonalHomePageViewModel alloc] initWithController:self];
-    self.viewModel.userId = self.userId;
 }
 
 - (void)startLoadData {
@@ -188,45 +187,6 @@
 -(void)retryLoadData {
     [self.emptyView hideEmptyView];
     [self startLoadData];
-}
-
-
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat offset = scrollView.contentOffset.y;
-    CGFloat tabListOffset = self.profileInfoView.viewHeight - self.customNavBarView.height;
-    CGFloat backViewOffset = 120 - self.customNavBarView.height;
-    
-    if(offset < 0) {
-        CGFloat shadowViewHeight = 160;
-        self.profileInfoView.shadowView.transform = CGAffineTransformMakeScale(1 + offset/(-shadowViewHeight), 1 + offset/(-shadowViewHeight));
-        CGRect frame = self.profileInfoView.shadowView.frame;
-        frame.origin.y = offset;
-        self.profileInfoView.shadowView.frame = frame;
-    }else if(offset >= tabListOffset) {
-        self.scrollView.contentOffset = CGPointMake(0, tabListOffset);
-        self.enableScroll = NO;
-        self.feedViewController.enableScroll = YES;
-    }else {
-        if(!self.enableScroll) {
-            self.scrollView.contentOffset = CGPointMake(0, tabListOffset);
-        }
-    };
-    
-    offset = self.scrollView.contentOffset.y;
-    if(offset < 0) {
-        self.customNavBarView.bgView.alpha = 0;
-        self.customNavBarView.title.alpha = 0;
-    } else if(offset <= backViewOffset) {
-        self.customNavBarView.bgView.alpha = offset / backViewOffset;
-        self.customNavBarView.title.alpha = offset / backViewOffset;
-    } else {
-        self.customNavBarView.bgView.alpha = 1;
-        self.customNavBarView.title.alpha = 1;
-    }
-}
-
-- (void)enableScrollChange {
-    self.enableScroll = YES;
 }
 
 @end

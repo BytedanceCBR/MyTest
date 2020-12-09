@@ -158,6 +158,11 @@
         _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, - 0.2 * SCREEN_WIDTH, SCREEN_WIDTH, SCREEN_WIDTH)];
         [self addSubview:_imageView];
         
+        UIView *blackView = [[UIView alloc] initWithFrame:frame];
+        blackView.backgroundColor = [UIColor themeBlack];
+        blackView.alpha = 0.05;
+        [self addSubview:blackView];
+        
         UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
         effectView.frame = frame;
         effectView.alpha = 1;

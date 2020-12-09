@@ -7,6 +7,7 @@
 
 #import "FHPersonalHomePageFeedViewModel.h"
 #import "FHPersonalHomePageFeedCollectionViewCell.h"
+#import "FHPersonalHomePageManager.h"
 #import "FHCommonDefines.h"
 
 
@@ -14,6 +15,7 @@
 @property(nonatomic,weak) FHPersonalHomePageFeedViewController *viewController;
 @property(nonatomic,weak) UICollectionView *collectionView;
 @property(nonatomic,strong) NSArray *titleArray;
+@property(nonatomic,weak) FHPersonalHomePageTabListModel *tabListModel;
 @property(nonatomic,weak) FHPersonalHomePageFeedCollectionViewCell *currentCell;
 @end
 
@@ -31,6 +33,8 @@
 
 
 -(void)updateWithHeaderViewMdoel:(FHPersonalHomePageTabListModel *)model {
+    self.tabListModel = model;
+    
     NSMutableArray *titleArray = [NSMutableArray array];
     
     Class cellClass = [FHPersonalHomePageFeedCollectionViewCell class];
@@ -56,6 +60,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if(index >= 0 && index < self.titleArray.count) {
             [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+            [FHPersonalHomePageManager shareInstance].currentIndex = index;
         }
     });
 }
@@ -70,12 +75,16 @@
 }
 
 - (nonnull __kindof UICollectionViewCell *)collectionView:(nonnull UICollectionView *)collectionView cellForItemAtIndexPath:(nonnull NSIndexPath *)indexPath {
+    NSInteger index = indexPath.row;
     NSString *cellClassName = NSStringFromClass([FHPersonalHomePageFeedCollectionViewCell class]);
     NSString *identifier = [NSString stringWithFormat:@"%@_%zd",cellClassName,indexPath.row];
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
     if([cell isKindOfClass:[FHPersonalHomePageFeedCollectionViewCell class]]) {
         FHPersonalHomePageFeedCollectionViewCell *feedListCell = (FHPersonalHomePageFeedCollectionViewCell *)cell;
-        feedListCell.viewController = self.viewController;
+        if(index >= 0 && index < self.tabListModel.data.tabList.count) {
+            FHPersonalHomePageTabItemModel *itemModel = self.tabListModel.data.tabList[index];
+            [feedListCell updateTabName:itemModel.name index:index];
+        }
     }
     return cell;
 }

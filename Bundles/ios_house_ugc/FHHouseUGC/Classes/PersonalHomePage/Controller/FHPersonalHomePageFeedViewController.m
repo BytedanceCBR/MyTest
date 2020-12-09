@@ -60,8 +60,8 @@
     _headerView.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _headerView.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _headerView.isNeedNetworkCheck = NO;
-    _headerView.firstLeftMargain = 42;
-    _headerView.lastRightMargin = 42;
+    _headerView.firstLeftMargain = 20;
+    _headerView.lastRightMargin = 20;
     _headerView.segmentEdgeInset = UIEdgeInsetsMake(5, 14, 0, 14);
     
     _headerView.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;

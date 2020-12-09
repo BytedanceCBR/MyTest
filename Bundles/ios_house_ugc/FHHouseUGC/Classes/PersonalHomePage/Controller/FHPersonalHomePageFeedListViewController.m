@@ -9,7 +9,6 @@
 #import "FHPersonalHomePageFeedListViewModel.h"
 
 @interface FHPersonalHomePageFeedListViewController ()
-@property(nonatomic,strong) UITableView *tableView;
 @property(nonatomic,strong) FHPersonalHomePageFeedListViewModel *viewModel;
 @end
 
@@ -21,11 +20,19 @@
     [self initViewModel];
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.viewModel requestData:YES first:YES];
+}
+
 - (void)initView {
-    self.tableView = [[UITableView alloc] initWithFrame:self.view.bounds];
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.tableView.alwaysBounceVertical = YES;
     self.tableView.bounces = YES;
+    self.tableView.separatorStyle = UITableViewCellSelectionStyleNone;
     [self.view addSubview:self.tableView];
+    
+    [self addDefaultEmptyViewFullScreen];
 }
 
 - (void)initViewModel {
