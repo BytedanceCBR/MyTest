@@ -570,13 +570,15 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     
     // 先添加监控息tab的未读数更新逻辑
     [self monitorBadgetNumberAndReport:systemMessageNumber chatNumber:chatNumber];
-    // 用单例记录一下系统消息未读数和微聊消息未读数，用于之后比较消息tab未读数
-    [[FHMessageBadgetNumberMonitorHelper shared] updateSystemUnreadNumber:systemMessageNumber chatUnreadNumber:chatNumber];
-    // 刷新消息tab未读数
+    // 后刷新消息tab未读数
     [[FHEnvContext sharedInstance].messageManager refreshBadgeNumber];
 }
 
 - (void)monitorBadgetNumberAndReport:(NSInteger)systemMessageNumber chatNumber:(NSInteger)chatNumber {
+    
+    // 用单例记录一下系统消息未读数和微聊消息未读数，用于之后比较消息tab未读数
+    [[FHMessageBadgetNumberMonitorHelper shared] updateSystemUnreadNumber:systemMessageNumber chatUnreadNumber:chatNumber];
+    
     // 监听消息tab的未读数变化事件，每次变化比较和当前系统通知未读数与微聊未读数的和是否相等，不相等就上报
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
