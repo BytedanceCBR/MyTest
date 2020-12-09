@@ -137,7 +137,8 @@
         FHNeighborhoodDetailMapCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailMapCollectionCell class] withReuseIdentifier:NSStringFromClass([model.mapCellModel class]) forSectionController:self atIndex:index];
         [cell refreshWithData:model.mapCellModel];
         [cell setCategoryClickBlock:^(NSString * _Nonnull category) {
-            
+            model.curCategory = category;
+            [weakSelf mapMaskBtnClick:nil];
         }];
         cell.mapBtnClickBlock = ^(NSString * _Nonnull clickType) {
             [weakSelf mapMaskBtnClick:clickType];

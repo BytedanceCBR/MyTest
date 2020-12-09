@@ -191,11 +191,11 @@
         }
 
         //周边 地图+均价走势
-//        if ((model.data.neighborhoodInfo.gaodeLat.length && model.data.neighborhoodInfo.gaodeLng.length)) {
-//            FHNeighborhoodDetailSurroundingSM *surroundingSM = [[FHNeighborhoodDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
-//            surroundingSM.sectionType = FHNeighborhoodDetailSectionTypeSurrounding;
-//            [sectionModels addObject:surroundingSM];
-//        }
+        if ((model.data.neighborhoodInfo.gaodeLat.length && model.data.neighborhoodInfo.gaodeLng.length)) {
+            FHNeighborhoodDetailSurroundingSM *surroundingSM = [[FHNeighborhoodDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
+            surroundingSM.sectionType = FHNeighborhoodDetailSectionTypeSurrounding;
+            [sectionModels addObject:surroundingSM];
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
             self.sectionModels = sectionModels.copy;
             self.firstReloadInterval = CFAbsoluteTimeGetCurrent();

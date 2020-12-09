@@ -565,7 +565,7 @@ static MAMapView *kFHPageMapView = nil;
     }
     
     AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
-    requestPoi.keywords = [FHOldDetailStaticMapCell keyWordConver:categoryName];
+    requestPoi.keywords = [FHDetailStaticMap keyWordConver:categoryName];
     requestPoi.location = [AMapGeoPoint locationWithLatitude:self.centerPoint.latitude longitude:self.centerPoint.longitude];
     requestPoi.requireExtension = YES;
     requestPoi.requireSubPOIs = YES;
@@ -790,7 +790,7 @@ static MAMapView *kFHPageMapView = nil;
         [self.mapView setCenterCoordinate:self.centerPoint];
         return;
     }
-    NSString *keyWords =[FHOldDetailStaticMapCell keyWordConverReverse:searchReqeust.keywords];
+    NSString *keyWords =[FHDetailStaticMap keyWordConverReverse:searchReqeust.keywords];
     if (keyWords.length <= 0) {
         [[ToastManager manager] showToast:@"暂无相关信息"];
         [self.mapView setCenterCoordinate:self.centerPoint];
