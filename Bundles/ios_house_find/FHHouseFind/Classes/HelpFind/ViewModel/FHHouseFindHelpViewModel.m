@@ -39,6 +39,7 @@
 #import "FHMainApi+Contact.h"
 #import "HMDTTMonitor.h"
 #import <FHHouseBase/FHUserInfoManager.h>
+#import "SSCommonLogic.h"
 
 #define HELP_HEADER_ID @"header_id"
 #define HELP_ITEM_HOR_MARGIN 20
@@ -82,11 +83,12 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
 @property (nonatomic , weak) UITextField *activeTextField;
 
 //1.0.1版本帮我找房优化需求去掉了验证码逻辑
-//@property(nonatomic , assign) BOOL isRequestingSMS;
-//@property(nonatomic , strong) NSTimer *timer;
-//@property(nonatomic , assign) NSInteger verifyCodeRetryTime;
-////是否重新是重新发送验证码
-//@property(nonatomic , assign) BOOL isVerifyCodeRetry;
+@property(nonatomic , assign) BOOL isRequestingSMS;
+@property(nonatomic , strong) NSTimer *timer;
+@property(nonatomic , assign) NSInteger verifyCodeRetryTime;
+//是否重新是重新发送验证码
+@property(nonatomic , assign) BOOL isVerifyCodeRetry;
+
 @property(nonatomic , assign) CGPoint lastContentOffset;
 @property(nonatomic , assign) BOOL isKeyboardShow;
 //1.0.4版本帮我找房新增线索逻辑
@@ -745,7 +747,7 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
         return;
     }
     FHHouseType ht = _houseType;
-    NSArray *filter = [self filterOfHouseType:ht];
+//    NSArray *filter = [self filterOfHouseType:ht];
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     
     FHSearchFilterConfigOption *options = [item.options firstObject];
@@ -920,7 +922,7 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
 - (void)selectDefaultItems
 {
     FHHouseType ht = _houseType;
-    NSArray *filter = [self filterOfHouseType:ht];
+//    NSArray *filter = [self filterOfHouseType:ht];
     FHHouseFindSelectModel *model = [self selectModelWithType:ht];
     FHSearchFilterConfigItem *item = self.priceConfigItem;
     FHSearchFilterConfigOption *options = [item.options firstObject];
@@ -1323,6 +1325,11 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
         if([TTAccount sharedAccount].isLogin){
             return CGSizeMake(collectionView.frame.size.width, 90);
         }
+        //带验证码 高度 174
+        //不带验证码 高度 107
+        if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+            return CGSizeMake(collectionView.frame.size.width, 174);
+        }
         return CGSizeMake(collectionView.frame.size.width, 107);
     }
     return CGSizeMake(collectionView.frame.size.width, 60);
@@ -1657,15 +1664,15 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
         limit = 11;
         
         //设置登录和获取验证码是否可点击
-//        if(text.length > 0){
-//            [self setVerifyCodeButtonAndConfirmBtnEnabled:YES];
-//        }else{
-//            [self setVerifyCodeButtonAndConfirmBtnEnabled:NO];
-//        }
+        if(text.length > 0){
+            [self setVerifyCodeButtonAndConfirmBtnEnabled:YES];
+        }else{
+            [self setVerifyCodeButtonAndConfirmBtnEnabled:NO];
+        }
     }
-//    else if(textField == self.contactCell.varifyCodeInput) {
-//        limit = 6;
-//    }
+    else if(textField == self.contactCell.varifyCodeInput) {
+        limit = 6;
+    }
     
     if(text.length > limit) {
         textField.text = [text substringToIndex:limit];
@@ -1691,53 +1698,52 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
     self.activeTextField = nil;
 }
 
-//- (void)sendVerifyCode
-//{
-//    [self.collectionView endEditing:YES];
-//    __weak typeof(self) weakSelf = self;
-//    NSString *phoneNumber = self.contactCell.phoneInput.text;
-//
-//    if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![self isPureInt:phoneNumber]){
-//        [[ToastManager manager] showToast:@"手机号错误"];
-//        return;
-//    }
-//
-//    if (![TTReachability isNetworkConnected]) {
-//        [[ToastManager manager] showToast:@"网络错误"];
-//        return;
-//    }
-//
-//    if(self.isRequestingSMS){
-//        return;
-//    }
-//
-//    self.isRequestingSMS = YES;
-//    [[ToastManager manager] showToast:@"正在获取验证码"];
-//
-//    __weak typeof(self)wself = self;
-//    [self requestSendVerifyCode:phoneNumber completion:^(NSNumber * _Nonnull retryTime, UIImage * _Nonnull captchaImage, NSError * _Nonnull error) {
-//        wself.isRequestingSMS = NO;
-//        if(!error){
-//            [wself blockRequestSendMessage:[retryTime integerValue]];
-//            [[ToastManager manager] showToast:@"短信验证码发送成功"];
-//            wself.isVerifyCodeRetry = YES;
-//        }else{
-//            NSString *errorMessage = [wself errorMessageByErrorCode:error];
-//            [[ToastManager manager] showToast:errorMessage];
-//        }
-//    }];
-//}
+- (void)sendVerifyCode
+{
+    [self.collectionView endEditing:YES];
+    NSString *phoneNumber = self.contactCell.phoneInput.text;
 
-//- (void)blockRequestSendMessage:(NSInteger)retryTime
-//{
-//    self.verifyCodeRetryTime = retryTime;
-//    [self startTimer];
-//}
+    if(![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11){
+        [[ToastManager manager] showToast:@"手机号错误"];
+        return;
+    }
 
-//- (void)setVerifyCodeButtonAndConfirmBtnEnabled:(BOOL)enabled
-//{
-//    [self.contactCell enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
-//}
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络错误"];
+        return;
+    }
+
+    if(self.isRequestingSMS){
+        return;
+    }
+
+    self.isRequestingSMS = YES;
+    [[ToastManager manager] showToast:@"正在获取验证码"];
+
+    __weak typeof(self)wself = self;
+    [self requestSendVerifyCode:phoneNumber completion:^(NSNumber * _Nonnull retryTime, UIImage * _Nonnull captchaImage, NSError * _Nonnull error) {
+        wself.isRequestingSMS = NO;
+        if(!error){
+            [wself blockRequestSendMessage:[retryTime integerValue]];
+            [[ToastManager manager] showToast:@"短信验证码发送成功"];
+            wself.isVerifyCodeRetry = YES;
+        }else{
+            NSString *errorMessage = [wself errorMessageByErrorCode:error];
+            [[ToastManager manager] showToast:errorMessage];
+        }
+    }];
+}
+
+- (void)blockRequestSendMessage:(NSInteger)retryTime
+{
+    self.verifyCodeRetryTime = retryTime;
+    [self startTimer];
+}
+
+- (void)setVerifyCodeButtonAndConfirmBtnEnabled:(BOOL)enabled
+{
+    [self.contactCell enableSendVerifyCodeBtn:(enabled && self.verifyCodeRetryTime <= 0)];
+}
 
 - (void)requestSendVerifyCode:(NSString *)phoneNumber completion:(void(^_Nullable)(NSNumber *retryTime, UIImage *captchaImage, NSError *error))completion
 {
@@ -1766,46 +1772,46 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
     }
 }
 
-//- (void)setVerifyCodeButtonCountDown
-//{
-//    if(self.verifyCodeRetryTime < 0){
-//        self.verifyCodeRetryTime = 0;
-//    }
-//
-//    if(self.verifyCodeRetryTime == 0){
-//        [self stopTimer];
-//        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateNormal];
-//        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateHighlighted];
-//        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateDisabled];
-//        self.contactCell.sendVerifyCodeBtn.enabled = (self.contactCell.phoneInput.text.length > 0);
-//        self.isRequestingSMS = NO;
-//    }else{
-//        self.contactCell.sendVerifyCodeBtn.enabled = NO;
-//        [self.contactCell.sendVerifyCodeBtn setTitle:[NSString stringWithFormat:@"重新发送(%lis)",(long)self.verifyCodeRetryTime] forState:UIControlStateDisabled];
-//    }
-//    self.verifyCodeRetryTime--;
-//}
+- (void)setVerifyCodeButtonCountDown
+{
+    if(self.verifyCodeRetryTime < 0){
+        self.verifyCodeRetryTime = 0;
+    }
 
-//- (void)startTimer
-//{
-//    if(_timer){
-//        [self stopTimer];
-//    }
-//    [self.timer fire];
-//}
-//
-//- (void)stopTimer {
-//    [_timer invalidate];
-//    _timer = nil;
-//}
-//
-//- (NSTimer *)timer {
-//    if(!_timer){
-//        _timer  =  [NSTimer timerWithTimeInterval:1 target:self selector:@selector(setVerifyCodeButtonCountDown) userInfo:nil repeats:YES];
-//        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
-//    }
-//    return _timer;
-//}
+    if(self.verifyCodeRetryTime == 0){
+        [self stopTimer];
+        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateNormal];
+        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateHighlighted];
+        [self.contactCell.sendVerifyCodeBtn setTitle:@"重新发送" forState:UIControlStateDisabled];
+        self.contactCell.sendVerifyCodeBtn.enabled = (self.contactCell.phoneInput.text.length > 0);
+        self.isRequestingSMS = NO;
+    }else{
+        self.contactCell.sendVerifyCodeBtn.enabled = NO;
+        [self.contactCell.sendVerifyCodeBtn setTitle:[NSString stringWithFormat:@"重新发送(%lis)",(long)self.verifyCodeRetryTime] forState:UIControlStateDisabled];
+    }
+    self.verifyCodeRetryTime--;
+}
+
+- (void)startTimer
+{
+    if(_timer){
+        [self stopTimer];
+    }
+    [self.timer fire];
+}
+
+- (void)stopTimer {
+    [_timer invalidate];
+    _timer = nil;
+}
+
+- (NSTimer *)timer {
+    if(!_timer){
+        _timer  =  [NSTimer timerWithTimeInterval:1 target:self selector:@selector(setVerifyCodeButtonCountDown) userInfo:nil repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:_timer forMode:NSRunLoopCommonModes];
+    }
+    return _timer;
+}
 
 #pragma mark - 埋点相关
 
