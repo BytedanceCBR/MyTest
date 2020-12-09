@@ -10,7 +10,6 @@
 #import "FHPersonalHomePageFeedViewController.h"
 #import "FHPersonalHomePageManager.h"
 #import "UIImage+FIconFont.h"
-#import "TTReachability.h"
 #import "FHCommonDefines.h"
 #import "UIViewAdditions.h"
 #import "FHUserTracker.h"
@@ -175,13 +174,7 @@
 }
 
 - (void)startLoadData {
-    if ([TTReachability isNetworkConnected]) {
-        [self startLoading];
-        self.isLoadingData = YES;
-        [self.viewModel startLoadData];
-    } else {
-        [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
-    }
+    [self.viewModel startLoadData];
 }
 
 -(void)retryLoadData {

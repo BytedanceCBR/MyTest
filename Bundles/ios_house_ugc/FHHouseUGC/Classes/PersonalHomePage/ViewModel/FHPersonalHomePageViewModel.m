@@ -9,6 +9,7 @@
 #import "FHPersonalHomePageProfileInfoModel.h"
 #import "FHPersonalHomePageTabListModel.h"
 #import "FHPersonalHomePageManager.h"
+#import "TTReachability.h"
 #import "UIViewAdditions.h"
 #import "FHHouseUGCAPI.h"
 #import "FHCommonDefines.h"
@@ -35,13 +36,19 @@
 }
 
 - (void)startLoadData {
-    [self requestProfileInfo];
-    [self requestFeedTabList];
-    
-    dispatch_group_notify(self.personalHomePageGroup, dispatch_get_main_queue(), ^{
-        [self.viewController endLoading];
-        [[FHPersonalHomePageManager shareInstance] updateProfileInfoWithMdoel:self.profileInfoModel tabListWithMdoel:self.tabListModel];
-    });
+    if ([TTReachability isNetworkConnected]) {
+        [self.viewController startLoading];
+        self.viewController.isLoadingData = YES;
+        [self requestProfileInfo];
+        [self requestFeedTabList];
+        
+        dispatch_group_notify(self.personalHomePageGroup, dispatch_get_main_queue(), ^{
+            [self.viewController endLoading];
+            [[FHPersonalHomePageManager shareInstance] updateProfileInfoWithMdoel:self.profileInfoModel tabListWithMdoel:self.tabListModel];
+        });
+    } else {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+    }
 }
 
 - (void)requestProfileInfo {

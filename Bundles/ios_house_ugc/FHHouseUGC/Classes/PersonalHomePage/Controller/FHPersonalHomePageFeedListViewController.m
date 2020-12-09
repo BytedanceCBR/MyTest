@@ -7,6 +7,7 @@
 
 #import "FHPersonalHomePageFeedListViewController.h"
 #import "FHPersonalHomePageFeedListViewModel.h"
+#import "TTReachability.h"
 
 @interface FHPersonalHomePageFeedListViewController ()
 @property(nonatomic,strong) FHPersonalHomePageFeedListViewModel *viewModel;
@@ -22,7 +23,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.viewModel requestData:YES first:YES];
+    [self startLoadData];
 }
 
 - (void)initView {
@@ -37,6 +38,15 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHPersonalHomePageFeedListViewModel alloc] initWithController:self tableView:self.tableView];
+}
+
+- (void)startLoadData {
+    [self.viewModel requestData:YES first:YES];
+}
+
+-(void)retryLoadData {
+    [self.emptyView hideEmptyView];
+    [self startLoadData];
 }
 
 @end

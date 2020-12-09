@@ -63,20 +63,21 @@
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     
-    if (![TTReachability isNetworkConnected]) {
+    if (![TTReachability isNetworkConnected] && isFirst) {
         [self showErrorViewNoNetWork];
         return;
     }
-    
-    
+
     if (self.requestTask) {
         [self.requestTask cancel];
         self.viewController.isLoadingData = NO;
     }
+    
     if(self.viewController.isLoadingData){
         return;
     }
     self.viewController.isLoadingData = YES;
+    
     if (isFirst) {
         [[FHPersonalHomePageManager shareInstance].viewController startLoading];
     }
@@ -111,18 +112,14 @@
         self.feedListModel = feedListModel;
 
         if (error) {
-            [self reloadTableViewData];
             if(isFirst){
-                if(error.code != -999){
-                    self.refreshFooter.hidden = YES;
-                }
+                [self showErrorViewNoNetWork];
             }else{
-                self.refreshFooter.hidden = YES;
-                [[ToastManager manager] showToast:@"网络异常"];
-                [self updateTableViewWithMoreData:YES];
+                [self loadMoreError];
             }
             return;
         }
+        
         if(model){
             NSArray *resultArr = [self convertModel:feedListModel.data];
             if(isHead){
@@ -132,11 +129,7 @@
                 [self.dataList addObjectsFromArray:resultArr];
             }
             self.tableView.hasMore = feedListModel.hasMore;
-            if(self.dataList.count > 0){
-                [self updateTableViewWithMoreData:feedListModel.hasMore];
-                [self.viewController.emptyView hideEmptyView];
-            }
-            [self reloadTableViewData];
+            [self reloadTableViewDataWithHasMore:feedListModel.hasMore];
         }
     }];
 }
@@ -178,20 +171,27 @@
     [self.tableView reloadData];
 }
 
-- (void)updateTableViewWithMoreData:(BOOL)hasMore {
-    self.tableView.mj_footer.hidden = NO;
-    if (hasMore) {
-        [self.tableView.mj_footer endRefreshing];
-    }else {
-        [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -" offsetY:-3];
-        [self.tableView.mj_footer endRefreshingWithNoMoreData];
-    }
+- (void)loadMoreError {
+    [[ToastManager manager] showToast:@"网络异常"];
+    self.refreshFooter.hidden = NO;
+    [self.refreshFooter setUpNoMoreDataText:@"- 没有更多数据了 -" offsetY:-3];
+    [self.tableView.mj_footer endRefreshingWithNoMoreData];
 }
 
 
-- (void)reloadTableViewData {
+- (void)reloadTableViewDataWithHasMore:(BOOL)hasMore {
     if(self.dataList.count > 0){
+        [self.viewController.emptyView hideEmptyView];
         self.tableView.backgroundColor = [UIColor themeGray7];
+
+        self.tableView.mj_footer.hidden = NO;
+        if (hasMore) {
+            [self.tableView.mj_footer endRefreshing];
+        }else {
+            [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -" offsetY:-3];
+            [self.tableView.mj_footer endRefreshingWithNoMoreData];
+        }
+        
         [self setFeedError:NO];
     }else{
         [self.viewController.emptyView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];

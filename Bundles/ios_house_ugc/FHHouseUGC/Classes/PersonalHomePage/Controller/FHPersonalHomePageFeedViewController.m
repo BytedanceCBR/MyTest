@@ -101,7 +101,13 @@
 }
 
 -(void)updateWithHeaderViewMdoel:(FHPersonalHomePageTabListModel *)model {
-    self.collectionView.frame = CGRectMake(0, 44, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 44);
+    if(model.data.tabList.count > 1) {
+        self.headerView.hidden = NO;
+        self.collectionView.frame = CGRectMake(0, 44, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 44);
+    } else {
+        self.headerView.hidden = YES;
+        self.collectionView.frame = CGRectMake(0, 0, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame));
+    }
     [self.viewModel updateWithHeaderViewMdoel:model];
 }
 

@@ -18,6 +18,7 @@
 @property(nonatomic,assign) BOOL tableViewScrollEnable;
 @property(nonatomic,weak) FHPersonalHomePageTabListModel *tabListModel;
 @property(nonatomic,assign) BOOL isFeedError;
+
 @end
 
 @implementation FHPersonalHomePageManager
@@ -78,10 +79,14 @@
         scrollView.contentOffset = CGPointMake(0, tabListOffset);
         self.scrollViewScrollEnable = self.isFeedError;
         self.tableViewScrollEnable = !self.isFeedError;
-    } else if(!self.scrollViewScrollEnable) {
-        scrollView.contentOffset = CGPointMake(0, tabListOffset);
+    } else {
+        if(!self.scrollViewScrollEnable) {
+            scrollView.contentOffset = CGPointMake(0, tabListOffset);
+        } else {
+            
+        }
     }
-    
+
     offset = self.scrollView.contentOffset.y;
     if(offset < 0) {
         CGFloat shadowViewHeight = 160;
