@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailPropertyInfoCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 
-@property (nonatomic, copy) void (^foldButtonActionBlock)(void);
+@property (nonatomic, copy) void (^allButtonActionBlock)(void);
 
 @end
 
