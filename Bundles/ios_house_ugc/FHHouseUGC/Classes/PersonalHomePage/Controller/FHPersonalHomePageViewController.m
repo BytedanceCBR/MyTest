@@ -23,13 +23,25 @@
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
 }
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    
+    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
+        UIPanGestureRecognizer *pan = (UIPanGestureRecognizer *)gestureRecognizer;
+        CGPoint point = [pan translationInView:self];
+        if(point.x > 0) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 @end
 
 @interface FHPersonalHomePageViewController () <UIScrollViewDelegate>
 @property(nonatomic,strong) FHPersonalHomePageFeedViewController *feedViewController;
 @property(nonatomic,copy) NSString *userId;
 @property(nonatomic,strong) FHPersonalHomePageViewModel *viewModel;
-@property(nonatomic,assign) BOOL userInfoChange;
 @end
 
 @implementation FHPersonalHomePageViewController
@@ -38,7 +50,6 @@
     if(self = [super initWithRouteParamObj:paramObj]) {
         NSDictionary *params = paramObj.allParams;
         self.userId = params[@"uid"];
-        self.userInfoChange = NO;
         BOOL isTest = YES;
         if(isTest) {
             self.userId = @"2559307071627528";
@@ -65,13 +76,10 @@
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if(self.userInfoChange) {
+    if([FHPersonalHomePageManager shareInstance].userInfoChange) {
+        [FHPersonalHomePageManager shareInstance].userInfoChange = NO;
         [self.viewModel requestProfileInfoAfterChange];
     }
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    self.userInfoChange = YES;
 }
 
 - (void)initView {

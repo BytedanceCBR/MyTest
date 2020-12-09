@@ -8,6 +8,7 @@
 #import "FHPersonalHomePageFeedListViewModel.h"
 #import "FHPersonalHomePageViewModel.h"
 #import "FHPersonalHomePageManager.h"
+#import "FHUGCFeedDetailJumpManager.h"
 #import "UIScrollView+Refresh.h"
 #import "FHRefreshCustomFooter.h"
 #import "FHUGCCellManager.h"
@@ -21,11 +22,12 @@
         
 
 
-@interface FHPersonalHomePageFeedListViewModel () <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate>
+@interface FHPersonalHomePageFeedListViewModel () <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,FHUGCBaseCellDelegate>
 @property(nonatomic,weak) FHPersonalHomePageFeedListViewController *viewController;
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic,weak) UITableView *tableView;
 @property (nonatomic,strong) FHUGCCellManager *cellManager;
+@property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
 @property(nonatomic,copy) NSString *categoryId;
@@ -40,6 +42,8 @@
         _viewController = viewController;
         _tableView = tableView;
         _dataList = [NSMutableArray array];
+        _detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
+        _detailJumpManager.refer = 1;
         [self configTableView];
     }
     return self;
@@ -134,34 +138,6 @@
     }];
 }
 
-- (NSArray *)convertModel:(NSArray *)feedList{
-    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    for (FHFeedListDataModel *itemModel in feedList) {
-        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
-        cellModel.isHiddenConnectBtn = YES;
-        cellModel.isInRealtorEvaluationList = YES;
-        cellModel.categoryId = self.categoryId;
-        cellModel.tableView = self.tableView;
-        cellModel.enterFrom = [self.viewController categoryName];
-        cellModel.isShowLineView = NO;
-//        cellModel.tracerDic = self.tracerDic;
-        switch (cellModel.cellType) {
-            case FHUGCFeedListCellTypeUGC:
-                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-                break;
-            case FHUGCFeedListCellTypeUGCSmallVideo:
-                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-                break;
-            default:
-                break;
-        }
-//        cellModel.tracerDic = self.tracerDic;
-        if (cellModel) {
-            [resultArray addObject:cellModel];
-        }
-    }
-    return resultArray;
-}
 
 
 - (void)showErrorViewNoNetWork {
@@ -175,8 +151,6 @@
     [[ToastManager manager] showToast:@"网络异常"];
     self.refreshFooter.hidden = NO;
     [self.tableView.mj_footer endRefreshing];
-//    [self.refreshFooter setUpNoMoreDataText:@"- 没有更多数据了 -" offsetY:-3];
-//    [self.tableView.mj_footer endRefreshingWithNoMoreData];
 }
 
 
@@ -200,6 +174,55 @@
         [self setFeedError:YES];
     }
     [self.tableView reloadData];
+}
+
+#pragma mark UGC
+
+- (NSArray *)convertModel:(NSArray *)feedList {
+    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    for (FHFeedListDataModel *itemModel in feedList) {
+        FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
+        cellModel.isHiddenConnectBtn = YES;
+        cellModel.categoryId = self.categoryId;
+        cellModel.tableView = self.tableView;
+        cellModel.enterFrom = [self.viewController categoryName];
+        
+        switch (cellModel.cellType) {
+            case FHUGCFeedListCellTypeUGC:
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
+                break;
+            case FHUGCFeedListCellTypeUGCSmallVideo:
+                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
+                break;
+            default:
+                break;
+        }
+        if (cellModel) {
+            [resultArray addObject:cellModel];
+        }
+    }
+    return resultArray;
+}
+
+
+- (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
+    self.detailJumpManager.currentCell = cell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
+}
+
+
+- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
+    [self.detailJumpManager goToCommunityDetail:cellModel];
+}
+
+- (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
+    // PM要求点富文本链接也进入详情页
+    [self lookAllLinkClicked:cellModel cell:nil];
+}
+
+- (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
+    self.detailJumpManager.currentCell = cell;
+    [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
 #pragma mark TableView protocol
@@ -242,6 +265,15 @@
     return 100;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger index = indexPath.row;
+    if(index >= 0 && index < self.dataList.count) {
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        self.detailJumpManager.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+        [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+    }
+}
+
 -(void)setFeedError:(BOOL)isError {
     NSMutableArray *feedErrorArray =  [FHPersonalHomePageManager shareInstance].feedErrorArray;
     NSInteger index = self.viewController.index;
@@ -249,7 +281,6 @@
         feedErrorArray[index] = @(isError);
     }
 }
-
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [[FHPersonalHomePageManager shareInstance] tableViewScroll:scrollView];

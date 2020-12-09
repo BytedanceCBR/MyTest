@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHPersonalHomePageManager : NSObject
 + (instancetype)shareInstance;
 - (void)reset;
+@property(nonatomic,assign) BOOL userInfoChange;
 @property(nonatomic,assign) NSInteger currentIndex;
 @property(nonatomic,copy) NSString *userId;
 @property(nonatomic,strong) NSMutableArray<NSNumber *> *feedErrorArray;

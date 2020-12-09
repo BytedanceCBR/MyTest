@@ -6,6 +6,7 @@
 //
 
 #import "FHPersonalHomePageManager.h"
+#import "UIImage+FIconFont.h"
 #import "FHCommonDefines.h"
 #import "UIViewAdditions.h"
 
@@ -42,6 +43,7 @@
     self.feedViewController = nil;
     self.tabListModel = nil;
     self.feedErrorArray = nil;
+    self.userInfoChange = NO;
 }
 
 -(void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel {
@@ -117,6 +119,13 @@
     } else {
         self.navBar.bgView.alpha = 1;
         self.navBar.title.alpha = 1;
+    }
+    if(self.navBar.title.alpha <= 0.1f) {
+        [self.navBar.leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_page_back_arrow"] forState:UIControlStateNormal];
+        [self.navBar.leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_page_back_arrow"] forState:UIControlStateHighlighted];
+    } else {
+        [self.navBar.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateNormal];
+        [self.navBar.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateHighlighted];
     }
 }
 

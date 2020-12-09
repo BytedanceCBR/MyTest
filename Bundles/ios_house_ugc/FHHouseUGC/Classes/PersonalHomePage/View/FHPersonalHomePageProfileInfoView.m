@@ -7,6 +7,7 @@
 
 #import "FHPersonalHomePageProfileInfoView.h"
 #import "TTPhotoScrollViewController.h"
+#import "FHPersonalHomePageManager.h"
 #import "TTInteractExitHelper.h"
 #import "TTAccountManager.h"
 #import "UIImageView+BDWebImage.h"
@@ -145,6 +146,7 @@
 
 
 - (void)changeProfileInfo {
+    [FHPersonalHomePageManager shareInstance].userInfoChange = YES;
     NSURL* url = [NSURL URLWithString:@"sslocal://editUserProfile"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }

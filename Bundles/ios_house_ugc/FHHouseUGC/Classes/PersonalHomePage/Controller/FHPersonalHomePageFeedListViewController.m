@@ -6,6 +6,7 @@
 //
 
 #import "FHPersonalHomePageFeedListViewController.h"
+#import "FHPersonalHomePageManager.h"
 #import "FHPersonalHomePageFeedListViewModel.h"
 #import "TTReachability.h"
 
@@ -47,6 +48,10 @@
 -(void)retryLoadData {
     [self.emptyView hideEmptyView];
     [self startLoadData];
+}
+
+- (NSString *)categoryName {
+    return @"f_user_profile";
 }
 
 @end

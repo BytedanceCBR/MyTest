@@ -16,7 +16,6 @@
 @property(nonatomic,weak) UICollectionView *collectionView;
 @property(nonatomic,strong) NSArray *titleArray;
 @property(nonatomic,weak) FHPersonalHomePageTabListModel *tabListModel;
-@property(nonatomic,weak) FHPersonalHomePageFeedCollectionViewCell *currentCell;
 @end
 
 @implementation FHPersonalHomePageFeedViewModel
