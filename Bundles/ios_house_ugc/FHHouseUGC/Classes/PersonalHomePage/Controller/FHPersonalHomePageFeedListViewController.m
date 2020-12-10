@@ -32,6 +32,8 @@
     self.tableView.alwaysBounceVertical = YES;
     self.tableView.bounces = YES;
     self.tableView.separatorStyle = UITableViewCellSelectionStyleNone;
+    self.tableView.backgroundColor = [UIColor themeGray7];
+    self.tableView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.tableView];
     
     [self addDefaultEmptyViewFullScreen];

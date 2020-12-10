@@ -43,6 +43,7 @@
     
     [self initHeaderView];
     [self initCollectionView];
+    [self addDefaultEmptyViewFullScreen];
 }
 
 - (void)initHeaderView {

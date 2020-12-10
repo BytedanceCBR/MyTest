@@ -51,8 +51,12 @@
     self.titleArray = titleArray;
     self.viewController.headerView.sectionTitles = self.titleArray;
 
-    [self.collectionView reloadData];
-    [self updateSelectCell:0];
+    if(model.data.tabList.count > 0) {
+        [self.collectionView reloadData];
+        [self updateSelectCell:0];
+    } else {
+        [self.viewController.emptyView showEmptyWithTip:@"TA没有留下任何足迹，去其他地方看看吧！" errorImageName:@"fh_ugc_personal_nonews" showRetry:NO];
+    }
 }
 
 - (void)updateSelectCell:(NSInteger)index {

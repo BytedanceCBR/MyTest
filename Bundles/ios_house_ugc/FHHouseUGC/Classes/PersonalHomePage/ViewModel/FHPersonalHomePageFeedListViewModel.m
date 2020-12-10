@@ -157,7 +157,6 @@
 - (void)reloadTableViewDataWithHasMore:(BOOL)hasMore {
     if(self.dataList.count > 0){
         [self.viewController.emptyView hideEmptyView];
-        self.tableView.backgroundColor = [UIColor themeGray7];
 
         self.tableView.mj_footer.hidden = NO;
         if (hasMore) {
@@ -182,21 +181,10 @@
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
-        cellModel.isHiddenConnectBtn = YES;
         cellModel.categoryId = self.categoryId;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.viewController categoryName];
         
-        switch (cellModel.cellType) {
-            case FHUGCFeedListCellTypeUGC:
-                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
-                break;
-            case FHUGCFeedListCellTypeUGCSmallVideo:
-                cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
-                break;
-            default:
-                break;
-        }
         if (cellModel) {
             [resultArray addObject:cellModel];
         }
