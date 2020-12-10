@@ -43,6 +43,7 @@
 #import <FHHouseBase/NSObject+FHOptimize.h>
 #import "FHNeighborhoodDetailBaseInfoSM.h"
 #import "FHDetailRelatedHouseResponseModel.h"
+#import "FHNeighborhoodDetailSurroundingHouseSM.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
@@ -282,6 +283,15 @@
             recommendSM.sectionType = FHNeighborhoodDetailSectionTypeRecommend;
             [sectionModels addObject:recommendSM];
         }
+        //周边房源
+        if (self.recommendHouseData.items.count > 0) {
+            FHNeighborhoodDetailSurroundingHouseSM *SM = [[FHNeighborhoodDetailSurroundingHouseSM alloc] initWithDetailModel:self.detailData];
+            [SM updateWithDataModel:self.recommendHouseData];
+            SM.sectionType = FHNeighborhoodDetailSectionTypeSurroundingHouse;
+            [sectionModels addObject:SM];
+        }
+        
+        
         
         FHDetailNeighborhoodModel *model = self.detailData;
         FHDetailNeighborhoodSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;

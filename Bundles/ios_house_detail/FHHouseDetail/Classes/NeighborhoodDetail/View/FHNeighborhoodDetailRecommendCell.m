@@ -38,7 +38,7 @@
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
     if ([data isKindOfClass:[FHHouseSecondCardViewModel class]]) {
         FHHouseSecondCardViewModel *viewModel = (FHHouseSecondCardViewModel *)data;
-        CGFloat height = [FHHouseSecondCardView viewHeightWithViewModel:viewModel] + 1;
+        CGFloat height = [FHHouseSecondCardView calculateViewHeight:viewModel] + 1;
         return CGSizeMake(width, height);
     }
     return CGSizeZero;
@@ -87,7 +87,7 @@
 - (void)refreshWithData:(id)data withLast:(BOOL)isLast {
     [self refreshWithData:data];
     self.line.hidden = isLast;
-    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH - 30, 114);
+    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH - 18, 114);
     if (isLast) {
         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:frame byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
