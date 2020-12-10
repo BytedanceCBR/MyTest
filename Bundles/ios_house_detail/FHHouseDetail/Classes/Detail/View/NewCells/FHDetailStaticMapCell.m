@@ -75,6 +75,35 @@
 }
 @end
 
+@implementation FHDetailStaticMapNeighborhoodPOIAnnotationView
+
+- (instancetype)initWithAnnotation:(FHStaticMapAnnotation *)annotation reuseIdentifier:(NSString *)reuseIdentifier {
+    if (self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier]) {
+        self.imageView = [[UIImageView alloc] init];
+        self.imageView.image = [UIImage imageNamed:@"detail_map_neighbor_annotation"];
+        [self addSubview:self.imageView];
+//        [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.centerX.mas_equalTo(self);
+//            make.top.mas_equalTo(0);
+//            make.size.mas_equalTo(CGSizeMake(62, 62));
+//        }];
+        
+        self.titleLabel = [[UILabel alloc] init];
+        self.titleLabel.font = [UIFont themeFontRegular:12];
+        self.titleLabel.textColor = [UIColor themeGray1];
+        self.titleLabel.numberOfLines = 1;
+        self.titleLabel.textAlignment = NSTextAlignmentCenter;
+        [self addSubview:self.titleLabel];
+//        [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.centerY.mas_equalTo(self).mas_offset(12);
+//            make.centerX.mas_equalTo(self);
+//        }];
+    }
+    return self;
+}
+
+@end
+
 @interface FHDetailStaticMapCell () <AMapSearchDelegate, UITableViewDelegate, UITableViewDataSource, FHDetailVCViewLifeCycleProtocol, FHStaticMapDelegate, MAMapViewDelegate>
 //ui
 
@@ -425,7 +454,7 @@
         }
         AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
 
-        requestPoi.keywords = [FHOldDetailStaticMapCell keyWordConver:categoryName];
+        requestPoi.keywords = [FHDetailStaticMap keyWordConver:categoryName];
         requestPoi.location = [AMapGeoPoint locationWithLatitude:center.latitude longitude:center.longitude];
         requestPoi.requireExtension = YES;
         requestPoi.requireSubPOIs = NO;
@@ -583,7 +612,7 @@
         }
     }
     AMapPOIKeywordsSearchRequest *searchRequest = (AMapPOIKeywordsSearchRequest *) request;
-    NSString *category = [FHOldDetailStaticMapCell keyWordConverReverse:searchRequest.keywords];
+    NSString *category = [FHDetailStaticMap keyWordConverReverse:searchRequest.keywords];
 
     NSMutableArray *annotations = [NSMutableArray array];
     FHStaticMapAnnotation *annotation = nil;

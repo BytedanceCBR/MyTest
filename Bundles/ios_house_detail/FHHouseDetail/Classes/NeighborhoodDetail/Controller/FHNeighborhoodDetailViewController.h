@@ -18,14 +18,9 @@ NS_ASSUME_NONNULL_BEGIN
 //bizTrace
 @property (nonatomic, copy) NSString *bizTrace;
 
-//是否显示
-@property (nonatomic, assign) BOOL isViewDidDisapper;
-
 @property (nonatomic, strong) NSMutableDictionary *elementShowCaches;
 
 - (void)updateLayout:(BOOL)isInstant;
-
-- (void)refreshSectionModel:(FHNeighborhoodDetailSectionModel *)sectionModel animated:(BOOL )animated;
 
 @end
 

@@ -31,15 +31,12 @@
 @property (nonatomic, strong) NSArray *nameArray;
 @property (nonatomic, strong) FHStaticMapAnnotation *centerAnnotation;
 
-//+ (NSString *)keyWordConver:(NSString *)category;
-//+ (NSString *)keyWordConverReverse:(NSString *)category;
-
 @end
 
 @implementation FHNeighborhoodDetailMapCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, width/16.0*9.0);
+    return CGSizeMake(width, width/16.0*7.0);
 }
 
 - (NSString *)elementType {
@@ -56,8 +53,8 @@
         self.nameArray = @[@"地铁", @"公交", @"教育", @"医疗", @"生活"];
         
         //初始化poi搜索器
-        self.searchApi = [[AMapSearchAPI alloc] init];
-        self.searchApi.delegate = self;
+//        self.searchApi = [[AMapSearchAPI alloc] init];
+//        self.searchApi.delegate = self;
     }
     return self;
 }
@@ -93,8 +90,9 @@
     self.currentData = data;
     
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
+    self.centerAnnotation.title = dataModel.mapCentertitle;
     
-    NSDictionary *fhSettings = [[TTSettingsManager sharedManager] settingForKey:@"kFHSettingsKey" defaultValue:@{} freeze:NO];
+    NSDictionary *fhSettings = [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:NO];
     dataModel.useNativeMap = [fhSettings btd_unsignedIntegerValueForKey:@"f_use_static_map"] == 0;
     
     [self cleanSubViews];
@@ -152,18 +150,83 @@
         make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
     
-    if (!self.baiduPanoButton) {
-        self.baiduPanoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.baiduPanoButton setImage:[UIImage imageNamed:@"baidu_panorama_entrance_icon"] forState:UIControlStateNormal];
-        [self.baiduPanoButton addTarget:self action:@selector(baiduPanoButtonAction) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:self.baiduPanoButton];
-        [self.baiduPanoButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(40, 40));
-            make.right.mas_equalTo(-23);
-            make.bottom.mas_equalTo(-40);
+//    if (!self.baiduPanoButton) {
+//        self.baiduPanoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [self.baiduPanoButton setImage:[UIImage imageNamed:@"baidu_panorama_entrance_icon"] forState:UIControlStateNormal];
+//        [self.baiduPanoButton addTarget:self action:@selector(baiduPanoButtonAction) forControlEvents:UIControlEventTouchUpInside];
+//        [self.contentView addSubview:self.baiduPanoButton];
+//        [self.baiduPanoButton mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.size.mas_equalTo(CGSizeMake(40, 40));
+//            make.right.mas_equalTo(-23);
+//            make.bottom.mas_equalTo(-40);
+//        }];
+//    }
+    if (!self.categoryStackView) {
+        self.categoryStackView = [[UIStackView alloc] init];
+        self.categoryStackView.axis = UILayoutConstraintAxisHorizontal;
+        self.categoryStackView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
+        self.categoryStackView.layer.masksToBounds = YES;
+        self.categoryStackView.layer.cornerRadius = 4.0;
+        [self.contentView addSubview:self.categoryStackView];
+        [self.categoryStackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
+            make.bottom.mas_equalTo(-12);
+            make.height.mas_equalTo(40);
         }];
+        
+        [self.categoryStackView addArrangedSubview:[self itemViewWithName:@"交通" icon:@"detail_map_v3_sub_icon"]];
+        [self.categoryStackView addArrangedSubview:[self itemViewWithName:@"教育" icon:@"detail_map_v3_jiaoyu_icon"]];
+        [self.categoryStackView addArrangedSubview:[self itemViewWithName:@"医疗" icon:@"detail_map_v3_hospital_icon"]];
+        [self.categoryStackView addArrangedSubview:[self itemViewWithName:@"生活" icon:@"detail_map_v3_eat_icon"]];
+        [self.categoryStackView addArrangedSubview:[self itemViewWithName:@"休闲" icon:@"detail_map_v3_play_icon"]];
     }
+    [self.contentView bringSubviewToFront:self.categoryStackView];
     
+}
+
+- (UIControl *)itemViewWithName:(NSString *)name icon:(NSString *)icon {
+    UIControl *itemView = [[UIControl alloc] init];
+    
+    UIImageView *iconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:icon]];
+    [itemView addSubview:iconImageView];
+    [iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.mas_equalTo(itemView).mas_offset(-24);
+        make.centerY.mas_equalTo(itemView);
+        make.size.mas_equalTo(CGSizeMake(16, 16));
+    }];
+    
+    UILabel *nameLabel = [[UILabel alloc] init];
+    nameLabel.textColor = [UIColor themeGray1];
+    nameLabel.font = [UIFont themeFontRegular:14];
+    nameLabel.text = name;
+    [itemView addSubview:nameLabel];
+    [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(iconImageView.mas_right).mas_offset(4);
+        make.centerY.mas_equalTo(itemView);
+    }];
+    
+    __weak typeof(self) weakSelf = self;
+    [itemView btd_addActionBlock:^(__kindof UIControl * _Nonnull sender) {
+        if (weakSelf.categoryClickBlock) {
+            weakSelf.categoryClickBlock(name);
+        }
+    } forControlEvents:UIControlEventTouchUpInside];
+    
+    CGFloat itemWidth = 0;
+    if (self.contentView.bounds.size.width > 0) {
+        itemWidth = floor((CGRectGetWidth(self.contentView.bounds) - 12 * 2) * 0.2);
+    }
+    [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(self.categoryStackView.mas_height);
+        if (itemWidth > 0) {
+            make.width.mas_equalTo(itemWidth);
+        } else {
+            make.width.mas_equalTo(self.categoryStackView.mas_width).multipliedBy(0.2);
+        }
+    }];
+    
+    return itemView;
 }
 
 #pragma mark - Data
@@ -178,9 +241,11 @@
             return;
         }
         [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
+        
+        [self showPoiInfo];
     }
     
-    [self showPoiInfo];
+    
 //    if ([self isPoiSearchDone:self.curCategory]) {
 //        [self showPoiResultInfo];
 //    } else {
@@ -224,34 +289,45 @@
 - (FHStaticMapAnnotationView *)mapView:(FHDetailStaticMap *)mapView viewForStaticMapAnnotation:(FHStaticMapAnnotation *)annotation {
     if ([annotation.extra isEqualToString:@"center_annotation"]) {
         NSString *reuseIdentifier = @"center_annotation";
-        FHDetailStaticMapCenterAnnotationView *annotationView = (FHDetailStaticMapCenterAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:reuseIdentifier];
+        FHDetailStaticMapNeighborhoodPOIAnnotationView *annotationView = (FHDetailStaticMapNeighborhoodPOIAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:reuseIdentifier];
         if (!annotationView) {
-            annotationView = [[FHDetailStaticMapCenterAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
+            annotationView = [[FHDetailStaticMapNeighborhoodPOIAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
         }
-        annotationView.annotationSize = CGSizeMake(CGRectGetWidth(annotationView.imageView.frame), CGRectGetHeight(annotationView.imageView.frame));
-        return annotationView;
-    }
-    
-    if ([annotation.extra isEqualToString:@"poi_annotation"]) {
-        NSString *reuseIdentifier = @"poi_annotation";
-        FHDetailStaticMapPOIAnnotationView *annotationView = (FHDetailStaticMapPOIAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:reuseIdentifier];
-        if (!annotationView) {
-            annotationView = [[FHDetailStaticMapPOIAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
-        }
+        
         UILabel *titleLabel = annotationView.titleLabel;
         titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
         titleLabel.text = annotation.title;
+        
+        CGSize size = CGSizeMake(MAX([titleLabel btd_widthWithHeight:15], 62), 62);
+        annotationView.imageView.frame = CGRectMake(size.width / 2 - 31 , 0, 62, 62);
+        
         [titleLabel sizeToFit];
+        titleLabel.center = CGPointMake(size.width / 2, 31 + 12);
         
-        UIImageView *backImageView = annotationView.backImageView;
-        backImageView.frame = CGRectMake(0, 0, titleLabel.frame.size.width + 40, 35);
-        titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y - 1);
-        
-        annotationView.arrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 12, 10.5, 10.5);
-        annotationView.centerOffset = CGPointMake(0, -16);
-        annotationView.annotationSize = CGSizeMake(CGRectGetWidth(backImageView.frame), CGRectGetHeight(backImageView.frame));
+        annotationView.annotationSize = size;
         return annotationView;
     }
+    
+//    if ([annotation.extra isEqualToString:@"poi_annotation"]) {
+//        NSString *reuseIdentifier = @"poi_annotation";
+//        FHDetailStaticMapPOIAnnotationView *annotationView = (FHDetailStaticMapPOIAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:reuseIdentifier];
+//        if (!annotationView) {
+//            annotationView = [[FHDetailStaticMapPOIAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
+//        }
+//        UILabel *titleLabel = annotationView.titleLabel;
+//        titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
+//        titleLabel.text = annotation.title;
+//        [titleLabel sizeToFit];
+//
+//        UIImageView *backImageView = annotationView.backImageView;
+//        backImageView.frame = CGRectMake(0, 0, titleLabel.frame.size.width + 40, 35);
+//        titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y - 1);
+//
+//        annotationView.arrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 12, 10.5, 10.5);
+//        annotationView.centerOffset = CGPointMake(0, -16);
+//        annotationView.annotationSize = CGSizeMake(CGRectGetWidth(backImageView.frame), CGRectGetHeight(backImageView.frame));
+//        return annotationView;
+//    }
     return [[FHStaticMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
 }
 

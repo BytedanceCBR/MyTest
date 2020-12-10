@@ -246,24 +246,21 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:18];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
     FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
-
     // 设置下发标题
     if(agentSM.recommendedRealtorsTitle.length > 0) {
         titleView.titleLabel.text = agentSM.recommendedRealtorsTitle;
     }else {
         titleView.titleLabel.text = @"推荐经纪人";
     }
-
+    [titleView setupNeighborhoodDetailStyle];
     return titleView;
 }
 
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - 9 * 2, 46);
     }
     return CGSizeZero;
 }

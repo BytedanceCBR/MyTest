@@ -137,9 +137,9 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
         }];
         __weak typeof(self) weakSelf = self;
         [self.foldButton btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
-            if (weakSelf.foldButtonActionBlock) {
-                weakSelf.foldButtonActionBlock();
-            }
+//            if (weakSelf.foldButtonActionBlock) {
+//                weakSelf.foldButtonActionBlock();
+//            }
         }];
         
     }
