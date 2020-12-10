@@ -57,11 +57,12 @@
     if (self.showed) return;
     self.showed = YES;
     
-    BOOL isFirstHavetip = [self.context btd_boolValueForKey:@"is_first_havetip"];
+    NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];
+    NSInteger rank = indexPath.row + rankOffset;
+    
     NSInteger houseType = [self.context btd_integerValueForKey:@"house_type"];
-    NSInteger rank = indexPath.row;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"rank"] = @(!isFirstHavetip ? rank - 1 :rank);
+    tracerDict[@"rank"] = @(rank);
     tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
     tracerDict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
     

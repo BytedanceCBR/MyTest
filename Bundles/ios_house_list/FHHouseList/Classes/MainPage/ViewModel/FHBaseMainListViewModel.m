@@ -993,7 +993,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if(self.houseList.count == 1 && self.sugesstHouseList.count == 0){
             if ([FHEnvContext isHouseListComponentEnable]) {
                 id existModel = self.houseList.firstObject;
-                id noResultViewModel = [FHHouseCardUtils getNoResultViewModelWithExistModel:existModel containerHeight:self.tableView.height];
+                id noResultViewModel = [FHHouseCardUtils getNoResultViewModelWithExistModel:existModel containerHeight:self.tableView.height - self.topView.height];
                 if (noResultViewModel) {
                     [self.houseList addObject:noResultViewModel];
                 }

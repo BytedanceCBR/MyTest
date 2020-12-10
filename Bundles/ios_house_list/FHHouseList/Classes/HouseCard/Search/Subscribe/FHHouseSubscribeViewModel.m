@@ -25,11 +25,12 @@
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath {
     if (self.showed) return;
     self.showed = YES;
-    BOOL isFirstHavetip = [self.context btd_boolValueForKey:@"is_first_havetip"];
-    NSInteger rank = indexPath.row;
+    NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];
+    NSInteger rank = indexPath.row + rankOffset;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"rank"] = @(!isFirstHavetip ? rank - 1 :rank);
+    tracerDict[@"rank"] = @(rank);
     tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : @"be_null";
+    tracerDict[UT_SEARCH_ID] = self.fh_trackModel.searchId ? : @"be_null";
     tracerDict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : @"be_null";
     
     FHSugSubscribeDataDataSubscribeInfoModel *cellSubModel = (FHSugSubscribeDataDataSubscribeInfoModel *)self.model;

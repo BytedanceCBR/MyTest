@@ -1036,7 +1036,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
                     dict[@"search_type"] = @(self.searchType);
                     dict[@"house_type"] = @(self.houseType);
-                    dict[@"is_first_havetip"] = @(self.isFirstHavetip);
+                    dict[@"rank_offset"] = @(!self.isFirstHavetip ? -1 : 0);
                     NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = (NSObject<FHHouseNewComponentViewModelProtocol> *)entity;
                     viewModel.context = dict;
                 }
@@ -1064,7 +1064,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     itemModel.topMargin = 10;
                 }
                 theItemModel = itemModel;
-            }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
+            }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) { //废弃
                 FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
                 if (agencyInfoModel.agencyTotal.integerValue != 0 && agencyInfoModel.houseTotal.integerValue != 0) {
                     if (wself.isRefresh) {
@@ -1077,7 +1077,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }else if ([theItemModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]] && wself.isRefresh) {
                 // 展示搜索订阅卡片
                 wself.isShowSubscribeCell = YES;
-            }else if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+            }else if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) { //废弃
                 
                 FHSugListRealHouseTopInfoModel *infoModel = theItemModel;
                 infoModel.searchId = wself.searchId;
@@ -1191,11 +1191,8 @@ extern NSString *const INSTANT_DATA_KEY;
                         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
                         dict[@"search_type"] = @(self.searchType);
                         dict[@"house_type"] = @(self.houseType);
-                        dict[@"pre_house_type"] = @(self.preHouseType);
-                        dict[@"is_first_havetip"] = @(self.isFirstHavetip);
-                        dict[@"has_filter_condition"] = @(self.isHasFilterCondition);
+                        dict[@"rank_offset"] = @(!self.isFirstHavetip ? -1 : 0);
                         NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = (NSObject<FHHouseNewComponentViewModelProtocol> *)entity;
-                        viewModel.delegate = self;
                         viewModel.context = dict;
                     }
                     entity.fh_trackModel = tracerModel;
@@ -1203,13 +1200,13 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
                 
             }
-            if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+            if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) { //废弃
                 FHSugListRealHouseTopInfoModel *infoModel = theItemModel;
                 infoModel.searchId = wself.searchId;
                 infoModel.tracerDict = traceDictParams;
                 infoModel.searchQuery = wself.subScribeQuery;
                 theItemModel = infoModel;
-            }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
+            }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) { //废弃
                 FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
                 if (agencyInfoModel.agencyTotal.integerValue == 0 || agencyInfoModel.houseTotal.integerValue == 0) {
                     theItemModel = nil;
@@ -2776,49 +2773,6 @@ extern NSString *const INSTANT_DATA_KEY;
     return [self categoryLogDict];
 }
 
-+ (id)searchItemModelByDict:(NSDictionary *)itemDict
-{
-    NSInteger cardType = [itemDict btd_integerValueForKey:@"card_type"];
-    id itemModel = nil;
-    NSError *jerror = nil;
-    
-    switch (cardType) {
-        case FHSearchCardTypeSecondHouse:
-            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeNewHouse:
-            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeRentHouse:
-            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeNeighborhood:
-            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeSubscribe:
-            itemModel = [[FHSugSubscribeDataDataSubscribeInfoModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeNeighborExpert:
-            itemModel = [[FHHouseNeighborAgencyModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeAgencyInfo:
-            itemModel = [[FHSearchRealHouseAgencyInfo alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeFilterHouseTip:
-            itemModel = [[FHSugListRealHouseTopInfoModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeGuessYouWantTip:
-            itemModel = [[FHSearchGuessYouWantTipsModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeGuessYouWantContent:
-            itemModel = [[FHSearchGuessYouWantContentModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        default:
-            break;
-    }
-    return itemModel;
-}
-
 
 @end
 
@@ -2842,8 +2796,7 @@ extern NSString *const INSTANT_DATA_KEY;
     dict[@"search_type"] = @(self.searchType);
     dict[@"house_type"] = @(self.houseType);
     dict[@"pre_house_type"] = @(self.preHouseType);
-    dict[@"is_first_havetip"] = @(self.isFirstHavetip);
-    dict[@"has_filter_condition"] = @(self.isHasFilterCondition);
+    dict[@"rank_offset"] = @(!self.isFirstHavetip ? -1 : 0);
     if (self.subScribeQuery) {
         dict[@"subscribe_query"] = self.subScribeQuery;
     }

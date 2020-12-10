@@ -87,11 +87,8 @@
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
         NSNumber *houseTypeNum = [self.context btd_numberValueForKey:@"house_type"];
         NSString *urlStr = nil;
-        NSNumber *isFirstHavetipNum = [self.context btd_numberValueForKey:@"is_first_havetip"];
-        NSInteger row = indexPath.row;
-        if (isFirstHavetipNum && isFirstHavetipNum.boolValue == NO) {
-            row--;
-        }
+        NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];
+        NSInteger rank = indexPath.row + rankOffset;
         id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
         [contextBridge setTraceValue:self.fh_trackModel.originFrom forKey:@"origin_from"];
         [contextBridge setTraceValue:self.fh_trackModel.originSearchId forKey:@"origin_search_id"];
@@ -102,7 +99,7 @@
         traceParam[UT_LOG_PB] = model.logPbWithTags ? : UT_BE_NULL;
         traceParam[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
         traceParam[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
-        traceParam[@"rank"] = @(row);
+        traceParam[@"rank"] = @(rank);
         traceParam[@"card_type"] = @"left_pic";
         
         
@@ -144,13 +141,10 @@
 - (void)addHouseShowWithIndexPath:(NSIndexPath *)indexPath {
     if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
-        NSNumber *isFirstHavetipNum = [self.context btd_numberValueForKey:@"is_first_havetip"];
-        NSInteger row = indexPath.row;
-        if (isFirstHavetipNum && isFirstHavetipNum.boolValue == NO) {
-            row--;
-        }
+        NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];
+        NSInteger rank = indexPath.row + rankOffset;
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-        tracerDict[@"rank"] = @(row);
+        tracerDict[@"rank"] = @(rank);
         tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
         tracerDict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
         tracerDict[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : UT_BE_NULL;
@@ -175,16 +169,6 @@
         if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
             FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
             model.topMargin = 10;
-        }
-        
-        return;
-    }
-    
-    //如果前面是小区专家卡片或者预约顾问卡片，topMargin=0
-    if ([viewModel isKindOfClass:FHHouseNeighborAgencyViewModel.class] || [viewModel isKindOfClass:FHHouseReserveAdviserViewModel.class]) {
-        if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
-            FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
-            model.topMargin = 0;
         }
     }
 }

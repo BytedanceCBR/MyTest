@@ -22,9 +22,7 @@
     [super setContext:context];
     
     FHHouseNeighborAgencyModel *model = (FHHouseNeighborAgencyModel *)self.model;
-    NSInteger houseType = [self.context btd_integerValueForKey:@"house_type"];
-    
-
+ 
     NSMutableDictionary *traceParam = [NSMutableDictionary new];
     traceParam[@"card_type"] = @"left_pic";
     traceParam[UT_ENTER_FROM] = self.fh_trackModel.enterFrom ? : UT_BE_NULL;
@@ -35,11 +33,6 @@
     traceParam[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
     traceParam[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
     traceParam[@"rank"] = @(0);
-    if (houseType == FHHouseTypeNeighborhood) {
-        traceParam[@"realtor_position"] = @"neighborhood_expert_card";
-    } else {
-        traceParam[@"realtor_position"] = @"area_expert_card";
-    }
     model.tracerDict = traceParam;
    
     if ([self.delegate respondsToSelector:@selector(belongsVC)]) {
@@ -51,11 +44,12 @@
     if (self.showed) return;
     self.showed = YES;
     
-    BOOL isFirstHavetip = [self.context btd_boolValueForKey:@"is_first_havetip"];
+    NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];
+    NSInteger rank = indexPath.row + rankOffset;
+    
     NSInteger houseType = [self.context btd_integerValueForKey:@"house_type"];
-    NSInteger rank = indexPath.row;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"rank"] = @(!isFirstHavetip ? rank - 1 :rank);
+    tracerDict[@"rank"] = @(rank);
     tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
     tracerDict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
     
@@ -84,8 +78,7 @@
 - (void)addLeadShowLog:(id)cm
 {
     NSInteger houseType = [self.context btd_integerValueForKey:@"house_type"];
-    BOOL isHasFilterCondition = [self.context btd_boolValueForKey:@"has_filter_condition"];
-    
+
     FHHouseNeighborAgencyModel *cellModel = (FHHouseNeighborAgencyModel *)cm;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : UT_BE_NULL;
@@ -102,20 +95,14 @@
     tracerDict[@"is_report"] = @(0);
     tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
     tracerDict[@"realtor_id"] = cellModel.id;
-    if(houseType == FHHouseTypeNeighborhood){
+    if (houseType == FHHouseTypeNeighborhood) {
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
         tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
         tracerDict[@"house_type"] = @"neighborhood";
-    }else{
-        if (isHasFilterCondition) {
-            tracerDict[@"element_type"] = @"area_expert_card";
-            tracerDict[@"realtor_position"] = @"area_expert_card";
-            tracerDict[@"house_type"] = @"area";
-        }else{
-            tracerDict[@"element_type"] = @"neighborhood_expert_card";
-            tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
-            tracerDict[@"house_type"] = @"neighborhood";
-        }
+    } else {
+        tracerDict[@"element_type"] = @"area_expert_card";
+        tracerDict[@"realtor_position"] = @"area_expert_card";
+        tracerDict[@"house_type"] = @"area";
     }
     
     [FHUserTracker writeEvent:@"realtor_show" params:tracerDict];

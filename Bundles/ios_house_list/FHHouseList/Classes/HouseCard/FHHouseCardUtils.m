@@ -169,7 +169,7 @@
                 CGFloat height = [cellClass viewHeightWithViewModel:(id<FHHouseCardCellViewModelProtocol> )existModel];
                 if (containerHeight > height) {
                     FHHouseNoResultViewModel *model = [[FHHouseNoResultViewModel alloc] init];
-                    model.viewHeight = containerHeight - height;
+                    model.viewHeight = MAX(containerHeight - height, 300);
                     return model;
                 }
             }

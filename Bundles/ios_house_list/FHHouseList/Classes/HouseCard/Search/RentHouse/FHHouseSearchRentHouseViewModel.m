@@ -20,10 +20,11 @@
 
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath {
     
-    BOOL isFirstHavetip = [self.context btd_boolValueForKey:@"is_first_havetip"];
-    NSInteger rank = indexPath.row;
+    NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];
+    NSInteger rank = indexPath.row + rankOffset;
+    
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"rank"] = @(!isFirstHavetip ? rank - 1 :rank);
+    tracerDict[@"rank"] = @(rank);
     tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
     tracerDict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
     tracerDict[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : UT_BE_NULL;
@@ -65,9 +66,9 @@
     traceParam[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
     traceParam[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
     
-    BOOL isFirstHavetip = [self.context btd_boolValueForKey:@"is_first_havetip"];
-    NSInteger rank = indexPath.row;
-    traceParam[@"rank"] = @(!isFirstHavetip ? rank - 1 :rank);
+    NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];
+    NSInteger rank = indexPath.row + rankOffset;
+    traceParam[@"rank"] = @(rank);
     
     NSMutableDictionary *dict = @{
         @"house_type":@(theModel.houseType.integerValue) ,
