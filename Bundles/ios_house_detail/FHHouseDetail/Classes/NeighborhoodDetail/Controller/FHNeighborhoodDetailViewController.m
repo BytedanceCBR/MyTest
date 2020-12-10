@@ -102,13 +102,13 @@
 
 - (void)initMapping {
     
-    NSArray *name = @[@"基础信息",@"小区户型",@"小区户型",@"小区点评",@"小区测评",@"周边配套",@"在售房源",@"周边房源",@"猜你喜欢"];
+    NSArray *name = @[@"基础信息",@"小区户型",@"小区点评",@"小区测评",@"周边配套",@"小区房源",@"小区房源",@"周边房源",@"猜你喜欢"];
     NSArray *type = @[@(FHNeighborhoodDetailSectionTypeCoreInfo),
-                      @(FHNeighborhoodDetailSectionTypeFloorpan),
                       @(FHNeighborhoodDetailSectionTypeAgent),
                       @(FHNeighborhoodDetailSectionTypeCommentAndQuestion),
                       @(FHNeighborhoodDetailSectionTypeStrategy),
                       @(FHNeighborhoodDetailSectionTypeSurrounding),
+                      @(FHNeighborhoodDetailSectionTypeFloorpan),
                       @(FHNeighborhoodDetailSectionTypeHouseSale),
                       @(FHNeighborhoodDetailSectionTypeSurroundingHouse),
                       @(FHNeighborhoodDetailSectionTypeRecommend)

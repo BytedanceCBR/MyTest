@@ -21,9 +21,6 @@
     self.items = arrayM.copy;
     self.moreTitle = [NSString stringWithFormat:@"查看在售%@套房源", model.total];
     self.model = model;
-    
-//    self.houseSaleCellModel = [[FHNeighborhoodDetailHouseSaleCellModel alloc] init];
-//    self.houseSaleCellModel.neighborhoodSoldHouseData = model;
 }
 
 @end

@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) FHDetailSameNeighborhoodHouseResponseDataModel *model;
 
 - (void)updateWithDataModel:(FHDetailSameNeighborhoodHouseResponseDataModel *)model;
+
 @end
 
 NS_ASSUME_NONNULL_END

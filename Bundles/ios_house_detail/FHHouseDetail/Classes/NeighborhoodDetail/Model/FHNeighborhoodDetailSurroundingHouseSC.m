@@ -124,7 +124,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 18, 42);
+        return CGSizeMake(self.collectionContext.containerSize.width - 30, 42);
     }
     return CGSizeZero;
 }
