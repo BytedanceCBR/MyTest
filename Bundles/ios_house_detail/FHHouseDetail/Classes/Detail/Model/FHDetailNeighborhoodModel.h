@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, strong , nullable) NSDictionary *compare;
 @property (nonatomic, copy , nullable) NSString *iconUrl;
 @property (nonatomic, assign) BOOL hiddenBottomLine;
 @end
@@ -46,6 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNeighborhoodDataStrategyModel : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataStrategyArticleListModel> *articleList;
+@property (nonatomic, strong , nullable) NSDictionary *article;
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 

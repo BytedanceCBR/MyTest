@@ -6,13 +6,21 @@
 //
 
 #import "FHNeighborhoodDetailRecommendSM.h"
+#import "FHHouseCardUtils.h"
 
 @implementation FHNeighborhoodDetailRecommendSM
 
 - (void)updateWithDataModel:(FHSearchHouseDataModel *)data {
     self.recommendCellModel = [[FHNeighborhoodDetailRecommendCellModel alloc] init];
     self.recommendCellModel.data = data;
-    self.items = data.items;
+    NSMutableArray *arrayM = [[NSMutableArray alloc] init];
+    for (id item in data.items) {
+        id obj = [FHHouseCardUtils getEntityFromModel:item];
+        if (obj) {
+            [arrayM addObject:obj];
+        }
+    }
+    self.items = arrayM.copy;
 }
 
 - (id<NSObject>)diffIdentifier {

@@ -20,6 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^moreActionBlock)(void);
 
 - (void)setSubTitleWithTitle:(NSString *)subTitle;
+
+- (void)setupNeighborhoodDetailStyle;
 @end
 
 NS_ASSUME_NONNULL_END

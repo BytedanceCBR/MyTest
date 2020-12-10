@@ -55,15 +55,15 @@
     self.mapView.hidden = YES;
 
     //设置地图style
-    NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style.data" ofType:nil];
-    NSData *data = [NSData dataWithContentsOfFile:stylePath];
-    NSString *extraPath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style_extra.data" ofType:nil];
-    NSData *extraData = [NSData dataWithContentsOfFile:extraPath];
-    MAMapCustomStyleOptions *options = [MAMapCustomStyleOptions new];
-    options.styleData = data;
-    options.styleExtraData = extraData;
-    [_mapView setCustomMapStyleOptions:options];
-    [_mapView setCustomMapStyleEnabled:YES];
+//    NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style.data" ofType:nil];
+//    NSData *data = [NSData dataWithContentsOfFile:stylePath];
+//    NSString *extraPath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style_extra.data" ofType:nil];
+//    NSData *extraData = [NSData dataWithContentsOfFile:extraPath];
+//    MAMapCustomStyleOptions *options = [MAMapCustomStyleOptions new];
+//    options.styleData = data;
+//    options.styleExtraData = extraData;
+//    [_mapView setCustomMapStyleOptions:options];
+//    [_mapView setCustomMapStyleEnabled:YES];
 
     [[[UIApplication sharedApplication] keyWindow] insertSubview:self.mapView atIndex:0];
 }

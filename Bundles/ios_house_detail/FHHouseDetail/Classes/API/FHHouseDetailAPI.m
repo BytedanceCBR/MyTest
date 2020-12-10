@@ -219,23 +219,30 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
 
 // 二手房-周边房源
 +(TTHttpTask*)requestRelatedHouseSearch:(NSString*)houseId
+                         neighborhoodId:(NSString*)neighborhoodId
                                  searchId:(NSString *)searchId
                                  offset:(NSString *)offset
                                   query:(NSString*)query
                                   count:(NSInteger)count
                              completion:(void(^)(FHDetailRelatedHouseResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
-    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_house?house_id=%@&offset=%@",houseId,offset];
-    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    NSString* url = [host stringByAppendingFormat:@"/f100/api/related_house?offset=%@",offset];
     if (query.length > 0) {
         url = [NSString stringWithFormat:@"%@&%@",url,query];
+    }
+    NSMutableDictionary *paramDic = [NSMutableDictionary new];
+    if (neighborhoodId.length > 0) {
+        paramDic[@"neighborhood_id"] = neighborhoodId;
+    }
+    if (houseId.length > 0) {
+        paramDic[@"house_id"] = houseId;
     }
     if (![url containsString:@"count"]) {
         paramDic[@"count"] = @(count);
     }
     paramDic[@"search_id"] = searchId ?: @"";
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_HOUSE;
-    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedHouseResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
+    return [FHMainApi getRequest:url query:nil params:paramDic.copy jsonClass:[FHDetailRelatedHouseResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHDetailRelatedHouseResponseModel *model = (FHDetailRelatedHouseResponseModel *)m;
         if (completion) {
             completion(model,error);

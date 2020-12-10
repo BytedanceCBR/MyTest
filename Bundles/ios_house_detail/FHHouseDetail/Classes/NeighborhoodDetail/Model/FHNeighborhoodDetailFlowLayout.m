@@ -6,14 +6,14 @@
 //
 
 #import "FHNeighborhoodDetailFlowLayout.h"
-#import "FHBuildingDetailShadowView.h"
+#import "FHNeighborhoodDetailShadowView.h"
 #import "FHNeighborhoodDetailSectionModel.h"
 
 @implementation FHNeighborhoodDetailFlowLayout
 
 - (void)prepareLayout {
     [super prepareLayout];
-    [self registerClass:[FHBuildingDetailShadowView class] forDecorationViewOfKind:NSStringFromClass([FHBuildingDetailShadowView class])];
+    [self registerClass:[FHNeighborhoodDetailShadowView class] forDecorationViewOfKind:NSStringFromClass([FHNeighborhoodDetailShadowView class])];
 }
 
 - (NSArray<UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect {
@@ -30,20 +30,18 @@
         
         if (attribute.representedElementCategory == UICollectionElementCategorySupplementaryView) {
             CGRect frame = attribute.frame;
-            frame.origin.x = 15;
-            frame.size.width = CGRectGetWidth(self.collectionView.bounds) - 15 * 2;
+            frame.origin.x = 9;
+            frame.size.width = CGRectGetWidth(self.collectionView.bounds) - 9 * 2;
             attribute.frame = frame;
         }
 
         FHNeighborhoodDetailSectionModel *model = self.sectionModels[attribute.indexPath.section];
 
         if (model.sectionType != FHNeighborhoodDetailSectionTypeHeader &&
-            model.sectionType != FHNeighborhoodDetailSectionTypeFloorpan &&
             model.sectionType != FHNeighborhoodDetailSectionTypeOwnerSellHouse &&
-            model.sectionType != FHNeighborhoodDetailSectionTypeRecommend &&
             ![sections containsObject:@(attribute.indexPath.section)]) {
             [sections addObject:@(attribute.indexPath.section)];
-            UICollectionViewLayoutAttributes *newAttrs = [self layoutAttributesForDecorationViewOfKind:NSStringFromClass([FHBuildingDetailShadowView class]) atIndexPath:[NSIndexPath indexPathForItem:0 inSection:attribute.indexPath.section]];
+            UICollectionViewLayoutAttributes *newAttrs = [self layoutAttributesForDecorationViewOfKind:NSStringFromClass([FHNeighborhoodDetailShadowView class]) atIndexPath:[NSIndexPath indexPathForItem:0 inSection:attribute.indexPath.section]];
             if (newAttrs && newAttrs.frame.size.height > 0) {
                 [newArray addObject:newAttrs];
             }
@@ -56,14 +54,14 @@
 - (nullable UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewLayoutAttributes *attribute = [super layoutAttributesForSupplementaryViewOfKind:elementKind atIndexPath:indexPath];
     CGRect frame = attribute.frame;
-    frame.origin.x = 15;
-    frame.size.width = CGRectGetWidth(self.collectionView.bounds) - 15 * 2;
+    frame.origin.x = 9;
+    frame.size.width = CGRectGetWidth(self.collectionView.bounds) - 9 * 2;
     attribute.frame = frame;
     return attribute;
 }
 
 - (UICollectionViewLayoutAttributes *)layoutAttributesForDecorationViewOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath {
-    if ([elementKind isEqualToString:NSStringFromClass([FHBuildingDetailShadowView class])]) {
+    if ([elementKind isEqualToString:NSStringFromClass([FHNeighborhoodDetailShadowView class])]) {
         UICollectionViewLayoutAttributes *decorationAttributes = [UICollectionViewLayoutAttributes layoutAttributesForDecorationViewOfKind:elementKind withIndexPath:indexPath];
         UICollectionViewLayoutAttributes *newDecorationAttributes = [decorationAttributes copy];
 
@@ -72,11 +70,12 @@
 
         UICollectionViewLayoutAttributes *attrsFirst = [self layoutAttributesForItemAtIndexPath:indexPathFirst];
         UICollectionViewLayoutAttributes *attrsLast = [self layoutAttributesForItemAtIndexPath:indexPathLast];
-        newDecorationAttributes.frame = CGRectMake(attrsFirst.frame.origin.x - 15, attrsFirst.frame.origin.y - 20, self.collectionView.frame.size.width, attrsLast.frame.origin.y+attrsLast.frame.size.height-attrsFirst.frame.origin.y + 40);
+        newDecorationAttributes.frame = CGRectMake(9, attrsFirst.frame.origin.y, self.collectionView.frame.size.width - 9 * 2, attrsLast.frame.origin.y+attrsLast.frame.size.height-attrsFirst.frame.origin.y);
         UICollectionViewLayoutAttributes *sectionAttrs = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:indexPath];
         if (sectionAttrs && sectionAttrs.frame.size.height > 0) {
             CGRect frame = newDecorationAttributes.frame;
-            frame.origin.y = sectionAttrs.frame.origin.y - 20;
+            frame.origin.x = 9;
+            frame.origin.y = sectionAttrs.frame.origin.y;
             frame.size.height += sectionAttrs.frame.size.height;
             newDecorationAttributes.frame = frame;
         }

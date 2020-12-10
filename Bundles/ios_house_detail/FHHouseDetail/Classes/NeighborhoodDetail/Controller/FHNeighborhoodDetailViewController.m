@@ -52,6 +52,8 @@
 #import "FHNeighborhoodDetailOwnerSellHouseSM.h"
 #import "FHNeighborhoodDetailSurroundingSC.h"
 #import "FHNeighborhoodDetailSurroundingSM.h"
+#import "FHNeighborhoodDetailSurroundingHouseSM.h"
+#import "FHNeighborhoodDetailSurroundingHouseSC.h"
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -92,20 +94,23 @@
 @property (nonatomic, strong) NSArray<NSString *> * names;
 @property (nonatomic, strong) NSArray<NSNumber *> * types;
 
+//是否显示
+@property (nonatomic, assign) BOOL isViewDidDisapper;
 @end
 
 @implementation FHNeighborhoodDetailViewController
 
 - (void)initMapping {
     
-    NSArray *name = @[@"基础信息",@"小区户型",@"小区户型",@"小区点评",@"小区测评",@"周边配套",@"周边配套",@"推荐房源"];
-    NSArray *type = @[@(FHNeighborhoodDetailSectionTypeBaseInfo),
-                      @(FHNeighborhoodDetailSectionTypeFloorpan),
+    NSArray *name = @[@"基础信息",@"小区户型",@"小区点评",@"小区测评",@"周边配套",@"小区房源",@"小区房源",@"周边房源",@"猜你喜欢"];
+    NSArray *type = @[@(FHNeighborhoodDetailSectionTypeCoreInfo),
                       @(FHNeighborhoodDetailSectionTypeAgent),
                       @(FHNeighborhoodDetailSectionTypeCommentAndQuestion),
                       @(FHNeighborhoodDetailSectionTypeStrategy),
                       @(FHNeighborhoodDetailSectionTypeSurrounding),
+                      @(FHNeighborhoodDetailSectionTypeFloorpan),
                       @(FHNeighborhoodDetailSectionTypeHouseSale),
+                      @(FHNeighborhoodDetailSectionTypeSurroundingHouse),
                       @(FHNeighborhoodDetailSectionTypeRecommend)
     ];
     
@@ -249,7 +254,7 @@
     [self refreshContentOffset:self.collectionView.contentOffset];
     [self.view endEditing:YES];
     [self executeOnce:^{
-        [self clickTabTrackWithEnterType:@"default" sectionType:FHNeighborhoodDetailSectionTypeBaseInfo];
+        [self clickTabTrackWithEnterType:@"default" sectionType:FHNeighborhoodDetailSectionTypeCoreInfo];
     } token:FHExecuteOnceUniqueTokenForCurrentContext];
      //   [self.viewModel vc_viewDidAppear:animated];
 }
@@ -330,14 +335,7 @@
                         options:NSKeyValueObservingOptionNew
                           block:^(id _Nullable observer, id _Nonnull object, NSDictionary<NSString *, id> *_Nonnull change) {
                               if (change[NSKeyValueChangeNewKey] && [change[NSKeyValueChangeNewKey] isKindOfClass:[NSArray class]]) {
-                                  [weakSelf updateTitleNames];
-                                  weakSelf.detailFlowLayout.sectionModels = weakSelf.viewModel.sectionModels;
-                                  [weakSelf.listAdapter performUpdatesAnimated:NO
-                                                                    completion:^(BOOL finished) {
-
-                                                                    }];
-                                  //            [weakSelf.listAdapter reloadDataWithCompletion:^(BOOL finished) {
-                                  //            }];
+                                  [weakSelf formattDataSource];
                               }
                           }];
 
@@ -428,10 +426,23 @@
     self.segmentTitleView.selectIndex = 0;
 }
 
+- (void)formattDataSource {
+    [self updateTitleNames];
+    self.detailFlowLayout.sectionModels = self.viewModel.sectionModels.copy;
+    [self.listAdapter performUpdatesAnimated:NO
+                                      completion:^(BOOL finished) {
+
+                                      }];
+    //            [weakSelf.listAdapter reloadDataWithCompletion:^(BOOL finished) {
+    //            }];
+
+}
+
 - (void)updateTitleNames {
     NSMutableArray *titles = [NSMutableArray array];
     NSString *beNull = @"be_null";
-    for (FHNeighborhoodDetailSectionModel *model in self.viewModel.sectionModels) {
+    NSArray *sectionModels = self.viewModel.sectionModels.copy;
+    for (FHNeighborhoodDetailSectionModel *model in sectionModels) {
         NSString *title = [self getTabNameBySectionType:model.sectionType];
         if ([title isEqualToString:beNull] || [titles containsObject:title]) {
             continue;
@@ -575,20 +586,6 @@
 }
 
 #pragma mark - Request
- - (void)refreshSectionModel:(FHNeighborhoodDetailSectionModel *)sectionModel animated:(BOOL )animated {
-//     if ([self.viewModel.sectionModels containsObject:sectionModel]) {
-//         NSUInteger index = [self.viewModel.sectionModels indexOfObject:sectionModel];
-//         if (index < self.viewModel.sectionModels.count) {
-//             [self.listAdapterUpdater reloadCollectionView:self.collectionView sections:[NSIndexSet indexSetWithIndex:index]];
-//         }
-//     }
-//    [self.listAdapter performUpdatesAnimated:YES
-//                                      completion:^(BOOL finished) {
-//
-//                                      }];
-    [self.listAdapter reloadDataWithCompletion:^(BOOL finished) {
-    }];
-}
 
 - (void)startLoadData
 {
@@ -830,7 +827,7 @@
             case FHNeighborhoodDetailSectionTypeHeader:
                 return [[FHNeighborhoodDetailHeaderMediaSC alloc] init];
                 break;
-            case FHNeighborhoodDetailSectionTypeBaseInfo:
+            case FHNeighborhoodDetailSectionTypeCoreInfo:
                 return [[FHNeighborhoodDetailCoreInfoSC alloc] init];
                 break;
             case FHNeighborhoodDetailSectionTypeHouseSale:
@@ -853,6 +850,9 @@
                 break;
             case FHNeighborhoodDetailSectionTypeOwnerSellHouse:
                 return [[FHNeighborhoodDetailOwnerSellHouseSC alloc] init];
+                break;
+            case FHNeighborhoodDetailSectionTypeSurroundingHouse:
+                return [[FHNeighborhoodDetailSurroundingHouseSC alloc] init];
                 break;
             case FHNeighborhoodDetailSectionTypeSurrounding:
                 return [[FHNeighborhoodDetailSurroundingSC alloc] init];

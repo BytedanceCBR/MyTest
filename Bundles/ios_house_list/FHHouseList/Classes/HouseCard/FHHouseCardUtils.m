@@ -51,6 +51,8 @@
 //            default:
 //                break;
 //        }
+    } else if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        return [[FHHouseSecondCardViewModel alloc] initWithModel:model];
     }
     
     return nil;

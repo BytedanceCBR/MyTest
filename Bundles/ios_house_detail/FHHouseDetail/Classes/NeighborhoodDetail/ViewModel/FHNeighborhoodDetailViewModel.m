@@ -41,13 +41,16 @@
 #import "FHNeighborhoodDetailOwnerSellHouseSM.h"
 #import "FHNeighborhoodDetailSurroundingSM.h"
 #import <FHHouseBase/NSObject+FHOptimize.h>
+#import "FHNeighborhoodDetailBaseInfoSM.h"
+#import "FHDetailRelatedHouseResponseModel.h"
+#import "FHNeighborhoodDetailSurroundingHouseSM.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
-@property (nonatomic, assign)   NSInteger       requestRelatedCount;
-@property (nonatomic, assign)   BOOL dontRequestSameNeighborhoodHouse;
+@property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;// 周边小区
+@property (nonatomic, strong , nullable) FHDetailRelatedHouseResponseDataModel *relatedHouseData; //周边房源
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
-@property (nonatomic, strong , nullable) FHSearchHouseDataModel *recommendHouseData;
+@property (nonatomic, strong , nullable) FHSearchHouseDataModel *recommendHouseData; //推荐房源，猜你喜欢
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
@@ -131,7 +134,7 @@
             ) {
             FHNeighborhoodDetailCoreInfoSM *coreInfoSM = [[FHNeighborhoodDetailCoreInfoSM alloc] initWithDetailModel:self.detailData];
             
-            coreInfoSM.sectionType = FHNeighborhoodDetailSectionTypeBaseInfo;
+            coreInfoSM.sectionType = FHNeighborhoodDetailSectionTypeCoreInfo;
             [sectionModels addObject:coreInfoSM];
         }
 
@@ -174,14 +177,11 @@
         }
         __weak typeof(self) weakSelf = self;
         //小区户型
-        if(model.data.neighborhoodSaleHouseInfo.neighborhoodSaleHouseList.count > 0) {
+        if(model.data.neighborhoodSaleHouseInfo.neighborhoodSaleHouseList.count) {
             FHNeighborhoodDetailFloorpanSM *floorpanSM = [[FHNeighborhoodDetailFloorpanSM alloc] initWithDetailModel:self.detailData];
             [floorpanSM updateWithDataModel:model.data.neighborhoodSaleHouseInfo];
             floorpanSM.sectionType = FHNeighborhoodDetailSectionTypeFloorpan;
             [sectionModels addObject:floorpanSM];
-            weakSelf.dontRequestSameNeighborhoodHouse = YES;
-        } else {
-            weakSelf.dontRequestSameNeighborhoodHouse = NO;
         }
         //经纪人
         if (model.data.recommendedRealtors.count > 0) {
@@ -191,13 +191,13 @@
         }
 
         //周边 地图+均价走势
-        if ((model.data.neighborhoodInfo.gaodeLat.length && model.data.neighborhoodInfo.gaodeLng.length) || model.data.priceTrend.count > 0) {
+        if ((model.data.neighborhoodInfo.gaodeLat.length && model.data.neighborhoodInfo.gaodeLng.length)) {
             FHNeighborhoodDetailSurroundingSM *surroundingSM = [[FHNeighborhoodDetailSurroundingSM alloc] initWithDetailModel:self.detailData];
             surroundingSM.sectionType = FHNeighborhoodDetailSectionTypeSurrounding;
             [sectionModels addObject:surroundingSM];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.sectionModels = sectionModels.copy;
+            self.sectionModels = [self formattSectionModels:sectionModels.copy];
             self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
         });
         
@@ -212,24 +212,39 @@
 
 // 周边数据请求，当网络请求都返回后刷新数据
 - (void)requestRelatedData:(NSString *)neighborhoodId {
-    self.requestRelatedCount = 0;
     if (neighborhoodId.length < 1) {
         return;
     }
     dispatch_queue_t relateQueue = dispatch_queue_create("requestRelatedDataNeighborhood", DISPATCH_QUEUE_CONCURRENT);
     dispatch_group_t relateGroup = dispatch_group_create();
-    
-    if (!self.dontRequestSameNeighborhoodHouse) {
-        // 同小区房源-二手房
-        dispatch_group_enter(relateGroup);
-        dispatch_async(relateQueue, ^{
-            [self requestHouseInSameNeighborhoodSearchErShou:neighborhoodId completion:^{
-                 dispatch_group_leave(relateGroup);
-            }];
-            
-        });
 
-    }
+    // 同小区房源-二手房
+    dispatch_group_enter(relateGroup);
+    dispatch_async(relateQueue, ^{
+        [self requestHouseInSameNeighborhoodSearchErShou:neighborhoodId completion:^{
+             dispatch_group_leave(relateGroup);
+        }];
+        
+    });
+    
+    //周边房源-二手房
+    dispatch_group_enter(relateGroup);
+    dispatch_async(relateQueue, ^{
+        [self requestRelatedHouseSearch:neighborhoodId completion:^{
+             dispatch_group_leave(relateGroup);
+        }];
+        
+    });
+    
+    //周边小区
+    dispatch_group_enter(relateGroup);
+    dispatch_async(relateQueue, ^{
+        [self requestRelatedNeighborhoodSearch:neighborhoodId completion:^{
+             dispatch_group_leave(relateGroup);
+        }];
+        
+    });
+    
     dispatch_group_enter(relateGroup);
     dispatch_async(relateQueue, ^{
         //推荐房源-二手房
@@ -268,6 +283,15 @@
             recommendSM.sectionType = FHNeighborhoodDetailSectionTypeRecommend;
             [sectionModels addObject:recommendSM];
         }
+        //周边房源
+        if (self.recommendHouseData.items.count > 0) {
+            FHNeighborhoodDetailSurroundingHouseSM *SM = [[FHNeighborhoodDetailSurroundingHouseSM alloc] initWithDetailModel:self.detailData];
+            [SM updateWithDataModel:self.recommendHouseData];
+            SM.sectionType = FHNeighborhoodDetailSectionTypeSurroundingHouse;
+            [sectionModels addObject:SM];
+        }
+        
+        
         
         FHDetailNeighborhoodModel *model = self.detailData;
         FHDetailNeighborhoodSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;
@@ -280,7 +304,7 @@
         
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.sectionModels = sectionModels.copy;
+            self.sectionModels = [self formattSectionModels:sectionModels.copy];
         });
         __weak typeof(self) weakSelf = self;
         [self executeOnce:^{
@@ -288,6 +312,19 @@
         } token:FHExecuteOnceUniqueTokenForCurrentContext];
     });
     
+}
+
+- (NSArray *)formattSectionModels:(NSArray *)sectionModels {
+    return [[sectionModels btd_filter:^BOOL(id  _Nonnull obj) {
+        if (obj && [obj isKindOfClass:[FHNeighborhoodDetailSectionModel class]]) {
+            return YES;
+        }
+        return NO;
+    }] sortedArrayUsingComparator:^NSComparisonResult(FHNeighborhoodDetailSectionModel * _Nonnull obj1,FHNeighborhoodDetailSectionModel *  _Nonnull obj2) {
+        // 因为满足sortedArrayUsingComparator方法的默认排序顺序，则不需要交换
+        if ([obj1 sectionType] < [obj2 sectionType]) return NSOrderedAscending;
+        return NSOrderedDescending;
+    }];
 }
 
 // 推荐房源
@@ -322,6 +359,33 @@
         
     }];
 }
+
+// 周边房源
+- (void)requestRelatedHouseSearch:(NSString *)neighborhoodId completion:(void (^)(void))completion {
+    __weak typeof(self) wSelf = self;
+    [FHHouseDetailAPI requestRelatedHouseSearch:nil neighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:3 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+        wSelf.relatedHouseData = model.data;
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion();
+            });
+        }
+    }];
+}
+
+// 周边小区
+- (void)requestRelatedNeighborhoodSearch:(NSString *)neighborhoodId completion:(void (^)(void))completion{
+    __weak typeof(self) wSelf = self;
+    [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
+        wSelf.relatedNeighborhoodData = model.data;
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion();
+            });
+        }
+    }];
+}
+
 
 - (NSString *)pageTypeString {
     return @"neighborhood_detail";

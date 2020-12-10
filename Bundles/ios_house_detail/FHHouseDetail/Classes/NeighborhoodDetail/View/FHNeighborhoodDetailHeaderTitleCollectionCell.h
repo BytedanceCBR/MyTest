@@ -18,6 +18,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *titleStr;
 @property (nonatomic, copy) NSString *address;
 
+@property (nonatomic, copy, nullable) NSString *gaodeLng;
+@property (nonatomic, copy, nullable) NSString *gaodeLat;
+@property (nonatomic, copy, nullable) NSString *mapCentertitle;
+@property (nonatomic, copy, nullable) NSString *baiduPanoramaUrl;
+
 @end
 
 NS_ASSUME_NONNULL_END
