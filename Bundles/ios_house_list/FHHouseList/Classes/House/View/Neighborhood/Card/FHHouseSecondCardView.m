@@ -152,7 +152,7 @@
         make.width.mas_equalTo(width);
     }];
     self.pricePerSqmLabel.text = secondViewModel.pricePerSqm;
-    self.recommendView.hidden = secondViewModel.recommendViewModel.isHidden;
+    //self.recommendView.hidden = secondViewModel.recommendViewModel.isHidden;
     self.recommendView.viewModel = secondViewModel.recommendViewModel;
     self.vrLoadingView.hidden = !secondViewModel.hasVr;
     if (!self.vrLoadingView.hidden) {

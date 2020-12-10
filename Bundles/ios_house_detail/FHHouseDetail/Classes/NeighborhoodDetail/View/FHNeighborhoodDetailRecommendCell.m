@@ -87,6 +87,9 @@
 - (void)refreshWithData:(id)data withLast:(BOOL)isLast {
     [self refreshWithData:data];
     self.line.hidden = isLast;
+}
+
+- (void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast {
     CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH - 18, 114);
     if (isLast) {
         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:frame byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];

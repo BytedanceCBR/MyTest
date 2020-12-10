@@ -11,6 +11,8 @@
 #import "FHNeighborhoodDetailSurroundingHouseSM.h"
 #import "FHNeighborhoodDetailRecommendCell.h"
 #import "FHNeighborhoodDetailRelatedHouseMoreCell.h"
+#import "FHDetailRelatedNeighborhoodResponseModel.h"
+#import "FHNeighborhoodDetailViewController.h"
 
 @interface FHNeighborhoodDetailSurroundingHouseSC()<IGListSupplementaryViewSource, IGListDisplayDelegate>
 
@@ -58,7 +60,77 @@
 }
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
-    
+    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
+    if (index >= 0 && index < SM.items.count) {
+        FHHouseSecondCardViewModel *item = SM.items[index];
+        if ([item.model isKindOfClass:[FHDetailRelatedNeighborhoodResponseDataItemsModel class]]) {
+            FHDetailRelatedNeighborhoodResponseDataItemsModel *model = (FHDetailRelatedNeighborhoodResponseDataItemsModel *)item.model;
+            NSMutableDictionary *traceParam = [NSMutableDictionary new];
+            traceParam[@"log_pb"] = [model logPb] ? : UT_BE_NULL;;
+            traceParam[@"element_from"] = @"recommend_house";
+            traceParam[@"origin_from"] = self.detailTracerDict[@"origin_from"] ? : UT_BE_NULL;
+            traceParam[@"origin_search_id"] = model.searchId ? : UT_BE_NULL;
+            traceParam[@"search_id"] = model.searchId ? : UT_BE_NULL;
+            traceParam[@"rank"] = @(index);
+            traceParam[@"enter_from"] = @"neighborhood_detail";
+            NSMutableDictionary *dict = @{@"house_type":@(2),
+                                  @"tracer": traceParam
+                                  }.mutableCopy;
+            
+            if (model.id) {
+                NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", model.id]];
+                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+                [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
+            }
+        }
+    } else if (index == SM.items.count) {
+        FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
+        if (SM.model.hasMore) {
+            
+            FHDetailNeighborhoodModel *detailModel = (FHDetailNeighborhoodModel*)self.detailViewController.viewModel.detailData;
+            NSString *neighborhood_id = @"be_null";
+            if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {
+                neighborhood_id = detailModel.data.neighborhoodInfo.id;
+            }
+            NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
+            tracerDic[@"enter_type"] = @"click";
+            tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB;
+            tracerDic[@"category_name"] = @"same_neighborhood_list";
+            tracerDic[@"element_from"] = @"same_neighborhood";
+            tracerDic[@"enter_from"] = @"neighborhood_detail";
+            [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
+            
+            NSMutableDictionary *userInfo = [NSMutableDictionary new];
+            userInfo[@"tracer"] = tracerDic;
+            userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+            if (detailModel.data.neighborhoodInfo.name.length > 0) {
+                if (SM.model.total.length > 0) {
+                    userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.neighborhoodInfo.name,SM.model.total];
+                } else {
+                    userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
+                }
+            } else {
+                userInfo[@"title"] = @"小区房源";// 默认值
+            }
+            if (neighborhood_id.length > 0) {
+                userInfo[@"neighborhood_id"] = neighborhood_id;
+            }
+            if (self.detailViewController.viewModel.houseId.length > 0) {
+                userInfo[@"house_id"] = self.detailViewController.viewModel.houseId;
+            }
+            if (SM.model.searchId.length > 0) {
+                userInfo[@"search_id"] = SM.model.searchId;
+            }
+            userInfo[@"list_vc_type"] = @(5);
+            
+            TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
+            NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
+            if (urlStr.length > 0) {
+                NSURL *url = [NSURL URLWithString:urlStr];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
+            }
+        }
+    }
 }
 
 #pragma mark - IGListDisplayDelegate

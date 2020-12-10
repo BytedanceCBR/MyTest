@@ -46,6 +46,7 @@
     FHNeighborhoodDetailRecommendCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailRecommendCell class] withReuseIdentifier:NSStringFromClass([SM.recommendCellModel class]) forSectionController:self atIndex:index];
     if (index >= 0 && index < SM.items.count) {
         [cell refreshWithData:SM.items[index] withLast:(index == SM.items.count - 1) ? YES : NO];
+        [cell refreshIndexCorner:NO andLast:(index == SM.items.count - 1) ? YES : NO];
     }
     return cell;
 }

@@ -13,6 +13,7 @@
 #import "FHHouseSecondCardViewModel.h"
 #import "FHHouseNewCell.h"
 #import "FHHouseNewCardViewModel.h"
+#import "FHDetailRelatedNeighborhoodResponseModel.h"
 
 @implementation FHHouseCardUtils
 
@@ -52,6 +53,8 @@
 //                break;
 //        }
     } else if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        return [[FHHouseSecondCardViewModel alloc] initWithModel:model];
+    } else if ([model isKindOfClass:[FHDetailRelatedNeighborhoodResponseDataItemsModel class]]) {
         return [[FHHouseSecondCardViewModel alloc] initWithModel:model];
     }
     

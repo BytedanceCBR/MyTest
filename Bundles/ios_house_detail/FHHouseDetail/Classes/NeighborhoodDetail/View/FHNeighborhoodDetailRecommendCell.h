@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshWithData:(id)data withLast:(BOOL) isLast;
 
+- (void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast;
+
 @end
 
 @interface FHNeighborhoodDetailRecommendCellModel : NSObject

@@ -10,7 +10,7 @@
 
 @implementation FHNeighborhoodDetailSurroundingHouseSM
 
-- (void)updateWithDataModel:(FHSearchHouseDataModel *)data {
+- (void)updateWithDataModel:(FHDetailRelatedNeighborhoodResponseDataModel *)data {
     NSMutableArray *arrayM = [[NSMutableArray alloc] init];
     for (id item in data.items) {
         id obj = [FHHouseCardUtils getEntityFromModel:item];
@@ -18,6 +18,7 @@
             [arrayM addObject:obj];
         }
     }
+    self.model = data;
     self.items = arrayM.copy;
     self.total = data.total;
     self.moreTitle = [NSString stringWithFormat:@"查看在售%@套房源", data.total];
