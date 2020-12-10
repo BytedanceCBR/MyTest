@@ -410,13 +410,6 @@
 }
 @end
 
-@implementation FHDetailNeighborhoodDataNeighborhoodEvaluationScoreModel
-+ (BOOL)propertyIsOptional:(NSString *)propertyName
-{
-    return YES;
-}
-@end
-
 @implementation FHDetailNeighborhoodDataNeighborhoodEvaluationModel
 + (JSONKeyMapper*)keyMapper
 {
