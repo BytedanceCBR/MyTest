@@ -19,6 +19,7 @@
         }
     }
     self.items = arrayM.copy;
+    self.total = data.total;
     self.moreTitle = [NSString stringWithFormat:@"查看在售%@套房源", data.total];
 }
 

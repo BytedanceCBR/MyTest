@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *moreTitle;
 
+@property (nonatomic, copy) NSString *total;
+
 - (void)updateWithDataModel:(id)data;
 
 @end

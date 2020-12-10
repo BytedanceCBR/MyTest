@@ -48,7 +48,7 @@
     FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
     if (index >= 0 && index < SM.items.count) {
         FHNeighborhoodDetailRecommendCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailRecommendCell class] withReuseIdentifier:NSStringFromClass([SM class]) forSectionController:self atIndex:index];
-        [cell refreshWithData:SM.items[index]];
+        [cell refreshWithData:SM.items[index] withLast:(index == SM.items.count - 1) ? YES : NO];
         return cell;
     } else {
         FHNeighborhoodDetailRelatedHouseMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailRelatedHouseMoreCell class] forSectionController:self atIndex:index];
@@ -112,9 +112,10 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHNeighborhoodDetailRecommendTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailRecommendTitleView class] atIndex:index];
+    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
     titleView.titleLabel.font = [UIFont themeFontMedium:18];
     titleView.titleLabel.textColor = [UIColor themeGray1];
-    titleView.titleLabel.text = @"周边房源";
+    titleView.titleLabel.text = [NSString stringWithFormat:@"周边房源(%@)", SM.total];//@"周边房源";
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
     return titleView;
