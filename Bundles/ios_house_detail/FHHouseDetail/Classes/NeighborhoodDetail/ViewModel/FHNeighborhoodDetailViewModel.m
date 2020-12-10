@@ -42,13 +42,14 @@
 #import "FHNeighborhoodDetailSurroundingSM.h"
 #import <FHHouseBase/NSObject+FHOptimize.h>
 #import "FHNeighborhoodDetailBaseInfoSM.h"
+#import "FHDetailRelatedHouseResponseModel.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
-@property (nonatomic, assign)   NSInteger       requestRelatedCount;
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataModel *relatedNeighborhoodData;// 周边小区
+@property (nonatomic, strong , nullable) FHDetailRelatedHouseResponseDataModel *relatedHouseData; //周边房源
 @property (nonatomic, strong , nullable) FHDetailSameNeighborhoodHouseResponseDataModel *sameNeighborhoodErshouHouseData;// 同小区房源，二手房
-@property (nonatomic, strong , nullable) FHSearchHouseDataModel *recommendHouseData;
+@property (nonatomic, strong , nullable) FHSearchHouseDataModel *recommendHouseData; //推荐房源，猜你喜欢
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
 @end
@@ -210,7 +211,6 @@
 
 // 周边数据请求，当网络请求都返回后刷新数据
 - (void)requestRelatedData:(NSString *)neighborhoodId {
-    self.requestRelatedCount = 0;
     if (neighborhoodId.length < 1) {
         return;
     }
@@ -221,6 +221,24 @@
     dispatch_group_enter(relateGroup);
     dispatch_async(relateQueue, ^{
         [self requestHouseInSameNeighborhoodSearchErShou:neighborhoodId completion:^{
+             dispatch_group_leave(relateGroup);
+        }];
+        
+    });
+    
+    //周边房源-二手房
+    dispatch_group_enter(relateGroup);
+    dispatch_async(relateQueue, ^{
+        [self requestRelatedHouseSearch:neighborhoodId completion:^{
+             dispatch_group_leave(relateGroup);
+        }];
+        
+    });
+    
+    //周边小区
+    dispatch_group_enter(relateGroup);
+    dispatch_async(relateQueue, ^{
+        [self requestRelatedNeighborhoodSearch:neighborhoodId completion:^{
              dispatch_group_leave(relateGroup);
         }];
         
@@ -332,11 +350,23 @@
     }];
 }
 
+// 周边房源
+- (void)requestRelatedHouseSearch:(NSString *)neighborhoodId completion:(void (^)(void))completion {
+    __weak typeof(self) wSelf = self;
+    [FHHouseDetailAPI requestRelatedHouseSearch:nil neighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:3 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+        wSelf.relatedHouseData = model.data;
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion();
+            });
+        }
+    }];
+}
+
 // 周边小区
 - (void)requestRelatedNeighborhoodSearch:(NSString *)neighborhoodId completion:(void (^)(void))completion{
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
-        wSelf.requestRelatedCount += 1;
         wSelf.relatedNeighborhoodData = model.data;
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{

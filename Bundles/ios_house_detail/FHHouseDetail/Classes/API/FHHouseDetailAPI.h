@@ -70,6 +70,7 @@ completion:(void(^)(FHListResultHouseModel *model , NSError *error))completion;
 
 // 二手房-周边房源
 +(TTHttpTask*)requestRelatedHouseSearch:(NSString*)houseId
+                         neighborhoodId:(NSString*)neighborhoodId
                                searchId:(NSString *)searchId
                                  offset:(NSString *)offset
                                   query:(NSString*)query
