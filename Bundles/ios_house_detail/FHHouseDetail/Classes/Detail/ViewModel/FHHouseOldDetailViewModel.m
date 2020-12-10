@@ -142,7 +142,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 }
 // 获得数据后通过cache或者网络请求
 - (void)afterLoadData:(FHDetailOldModel *)model{
-    self.isCache = YES;
     [self processDetailData:model];
     self.detailController.hasValidateData = YES;
     // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
