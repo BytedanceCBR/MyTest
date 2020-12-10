@@ -100,6 +100,7 @@
     CGFloat offset = scrollView.contentOffset.y;
     CGFloat tabListOffset = [self tabListOffset];
     CGFloat backViewOffset = 120 - self.navBar.height;
+    CGFloat nameLabelOffset = 192 - self.navBar.height;
     
 
     if(offset >= tabListOffset) {
@@ -126,12 +127,15 @@
     if(offset < 0) {
         self.navBar.bgView.alpha = 0;
         self.navBar.title.alpha = 0;
+        self.navBar.seperatorLine.alpha = 0;
     } else if(offset <= backViewOffset) {
         self.navBar.bgView.alpha = offset / backViewOffset;
         self.navBar.title.alpha = offset / backViewOffset;
+        self.navBar.seperatorLine.alpha = offset / backViewOffset;
     } else {
         self.navBar.bgView.alpha = 1;
         self.navBar.title.alpha = 1;
+        self.navBar.seperatorLine.alpha = 1;
     }
     if(self.navBar.title.alpha <= 0.1f) {
         [self.navBar.leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_page_back_arrow"] forState:UIControlStateNormal];
@@ -140,6 +144,13 @@
         [self.navBar.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateNormal];
         [self.navBar.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateHighlighted];
     }
+    
+    if(offset > nameLabelOffset) {
+        self.navBar.title.hidden = NO;
+    } else {
+        self.navBar.title.hidden = YES;
+    }
+    
 }
 
 -(void)tableViewScroll:(UIScrollView *)scrollView {

@@ -218,6 +218,7 @@
         }
         [self.viewController.headerView sethomePageWithModel:self.configModel.data.homePage];
     }
+    self.viewController.headerView.editIcon.hidden = YES;
 }
 
 - (NSDictionary *)fhSettings {
