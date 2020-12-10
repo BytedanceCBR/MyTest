@@ -127,7 +127,12 @@
         backViewHeight = backViewHeight + 8 + 20;
     }
    
-    if(!isEmptyString(model.data.desc)) {
+    NSString *desc = model.data.desc;
+    if([desc isKindOfClass:[NSString class]]) {
+        desc = [desc stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    }
+    
+    if(!isEmptyString(desc)) {
         CGSize descLabelSize = [model.data.desc btd_sizeWithFont:[UIFont themeFontRegular:14] width:SCREEN_WIDTH - 40];
         self.descLabel.text = model.data.desc;
         CGFloat offset = isVerifyShow ? 118 : 90;

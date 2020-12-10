@@ -77,7 +77,7 @@
 -(void)initTracerDictWithParams:(NSDictionary *)params {
     NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
     NSString *enter_from = params[@"from_page"];
-    tracerDict[@"enter_from"] = enter_from.length > 0 ? enter_from : @"default";
+    tracerDict[@"enter_from"] = enter_from;
     NSString *originFrom = params[@"origin_from"];
     tracerDict[@"origin_from"] = originFrom;
     tracerDict[@"user_id"] = self.userId;

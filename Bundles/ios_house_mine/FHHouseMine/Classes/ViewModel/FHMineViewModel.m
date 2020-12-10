@@ -144,7 +144,7 @@
             TRACK_EVENT(@"click_minetab", clickTrackDic);
             
             if(TTAccountManager.userID){
-                NSString *urlStr = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=mine",TTAccountManager.userID];
+                NSString *urlStr = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=mine&origin_from=mine",TTAccountManager.userID];
                 NSURL* url = [NSURL URLWithString:urlStr];
                 [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
             }
