@@ -446,7 +446,8 @@
         user.fverifyShow = model.rawData.content.user.fverifyShow;
         user.userId = model.rawData.content.user.userId;
         user.schema = model.rawData.content.user.userSchema;
-        user.verifiedContent = model.rawData.content.user.verifiedContent;
+        user.verifiedContent = model.rawData.content.user.vIcon;
+        
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];

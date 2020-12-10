@@ -140,7 +140,7 @@
     self.username.left = self.userIma.right + 4;
     self.username.height = 18;
     
-    self.useride.centerY =  self.userIma.centerY;
+    self.useride.centerY =  self.username.centerY;
     self.useride.left = self.username.right + 4;
     self.useride.height = 18;
     
@@ -290,8 +290,10 @@
     self.userIma.top =  self.userInfoView.bottom + 10;
     CGSize size = [self.username.text sizeWithFont:[UIFont themeFontRegular:14] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
     self.username.width = size.width;
-    self.useride.width =  [UIScreen mainScreen].bounds.size.width-15 -20 -size.width;
+    self.useride.width =  [UIScreen mainScreen].bounds.size.width-30 -20 -size.width;
     self.username.centerY =  self.userIma.centerY;
+    self.useride.centerY =  self.username.centerY;
+    self.useride.left = self.username.right + 4;
     self.contentLabel.top = self.userIma.bottom + 10;
     self.multiImageView.top = self.contentLabel.bottom + 10;
     self.singleImageView.top = self.contentLabel.bottom + 10;
