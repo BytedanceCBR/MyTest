@@ -1,5 +1,6 @@
 //GENERATED CODE , DON'T EDIT
 #import "JSONModel.h"
+#import "FHSearchHouseModel.h"
 NS_ASSUME_NONNULL_BEGIN
 @protocol FHDetailRelatedNeighborhoodResponseDataItemsModel<NSObject>
 @end
@@ -44,6 +45,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataItemsBaseInfoMapModel *baseInfoMap ;  
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *displaySubtitle;
+@property (nonatomic, strong , nullable) NSArray<FHHouseTagsModel> *tags;
+@property (nonatomic, strong, nullable) NSArray<FHSearchHouseItemTitleTagModel> *titleTags;
+@property (nonatomic, strong, nullable) FHSearchHouseVRModel *vrInfo;
+
 @end
 
 @interface FHDetailRelatedNeighborhoodResponseDataModel : JSONModel 

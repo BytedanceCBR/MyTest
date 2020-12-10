@@ -52,6 +52,8 @@
 #import "FHNeighborhoodDetailOwnerSellHouseSM.h"
 #import "FHNeighborhoodDetailSurroundingSC.h"
 #import "FHNeighborhoodDetailSurroundingSM.h"
+#import "FHNeighborhoodDetailSurroundingHouseSM.h"
+#import "FHNeighborhoodDetailSurroundingHouseSC.h"
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -100,14 +102,15 @@
 
 - (void)initMapping {
     
-    NSArray *name = @[@"基础信息",@"小区户型",@"小区户型",@"小区点评",@"小区测评",@"周边配套",@"周边配套",@"推荐房源"];
+    NSArray *name = @[@"基础信息",@"小区户型",@"小区点评",@"小区测评",@"周边配套",@"小区房源",@"小区房源",@"周边房源",@"猜你喜欢"];
     NSArray *type = @[@(FHNeighborhoodDetailSectionTypeCoreInfo),
-                      @(FHNeighborhoodDetailSectionTypeFloorpan),
                       @(FHNeighborhoodDetailSectionTypeAgent),
                       @(FHNeighborhoodDetailSectionTypeCommentAndQuestion),
                       @(FHNeighborhoodDetailSectionTypeStrategy),
                       @(FHNeighborhoodDetailSectionTypeSurrounding),
+                      @(FHNeighborhoodDetailSectionTypeFloorpan),
                       @(FHNeighborhoodDetailSectionTypeHouseSale),
+                      @(FHNeighborhoodDetailSectionTypeSurroundingHouse),
                       @(FHNeighborhoodDetailSectionTypeRecommend)
     ];
     
@@ -847,6 +850,9 @@
                 break;
             case FHNeighborhoodDetailSectionTypeOwnerSellHouse:
                 return [[FHNeighborhoodDetailOwnerSellHouseSC alloc] init];
+                break;
+            case FHNeighborhoodDetailSectionTypeSurroundingHouse:
+                return [[FHNeighborhoodDetailSurroundingHouseSC alloc] init];
                 break;
             case FHNeighborhoodDetailSectionTypeSurrounding:
                 return [[FHNeighborhoodDetailSurroundingSC alloc] init];

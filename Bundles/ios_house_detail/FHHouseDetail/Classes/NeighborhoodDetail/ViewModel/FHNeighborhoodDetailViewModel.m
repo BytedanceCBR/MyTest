@@ -43,6 +43,7 @@
 #import <FHHouseBase/NSObject+FHOptimize.h>
 #import "FHNeighborhoodDetailBaseInfoSM.h"
 #import "FHDetailRelatedHouseResponseModel.h"
+#import "FHNeighborhoodDetailSurroundingHouseSM.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
@@ -269,19 +270,29 @@
         self.detailController.isLoadingData = NO;
         NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
         
+        //在售房源
         if (self.sameNeighborhoodErshouHouseData.items.count > 0) {
             FHNeighborhoodDetailHouseSaleSM *houseSaleSM = [[FHNeighborhoodDetailHouseSaleSM alloc] initWithDetailModel:self.detailData];
             [houseSaleSM updateWithDataModel:self.sameNeighborhoodErshouHouseData];
             houseSaleSM.sectionType = FHNeighborhoodDetailSectionTypeHouseSale;
             [sectionModels addObject:houseSaleSM];
         }
-        
+        //猜你喜欢
         if (self.recommendHouseData.items.count > 0) {
             FHNeighborhoodDetailRecommendSM *recommendSM = [[FHNeighborhoodDetailRecommendSM alloc] initWithDetailModel:self.detailData];
             [recommendSM updateWithDataModel:self.recommendHouseData];
             recommendSM.sectionType = FHNeighborhoodDetailSectionTypeRecommend;
             [sectionModels addObject:recommendSM];
         }
+        //周边房源
+        if (self.relatedNeighborhoodData.items.count > 0) {
+            FHNeighborhoodDetailSurroundingHouseSM *SM = [[FHNeighborhoodDetailSurroundingHouseSM alloc] initWithDetailModel:self.detailData];
+            [SM updateWithDataModel:self.relatedNeighborhoodData];
+            SM.sectionType = FHNeighborhoodDetailSectionTypeSurroundingHouse;
+            [sectionModels addObject:SM];
+        }
+        
+        
         
         FHDetailNeighborhoodModel *model = self.detailData;
         FHDetailNeighborhoodSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;

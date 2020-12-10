@@ -19,15 +19,15 @@
 @implementation FHNeighborhoodDetailFloorpanCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, 115);
+    return CGSizeMake(width, 95);
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if(self = [super initWithFrame:frame]) {
         self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 15);
-        self.flowLayout.minimumInteritemSpacing = 10;
+        self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 12, 0, 15);
+        self.flowLayout.minimumLineSpacing = 8;
         self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), CGRectGetHeight(self.contentView.bounds)) collectionViewLayout:self.flowLayout];
         self.collectionView.backgroundColor = [UIColor clearColor];
@@ -90,7 +90,7 @@
 }
 
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(130, 105);
+    return CGSizeMake(130, 85);
 }
 
 -(void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
@@ -117,6 +117,9 @@
 
 -(instancetype)initWithFrame:(CGRect)frame{
     if(self = [super initWithFrame:frame]) {
+        self.layer.borderWidth = 0.5;
+        self.layer.borderColor = [UIColor themeGray6].CGColor;
+        self.layer.cornerRadius = 4;
         [self initView];
     }
     return self;
@@ -124,42 +127,39 @@
 
 
 -(void)initView {
-    self.shadowView = [[UIView alloc] init];
-    self.numberLabel = [[UILabel alloc] init];
+    
     self.roomLabel = [[UILabel alloc] init];
-    self.priceLabel = [[UILabel alloc] init];
-    
-    self.shadowView.backgroundColor = [UIColor themeWhite];
-    self.shadowView.layer.cornerRadius = 10;
-    self.shadowView.layer.masksToBounds = YES;
-    self.numberLabel.textColor = [UIColor themeGray1];
     self.roomLabel.textColor = [UIColor themeGray1];
-    self.roomLabel.font = [UIFont themeFontSemibold:12];
-    self.priceLabel.font = [UIFont themeFontMedium:12];
-    self.priceLabel.textColor = [UIColor themeOrange1];
-    
-    [self.contentView addSubview:self.shadowView];
-    [self.contentView addSubview:self.numberLabel];
+    self.roomLabel.font = [UIFont themeFontMedium:16];
     [self.contentView addSubview:self.roomLabel];
+    
+    self.numberLabel = [[UILabel alloc] init];
+    self.numberLabel.textColor = [UIColor themeGray1];
+    self.numberLabel.font = [UIFont themeFontRegular:12];
+    [self.contentView addSubview:self.numberLabel];
+    
+    self.priceLabel = [[UILabel alloc] init];
+    self.priceLabel.font = [UIFont themeFontMedium:16];
+    self.priceLabel.textColor = [UIColor themeOrange1];
     [self.contentView addSubview:self.priceLabel];
     
-    [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView);
+    [self.roomLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(12);
+        make.top.mas_equalTo(8);
+        make.height.mas_equalTo(22);
+        make.right.mas_equalTo(0);
     }];
     [self.numberLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.contentView).offset(12);
-        make.left.equalTo(self.contentView).offset(12);
-        make.height.mas_equalTo(33);
-    }];
-    [self.roomLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.numberLabel.mas_bottom).offset(8);
-        make.left.equalTo(self.contentView).offset(12);
+        make.left.mas_equalTo(self.roomLabel);
+        make.top.mas_equalTo(self.roomLabel.mas_bottom).offset(4);
         make.height.mas_equalTo(17);
+        make.right.mas_equalTo(0);
     }];
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.roomLabel.mas_bottom).offset(2);
-        make.left.equalTo(self.contentView).offset(12);
-        make.height.mas_equalTo(17);
+        make.left.mas_equalTo(self.roomLabel);
+        make.top.mas_equalTo(self.numberLabel.mas_bottom).offset(4);
+        make.right.mas_equalTo(0);
+        make.height.mas_equalTo(22);
     }];
 }
 
@@ -169,22 +169,12 @@
     }
     self.currentData = data;
     FHDetailNeighborhoodSaleHouseInfoItemModel *model =(FHDetailNeighborhoodSaleHouseInfoItemModel *) data;
-    
-    self.numberLabel.attributedText = nil;
-    self.roomLabel.text = nil;
-    
+    self.roomLabel.text = [NSString stringWithFormat:@"%@居室",[self transformNumber:model.roomNum]];
+    NSString *info = model.areaRange;
     if(model.count.length > 0) {
-        NSString *numberText = [NSString stringWithFormat:@"%@套",model.count];
-        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:numberText];
-        [attrText addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:24] range:[numberText rangeOfString:model.count]];
-        [attrText addAttribute:NSFontAttributeName value:[UIFont themeFontMedium:12] range:[numberText rangeOfString:@"套"]];
-        self.numberLabel.attributedText = attrText;
+        info = [NSString stringWithFormat:@"%@ %@套", info, model.count];
     }
-    
-    if(model.roomNum.length > 0 && model.areaRange.length > 0){
-        self.roomLabel.text = [NSString stringWithFormat:@"%@居室 %@",[self transformNumber:model.roomNum],model.areaRange];
-    }
-    
+    self.numberLabel.text = info;
     self.priceLabel.text = model.priceRange;
 }
 
@@ -196,7 +186,6 @@
     }
     return @"多";
 }
-
 
 @end
 
