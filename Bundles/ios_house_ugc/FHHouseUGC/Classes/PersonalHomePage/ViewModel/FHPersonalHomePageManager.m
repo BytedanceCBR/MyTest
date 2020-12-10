@@ -74,6 +74,19 @@
     self.scrollView.contentSize = CGSizeMake(SCREEN_WIDTH, profileInfoViewHeight + feedViewControllerHeight);
 }
 
+-(void)initTracerDictWithParams:(NSDictionary *)params {
+    NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
+    NSString *enter_from = params[@"from_page"];
+    tracerDict[@"enter_from"] = enter_from.length > 0 ? enter_from : @"default";
+    NSString *originFrom = params[@"origin_from"];
+    tracerDict[@"origin_from"] = originFrom;
+    tracerDict[@"user_id"] = self.userId;
+    tracerDict[@"category_name"] = @"personal_homepage";
+    tracerDict[@"page_type"] = @"personal_homepage_detail";
+    tracerDict[@"enter_type"] = @"click";
+    
+    self.tracerDict = tracerDict;
+}
 
 - (void)initFeedStatus:(NSInteger)count {
     NSMutableArray *feedErrorArray = [NSMutableArray array];

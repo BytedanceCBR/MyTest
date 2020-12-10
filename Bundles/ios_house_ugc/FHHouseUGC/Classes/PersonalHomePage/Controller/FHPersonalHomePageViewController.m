@@ -50,10 +50,9 @@
     if(self = [super initWithRouteParamObj:paramObj]) {
         NSDictionary *params = paramObj.allParams;
         self.userId = params[@"uid"];
-        BOOL isTest = YES;
-        if(isTest) {
-            self.userId = @"2559307071627528";
-        }
+        [[FHPersonalHomePageManager shareInstance] reset];
+        [FHPersonalHomePageManager shareInstance].userId = self.userId;
+        [[FHPersonalHomePageManager shareInstance] initTracerDictWithParams:params];
     }
     return self;
 }
@@ -67,8 +66,6 @@
     [self initView];
     [self initViewModel];
     
-    [[FHPersonalHomePageManager shareInstance] reset];
-    [FHPersonalHomePageManager shareInstance].userId = self.userId;
     [FHPersonalHomePageManager shareInstance].viewController = self;
     [FHPersonalHomePageManager shareInstance].feedViewController = self.feedViewController;
     

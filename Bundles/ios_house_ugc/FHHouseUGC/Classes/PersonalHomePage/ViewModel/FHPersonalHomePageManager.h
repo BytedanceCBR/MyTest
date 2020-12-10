@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign) BOOL userInfoChange;
 @property(nonatomic,assign) NSInteger currentIndex;
 @property(nonatomic,copy) NSString *userId;
+@property(nonatomic,strong) NSDictionary *tracerDict;
 @property(nonatomic,strong) NSMutableArray<NSNumber *> *feedErrorArray;
 @property(nonatomic,weak) FHPersonalHomePageViewController *viewController;
 @property(nonatomic,weak) FHPersonalHomePageFeedViewController *feedViewController;
@@ -31,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)tableViewScroll:(UIScrollView *)scrollView;
 - (void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel;
 - (void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel;
+- (void)initTracerDictWithParams:(NSDictionary *)params;
+
 @end
 
 NS_ASSUME_NONNULL_END

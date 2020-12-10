@@ -143,8 +143,11 @@
             };
             TRACK_EVENT(@"click_minetab", clickTrackDic);
             
-            NSURL* url = [NSURL URLWithString:@"sslocal://editUserProfile"];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            if(TTAccountManager.userID){
+                NSString *urlStr = [NSString stringWithFormat:@"sslocal://profile?uid=%@&from_page=mine",TTAccountManager.userID];
+                NSURL* url = [NSURL URLWithString:urlStr];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
+            }
         }
     }else{
         NSString *clickTrackDic = @{
@@ -179,7 +182,7 @@
             NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
             [self.viewController.headerView setUserInfoState:state];
             self.viewController.headerView.userNameLabel.text = name?:@"";
-            self.viewController.headerView.descLabel.text = @"查看并编辑个人信息";
+            self.viewController.headerView.descLabel.text = userInfo.userDescription.length > 0 ? userInfo.userDescription : @"查看并编辑个人信息";
             if(state != 0){
                 self.viewController.headerView.editIcon.hidden = NO;
             }

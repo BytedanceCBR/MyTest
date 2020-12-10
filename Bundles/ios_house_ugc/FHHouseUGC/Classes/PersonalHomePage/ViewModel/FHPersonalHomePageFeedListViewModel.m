@@ -19,6 +19,8 @@
 #import "FHHouseUGCAPI.h"
 #import "FHFeedListModel.h"
 #import "ToastManager.h"
+#import "FHUserTracker.h"
+#import "FHUtils.h"
         
 
 
@@ -32,6 +34,7 @@
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
 @property(nonatomic,copy) NSString *categoryId;
 @property(nonatomic,strong) NSMutableArray *dataList;
+//@property(nonatomic,strong) NSMutableSet<NSString *> *showFeedCache;
 @end
 
 @implementation FHPersonalHomePageFeedListViewModel
@@ -184,6 +187,7 @@
         cellModel.categoryId = self.categoryId;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.viewController categoryName];
+        cellModel.tracerDic = [FHPersonalHomePageManager shareInstance].tracerDict;
         
         if (cellModel) {
             [resultArray addObject:cellModel];
@@ -212,6 +216,57 @@
     self.detailJumpManager.currentCell = cell;
     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
+
+//- (void)trackFeedClientShow:(FHFeedUGCCellModel *)itemData rank:(NSInteger)rank{
+//    if(isEmptyString(itemData.groupId) || [self.showFeedCache containsObject:itemData.groupId]) {
+//        return;
+//    }
+//
+//    [self.showFeedCache addObject:itemData.groupId];
+//    NSMutableDictionary *dict = [self trackDict:itemData rank:rank];
+//    [FHUserTracker writeEvent:@"feed_client_show" params:dict];
+//}
+
+//- (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
+//    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+//    NSDictionary *tracerDict = [FHPersonalHomePageManager shareInstance].tracerDict;
+//
+//    params[@"origin_from"] = tracerDict[@"origin_from"] ?: @"be_null";
+//    params[@"enter_from"] = tracerDict[@"enter_from"] ?: @"be_null";
+//    params[@"page_type"] = tracerDict[@"page_type"] ?: @"be_null";
+//    params[@"category_name"] = self.categoryId;
+//    params[@"rank"] = @(rank);
+//    params[@"group_id"] = cellModel.groupId;
+////    params[@"element_type"] = @"";
+//
+//    NSDictionary *logPb = tracerDict[@"log_pb"];
+//    if([logPb isKindOfClass:[NSDictionary class]]){
+//        params[@"from_gid"] = logPb[@"group_id"] ?: @"be_null";
+//    }
+//
+//    id cellModelLogPb = cellModel.logPb;
+//    logPb = nil;
+//    if([cellModelLogPb isKindOfClass:[NSDictionary class]]){
+//        logPb = cellModelLogPb;
+//    }else if([logPb isKindOfClass:[NSString class]]){
+//        logPb = [FHUtils dictionaryWithJsonString:cellModelLogPb];
+//    }
+//
+//    if([logPb isKindOfClass:[NSDictionary class]]) {
+//        params[@"log_pb"] = logPb;
+//        params[@"impr_id"] = logPb[@"impr_id"];
+//        params[@"group_source"] = logPb[@"group_source"];
+//    }
+//
+//    return params;
+//}
+//
+//-(NSMutableSet<NSString *> *)showFeedCache {
+//    if(!_showFeedCache) {
+//        _showFeedCache = [NSMutableSet set];
+//    }
+//    return _showFeedCache;
+//}
 
 #pragma mark TableView protocol
 
@@ -256,11 +311,19 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger index = indexPath.row;
     if(index >= 0 && index < self.dataList.count) {
-        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        FHFeedUGCCellModel *cellModel = self.dataList[index];
         self.detailJumpManager.currentCell = [tableView cellForRowAtIndexPath:indexPath];
         [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
     }
 }
+
+//- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+//    NSInteger index = indexPath.row;
+//    if(index >= 0 && index < self.dataList.count) {
+//        FHFeedUGCCellModel *cellModel = self.dataList[index];
+//        [self trackFeedClientShow:cellModel rank:index];
+//    }
+//}
 
 -(void)setFeedError:(BOOL)isError {
     NSMutableArray *feedErrorArray =  [FHPersonalHomePageManager shareInstance].feedErrorArray;
