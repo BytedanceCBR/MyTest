@@ -98,6 +98,13 @@
     [self.bgView addGestureRecognizer:tap];
     
     if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        UIImageView *bgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"form_fill_associate_bg"]];
+        bgImageView.contentMode = UIViewContentModeTopRight;
+        [self.contentView addSubview:bgImageView];
+        [bgImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.right.mas_equalTo(0);
+        }];
+        
         [self.contentView addSubview:self.closeBtn];
         [self.contentView addSubview:self.titleLabel];
         [self.contentView addSubview:self.subtitleLabel];
@@ -405,6 +412,8 @@
         } forControlEvents:UIControlEventTouchUpInside];
         [cancelButton setTitle:cancelTitle.length ? cancelTitle : @"拒绝联系" forState:UIControlStateNormal];
         [self.contentView addSubview:cancelButton];
+        [cancelButton sizeToFit];
+        cancelButton.frame = CGRectMake(CGRectGetMidX(self.contentView.bounds) - cancelButton.frame.size.width/2, CGRectGetHeight(self.contentView.bounds), cancelButton.frame.size.width, cancelButton.frame.size.height);
         [cancelButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(20);
             make.top.mas_equalTo(self.submitBtn.mas_bottom).mas_offset(16);

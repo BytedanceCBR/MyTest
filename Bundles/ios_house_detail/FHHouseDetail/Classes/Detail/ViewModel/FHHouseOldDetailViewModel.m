@@ -989,7 +989,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         formReportModel.extraInfo = extraInfo;
         formReportModel.houseType = FHHouseTypeNeighborhood;
         formReportModel.title = @"房源订阅";
-        formReportModel.btnTitle = @"立即预约";
+        formReportModel.btnTitle = @"立即订阅";
         formReportModel.subtitle = @"订阅房源动态，订阅后房源价格变动，售卖信息，我们将第一时间提醒您。";
         formReportModel.topViewController = self.detailController;
         [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:formReportModel completion:^{

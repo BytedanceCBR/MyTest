@@ -332,32 +332,46 @@
             [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(53);
             }];
+            if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+                [self.tipNameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self.bottomInfoView).offset(15);
+                    make.right.mas_equalTo(self.bottomInfoView).offset(-5);
+                    make.height.mas_equalTo(20);
+                    make.centerY.mas_equalTo(self.bottomInfoView);
+                }];
+            }
         }else{
             //新增实验
             self.tipNameLabel.text = model.tipText;
             if ([SSCommonLogic isEnableVerifyFormAssociate]) {
-
+                self.tipNameLabel.font = [UIFont themeFontSemibold:14];
+                self.tipNameLabel.text = @"高效找房，为您推荐专属找房顾问";
                 
                 self.subscribeBtn.hidden = NO;
+                [self.subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                self.subscribeBtn.layer.cornerRadius = 15;
+//                _subscribeBtn.layer.borderColor = [UIColor colorWithHexStr:@"#c8a572"].CGColor;
+                self.subscribeBtn.layer.borderWidth = 0;
+                self.subscribeBtn.backgroundColor = [UIColor colorWithHexString:@"#d4b382"];
                 self.textField.hidden = YES;
                 self.legalAnnouncement.hidden = YES;
                 
                 [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.height.mas_equalTo(53);
+                    make.height.mas_equalTo(58);
                 }];
                 
                 [self.subscribeBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-                    make.centerY.mas_equalTo(self.tipNameLabel.mas_centerY);
+                    make.centerY.mas_equalTo(self.bottomInfoView).mas_offset(-3);
                     make.right.mas_equalTo(self.bottomInfoView).offset(-15);
-                    make.width.mas_equalTo(89);
+                    make.width.mas_equalTo(86);
                     make.height.mas_equalTo(30);
                 }];
                 
                 [self.tipNameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(self.bottomInfoView).offset(15);
-                    make.right.mas_equalTo(self.subscribeBtn.mas_left).offset(-5);
-                    make.top.mas_equalTo(self.bottomInfoView).offset(16);
-                    make.height.mas_equalTo(22);
+                    make.right.mas_equalTo(self.subscribeBtn.mas_left).offset(0);
+                    make.height.mas_equalTo(20);
+                    make.centerY.mas_equalTo(self.subscribeBtn.mas_centerY);
                 }];
             } else {
                 self.subscribeBtn.hidden = NO;
@@ -450,9 +464,23 @@
     self.textField.hidden = YES;
     self.legalAnnouncement.hidden = YES;
     self.tipNameLabel.text = @"已为您预约顾问，稍后会和您联系";
-    [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(53);
-    }];
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        [self.tipNameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.bottomInfoView).offset(15);
+            make.right.mas_equalTo(self.bottomInfoView).offset(0);
+            make.height.mas_equalTo(20);
+            make.centerY.mas_equalTo(self.bottomInfoView);
+        }];
+        
+        [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(58);
+        }];
+
+    } else {
+        [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(53);
+        }];
+    }
     
     [self setNeedsUpdateConstraints];
     

@@ -177,6 +177,7 @@
     }];
     
     if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        self.bacIma.image = [UIImage imageNamed:@"houseSubscribeBac_new"];
         
         [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.contentView).offset(15);
