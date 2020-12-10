@@ -37,18 +37,15 @@
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width - 9 * 2;
     FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
     if (model.items[index] == model.titleCellModel) {
         return [FHNeighborhoodDetailHeaderTitleCollectionCell cellSizeWithData:model.titleCellModel width:width];
     } else if (model.items[index] == model.subMessageModel) {
         return [FHNeighborhoodDetailSubMessageCollectionCell cellSizeWithData:model.subMessageModel width:width];
+    }else if(model.items[index] == model.tradingRecordModel){
+        return [FHNeighborhoodDetailTradingRecordCell cellSizeWithData:model.tradingRecordModel width:width];
     }
-//    else if (model.items[index] == model.propertyInfoModel) {
-//        return [FHNeighborhoodDetailPropertyInfoCollectionCell cellSizeWithData:model.propertyInfoModel width:width];
-//    } else if (model.items[index] == model.quickEntryModel) {
-//        return [FHNeighborhoodDetailQuickEntryCollectionCell cellSizeWithData:model.quickEntryModel width:width];
-//    }
     return CGSizeZero;
 }
 
@@ -62,6 +59,10 @@
     } else if (model.items[index] == model.subMessageModel) {
         FHNeighborhoodDetailSubMessageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSubMessageCollectionCell class] withReuseIdentifier:NSStringFromClass([model.subMessageModel class]) forSectionController:self atIndex:index];
         [cell refreshWithData:model.subMessageModel];
+        return cell;
+    }else if(model.items[index] == model.tradingRecordModel){
+        FHNeighborhoodDetailTradingRecordCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailTradingRecordCell class] withReuseIdentifier:NSStringFromClass([model.tradingRecordModel class]) forSectionController:self atIndex:index];
+        [cell refreshWithData:model.tradingRecordModel];
         return cell;
     }
 //    else if (model.items[index] == model.propertyInfoModel) {

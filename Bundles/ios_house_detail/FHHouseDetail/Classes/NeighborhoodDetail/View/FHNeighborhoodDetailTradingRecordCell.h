@@ -9,7 +9,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHNeighborhoodDetailTradingRecordCell : FHDetailBaseCollectionCell
+
+@interface  FHNeighborhoodDetailTradingRecordCell : FHDetailBaseCollectionCell<IGListBindable>
+
+@end
+
+@interface FHNeighborhoodDetailTradingRecordModel : NSObject<IGListDiffable>
+
+@property(nonatomic ,copy) NSString *onSale;
+@property(nonatomic ,copy) NSString *sold;
 
 @end
 

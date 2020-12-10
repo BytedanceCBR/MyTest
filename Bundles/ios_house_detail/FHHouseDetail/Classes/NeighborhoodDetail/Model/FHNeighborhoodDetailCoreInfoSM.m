@@ -6,7 +6,7 @@
 //
 
 #import "FHNeighborhoodDetailCoreInfoSM.h"
-
+#import <ByteDanceKit/ByteDanceKit.h>
 
 
 @implementation FHNeighborhoodDetailCoreInfoSM
@@ -21,14 +21,27 @@
     houseTitleModel.gaodeLng = model.data.neighborhoodInfo.gaodeLng;
     houseTitleModel.mapCentertitle = model.data.neighborhoodInfo.name;
     houseTitleModel.baiduPanoramaUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
+    houseTitleModel.tradeAreaName = model.data.neighborhoodInfo.tradeAreaName;
+    houseTitleModel.areaName = model.data.neighborhoodInfo.areaName;
+    houseTitleModel.districtName = model.data.neighborhoodInfo.districtName;
     self.titleCellModel = houseTitleModel;
     [items addObject:self.titleCellModel];
     
-    if (model.data.neighborhoodInfo.id.length > 0) {
+    if (model.data.coreInfo.count == 3) {
         FHNeighborhoodDetailSubMessageModel *subMessageModel = [[FHNeighborhoodDetailSubMessageModel alloc] init];
-        subMessageModel.neighborhoodInfo = model.data.neighborhoodInfo;
+        subMessageModel.perSquareMetre = ((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[0]).value ?: @"?元/平";
+        subMessageModel.monthUp = ((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[1]).value ?: @"0";
+        subMessageModel.subTitleText = ((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[2]).value ?: @"上个月参考均价";
         self.subMessageModel = subMessageModel;
         [items addObject:self.subMessageModel];
+    }
+    if(model.data.statsInfo.count == 3){
+        FHNeighborhoodDetailTradingRecordModel *recordModel = [[FHNeighborhoodDetailTradingRecordModel alloc]init];
+        recordModel.onSale = model.data.statsMinfo.onSale.val ?:@"暂无数据" ;
+        recordModel.sold = model.data.statsMinfo.sold.val ?: @"暂无数据";
+        self.tradingRecordModel = recordModel;
+        
+        [items addObject:recordModel];
     }
     
 //    if ((model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0 )|| model.data.neighborhoodInfo.baiduPanoramaUrl.length > 0) {

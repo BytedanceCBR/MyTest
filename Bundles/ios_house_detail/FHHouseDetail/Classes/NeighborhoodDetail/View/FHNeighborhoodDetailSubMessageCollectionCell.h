@@ -16,7 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailSubMessageModel : NSObject<IGListDiffable>
 
-@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighborhoodInfoModel *neighborhoodInfo ;
+@property (nonatomic, copy) NSString *perSquareMetre;
+@property (nonatomic, copy) NSString *monthUp;
+@property (nonatomic, copy) NSString *subTitleText;
 @end
 
 NS_ASSUME_NONNULL_END

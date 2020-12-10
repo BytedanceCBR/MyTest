@@ -115,6 +115,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNeighborhoodDataNeighborhoodInfoModel : JSONModel
 
+@property (nonatomic, copy) NSString *tradeAreaName;//商圈
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *areaId;
 @property (nonatomic, copy , nullable) NSString *name;
@@ -220,8 +221,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataCommentsContentModel *content;
 @end
 
+@interface FHDetailNeighborhoodDatastatsMinfoSaleModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *attr;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *unit;
+@property (nonatomic, copy , nullable) NSString *val;
+@end
+
+@interface FHDetailNeighborhoodDatastatsMinfoModel : JSONModel
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDatastatsMinfoSaleModel *onSale;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDatastatsMinfoSaleModel *sold;
+@end
+
 @interface FHDetailNeighborhoodDataModel : JSONModel
 
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDatastatsMinfoModel *statsMinfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataStatsInfoModel> *statsInfo;
