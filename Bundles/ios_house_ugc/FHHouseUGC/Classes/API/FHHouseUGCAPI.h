@@ -135,6 +135,9 @@ NS_ASSUME_NONNULL_BEGIN
 //1.0.1详情页增加rgc内容tab请求
 + (TTHttpTask *)requestTabListWithhouseId:(NSString *)houseId class:(Class)cls houseType:(NSString *)houseType completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
 
+//1.1.3请求v标用户白名单
++ (TTHttpTask *)requestUserVWhiteListClass:(Class)cls completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

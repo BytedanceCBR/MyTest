@@ -19,6 +19,7 @@
 #import "UIViewAdditions.h"
 #import "FHUGCCellAttachCardView.h"
 #import "TTAsyncCornerImageView.h"
+#import "FHUGCCommonAvatar.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -34,10 +35,9 @@
 @interface FHUGCAnswerCell ()<TTUGCAsyncLabelDelegate>
 
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
-@property(nonatomic, strong) TTAsyncCornerImageView *userIma;
+@property(nonatomic, strong) FHUGCCommonAvatar *userIma;
 @property(nonatomic, strong) UILabel *username;
 @property(nonatomic, strong) UILabel *useride;
-@property(nonatomic, strong) UIImageView *userTag;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *singleImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
@@ -77,19 +77,12 @@
     [self.contentView addSubview:_userInfoView];
     
     
-    self.userIma = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(0, 0, 20, 20) allowCorner:YES];
-    _userIma.placeholderName = @"fh_mine_avatar";
-    _userIma.cornerRadius = 10;
+    self.userIma = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    [_userIma setPlaceholderImage:@"fh_mine_avatar"];
     _userIma.contentMode = UIViewContentModeScaleAspectFill;
 //    _userIma.borderWidth = 1;
 //    _userIma.borderColor = [UIColor themeGray6];
     [self addSubview:self.userIma];
-    
-    self.userTag = [[UIImageView alloc]init];
-    self.userTag.contentMode = UIViewContentModeScaleAspectFit;
-    self.userTag.image = [UIImage imageNamed:@"ugc_v_tag"];
-    [self addSubview:self.userTag];
-    self.userTag.hidden = YES;
     
     self.username = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
     self.username.textAlignment = NSTextAlignmentLeft;
@@ -142,11 +135,6 @@
     self.userIma.left = leftMargin;
     self.userIma.width = 20;
     self.userIma.height = 20;
-    
-    self.userTag.top =  self.userIma.top + 12;
-    self.userTag.left = self.userIma.left + 12;
-    self.userTag.width = 8;
-    self.userTag.height = 8;
     
     self.username.centerY =  self.userIma.centerY;
     self.username.left = self.userIma.right + 4;
@@ -285,8 +273,8 @@
     [self.userInfoView setTitleModel:cellModel];
     self.username.text = cellModel.user.name;
     self.useride.text = cellModel.user.verifiedContent;
-    self.userTag.hidden = !cellModel.user.fverifyShow;
-    [self.userIma tt_setImageWithURLString:cellModel.user.avatarUrl];
+    [self.userIma setAvatarUrl:cellModel.user.avatarUrl];
+    self.userIma.userId = cellModel.user.userId;
     NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    问题：%@",cellModel.originItemModel.content] : @"";
     CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
     CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
@@ -300,7 +288,6 @@
 
 - (void)updateFarme {
     self.userIma.top =  self.userInfoView.bottom + 10;
-    self.userTag.top =  self.userIma.top + 12;
     CGSize size = [self.username.text sizeWithFont:[UIFont themeFontRegular:14] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
     self.username.width = size.width;
     self.useride.width =  [UIScreen mainScreen].bounds.size.width-15 -20 -size.width;

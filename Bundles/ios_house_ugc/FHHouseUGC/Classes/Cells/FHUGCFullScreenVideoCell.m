@@ -32,6 +32,7 @@
 #import "UIViewAdditions.h"
 #import "UIViewController+TTMovieUtil.h"
 #import "FHUserTracker.h"
+#import "FHUGCCommonAvatar.h"
 
 #define leftMargin 15
 #define rightMargin 15
@@ -44,7 +45,7 @@
 
 @interface FHUGCFullScreenVideoCell ()<TTUGCAsyncLabelDelegate,TTVFeedPlayMovie,TTVFeedUserOpDataSyncMessage>
 
-@property(nonatomic ,strong) TTAsyncCornerImageView *icon;
+@property(nonatomic ,strong) FHUGCCommonAvatar *icon;
 @property(nonatomic ,strong) UILabel *userName;
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCToolView *bottomView;
@@ -93,12 +94,8 @@
 }
 
 - (void)initViews {
-    self.icon = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(15, 15, 20, 20) allowCorner:YES];
-    _icon.placeholderName = @"fh_mine_avatar";
-    _icon.cornerRadius = 10;
-    _icon.contentMode = UIViewContentModeScaleAspectFill;
-    _icon.borderWidth = 1;
-    _icon.borderColor = [UIColor themeGray6];
+    self.icon = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake(15, 15, 20, 20)];
+    [_icon setPlaceholderImage: @"fh_mine_avatar"];
     _icon.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -20, -10, -10);
     [self.contentView addSubview:_icon];
     
@@ -226,7 +223,8 @@
     self.currentData = data;
     self.cellModel = cellModel;
     //设置头像和用户名
-    [self.icon tt_setImageWithURLString:cellModel.user.avatarUrl];
+    [self.icon setAvatarUrl:cellModel.user.avatarUrl];
+    self.icon.userId = cellModel.user.userId;
     
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
     [self.userName sizeToFit];

@@ -27,6 +27,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHEnvContext.h"
 
 
 @interface FHUGCCellUserInfoView()
@@ -81,17 +82,9 @@
 
 - (void)initViews {
     _avatarView = [[FHRealtorAvatarView alloc] init];
-    _avatarView.avatarImageView.layer.borderWidth = 1;
-    _avatarView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
     _avatarView.placeHoldName = @"fh_mine_avatar";
     _avatarView.userInteractionEnabled = YES;
     [self addSubview:_avatarView];
-    
-    _avatarTag = [[UIImageView alloc]init];
-    _avatarTag.contentMode = UIViewContentModeScaleAspectFill;
-    _avatarTag.image = [UIImage imageNamed:@"ugc_v_tag"];
-    [self addSubview:_avatarTag];
-    self.avatarTag.hidden = YES;
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
     [_avatarView addGestureRecognizer:tap];
@@ -155,13 +148,6 @@
     self.avatarView.left = 20;
     self.avatarView.width = 40;
     self.avatarView.height = 40;
-    
-    self.avatarTag.top = 24;
-    self.avatarTag.left = 44;
-    self.avatarTag.width = 16;
-    self.avatarTag.height = 16;
-    
-
     self.userName.top = 0;
     self.userName.left = self.avatarView.right + 10;
     self.userName.width = 100;
@@ -211,7 +197,6 @@
     [self.avatarView updateAvatarWithUGCCellModel:cellModel];
 
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
-    self.avatarTag.hidden = !self.cellModel.user.fverifyShow;
     [self updateUserAuth];
     [self updateDescLabel];
     [self updateEditState];
