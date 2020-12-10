@@ -136,7 +136,6 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.houseTypeArray = [NSMutableArray new];
     [self setupUI];
-    [self fixDragBackConfict];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     if (self.autoFillInputText) {
         self.naviBar.searchInput.text = self.autoFillInputText;
@@ -163,6 +162,11 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.naviBar resignFirstResponder];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self fixDragBackConfict];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
