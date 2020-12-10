@@ -368,6 +368,7 @@
              @"opData2list": @"op_data_2_list",
              @"opData": @"op_data",
              @"houseOpData2": @"house_op_data_2",
+             @"houseFinderOpData": @"house_finder_op_data",
              @"rentOpData": @"rent_op_data",
              @"courtOpData": @"court_op_data",
              @"mainPageBannerOpData": @"main_page_banner",
