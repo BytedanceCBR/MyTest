@@ -182,7 +182,7 @@
             NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
             [self.viewController.headerView setUserInfoState:state];
             self.viewController.headerView.userNameLabel.text = name?:@"";
-            self.viewController.headerView.descLabel.text = userInfo.userDescription.length > 0 ? userInfo.userDescription : @"查看并编辑个人信息";
+            self.viewController.headerView.descLabel.text = userInfo.userDescription.length > 0 ? userInfo.userDescription : @"暂无介绍，简单介绍一下自己吧";
             if(state != 0){
                 self.viewController.headerView.editIcon.hidden = NO;
             }
@@ -205,7 +205,7 @@
         
         if (userInfo != nil) {
             self.viewController.headerView.userNameLabel.text = name?:@"";
-            self.viewController.headerView.descLabel.text = @"查看并编辑个人信息";
+            self.viewController.headerView.descLabel.text = @"暂无介绍，简单介绍一下自己吧";
             if(state != 0){
                 self.viewController.headerView.editIcon.hidden = NO;
             }
