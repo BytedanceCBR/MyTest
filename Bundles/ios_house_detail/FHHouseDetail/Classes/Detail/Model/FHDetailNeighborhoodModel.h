@@ -21,15 +21,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
-@protocol FHDetailNeighborhoodDataNeighborhoodEvaluationScoreModel<NSObject>
-@end
-
-@interface FHDetailNeighborhoodDataNeighborhoodEvaluationScoreModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *value;
-@property (nonatomic, copy , nullable) NSString *schema;
-@end
-
 @interface FHDetailNeighborhoodDataNeighborhoodEvaluationModel : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataNeighborhoodEvaluationEvaluationListModel> *evaluationList;
@@ -48,7 +39,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
-@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighborhoodEvaluationScoreModel *score;
 @property (nonatomic, strong , nullable) NSDictionary *compare;
 @property (nonatomic, copy , nullable) NSString *iconUrl;
 @property (nonatomic, assign) BOOL hiddenBottomLine;
@@ -57,7 +47,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNeighborhoodDataStrategyModel : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataStrategyArticleListModel> *articleList;
-@property (nonatomic, strong , nullable) FHDetailNeighborhoodDataStrategyArticleListModel *article;
+@property (nonatomic, strong , nullable) NSDictionary *article;
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 

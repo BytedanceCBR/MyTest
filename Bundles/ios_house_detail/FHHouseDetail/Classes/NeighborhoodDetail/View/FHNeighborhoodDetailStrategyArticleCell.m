@@ -11,63 +11,30 @@
 #import "UIDevice+BTDAdditions.h"
 #import <UILabel+BTDAdditions.h>
 
+
+#import "FHLynxView.h"
+#import "Masonry.h"
+#import "LynxView.h"
+#import "NSDictionary+BTDAdditions.h"
 @interface FHNeighborhoodDetailStrategyArticleCell ()
 
-@property(nonatomic , strong) UILabel *contentLabel;
-@property(nonatomic , strong) UIImageView *singleImageView;
-@property(nonatomic , strong) UIImageView *iconImageView;
-@property(nonatomic , strong) UILabel *iconLabel;
-@property(nonatomic , strong) UILabel *descLabel;
-@property(nonatomic , strong) UIView *bottomLine;
-
+@property (nonatomic, strong) FHLynxView *articleCardView;
 @end
 
 @implementation FHNeighborhoodDetailStrategyArticleCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, 102);
+    return CGSizeMake(width, 200);
 }
 
 - (void)refreshWithData:(id)data {
-    if (self.currentData == data || ![data isKindOfClass:[FHDetailNeighborhoodDataStrategyArticleListModel class]]) {
+    if (self.currentData == data || ![data isKindOfClass:[NSDictionary class]]) {
         return;
     }
     self.currentData = data;
-    FHDetailNeighborhoodDataStrategyArticleListModel *model = (FHDetailNeighborhoodDataStrategyArticleListModel *)data;
-    if (model) {
-        self.contentLabel.text = model.title;
-        self.iconLabel.text = model.articleType;
-        self.descLabel.text = model.desc;
-        self.bottomLine.hidden = model.hiddenBottomLine;
-        CGFloat labelWidth = self.contentView.bounds.size.width;
-        if(isEmptyString(model.picture)){
-            _singleImageView.hidden = YES;
-            [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(self.contentView).offset(-16);
-            }];
-            labelWidth = labelWidth - 16 * 2;
-        }else{
-            _singleImageView.hidden = NO;
-            [self.singleImageView bd_setImageWithURL:[NSURL URLWithString:model.picture] placeholder:nil];
-            [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(self.contentView).offset(-102);
-            }];
-            labelWidth = labelWidth - 16 - 102;
-        }
-        
-        CGFloat labelHeight = [self.contentLabel btd_heightWithWidth:labelWidth];
-        if(labelHeight < 25) {
-            CGFloat labelTop = 50 - (labelHeight + 12 + 16) / 2;
-            [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(labelTop);
-            }];
-        }
-
-        if(isEmptyString(model.iconUrl)){
-            self.iconImageView.image = [UIImage imageNamed:@"neighborhood_detail_xingfu_icon"];
-        }else{
-            [self.iconImageView bd_setImageWithURL:[NSURL URLWithString:model.iconUrl] placeholder:nil];
-        }
+    NSDictionary *dic = (NSDictionary *)data;
+    if (dic) {
+        [self reloadDataWithDic:dic];
     }
 }
 
@@ -86,90 +53,31 @@
 }
 
 - (void)initViews {
-    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:16] textColor:[UIColor themeGray1]];
-    _contentLabel.numberOfLines = 2;
-    [self.contentView addSubview:_contentLabel];
-    
-    //单图
-    self.singleImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    _singleImageView.hidden = YES;
-    _singleImageView.clipsToBounds = YES;
-    _singleImageView.contentMode = UIViewContentModeScaleAspectFill;
-    _singleImageView.backgroundColor = [UIColor themeGray6];
-    _singleImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _singleImageView.layer.borderWidth = 1;
-    _singleImageView.layer.masksToBounds = YES;
-    _singleImageView.layer.cornerRadius = 10;
-    [self.contentView addSubview:_singleImageView];
-    
-    self.iconImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-    _iconImageView.clipsToBounds = YES;
-    _iconImageView.contentMode = UIViewContentModeScaleAspectFill;
-    _iconImageView.backgroundColor = [UIColor themeGray6];
-    _iconImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _iconImageView.layer.borderWidth = 0.5;
-    _iconImageView.layer.masksToBounds = YES;
-    _iconImageView.layer.cornerRadius = 8;
-    [self.contentView addSubview:_iconImageView];
-    
-    self.iconLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
-    [self.contentView addSubview:_iconLabel];
-    
-    self.descLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
-    [_descLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [_descLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [self.contentView addSubview:_descLabel];
-    
-    self.bottomLine = [[UIView alloc] init];
-    _bottomLine.backgroundColor = [UIColor themeGray6];
-    [self.contentView addSubview:_bottomLine];
+    self.articleCardView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 0)];
+    [self.contentView addSubview:self.articleCardView];
 }
 
 - (void)initConstraints {
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(15);
-        make.left.mas_equalTo(self.contentView).offset(16);
-        make.right.mas_equalTo(self.contentView).offset(-102);
-    }];
-    
-    [self.singleImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(15);
-        make.right.mas_equalTo(self.contentView).offset(-16);
-        make.width.height.mas_equalTo(70);
-    }];
-    
-    [self.iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentLabel.mas_bottom).offset(12);
-        make.left.mas_equalTo(self.contentView).offset(16);
-        make.width.height.mas_equalTo(16);
-    }];
-    
-    [self.iconLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.iconImageView);
-        make.left.mas_equalTo(self.iconImageView.mas_right).offset(4);
-        make.right.mas_equalTo(self.descLabel.mas_left).offset(-10);
-        make.height.mas_equalTo(14);
-    }];
-    
-    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.iconImageView);
-        make.right.mas_equalTo(self.contentLabel.mas_right);
-        make.height.mas_equalTo(14);
-    }];
-    
-    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.contentView).offset(16);
-        make.right.mas_equalTo(self.contentView).offset(-16);
-        make.height.mas_equalTo([UIDevice btd_onePixel]);
-    }];
+    [self.articleCardView mas_makeConstraints:^(MASConstraintMaker *make) {
+          make.edges.equalTo(self.contentView);
+      }];
 }
 
--(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
-    UILabel *label = [[UILabel alloc] init];
-    label.font = font;
-    label.textColor = textColor;
-    return label;
+- (void)reloadDataWithDic:(NSDictionary *)dic {
+    FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
+    baesparmas.channel = @"community_evaluation";
+    baesparmas.bridgePrivate = self;
+    [self.articleCardView loadLynxWithParams:baesparmas];
+    NSMutableDictionary *dics = [dic mutableCopy];
+    [dics setObject:[@([UIScreen mainScreen].bounds.size.width - 9*2) stringValue] forKey:@"width"];
+//    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"search_agency_card" templateKey:[FHLynxManager defaultJSFileName] version:0];
+//    NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.172.166:3344/community_evaluation/template.js"]];
+//    NSString *lynxData = [dics btd_jsonStringEncoded];
+//    LynxTemplateData *data = [[LynxTemplateData alloc]initWithJson:lynxData];
+//    [self.articleCardView.lynxView loadTemplate:templateData withURL:@"local" initData:data];
+    if (dics && self.articleCardView) {
+        [self.articleCardView updateData:dics];
+    }
 }
 
 @end
