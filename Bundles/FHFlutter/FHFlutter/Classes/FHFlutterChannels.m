@@ -34,6 +34,7 @@
 }
 
 + (void)processChannelsImp:(FlutterMethodCall *)call callback:(FlutterResult)resultCallBack{
+    
 //    if ([@"invalidReasonDialog" isEqualToString:call.method]) {
 //        [FHFlutterChannels invalidReasonDialogWithParam:call callback:resultCallBack];
 //    } else if([@"callPhone" isEqualToString:call.method]) {
@@ -48,6 +49,13 @@
 //
     
 }
+
+//电话线索
+- (void)phoneCall:()
+
+//IM线索
+
+//表单线索
 
 + (void)invalidReasonDialogWithParam:(FlutterMethodCall *)call callback:(FlutterResult)resultCallBack
 {
