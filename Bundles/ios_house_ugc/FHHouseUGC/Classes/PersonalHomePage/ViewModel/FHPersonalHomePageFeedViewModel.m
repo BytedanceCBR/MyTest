@@ -11,7 +11,7 @@
 #import "FHCommonDefines.h"
 
 
-@interface FHPersonalHomePageFeedViewModel () <UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout>
+@interface FHPersonalHomePageFeedViewModel () <UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout,UIScrollViewDelegate>
 @property(nonatomic,weak) FHPersonalHomePageFeedViewController *viewController;
 @property(nonatomic,weak) UICollectionView *collectionView;
 @property(nonatomic,strong) NSArray *titleArray;
@@ -95,5 +95,13 @@
     CGSize cellSize = self.collectionView.bounds.size;
     return cellSize;
 }
+
+//-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+//    [[FHPersonalHomePageManager shareInstance] collectionViewBeginScroll:scrollView];
+//}
+//
+//-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    [[FHPersonalHomePageManager shareInstance] collectionViewDidScroll:scrollView];
+//}
 
 @end

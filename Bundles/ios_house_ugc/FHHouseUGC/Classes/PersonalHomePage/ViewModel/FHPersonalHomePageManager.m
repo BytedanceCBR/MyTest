@@ -19,7 +19,8 @@
 @property(nonatomic,assign) BOOL tableViewScrollEnable;
 @property(nonatomic,weak) FHPersonalHomePageTabListModel *tabListModel;
 @property(nonatomic,assign) BOOL isFeedError;
-
+@property(nonatomic,assign) CGFloat beginOffset;
+@property(nonatomic,assign) CGFloat lastOffset;
 @end
 
 @implementation FHPersonalHomePageManager
@@ -44,6 +45,8 @@
     self.tabListModel = nil;
     self.feedErrorArray = nil;
     self.userInfoChange = NO;
+    self.beginOffset = 0;
+    self.lastOffset = 0;
 }
 
 -(void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel {
@@ -162,6 +165,37 @@
         scrollView.contentOffset = CGPointZero;
         [self scrollsToTop];
     }
+}
+
+-(void)collectionViewBeginScroll:(UIScrollView *)scrollView {
+    self.beginOffset = self.currentIndex * SCREEN_WIDTH;
+    self.lastOffset = scrollView.contentOffset.x;
+}
+
+-(void)collectionViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat scrollDistance = scrollView.contentOffset.x - self.lastOffset;
+    CGFloat diff = scrollView.contentOffset.x - self.beginOffset;
+
+    CGFloat tabIndex = scrollView.contentOffset.x / SCREEN_WIDTH;
+    if(diff >= 0){
+        tabIndex = floorf(tabIndex);
+    }else if (diff < 0){
+        tabIndex = ceilf(tabIndex);
+    }
+
+    if(tabIndex != self.feedViewController.headerView.selectedSegmentIndex){
+        self.currentIndex = tabIndex;
+        self.feedViewController.headerView.selectedSegmentIndex = self.currentIndex;
+    } else {
+        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > SCREEN_WIDTH * (self.feedErrorArray.count - 1)){
+            return;
+        }
+        
+        CGFloat value = scrollDistance / SCREEN_WIDTH;
+        [self.feedViewController.headerView setScrollValue:value isDirectionLeft:diff < 0];
+    }
+
+    self.lastOffset = scrollView.contentOffset.x;
 }
 
 -(CGFloat)tabListOffset {
