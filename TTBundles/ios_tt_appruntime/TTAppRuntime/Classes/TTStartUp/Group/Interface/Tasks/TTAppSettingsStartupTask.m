@@ -17,6 +17,8 @@
 #import <BDABTestSDK/BDABTestManager.h>
 #import "TTLaunchDefine.h"
 #import <TTAccount+Multicast.h>
+#import <ReactiveObjC.h>
+#import <TTReachability.h>
 
 DEC_TASK("TTAppSettingsStartupTask",FHTaskTypeInterface,TASK_PRIORITY_HIGH+2);
 
@@ -31,6 +33,17 @@ static const NSInteger kSDOptimizeCacheMaxSize = 100 * 1024 * 1024; // 100M
 - (instancetype)init {
     if(self = [super init]) {
         [TTAccount addMulticastDelegate:self];
+        
+        @weakify(self);
+        [[[[[NSNotificationCenter defaultCenter] rac_addObserverForName:TTReachabilityChangedNotification object:nil] map:^id _Nullable(NSNotification * _Nullable value) {
+            return @([TTReachability isNetworkConnected]);
+        }] distinctUntilChanged] subscribeNext:^(id  _Nullable isNetworkConnect) {
+            @strongify(self);
+            // 网络从断开连接到恢复连接后，重新取一次settings
+            if([isNetworkConnect boolValue]) {
+                [self manualFetchSettings];
+            }
+        }];;
     }
     return self;
 }
@@ -76,17 +89,19 @@ static const NSInteger kSDOptimizeCacheMaxSize = 100 * 1024 * 1024; // 100M
     }];
 }
 
-#pragma mark - TTAccountMulticastProtocol
-
-- (void)onAccountLogin {
+- (void)manualFetchSettings {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [ArticleFetchSettingsManager manualForceRefreshDefaultInfoIfNeed];
     });
 }
 
+#pragma mark - TTAccountMulticastProtocol
+
+- (void)onAccountLogin {
+    [self manualFetchSettings];
+}
+
 - (void)onAccountLogout {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [ArticleFetchSettingsManager manualForceRefreshDefaultInfoIfNeed];
-    });
+    [self manualFetchSettings];
 }
 @end
