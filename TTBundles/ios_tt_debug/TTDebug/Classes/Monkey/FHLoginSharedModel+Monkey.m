@@ -10,7 +10,10 @@
 @implementation FHLoginViewModel (Monkey)
 
 - (BOOL)monkey_shouldShowDouyinIcon {
-    return NO;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"IS_MONKEY"]) {
+        return NO;
+    }
+    return [self monkey_shouldShowDouyinIcon];
 }
 
 @end
@@ -18,7 +21,10 @@
 @implementation FHLoginSharedModel (Monkey)
 
 - (BOOL)monkey_douyinCanQucikLogin {
-    return NO;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"IS_MONKEY"]) {
+        return NO;
+    }
+    return [self monkey_douyinCanQucikLogin];
 }
 
 @end

@@ -770,7 +770,7 @@
             }
         }
     } else if (scrollView == self.homeViewController.scrollView) {
-        
+        self.superScrollEnable = NO;
         CGFloat contentWidth = (KFHScreenWidth * [FHEnvContext sharedInstance].generalBizConfig.configCache.houseTypeList.count) - KFHScreenWidth;
         if (scrollView.contentOffset.x >= contentWidth) {
             scrollView.contentOffset = CGPointMake(contentWidth, 0);
@@ -872,7 +872,6 @@
     };
     [self.categoryView showOriginStyle:isShowTopHouse];
     [mainVC changeTopStatusShowHouse:!isShowTopHouse];
-    
     if (isShowTopHouse && (self.childResetZeroStatus != isShowTopHouse)) {
         for (FHHomeItemViewController *vc in self.itemsVCArray) {
             if (vc.houseType == self.houseType) {
@@ -881,9 +880,6 @@
                     self.superScrollEnable = YES;
                 }
             }
-           if (vc.tableView.numberOfSections > 0 && [vc.tableView numberOfRowsInSection:0] > 0 && (NSInteger)vc.tableView.contentOffset.y != 0){
-               vc.tableView.contentOffset = CGPointZero;
-           }
         }
     }
     self.childResetZeroStatus = isShowTopHouse;
