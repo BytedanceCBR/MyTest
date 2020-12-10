@@ -44,6 +44,8 @@
 #import "FHNeighborhoodDetailBaseInfoSM.h"
 #import "FHDetailRelatedHouseResponseModel.h"
 #import "FHNeighborhoodDetailSurroundingHouseSM.h"
+#import "FHNeighborhoodDetailSurroundingNeighborSM.h"
+#import "FHNeighborhoodDetailSurroundingNeighborSC.h"
 
 @interface FHNeighborhoodDetailViewModel ()
 
@@ -189,6 +191,13 @@
             agentSM.sectionType = FHNeighborhoodDetailSectionTypeAgent;
             [sectionModels addObject:agentSM];
         }
+        
+        //小区基本信息
+        if (model.data.baseInfo.count) {
+            FHNeighborhoodDetailBaseInfoSM *baseInfoSM = [[FHNeighborhoodDetailBaseInfoSM alloc] initWithDetailModel:self.detailData];
+            baseInfoSM.sectionType = FHNeighborhoodDetailSectionTypeBaseInfo;
+            [sectionModels addObject:baseInfoSM];
+        }
 
         //周边 地图+均价走势
         if ((model.data.neighborhoodInfo.gaodeLat.length && model.data.neighborhoodInfo.gaodeLng.length)) {
@@ -276,6 +285,13 @@
             [houseSaleSM updateWithDataModel:self.sameNeighborhoodErshouHouseData];
             houseSaleSM.sectionType = FHNeighborhoodDetailSectionTypeHouseSale;
             [sectionModels addObject:houseSaleSM];
+        }
+        // 周边小区
+        if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
+            FHNeighborhoodDetailSurroundingNeighborSM *surroundingNeighborSM = [[FHNeighborhoodDetailSurroundingNeighborSM alloc] initWithDetailModel:self.detailData];
+            [surroundingNeighborSM updateWithDataModel:self.relatedNeighborhoodData];
+            surroundingNeighborSM.sectionType = FHNeighborhoodDetailSectionTypeSurroundingNeighbor;
+            [sectionModels addObject:surroundingNeighborSM];
         }
         //猜你喜欢
         if (self.recommendHouseData.items.count > 0) {

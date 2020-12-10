@@ -16,8 +16,7 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
 @interface FHNeighborhoodDetailPropertyInfoCollectionCell ()
 
 @property (nonatomic, strong) UIStackView *stackView;
-@property (nonatomic, strong)   FHDetailFoldViewButton       *foldButton;
-@property (nonatomic, strong)   UIView       *opView;// 半透明视图
+@property (nonatomic, strong) UIButton *allButton;
 
 @end
 
@@ -29,22 +28,26 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
     }
     FHNeighborhoodDetailPropertyInfoModel *model = (FHNeighborhoodDetailPropertyInfoModel *)data;
     CGFloat height = 0;
-    NSInteger foldCount = 0;
-    if (model.baseInfoFoldCount && model.baseInfoFoldCount.length > 0) {
-        NSInteger value = [model.baseInfoFoldCount integerValue];
-        if (value > 0) {
-            foldCount = value;
-        }
-    }
+    NSInteger foldCount = 3;
     foldCount = MIN(foldCount, model.baseInfo.count);
-    NSInteger baseInfoCount = model.isFold ? foldCount : model.baseInfo.count;
-    height = baseInfoCount * kFHPropertyItemInfoHeight;
-    
-    if (model.baseInfo.count > foldCount) {
-        height += 58;
-    } else {
-        height += 20;
-    }
+    height = foldCount * kFHPropertyItemInfoHeight;
+    height += 60;
+//    NSInteger foldCount = 0;
+//    if (model.baseInfoFoldCount && model.baseInfoFoldCount.length > 0) {
+//        NSInteger value = [model.baseInfoFoldCount integerValue];
+//        if (value > 0) {
+//            foldCount = value;
+//        }
+//    }
+//    foldCount = MIN(foldCount, model.baseInfo.count);
+//    NSInteger baseInfoCount = model.isFold ? foldCount : model.baseInfo.count;
+//    height = baseInfoCount * kFHPropertyItemInfoHeight;
+//
+//    if (model.baseInfo.count > foldCount) {
+//        height += 58;
+//    } else {
+//        height += 20;
+//    }
     
     return CGSizeMake(width, height);
 }
@@ -57,10 +60,35 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
         self.stackView.axis = UILayoutConstraintAxisVertical;
         [self addSubview:self.stackView];
         [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_offset(15);
-            make.right.mas_offset(-15);
+            make.left.mas_offset(12);
+            make.right.mas_offset(-12);
             make.top.mas_equalTo(self);
-            make.bottom.mas_equalTo(-20);
+            make.height.mas_equalTo(kFHPropertyItemInfoHeight * 3);
+        }];
+        
+        __weak typeof(self) weakSelf = self;
+        self.allButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.allButton.backgroundColor = [UIColor colorWithHexString:@"#fafafa"];
+        self.allButton.titleLabel.font = [UIFont themeFontRegular:16];
+        [self.allButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+        self.allButton.layer.masksToBounds = YES;
+        self.allButton.layer.cornerRadius = 4.0;
+        [self.allButton setTitle:@"查看全部信息" forState:UIControlStateNormal];
+        [self.allButton setImage:[UIImage imageNamed:@"arrowicon-feed-4"] forState:UIControlStateNormal];
+        [self.allButton btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
+            if (weakSelf.allButtonActionBlock) {
+                weakSelf.allButtonActionBlock();
+            }
+        }];
+        [self addSubview:self.allButton];
+        [self.allButton sizeToFit];
+        self.allButton.titleEdgeInsets = UIEdgeInsetsMake(0, -self.allButton.imageView.bounds.size.width, 0, self.allButton.imageView.bounds.size.width);
+        self.allButton.imageEdgeInsets = UIEdgeInsetsMake(0, self.allButton.titleLabel.bounds.size.width + 4, 0, -self.allButton.titleLabel.bounds.size.width);
+        [self.allButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.stackView.mas_bottom).mas_offset(8);
+            make.height.mas_equalTo(40);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
         }];
     }
     return self;
@@ -76,16 +104,10 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
     [self.stackView.arrangedSubviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     CGFloat stackViewHeight = 0;
-    NSInteger foldCount = 0;
-    if (model.baseInfoFoldCount && model.baseInfoFoldCount.length > 0) {
-        NSInteger value = [model.baseInfoFoldCount integerValue];
-        if (value > 0) {
-            foldCount = value;
-        }
-    }
+    NSInteger foldCount = 3;
     foldCount = MIN(foldCount, model.baseInfo.count);
-    NSInteger baseInfoCount = model.isFold ? foldCount : model.baseInfo.count;
-    for (NSInteger i = 0; i < baseInfoCount; i++) {
+//    NSInteger baseInfoCount = model.isFold ? foldCount : model.baseInfo.count;
+    for (NSInteger i = 0; i < foldCount; i++) {
         FHNeighborhoodDetailPropertyItemView *itemView = [[FHNeighborhoodDetailPropertyItemView alloc] init];
         [self.stackView addArrangedSubview:itemView];
         FHHouseBaseInfoModel *baseInfoModel = model.baseInfo[i];
@@ -96,63 +118,9 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
         }];
         stackViewHeight += kFHPropertyItemInfoHeight;
     }
-    
-    if (model.baseInfo.count > foldCount) {
-        if (_foldButton) {
-            [_foldButton removeFromSuperview];
-            _foldButton = nil;
-        }
-        if (_opView) {
-            [_opView removeFromSuperview];
-        }
-        _opView = [[UIView alloc] initWithFrame:CGRectZero];
-        // 渐变色layer
-        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-        gradientLayer.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, 53);
-        gradientLayer.colors = @[(__bridge id)[[UIColor whiteColor] colorWithAlphaComponent:0.3].CGColor,
-                                 (__bridge id)[[UIColor whiteColor] colorWithAlphaComponent:1.0].CGColor];
-        gradientLayer.startPoint = CGPointMake(0.5, 0.0);
-        gradientLayer.endPoint = CGPointMake(0.5, 1.0);
-        [_opView.layer addSublayer:gradientLayer];
-        [self addSubview:_opView];
-        [_opView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(53);
-            make.left.right.mas_equalTo(self);
-            make.top.mas_equalTo(self.stackView.mas_bottom).offset(-30);
-        }];
-        
-        _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部信息" upText:@"收起" isFold:YES];
-        _foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
-        _foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];
-        _foldButton.keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
-        _foldButton.keyLabel.font = [UIFont themeFontRegular:14];
-        [self addSubview:_foldButton];
-        [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.stackView.mas_bottom);
-            make.height.mas_equalTo(58);
-            make.left.right.mas_equalTo(self);
-        }];
-        [self.stackView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self).offset(-58);
-        }];
-        __weak typeof(self) weakSelf = self;
-        [self.foldButton btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
-//            if (weakSelf.foldButtonActionBlock) {
-//                weakSelf.foldButtonActionBlock();
-//            }
-        }];
-        
-    }
-    
     [self.stackView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(stackViewHeight);
     }];
-    self.foldButton.isFold = model.isFold;
-    if (model.isFold) {
-        self.opView.hidden = NO;
-    } else {
-        self.opView.hidden = YES;
-    }
 }
 
 - (void)bindViewModel:(id)viewModel {
@@ -167,7 +135,7 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
 {
     self = [super init];
     if (self) {
-        _isFold = YES;
+//        _isFold = YES;
     }
     return self;
 }
@@ -179,13 +147,13 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
     return self == object;
 }
 
-- (instancetype)transformFoldStatus {
-    FHNeighborhoodDetailPropertyInfoModel *newInfoModel = [[FHNeighborhoodDetailPropertyInfoModel alloc] init];
-    newInfoModel.baseInfo = self.baseInfo;
-    newInfoModel.baseInfoFoldCount = self.baseInfoFoldCount;
-    newInfoModel.isFold = !self.isFold;
-    return newInfoModel;
-}
+//- (instancetype)transformFoldStatus {
+//    FHNeighborhoodDetailPropertyInfoModel *newInfoModel = [[FHNeighborhoodDetailPropertyInfoModel alloc] init];
+//    newInfoModel.baseInfo = self.baseInfo;
+//    newInfoModel.baseInfoFoldCount = self.baseInfoFoldCount;
+//    newInfoModel.isFold = !self.isFold;
+//    return newInfoModel;
+//}
 
 @end
 
@@ -207,32 +175,28 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
 }
 
 - (void)setupUI {
-    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     _keyLabel.textColor = [UIColor themeGray3];
     [self addSubview:_keyLabel];
     [_keyLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_keyLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
-    _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     _valueLabel.textColor = [UIColor themeGray1];
-    _valueLabel.font = [UIFont themeFontMedium:14];
     [self addSubview:_valueLabel];
     _valueLabel.textAlignment = NSTextAlignmentLeft;
     // 布局
     [self.keyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
-        make.top.mas_equalTo(5);
-        make.height.mas_equalTo(20);
-        make.width.mas_offset(56);
-        make.bottom.mas_equalTo(self).offset(-5);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(22);
     }];
     
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.keyLabel.mas_right).offset(12);
-        make.top.mas_equalTo(5);
-        make.height.mas_equalTo(20);
+        make.left.mas_equalTo(70);
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(22);
         make.right.mas_equalTo(-5);
-        make.bottom.mas_equalTo(self.keyLabel);
     }];
 }
 

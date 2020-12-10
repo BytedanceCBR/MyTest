@@ -389,16 +389,6 @@
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 3) {
         self.detailController.isLoadingData = NO;
-//        // 周边小区
-//        if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
-//            // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//            [self.items addObject:grayLine];
-//            FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
-//            infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
-//            infoModel.neighborhoodId = self.neighborhoodId;
-//            [self.items addObject:infoModel];
-//        }
         // 小区房源(二手房)
         if (self.sameNeighborhoodErshouHouseData.items.count>0){
             FHDetailNeighborhoodHouseSaleModel *infoModel = [[FHDetailNeighborhoodHouseSaleModel alloc] init];

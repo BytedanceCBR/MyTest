@@ -14,6 +14,7 @@
 
 - (void)prepareForReuse {
     [super prepareForReuse];
+    self.moreActionBlock = nil;
     self.arrowsImg.hidden = YES;
     self.subTitleLabel.hidden = YES;
     [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {

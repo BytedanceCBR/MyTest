@@ -54,6 +54,11 @@
 #import "FHNeighborhoodDetailSurroundingSM.h"
 #import "FHNeighborhoodDetailSurroundingHouseSM.h"
 #import "FHNeighborhoodDetailSurroundingHouseSC.h"
+#import "FHNeighborhoodDetailBaseInfoSM.h"
+#import "FHNeighborhoodDetailBaseInfoSC.h"
+#import "FHNeighborhoodDetailSurroundingNeighborSM.h"
+#import "FHNeighborhoodDetailSurroundingNeighborSC.h"
+
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -856,6 +861,13 @@
                 break;
             case FHNeighborhoodDetailSectionTypeSurrounding:
                 return [[FHNeighborhoodDetailSurroundingSC alloc] init];
+                break;
+            case FHNeighborhoodDetailSectionTypeBaseInfo:
+                return [[FHNeighborhoodDetailBaseInfoSC alloc] init];
+                break;
+            case FHNeighborhoodDetailSectionTypeSurroundingNeighbor:
+                return [[FHNeighborhoodDetailSurroundingNeighborSC alloc] init];
+                break;
             default:
                 break;
         }
