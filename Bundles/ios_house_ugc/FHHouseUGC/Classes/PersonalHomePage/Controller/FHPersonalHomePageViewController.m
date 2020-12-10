@@ -6,6 +6,7 @@
 //
 
 #import "FHPersonalHomePageViewController.h"
+#import "UIViewController+NavigationBarStyle.h"
 #import "FHPersonalHomePageViewModel.h"
 #import "FHPersonalHomePageFeedViewController.h"
 #import "FHPersonalHomePageManager.h"
@@ -21,18 +22,6 @@
 
 @implementation FHPersonalHomePageScrollView
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer {
-    return YES;
-}
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
-    
-    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-        UIPanGestureRecognizer *pan = (UIPanGestureRecognizer *)gestureRecognizer;
-        CGPoint point = [pan translationInView:self];
-        if(point.x > 0) {
-            return NO;
-        }
-    }
     return YES;
 }
 
@@ -92,6 +81,7 @@
     
     [self initNavBar];
     [self addDefaultEmptyViewFullScreen];
+    self.ttDragBackLeftEdge = 50;
 }
 
 
