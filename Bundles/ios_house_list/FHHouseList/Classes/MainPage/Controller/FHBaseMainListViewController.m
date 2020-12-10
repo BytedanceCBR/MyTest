@@ -327,11 +327,18 @@
     
     [self.viewModel addStayLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
+    
+    if ([FHEnvContext isHouseListComponentEnable]) {
+        [(FHHouseTableView *)self.tableView handleAppDidEnterBackground];
+    }
 }
 
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    if ([FHEnvContext isHouseListComponentEnable]) {
+        [(FHHouseTableView *)self.tableView handleAppWillEnterForground];
+    }
     
     if (self.houseType == FHHouseTypeSecondHandHouse) {
         NSArray *tableCells = [self.tableView visibleCells];

@@ -134,6 +134,12 @@
     }];
 }
 
+- (void)resumeVRIcon {
+    if (_vrLoadingView && !self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
+    }
+}
+
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
     FHHouseSecondCardViewModel *secondViewModel = (FHHouseSecondCardViewModel *)self.viewModel;

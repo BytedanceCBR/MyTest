@@ -192,6 +192,12 @@
     }
 }
 
+- (void)resumeVRIcon {
+    if (_vrLoadingView && !self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
+    }
+}
+
 + (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (![viewModel isKindOfClass:FHHouseNewCardViewModel.class]) return 0.0f;
     FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;

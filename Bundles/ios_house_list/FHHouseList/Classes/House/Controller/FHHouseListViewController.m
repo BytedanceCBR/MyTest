@@ -711,11 +711,19 @@
     
     [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
+    
+    if ([FHEnvContext isHouseListComponentEnable]) {
+        [(FHHouseTableView *)self.tableView handleAppDidEnterBackground];
+    }
 }
 
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    if ([FHEnvContext isHouseListComponentEnable]) {
+        [(FHHouseTableView *)self.tableView handleAppWillEnterForground];
+    }
     
     if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNewHouse) {
         NSArray *tableCells = [self.tableView visibleCells];
@@ -730,6 +738,7 @@
             }];
         }
     }
+
 }
 
 #pragma mark - lazy load

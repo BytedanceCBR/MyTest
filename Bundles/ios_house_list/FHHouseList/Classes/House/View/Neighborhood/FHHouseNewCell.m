@@ -57,6 +57,10 @@
     }
 }
 
+- (void)cellWillEnterForground {
+    [self.cardView resumeVRIcon];
+}
+
 + (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if ([viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
         FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;
