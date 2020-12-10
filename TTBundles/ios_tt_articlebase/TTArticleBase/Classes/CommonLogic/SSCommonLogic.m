@@ -5541,9 +5541,8 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
 
 // 表单线索提交是有优化体验 form_associate_verify
 + (BOOL)isEnableVerifyFormAssociate {
-    return YES;
     NSDictionary *fhSettings = [self fhSettings];
-    return [fhSettings btd_boolValueForKey:@"form_associate_verify" default:NO];
+    return [fhSettings btd_boolValueForKey:@"f_form_associate_verify_enable" default:NO];
 }
 
 @end

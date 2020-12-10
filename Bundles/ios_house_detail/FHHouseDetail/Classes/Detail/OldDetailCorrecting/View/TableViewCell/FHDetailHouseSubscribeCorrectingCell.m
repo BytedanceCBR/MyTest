@@ -106,6 +106,7 @@
     if (!_bacIma) {
         UIImageView *bacIma = [[UIImageView alloc]init];
         bacIma.image = [UIImage imageNamed:@"houseSubscribeBac"];
+        bacIma.userInteractionEnabled = YES;
         [self.contentView addSubview:bacIma];
         _bacIma = bacIma;
     }

@@ -365,16 +365,64 @@
     }];
 }
 
-+ (TTHttpTask*)requestCallReportByHouseId:(NSString*)houseId
-       phone:(NSString*)phone
-        from:(NSString*)from
-    cluePage:(NSNumber*)cluePage
-clueEndpoint:(NSNumber*)clueEndpoint
-  targetType:(NSNumber *)targetType
-reportAssociate:(NSDictionary*)reportAssociate
-agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
-extraInfo:(NSDictionary *)extra
-completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion
++ (TTHttpTask *)revokeAssociateDistribution:(NSString *)associateId completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion {
+    NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
+    NSString* url = [host stringByAppendingString:@"/f100/api/call_report/verify"];
+    
+    NSMutableDictionary *paramDic = @{}.mutableCopy;
+    if (associateId) {
+        paramDic[@"associate_id"] = associateId;
+    }
+    paramDic[@"channel_biz_id"] = @"94349548910";
+    
+    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:POST needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
+        FHDetailResponseModel *model = nil;
+        NSError *jerror = nil;
+        if (!error) {
+            model = [[FHDetailResponseModel alloc]initWithData:jsonObj error:&jerror];
+        }
+        if (![model.status isEqualToString:@"0"]) {
+            error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];
+        }
+        NSMutableDictionary *categoryDict = @{}.mutableCopy;
+        NSMutableDictionary *extraDict = @{}.mutableCopy;
+        if (![TTReachability isNetworkConnected]) {
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%lu",(unsigned long)FHClueErrorTypeNetFailure];
+        }
+        if (response.statusCode == 200) {
+            if ([model respondsToSelector:@selector(status)]) {
+                NSString *status = [model performSelector:@selector(status)];
+                if (status.integerValue != 0 || error != nil) {
+                    if (status) {
+                        extraDict[@"error_code"] = status;
+                    }
+                    extraDict[@"message"] = model.message ? : error.domain;
+                    categoryDict[@"status"] = [NSString stringWithFormat:@"%lu",(unsigned long)FHClueErrorTypeServerFailure];
+                }else {
+                    categoryDict[@"status"] = [NSString stringWithFormat:@"%lu",(unsigned long)FHClueErrorTypeNone];
+                }
+            }
+        }else {
+            categoryDict[@"status"] = [NSString stringWithFormat:@"%lu",(unsigned long)FHClueErrorTypeHttpFailure];
+            extraDict[@"error_code"] = [NSString stringWithFormat:@"%ld",(long)response.statusCode];
+        }
+        [self addClueFormErrorRateLog:categoryDict extraDict:extraDict];
+        if (completion) {
+            completion(model,error);
+        }
+    }];
+}
+
++ (TTHttpTask *)requestCallReportByHouseId:(NSString *)houseId
+                                     phone:(NSString *)phone
+                                      from:(NSString *)from
+                                  cluePage:(NSNumber *)cluePage
+                              clueEndpoint:(NSNumber *)clueEndpoint
+                                targetType:(NSNumber *)targetType
+                           reportAssociate:(NSDictionary *)reportAssociate
+                                agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
+                                 extraInfo:(NSDictionary *)extra
+                                completion:(void(^)(FHDetailFillFormResponseModel * _Nullable model , NSError * _Nullable error))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/call_report"];
@@ -422,10 +470,10 @@ completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullabl
     }
 
     return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:paramDic method:POST needCommonParams:YES requestSerializer:[FHPostDataHTTPRequestSerializer class] responseSerializer:[[TTNetworkManager shareInstance]defaultBinaryResponseSerializerClass] autoResume:YES callback:^(NSError *error, id jsonObj, TTHttpResponse *response) {
-        FHDetailResponseModel *model = nil;
+        FHDetailFillFormResponseModel *model = nil;
         NSError *jerror = nil;
         if (!error) {
-            model = [[FHDetailResponseModel alloc]initWithData:jsonObj error:&jerror];
+            model = [[FHDetailFillFormResponseModel alloc]initWithData:jsonObj error:&jerror];
         }
         if (![model.status isEqualToString:@"0"]) {
             error = [NSError errorWithDomain:model.message?:DEFULT_ERROR code:API_ERROR_CODE userInfo:nil];

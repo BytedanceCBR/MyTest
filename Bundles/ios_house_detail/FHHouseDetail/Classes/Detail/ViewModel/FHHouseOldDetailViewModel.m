@@ -1007,7 +1007,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     }
 
 
-    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil extraInfo:extraInfo completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil extraInfo:extraInfo completion:^(FHDetailFillFormResponseModel * _Nullable model, NSError * _Nullable error) {
 
 //    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         

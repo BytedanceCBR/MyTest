@@ -14,6 +14,8 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <FHHouseBase/FHUserInfoManager.h>
 #import <FHHouseBase/NSObject+FHOptimize.h>
+#import "SSCommonLogic.h"
+#import <TTAccountSDK/TTAccount.h>
 
 @interface FHHouseFindHelpContactCell()
 
@@ -64,32 +66,43 @@
         make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
     
-    [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.phoneInput);
-        make.top.mas_equalTo(self.singleLine.mas_bottom).mas_offset(20);
-//        make.bottom.mas_equalTo(-20);
-    }];
-    
-    [self.varifyCodeInput mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(30);
-        make.left.mas_equalTo(self.phoneInput);
-        make.right.mas_equalTo(self.phoneInput);
-        make.height.mas_equalTo(30);
-    }];
-    
-    [self.singleLine2 mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.varifyCodeInput.mas_bottom);
-        make.left.mas_equalTo(self.phoneInput);
-        make.right.mas_equalTo(self.phoneInput);
-        make.height.mas_equalTo(1.0/UIScreen.mainScreen.scale);
-    }];
-    
-    [self.sendVerifyCodeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.phoneInput);
-        make.right.mas_equalTo(self.phoneInput);
-        make.height.mas_equalTo(30);
-    }];
-
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        if (![TTAccount sharedAccount].isLogin) {
+            [self.varifyCodeInput mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(30);
+                make.left.mas_equalTo(self.phoneInput);
+                make.right.mas_equalTo(self.phoneInput);
+                make.height.mas_equalTo(30);
+            }];
+            
+            [self.singleLine2 mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.varifyCodeInput.mas_bottom);
+                make.left.mas_equalTo(self.phoneInput);
+                make.right.mas_equalTo(self.phoneInput);
+                make.height.mas_equalTo(1.0/UIScreen.mainScreen.scale);
+            }];
+            
+            [self.sendVerifyCodeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.mas_equalTo(self.phoneInput);
+                make.right.mas_equalTo(self.phoneInput);
+                make.height.mas_equalTo(30);
+            }];
+            
+            [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.right.mas_equalTo(self.phoneInput);
+                make.top.mas_equalTo(self.singleLine2.mas_bottom).mas_offset(20);
+        //        make.bottom.mas_equalTo(-20);
+            }];
+        } else {
+            self.phoneInput.userInteractionEnabled = NO;
+        }
+    } else {
+        [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(self.phoneInput);
+            make.top.mas_equalTo(self.singleLine.mas_bottom).mas_offset(20);
+    //        make.bottom.mas_equalTo(-20);
+        }];
+    }
     [self.announceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.tipLabel);
         make.top.mas_equalTo(self.tipLabel.mas_bottom);

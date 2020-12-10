@@ -114,18 +114,13 @@ extern NSString *const kFHToastCountKey;
     if (![extraInfo btd_stringValueForKey:@"origin_from"]) {
         extraInfo[@"origin_from"] = associateReport.reportParams[@"origin_from"] ?: @"be_null";
     }
-    [FHMainApi requestCallReportByHouseId:associateReport.houseId phone:phone from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:associateReport.associateInfo agencyList:nil extraInfo:extraInfo.copy completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:associateReport.houseId phone:phone from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:associateReport.associateInfo agencyList:nil extraInfo:extraInfo.copy completion:^(FHDetailFillFormResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
             if (completion) {
                 completion();
             }
             [FHUserInfoManager savePhoneNumber:phone];
-            NSString *toast = @"提交成功，经纪人将尽快与您联系";
-            if (associateReport.toast && associateReport.toast.length > 0) {
-                toast = associateReport.toast;
-            }
-            
             /*
              不想加这个逻辑，新房填表单之后要弹出另一个弹窗，效果是要衔接，就是一个不消失直接展示另一个，不是不能实现，是要把之前封装好的逻辑打乱，还要加一些XX的代码，不优雅； 数据都不在一个地方，加通知也不太好，oops
              
@@ -133,9 +128,36 @@ extern NSString *const kFHToastCountKey;
              补充，之前的新房留资功能已经删除
              命中新的线索优化实验后，需要出现二次弹框，可以使用之前留资的api
              */
-            [[ToastManager manager] showToast:toast];
-            // 走之前的逻辑
-            [alertView dismiss];
+            NSString *toast = @"提交成功，经纪人将尽快与您联系";
+            if (associateReport.toast && associateReport.toast.length > 0) {
+                toast = associateReport.toast;
+            }
+            if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+                FHFormAssociateInfoControlInfoModel *controlInfo = model.data.associateInfo.controlInfo;
+                if (controlInfo && [controlInfo.verifyType isEqualToString:@"3"] && controlInfo.dialog) {
+                    __weak FHDetailNoticeAlertView *weakAlertView = alertView;
+                    [alertView setRevokeAssociateDistributionBlock:^{
+                        [FHHouseFillFormHelper revokeFillFormAssociate:model.data.associateId alertView:weakAlertView];
+                    }];
+                    FHFormAssociateInfoControlInfoDialogModel *dialogModel = controlInfo.dialog;
+                    [alertView showOtherDialogWithTitle:dialogModel.title subTitle:dialogModel.content confirmTitle:dialogModel.confirmBtnText cancelTitle:dialogModel.cancelBtnText];
+                    
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(180 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        if (alertView) {
+                            [alertView dismiss];
+                        }
+                    });
+                } else {
+                    [[ToastManager manager] showToast:toast];
+                    // 走之前的逻辑
+                    [alertView dismiss];
+                }
+            } else {
+ 
+                [[ToastManager manager] showToast:toast];
+                // 走之前的逻辑
+                [alertView dismiss];
+            }
 
         }else {
             NSString *message = model.message ? : @"提交失败";
@@ -152,6 +174,17 @@ extern NSString *const kFHToastCountKey;
     followConfig.showTip = YES;
     
     [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:followConfig];
+}
+
++ (void)revokeFillFormAssociate:(NSString *)associateId alertView:(FHDetailNoticeAlertView *)alertView{
+    [FHMainApi revokeAssociateDistribution:associateId completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+        if (model.status.integerValue == 0 && !error) {
+            [alertView dismiss];
+        }else {
+            NSString *message = model.message ? : @"提交失败";
+            [[ToastManager manager] showToast:message];
+        }
+    }];
 }
 
 // 表单展示

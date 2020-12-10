@@ -67,6 +67,7 @@
 #import "FHNewHouseDetailViewController.h"
 #import "FHNeighborhoodDetailViewController.h"
 #import <FHShareManager.h>
+#import "SSCommonLogic.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -681,6 +682,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (formParamsDict[@"toast"]) {
         toast = formParamsDict[@"toast"];
     }
+    
+//    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+//        title = @"询底价";
+//        subtitle = @"填写手机号，我们将给您匹配专业的经纪人为您提供接待服务。";
+//    }
     FHAssociateFormReportModel *associateReport = [[FHAssociateFormReportModel alloc]init];
     if (self.houseType == FHHouseTypeNeighborhood) {
         associateReport.title = @"咨询经纪人";

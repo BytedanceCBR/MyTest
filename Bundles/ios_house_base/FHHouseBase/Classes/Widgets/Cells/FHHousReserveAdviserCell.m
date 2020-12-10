@@ -355,7 +355,7 @@
                 
                 [self.tipNameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                     make.left.mas_equalTo(self.bottomInfoView).offset(15);
-                    make.right.mas_equalTo(self.subscribeBtn.mas_left).offset(-15);
+                    make.right.mas_equalTo(self.subscribeBtn.mas_left).offset(-5);
                     make.top.mas_equalTo(self.bottomInfoView).offset(16);
                     make.height.mas_equalTo(22);
                 }];
@@ -494,7 +494,7 @@
     }
 
     __weak typeof(self) wself = self;
-    [FHMainApi requestCallReportByHouseId:nil phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:self.modelData.associateInfo.reportFormInfo agencyList:nil extraInfo:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:nil phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:self.modelData.associateInfo.reportFormInfo agencyList:nil extraInfo:nil completion:^(FHDetailFillFormResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
             if(wself.modelData.subscribeCache && wself.modelData.targetId){

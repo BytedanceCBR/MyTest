@@ -58,7 +58,7 @@
 extern NSString *const kFHFindHouseTypeNumberCacheKey;
 static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的默认值改为第四个
 
-@interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
+@interface FHHouseFindHelpViewModel ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource, UITableViewDelegate, FHHouseFindPriceCellDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate, FHHouseFindLoginDelegate>
 
 @property(nonatomic , strong) UICollectionView *collectionView;
 @property (nonatomic , strong) NSArray<FHSearchFilterConfigItem *> *secondFilter;
@@ -203,66 +203,73 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
     if ([phoneNumber containsString:@"*"]) {
         phoneNumber = self.contactCell.phoneNum;
     }
-    if (phoneNumber.length < 1 || ![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![FHUserInfoManager checkPureIntFormatted:phoneNumber]) {
+    if (phoneNumber.length != 11 || ![phoneNumber hasPrefix:@"1"] || phoneNumber.length != 11 || ![FHUserInfoManager checkPureIntFormatted:phoneNumber]) {
         [[ToastManager manager] showToast:@"请输入正确的手机号"];
         return;
     }
     [self storePhoneNumber:phoneNumber];
     [self storeHouseTypeNumber:[NSString stringWithFormat:@"%ld",_houseTypeSelectedValue]];
 
-    if (![self submitActionWithPhoneNumber:phoneNumber]) {
+    if (phoneNumber.length != 11) {
         [[ToastManager manager] showToast:@"请输入正确的手机号"];
         return;
     }
     
+    if ([SSCommonLogic isEnableVerifyFormAssociate] && ![TTAccount sharedAccount].isLogin) {
+        [self addClickLoginLog];
+        
+        NSString *phoneNumber = self.contactCell.phoneInput.text;
+        NSString *smsCode = self.contactCell.varifyCodeInput.text;
+        
+        if (![TTReachability isNetworkConnected]) {
+            [[ToastManager manager] showToast:@"网络错误"];
+            return;
+        }
+        if(smsCode.length == 0){
+            [[ToastManager manager] showToast:@"验证码为空"];
+            return;
+        }
+        
+        if (![TTReachability isNetworkConnected]) {
+            [[ToastManager manager] showToast:@"网络异常"];
+            return;
+        }
+        
+        //添加抖音 submit 埋点
+        NSMutableDictionary *trackerDict = [self.viewController tracerDict].mutableCopy;
+        trackerDict[@"enter_from"] = @"driving_find_house";
+        trackerDict[@"login_method"] = @"phone_sms";
+        trackerDict[@"enter_method"] = @"click";
+        [FHLoginTrackHelper loginSubmit:trackerDict];
+        
+        __weak typeof(self) weakSelf = self;
+        [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
+            //添加抖音 result 埋点
+            [FHLoginTrackHelper loginResult:trackerDict error:error];
+            if(!error){
+                //记录上一次登录成功的行为
+                [[NSUserDefaults standardUserDefaults] setObject:@"phone_sms" forKey:FHLoginTrackLastLoginMethodKey];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
+    //            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
+                [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
+                [weakSelf submitActionWithPhoneNumber:phoneNumber];
+            }else{
+                NSString *errorMessage = [weakSelf errorMessageByErrorCode:error];
+                [[ToastManager manager] showToast:errorMessage];
+            }
+        }];
+    } else {
+        [self submitActionWithPhoneNumber:phoneNumber];
+    }
 //    if([TTAccount sharedAccount].isLogin){
 //        [self submitAction];
 //        return;
 //    }
-//    [self addClickLoginLog];
-
-//    NSString *phoneNumber = self.contactCell.phoneInput.text;
-//    NSString *smsCode = self.contactCell.varifyCodeInput.text;
-    
-//    if (![TTReachability isNetworkConnected]) {
-//        [[ToastManager manager] showToast:@"网络错误"];
-//        return;
-//    }
-//    if(smsCode.length == 0){
-//        [[ToastManager manager] showToast:@"验证码为空"];
-//        return;
-//    }
-    
-//    if (![TTReachability isNetworkConnected]) {
-//        [[ToastManager manager] showToast:@"网络异常"];
-//        return;
-//    }
-//    //添加抖音 submit 埋点
-//    NSMutableDictionary *trackerDict = [self.viewController tracerDict].mutableCopy;
-//    trackerDict[@"enter_from"] = @"driving_find_house";
-//    trackerDict[@"login_method"] = @"phone_sms";
-//    trackerDict[@"enter_method"] = @"click";
-//    [FHLoginTrackHelper loginSubmit:trackerDict];
-//    [self requestQuickLogin:phoneNumber smsCode:smsCode completion:^(UIImage * _Nonnull captchaImage, NSNumber * _Nonnull newUser, NSError * _Nonnull error) {
-//        //添加抖音 result 埋点
-//        [FHLoginTrackHelper loginResult:trackerDict error:error];
-//        if(!error){
-//            //记录上一次登录成功的行为
-//            [[NSUserDefaults standardUserDefaults] setObject:@"phone_sms" forKey:FHLoginTrackLastLoginMethodKey];
-//            [[NSUserDefaults standardUserDefaults] synchronize];
-//            YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
-////            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPhoneNumberCacheKey];
-//            [sendPhoneNumberCache setObject:phoneNumber forKey:kFHPLoginhoneNumberCacheKey];
-//            [wself submitAction];
-//        }else{
-//            NSString *errorMessage = [wself errorMessageByErrorCode:error];
-//            [[ToastManager manager] showToast:errorMessage];
-//        }
-//    }];
 }
 #pragma mark 提交选项
 - (BOOL)submitActionWithPhoneNumber:(NSString *)phoneNumber {
-    if (phoneNumber.length < 1) {
+    if (phoneNumber.length != 11) {
         return NO;
     }
     
@@ -1252,8 +1259,8 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
         
         FHHouseFindHelpContactCell *pcell = [collectionView dequeueReusableCellWithReuseIdentifier:HELP_CONTACT_CELL_ID forIndexPath:indexPath];
         pcell.phoneInput.delegate = self;
-//        pcell.varifyCodeInput.delegate = self;
-        pcell.delegate = self;
+        pcell.varifyCodeInput.delegate = self;
+        pcell.delegate = (id)self;
         self.contactCell = pcell;
         pcell.phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
         [pcell showFullPhoneNum:NO];
@@ -1654,7 +1661,7 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
 {
     UITextField *textField = (UITextField *)notification.object;
 
-    if (textField != self.contactCell.phoneInput/* && textField != self.contactCell.varifyCodeInput*/) {
+    if (textField != self.contactCell.phoneInput && textField != self.contactCell.varifyCodeInput) {
         [self resetPriceSelectItems];
         return;
     }

@@ -12,7 +12,7 @@
 #import "TTUIResponderHelper.h"
 #import "UIView+House.h"
 #import "UIImage+FIconFont.h"
-#import <ByteDanceKit/UIDevice+BTDAdditions.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 #import "FHUserInfoManager.h"
 #import "SSCommonLogic.h"
 
@@ -43,7 +43,6 @@
         self.titleLabel.text = title;
         self.subtitleLabel.text = subtitle;
         [self.submitBtn setTitle:btnTitle forState:UIControlStateNormal];
-        [self.submitBtn setTitle:btnTitle forState:UIControlStateHighlighted];
         [self.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
@@ -98,59 +97,115 @@
     self.bgView.userInteractionEnabled = YES;
     [self.bgView addGestureRecognizer:tap];
     
-    [self.contentView addSubview:self.closeBtn];
-    [self.contentView addSubview:self.titleLabel];
-    [self.contentView addSubview:self.subtitleLabel];
-    [self.contentView addSubview:self.phoneTextField];
-    [self.contentView addSubview:self.seperateLine];
-    [self.contentView addSubview:self.errorTextLabel];
-    [self.contentView addSubview:self.submitBtn];
-    [self.contentView addSubview:self.tipLabel];
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        [self.contentView addSubview:self.closeBtn];
+        [self.contentView addSubview:self.titleLabel];
+        [self.contentView addSubview:self.subtitleLabel];
+        [self.contentView addSubview:self.phoneTextField];
+        [self.contentView addSubview:self.tipLabel];
+        [self.contentView addSubview:self.submitBtn];
         
-    [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(34);
-        make.right.mas_equalTo(self.contentView).mas_offset(-5);
-        make.top.mas_equalTo(self.contentView).mas_offset(5);
-    }];
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).mas_offset(40);
-        make.left.mas_equalTo(self.contentView).mas_offset(20);
-    }];
-    [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(10);
-        make.left.mas_equalTo(20);
-        make.right.mas_equalTo(-20);
-    }];
-    [self.phoneTextField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(24);
-        make.top.mas_equalTo(self.subtitleLabel.mas_bottom).mas_offset(20);
-        make.left.mas_equalTo(self.subtitleLabel);
-        make.right.mas_equalTo(-20);
-    }];
-    [self.errorTextLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(24);
-        make.centerY.mas_equalTo(self.phoneTextField);
-        make.right.mas_equalTo(self.contentView).mas_offset(-20);
-    }];
-    [self.seperateLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(0.5);
-        make.top.mas_equalTo(self.phoneTextField.mas_bottom).mas_offset(10);
-        make.left.mas_equalTo(self.subtitleLabel);
-        make.right.mas_equalTo(self.contentView).mas_offset(-20);
-    }];
+            
+        [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(34);
+            make.right.mas_equalTo(self.contentView).mas_offset(-5);
+            make.top.mas_equalTo(self.contentView).mas_offset(5);
+        }];
+        [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.contentView).mas_offset(40);
+            make.left.mas_equalTo(self.contentView).mas_offset(20);
+            make.height.mas_equalTo(33);
+        }];
+        
+        self.subtitleLabel.textColor = [UIColor themeGray1];
+        [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(8);
+            make.left.mas_equalTo(20);
+            make.right.mas_equalTo(-20);
+        }];
+        
+        self.phoneTextField.font = [UIFont themeFontSemibold:18];
+        self.phoneTextField.textColor = [UIColor themeGray1];
+        self.phoneTextField.userInteractionEnabled = NO;
+        self.phoneTextField.enabled = NO;
+        [self.phoneTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(25);
+            make.top.mas_equalTo(self.subtitleLabel.mas_bottom).mas_offset(20);
+            make.left.mas_equalTo(self.subtitleLabel);
+            make.right.mas_equalTo(-20);
+        }];
+        
+        [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(17);
+            make.top.mas_equalTo(self.phoneTextField.mas_bottom).mas_offset(8);
+            make.left.mas_equalTo(self.subtitleLabel);
+            make.right.mas_equalTo(-20);
+        }];
+
+        [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(40);
+            make.top.mas_equalTo(self.tipLabel.mas_bottom).mas_offset(20);
+            make.left.mas_equalTo(self.subtitleLabel);
+            make.right.mas_equalTo(-20);
+            make.bottom.mas_equalTo(-30);
+        }];
+
+    } else {
+        [self.contentView addSubview:self.closeBtn];
+        [self.contentView addSubview:self.titleLabel];
+        [self.contentView addSubview:self.subtitleLabel];
+        [self.contentView addSubview:self.phoneTextField];
+        [self.contentView addSubview:self.seperateLine];
+        [self.contentView addSubview:self.errorTextLabel];
+        [self.contentView addSubview:self.submitBtn];
+        [self.contentView addSubview:self.tipLabel];
+            
+        [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.width.height.mas_equalTo(34);
+            make.right.mas_equalTo(self.contentView).mas_offset(-5);
+            make.top.mas_equalTo(self.contentView).mas_offset(5);
+        }];
+        [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.contentView).mas_offset(40);
+            make.left.mas_equalTo(self.contentView).mas_offset(20);
+        }];
+        [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(10);
+            make.left.mas_equalTo(20);
+            make.right.mas_equalTo(-20);
+        }];
+        [self.phoneTextField mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(24);
+            make.top.mas_equalTo(self.subtitleLabel.mas_bottom).mas_offset(20);
+            make.left.mas_equalTo(self.subtitleLabel);
+            make.right.mas_equalTo(-20);
+        }];
+        [self.errorTextLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(24);
+            make.centerY.mas_equalTo(self.phoneTextField);
+            make.right.mas_equalTo(self.contentView).mas_offset(-20);
+        }];
+        [self.seperateLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(0.5);
+            make.top.mas_equalTo(self.phoneTextField.mas_bottom).mas_offset(10);
+            make.left.mas_equalTo(self.subtitleLabel);
+            make.right.mas_equalTo(self.contentView).mas_offset(-20);
+        }];
+        
+        [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(40);
+            make.top.mas_equalTo(self.seperateLine.mas_bottom).mas_offset(20);
+            make.left.mas_equalTo(self.subtitleLabel);
+            make.right.mas_equalTo(-20);
+        }];
+        [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(17);
+            make.top.mas_equalTo(self.submitBtn.mas_bottom).mas_offset(11);
+            make.bottom.mas_equalTo(self.contentView).mas_offset(-12);
+            make.centerX.mas_equalTo(self.contentView);
+        }];
+    }
     
-    [self.submitBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(40);
-        make.top.mas_equalTo(self.seperateLine.mas_bottom).mas_offset(20);
-        make.left.mas_equalTo(self.subtitleLabel);
-        make.right.mas_equalTo(-20);
-    }];
-    [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(17);
-        make.top.mas_equalTo(self.submitBtn.mas_bottom).mas_offset(11);
-        make.bottom.mas_equalTo(self.contentView).mas_offset(-12);
-        make.centerX.mas_equalTo(self.contentView);
-    }];
     [self.closeBtn addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
 
     UITapGestureRecognizer *tipTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tipBtnDidClick)];
@@ -310,6 +365,57 @@
     }];
 }
 
+- (void)showOtherDialogWithTitle:(NSString *)title subTitle:(NSString *)subTitle confirmTitle:(NSString *)confirmTitle cancelTitle:(NSString *)cancelTitle {
+    [self endEditing:YES];
+    
+    
+    [UIView animateWithDuration:0.2 animations:^{
+
+        __weak typeof(self) weakSelf = self;
+        self.tipLabel.hidden = YES;
+        self.phoneTextField.hidden = YES;
+        if (title.length) {
+            self.titleLabel.text = title;
+        }
+        if (subTitle.length) {
+            self.subtitleLabel.text = subTitle;
+        }
+        if (confirmTitle.length) {
+            [self.submitBtn setTitle:confirmTitle forState:UIControlStateNormal];
+        }
+        [self.submitBtn removeTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+        [self.submitBtn btd_addActionBlock:^(__kindof UIControl * _Nonnull sender) {
+            [weakSelf dismiss];
+        } forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.submitBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(40);
+            make.top.mas_equalTo(self.subtitleLabel.mas_bottom).mas_offset(20);
+            make.left.mas_equalTo(self.subtitleLabel);
+            make.right.mas_equalTo(-20);
+        }];
+        
+        UIButton *cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        cancelButton.titleLabel.font = [UIFont themeFontRegular:12];
+        [cancelButton setTitleColor:[UIColor themeGray3] forState:UIControlStateNormal];
+        [cancelButton btd_addActionBlock:^(__kindof UIControl * _Nonnull sender) {
+            if (weakSelf.revokeAssociateDistributionBlock) {
+                weakSelf.revokeAssociateDistributionBlock();
+            }
+        } forControlEvents:UIControlEventTouchUpInside];
+        [cancelButton setTitle:cancelTitle.length ? cancelTitle : @"拒绝联系" forState:UIControlStateNormal];
+        [self.contentView addSubview:cancelButton];
+        [cancelButton mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(20);
+            make.top.mas_equalTo(self.submitBtn.mas_bottom).mas_offset(16);
+            make.bottom.mas_equalTo(-16);
+            make.centerX.mas_equalTo(self.contentView);
+        }];
+
+        [self layoutIfNeeded];
+    }];
+}
+
 - (void)showAnotherView:(UIView *)anotherView {
     [self endEditing:YES];
     NSArray *subViews = self.contentView.subviews.copy;
@@ -413,7 +519,6 @@
         [_submitBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
         _submitBtn.titleLabel.font = [UIFont themeFontRegular:16];
         [_submitBtn setTitle:@"提交" forState:UIControlStateNormal];
-        [_submitBtn setTitle:@"提交" forState:UIControlStateHighlighted];
         _submitBtn.layer.cornerRadius = 20;
         _submitBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
     }
