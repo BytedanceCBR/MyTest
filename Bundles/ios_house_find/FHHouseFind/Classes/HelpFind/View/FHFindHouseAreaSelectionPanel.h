@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
     FHFindHouseAreaSelectionTableViewVM* _lastListViewModel;
 }
 @property (nonatomic, strong) NSArray<FHFindHouseAreaSelectionTableViewVM *>* selectionViewModels;
-@property (nonatomic, strong) ButtomBarView* buttomBarView;
+@property (nonatomic, strong) BottomBarView* buttomBarView;
 @property (nonatomic, weak) id<FHConditionPanelDelegate> delegate;
 @property (nonatomic, weak) id<UserReactionListener> userReactionListener;
 -(instancetype)initWithLastListViewModel:(FHFindHouseAreaSelectionTableViewVM*)lastListViweModel;

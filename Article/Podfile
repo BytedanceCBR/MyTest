@@ -46,7 +46,8 @@ def fhPods
     pod 'FHLynxKit' , :path => '../Bundles/ios_common_lynx', :inhibit_warnings => false
 
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
-    pod 'ios_house_filter' , '1.0.3-rc.0', :inhibit_warnings => false
+#    pod 'ios_house_filter' , '1.0.3-rc.0', :inhibit_warnings => false
+    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '9c48b4994648093bccae56ff98ba64a6d12b777d'
 
 
 #    pod 'FHCommonUI','0.9.0.4', :inhibit_warnings => false
