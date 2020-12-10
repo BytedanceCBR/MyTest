@@ -33,19 +33,34 @@ extern NSString *const kFHToastCountKey;
 @implementation FHHouseFillFormHelper
 
 #pragma mark - associate refactor
-+ (void)fillFormActionWithAssociateReport:(NSDictionary *)associateReportDict
++ (void)fillFormActionWithAssociateReport:(NSDictionary *)associateReportDict completion:(nonnull FillFormSubmitCallBack)completion
 {
     FHAssociateFormReportModel *configModel = [[FHAssociateFormReportModel alloc]initWithDictionary:associateReportDict error:nil];
     if (configModel) {
-        [self fillFormActionWithAssociateReportModel:configModel];
+        [self fillFormActionWithAssociateReportModel:configModel completion:completion];
     }
 }
 
-+ (void)fillFormActionWithAssociateReportModel:(FHAssociateFormReportModel *)associateReport
++ (void)fillFormActionWithAssociateReportModel:(FHAssociateFormReportModel *)associateReport completion:(nonnull FillFormSubmitCallBack)completion
 {
     if ([SSCommonLogic isEnableVerifyFormAssociate]) {
         if (![TTAccount sharedAccount].isLogin) {
-//            [TTAccountLoginManager showAlertFLoginVCWithParams:<#(NSDictionary *)#> completeBlock:<#^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum)complete#>]
+            NSMutableDictionary *params = [NSMutableDictionary dictionary];
+            // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+            [params setObject:@(YES) forKey:@"need_pop_vc"];
+            NSMutableDictionary *tracerDict = associateReport.reportParams.mutableCopy;
+            params[TRACER_KEY] = tracerDict.copy;
+            [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+                if (type == TTAccountAlertCompletionEventTypeDone) {
+                    // 登录成功
+                    if ([[TTAccount sharedAccount] isLogin]) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            //弹框
+                            [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport completion:completion];
+                        });
+                    }
+                }
+            }];
             return;
         }
     }
@@ -62,7 +77,7 @@ extern NSString *const kFHToastCountKey;
     FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
     alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
-        [wself fillFormRequestWithAssociateReport:associateReport phone:phoneNum alertView:alert];
+        [wself fillFormRequestWithAssociateReport:associateReport phone:phoneNum alertView:alert completion:completion];
         [wself addClickConfirmLogWithAssociateReport:associateReport alertView:alert];
     };
 
@@ -86,7 +101,7 @@ extern NSString *const kFHToastCountKey;
     [alertView showFrom:topViewController.view];
 }
 
-+ (void)fillFormRequestWithAssociateReport:(FHAssociateFormReportModel *)associateReport phone:(NSString *)phone alertView:(FHDetailNoticeAlertView *)alertView
++ (void)fillFormRequestWithAssociateReport:(FHAssociateFormReportModel *)associateReport phone:(NSString *)phone alertView:(FHDetailNoticeAlertView *)alertView completion:(nonnull FillFormSubmitCallBack)completion
 {
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
@@ -102,6 +117,9 @@ extern NSString *const kFHToastCountKey;
     [FHMainApi requestCallReportByHouseId:associateReport.houseId phone:phone from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:associateReport.associateInfo agencyList:nil extraInfo:extraInfo.copy completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
+            if (completion) {
+                completion();
+            }
             [FHUserInfoManager savePhoneNumber:phone];
             NSString *toast = @"提交成功，经纪人将尽快与您联系";
             if (associateReport.toast && associateReport.toast.length > 0) {

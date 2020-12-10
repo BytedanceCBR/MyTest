@@ -63,6 +63,7 @@
 #import "FHOldDetailOwnerSellHouseCell.h"
 #import "SSCommonLogic.h"
 #import "BDABTestManager.h"
+#import "FHHouseFillFormHelper.h"
 
 extern NSString *const kFHSubscribeHouseCacheKey;
 
@@ -966,11 +967,8 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 }
 
 - (void)subscribeFormRequest:(NSString *)phoneNum subscribeModel:(FHDetailHouseSubscribeCorrectingModel *)subscribeModel {
-    __weak typeof(self)wself = self;
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
-        return;
-    }
+    __weak typeof(self)weakSelf = self;
+    
     NSString *houseId = self.houseId;
 //    NSString *from = @"app_oldhouse_subscription";
     NSDictionary *extraInfo = nil;
@@ -978,6 +976,36 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     if (self.houseInfoBizTrace) {
         extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
     }
+    
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        __weak typeof(self) weakSelf = self;
+        FHAssociateFormReportModel *formReportModel = [[FHAssociateFormReportModel alloc] init];
+        formReportModel.associateInfo = subscribeModel.associateInfo.reportFormInfo;
+        NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+        tracerDic[@"position"] = @"card";
+        tracerDic[@"enter_from"] = tracerDic[@"page_type"] ?: @"be_null";
+        tracerDic[@"enter_type"] = @"click_subscribe";
+        formReportModel.reportParams = tracerDic.copy;
+        formReportModel.extraInfo = extraInfo;
+        formReportModel.houseType = FHHouseTypeNeighborhood;
+        formReportModel.title = @"房源订阅";
+        formReportModel.btnTitle = @"立即预约";
+        formReportModel.subtitle = @"订阅房源动态，订阅后房源价格变动，售卖信息，我们将第一时间提醒您。";
+        formReportModel.topViewController = self.detailController;
+        [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:formReportModel completion:^{
+            YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
+            [subscribeHouseCache setObject:@"1" forKey:weakSelf.houseId];
+            [weakSelf.items removeObject:subscribeModel];
+            [weakSelf reloadData];
+        }];
+        return;
+    }
+    
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
+
 
     [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil extraInfo:extraInfo completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
 
@@ -992,10 +1020,10 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
             [[ToastManager manager] showToast:toast];
             [FHUserInfoManager savePhoneNumber:phoneNum];
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
-            [subscribeHouseCache setObject:@"1" forKey:wself.houseId];
+            [subscribeHouseCache setObject:@"1" forKey:weakSelf.houseId];
             
-            [wself.items removeObject:subscribeModel];
-            [wself reloadData];
+            [weakSelf.items removeObject:subscribeModel];
+            [weakSelf reloadData];
         }else {
             [[ToastManager manager] showToast:[NSString stringWithFormat:@"%@%@",model.message.length ? @"" : @"提交失败 ", model.message]];
         }

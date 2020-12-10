@@ -333,9 +333,9 @@
             for (int i = 0; i<3; i++) {
                 FHDetailContactModel *showModel = (FHDetailContactModel*) model.recommendedRealtors[i];
                 if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
-                    showHeight = showHeight + 90;
+                    showHeight = showHeight + 86;
                 }else {
-                    showHeight = showHeight + 65;
+                    showHeight = showHeight + 74;
                 };
             }
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -347,9 +347,9 @@
             [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailContactModel *showModel = obj;
             if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
-                     showHeight = showHeight + 90;
+                     showHeight = showHeight + 86;
                  }else {
-                     showHeight = showHeight + 65;
+                     showHeight = showHeight + 74;
                  };
             }];
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -368,9 +368,9 @@
              FHDetailContactModel *showModel = obj;
          if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
              //二手房的经纪人一般会展示tag，新房顾问没有
-                  showHeight = showHeight + 90;
+                  showHeight = showHeight + 86;
               }else {
-                  showHeight = showHeight + 65;
+                  showHeight = showHeight + 74;
               };
          }];
          [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -400,9 +400,9 @@
     for (int m = 0; m <model.recommendedRealtors.count; m++) {
         FHDetailContactModel *showModel = model.recommendedRealtors[m];
         if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
-            showHeight = showHeight + 90;
+            showHeight = showHeight + 86;
         }else {
-            showHeight = showHeight + 65;
+            showHeight = showHeight + 74;
         };
         if (UIScreen.mainScreen.bounds.size.height - point.y > showHeight) {
             NSInteger showCount = model.isFold ? MIN(m, 2):MIN(model.recommendedRealtors.count, m);

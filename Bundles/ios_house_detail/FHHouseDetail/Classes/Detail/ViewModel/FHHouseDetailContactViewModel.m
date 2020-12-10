@@ -710,7 +710,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     extraInfo[@"origin_from"] = reportParamsDict[@"origin_from"] ?: @"be_null";
     associateReport.extraInfo = extraInfo.copy;
     
-    [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];
+    [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport completion:nil];
 }
 
 - (void)imAction {

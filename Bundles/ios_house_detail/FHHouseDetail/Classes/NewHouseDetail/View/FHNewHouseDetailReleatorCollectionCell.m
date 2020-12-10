@@ -51,6 +51,13 @@
             make.top.mas_equalTo(12);
         }];
         
+        self.scoreLabel = [[UILabel alloc] init];
+        [self.contentView addSubview:self.scoreLabel];
+        [self.scoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.nameLabel.mas_left);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(8);
+        }];
+        
         __weak typeof(self) weakSelf = self;
         CGFloat phoneButtonWidth = 36;
         self.callBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -111,14 +118,7 @@
         [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(UIEdgeInsetsMake(3, 5, 3, 5));
         }];
-        
-        self.scoreLabel = [[UILabel alloc] init];
-        [self.contentView addSubview:self.scoreLabel];
-        [self.scoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.nameLabel.mas_left);
-            make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(8);
-        }];
-       
+               
         self.agencyDescriptionBac = [[UIImageView alloc] init];
 //        self.agencyDescriptionBac.backgroundColor = [UIColor colorWithHexString:@"#fefaf4"];
         self.agencyDescriptionBac.image = [UIImage fh_gradientImageWithColors:@[(id)[UIColor colorWithHexString:@"eef4fe"].CGColor, (id)[UIColor colorWithHexString:@"eff4fc"].CGColor, (id)[UIColor colorWithHexString:@"f5f7fc"].CGColor] startPoint:CGPointMake(0, 0.5) endPoint:CGPointMake(1, 0.5) size:CGSizeMake(100, 18) usedInClass:NSStringFromClass([self class])];
@@ -216,7 +216,11 @@
     if (model.realtorScoreDisplay.length > 0) {
         self.scoreLabel.hidden = NO;
         
-        NSMutableAttributedString *scoreString = [[NSMutableAttributedString alloc] initWithString:model.realtorScoreDisplay ?: @"" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexString:@"FE5500"], NSFontAttributeName: [UIFont themeFontRegular:12]}];
+        NSString *scoreStringValue = model.realtorScoreDisplay.copy;
+        if ([scoreStringValue rangeOfString:@"分"].length > 0) {
+            scoreStringValue = [scoreStringValue stringByReplacingOccurrencesOfString:@"分" withString:@""];
+        }
+        NSMutableAttributedString *scoreString = [[NSMutableAttributedString alloc] initWithString:scoreStringValue ?: @"" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexString:@"FE5500"], NSFontAttributeName: [UIFont themeFontRegular:12]}];
         [scoreString appendAttributedString:[[NSAttributedString alloc] initWithString:@" 服务分" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:12]}]];
         self.scoreLabel.attributedText = scoreString.copy;
     } else {

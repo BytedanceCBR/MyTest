@@ -65,6 +65,13 @@
             make.top.mas_equalTo(12);
         }];
         
+        self.scoreLabel = [[UILabel alloc] init];
+        [self.contentView addSubview:self.scoreLabel];
+        [self.scoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.nameLabel.mas_left);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(8);
+        }];
+        
         __weak typeof(self) weakSelf = self;
         CGFloat phoneButtonWidth = 36;
         self.callBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -82,7 +89,7 @@
         [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_equalTo(phoneButtonWidth);
             make.right.mas_equalTo(-16);
-            make.centerY.mas_equalTo(self.avatorView.mas_centerY);
+            make.centerY.mas_equalTo(self.nameLabel.mas_centerY);
         }];
         
         self.imBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -139,13 +146,6 @@
         [self.agencyBac addSubview:self.agencyLabel];
         [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(UIEdgeInsetsMake(3, 5, 3, 5));
-        }];
-        
-        self.scoreLabel = [[UILabel alloc] init];
-        [self.contentView addSubview:self.scoreLabel];
-        [self.scoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.nameLabel.mas_left);
-            make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(8);
         }];
        
         self.tagsView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:[[FHDetailAgentItemTagsFlowLayout alloc] init]];
@@ -225,7 +225,12 @@
     if (model.realtorScoreDisplay.length > 0) {
         self.scoreLabel.hidden = NO;
         
-        NSMutableAttributedString *scoreString = [[NSMutableAttributedString alloc] initWithString:model.realtorScoreDisplay ?: @"" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexString:@"FE5500"], NSFontAttributeName: [UIFont themeFontRegular:12]}];
+        NSString *scoreStringValue = model.realtorScoreDisplay.copy;
+        if ([scoreStringValue rangeOfString:@"分"].length > 0) {
+            scoreStringValue = [scoreStringValue stringByReplacingOccurrencesOfString:@"分" withString:@""];
+        }
+        
+        NSMutableAttributedString *scoreString = [[NSMutableAttributedString alloc] initWithString:scoreStringValue ?: @"" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexString:@"FE5500"], NSFontAttributeName: [UIFont themeFontRegular:12]}];
         [scoreString appendAttributedString:[[NSAttributedString alloc] initWithString:@" 服务分" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:12]}]];
         self.scoreLabel.attributedText = scoreString.copy;
     } else {

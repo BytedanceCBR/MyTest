@@ -228,7 +228,7 @@
     [self.scoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.nameLabel);
         make.top.equalTo(self.nameLabel.mas_bottom).offset(8);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).mas_offset(-10);
+        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).mas_offset(0);
     }];
     
 //    self.scoreDescription = [UILabel createLabel:@"" textColor:@"" fontSize:14];
@@ -311,11 +311,22 @@
     if (model.realtorScoreDisplay.length > 0) {
         self.scoreLabel.hidden = NO;
         
-        NSMutableAttributedString *scoreString = [[NSMutableAttributedString alloc] initWithString:model.realtorScoreDisplay ?: @"" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexString:@"FE5500"], NSFontAttributeName: [UIFont themeFontRegular:12]}];
+        NSString *scoreStringValue = model.realtorScoreDisplay.copy;
+        if ([scoreStringValue rangeOfString:@"分"].length > 0) {
+            scoreStringValue = [scoreStringValue stringByReplacingOccurrencesOfString:@"分" withString:@""];
+        }
+        
+        NSMutableAttributedString *scoreString = [[NSMutableAttributedString alloc] initWithString:scoreStringValue ?: @"" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexString:@"FE5500"], NSFontAttributeName: [UIFont themeFontRegular:12]}];
         [scoreString appendAttributedString:[[NSAttributedString alloc] initWithString:@" 服务分" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:12]}]];
         
         if (model.neighborhoodScoreDisplay.length) {
-            [scoreString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" + %@ 小区熟悉度",model.neighborhoodScoreDisplay] attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3], NSFontAttributeName: [UIFont themeFontRegular:12]}]];
+            
+            scoreStringValue = model.neighborhoodScoreDisplay.copy;
+            if ([scoreStringValue rangeOfString:@"分"].length > 0) {
+                scoreStringValue = [scoreStringValue stringByReplacingOccurrencesOfString:@"分" withString:@""];
+            }
+            
+            [scoreString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" + %@ 小区熟悉度",scoreStringValue] attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3], NSFontAttributeName: [UIFont themeFontRegular:12]}]];
         }
         self.scoreLabel.attributedText = scoreString.copy;
     } else {

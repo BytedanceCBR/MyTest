@@ -298,7 +298,11 @@
 - (void)subscribe {
 
     if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        if (self.subscribeBlock) {
+            self.subscribeBlock(nil);
+        }
         return;
+        
     }
     NSString *phoneNum = self.phoneNum;
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [FHUserInfoManager checkPureIntFormatted:phoneNum]) {
