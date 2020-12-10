@@ -45,11 +45,10 @@
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
 
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
-        FHConfigDataOpDataModel *opDataModel = dataModel.houseFinderOpData;
-        if(!opDataModel) {
-            opDataModel = dataModel.houseOpData2;
+        NSArray *items = dataModel.houseFinderOpData.items;
+        if(items.count == 0) {
+            items = dataModel.houseOpData2.items;
         }
-        NSArray *items = opDataModel.items;
         
         if (items.count > 5) {
             _items = [items subarrayWithRange:NSMakeRange(0,5)];
