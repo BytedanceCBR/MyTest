@@ -167,32 +167,32 @@
     }
 }
 
-//-(void)collectionViewBeginScroll:(UIScrollView *)scrollView {
-//    self.beginOffset = self.currentIndex * SCREEN_WIDTH;
-//    self.lastOffset = scrollView.contentOffset.x;
-//}
-//
-//-(void)collectionViewDidScroll:(UIScrollView *)scrollView {
-//    CGFloat scrollDistance = scrollView.contentOffset.x - self.lastOffset;
-//    CGFloat diff = scrollView.contentOffset.x - self.beginOffset;
-//
-//    CGFloat tabIndex = scrollView.contentOffset.x / SCREEN_WIDTH;
-//    if(diff >= 0){
-//        tabIndex = floorf(tabIndex);
-//    }else if (diff < 0){
-//        tabIndex = ceilf(tabIndex);
-//    }
-//
-//    if(tabIndex != self.feedViewController.headerView.selectedSegmentIndex){
-//        self.currentIndex = tabIndex;
-//        self.feedViewController.headerView.selectedSegmentIndex = self.currentIndex;
-//    }
-//        CGFloat value = scrollDistance / SCREEN_WIDTH;
-//        [self.feedViewController.headerView setScrollValue:value isDirectionLeft:diff < 0];
-//    }
-//
-//    self.lastOffset = scrollView.contentOffset.x;
-//}
+-(void)collectionViewBeginScroll:(UIScrollView *)scrollView {
+    self.beginOffset = self.currentIndex * SCREEN_WIDTH;
+    self.lastOffset = scrollView.contentOffset.x;
+}
+
+-(void)collectionViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat scrollDistance = scrollView.contentOffset.x - self.lastOffset;
+    CGFloat diff = scrollView.contentOffset.x - self.beginOffset;
+
+    CGFloat tabIndex = scrollView.contentOffset.x / SCREEN_WIDTH;
+    if(diff >= 0){
+        tabIndex = floorf(tabIndex);
+    }else if (diff < 0){
+        tabIndex = ceilf(tabIndex);
+    }
+
+    if(tabIndex != self.feedViewController.headerView.selectedSegmentIndex){
+        self.currentIndex = tabIndex;
+        self.feedViewController.headerView.selectedSegmentIndex = self.currentIndex;
+    } else {
+        CGFloat value = scrollDistance / SCREEN_WIDTH;
+        [self.feedViewController.headerView setScrollValue:value isDirectionLeft:diff < 0];
+    }
+
+    self.lastOffset = scrollView.contentOffset.x;
+}
 
 -(CGFloat)tabListOffset {
     return self.profileInfoView.viewHeight - self.navBar.height;

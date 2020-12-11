@@ -69,6 +69,7 @@
 }
 
 - (void)initView {
+    self.ttDisableDragBack = YES;
 
     [self initScrollView];
 

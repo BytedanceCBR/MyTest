@@ -33,9 +33,9 @@
 //    return NO;
 //}
 
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    return NO;
-}
+//- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+//    return NO;
+//}
 
 @end
 

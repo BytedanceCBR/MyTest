@@ -32,8 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel;
 - (void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel;
 - (void)initTracerDictWithParams:(NSDictionary *)params;
-//-(void)collectionViewBeginScroll:(UIScrollView *)scrollView;
-//-(void)collectionViewDidScroll:(UIScrollView *)scrollView;
+-(void)collectionViewBeginScroll:(UIScrollView *)scrollView;
+-(void)collectionViewDidScroll:(UIScrollView *)scrollView;
 
 @end
 
