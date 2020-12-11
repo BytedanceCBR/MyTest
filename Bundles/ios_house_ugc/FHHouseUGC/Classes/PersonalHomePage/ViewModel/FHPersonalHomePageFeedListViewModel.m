@@ -85,7 +85,7 @@
     self.viewController.isLoadingData = YES;
     
     if (isFirst) {
-        [[FHPersonalHomePageManager shareInstance].viewController startLoading];
+        [self.homePageManager.viewController startLoading];
     }
     
     NSInteger listCount = self.dataList.count;
@@ -105,7 +105,7 @@
     }
     
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
-    extraDic[@"user_id"] = [FHPersonalHomePageManager shareInstance].userId;
+    extraDic[@"user_id"] = self.homePageManager.userId;
     extraDic[@"tab_name"] = self.viewController.tabName;
     self.categoryId = @"f_user_profile";
     
@@ -113,7 +113,7 @@
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead isFirst:isFirst listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         self.viewController.isLoadingData = NO;
-        [[FHPersonalHomePageManager shareInstance].viewController endLoading];
+        [self.homePageManager.viewController endLoading];
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         self.feedListModel = feedListModel;
 
@@ -186,7 +186,7 @@
         cellModel.categoryId = self.categoryId;
         cellModel.tableView = self.tableView;
         cellModel.enterFrom = [self.viewController categoryName];
-        cellModel.tracerDic = [FHPersonalHomePageManager shareInstance].tracerDict;
+        cellModel.tracerDic = self.homePageManager.tracerDict;
         
         if (cellModel) {
             [resultArray addObject:cellModel];
@@ -267,7 +267,7 @@
 }
 
 -(void)setFeedError:(BOOL)isError {
-    NSMutableArray *feedErrorArray =  [FHPersonalHomePageManager shareInstance].feedErrorArray;
+    NSMutableArray *feedErrorArray =  self.homePageManager.feedErrorArray;
     NSInteger index = self.viewController.index;
     if(index >= 0 && index < feedErrorArray.count){
         feedErrorArray[index] = @(isError);
@@ -275,7 +275,7 @@
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [[FHPersonalHomePageManager shareInstance] tableViewScroll:scrollView];
+    [self.homePageManager tableViewScroll:scrollView];
 }
 
 @end

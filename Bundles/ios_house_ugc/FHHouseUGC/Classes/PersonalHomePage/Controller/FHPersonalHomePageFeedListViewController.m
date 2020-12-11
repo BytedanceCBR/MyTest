@@ -41,7 +41,14 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHPersonalHomePageFeedListViewModel alloc] initWithController:self tableView:self.tableView];
+    self.viewModel.homePageManager = self.homePageManager;
 }
+
+- (void)setHomePageManager:(FHPersonalHomePageManager *)homePageManager {
+    _homePageManager = homePageManager;
+    _viewModel.homePageManager = homePageManager;
+}
+
 
 - (void)startLoadData {
     [self.viewModel requestData:YES first:YES];

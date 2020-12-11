@@ -32,6 +32,7 @@
 @property(nonatomic,strong) FHPersonalHomePageFeedViewController *feedViewController;
 @property(nonatomic,copy) NSString *userId;
 @property(nonatomic,strong) FHPersonalHomePageViewModel *viewModel;
+@property(nonatomic,strong) FHPersonalHomePageManager *homePageManager;
 @end
 
 @implementation FHPersonalHomePageViewController
@@ -40,15 +41,12 @@
     if(self = [super initWithRouteParamObj:paramObj]) {
         NSDictionary *params = paramObj.allParams;
         self.userId = params[@"uid"];
-        [[FHPersonalHomePageManager shareInstance] reset];
-        [FHPersonalHomePageManager shareInstance].userId = self.userId;
-        [[FHPersonalHomePageManager shareInstance] initTracerDictWithParams:params];
+        self.homePageManager = [[FHPersonalHomePageManager alloc] init];
+        [self.homePageManager reset];
+        self.homePageManager.userId = self.userId;
+        [self.homePageManager initTracerDictWithParams:params];
     }
     return self;
-}
-
--(void)dealloc {
-    [[FHPersonalHomePageManager shareInstance].feedListVCArray removeAllObjects];
 }
 
 - (void)viewDidLoad {
@@ -56,15 +54,16 @@
     [self initView];
     [self initViewModel];
     
-    [FHPersonalHomePageManager shareInstance].viewController = self;
-    [FHPersonalHomePageManager shareInstance].feedViewController = self.feedViewController;
+    self.homePageManager.viewController = self;
+    self.homePageManager.feedViewController = self.feedViewController;
+    self.feedViewController.homePageManager = self.homePageManager;
     
     [self startLoadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-    if([FHPersonalHomePageManager shareInstance].userInfoChange) {
-        [FHPersonalHomePageManager shareInstance].userInfoChange = NO;
+    if(self.homePageManager.userInfoChange) {
+        self.homePageManager.userInfoChange = NO;
         [self.viewModel requestProfileInfoAfterChange];
     }
 }
@@ -74,6 +73,7 @@
     [self initScrollView];
 
     self.profileInfoView = [[FHPersonalHomePageProfileInfoView alloc] initWithFrame:CGRectZero];
+    self.profileInfoView.homePageManager = self.homePageManager;
     [self.scrollView addSubview:self.profileInfoView];
     
     self.feedViewController = [[FHPersonalHomePageFeedViewController alloc] init];
@@ -82,7 +82,6 @@
     
     [self initNavBar];
     [self addDefaultEmptyViewFullScreen];
-    self.ttDragBackLeftEdge = 50;
 }
 
 
@@ -187,6 +186,7 @@
 
 - (void)initViewModel {
     self.viewModel = [[FHPersonalHomePageViewModel alloc] initWithController:self];
+    self.viewModel.homePageManager = self.homePageManager;
 }
 
 - (void)startLoadData {

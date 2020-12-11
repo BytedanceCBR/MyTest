@@ -6,6 +6,13 @@
 //
 
 #import "FHPersonalHomePageManager.h"
+#import "FHPersonalHomePageProfileInfoView.h"
+#import "FHPersonalHomePageProfileInfoModel.h"
+#import "FHPersonalHomePageTabListModel.h"
+#import "FHPersonalHomePageFeedViewController.h"
+#import "FHPersonalHomePageViewController.h"
+#import "FHPersonalHomePageFeedListViewController.h"
+#import "FHNavBarView.h"
 #import "UIImage+FIconFont.h"
 #import "FHCommonDefines.h"
 #import "UIViewAdditions.h"
@@ -26,14 +33,11 @@
 
 @implementation FHPersonalHomePageManager
 
-+ (instancetype)shareInstance {
-    static dispatch_once_t onceToken;
-    static FHPersonalHomePageManager *defaultManager;
-    dispatch_once(&onceToken, ^{
-        defaultManager = [[FHPersonalHomePageManager alloc] init];
-        defaultManager.feedListVCArray = [NSMutableArray array];
-    });
-    return defaultManager;
+-(instancetype)init {
+    if(self = [super init]) {
+        self.feedErrorArray = [NSMutableArray array];
+    }
+    return self;
 }
 
 -(void)reset {

@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import "FHPersonalHomePageProfileInfoModel.h"
+#import "FHPersonalHomePageManager.h"
 NS_ASSUME_NONNULL_BEGIN
 @interface FHPersonalHomePageProfileInfoImageView : UIView
 - (void)updateWithUrl:(NSString *)url;
@@ -15,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHPersonalHomePageProfileInfoView : UIView
 @property(nonatomic,strong) FHPersonalHomePageProfileInfoImageView *shadowView;
 @property(nonatomic,assign) CGFloat viewHeight;
+@property(nonatomic,weak) FHPersonalHomePageManager *homePageManager;
 - (void)updateWithModel:(FHPersonalHomePageProfileInfoModel *)model isVerifyShow:(BOOL)isVerifyShow;
 @end
 

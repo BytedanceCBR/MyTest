@@ -26,7 +26,6 @@
 #import <TTImagePicker/TTImagePickerController.h>
 #import <AssetsLibrary/ALAssetsLibrary.h>
 #import <AVFoundation/AVFoundation.h>
-#import "FHPersonalHomePageManager.h"
 
 @interface FHEditUserViewModel()<UITableViewDelegate,UITableViewDataSource,FHEditingInfoControllerDelegate,FHEditUserBaseCellDelegate,FHHomePageSettingControllerDelegate,TTImagePickerControllerDelegate>
 

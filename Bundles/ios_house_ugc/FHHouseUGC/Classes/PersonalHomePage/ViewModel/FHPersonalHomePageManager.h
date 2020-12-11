@@ -6,18 +6,16 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "FHPersonalHomePageProfileInfoView.h"
-#import "FHPersonalHomePageProfileInfoModel.h"
-#import "FHPersonalHomePageTabListModel.h"
-#import "FHPersonalHomePageFeedViewController.h"
-#import "FHPersonalHomePageViewController.h"
-#import "FHPersonalHomePageFeedListViewController.h"
-#import "FHNavBarView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHPersonalHomePageViewController;
+@class FHPersonalHomePageFeedViewController;
+@class FHPersonalHomePageFeedListViewController;
+@class FHPersonalHomePageProfileInfoModel;
+@class FHPersonalHomePageTabListModel;
+
 @interface FHPersonalHomePageManager : NSObject
-+ (instancetype)shareInstance;
 - (void)reset;
 @property(nonatomic,assign) BOOL userInfoChange;
 @property(nonatomic,assign) NSInteger currentIndex;

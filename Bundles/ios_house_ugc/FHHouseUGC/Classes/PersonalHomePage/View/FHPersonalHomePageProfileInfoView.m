@@ -7,7 +7,6 @@
 
 #import "FHPersonalHomePageProfileInfoView.h"
 #import "TTPhotoScrollViewController.h"
-#import "FHPersonalHomePageManager.h"
 #import "TTInteractExitHelper.h"
 #import "TTAccountManager.h"
 #import "UIImageView+BDWebImage.h"
@@ -56,14 +55,14 @@
 }
 
 - (void)initView {
-    self.shadowView = [[FHPersonalHomePageProfileInfoImageView alloc] initWithFrame:CGRectMake(0,0, SCREEN_WIDTH, 160 + [[FHPersonalHomePageManager shareInstance] safeArea])];
+    self.shadowView = [[FHPersonalHomePageProfileInfoImageView alloc] initWithFrame:CGRectMake(0,0, SCREEN_WIDTH, 160 + self.homePageManager.safeArea)];
     [self addSubview:self.shadowView];
     
     self.backView = [[FHPersonalHomePageProfileInfoBackView alloc] initWithFrame:CGRectZero];
     self.backView.backgroundColor = [UIColor themeWhite];
     [self addSubview:self.backView];
     
-    self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 74 + [[FHPersonalHomePageManager shareInstance] safeArea], 80, 80)];
+    self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 74 + self.homePageManager.safeArea, 80, 80)];
     self.iconView.layer.cornerRadius = 40;
     self.iconView.layer.borderColor = [UIColor themeWhite].CGColor;
     self.iconView.layer.borderWidth = 2;
@@ -144,14 +143,14 @@
         self.changeButton.hidden = NO;
     }
     
-    self.backView.frame = CGRectMake(0, 110 + [[FHPersonalHomePageManager shareInstance] safeArea], SCREEN_WIDTH, backViewHeight);
-    self.viewHeight = 110 + backViewHeight + [[FHPersonalHomePageManager shareInstance] safeArea];
-    self.seperatorView.frame = CGRectMake(0, self.viewHeight - 0.5, SCREEN_WIDTH, 0.5);
+    self.backView.frame = CGRectMake(0, 110 + self.homePageManager.safeArea, SCREEN_WIDTH, backViewHeight);
+    self.viewHeight = 110 + backViewHeight + self.homePageManager.safeArea;
+    self.seperatorView.frame = CGRectMake(0, self.viewHeight - 5, SCREEN_WIDTH, 5);
 }
 
 
 - (void)changeProfileInfo {
-    [FHPersonalHomePageManager shareInstance].userInfoChange = YES;
+    self.homePageManager.userInfoChange = YES;
     NSURL* url = [NSURL URLWithString:@"sslocal://editUserProfile"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }

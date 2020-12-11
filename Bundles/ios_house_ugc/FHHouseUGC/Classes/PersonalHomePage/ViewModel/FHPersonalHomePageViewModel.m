@@ -44,7 +44,7 @@
         
         dispatch_group_notify(self.personalHomePageGroup, dispatch_get_main_queue(), ^{
             [self.viewController endLoading];
-            [[FHPersonalHomePageManager shareInstance] updateProfileInfoWithMdoel:self.profileInfoModel tabListWithMdoel:self.tabListModel];
+            [self.homePageManager updateProfileInfoWithMdoel:self.profileInfoModel tabListWithMdoel:self.tabListModel];
         });
     } else {
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -54,7 +54,7 @@
 - (void)requestProfileInfo {
     dispatch_group_enter(self.personalHomePageGroup);
     WeakSelf;
-    NSString *userId = [FHPersonalHomePageManager shareInstance].userId;
+    NSString *userId = self.homePageManager.userId;
    [FHHouseUGCAPI requestHomePageInfoWithUserId:userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
        StrongSelf;
        if(!error && [model isKindOfClass:[FHPersonalHomePageProfileInfoModel class]]) {
@@ -70,7 +70,7 @@
 - (void)requestFeedTabList {
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     params[@"channel_id"] = @"94349558589";
-    params[@"user_id"] = [FHPersonalHomePageManager shareInstance].userId;
+    params[@"user_id"] = self.homePageManager.userId;
     
     dispatch_group_enter(self.personalHomePageGroup);
     WeakSelf;
@@ -93,7 +93,7 @@
 
         dispatch_group_notify(self.personalHomePageGroup, dispatch_get_main_queue(), ^{
             [self.viewController endLoading];
-            [[FHPersonalHomePageManager shareInstance] updateProfileInfoWithMdoel:self.profileInfoModel];
+            [self.homePageManager updateProfileInfoWithMdoel:self.profileInfoModel];
         });
     } else {
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -102,11 +102,11 @@
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [[FHPersonalHomePageManager shareInstance] scrollViewScroll:scrollView];
+    [self.homePageManager scrollViewScroll:scrollView];
 }
 
 -(BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
-    [[FHPersonalHomePageManager shareInstance] scrollsToTop];
+    [self.homePageManager scrollsToTop];
     return YES;
 }
 

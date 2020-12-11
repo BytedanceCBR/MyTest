@@ -116,6 +116,11 @@
     self.viewModel = [[FHPersonalHomePageFeedViewModel alloc] initWithController:self collectionView:self.collectionView];
 }
 
+-(void)setHomePageManager:(FHPersonalHomePageManager *)homePageManager {
+    _homePageManager = homePageManager;
+    _viewModel.homePageManager = _homePageManager;
+}
+
 -(void)updateWithHeaderViewMdoel:(FHPersonalHomePageTabListModel *)model {
     if(model.data.tabList.count > 1) {
         self.headerView.hidden = NO;

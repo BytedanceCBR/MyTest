@@ -63,7 +63,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         if(index >= 0 && index < self.titleArray.count) {
             [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
-            [FHPersonalHomePageManager shareInstance].currentIndex = index;
+            self.homePageManager.currentIndex = index;
         }
     });
 }
@@ -86,6 +86,7 @@
         FHPersonalHomePageFeedCollectionViewCell *feedListCell = (FHPersonalHomePageFeedCollectionViewCell *)cell;
         if(index >= 0 && index < self.tabListModel.data.tabList.count) {
             FHPersonalHomePageTabItemModel *itemModel = self.tabListModel.data.tabList[index];
+            feedListCell.homePageManager = self.homePageManager;
             [feedListCell updateTabName:itemModel.name index:index];
         }
     }
