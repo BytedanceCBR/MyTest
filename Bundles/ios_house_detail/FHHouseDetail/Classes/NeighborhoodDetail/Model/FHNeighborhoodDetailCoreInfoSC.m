@@ -53,6 +53,9 @@
     if (model.items[index] == model.titleCellModel) {
         FHNeighborhoodDetailHeaderTitleCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailHeaderTitleCollectionCell class] withReuseIdentifier:NSStringFromClass([model.titleCellModel class]) forSectionController:self atIndex:index];
         [cell refreshWithData:model.titleCellModel];
+        cell.mapBtnClickBlock = ^{
+            [weakSelf gotoMapDetail:model.titleCellModel.titleStr];
+        };
         return cell;
     } else if (model.items[index] == model.subMessageModel) {
         FHNeighborhoodDetailSubMessageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSubMessageCollectionCell class] withReuseIdentifier:NSStringFromClass([model.subMessageModel class]) forSectionController:self atIndex:index];
