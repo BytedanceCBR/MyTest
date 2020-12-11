@@ -54,6 +54,10 @@
     return self;
 }
 
+-(void)dealloc {
+    [TTAccount removeMulticastDelegate:self];
+}
+
 -(void)onAccountUserProfileChanged:(NSDictionary *)changedFields error:(NSError *)error {
     WeakSelf;
     [FHHouseUGCAPI requestHomePageInfoWithUserId:self.userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
