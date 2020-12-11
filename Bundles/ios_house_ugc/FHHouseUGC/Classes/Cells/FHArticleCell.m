@@ -14,7 +14,7 @@
 #import "UIFont+House.h"
 
 #define maxLines 3
-#define bottomViewHeight 35
+#define bottomViewHeight 36
 #define guideViewHeight 27
 #define topMargin 15
 #define singleImageViewHeight 90

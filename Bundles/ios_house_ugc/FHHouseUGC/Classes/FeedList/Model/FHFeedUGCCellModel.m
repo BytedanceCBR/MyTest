@@ -20,6 +20,7 @@
 #import "FHHouseUGCHeader.h"
 #import "FHUtils.h"
 #import "UIFont+House.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define kRecommendSocialGroupListNil @"kRecommendSocialGroupListNil"
 #define kHotTopicListNil @"kHotTopicListNil"
@@ -57,7 +58,7 @@
     self = [super init];
     if (self) {
         _showCommunity = YES;
-        _bottomLineHeight = 1;
+        _bottomLineHeight = 1.2;
         _bottomLineLeftMargin = 20;
         _bottomLineRightMargin = 20;
     }

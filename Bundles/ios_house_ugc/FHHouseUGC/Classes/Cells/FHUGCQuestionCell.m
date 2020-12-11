@@ -14,7 +14,7 @@
 #import "FHUGCCellUserInfoView.h"
 
 #define maxLines 3
-#define bottomViewHeight 45
+#define bottomViewHeight 46
 #define guideViewHeight 17
 #define topMargin 15
 #define singleImageViewHeight 90

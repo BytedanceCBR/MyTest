@@ -61,7 +61,7 @@
     
     self.bottomSepView.left = 20;
     self.bottomSepView.top = self.mainCollection.bottom + 20;
-    self.bottomSepView.height = 1;
+    self.bottomSepView.height = 1.2;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
 }
 

@@ -14,6 +14,7 @@
 #import "FHLynxManager.h"
 #import "HMDTTMonitor.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHUGCLynxBannerCell()<LynxViewClient>
 
@@ -261,7 +262,7 @@
 //这里接收TTLynxViewClient抛上来的sizeChange事件
 - (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
     
-    self.bottomSepView.frame = CGRectMake(20.0f,self.lynxView.frame.origin.y + view.frame.size.height, [UIScreen mainScreen].bounds.size.height - 40, 1);
+    self.bottomSepView.frame = CGRectMake(20.0f,self.lynxView.frame.origin.y + view.frame.size.height, [UIScreen mainScreen].bounds.size.height - 40, 1.2);
     
     if (CGSizeEqualToSize(self.cacheSize, view.frame.size)) {
         return;

@@ -17,7 +17,6 @@
 #define cellId @"cellId"
 
 #define headerViewHeight 40
-#define bottomSepViewHeight 1
 
 @interface FHUGCRecommendCell ()<UITableViewDelegate,UITableViewDataSource,FHUGCRecommendSubCellDelegate>
 
@@ -124,7 +123,7 @@
         make.bottom.mas_equalTo(self.contentView);
         make.left.mas_equalTo(self.contentView).offset(20);
         make.right.mas_equalTo(self.contentView).offset(-20);
-        make.height.mas_equalTo(bottomSepViewHeight);
+        make.height.mas_equalTo(1.2);
     }];
 }
 
@@ -151,7 +150,7 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = headerViewHeight + bottomSepViewHeight + 20;
+        CGFloat height = headerViewHeight + 1.2 + 20;
         
         if(cellModel.recommendSocialGroupList.count > 0){
             CGFloat tableViewHeight = cellModel.recommendSocialGroupList.count < 3 ? 60 * cellModel.recommendSocialGroupList.count : 180;

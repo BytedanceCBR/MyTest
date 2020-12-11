@@ -26,6 +26,7 @@
 #import "UIButton+FHUGCMultiDigg.h"
 #import <TTWebImageManager.h>
 #import <FHShareManager.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHUGCToolView ()<TTVVideoDetailCollectServiceDelegate>
 
@@ -75,7 +76,7 @@
     [self addSubview:_diggButton];
     [self.diggButton enableMulitDiggEmojiAnimation];
     
-    self.bottomLine = [[UIView alloc] initWithFrame:CGRectMake(15, self.bounds.size.height - 0.5, self.bounds.size.width - 30, 1)];
+    self.bottomLine = [[UIView alloc] initWithFrame:CGRectMake(15, self.bounds.size.height - 1.2 , self.bounds.size.width - 30, 1.2)];
     _bottomLine.backgroundColor = [UIColor themeGray7];
     [self addSubview:_bottomLine];
     

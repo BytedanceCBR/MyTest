@@ -146,7 +146,7 @@
     self.moreBtn.hidden = cellModel.hiddenMore;
     
     self.bottomSepView.left = cellModel.bottomLineLeftMargin;
-    self.bottomSepView.top = self.positionView.bottom + 10 + self.sepLineMorePadding;;
+    self.bottomSepView.top = self.positionView.bottom + 10 + self.sepLineMorePadding;
     self.bottomSepView.height = cellModel.bottomLineHeight;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
 }
