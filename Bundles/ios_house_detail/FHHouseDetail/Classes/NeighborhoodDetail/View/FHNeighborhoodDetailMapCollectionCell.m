@@ -94,8 +94,6 @@
         
     [self cleanSubViews];
     [self setupViews];
-    
-
     [self refreshWithDataPoiDetail];
 }
 
@@ -129,14 +127,12 @@
     }];
     
     //初始化静态地图
-//    if (useNativeMap) {
-//        self.nativeMapImageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-//        self.nativeMapImageView.image = [UIImage imageNamed:@"map_detail_default_bg"];
-//        [self.contentView addSubview:self.nativeMapImageView];
-//        [self.nativeMapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.edges.mas_equalTo(UIEdgeInsetsZero);
-//        }];
-//    }
+    self.nativeMapImageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
+    self.nativeMapImageView.image = [UIImage imageNamed:@"map_detail_default_bg"];
+    [self.contentView addSubview:self.nativeMapImageView];
+    [self.nativeMapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
     
     self.mapMaskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:self.mapMaskBtn];
@@ -187,7 +183,7 @@
     UIImageView *iconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:icon]];
     [itemView addSubview:iconImageView];
     [iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(itemView).mas_offset(-24);
+        make.centerX.mas_equalTo(itemView).mas_offset(-14);
         make.centerY.mas_equalTo(itemView);
         make.size.mas_equalTo(CGSizeMake(16, 16));
     }];
@@ -230,19 +226,10 @@
     FHNeighborhoodDetailMapCellModel *dataModel = (FHNeighborhoodDetailMapCellModel *) self.currentData;
     
     self.baiduPanoButton.hidden = !dataModel.baiduPanoramaUrl.length;
-//    if (!dataModel.useNativeMap) {
-//        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
-//            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";
-//            [self mapView:self.mapView loadFinished:NO message:message];
-//            return;
-//        }
-//        [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
-//
-//        [self showPoiInfo];
-//    }
     
-    
+    [self.mapView loadMap:nil center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
 
+    [self showPoiInfo];
 }
 
 - (void)showPoiInfo {
@@ -253,14 +240,11 @@
     self.centerAnnotation.coordinate = self.centerPoint;
     [annotations addObject:self.centerAnnotation];
     
-    FHNeighborhoodDetailMapCellModel *dataModel = (FHNeighborhoodDetailMapCellModel *) self.currentData;
+//    FHNeighborhoodDetailMapCellModel *dataModel = (FHNeighborhoodDetailMapCellModel *) self.currentData;
     
-//    if (dataModel.useNativeMap) {
-//        [self takeSnapWith:nil annotations:annotations];
-//    } else {
-//        [self.mapView removeAllAnnotations];
-//        [self.mapView addAnnotations:annotations];
-//    }
+    [self takeSnapWith:nil annotations:nil];
+    [self.mapView removeAllAnnotations];
+    [self.mapView addAnnotations:annotations];
 }
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
@@ -270,9 +254,10 @@
         StrongSelf;
         if (!success) {
             //展示默认图
-            self.nativeMapImageView.image = [UIImage imageNamed:@"static_map_empty"];
+            self.nativeMapImageView.image = [UIImage imageNamed:@"map_detail_default_bg"];
             return;
         }
+        self.nativeMapImageView.image = image;
     }];
 }
 

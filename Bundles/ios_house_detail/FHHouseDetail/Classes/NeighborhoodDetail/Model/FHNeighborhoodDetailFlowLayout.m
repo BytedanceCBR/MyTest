@@ -47,6 +47,12 @@
             }
         }
     }];
+    
+    //小区详情页 如果同时出现 FHNeighborhoodDetailSectionTypeFloorpan FHNeighborhoodDetailSectionTypeHouseSale
+    //则需要合并2个decoration的attrs
+//    if ([sec]) {
+//        <#statements#>
+//    }
 
     return newArray;
 }

@@ -107,7 +107,7 @@
 
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);//
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-16);//
         make.width.mas_equalTo(self.scrollView.mas_width);
         make.height.mas_equalTo(20);
     }];
@@ -115,8 +115,8 @@
     [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(44);
         make.height.mas_equalTo(22);
-        make.right.mas_equalTo(self.scrollView.mas_right).offset(-15);
-        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);
+        make.right.mas_equalTo(self.scrollView.mas_right).offset(-9);
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-16);
     }];
 
     [self layoutIfNeeded];
