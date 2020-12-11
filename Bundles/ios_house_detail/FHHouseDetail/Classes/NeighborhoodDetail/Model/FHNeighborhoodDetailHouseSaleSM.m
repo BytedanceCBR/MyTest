@@ -12,7 +12,8 @@
 
 -(void)updateWithDataModel:(FHDetailSameNeighborhoodHouseResponseDataModel *)model {
     NSMutableArray *arrayM = [[NSMutableArray alloc] init];
-    for (id item in model.items) {
+    for (FHSearchHouseDataItemsModel *item in model.items) {
+        item.advantageDescription = nil;
         id obj = [FHHouseCardUtils getEntityFromModel:item];
         if (obj) {
             [arrayM addObject:obj];

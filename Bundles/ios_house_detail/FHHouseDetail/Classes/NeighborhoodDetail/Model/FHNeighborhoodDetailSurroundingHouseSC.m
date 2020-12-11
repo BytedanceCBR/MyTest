@@ -184,7 +184,7 @@
                                                                  atIndex:(NSInteger)index {
     FHNeighborhoodDetailRecommendTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailRecommendTitleView class] atIndex:index];
     FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
-    titleView.titleLabel.font = [UIFont themeFontMedium:18];
+    titleView.titleLabel.font = [UIFont themeFontMedium:16];
     titleView.titleLabel.textColor = [UIColor themeGray1];
     titleView.titleLabel.text = [NSString stringWithFormat:@"周边房源(%@)", SM.total];//@"周边房源";
     titleView.arrowsImg.hidden = YES;
@@ -195,7 +195,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 30, 42);
+        return CGSizeMake(self.collectionContext.containerSize.width - 18, 34);
     }
     return CGSizeZero;
 }

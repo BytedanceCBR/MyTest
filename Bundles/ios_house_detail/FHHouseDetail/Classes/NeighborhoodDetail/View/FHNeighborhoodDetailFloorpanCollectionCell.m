@@ -19,7 +19,7 @@
 @implementation FHNeighborhoodDetailFloorpanCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, 95);
+    return CGSizeMake(width, 95 + 12);
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -38,7 +38,7 @@
 
         [self.contentView addSubview:self.collectionView];
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentView);
+            make.top.mas_equalTo(self.contentView).offset(12);
             make.left.mas_equalTo(self.contentView);
             make.right.mas_equalTo(self.contentView);
             make.bottom.mas_equalTo(self.contentView).offset(-10);
