@@ -1,21 +1,23 @@
 //
-//  FHNeighborhoodDetailRecommendSC.m
+//  FHNeighborhoodDetailSurroundingHouseSC.m
 //  FHHouseDetail
 //
-//  Created by xubinbin on 2020/10/14.
+//  Created by xubinbin on 2020/12/10.
 //
 
-#import "FHNeighborhoodDetailRecommendSC.h"
-#import "FHNeighborhoodDetailRecommendSM.h"
-#import "FHNeighborhoodDetailRecommendCell.h"
+#import "FHNeighborhoodDetailSurroundingHouseSC.h"
 #import "FHNeighborhoodDetailRecommendTitleView.h"
 #import "FHHouseSecondCardViewModel.h"
+#import "FHNeighborhoodDetailSurroundingHouseSM.h"
+#import "FHNeighborhoodDetailRecommendCell.h"
+#import "FHNeighborhoodDetailRelatedHouseMoreCell.h"
+#import "FHNeighborhoodDetailViewController.h"
 
-@interface FHNeighborhoodDetailRecommendSC()<IGListSupplementaryViewSource, IGListDisplayDelegate>
+@interface FHNeighborhoodDetailSurroundingHouseSC()<IGListSupplementaryViewSource, IGListDisplayDelegate>
 
 @end
 
-@implementation FHNeighborhoodDetailRecommendSC
+@implementation FHNeighborhoodDetailSurroundingHouseSC
 
 - (instancetype)init
 {
@@ -28,31 +30,36 @@
 }
 
 - (NSInteger)numberOfItems {
-    FHNeighborhoodDetailRecommendSM *SM = (FHNeighborhoodDetailRecommendSM *)self.sectionModel;
-    return SM.items.count;
+    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
+    return SM.items.count + 1;
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
     CGFloat width = self.collectionContext.containerSize.width - 18;
-    FHNeighborhoodDetailRecommendSM *SM = (FHNeighborhoodDetailRecommendSM *)self.sectionModel;
+    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
     if (index >= 0 && index < SM.items.count) {
         return [FHNeighborhoodDetailRecommendCell cellSizeWithData:SM.items[index] width:width];
+    } else if (index == SM.items.count) {
+        return CGSizeMake(width, 56);
     }
     return CGSizeZero;
 }
 
 - (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
-    FHNeighborhoodDetailRecommendSM *SM = (FHNeighborhoodDetailRecommendSM *)self.sectionModel;
-    FHNeighborhoodDetailRecommendCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailRecommendCell class] withReuseIdentifier:NSStringFromClass([SM.recommendCellModel class]) forSectionController:self atIndex:index];
+    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
     if (index >= 0 && index < SM.items.count) {
+        FHNeighborhoodDetailRecommendCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailRecommendCell class] withReuseIdentifier:NSStringFromClass([SM class]) forSectionController:self atIndex:index];
         [cell refreshWithData:SM.items[index] withLast:(index == SM.items.count - 1) ? YES : NO];
-        [cell refreshIndexCorner:NO andLast:(index == SM.items.count - 1) ? YES : NO];
+        return cell;
+    } else {
+        FHNeighborhoodDetailRelatedHouseMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailRelatedHouseMoreCell class] forSectionController:self atIndex:index];
+        [cell refreshWithTitle:SM.moreTitle];
+        return cell;
     }
-    return cell;
 }
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
-    FHNeighborhoodDetailRecommendSM *SM = (FHNeighborhoodDetailRecommendSM *)self.sectionModel;
+    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
     if (index >= 0 && index < SM.items.count) {
         FHHouseSecondCardViewModel *item = SM.items[index];
         if ([item.model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
@@ -75,31 +82,54 @@
                 [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
             }
         }
+    } else if (index == SM.items.count) {
+        FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
+        if (SM.model.hasMore) {
+            
+            FHDetailNeighborhoodModel *detailModel = (FHDetailNeighborhoodModel*)self.detailViewController.viewModel.detailData;
+            NSString *neighborhood_id = @"be_null";
+            if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {
+                neighborhood_id = detailModel.data.neighborhoodInfo.id;
+            }
+            NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
+            tracerDic[@"enter_type"] = @"click";
+            tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB;
+            tracerDic[@"category_name"] = @"same_neighborhood_list";
+            tracerDic[@"element_from"] = @"same_neighborhood";
+            tracerDic[@"enter_from"] = @"neighborhood_detail";
+            [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
+            
+            NSMutableDictionary *userInfo = [NSMutableDictionary new];
+            userInfo[@"tracer"] = tracerDic;
+            userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+            if (detailModel.data.neighborhoodInfo.name.length > 0) {
+                if (SM.model.total.length > 0) {
+                    userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.neighborhoodInfo.name,SM.model.total];
+                } else {
+                    userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
+                }
+            } else {
+                userInfo[@"title"] = @"小区房源";// 默认值
+            }
+            if (neighborhood_id.length > 0) {
+                userInfo[@"neighborhood_id"] = neighborhood_id;
+            }
+            if (self.detailViewController.viewModel.houseId.length > 0) {
+                userInfo[@"house_id"] = self.detailViewController.viewModel.houseId;
+            }
+            if (SM.model.searchId.length > 0) {
+                userInfo[@"search_id"] = SM.model.searchId;
+            }
+            userInfo[@"list_vc_type"] = @(5);
+            
+            TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
+            NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
+            if (urlStr.length > 0) {
+                NSURL *url = [NSURL URLWithString:urlStr];
+                [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
+            }
+        }
     }
-}
-
-- (void)addHouseShowByIndex:(NSInteger)index dataItem:(FHHouseSecondCardViewModel *)item {
-    if (![item.model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
-        return;
-    }
-    FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)item.model;
-    NSString *tempKey = [NSString stringWithFormat:@"%@_%ld", NSStringFromClass([self class]), index];
-    if ([self.elementShowCaches valueForKey:tempKey]) {
-        return;
-    }
-    [self.elementShowCaches setValue:@(YES) forKey:tempKey];
-    NSMutableDictionary *traceParam = [NSMutableDictionary new];
-    traceParam[@"log_pb"] = [model logPb] ? : UT_BE_NULL;;
-    traceParam[@"element_type"] = @"recommend_house";
-    traceParam[@"origin_from"] = self.detailTracerDict[@"origin_from"] ? : UT_BE_NULL;
-    traceParam[@"page_type"] = @"neighborhood_detail";
-    traceParam[@"house_type"] = @"old";
-    traceParam[@"search_id"] = model.searchId ? : UT_BE_NULL;
-    traceParam[@"group_id"] = model.groupId ? : UT_BE_NULL;
-    traceParam[@"rank"] = @(index);
-    traceParam[@"impr_id"] = model.imprId ? : UT_BE_NULL;
-    traceParam[@"enter_from"] = self.detailTracerDict[@"enter_from"];
-    [FHUserTracker writeEvent:@"house_show" params:traceParam];
 }
 
 #pragma mark - IGListDisplayDelegate
@@ -128,10 +158,7 @@
  */
 
 - (void)listAdapter:(IGListAdapter *)listAdapter willDisplaySectionController:(IGListSectionController *)sectionController cell:(UICollectionViewCell *)cell atIndex:(NSInteger)index {
-    FHNeighborhoodDetailRecommendSM *SM = (FHNeighborhoodDetailRecommendSM *)self.sectionModel;
-    if (index >= 0 && index < SM.items.count) {
-        [self addHouseShowByIndex:index dataItem:SM.items[index]];
-    }
+    
 }
 
 /**
@@ -156,9 +183,10 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHNeighborhoodDetailRecommendTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailRecommendTitleView class] atIndex:index];
+    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
     titleView.titleLabel.font = [UIFont themeFontMedium:16];
     titleView.titleLabel.textColor = [UIColor themeGray1];
-    titleView.titleLabel.text = @"猜你喜欢";
+    titleView.titleLabel.text = [NSString stringWithFormat:@"周边房源(%@)", SM.total];//@"周边房源";
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
     return titleView;

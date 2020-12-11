@@ -118,6 +118,10 @@
     
     NSString *pluginName = paramObj.allParams[kFHFlutterchemaPluginNameKey];
     
+    if(isEmptyString(pluginName)){
+        pluginName = kFHFlutterBDefaultModuleName;
+    }
+    
     
     BDPMSPackage * hasLocalPackage = [[BDFlutterPackageManager sharedInstance] validPackageWithName:pluginName];
     BOOL canFlutterDynamicart =  [FHFlutterManager isCanFlutterDynamicart];

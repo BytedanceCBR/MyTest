@@ -10,7 +10,7 @@
 #import "FHNeighborhoodDetailViewController.h"
 #import "FHNeighborhoodDetailViewModel.h"
 #import "FHNeighborhoodDetailFloorpanCollectionCell.h"
-#import "FHNeighborhoodDetailFloorpanTitleView.h"
+#import "FHNeighborhoodDetailRecommendTitleView.h"
 #import "FHDetailSectionTitleCollectionView.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
@@ -35,8 +35,8 @@
 }
 
 -(CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width;
-    return CGSizeMake(width, 115);
+    CGFloat width = self.collectionContext.containerSize.width - 18;
+    return CGSizeMake(width, 95 + 12);
 }
 
 -(__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
@@ -52,8 +52,8 @@
 }
 
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind atIndex:(NSInteger)index {
-    FHNeighborhoodDetailFloorpanTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailFloorpanTitleView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:18];
+    FHNeighborhoodDetailRecommendTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailRecommendTitleView class] atIndex:index];
+    titleView.titleLabel.font = [UIFont themeFontSemibold:16];
     titleView.titleLabel.textColor = [UIColor themeGray1];
     titleView.titleLabel.text = @"小区户型";
     titleView.arrowsImg.hidden = YES;
@@ -67,7 +67,7 @@
 
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 45);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 34);
     }
     return CGSizeZero;
 }

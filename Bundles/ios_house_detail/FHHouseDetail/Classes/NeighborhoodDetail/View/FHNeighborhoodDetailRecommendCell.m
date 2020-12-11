@@ -38,7 +38,7 @@
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
     if ([data isKindOfClass:[FHHouseSecondCardViewModel class]]) {
         FHHouseSecondCardViewModel *viewModel = (FHHouseSecondCardViewModel *)data;
-        CGFloat height = [FHHouseSecondCardView viewHeightWithViewModel:viewModel] + 1;
+        CGFloat height = [FHHouseSecondCardView calculateViewHeight:viewModel] + 1;
         return CGSizeMake(width, height);
     }
     return CGSizeZero;
@@ -61,7 +61,7 @@
     self.backView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:self.backView];
     
-    self.cardView = [[FHHouseSecondCardView alloc] init];
+    self.cardView = [[FHHouseSecondCardView alloc] initWithLeftMargin:12 rightMargin:12];
     [self.contentView addSubview:self.cardView];
     
     self.line = [[UIView alloc] init];
@@ -77,8 +77,8 @@
         make.edges.mas_equalTo(0);
     }];
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
+        make.left.mas_equalTo(12);
+        make.right.mas_equalTo(-12);
         make.height.mas_equalTo(1);
         make.bottom.mas_equalTo(0);
     }];
@@ -87,7 +87,10 @@
 - (void)refreshWithData:(id)data withLast:(BOOL)isLast {
     [self refreshWithData:data];
     self.line.hidden = isLast;
-    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH - 30, 114);
+}
+
+- (void)refreshIndexCorner:(BOOL)isFirst andLast:(BOOL)isLast {
+    CGRect frame = CGRectMake(0, 0, SCREEN_WIDTH - 18, 114);
     if (isLast) {
         UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:frame byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(15, 15)];
         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];

@@ -12,7 +12,8 @@
 #import "FHNeighborhoodDetailQuickEntryCollectionCell.h"
 #import <FHHouseBase/FHMonitor.h>
 #import "FHNeighborhoodDetailViewController.h"
-#import "NSArray+BTDAdditions.h"
+#import <TTRoute/TTRoute.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHNeighborhoodDetailCoreInfoSC ()
 
@@ -66,7 +67,7 @@
             [weakSelf addOnSaleClick:model.subMessageModel.onSaleUrl];
         };
         cell.clickAveragePriceblock = ^{
-            [weakSelf addAveragePriceClick:nil];
+            [weakSelf addAveragePriceClick];
         };
         [cell refreshWithData:model.subMessageModel];
         return cell;
@@ -121,8 +122,29 @@
 - (void)addOnSaleClick:(NSString *)url {
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];
 }
-- (void)addAveragePriceClick:(NSString *)url {
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];
+
+- (void)addAveragePriceClick {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    userInfo[@"route"] = [@"/neighbor_price_detail" btd_stringByURLEncode];
+    
+//    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+    
+    NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
+    tracerDict[@"element_from"] = @"map";
+    tracerDict[@"enter_from"] = @"neighborhood_detail";
+    params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
+    
+    
+    if (self.detailViewController.viewModel.detailData) {
+        
+        params[@"neighbor_info"] = [[self.detailViewController.viewModel.detailData toDictionary] btd_safeJsonStringEncoded];
+    }
+    
+    userInfo[@"params"] = [params btd_jsonStringEncoded];
+    
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
 }
 - (void)addSoldClick:(NSString *)url {
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];

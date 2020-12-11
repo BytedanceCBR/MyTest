@@ -268,6 +268,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHouseDetailMediaInfo *neighborhoodTopImages;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighborhoodEvaluationModel *neighborhoodEvaluation ; 
 
+//113 二级页面基础信息
+@property (nonatomic, copy, nullable) NSDictionary *neighborhoodDetailModules;
 @end
 
 @interface FHDetailNeighborhoodModel : JSONModel

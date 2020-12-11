@@ -44,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataItemsBaseInfoMapModel *baseInfoMap ;  
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *displaySubtitle;
+
 @end
 
 @interface FHDetailRelatedNeighborhoodResponseDataModel : JSONModel 

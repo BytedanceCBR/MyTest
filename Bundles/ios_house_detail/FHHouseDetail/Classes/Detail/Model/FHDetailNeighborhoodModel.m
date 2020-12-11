@@ -60,6 +60,7 @@
                            @"albumInfo": @"album_info",
                            @"neighborhoodTopImages":@"neighborhood_top_images",
                            @"neighborhoodEvaluation": @"neighborhood_evaluation",
+                           @"neighborhoodDetailModules": @"neighborhood_detail_modules",
                            @"statsMinfo":@"stats_minfo",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {

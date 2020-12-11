@@ -12,9 +12,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailSubMessageCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 
-@property (nonatomic, copy) void(^clickAveragePriceblock)(void);
-@property (nonatomic, copy) void(^clickSoldblock)(void);
-@property (nonatomic, copy) void(^clickOnSaleblock)(void);
+@property (nonatomic, copy) void(^clickAveragePriceblock)(void); //均价
+@property (nonatomic, copy) void(^clickSoldblock)(void); //成交
+@property (nonatomic, copy) void(^clickOnSaleblock)(void); //在售
 
 @end
 

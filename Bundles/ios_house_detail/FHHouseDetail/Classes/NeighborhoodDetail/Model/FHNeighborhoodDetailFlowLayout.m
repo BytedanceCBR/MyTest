@@ -38,7 +38,6 @@
         FHNeighborhoodDetailSectionModel *model = self.sectionModels[attribute.indexPath.section];
 
         if (model.sectionType != FHNeighborhoodDetailSectionTypeHeader &&
-            model.sectionType != FHNeighborhoodDetailSectionTypeFloorpan &&
             model.sectionType != FHNeighborhoodDetailSectionTypeOwnerSellHouse &&
             ![sections containsObject:@(attribute.indexPath.section)]) {
             [sections addObject:@(attribute.indexPath.section)];

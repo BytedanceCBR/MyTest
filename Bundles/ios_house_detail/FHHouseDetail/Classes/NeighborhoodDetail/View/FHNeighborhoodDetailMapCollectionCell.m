@@ -28,7 +28,7 @@
 @property (nonatomic, assign) CLLocationCoordinate2D centerPoint;
 @property (nonatomic, strong) AMapSearchAPI *searchApi;
 
-@property (nonatomic, strong) NSArray *nameArray;
+//@property (nonatomic, strong) NSArray *nameArray;
 @property (nonatomic, strong) FHStaticMapAnnotation *centerAnnotation;
 
 @end
@@ -36,7 +36,7 @@
 @implementation FHNeighborhoodDetailMapCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, width/16.0*7.0);
+    return CGSizeMake(width, width/16.0*9.0);
 }
 
 - (NSString *)elementType {
@@ -50,7 +50,7 @@
         self.centerAnnotation = [[FHStaticMapAnnotation alloc] init];
         self.centerAnnotation.extra = @"center_annotation";
         
-        self.nameArray = @[@"地铁", @"公交", @"教育", @"医疗", @"生活"];
+//        self.nameArray = @[@"地铁", @"公交", @"教育", @"医疗", @"生活"];
         
         //初始化poi搜索器
 //        self.searchApi = [[AMapSearchAPI alloc] init];
@@ -91,12 +91,9 @@
     
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
     self.centerAnnotation.title = dataModel.mapCentertitle;
-    
-    NSDictionary *fhSettings = [[TTSettingsManager sharedManager] settingForKey:@"f_settings" defaultValue:@{} freeze:NO];
-    dataModel.useNativeMap = [fhSettings btd_unsignedIntegerValueForKey:@"f_use_static_map"] == 0;
-    
+        
     [self cleanSubViews];
-    [self setupViews:dataModel.useNativeMap];
+    [self setupViews];
     
 
     [self refreshWithDataPoiDetail];
@@ -114,7 +111,7 @@
     self.mapMaskBtn = nil;
 }
 
-- (void)setupViews:(BOOL)useNativeMap {
+- (void)setupViews {
     
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.contentView.bounds byRoundingCorners:UIRectCornerBottomLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(10, 10)];
     CAShapeLayer *layer = [[CAShapeLayer alloc]init];
@@ -122,25 +119,24 @@
     layer.path = maskPath.CGPath;
     self.layer.mask = layer;
     
+    self.mapView = [FHDetailStaticMap mapWithFrame:self.contentView.bounds];
+    self.mapView.backgroundColor = [UIColor colorWithHexStr:@"#ececec"];
+    self.mapView.delegate = self;
+    [self.contentView addSubview:self.mapView];
+    [self.contentView sendSubviewToBack:self.mapView];
+    [self.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
+    
     //初始化静态地图
-    if (useNativeMap) {
-        self.nativeMapImageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-        self.nativeMapImageView.image = [UIImage imageNamed:@"static_map_empty"];
-        [self.contentView addSubview:self.nativeMapImageView];
-        [self.nativeMapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsZero);
-        }];
-    } else {
-        self.mapView = [FHDetailStaticMap mapWithFrame:self.contentView.bounds];
-        self.mapView.backgroundColor = [UIColor colorWithHexStr:@"#ececec"];
-        self.mapView.delegate = self;
-        [self.contentView addSubview:self.mapView];
-        [self.contentView sendSubviewToBack:self.mapView];
-        [self.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsZero);
-        }];
-        
-    }
+//    if (useNativeMap) {
+//        self.nativeMapImageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
+//        self.nativeMapImageView.image = [UIImage imageNamed:@"map_detail_default_bg"];
+//        [self.contentView addSubview:self.nativeMapImageView];
+//        [self.nativeMapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.edges.mas_equalTo(UIEdgeInsetsZero);
+//        }];
+//    }
     
     self.mapMaskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:self.mapMaskBtn];
@@ -234,23 +230,19 @@
     FHNeighborhoodDetailMapCellModel *dataModel = (FHNeighborhoodDetailMapCellModel *) self.currentData;
     
     self.baiduPanoButton.hidden = !dataModel.baiduPanoramaUrl.length;
-    if (!dataModel.useNativeMap) {
-        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
-            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";
-            [self mapView:self.mapView loadFinished:NO message:message];
-            return;
-        }
-        [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
-        
-        [self showPoiInfo];
-    }
-    
-    
-//    if ([self isPoiSearchDone:self.curCategory]) {
-//        [self showPoiResultInfo];
-//    } else {
-//        [self requestPoiInfo:self.centerPoint];
+//    if (!dataModel.useNativeMap) {
+//        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
+//            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";
+//            [self mapView:self.mapView loadFinished:NO message:message];
+//            return;
+//        }
+//        [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
+//
+//        [self showPoiInfo];
 //    }
+    
+    
+
 }
 
 - (void)showPoiInfo {
@@ -263,12 +255,12 @@
     
     FHNeighborhoodDetailMapCellModel *dataModel = (FHNeighborhoodDetailMapCellModel *) self.currentData;
     
-    if (dataModel.useNativeMap) {
-        [self takeSnapWith:nil annotations:annotations];
-    } else {
-        [self.mapView removeAllAnnotations];
-        [self.mapView addAnnotations:annotations];
-    }
+//    if (dataModel.useNativeMap) {
+//        [self takeSnapWith:nil annotations:annotations];
+//    } else {
+//        [self.mapView removeAllAnnotations];
+//        [self.mapView addAnnotations:annotations];
+//    }
 }
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
@@ -350,9 +342,8 @@
     filterDic[@"eventName"] = eventName;
     [[HMDUserExceptionTracker sharedTracker] trackUserExceptionWithType:eventName Log:eventName CustomParams:extra filters:filterDic callback:nil];
     
-    dataModel.useNativeMap = YES;
     [self cleanSubViews];
-    [self setupViews:dataModel.useNativeMap];
+    [self setupViews];
     [self refreshWithDataPoiDetail];
 }
 
