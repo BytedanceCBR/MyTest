@@ -393,7 +393,8 @@ static CGFloat const kSectionHeaderHeight = 38;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
-                        [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:@"" withUrl:currentDataModel.jump2AdRecommend withTabName:@"" withPriority:1];
+                        NSURLComponents *urlComponent = [[NSURLComponents alloc] initWithString:currentDataModel.jump2AdRecommend];
+                        [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:urlComponent.host withUrl:currentDataModel.jump2AdRecommend withTabName:@"" withPriority:1];
                         [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
                         if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
                             //通勤找房
