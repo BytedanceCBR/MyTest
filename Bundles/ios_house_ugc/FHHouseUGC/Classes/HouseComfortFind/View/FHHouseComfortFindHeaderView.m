@@ -124,7 +124,7 @@
             return operationName;
         }
     }
-    return @"bd_null";
+    return @"be_null";
 }
 
 @end
