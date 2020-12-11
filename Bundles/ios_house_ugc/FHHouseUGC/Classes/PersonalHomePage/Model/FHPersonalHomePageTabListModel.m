@@ -29,7 +29,6 @@
 {
     NSDictionary *dict = @{
         @"tabList": @"tab_list",
-        @"isVerifyShow": @"f_verify_show"
     };
     return [[JSONKeyMapper alloc] initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

@@ -23,7 +23,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPersonalHomePageTabListDataModel : JSONModel
 @property (nonatomic, strong, nullable) NSArray <FHPersonalHomePageTabItemModel> *tabList;
-@property (nonatomic, copy , nullable) NSString *isVerifyShow;
 @end
 
 

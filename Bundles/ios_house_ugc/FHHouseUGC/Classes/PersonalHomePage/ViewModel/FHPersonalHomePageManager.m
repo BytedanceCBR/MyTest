@@ -12,6 +12,7 @@
 #import "FHPersonalHomePageFeedViewController.h"
 #import "FHPersonalHomePageViewController.h"
 #import "FHPersonalHomePageFeedListViewController.h"
+#import "FHEnvContext.h"
 #import "FHNavBarView.h"
 #import "UIImage+FIconFont.h"
 #import "FHCommonDefines.h"
@@ -36,29 +37,29 @@
 -(instancetype)init {
     if(self = [super init]) {
         self.feedErrorArray = [NSMutableArray array];
+        self.feedListVCArray = [NSMutableArray array];
+        self.userId = @"";
+        self.isFeedError = NO;
+        self.scrollViewScrollEnable = YES;
+        self.tableViewScrollEnable = NO;
+        self.viewController = nil;
+        self.feedViewController = nil;
+        self.tabListModel = nil;
+        self.userInfoChange = NO;
+        self.beginOffset = 0;
+        self.lastOffset = 0;
     }
     return self;
-}
-
--(void)reset {
-    self.userId = @"";
-    self.isFeedError = NO;
-    self.scrollViewScrollEnable = YES;
-    self.tableViewScrollEnable = NO;
-    self.viewController = nil;
-    self.feedViewController = nil;
-    self.tabListModel = nil;
-    self.feedErrorArray = nil;
-    self.userInfoChange = NO;
-    self.beginOffset = 0;
-    self.lastOffset = 0;
 }
 
 -(void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel {
     self.tabListModel = tabListModel;
     
+    NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
+    BOOL isVerifyShow = [vwhiteList containsObject:self.userId];
+    
     self.viewController.customNavBarView.title.text = profileInfoModel.data.name;
-    [self.profileInfoView updateWithModel:profileInfoModel isVerifyShow:[tabListModel.data.isVerifyShow boolValue]];
+    [self.profileInfoView updateWithModel:profileInfoModel isVerifyShow:isVerifyShow];
     CGFloat profileInfoViewHeight = [self.profileInfoView viewHeight];
     self.profileInfoView.frame = CGRectMake(0, 0, SCREEN_WIDTH, profileInfoViewHeight);
     
@@ -72,8 +73,11 @@
 }
 
 -(void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel {
+    NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
+    BOOL isVerifyShow = [vwhiteList containsObject:self.userId];
+    
     self.viewController.customNavBarView.title.text = profileInfoModel.data.name;
-    [self.profileInfoView updateWithModel:profileInfoModel isVerifyShow:[self.tabListModel.data.isVerifyShow boolValue]];
+    [self.profileInfoView updateWithModel:profileInfoModel isVerifyShow:isVerifyShow];
     CGFloat profileInfoViewHeight = [self.profileInfoView viewHeight];
     self.profileInfoView.frame = CGRectMake(0, 0, SCREEN_WIDTH, profileInfoViewHeight);
     

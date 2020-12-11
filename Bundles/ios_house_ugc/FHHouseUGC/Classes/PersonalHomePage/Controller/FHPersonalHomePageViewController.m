@@ -42,7 +42,6 @@
         NSDictionary *params = paramObj.allParams;
         self.userId = params[@"uid"];
         self.homePageManager = [[FHPersonalHomePageManager alloc] init];
-        [self.homePageManager reset];
         self.homePageManager.userId = self.userId;
         [self.homePageManager initTracerDictWithParams:params];
     }

@@ -16,7 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHPersonalHomePageTabListModel;
 
 @interface FHPersonalHomePageManager : NSObject
-- (void)reset;
 @property(nonatomic,assign) BOOL userInfoChange;
 @property(nonatomic,assign) NSInteger currentIndex;
 @property(nonatomic,copy) NSString *userId;

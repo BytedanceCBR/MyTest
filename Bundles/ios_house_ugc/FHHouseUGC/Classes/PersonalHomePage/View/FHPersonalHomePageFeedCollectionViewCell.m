@@ -21,7 +21,6 @@
         self.feedVC.view.frame = self.contentView.frame;
         self.feedVC.tableView.frame = self.contentView.frame;
         [self.contentView addSubview:self.feedVC.view];
-        [self.homePageManager.feedListVCArray addObject:self.feedVC];
     }
     return self;
 }
@@ -35,6 +34,7 @@
 -(void)setHomePageManager:(FHPersonalHomePageManager *)homePageManager {
     _homePageManager = homePageManager;
     _feedVC.homePageManager = homePageManager;
+    [_homePageManager.feedListVCArray addObject:_feedVC];
 }
 
 @end

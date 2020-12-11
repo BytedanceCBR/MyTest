@@ -115,6 +115,7 @@
     CGFloat backViewHeight = 90 - 8 + 15;
     
     [self.shadowView updateWithUrl:model.data.avatarUrl];
+    self.iconView.frame = CGRectMake(20, 74 + self.homePageManager.safeArea, 80, 80);
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:model.data.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     self.bigAvatarUrl = model.data.bigAvatarUrl;
     self.userNameLabel.text = model.data.name;
