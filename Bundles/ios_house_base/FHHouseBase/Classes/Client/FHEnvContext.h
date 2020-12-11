@@ -333,6 +333,9 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 //是否展展示登陆弹窗
 +(BOOL)canShowLoginTip;
 
+//获取ugc用户v图标
++ (NSArray *)getUGCUserVWhiteList;
+
 @end
 
 
