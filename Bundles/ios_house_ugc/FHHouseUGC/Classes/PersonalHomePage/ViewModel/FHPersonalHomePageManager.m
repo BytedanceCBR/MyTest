@@ -234,6 +234,18 @@
     });
 }
 
+-(void)refreshScrollStatus {
+    CGFloat tabListOffset = [self tabListOffset];
+    CGFloat offset = self.scrollView.contentOffset.y;
+    if(offset >= tabListOffset) {
+        self.scrollViewScrollEnable = NO;
+        self.tableViewScrollEnable = YES;
+    }else {
+        self.scrollViewScrollEnable = YES;
+        self.tableViewScrollEnable = NO;
+    }
+}
+
 -(CGFloat)safeArea {
     if([UIDevice btd_isIPhoneXSeries]){
         return 40;

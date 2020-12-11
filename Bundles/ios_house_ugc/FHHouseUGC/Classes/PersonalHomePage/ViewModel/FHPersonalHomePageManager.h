@@ -33,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)initTracerDictWithParams:(NSDictionary *)params;
 -(void)collectionViewBeginScroll:(UIScrollView *)scrollView;
 -(void)collectionViewDidScroll:(UIScrollView *)scrollView;
+-(void)refreshScrollStatus;
 
 @end
 
