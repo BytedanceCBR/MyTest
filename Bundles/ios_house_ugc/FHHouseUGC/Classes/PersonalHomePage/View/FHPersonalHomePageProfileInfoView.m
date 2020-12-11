@@ -111,36 +111,36 @@
     [self.backView addSubview:self.changeButton];
 }
 
-- (void)updateWithModel:(FHPersonalHomePageProfileInfoModel *)model isVerifyShow:(BOOL)isVerifyShow{
+- (void)updateWithModel:(FHPersonalHomePageProfileInfoDataModel *)model isVerifyShow:(BOOL)isVerifyShow {
     CGFloat backViewHeight = 90 - 8 + 15;
     
-    [self.shadowView updateWithUrl:model.data.avatarUrl];
+    [self.shadowView updateWithUrl:model.avatarUrl];
     self.iconView.frame = CGRectMake(20, 74 + self.homePageManager.safeArea, 80, 80);
-    [self.iconView bd_setImageWithURL:[NSURL URLWithString:model.data.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
-    self.bigAvatarUrl = model.data.bigAvatarUrl;
-    self.userNameLabel.text = model.data.name;
+    [self.iconView bd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    self.bigAvatarUrl = model.bigAvatarUrl;
+    self.userNameLabel.text = model.name;
     
     if(isVerifyShow) {
-        self.verifyContentLabel.text = model.data.verifiedContent;
+        self.verifyContentLabel.text = model.verifiedContent;
         self.verifyContentLabel.hidden = NO;
         self.verifyIconView.hidden = NO;
         backViewHeight = backViewHeight + 8 + 20;
     }
    
-    NSString *desc = model.data.desc;
+    NSString *desc = model.desc;
     if([desc isKindOfClass:[NSString class]]) {
         desc = [desc stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     }
     
     if(!isEmptyString(desc)) {
-        CGSize descLabelSize = [model.data.desc btd_sizeWithFont:[UIFont themeFontRegular:14] width:SCREEN_WIDTH - 40];
-        self.descLabel.text = model.data.desc;
+        CGSize descLabelSize = [model.desc btd_sizeWithFont:[UIFont themeFontRegular:14] width:SCREEN_WIDTH - 40];
+        self.descLabel.text = model.desc;
         CGFloat offset = isVerifyShow ? 118 : 90;
         self.descLabel.frame = CGRectMake(20, offset, descLabelSize.width, descLabelSize.height);
         backViewHeight = backViewHeight + 8 + descLabelSize.height;
     }
 
-    if([model.data.userId isEqualToString:[TTAccountManager userID]]) {
+    if([model.userId isEqualToString:[TTAccountManager userID]]) {
         self.changeButton.hidden = NO;
     }
     
@@ -151,7 +151,6 @@
 
 
 - (void)changeProfileInfo {
-    self.homePageManager.userInfoChange = YES;
     NSURL* url = [NSURL URLWithString:@"sslocal://editUserProfile"];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:nil];
 }

@@ -12,6 +12,8 @@
 #import "FHPersonalHomePageFeedViewController.h"
 #import "FHPersonalHomePageViewController.h"
 #import "FHPersonalHomePageFeedListViewController.h"
+#import "TTAccount+Multicast.h"
+#import "FHHouseUGCAPI.h"
 #import "FHEnvContext.h"
 #import "FHNavBarView.h"
 #import "UIImage+FIconFont.h"
@@ -20,7 +22,7 @@
 #import "UIDevice+BTDAdditions.h"
 
 
-@interface FHPersonalHomePageManager ()
+@interface FHPersonalHomePageManager () <TTAccountMulticastProtocol>
 @property(nonatomic,weak) FHPersonalHomePageProfileInfoView *profileInfoView;
 @property(nonatomic,weak) UIScrollView *scrollView;
 @property(nonatomic,weak) FHNavBarView *navBar;
@@ -45,11 +47,24 @@
         self.viewController = nil;
         self.feedViewController = nil;
         self.tabListModel = nil;
-        self.userInfoChange = NO;
         self.beginOffset = 0;
         self.lastOffset = 0;
+        [TTAccount addMulticastDelegate:self];
     }
     return self;
+}
+
+-(void)onAccountUserProfileChanged:(NSDictionary *)changedFields error:(NSError *)error {
+    WeakSelf;
+    [FHHouseUGCAPI requestHomePageInfoWithUserId:self.userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        StrongSelf;
+        if(!error && [model isKindOfClass:[FHPersonalHomePageProfileInfoModel class]]) {
+            FHPersonalHomePageProfileInfoModel *profileInfoModel = (FHPersonalHomePageProfileInfoModel *) model;
+            if([profileInfoModel.message isEqualToString:@"success"] && [profileInfoModel.errorCode integerValue] == 0) {
+                [self updateProfileInfoWithModel:profileInfoModel];
+            }
+        }
+     }];
 }
 
 -(void)updateProfileInfoWithModel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel {
@@ -59,7 +74,7 @@
     BOOL isVerifyShow = [vwhiteList containsObject:self.userId];
     
     self.viewController.customNavBarView.title.text = profileInfoModel.data.name;
-    [self.profileInfoView updateWithModel:profileInfoModel isVerifyShow:isVerifyShow];
+    [self.profileInfoView updateWithModel:profileInfoModel.data isVerifyShow:isVerifyShow];
     CGFloat profileInfoViewHeight = [self.profileInfoView viewHeight];
     self.profileInfoView.frame = CGRectMake(0, 0, SCREEN_WIDTH, profileInfoViewHeight);
     
@@ -79,7 +94,7 @@
     BOOL isVerifyShow = [vwhiteList containsObject:self.userId];
     
     self.viewController.customNavBarView.title.text = profileInfoModel.data.name;
-    [self.profileInfoView updateWithModel:profileInfoModel isVerifyShow:isVerifyShow];
+    [self.profileInfoView updateWithModel:profileInfoModel.data isVerifyShow:isVerifyShow];
     CGFloat profileInfoViewHeight = [self.profileInfoView viewHeight];
     self.profileInfoView.frame = CGRectMake(0, 0, SCREEN_WIDTH, profileInfoViewHeight);
     

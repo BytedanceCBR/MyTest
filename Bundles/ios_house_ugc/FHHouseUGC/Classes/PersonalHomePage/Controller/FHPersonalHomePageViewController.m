@@ -60,13 +60,6 @@
     [self startLoadData];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    if(self.homePageManager.userInfoChange) {
-        self.homePageManager.userInfoChange = NO;
-        [self.viewModel requestProfileInfoAfterChange];
-    }
-}
-
 - (void)initView {
     self.ttDisableDragBack = YES;
 
