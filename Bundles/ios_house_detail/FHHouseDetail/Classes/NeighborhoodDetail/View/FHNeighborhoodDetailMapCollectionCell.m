@@ -354,30 +354,30 @@
                 annotationView = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
             }
 
-            UIView *contentView = [[UIView alloc] init];
-            contentView.backgroundColor = [UIColor clearColor];
-            contentView.opaque = NO;
+//            UIView *contentView = [[UIView alloc] init];
+//            contentView.backgroundColor = [UIColor clearColor];
+//            contentView.opaque = NO;
+//
+//            UIImageView *imageView = [[UIImageView alloc] init];
+//            imageView.image = [UIImage imageNamed:@"detail_map_neighbor_annotation"];
+//            imageView.contentMode = UIViewContentModeCenter;
+//            [contentView addSubview:imageView];
+//
+//            UILabel *titleLabel = [[UILabel alloc] init];
+//            titleLabel.font = [UIFont themeFontMedium:12];
+//            titleLabel.textColor = [UIColor themeGray1];
+//            titleLabel.numberOfLines = 1;
+//            titleLabel.textAlignment = NSTextAlignmentCenter;
+//            titleLabel.text = annotation.title;
+//            [contentView addSubview:titleLabel];
+//            [titleLabel sizeToFit];
+//
+//            CGSize size = CGSizeMake([titleLabel btd_widthWithHeight:12], 34 + 12);
+//            contentView.frame = CGRectMake(0, 0, size.width, size.height);
+//            imageView.frame = CGRectMake(size.width / 2 - 17 , 0, 34, 34);
+//            titleLabel.center = CGPointMake(size.width / 2, size.height - titleLabel.frame.size.height / 2);
 
-            UIImageView *imageView = [[UIImageView alloc] init];
-            imageView.image = [UIImage imageNamed:@"detail_map_neighbor_annotation"];
-            imageView.contentMode = UIViewContentModeCenter;
-            [contentView addSubview:imageView];
-
-            UILabel *titleLabel = [[UILabel alloc] init];
-            titleLabel.font = [UIFont themeFontMedium:12];
-            titleLabel.textColor = [UIColor themeGray1];
-            titleLabel.numberOfLines = 1;
-            titleLabel.textAlignment = NSTextAlignmentCenter;
-            titleLabel.text = annotation.title;
-            [contentView addSubview:titleLabel];
-            [titleLabel sizeToFit];
-
-            CGSize size = CGSizeMake([titleLabel btd_widthWithHeight:12], 34 + 12);
-            contentView.frame = CGRectMake(0, 0, size.width, size.height);
-            imageView.frame = CGRectMake(size.width / 2 - 17 , 0, 34, 34);
-            titleLabel.center = CGPointMake(size.width / 2, size.height - titleLabel.frame.size.height / 2);
-
-            annotationView.image = [contentView btd_snapshotImage];
+            annotationView.image = [UIImage imageNamed:@"detail_map_neighbor_annotation"];
             annotationView.centerOffset = CGPointMake(0, 0);
             return annotationView;
         }

@@ -10,6 +10,7 @@
 #import "UIFont+House.h"
 #import "Masonry.h"
 #import "UIButton+TTAdditions.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 
 @interface FHVideoAndImageItemCorrectingView ()
@@ -125,6 +126,7 @@
         UIView *lastView = self;
         for (NSInteger i = 0; i < itemArr.count; i++) {
             UIButton *button = [self buttonWithTitle:itemArr[i]];
+            [button setBtd_hitTestEdgeInsets:UIEdgeInsetsMake(-30, -30, -30, -30)];
             [itemBacView addSubview:button];
             [button mas_makeConstraints:^(MASConstraintMaker *make) {
                 if(i%self.row == 0){
