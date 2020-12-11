@@ -66,6 +66,9 @@
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, strong) UIView *containerView;
 
+@property (nonatomic, assign) NSInteger defaultHouseType;
+@property (nonatomic, copy) NSString *defaultSearchPlaceholder;
+
 @end
 
 @implementation FHSuggestionListViewController
@@ -111,7 +114,8 @@
             self.autoFillInputText = paramObj.allParams[@"search_history_text"];
         }
         
-//        ZWLog(@"%@", [paramObj.allParams[@"tracer"] btd_jsonStringEncoded]);
+        _defaultHouseType = _viewModel.houseType;
+        _defaultSearchPlaceholder = [self.homePageRollDic btd_stringValueForKey:@"text"];
     }
     return self;
 }
@@ -149,14 +153,18 @@
     [self trackPageShow];
 }
 
+- (void)refreshSearchPlaceHolderText {
+    if (self.houseType == self.defaultHouseType && self.defaultSearchPlaceholder.length > 0) {
+        [self.naviBar setSearchPlaceHolderText:self.defaultSearchPlaceholder];
+        return;
+    }
+    
+    [self.naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:self.houseType]];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if (self.homePageRollDic) {
-        NSString *text = self.homePageRollDic[@"text"];
-        if (text.length > 0) {
-            [self.naviBar setSearchPlaceHolderText:text];
-        }
-    }
+    [self refreshSearchPlaceHolderText];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -195,7 +203,7 @@
         make.height.mas_equalTo(54);
     }];
     [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
-    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:self.houseType]];
+    [self refreshSearchPlaceHolderText];
     _naviBar.searchInput.delegate = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
     
@@ -342,7 +350,7 @@
         return;
     }
     _houseType = houseType;
-    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:houseType]];
+    [self refreshSearchPlaceHolderText];
     _segmentControl.selectedSegmentIndex = [self getSegmentControlIndex];
     self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
     [self.collectionView layoutIfNeeded];
