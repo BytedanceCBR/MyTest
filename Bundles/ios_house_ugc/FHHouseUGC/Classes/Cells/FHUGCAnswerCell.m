@@ -313,7 +313,7 @@
         }else {
             userInfoHeight = 30;
         }
-        CGFloat height = userInfoHeight + bottomViewHeight + topMargin +userInfoViewHeight;
+        CGFloat height = userInfoHeight +30+ bottomViewHeight + topMargin + 10;
         
         if(!isEmptyString(cellModel.content)){
             height += (cellModel.contentHeight + 10);
