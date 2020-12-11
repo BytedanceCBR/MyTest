@@ -50,7 +50,7 @@
     self.mapView.showsScale = NO;
     self.mapView.zoomEnabled = NO;
     self.mapView.scrollEnabled = NO;
-    self.mapView.zoomLevel = 14;
+    self.mapView.zoomLevel = 15.5;
     self.mapView.showsUserLocation = NO;
     self.mapView.hidden = YES;
 
