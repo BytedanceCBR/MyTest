@@ -7,6 +7,7 @@
 
 #import "FHPersonalHomePageViewController.h"
 #import "UIViewController+NavigationBarStyle.h"
+#import "TTNavigationController.h"
 #import "FHPersonalHomePageViewModel.h"
 #import "FHPersonalHomePageFeedViewController.h"
 #import "FHPersonalHomePageManager.h"
@@ -81,7 +82,7 @@
     
     [self initNavBar];
     [self addDefaultEmptyViewFullScreen];
-    self.ttDragBackLeftEdge = 50;
+//    self.ttDragBackLeftEdge = 50;
 }
 
 
@@ -96,6 +97,10 @@
     self.scrollView.alwaysBounceVertical = YES;
     self.scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.scrollView];
+    if([self.navigationController isKindOfClass:[TTNavigationController class]]){
+        TTNavigationController *navigationController = (TTNavigationController *)self.navigationController;
+        [navigationController.panRecognizer requireGestureRecognizerToFail:self.scrollView.panGestureRecognizer];
+    }
 }
 
 - (void)initNavBar {

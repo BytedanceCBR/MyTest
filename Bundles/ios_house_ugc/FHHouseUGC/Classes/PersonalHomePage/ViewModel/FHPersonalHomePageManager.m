@@ -106,15 +106,17 @@
     CGFloat nameLabelOffset = 192 - self.navBar.height;
     
 
-    if(offset >= tabListOffset && !self.isFeedError) {
-        scrollView.contentOffset = CGPointMake(0, tabListOffset);
-        self.scrollViewScrollEnable = NO;
-        self.tableViewScrollEnable = YES;
-    } else {
-        if(!self.scrollViewScrollEnable) {
+    if(!self.isFeedError){
+        if(offset >= tabListOffset) {
             scrollView.contentOffset = CGPointMake(0, tabListOffset);
+            self.scrollViewScrollEnable = NO;
+            self.tableViewScrollEnable = YES;
         } else {
-            
+            if(!self.scrollViewScrollEnable) {
+                scrollView.contentOffset = CGPointMake(0, tabListOffset);
+            } else {
+                
+            }
         }
     }
 
