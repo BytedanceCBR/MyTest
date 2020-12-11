@@ -206,12 +206,12 @@
         
         UIView *blackView = [[UIView alloc] initWithFrame:frame];
         blackView.backgroundColor = [UIColor themeBlack];
-        blackView.alpha = 0.05;
+        blackView.alpha = 0.08;
         [self addSubview:blackView];
         
         UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
         effectView.frame = frame;
-        effectView.alpha = 0.5;
+        effectView.alpha = 1;
         [self addSubview:effectView];
         [self bringSubviewToFront:effectView];
         self.layer.masksToBounds = YES;
