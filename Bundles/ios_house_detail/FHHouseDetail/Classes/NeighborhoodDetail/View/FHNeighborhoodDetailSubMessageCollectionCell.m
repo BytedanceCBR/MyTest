@@ -263,7 +263,8 @@
 
 - (UIView *)containerView {
     if (!_containerView) {
-        UIView *containerView = [[UIView alloc]init];
+        UIView *containerView = [[UIView alloc] init];
+        containerView.userInteractionEnabled = NO;
         [self addSubview: containerView];
         _containerView = containerView;
     }

@@ -839,6 +839,67 @@
     }];
 }
 
++(TTHttpTask *_Nullable)getStringRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable resultDict ,NSData *_Nullable resultData, NSError *_Nullable error))completion {
+    NSString *url = nil;
+    if (![[path lowercaseString] hasPrefix:@"http"]) {
+        url = QURL(path);
+    }else{
+        url = path;
+    }
+    
+    if (!IS_EMPTY_STRING(query)) {
+        url = [url stringByAppendingFormat:@"?%@",query];
+    }
+    
+    NSDate *startDate = [NSDate date];
+    return [[TTNetworkManager shareInstance]requestForBinaryWithResponse:url params:param method:GET needCommonParams:YES callback:^(NSError *error, id obj , TTHttpResponse *response) {
+        if (completion) {
+            NSDictionary *json = nil;
+            NSDate *backDate = [NSDate date];
+            NSInteger code = 0;
+            NSString *errMsg = nil;
+            NSMutableDictionary *extraDict = @{}.mutableCopy;;
+            FHNetworkMonitorType resultType = FHNetworkMonitorTypeSuccess;
+            NSInteger responseCode = -1;
+            if (response.statusCode) {
+                responseCode = response.statusCode;
+            }
+            if (!error) {
+                @try{
+                    json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                }
+                @catch(NSException *e){
+                    error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
+                    resultType = FHNetworkMonitorTypeBizFailed;
+                    errMsg = e.reason;
+                    code = API_ERROR_CODE;
+                }
+            }else{
+                code = response.statusCode;
+                resultType = FHNetworkMonitorTypeNetFailed;
+                errMsg = error.domain;
+                if ([json isKindOfClass:[NSDictionary class]] && json[@"status"]) {
+                    NSInteger status = [json[@"status"] integerValue];
+                    if (status != 0) {
+                        extraDict[@"request_url"] = response.URL.absoluteString;
+                        extraDict[@"response_headers"] = response.allHeaderFields;
+                        extraDict[@"error"] = error.domain;
+                        extraDict[@"status"] = @(status);
+                        extraDict[@"response_code"] = @(responseCode);
+                        resultType = status;
+                    }
+                }
+            }
+               if ([json isKindOfClass:[NSDictionary class]] && json[@"status"]) {
+                   NSInteger status = [json[@"status"] integerValue];
+                   extraDict[@"status"] = @(status);
+               }
+            [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
+            completion(json, obj,error);
+        }
+    }];
+}
+
 +(TTHttpTask *_Nullable)postRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(NSDictionary *_Nullable result , NSError *_Nullable error))completion
 {
     NSString *url = QURL(path);
