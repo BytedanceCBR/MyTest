@@ -20,6 +20,7 @@
 #import "FHUGCCellAttachCardView.h"
 #import "TTAsyncCornerImageView.h"
 #import "FHUGCCommonAvatar.h"
+#import "FHEnvContext.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -272,7 +273,11 @@
 - (void)updateUserInfoView:(FHFeedUGCCellModel *)cellModel {
     [self.userInfoView setTitleModel:cellModel];
     self.username.text = cellModel.user.name;
-    self.useride.text = cellModel.user.verifiedContent;
+    NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
+    if ([vwhiteList containsObject:cellModel.user.userId]) {
+        self.useride.text = cellModel.user.verifiedContent;
+    }
+
     [self.userIma setAvatarUrl:cellModel.user.avatarUrl];
     self.userIma.userId = cellModel.user.userId;
     NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    %@",cellModel.originItemModel.content] : @"";
