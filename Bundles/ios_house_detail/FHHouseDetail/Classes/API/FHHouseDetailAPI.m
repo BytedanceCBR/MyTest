@@ -233,15 +233,16 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (neighborhoodId.length > 0) {
         paramDic[@"related_neighborhood_id"] = neighborhoodId;
+        paramDic[CHANNEL_ID] = CHANNEL_ID_NEIGHBOR_RELATED_HOUSE;
     }
     if (houseId.length > 0) {
         paramDic[@"house_id"] = houseId;
+        paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_HOUSE;
     }
     if (![url containsString:@"count"]) {
         paramDic[@"count"] = @(count);
     }
     paramDic[@"search_id"] = searchId ?: @"";
-    paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_HOUSE;
     return [FHMainApi getRequest:url query:nil params:paramDic.copy jsonClass:[FHDetailRelatedHouseResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHDetailRelatedHouseResponseModel *model = (FHDetailRelatedHouseResponseModel *)m;
         if (completion) {

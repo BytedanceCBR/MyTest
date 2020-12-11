@@ -9,6 +9,9 @@
 #import "FHEnvContext.h"
 #import "FHDetailStaticMapCell.h"
 #import "AMapSearchAPI.h"
+#import "MAMapView.h"
+#import "FHCommonDefines.h"
+#import "MAAnnotation.h"
 #import "MAMapKit.h"
 #import "FHDetailMapViewSnapService.h"
 #import <ByteDanceKit/ByteDanceKit.h>
@@ -17,7 +20,8 @@
 
 @interface FHNeighborhoodDetailMapCollectionCell ()<AMapSearchDelegate, FHStaticMapDelegate, MAMapViewDelegate>
 
-@property (nonatomic, strong) FHDetailStaticMap *mapView;
+//@property (nonatomic, strong) FHDetailStaticMap *mapView;
+@property(nonatomic, strong) MAMapView *mapView;
 @property (nonatomic, strong) UIImageView *nativeMapImageView;
 @property (nonatomic, strong) UIButton *mapMaskBtn;
 
@@ -26,7 +30,7 @@
 @property (nonatomic, strong) UIButton *baiduPanoButton;
 
 @property (nonatomic, assign) CLLocationCoordinate2D centerPoint;
-@property (nonatomic, strong) AMapSearchAPI *searchApi;
+//@property (nonatomic, strong) AMapSearchAPI *searchApi;
 
 //@property (nonatomic, strong) NSArray *nameArray;
 @property (nonatomic, strong) FHStaticMapAnnotation *centerAnnotation;
@@ -99,8 +103,8 @@
 
 - (void)cleanSubViews {
     
-    [self.mapView removeFromSuperview];
-    self.mapView = nil;
+//    [self.mapView removeFromSuperview];
+//    self.mapView = nil;
     
     [self.nativeMapImageView removeFromSuperview];
     self.nativeMapImageView = nil;
@@ -126,9 +130,25 @@
 //        make.edges.mas_equalTo(UIEdgeInsetsZero);
 //    }];
     
+    self.mapView = [[MAMapView alloc] initWithFrame:self.contentView.bounds];
+    self.mapView.runLoopMode = NSRunLoopCommonModes;
+    self.mapView.showsCompass = NO;
+    self.mapView.showsScale = NO;
+    self.mapView.zoomEnabled = NO;
+    self.mapView.scrollEnabled = NO;
+    self.mapView.zoomLevel = 15.5;
+    self.mapView.showsUserLocation = NO;
+    self.mapView.delegate = self;
+    self.mapView.hidden = NO;
+    [self.contentView addSubview:self.mapView];
+    [self.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
+    
     //初始化静态地图
     self.nativeMapImageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
     self.nativeMapImageView.image = [UIImage imageNamed:@"map_detail_default_bg"];
+    self.nativeMapImageView.hidden = YES;
     [self.contentView addSubview:self.nativeMapImageView];
     [self.nativeMapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsZero);
@@ -251,17 +271,27 @@
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
     CGRect frame = self.contentView.bounds;
-    WeakSelf;
-    [[FHDetailMapViewSnapService sharedInstance] takeSnapWith:self.centerPoint frame:frame targetRect:frame annotations:annotations delegate:self block:^(FHDetailMapSnapTask *task, UIImage *image, BOOL success) {
-        StrongSelf;
-        if (!success) {
-            //展示默认图
-            self.nativeMapImageView.image = [UIImage imageNamed:@"map_detail_default_bg"];
-        } else {
-            self.nativeMapImageView.image = image;
-        }
-//        [self showPoiInfo];
-    }];
+    self.mapView.centerCoordinate = self.centerPoint;
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    [self.mapView addAnnotations:annotations];
+    __weak typeof(self) weakSelf = self;
+//    [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
+//        if (state == 1) {
+//
+//        }
+//
+//    }];
+//    WeakSelf;
+//    [[FHDetailMapViewSnapService sharedInstance] takeSnapWith:self.centerPoint frame:frame targetRect:frame annotations:annotations delegate:self block:^(FHDetailMapSnapTask *task, UIImage *image, BOOL success) {
+//        StrongSelf;
+//        if (!success) {
+//            //展示默认图
+//            self.nativeMapImageView.image = [UIImage imageNamed:@"map_detail_default_bg"];
+//        } else {
+//            self.nativeMapImageView.image = image;
+//        }
+////        [self showPoiInfo];
+//    }];
 }
 
 #pragma FHStaticMapDelegate
@@ -323,16 +353,16 @@
             if (!annotationView) {
                 annotationView = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
             }
-            
+
             UIView *contentView = [[UIView alloc] init];
             contentView.backgroundColor = [UIColor clearColor];
-            contentView.opaque = YES;
-            
+            contentView.opaque = NO;
+
             UIImageView *imageView = [[UIImageView alloc] init];
             imageView.image = [UIImage imageNamed:@"detail_map_neighbor_annotation"];
             imageView.contentMode = UIViewContentModeCenter;
             [contentView addSubview:imageView];
-            
+
             UILabel *titleLabel = [[UILabel alloc] init];
             titleLabel.font = [UIFont themeFontMedium:12];
             titleLabel.textColor = [UIColor themeGray1];
@@ -341,26 +371,17 @@
             titleLabel.text = annotation.title;
             [contentView addSubview:titleLabel];
             [titleLabel sizeToFit];
-            
+
             CGSize size = CGSizeMake([titleLabel btd_widthWithHeight:12], 34 + 12);
             contentView.frame = CGRectMake(0, 0, size.width, size.height);
             imageView.frame = CGRectMake(size.width / 2 - 17 , 0, 34, 34);
             titleLabel.center = CGPointMake(size.width / 2, size.height - titleLabel.frame.size.height / 2);
-            
+
             annotationView.image = [contentView btd_snapshotImage];
             annotationView.centerOffset = CGPointMake(0, 0);
             return annotationView;
-            
-            
-
-
-            
-
-        
         }
     }
-
-    
     return [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
 }
 
