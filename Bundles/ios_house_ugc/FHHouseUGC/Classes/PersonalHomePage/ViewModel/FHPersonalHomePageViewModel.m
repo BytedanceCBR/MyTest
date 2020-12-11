@@ -44,7 +44,7 @@
         
         dispatch_group_notify(self.personalHomePageGroup, dispatch_get_main_queue(), ^{
             [self.viewController endLoading];
-            [self.homePageManager updateProfileInfoWithMdoel:self.profileInfoModel tabListWithMdoel:self.tabListModel];
+            [self.homePageManager updateProfileInfoWithModel:self.profileInfoModel tabListWithMdoel:self.tabListModel];
         });
     } else {
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -93,7 +93,7 @@
 
         dispatch_group_notify(self.personalHomePageGroup, dispatch_get_main_queue(), ^{
             [self.viewController endLoading];
-            [self.homePageManager updateProfileInfoWithMdoel:self.profileInfoModel];
+            [self.homePageManager updateProfileInfoWithModel:self.profileInfoModel];
         });
     } else {
         [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];

@@ -52,7 +52,7 @@
     return self;
 }
 
--(void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel {
+-(void)updateProfileInfoWithModel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel {
     self.tabListModel = tabListModel;
     
     NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
@@ -70,9 +70,11 @@
     
     [self.feedViewController updateWithHeaderViewMdoel:tabListModel];
     self.scrollView.contentSize = CGSizeMake(SCREEN_WIDTH, profileInfoViewHeight + feedViewControllerHeight);
+    
+    self.profileInfoView.hidden = NO;
 }
 
--(void)updateProfileInfoWithMdoel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel {
+-(void)updateProfileInfoWithModel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel {
     NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
     BOOL isVerifyShow = [vwhiteList containsObject:self.userId];
     

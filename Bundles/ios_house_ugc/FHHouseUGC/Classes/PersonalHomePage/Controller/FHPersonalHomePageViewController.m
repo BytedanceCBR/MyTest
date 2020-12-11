@@ -74,6 +74,7 @@
 
     self.profileInfoView = [[FHPersonalHomePageProfileInfoView alloc] initWithFrame:CGRectZero];
     self.profileInfoView.homePageManager = self.homePageManager;
+    self.profileInfoView.hidden = YES;
     [self.scrollView addSubview:self.profileInfoView];
     
     self.feedViewController = [[FHPersonalHomePageFeedViewController alloc] init];
