@@ -81,6 +81,7 @@
     if (self = [super initWithAnnotation:annotation reuseIdentifier:reuseIdentifier]) {
         self.imageView = [[UIImageView alloc] init];
         self.imageView.image = [UIImage imageNamed:@"detail_map_neighbor_annotation"];
+        self.imageView.contentMode = UIViewContentModeCenter;
         [self addSubview:self.imageView];
 //        [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
 //            make.centerX.mas_equalTo(self);
@@ -89,7 +90,7 @@
 //        }];
         
         self.titleLabel = [[UILabel alloc] init];
-        self.titleLabel.font = [UIFont themeFontRegular:12];
+        self.titleLabel.font = [UIFont themeFontMedium:12];
         self.titleLabel.textColor = [UIColor themeGray1];
         self.titleLabel.numberOfLines = 1;
         self.titleLabel.textAlignment = NSTextAlignmentCenter;
