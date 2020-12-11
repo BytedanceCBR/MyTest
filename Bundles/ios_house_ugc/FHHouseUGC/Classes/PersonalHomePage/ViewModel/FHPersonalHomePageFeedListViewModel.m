@@ -164,7 +164,7 @@
         if (hasMore) {
             [self.tableView.mj_footer endRefreshing];
         }else {
-            [self.refreshFooter setUpNoMoreDataText:@"- 我是有底线的哟 -" offsetY:-3];
+            [self.refreshFooter setUpNoMoreDataText:@"- 没有更多信息了 -" offsetY:-3];
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }
         

@@ -96,12 +96,12 @@
     return cellSize;
 }
 
--(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [[FHPersonalHomePageManager shareInstance] collectionViewBeginScroll:scrollView];
-}
-
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [[FHPersonalHomePageManager shareInstance] collectionViewDidScroll:scrollView];
-}
+//-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+//    [[FHPersonalHomePageManager shareInstance] collectionViewBeginScroll:scrollView];
+//}
+//
+//-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    [[FHPersonalHomePageManager shareInstance] collectionViewDidScroll:scrollView];
+//}
 
 @end

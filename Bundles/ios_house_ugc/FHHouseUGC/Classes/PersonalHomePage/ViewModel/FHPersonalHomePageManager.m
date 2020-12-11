@@ -103,8 +103,8 @@
 -(void)scrollViewScroll:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.y;
     CGFloat tabListOffset = [self tabListOffset];
-    CGFloat backViewOffset = 120 + [[FHPersonalHomePageManager shareInstance] safeArea] - self.navBar.height;
-    CGFloat nameLabelOffset = 192 + [[FHPersonalHomePageManager shareInstance] safeArea] - self.navBar.height;
+    CGFloat backViewOffset = 140 + [[FHPersonalHomePageManager shareInstance] safeArea] - self.navBar.height;
+    CGFloat nameLabelOffset = 210 + [[FHPersonalHomePageManager shareInstance] safeArea] - self.navBar.height;
     
 
     if(!self.isFeedError){
@@ -123,14 +123,6 @@
 
     offset = self.scrollView.contentOffset.y;
     if(offset < 0) {
-        CGFloat shadowViewHeight = 160 + [[FHPersonalHomePageManager shareInstance] safeArea];
-        self.profileInfoView.shadowView.transform = CGAffineTransformMakeScale(1 + offset/(-shadowViewHeight), 1 + offset/(-shadowViewHeight));
-        CGRect frame = self.profileInfoView.shadowView.frame;
-        frame.origin.y = offset;
-        self.profileInfoView.shadowView.frame = frame;
-    }
-    
-    if(offset < 0) {
         self.navBar.bgView.alpha = 0;
         self.navBar.title.alpha = 0;
     } else if(offset <= backViewOffset) {
@@ -148,8 +140,8 @@
     } else {
         [self.navBar.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateNormal];
         [self.navBar.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateHighlighted];
-        [self.viewController.moreButton setBackgroundImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
-        [self.viewController.moreButton setBackgroundImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateHighlighted];
+        [self.viewController.moreButton setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_more_black"] forState:UIControlStateNormal];
+        [self.viewController.moreButton setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_more_black"] forState:UIControlStateHighlighted];
     }
     
     if(offset > nameLabelOffset) {
@@ -171,36 +163,32 @@
     }
 }
 
--(void)collectionViewBeginScroll:(UIScrollView *)scrollView {
-    self.beginOffset = self.currentIndex * SCREEN_WIDTH;
-    self.lastOffset = scrollView.contentOffset.x;
-}
-
--(void)collectionViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat scrollDistance = scrollView.contentOffset.x - self.lastOffset;
-    CGFloat diff = scrollView.contentOffset.x - self.beginOffset;
-
-    CGFloat tabIndex = scrollView.contentOffset.x / SCREEN_WIDTH;
-    if(diff >= 0){
-        tabIndex = floorf(tabIndex);
-    }else if (diff < 0){
-        tabIndex = ceilf(tabIndex);
-    }
-
-    if(tabIndex != self.feedViewController.headerView.selectedSegmentIndex){
-        self.currentIndex = tabIndex;
-        self.feedViewController.headerView.selectedSegmentIndex = self.currentIndex;
-    } else {
-//        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > SCREEN_WIDTH * (self.feedErrorArray.count - 1)){
-//            return;
-//        }
-        
-        CGFloat value = scrollDistance / SCREEN_WIDTH;
-        [self.feedViewController.headerView setScrollValue:value isDirectionLeft:diff < 0];
-    }
-
-    self.lastOffset = scrollView.contentOffset.x;
-}
+//-(void)collectionViewBeginScroll:(UIScrollView *)scrollView {
+//    self.beginOffset = self.currentIndex * SCREEN_WIDTH;
+//    self.lastOffset = scrollView.contentOffset.x;
+//}
+//
+//-(void)collectionViewDidScroll:(UIScrollView *)scrollView {
+//    CGFloat scrollDistance = scrollView.contentOffset.x - self.lastOffset;
+//    CGFloat diff = scrollView.contentOffset.x - self.beginOffset;
+//
+//    CGFloat tabIndex = scrollView.contentOffset.x / SCREEN_WIDTH;
+//    if(diff >= 0){
+//        tabIndex = floorf(tabIndex);
+//    }else if (diff < 0){
+//        tabIndex = ceilf(tabIndex);
+//    }
+//
+//    if(tabIndex != self.feedViewController.headerView.selectedSegmentIndex){
+//        self.currentIndex = tabIndex;
+//        self.feedViewController.headerView.selectedSegmentIndex = self.currentIndex;
+//    }
+//        CGFloat value = scrollDistance / SCREEN_WIDTH;
+//        [self.feedViewController.headerView setScrollValue:value isDirectionLeft:diff < 0];
+//    }
+//
+//    self.lastOffset = scrollView.contentOffset.x;
+//}
 
 -(CGFloat)tabListOffset {
     return self.profileInfoView.viewHeight - self.navBar.height;

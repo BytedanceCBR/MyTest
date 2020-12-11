@@ -94,7 +94,7 @@
         self.scrollView.insetsLayoutMarginsFromSafeArea = NO;
         self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
-    self.scrollView.alwaysBounceVertical = YES;
+    self.scrollView.bounces = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.scrollView];
 }

@@ -63,7 +63,7 @@
     self.backView.backgroundColor = [UIColor themeWhite];
     [self addSubview:self.backView];
     
-    self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 74 + [[FHPersonalHomePageManager shareInstance] safeArea], 80, 80)];
+    self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 94 + [[FHPersonalHomePageManager shareInstance] safeArea], 80, 80)];
     self.iconView.layer.cornerRadius = 40;
     self.iconView.layer.borderColor = [UIColor themeWhite].CGColor;
     self.iconView.layer.borderWidth = 2;
@@ -144,8 +144,8 @@
         self.changeButton.hidden = NO;
     }
     
-    self.backView.frame = CGRectMake(0, 110 + [[FHPersonalHomePageManager shareInstance] safeArea], SCREEN_WIDTH, backViewHeight);
-    self.viewHeight = 110 + backViewHeight + [[FHPersonalHomePageManager shareInstance] safeArea];
+    self.backView.frame = CGRectMake(0, 130 + [[FHPersonalHomePageManager shareInstance] safeArea], SCREEN_WIDTH, backViewHeight);
+    self.viewHeight = 130 + backViewHeight + [[FHPersonalHomePageManager shareInstance] safeArea];
     self.seperatorView.frame = CGRectMake(0, self.viewHeight - 0.5, SCREEN_WIDTH, 0.5);
 }
 
@@ -211,7 +211,7 @@
         
         UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
         effectView.frame = frame;
-        effectView.alpha = 1;
+        effectView.alpha = 0.5;
         [self addSubview:effectView];
         [self bringSubviewToFront:effectView];
         self.layer.masksToBounds = YES;
