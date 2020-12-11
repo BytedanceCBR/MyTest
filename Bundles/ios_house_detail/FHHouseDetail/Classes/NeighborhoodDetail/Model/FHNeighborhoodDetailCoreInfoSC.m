@@ -130,15 +130,13 @@
     userInfo[@"route"] = [@"/neighbor_price_detail" btd_stringByURLEncode];
     
 //    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-    
+    //{"average_price_detail":"均价详情页"}
     NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
-    tracerDict[@"element_from"] = @"map";
+    tracerDict[@"element_from"] = @"average_price_detail";
     tracerDict[@"enter_from"] = @"neighborhood_detail";
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
     
-    
     if (self.detailViewController.viewModel.detailData) {
-        
         params[@"neighbor_info"] = [[self.detailViewController.viewModel.detailData toDictionary] btd_safeJsonStringEncoded];
     }
     
@@ -146,6 +144,7 @@
     
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
 }
+
 - (void)addSoldClick:(NSString *)url {
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];
 }
