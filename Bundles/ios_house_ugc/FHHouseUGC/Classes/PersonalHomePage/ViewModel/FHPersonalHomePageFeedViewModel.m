@@ -62,8 +62,8 @@
 - (void)updateSelectCell:(NSInteger)index {
     dispatch_async(dispatch_get_main_queue(), ^{
         if(index >= 0 && index < self.titleArray.count) {
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
             self.homePageManager.currentIndex = index;
+            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
         }
     });
 }
@@ -88,6 +88,9 @@
             FHPersonalHomePageTabItemModel *itemModel = self.tabListModel.data.tabList[index];
             feedListCell.homePageManager = self.homePageManager;
             [feedListCell updateTabName:itemModel.name index:index];
+            if(index == self.homePageManager.currentIndex) {
+                [feedListCell startLoadData];
+            }
         }
     }
     return cell;
@@ -95,6 +98,17 @@
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     CGSize cellSize = self.collectionView.bounds.size;
     return cellSize;
+}
+
+-(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if([scrollView isKindOfClass:[UICollectionView class]]) {
+        UICollectionView *collectionView = (UICollectionView *)scrollView;
+        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:self.homePageManager.currentIndex inSection:0]];
+        if([cell isKindOfClass:[FHPersonalHomePageFeedCollectionViewCell class]]) {
+            FHPersonalHomePageFeedCollectionViewCell *feedListCell = (FHPersonalHomePageFeedCollectionViewCell *)cell;
+            [feedListCell startLoadData];
+        }
+    }
 }
 
 -(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {

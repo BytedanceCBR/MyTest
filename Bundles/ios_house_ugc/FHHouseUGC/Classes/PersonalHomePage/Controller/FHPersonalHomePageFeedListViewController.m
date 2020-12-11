@@ -22,11 +22,6 @@
     [self initViewModel];
 }
 
--(void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    [self startLoadData];
-}
-
 - (void)initView {
     self.tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     self.tableView.alwaysBounceVertical = YES;

@@ -10,6 +10,7 @@
 
 @interface FHPersonalHomePageFeedCollectionViewCell ()
 @property(nonatomic,strong) FHPersonalHomePageFeedListViewController *feedVC;
+@property(nonatomic,assign) BOOL isFirstLoad;
 @end
 
 @implementation FHPersonalHomePageFeedCollectionViewCell
@@ -21,6 +22,7 @@
         self.feedVC.view.frame = self.contentView.frame;
         self.feedVC.tableView.frame = self.contentView.frame;
         [self.contentView addSubview:self.feedVC.view];
+        self.isFirstLoad = NO;
     }
     return self;
 }
@@ -35,6 +37,13 @@
     _homePageManager = homePageManager;
     _feedVC.homePageManager = homePageManager;
     [_homePageManager.feedListVCArray addObject:_feedVC];
+}
+
+-(void)startLoadData {
+    if(!self.isFirstLoad) {
+        self.isFirstLoad = YES;
+        [self.feedVC startLoadData];
+    }
 }
 
 @end
