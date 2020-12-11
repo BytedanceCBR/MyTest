@@ -7,6 +7,8 @@
 
 #import "FHPersonalHomePageFeedViewController.h"
 #import "FHPersonalHomePageFeedViewModel.h"
+#import "FHPersonalHomePageManager.h"
+#import "TTNavigationController.h"
 #import "FHPersonalHomePageFeedCollectionViewCell.h"
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
@@ -18,9 +20,22 @@
 
 @implementation FHPersonalHomePageCollectionView
 
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if([[FHPersonalHomePageManager shareInstance].viewController.navigationController isKindOfClass:[TTNavigationController class]]){
+        TTNavigationController *navigationController = (TTNavigationController *)[FHPersonalHomePageManager shareInstance].viewController.navigationController;
+        if(otherGestureRecognizer == navigationController.panRecognizer){
+            if(otherGestureRecognizer.state == UIGestureRecognizerStateBegan && self.contentOffset.x == 0) {
+                return YES;
+            }
+        }
+    }
+
     return NO;
 }
+
+//- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+//    return NO;
+//}
 
 @end
 

@@ -170,7 +170,7 @@
         
         [self setFeedError:NO];
     }else{
-        [self.viewController.emptyView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
+        [self.viewController.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
         self.refreshFooter.hidden = YES;
         [self setFeedError:YES];
     }

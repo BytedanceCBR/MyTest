@@ -9,6 +9,7 @@
 #import "UIImage+FIconFont.h"
 #import "FHCommonDefines.h"
 #import "UIViewAdditions.h"
+#import "UIDevice+BTDAdditions.h"
 
 
 @interface FHPersonalHomePageManager ()
@@ -102,8 +103,8 @@
 -(void)scrollViewScroll:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.y;
     CGFloat tabListOffset = [self tabListOffset];
-    CGFloat backViewOffset = 120 - self.navBar.height;
-    CGFloat nameLabelOffset = 192 - self.navBar.height;
+    CGFloat backViewOffset = 120 + [[FHPersonalHomePageManager shareInstance] safeArea] - self.navBar.height;
+    CGFloat nameLabelOffset = 192 + [[FHPersonalHomePageManager shareInstance] safeArea] - self.navBar.height;
     
 
     if(!self.isFeedError){
@@ -122,7 +123,7 @@
 
     offset = self.scrollView.contentOffset.y;
     if(offset < 0) {
-        CGFloat shadowViewHeight = 160;
+        CGFloat shadowViewHeight = 160 + [[FHPersonalHomePageManager shareInstance] safeArea];
         self.profileInfoView.shadowView.transform = CGAffineTransformMakeScale(1 + offset/(-shadowViewHeight), 1 + offset/(-shadowViewHeight));
         CGRect frame = self.profileInfoView.shadowView.frame;
         frame.origin.y = offset;
@@ -132,22 +133,23 @@
     if(offset < 0) {
         self.navBar.bgView.alpha = 0;
         self.navBar.title.alpha = 0;
-        self.navBar.seperatorLine.alpha = 0;
     } else if(offset <= backViewOffset) {
         self.navBar.bgView.alpha = offset / backViewOffset;
         self.navBar.title.alpha = offset / backViewOffset;
-        self.navBar.seperatorLine.alpha = offset / backViewOffset;
     } else {
         self.navBar.bgView.alpha = 1;
         self.navBar.title.alpha = 1;
-        self.navBar.seperatorLine.alpha = 1;
     }
     if(self.navBar.title.alpha <= 0.1f) {
         [self.navBar.leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_page_back_arrow"] forState:UIControlStateNormal];
         [self.navBar.leftBtn setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_page_back_arrow"] forState:UIControlStateHighlighted];
+        [self.viewController.moreButton setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_more_white"] forState:UIControlStateNormal];
+        [self.viewController.moreButton setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_more_white"] forState:UIControlStateHighlighted];
     } else {
         [self.navBar.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateNormal];
         [self.navBar.leftBtn setBackgroundImage:FHBackBlackImage forState:UIControlStateHighlighted];
+        [self.viewController.moreButton setBackgroundImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
+        [self.viewController.moreButton setBackgroundImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateHighlighted];
     }
     
     if(offset > nameLabelOffset) {
@@ -189,9 +191,9 @@
         self.currentIndex = tabIndex;
         self.feedViewController.headerView.selectedSegmentIndex = self.currentIndex;
     } else {
-        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > SCREEN_WIDTH * (self.feedErrorArray.count - 1)){
-            return;
-        }
+//        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > SCREEN_WIDTH * (self.feedErrorArray.count - 1)){
+//            return;
+//        }
         
         CGFloat value = scrollDistance / SCREEN_WIDTH;
         [self.feedViewController.headerView setScrollValue:value isDirectionLeft:diff < 0];
@@ -232,6 +234,13 @@
             [feedVC.tableView setContentOffset:CGPointZero animated:NO];
         }
     });
+}
+
+-(CGFloat)safeArea {
+    if([UIDevice btd_isIPhoneXSeries]){
+        return 20;
+    }
+    return 0;
 }
 
 @end

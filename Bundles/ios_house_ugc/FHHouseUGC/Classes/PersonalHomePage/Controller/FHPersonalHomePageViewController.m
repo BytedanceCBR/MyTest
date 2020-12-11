@@ -28,7 +28,7 @@
 
 @end
 
-@interface FHPersonalHomePageViewController () <UIScrollViewDelegate>
+@interface FHPersonalHomePageViewController () 
 @property(nonatomic,strong) FHPersonalHomePageFeedViewController *feedViewController;
 @property(nonatomic,copy) NSString *userId;
 @property(nonatomic,strong) FHPersonalHomePageViewModel *viewModel;
@@ -82,7 +82,7 @@
     
     [self initNavBar];
     [self addDefaultEmptyViewFullScreen];
-//    self.ttDragBackLeftEdge = 50;
+    self.ttDragBackLeftEdge = 50;
 }
 
 
@@ -97,10 +97,6 @@
     self.scrollView.alwaysBounceVertical = YES;
     self.scrollView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.scrollView];
-    if([self.navigationController isKindOfClass:[TTNavigationController class]]){
-        TTNavigationController *navigationController = (TTNavigationController *)self.navigationController;
-        [navigationController.panRecognizer requireGestureRecognizerToFail:self.scrollView.panGestureRecognizer];
-    }
 }
 
 - (void)initNavBar {
@@ -116,13 +112,13 @@
         if (@available(iOS 13.0 , *)) {
             CGFloat topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
             maker.left.right.top.mas_equalTo(self.view);
-            maker.height.mas_equalTo(24.f + topInset);
+            maker.height.mas_equalTo(44.f + topInset);
         } else if (@available(iOS 11.0 , *)) {
             maker.left.right.top.mas_equalTo(self.view);
-            maker.height.mas_equalTo(24.f + self.view.tt_safeAreaInsets.top);
+            maker.height.mas_equalTo(44.f + self.view.tt_safeAreaInsets.top);
         } else {
             maker.left.right.top.mas_equalTo(self.view);
-            maker.height.mas_equalTo(54);
+            maker.height.mas_equalTo(65);
         }
     }];
     WeakSelf;
@@ -131,11 +127,11 @@
         [self goBack];
     };
     
-    UIButton *moreButton = [[UIButton alloc] init];
-    [moreButton setBackgroundImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
-    moreButton.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
-    [moreButton addTarget:self action:@selector(moreButtonClick) forControlEvents:UIControlEventTouchUpInside];
-    [self.customNavBarView addRightViews:@[moreButton] viewsWidth:@[@(20)] viewsHeight:@[@(20)] viewsRightOffset:@[@(20)]];
+    _moreButton = [[UIButton alloc] init];
+    [_moreButton setBackgroundImage:[UIImage imageNamed:@"fh_ugc_personal_more_white"] forState:UIControlStateNormal];
+    [_moreButton addTarget:self action:@selector(moreButtonClick) forControlEvents:UIControlEventTouchUpInside];
+    _moreButton.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
+    [self.customNavBarView addRightViews:@[_moreButton] viewsWidth:@[@(20)] viewsHeight:@[@(20)] viewsRightOffset:@[@(20)]];
 }
 
 

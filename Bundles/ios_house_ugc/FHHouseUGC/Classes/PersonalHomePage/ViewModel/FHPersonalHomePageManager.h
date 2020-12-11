@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,assign) NSInteger currentIndex;
 @property(nonatomic,copy) NSString *userId;
 @property(nonatomic,strong) NSDictionary *tracerDict;
+@property(nonatomic,assign) CGFloat safeArea;
 @property(nonatomic,strong) NSMutableArray<NSNumber *> *feedErrorArray;
 @property(nonatomic,weak) FHPersonalHomePageViewController *viewController;
 @property(nonatomic,weak) FHPersonalHomePageFeedViewController *feedViewController;

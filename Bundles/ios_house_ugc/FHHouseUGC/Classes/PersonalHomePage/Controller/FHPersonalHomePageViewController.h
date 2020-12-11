@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHPersonalHomePageViewController : FHBaseViewController
 @property(nonatomic,strong) FHPersonalHomePageProfileInfoView *profileInfoView;
 @property(nonatomic,strong) UIScrollView *scrollView;
+@property(nonatomic,strong) UIButton *moreButton;
 @end
 
 NS_ASSUME_NONNULL_END
