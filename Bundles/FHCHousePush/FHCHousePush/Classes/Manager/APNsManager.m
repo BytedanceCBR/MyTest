@@ -32,6 +32,7 @@
 #import <BDALog/BDAgileLog.h>
 #import "FHCHousePushUtils.h"
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "HMDTTMonitor.h"
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
@@ -222,7 +223,21 @@ static APNsManager *_sharedManager = nil;
                 if (fSystemVersion >= 10.0 && fSystemVersion < 11.0) { // 10.0
                     userInfo.animated = @(0);
                 }
-                [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL userInfo:userInfo];
+                [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
+                    if(nav && [routeObj.instance isKindOfClass:UIViewController.class]) {
+                        UIViewController *vc = (UIViewController *)routeObj.instance;
+                        [nav pushViewController:vc animated:YES];
+                    } else {
+                        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+                        params[@"nav_vc"] = nav ? NSStringFromClass(nav.class) : @"be_null";
+                        params[@"vc"] = routeObj.instance ? NSStringFromClass(routeObj.instance.class) : @"be_null";
+                        params[@"allParams"] = routeObj.paramObj.allParams;
+                        [[HMDTTMonitor defaultManager] hmdTrackService:@"f_apns_manager_push_vc_error"
+                                                                metric:nil
+                                                              category:nil
+                                                                 extra:params.copy];
+                    }
+                }];
             }
         }
         else {
