@@ -59,10 +59,10 @@
     _bottomSepView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:_bottomSepView];
     
-    self.bottomSepView.left = 0;
+    self.bottomSepView.left = 20;
     self.bottomSepView.top = self.mainCollection.bottom + 20;
-    self.bottomSepView.height = 5;
-    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomSepView.height = 1;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
 }
 
 - (UILabel *)titleLabel {
@@ -170,7 +170,7 @@
 
 + (CGFloat)heightForData:(id)data {
     //默认返回cell的默认值44;
-    return 347;
+    return 343;
 }
 @end
 

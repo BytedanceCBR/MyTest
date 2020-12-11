@@ -18,7 +18,7 @@
 #define cellId @"cellId"
 
 #define headerViewHeight 44
-#define bottomSepViewHeight 5
+#define bottomSepViewHeight 1
 
 @interface FHUGCHotTopicCell()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -135,8 +135,8 @@
 //        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-3);
 //    }];
     self.bottomSepView.top = self.collectionView.bottom + 3;
-    self.bottomSepView.left = 0;
-    self.bottomSepView.width = self.headerView.width;
+    self.bottomSepView.left = 20;
+    self.bottomSepView.width = self.headerView.width - 40;
     self.bottomSepView.height = bottomSepViewHeight;
 
 //    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {

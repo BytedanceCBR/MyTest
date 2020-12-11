@@ -9,7 +9,7 @@
 #import "FHUGCProgressView.h"
 //#import "TTRoute.h"
 
-#define bottomSepViewHeight 5
+#define bottomSepViewHeight 1
 
 @interface FHUGCVoteCell()
 
@@ -243,7 +243,7 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = 158 + cellModel.vote.contentHeight;
+        CGFloat height = 154 + cellModel.vote.contentHeight;
         return height;
     }
     return 180;

@@ -116,10 +116,10 @@
     self.answerBtn.width = 75;
     
 
-    self.bottomSepView.left = 0;
+    self.bottomSepView.left = 20;
     self.bottomSepView.top = self.positionView.bottom + 10 + self.sepLineMorePadding;
-    self.bottomSepView.height = 5;
-    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomSepView.height = 1;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {

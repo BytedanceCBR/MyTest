@@ -17,7 +17,7 @@
 #define cellId @"cellId"
 
 #define headerViewHeight 40
-#define bottomSepViewHeight 5
+#define bottomSepViewHeight 1
 
 @interface FHUGCRecommendCell ()<UITableViewDelegate,UITableViewDataSource,FHUGCRecommendSubCellDelegate>
 
@@ -121,7 +121,9 @@
     
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.tableView.mas_bottom).offset(15);
-        make.bottom.left.right.mas_equalTo(self.contentView);
+        make.bottom.mas_equalTo(self.contentView);
+        make.left.mas_equalTo(self.contentView).offset(20);
+        make.right.mas_equalTo(self.contentView).offset(-20);
         make.height.mas_equalTo(bottomSepViewHeight);
     }];
 }

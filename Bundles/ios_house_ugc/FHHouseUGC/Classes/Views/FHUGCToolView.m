@@ -75,7 +75,7 @@
     [self addSubview:_diggButton];
     [self.diggButton enableMulitDiggEmojiAnimation];
     
-    self.bottomLine = [[UIView alloc] initWithFrame:CGRectMake(15, self.bounds.size.height - 0.5, self.bounds.size.width - 30, 0.5)];
+    self.bottomLine = [[UIView alloc] initWithFrame:CGRectMake(15, self.bounds.size.height - 0.5, self.bounds.size.width - 30, 1)];
     _bottomLine.backgroundColor = [UIColor themeGray7];
     [self addSubview:_bottomLine];
     

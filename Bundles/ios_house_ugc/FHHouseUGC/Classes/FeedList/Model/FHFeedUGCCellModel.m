@@ -57,7 +57,9 @@
     self = [super init];
     if (self) {
         _showCommunity = YES;
-        _bottomLineHeight = 5;
+        _bottomLineHeight = 1;
+        _bottomLineLeftMargin = 20;
+        _bottomLineRightMargin = 20;
     }
     return self;
 }

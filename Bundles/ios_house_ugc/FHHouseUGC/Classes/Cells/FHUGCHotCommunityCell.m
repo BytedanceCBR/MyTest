@@ -19,7 +19,7 @@
 #define cellId @"cellId"
 
 #define headerViewHeight 40
-#define bottomSepViewHeight 5
+#define bottomSepViewHeight 1
 
 @interface FHUGCHotCommunityCell()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -91,8 +91,8 @@
     self.collectionView.height = 188;
     
     self.bottomSepView.top = 223 - bottomSepViewHeight;
-    self.bottomSepView.left = 0;
-    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomSepView.left = 20;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
     self.bottomSepView.height = bottomSepViewHeight;
 }
 

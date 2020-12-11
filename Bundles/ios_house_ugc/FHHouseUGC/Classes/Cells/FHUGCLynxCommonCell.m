@@ -226,7 +226,7 @@
 //这里接收TTLynxViewClient抛上来的sizeChange事件
 - (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
     
-    self.bottomSepView.frame = CGRectMake(0.0f,self.lynxView.frame.origin.y + view.frame.size.height, [UIScreen mainScreen].bounds.size.height, 5);
+    self.bottomSepView.frame = CGRectMake(20.0f,self.lynxView.frame.origin.y + view.frame.size.height, [UIScreen mainScreen].bounds.size.height - 40, 1);
     
     if (CGSizeEqualToSize(self.cacheSize, view.frame.size)) {
         return;
@@ -258,16 +258,16 @@
     //默认返回cell的默认值44;
     
     CGFloat imageHeight = 0;
-    CGFloat height = imageHeight + 5;
+    CGFloat height = imageHeight + 1;
 
     if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
         if ([model.cell isKindOfClass:[FHUGCLynxCommonCell class]]) {
-            height =  [((FHUGCLynxCommonCell *)model.cell).lynxView intrinsicContentSize].height + 5;
+            height =  [((FHUGCLynxCommonCell *)model.cell).lynxView intrinsicContentSize].height + 1;
         }
     }
     
-    if (height == 5) {
+    if (height == 1) {
         height = 0;
     }
     return height;
