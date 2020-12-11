@@ -8,6 +8,15 @@
 //GENERATED CODE , DON'T EDIT
 #import "FHDetailNeighborhoodModel.h"
 @implementation FHDetailNeighborhoodDataCoreInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

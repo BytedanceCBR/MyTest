@@ -43,8 +43,6 @@
         return [FHNeighborhoodDetailHeaderTitleCollectionCell cellSizeWithData:model.titleCellModel width:width];
     } else if (model.items[index] == model.subMessageModel) {
         return [FHNeighborhoodDetailSubMessageCollectionCell cellSizeWithData:model.subMessageModel width:width];
-    }else if(model.items[index] == model.tradingRecordModel){
-        return [FHNeighborhoodDetailTradingRecordCell cellSizeWithData:model.tradingRecordModel width:width];
     }
     return CGSizeZero;
 }
@@ -58,11 +56,16 @@
         return cell;
     } else if (model.items[index] == model.subMessageModel) {
         FHNeighborhoodDetailSubMessageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSubMessageCollectionCell class] withReuseIdentifier:NSStringFromClass([model.subMessageModel class]) forSectionController:self atIndex:index];
+        cell.clickSoldblock = ^{
+            [weakSelf addSoldClick:model.subMessageModel.soldUrl];
+        };
+        cell.clickOnSaleblock = ^{
+            [weakSelf addOnSaleClick:model.subMessageModel.onSaleUrl];
+        };
+        cell.clickAveragePriceblock = ^{
+            [weakSelf addAveragePriceClick:nil];
+        };
         [cell refreshWithData:model.subMessageModel];
-        return cell;
-    }else if(model.items[index] == model.tradingRecordModel){
-        FHNeighborhoodDetailTradingRecordCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailTradingRecordCell class] withReuseIdentifier:NSStringFromClass([model.tradingRecordModel class]) forSectionController:self atIndex:index];
-        [cell refreshWithData:model.tradingRecordModel];
         return cell;
     }
 //    else if (model.items[index] == model.propertyInfoModel) {
@@ -111,6 +114,16 @@
 //        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
 //    }
 //}
+
+- (void)addOnSaleClick:(NSString *)url {
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];
+}
+- (void)addAveragePriceClick:(NSString *)url {
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];
+}
+- (void)addSoldClick:(NSString *)url {
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];
+}
 
 - (void)gotoMapDetail :(NSString *)quickEntryName {
     FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
