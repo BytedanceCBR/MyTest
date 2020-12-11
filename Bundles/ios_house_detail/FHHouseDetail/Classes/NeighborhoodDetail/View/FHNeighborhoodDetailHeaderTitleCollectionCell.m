@@ -49,6 +49,7 @@
     if (self) {
         UIButton *mapBtn = [[UIButton alloc]init];
         [mapBtn setImage:[UIImage imageNamed:@"plot_mapbtn"] forState:UIControlStateNormal];
+        [mapBtn setImageEdgeInsets:UIEdgeInsetsMake(22, 29, 18, 11)];
         [mapBtn addTarget:self action:@selector(clickMapAction:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:mapBtn];
         self.mapBtn = mapBtn;
@@ -82,9 +83,9 @@
         }];
         
         [self.mapBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self).offset(18);
-            make.right.equalTo(self).offset(-11);
-            make.size.mas_equalTo(CGSizeMake(40, 40));
+            make.top.equalTo(self);
+            make.right.equalTo(self);
+            make.size.mas_equalTo(CGSizeMake(80, 80));
         }];
         
     }
@@ -92,12 +93,9 @@
 }
 
 - (void)clickMapAction:(UIButton *)btn {
-    NSMutableDictionary *infoDict = [NSMutableDictionary new];
-    [infoDict setValue:@(self.latitude) forKey:@"latitude"];
-    [infoDict setValue:@(self.longitude) forKey:@"longitude"];
-    [infoDict setValue:self.nameLabel.text forKey:@"title"];
-    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+    if(self.mapBtnClickBlock){
+        self.mapBtnClickBlock();
+    }
 }
 
 - (void)refreshWithData:(id)data {
