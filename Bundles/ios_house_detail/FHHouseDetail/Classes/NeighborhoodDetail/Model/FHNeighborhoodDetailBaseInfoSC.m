@@ -9,6 +9,8 @@
 #import "FHNeighborhoodDetailPropertyInfoCollectionCell.h"
 #import "FHNeighborhoodDetailBaseInfoSM.h"
 #import "FHDetailSectionTitleCollectionView.h"
+#import <TTRoute/TTRoute.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHNeighborhoodDetailBaseInfoSC ()<IGListSupplementaryViewSource>
 
@@ -21,6 +23,30 @@
         self.supplementaryViewSource = self;
     }
     return self;
+}
+
+- (void)pushBaseInfo {
+    
+    NSMutableDictionary *params = @{}.mutableCopy;
+    
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    userInfo[@"route"] = [@"/neighbor_info_list_page" btd_stringByURLEncode];
+    
+    FHNeighborhoodDetailBaseInfoSM *model = (FHNeighborhoodDetailBaseInfoSM *)self.sectionModel;
+    
+    NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
+    tracerDict[@"element_from"] = @"map";
+    tracerDict[@"enter_from"] = @"neighborhood_detail";
+    params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
+    
+    if (model.neighborhoodDetailModules) {
+        params[@"neighbor_info_page"] = [@{@"neighborhood_detail_modules" : model.neighborhoodDetailModules} btd_jsonStringEncoded];
+    }
+    
+    userInfo[@"params"] = [params btd_jsonStringEncoded];
+    
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
+
 }
 
 -(NSInteger)numberOfItems {
@@ -36,8 +62,9 @@
 -(__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
     FHNeighborhoodDetailBaseInfoSM *model= (FHNeighborhoodDetailBaseInfoSM *)self.sectionModel;
     FHNeighborhoodDetailPropertyInfoCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPropertyInfoCollectionCell class] withReuseIdentifier:NSStringFromClass([model.propertyInfoModel class]) forSectionController:self atIndex:index];
+    __weak typeof(self) weakSelf = self;
     [cell setAllButtonActionBlock:^{
-        
+        [weakSelf pushBaseInfo];
     }];
     [cell refreshWithData:model.propertyInfoModel];
     

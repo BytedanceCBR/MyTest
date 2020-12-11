@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) FHNeighborhoodDetailPropertyInfoModel *propertyInfoModel;
 
+@property (nonatomic, copy) NSDictionary *neighborhoodDetailModules;
+
 @end
 
 NS_ASSUME_NONNULL_END
