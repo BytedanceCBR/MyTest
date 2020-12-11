@@ -254,6 +254,7 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
 
 // 二手房(小区详情)周边小区
 +(TTHttpTask*)requestRelatedNeighborhoodSearchByNeighborhoodId:(NSString*)neighborhoodId
+                                            isShowNeighborhood:(BOOL )isShowNeighborhood
                                                       searchId:(NSString*)searchId
                                                         offset:(NSString *)offset
                                                          query:(NSString*)query
@@ -272,6 +273,9 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
         paramDic[@"search_id"] = searchId;
     }
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_NEIGHBORHOOD;
+    if (isShowNeighborhood) {
+        paramDic[@"is_show_neighborhood"] = @(1);
+    }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedNeighborhoodResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHDetailRelatedNeighborhoodResponseModel *model = (FHDetailRelatedNeighborhoodResponseModel *)m;
         if (completion) {
@@ -314,6 +318,7 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
                                                             offset:(NSString *)offset
                                                              query:(NSString*)query
                                                              count:(NSInteger)count
+                                                           channel:(NSString *)channel
                                                         completion:(void(^)(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model , NSError * _Nullable error))completion {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingString:@"/f100/api/same_neighborhood_house"];
@@ -336,7 +341,9 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     } else {
         paramDic[@"offset"] = @"0";
     }
-    paramDic[CHANNEL_ID] = CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE;
+    if (channel.length) {
+        paramDic[CHANNEL_ID] = channel;
+    }
 //    __weak typeof(self)wself = self;
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailSameNeighborhoodHouseResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHDetailSameNeighborhoodHouseResponseModel *model = (FHDetailSameNeighborhoodHouseResponseModel *)m;

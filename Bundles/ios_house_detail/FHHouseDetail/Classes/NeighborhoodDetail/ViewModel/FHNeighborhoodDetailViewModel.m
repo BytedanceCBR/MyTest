@@ -366,7 +366,7 @@
 - (void)requestHouseInSameNeighborhoodSearchErShou:(NSString *)neighborhoodId completion:(void (^)(void))completion{
     NSString *houseId = self.houseId;
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:3 completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:3 channel:CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE_NEIGHBOR completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.sameNeighborhoodErshouHouseData = model.data;
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -393,7 +393,7 @@
 // 周边小区
 - (void)requestRelatedNeighborhoodSearch:(NSString *)neighborhoodId completion:(void (^)(void))completion{
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId isShowNeighborhood:YES searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.relatedNeighborhoodData = model.data;
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{

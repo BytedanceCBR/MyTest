@@ -78,6 +78,7 @@ completion:(void(^)(FHListResultHouseModel *model , NSError *error))completion;
                              completion:(void(^)(FHDetailRelatedHouseResponseModel * _Nullable model , NSError * _Nullable error))completion;
 // 二手房（小区）-周边小区
 +(TTHttpTask*)requestRelatedNeighborhoodSearchByNeighborhoodId:(NSString*)neighborhoodId
+                                            isShowNeighborhood:(BOOL )isShowNeighborhood
                                                       searchId:(NSString*)searchId
                                                         offset:(NSString *)offset
                                                          query:(NSString*)query
@@ -99,6 +100,7 @@ completion:(void(^)(FHListResultHouseModel *model , NSError *error))completion;
                                                             offset:(NSString *)offset
                                                              query:(NSString*)query
                                                              count:(NSInteger)count
+                                                           channel:(NSString *)channel
                                                         completion:(void(^)(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model , NSError * _Nullable error))completion;
 // 二手房-推荐新盘
 +(TTHttpTask*)requestOldHouseRecommendedCourtSearch:(NSString*)houseId

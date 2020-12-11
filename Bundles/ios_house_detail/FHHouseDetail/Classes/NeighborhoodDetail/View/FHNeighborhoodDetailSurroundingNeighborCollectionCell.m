@@ -92,7 +92,18 @@
         }
         self.titleLabel.text = model.displayTitle;
         self.priceLabel.text = model.displayPricePerSqm;
-        self.infoLabel.text = model.displayBuiltYear;
+        NSMutableString *infoString = [NSMutableString string];
+        if (model.displayBuiltYear) {
+            [infoString appendString:model.displayBuiltYear];
+        }
+        if (model.displayBuiltType) {
+            if (infoString.length) {
+                [infoString appendFormat:@" | %@",model.displayBuiltType];
+            } else {
+                [infoString appendString:model.displayBuiltType];
+            }
+        }
+        self.infoLabel.text = infoString.copy;
     }
     [self layoutIfNeeded];
 }
@@ -174,7 +185,10 @@
 }
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(140, CGRectGetHeight(collectionView.frame));
+    //需要显示 2 + 1/4 个模块
+    
+    CGFloat width = ceil((CGRectGetWidth(self.collectionView.frame) - 12 * 3) / 9.0 * 4.0);
+    return CGSizeMake(width, CGRectGetHeight(collectionView.frame));
 }
 
 @end

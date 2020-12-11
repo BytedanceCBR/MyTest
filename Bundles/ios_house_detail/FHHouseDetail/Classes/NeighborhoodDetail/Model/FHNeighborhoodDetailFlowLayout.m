@@ -39,8 +39,8 @@
 
         if (model.sectionType != FHNeighborhoodDetailSectionTypeHeader &&
             model.sectionType != FHNeighborhoodDetailSectionTypeOwnerSellHouse &&
-            ![sections containsObject:@(attribute.indexPath.section)]) {
-            [sections addObject:@(attribute.indexPath.section)];
+            ![sections containsObject:@(model.sectionType)]) {
+            [sections addObject:@(model.sectionType)];
             UICollectionViewLayoutAttributes *newAttrs = [self layoutAttributesForDecorationViewOfKind:NSStringFromClass([FHNeighborhoodDetailShadowView class]) atIndexPath:[NSIndexPath indexPathForItem:0 inSection:attribute.indexPath.section]];
             if (newAttrs && newAttrs.frame.size.height > 0) {
                 [newArray addObject:newAttrs];
@@ -50,9 +50,9 @@
     
     //小区详情页 如果同时出现 FHNeighborhoodDetailSectionTypeFloorpan FHNeighborhoodDetailSectionTypeHouseSale
     //则需要合并2个decoration的attrs
-//    if ([sec]) {
-//        <#statements#>
-//    }
+    if ([sections containsObject:@(FHNeighborhoodDetailSectionTypeFloorpan)] && [sections containsObject:@(FHNeighborhoodDetailSectionTypeHouseSale)]) {
+        
+    }
 
     return newArray;
 }

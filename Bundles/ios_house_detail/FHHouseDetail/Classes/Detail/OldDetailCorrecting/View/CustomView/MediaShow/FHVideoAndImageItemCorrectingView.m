@@ -126,7 +126,15 @@
         UIView *lastView = self;
         for (NSInteger i = 0; i < itemArr.count; i++) {
             UIButton *button = [self buttonWithTitle:itemArr[i]];
-            [button setBtd_hitTestEdgeInsets:UIEdgeInsetsMake(-30, -30, -30, -30)];
+            CGFloat left = 0;
+            CGFloat right = 0;
+            if (i == 0) {
+                left = -20;
+            }
+            if (i == itemArr.count - 1) {
+                right = -20;
+            }
+            button.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-20, left, -20, right);
             [itemBacView addSubview:button];
             [button mas_makeConstraints:^(MASConstraintMaker *make) {
                 if(i%self.row == 0){
@@ -155,7 +163,6 @@
     [btn addTarget:self action:@selector(btnClicked:) forControlEvents:UIControlEventTouchUpInside];
     btn.layer.cornerRadius = self.itemHeight/2;
     btn.layer.masksToBounds = YES;
-    btn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, 0, -10, 0);
     return btn;
 }
 
