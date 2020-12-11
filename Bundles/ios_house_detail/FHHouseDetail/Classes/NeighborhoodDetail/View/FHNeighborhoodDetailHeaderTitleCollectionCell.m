@@ -92,12 +92,9 @@
 }
 
 - (void)clickMapAction:(UIButton *)btn {
-    NSMutableDictionary *infoDict = [NSMutableDictionary new];
-    [infoDict setValue:@(self.latitude) forKey:@"latitude"];
-    [infoDict setValue:@(self.longitude) forKey:@"longitude"];
-    [infoDict setValue:self.nameLabel.text forKey:@"title"];
-    TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+    if(self.mapBtnClickBlock){
+        self.mapBtnClickBlock();
+    }
 }
 
 - (void)refreshWithData:(id)data {

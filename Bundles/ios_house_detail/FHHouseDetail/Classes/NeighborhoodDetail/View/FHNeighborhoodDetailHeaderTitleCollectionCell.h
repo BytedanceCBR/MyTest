@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailHeaderTitleCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 
-@property (nonatomic, copy) void(^mapBtnClickBlock)(NSString *);
+@property (nonatomic, copy) void(^mapBtnClickBlock)();
 
 @end
 
