@@ -145,7 +145,7 @@
 		6198678F2223E9A70056B2EF /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6198678E2223E9A70056B2EF /* NotificationService.m */; };
 		619867932223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6198678B2223E9A70056B2EF /* com.f100.client.FHNotificationServiceExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		62434B862504F5A59E2D81B7 /* libPods-f100InHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6654741C4CBDCFEE43406548 /* libPods-f100InHouse.a */; };
-		69F0CD392143A278FD9B2268 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		69F0CD392143A278FD9B2268 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		7623E3B12275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
 		7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
 		ACBF787C473BD50F37A42499 /* libPods-com.f100.client.FHNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7EE899B83B71F6E5A068E09 /* libPods-com.f100.client.FHNotificationServiceExtension.a */; };
@@ -670,7 +670,7 @@
 				FEFA5A4E205FB1A8001F50D8 /* CoreGraphics.framework in Frameworks */,
 				FEFA5A50205FB1A8001F50D8 /* libz.1.dylib in Frameworks */,
 				FEFA5A51205FB1A8001F50D8 /* AssetsLibrary.framework in Frameworks */,
-				69F0CD392143A278FD9B2268 /* BuildFile in Frameworks */,
+				69F0CD392143A278FD9B2268 /* (null) in Frameworks */,
 				0FEAB6ADE065D893FAFB6FAF /* libPods-NewsLiteInHouse.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1969,7 +1969,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.1.2.0;
+				CURRENT_PROJECT_VERSION = 7.1.3.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
@@ -2022,7 +2022,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2060,7 +2060,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.1.2.0;
+				CURRENT_PROJECT_VERSION = 7.1.3.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -2120,7 +2120,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				ONLY_ACTIVE_ARCH = NO;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2460,7 +2460,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Created via API (7PZDQUF8CS)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.1.2.0;
+				CURRENT_PROJECT_VERSION = 7.1.3.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
@@ -2513,7 +2513,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2550,7 +2550,7 @@
 				CODE_SIGN_IDENTITY = "Apple Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution: Beijing Wuxian Guangchang Technology Co., Ltd. (7HSS6X2323)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.1.2.0;
+				CURRENT_PROJECT_VERSION = 7.1.3.0;
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
 				ENABLE_BITCODE = NO;
@@ -2608,7 +2608,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				ONLY_ACTIVE_ARCH = NO;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2644,7 +2644,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.1.2.0;
+				CURRENT_PROJECT_VERSION = 7.1.3.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = 7HSS6X2323;
@@ -2697,7 +2697,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = NO;
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				ONLY_ACTIVE_ARCH = YES;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -2735,7 +2735,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Beijing Bytedance Network Technology Co,Ltd.";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 7.1.2.0;
+				CURRENT_PROJECT_VERSION = 7.1.3.0;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				DEVELOPMENT_TEAM = X46375UBYG;
@@ -2795,7 +2795,7 @@
 					"$(PROJECT_DIR)/Libs/MZSDk",
 				);
 				LLVM_LTO = YES_THIN;
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.1.3;
 				ONLY_ACTIVE_ARCH = NO;
 				ORDER_FILE = "$(SRCROOT)/order_file.txt";
 				OTHER_LDFLAGS = "$(inherited)";
