@@ -25,7 +25,7 @@
         CGFloat height = 20 + 25;
         
         if(model.subTitle.length > 0){
-            height += 24;
+            height += 15;
         }
         
         return CGSizeMake(width, height);
@@ -97,7 +97,7 @@
     }];
     
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(3);
         make.left.mas_equalTo(self.contentView).offset(12);
         make.right.mas_equalTo(self.contentView).offset(-16);
         make.height.mas_equalTo(20);

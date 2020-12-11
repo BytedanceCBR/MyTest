@@ -51,7 +51,7 @@
 //    _spLine.backgroundColor = [UIColor themeGray6];
 //    [self addSubview:_spLine];
     
-    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray1]];
+    self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
     _contentLabel.text = self.model.content;
     [self addSubview:_contentLabel];
 }
@@ -99,7 +99,7 @@
 //    CGFloat width = leftMargin + rightMargin + 14 + 2 + 12;
 //    CGRect persentRect = [model.persent boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 17) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont themeFontMedium:12],NSFontAttributeName, nil] context:nil];
     CGFloat width = leftMargin + rightMargin + 2 ;
-    CGRect contentRect = [model.content boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 17) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont themeFontRegular:12],NSFontAttributeName, nil] context:nil];
+    CGRect contentRect = [model.content boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 17) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont themeFontRegular:15],NSFontAttributeName, nil] context:nil];
 //    CGFloat persentWidth = ceil(persentRect.size.width);
     CGFloat contentWidth = ceil(contentRect.size.width);
 //    width += persentWidth;

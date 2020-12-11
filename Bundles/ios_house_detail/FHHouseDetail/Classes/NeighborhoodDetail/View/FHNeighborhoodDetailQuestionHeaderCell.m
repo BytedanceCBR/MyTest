@@ -33,9 +33,9 @@
         CGFloat height = model.topMargin + 25;
         
         if(model.isEmpty){
-            height += 49;
+            height += 44;
         }else{
-            height += 7;
+            height += 2;
         }
         
         return CGSizeMake(width, height);
@@ -148,7 +148,7 @@
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(12);
+        make.top.mas_equalTo(self.contentView).offset(5);
         make.left.mas_equalTo(self.contentView).offset(12);
         make.right.mas_equalTo(self.rightBtn.mas_left).offset(-5);
         make.height.mas_equalTo(25);
