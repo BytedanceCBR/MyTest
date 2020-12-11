@@ -14,7 +14,6 @@
 #import "FHCommonDefines.h"
 #import "FHHouseListBaseItemModel.h"
 #import "FHSingleImageInfoCellModel.h"
-#import "FHDetailRelatedNeighborhoodResponseModel.h"
 
 @interface FHHouseTitleAndTagViewModel()
 
@@ -51,15 +50,7 @@
                 [tags addObject:tagViewModel];
             }
             self.displayTitle = item.displayTitle;
-        } else if ([model isKindOfClass:[FHDetailRelatedNeighborhoodResponseDataItemsModel class]]) {
-            FHDetailRelatedNeighborhoodResponseDataItemsModel *item = (FHDetailRelatedNeighborhoodResponseDataItemsModel *)model;
-            for (FHSearchHouseItemTitleTagModel *tagModel in item.titleTags) {
-                FHHouseTagViewModel *tagViewModel = [[FHHouseTagViewModel alloc] initWithModel:tagModel];
-                [tags addObject:tagViewModel];
-            }
-            self.displayTitle = item.displayTitle;
         }
-        
         _tags = tags;
     }
     return self;

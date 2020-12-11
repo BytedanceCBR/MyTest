@@ -11,7 +11,6 @@
 #import "FHNeighborhoodDetailSurroundingHouseSM.h"
 #import "FHNeighborhoodDetailRecommendCell.h"
 #import "FHNeighborhoodDetailRelatedHouseMoreCell.h"
-#import "FHDetailRelatedNeighborhoodResponseModel.h"
 #import "FHNeighborhoodDetailViewController.h"
 
 @interface FHNeighborhoodDetailSurroundingHouseSC()<IGListSupplementaryViewSource, IGListDisplayDelegate>
@@ -63,8 +62,8 @@
     FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
     if (index >= 0 && index < SM.items.count) {
         FHHouseSecondCardViewModel *item = SM.items[index];
-        if ([item.model isKindOfClass:[FHDetailRelatedNeighborhoodResponseDataItemsModel class]]) {
-            FHDetailRelatedNeighborhoodResponseDataItemsModel *model = (FHDetailRelatedNeighborhoodResponseDataItemsModel *)item.model;
+        if ([item.model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+            FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)item.model;
             NSMutableDictionary *traceParam = [NSMutableDictionary new];
             traceParam[@"log_pb"] = [model logPb] ? : UT_BE_NULL;;
             traceParam[@"element_from"] = @"recommend_house";
@@ -77,8 +76,8 @@
                                   @"tracer": traceParam
                                   }.mutableCopy;
             
-            if (model.id) {
-                NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", model.id]];
+            if (model.hid) {
+                NSURL *jumpUrl = [NSURL URLWithString:[NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@", model.hid]];
                 TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
                 [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
             }

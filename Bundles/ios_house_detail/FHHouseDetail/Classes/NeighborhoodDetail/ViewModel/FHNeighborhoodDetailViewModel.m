@@ -301,9 +301,9 @@
             [sectionModels addObject:recommendSM];
         }
         //周边房源
-        if (self.relatedNeighborhoodData.items.count > 0) {
+        if (self.relatedHouseData.items.count > 0) {
             FHNeighborhoodDetailSurroundingHouseSM *SM = [[FHNeighborhoodDetailSurroundingHouseSM alloc] initWithDetailModel:self.detailData];
-            [SM updateWithDataModel:self.relatedNeighborhoodData];
+            [SM updateWithDataModel:self.relatedHouseData];
             SM.sectionType = FHNeighborhoodDetailSectionTypeSurroundingHouse;
             [sectionModels addObject:SM];
         }
@@ -366,7 +366,7 @@
 - (void)requestHouseInSameNeighborhoodSearchErShou:(NSString *)neighborhoodId completion:(void (^)(void))completion{
     NSString *houseId = self.houseId;
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:3 completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.sameNeighborhoodErshouHouseData = model.data;
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{

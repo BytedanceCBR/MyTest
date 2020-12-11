@@ -232,7 +232,7 @@ completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSError * _Nul
     }
     NSMutableDictionary *paramDic = [NSMutableDictionary new];
     if (neighborhoodId.length > 0) {
-        paramDic[@"neighborhood_id"] = neighborhoodId;
+        paramDic[@"related_neighborhood_id"] = neighborhoodId;
     }
     if (houseId.length > 0) {
         paramDic[@"house_id"] = houseId;

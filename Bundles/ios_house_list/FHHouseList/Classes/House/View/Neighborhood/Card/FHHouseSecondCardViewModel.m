@@ -20,7 +20,6 @@
 #import "FHHouseListViewModel.h"
 #import "FHHouseEnvContextBridge.h"
 #import "FHHouseBridgeManager.h"
-#import "FHDetailRelatedNeighborhoodResponseModel.h"
 
 @interface FHHouseSecondCardViewModel()
 
@@ -69,14 +68,6 @@
             FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)model;
             _recommendViewModel = [[FHHouseRecommendViewModel alloc] initWithModel:item.advantageDescription];
             self.leftImageModel = [item.houseImage firstObject];
-            self.price = item.displayPrice;
-            self.pricePerSqm = item.displayPricePerSqm;
-            self.subtitle = item.displaySubtitle;
-            self.tagList = item.tags;
-            self.hasVr = item.vrInfo.hasVr;
-        } else if ([model isKindOfClass:[FHDetailRelatedNeighborhoodResponseDataItemsModel class]]) {
-            FHDetailRelatedNeighborhoodResponseDataItemsModel *item = (FHDetailRelatedNeighborhoodResponseDataItemsModel *)model;
-            self.leftImageModel = [item.images firstObject];
             self.price = item.displayPrice;
             self.pricePerSqm = item.displayPricePerSqm;
             self.subtitle = item.displaySubtitle;

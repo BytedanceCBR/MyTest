@@ -6,7 +6,7 @@
 //
 
 #import "FHNeighborhoodDetailSectionModel.h"
-#import "FHDetailRelatedNeighborhoodResponseModel.h"
+#import "FHDetailRelatedHouseResponseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *total;
 
-@property (nonatomic, strong) FHDetailRelatedNeighborhoodResponseDataModel *model;
+@property (nonatomic, strong) FHDetailRelatedHouseResponseDataModel *model;
 
 - (void)updateWithDataModel:(id)data;
 
