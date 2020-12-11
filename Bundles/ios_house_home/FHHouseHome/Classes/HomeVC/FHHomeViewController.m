@@ -388,7 +388,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (!self.adColdHadJump) {
         self.adColdHadJump = YES;
         FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-        if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]]) {
+        if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]] && currentDataModel.jump2AdRecommend.length > 0) {
             TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 dispatch_async(dispatch_get_main_queue(), ^{

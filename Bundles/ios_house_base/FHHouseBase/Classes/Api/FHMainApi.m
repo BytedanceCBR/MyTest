@@ -68,7 +68,7 @@
         requestParam[@"city_name"] = gCityName;
     }
     if ([[FHEnvContext sharedInstance] isColdStart] && [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue]) {
-        [requestParam setValue:@(1) forKey:@"is_cold_start"];
+        [requestParam setValue:@(1) forKey:@"app_cold_start"];
         [[FHEnvContext sharedInstance] setColdStart];
     }
     if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
