@@ -39,7 +39,7 @@
         if(model.data.neighborhoodEvaluation.evaluationList.count > 0){
             //有评论时候
             FHNeighborhoodDetailSpaceModel *spaceModel = [[FHNeighborhoodDetailSpaceModel alloc] init];
-            spaceModel.height = 14;
+            spaceModel.height = 10;
             [itemArray addObject:spaceModel];
             //评论tag
             self.commentTagsModel = [[FHNeighborhoodDetailCommentTagsModel alloc] init];
@@ -88,7 +88,7 @@
         }
         
         FHNeighborhoodDetailSpaceModel *spaceModel1 = [[FHNeighborhoodDetailSpaceModel alloc] init];
-        spaceModel1.height = isHaveQuestion ? 16 : 20;
+        spaceModel1.height = isHaveQuestion ? 11 : 15;
         [itemArray addObject:spaceModel1];
     }
     
@@ -143,7 +143,7 @@
             }
             
             FHNeighborhoodDetailSpaceModel *spaceModel = [[FHNeighborhoodDetailSpaceModel alloc] init];
-            spaceModel.height = 15;
+            spaceModel.height = 10;
             [itemArray addObject:spaceModel];
         }else{
             _questionHeaderModel.title = @"暂无问答";

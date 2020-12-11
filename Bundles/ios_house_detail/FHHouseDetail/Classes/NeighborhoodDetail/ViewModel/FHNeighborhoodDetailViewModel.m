@@ -141,7 +141,7 @@
         }
 
         //小区测评
-        if (model.data.strategy.articleList.count > 0) {
+        if (model.data.strategy.article) {
             FHNeighborhoodDetailStrategySM *strategyModel = [[FHNeighborhoodDetailStrategySM alloc] initWithDetailModel:self.detailData];
             strategyModel.sectionType = FHNeighborhoodDetailSectionTypeStrategy;
             strategyModel.detailTracerDic = self.detailTracerDic;

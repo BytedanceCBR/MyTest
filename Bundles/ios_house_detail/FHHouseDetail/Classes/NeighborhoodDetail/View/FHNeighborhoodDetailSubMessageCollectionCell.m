@@ -136,7 +136,7 @@
             make.left.equalTo(self.priceLabel);
         }];
         [self.arrowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.monthUpLabel);
+            make.centerY.equalTo(self.monthUp);
             make.left.equalTo(self.monthUpLabel.mas_right).offset(4);
             make.size.mas_equalTo(CGSizeMake(10, 10));
         }];

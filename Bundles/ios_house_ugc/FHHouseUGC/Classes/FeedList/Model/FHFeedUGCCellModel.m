@@ -1013,7 +1013,7 @@
         cellModel.largeImageList = model.rawData.largeImageList;
     }
     if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:cellModel.numberOfLines];
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 42) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:14]];
     }else {
         [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
     }
@@ -1132,7 +1132,7 @@
     }else{
         self.numberOfLines = self.imageList.count > 0 ? 3 : 5;
     }
-    [FHUGCCellHelper setRichContentWithModel:self width:width numberOfLines:self.numberOfLines];
+    [FHUGCCellHelper setRichContentWithModel:self width:width numberOfLines:self.numberOfLines font:[UIFont themeFontRegular:14]];
 }
 
 - (void)setCategoryId:(NSString *)categoryId {
