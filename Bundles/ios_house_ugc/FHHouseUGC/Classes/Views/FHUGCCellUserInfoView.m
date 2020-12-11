@@ -158,7 +158,7 @@
     self.titleLabel.width = 100;
     self.titleLabel.height = 50;
     
-    self.questionIcon.top = 4.8;
+    self.questionIcon.top = 5.4;
     self.questionIcon.left =  20;
     self.questionIcon.width = 18;
     self.questionIcon.height = 18;
@@ -206,7 +206,7 @@
 - (void)setTitleModel:(FHFeedUGCCellModel *)cellModel {
     //设置userInfo
     self.cellModel = cellModel;
-    self.titleLabel.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    问题：%@",cellModel.originItemModel.content] : @"";
+    self.titleLabel.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    %@",cellModel.originItemModel.content] : @"";
     self.questionIcon.hidden = NO;
     CGSize titleLabelSize = [self.titleLabel sizeThatFits:CGSizeMake(MAXFLOAT, 50)];
     self.titleLabel.width = titleLabelSize.width;

@@ -131,7 +131,7 @@
     self.userInfoView.width = [UIScreen mainScreen].bounds.size.width;
     self.userInfoView.height = userInfoViewHeight;
     
-    self.userIma.top =  self.userInfoView.bottom + 10;
+    self.userIma.top =  self.userInfoView.bottom + 5;
     self.userIma.left = leftMargin;
     self.userIma.width = 20;
     self.userIma.height = 20;
@@ -145,7 +145,7 @@
     self.useride.height = 18;
     
     
-    self.contentLabel.top = self.userIma.bottom + 10;
+    self.contentLabel.top = self.userIma.bottom + 5;
     self.contentLabel.left = leftMargin;
     self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.contentLabel.height = 0;
@@ -275,7 +275,7 @@
     self.useride.text = cellModel.user.verifiedContent;
     [self.userIma setAvatarUrl:cellModel.user.avatarUrl];
     self.userIma.userId = cellModel.user.userId;
-    NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    问题：%@",cellModel.originItemModel.content] : @"";
+    NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    %@",cellModel.originItemModel.content] : @"";
     CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
     CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
     if(size.width > maxTitleLabelSizeWidth){
@@ -287,14 +287,14 @@
 }
 
 - (void)updateFarme {
-    self.userIma.top =  self.userInfoView.bottom + 10;
+    self.userIma.top =  self.userInfoView.bottom + 5;
     CGSize size = [self.username.text sizeWithFont:[UIFont themeFontRegular:14] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
     self.username.width = size.width;
-    self.useride.width =  [UIScreen mainScreen].bounds.size.width-30 -20 -size.width;
+    self.useride.width =  [UIScreen mainScreen].bounds.size.width-30 -40 -size.width;
     self.username.centerY =  self.userIma.centerY;
     self.useride.centerY =  self.username.centerY;
     self.useride.left = self.username.right + 4;
-    self.contentLabel.top = self.userIma.bottom + 10;
+    self.contentLabel.top = self.userIma.bottom + 5;
     self.multiImageView.top = self.contentLabel.bottom + 10;
     self.singleImageView.top = self.contentLabel.bottom + 10;
     self.bottomView.top = self.multiImageView.bottom + 10;
@@ -304,7 +304,7 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
+        NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"     %@",cellModel.originItemModel.content] : @"";
         CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
         CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
         CGFloat userInfoHeight = 0;
@@ -313,7 +313,7 @@
         }else {
             userInfoHeight = 30;
         }
-        CGFloat height = userInfoHeight + bottomViewHeight + topMargin + 10 +userInfoViewHeight;
+        CGFloat height = userInfoHeight + bottomViewHeight + topMargin +userInfoViewHeight;
         
         if(!isEmptyString(cellModel.content)){
             height += (cellModel.contentHeight + 10);

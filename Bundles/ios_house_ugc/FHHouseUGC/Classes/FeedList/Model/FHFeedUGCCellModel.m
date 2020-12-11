@@ -1113,7 +1113,7 @@
     if(!isEmptyString(model.commentCount)){
         NSString *comment = [NSString stringWithFormat:@"%@评论",[TTBusinessManager formatCommentCount:[model.commentCount longLongValue]]];
         if(desc.length > 0){
-            comment = [NSString stringWithFormat:@" %@",comment];
+            comment = [NSString stringWithFormat:@"   %@",comment];
         }
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:comment];
         [desc appendAttributedString:publishTimeAStr];
@@ -1125,7 +1125,7 @@
     
     if(![publishTime isEqualToString:@""]){
         if(desc.length > 0){
-            publishTime = [NSString stringWithFormat:@" %@",publishTime];
+            publishTime = [NSString stringWithFormat:@"   %@",publishTime];
         }
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
         [desc appendAttributedString:publishTimeAStr];
