@@ -10,7 +10,7 @@
 
 @implementation FHNeighborhoodDetailSurroundingHouseSM
 
-- (void)updateWithDataModel:(FHDetailRelatedNeighborhoodResponseDataModel *)data {
+- (void)updateWithDataModel:(FHDetailRelatedHouseResponseDataModel *)data {
     NSMutableArray *arrayM = [[NSMutableArray alloc] init];
     for (id item in data.items) {
         id obj = [FHHouseCardUtils getEntityFromModel:item];
