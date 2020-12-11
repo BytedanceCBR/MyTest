@@ -61,6 +61,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
+@property (nonatomic, assign) NSInteger configTime;
 
 @end
 
@@ -71,6 +72,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self = [super init];
     if (self) {
         _isMainTabVC = YES;
+        _configTime = 2;
         [[FHHomeRenderFlow sharedInstance] traceHomeInit];
         FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:@"maintab" withUrl:@"" withTabName:currentDataModel.jumpPageOnStartup withPriority:0];
@@ -110,6 +112,39 @@ static CGFloat const kSectionHeaderHeight = 38;
             self.panelVM = panelVM;
             self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
         }
+    }];
+    WeakSelf;
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
+        StrongSelf;
+        //开屏广告启动不会展示，保留逻辑代码
+        self.configTime--;
+        if (self.configTime != 0) {
+            return;
+        }
+        if (!self.adColdHadJump) {
+            self.adColdHadJump = YES;
+            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+            if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]] && currentDataModel.jump2AdRecommend.length > 0) {
+                TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
+                            NSURLComponents *urlComponent = [[NSURLComponents alloc] initWithString:currentDataModel.jump2AdRecommend];
+                            [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:urlComponent.host withUrl:currentDataModel.jump2AdRecommend withTabName:@"" withPriority:1];
+                            [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+                            if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+                                //通勤找房
+                                [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+                            }else
+                            {
+                                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                            }
+                        }
+                    });
+                });
+            }
+        }
+        [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
     }];
 }
 
@@ -384,33 +419,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    //开屏广告启动不会展示，保留逻辑代码
-    if (!self.adColdHadJump) {
-        self.adColdHadJump = YES;
-        FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-        if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]] && currentDataModel.jump2AdRecommend.length > 0) {
-            TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
-                        NSURLComponents *urlComponent = [[NSURLComponents alloc] initWithString:currentDataModel.jump2AdRecommend];
-                        [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:urlComponent.host withUrl:currentDataModel.jump2AdRecommend withTabName:@"" withPriority:1];
-                        [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
-                        if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
-                            //通勤找房
-                            [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
-                        }else
-                        {
-                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
-                        }
-                    }
-                });
-            });
-        }
-    }
-    [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
     [TTSandBoxHelper setAppFirstLaunchForAd];
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
     
     [self bindIndexChangedBlock];
