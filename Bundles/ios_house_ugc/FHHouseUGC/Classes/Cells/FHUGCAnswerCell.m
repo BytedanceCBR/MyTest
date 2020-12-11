@@ -276,9 +276,10 @@
     [self.userIma setAvatarUrl:cellModel.user.avatarUrl];
     self.userIma.userId = cellModel.user.userId;
     NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    %@",cellModel.originItemModel.content] : @"";
-    CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
+    CGRect titleRect = [titleStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:0 attributes:@{NSFontAttributeName : [UIFont themeFontMedium:16]} context:nil];
+//    CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
     CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
-    if(size.width > maxTitleLabelSizeWidth){
+    if(titleRect.size.width > maxTitleLabelSizeWidth){
         self.userInfoView.height = 50;
     }else {
          self.userInfoView.height = 30;
@@ -288,9 +289,9 @@
 
 - (void)updateFarme {
     self.userIma.top =  self.userInfoView.bottom + 5;
-    CGSize size = [self.username.text sizeWithFont:[UIFont themeFontRegular:14] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
-    self.username.width = size.width;
-    self.useride.width =  [UIScreen mainScreen].bounds.size.width-30 -40 -size.width;
+    CGRect titleRect = [self.username.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:0 attributes:@{NSFontAttributeName : [UIFont themeFontMedium:16]} context:nil];
+    self.username.width = titleRect.size.width;
+    self.useride.width =  [UIScreen mainScreen].bounds.size.width-30 -40 -titleRect.size.width;
     self.username.centerY =  self.userIma.centerY;
     self.useride.centerY =  self.username.centerY;
     self.useride.left = self.username.right + 4;
@@ -304,16 +305,16 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"     %@",cellModel.originItemModel.content] : @"";
-        CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
+        NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    %@",cellModel.originItemModel.content] : @"";
+        CGRect titleRect = [titleStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:0 attributes:@{NSFontAttributeName : [UIFont themeFontMedium:16]} context:nil];
         CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
         CGFloat userInfoHeight = 0;
-        if(size.width > maxTitleLabelSizeWidth){
+        if(titleRect.size.width > maxTitleLabelSizeWidth){
             userInfoHeight = 50;
         }else {
             userInfoHeight = 30;
         }
-        CGFloat height = userInfoHeight +30+ bottomViewHeight + topMargin + 10;
+        CGFloat height = userInfoHeight +30+ bottomViewHeight + topMargin;
         
         if(!isEmptyString(cellModel.content)){
             height += (cellModel.contentHeight + 10);

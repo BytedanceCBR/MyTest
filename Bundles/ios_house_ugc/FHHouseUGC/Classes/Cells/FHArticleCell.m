@@ -67,7 +67,7 @@
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
-    _contentLabel.font = [UIFont themeFontSemibold:16];
+    _contentLabel.font = [UIFont themeFontMedium:16];
     [self.contentView addSubview:_contentLabel];
     
     //单图
