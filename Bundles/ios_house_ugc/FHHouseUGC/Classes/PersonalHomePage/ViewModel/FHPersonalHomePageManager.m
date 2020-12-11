@@ -103,8 +103,8 @@
 -(void)scrollViewScroll:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.y;
     CGFloat tabListOffset = [self tabListOffset];
-    CGFloat backViewOffset = 140 + [[FHPersonalHomePageManager shareInstance] safeArea] - self.navBar.height;
-    CGFloat nameLabelOffset = 210 + [[FHPersonalHomePageManager shareInstance] safeArea] - self.navBar.height;
+    CGFloat backViewOffset = 120 + self.safeArea - self.navBar.height;
+    CGFloat nameLabelOffset = 190 + self.safeArea - self.navBar.height;
     
 
     if(!self.isFeedError){
@@ -226,7 +226,7 @@
 
 -(CGFloat)safeArea {
     if([UIDevice btd_isIPhoneXSeries]){
-        return 20;
+        return 40;
     }
     return 0;
 }
