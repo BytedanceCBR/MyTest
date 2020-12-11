@@ -46,7 +46,11 @@
     id cellModel = model.items[index];
     CGSize size = CGSizeZero;
     if([cellModel isKindOfClass:[NSDictionary class]]){
-        size = [FHNeighborhoodDetailStrategyArticleCell cellSizeWithData:cellModel width:width];
+        if (model.cellHeight) {
+            size = CGSizeMake(width, model.cellHeight);
+        }else {
+            size = [FHNeighborhoodDetailStrategyArticleCell cellSizeWithData:cellModel width:width];
+        }
     }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){
         size = [FHNeighborhoodDetailSpaceCell cellSizeWithData:cellModel width:width];
     }
@@ -61,6 +65,9 @@
 
     if([cellModel isKindOfClass:[NSDictionary class]]){
         FHNeighborhoodDetailStrategyArticleCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailStrategyArticleCell class] withReuseIdentifier:@"FHNeighborhoodDetailStrategyArticleCell" forSectionController:self atIndex:index];
+        cell.lynxEndLoadBlock = ^(CGFloat cellHeight) {
+            model.cellHeight = cellHeight;
+        };
         [cell refreshWithData:cellModel];
         return cell;
     }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){

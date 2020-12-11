@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic, copy) NSDictionary *extraDic;
 @property(nonatomic, copy) NSDictionary *detailTracerDic; // 详情页基础埋点数据
+@property (assign, nonatomic) CGFloat cellHeight;
 @end
 
 NS_ASSUME_NONNULL_END
