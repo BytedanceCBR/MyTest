@@ -62,9 +62,9 @@
 }
 
 - (void)initViews {
-    self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:18];
+    self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     _titleLabel.textColor = [UIColor themeGray1];
-    _titleLabel.font = [UIFont themeFontMedium:18];
+    _titleLabel.font = [UIFont themeFontSemibold:16];
     [self.contentView addSubview:_titleLabel];
     
     self.subTitleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
@@ -78,7 +78,7 @@
     _rightBtn.imageView.contentMode = UIViewContentModeCenter;
     [_rightBtn setImage:[UIImage imageNamed:@"neighborhood_detail_comment_right_arror"] forState:UIControlStateNormal];
     [_rightBtn setImage:[UIImage imageNamed:@"neighborhood_detail_comment_right_arror"] forState:UIControlStateHighlighted];
-    [_rightBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
+    [_rightBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     _rightBtn.titleLabel.font = [UIFont themeFontRegular:14];
     [_rightBtn setTitle:@"查看全部" forState:UIControlStateNormal];
     [_rightBtn sizeToFit];
@@ -90,22 +90,22 @@
 
 - (void)initConstraints {
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(20);
-        make.left.mas_equalTo(self.contentView).offset(16);
+        make.top.mas_equalTo(self.contentView).offset(12);
+        make.left.mas_equalTo(self.contentView).offset(12);
         make.right.mas_equalTo(self.rightBtn.mas_left).offset(-5);
         make.height.mas_equalTo(25);
     }];
     
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(4);
-        make.left.mas_equalTo(self.contentView).offset(16);
+        make.left.mas_equalTo(self.contentView).offset(12);
         make.right.mas_equalTo(self.contentView).offset(-16);
         make.height.mas_equalTo(20);
     }];
     
     [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.contentView).offset(-16);
+        make.right.mas_equalTo(self.contentView).offset(-12);
         make.height.mas_equalTo(25);
     }];
 }

@@ -48,6 +48,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataStrategyArticleListModel> *articleList;
 @property (nonatomic, strong , nullable) NSDictionary *article;
+@property (nonatomic, strong , nullable) NSDictionary *score;
+@property (nonatomic, strong , nullable) NSDictionary *compare;
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 

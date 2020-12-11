@@ -85,9 +85,9 @@
     _topLine.backgroundColor = [UIColor themeGray6];
     [self.contentView addSubview:_topLine];
     
-    self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:18];
+    self.titleLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     _titleLabel.textColor = [UIColor themeGray1];
-    _titleLabel.font = [UIFont themeFontMedium:18];
+    _titleLabel.font = [UIFont themeFontSemibold:16];
     [self.contentView addSubview:_titleLabel];
     
     self.rightBtn = [[UIButton alloc] init];
@@ -142,27 +142,27 @@
 - (void)initConstraints {
     [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.contentView).offset(16);
-        make.right.mas_equalTo(self.contentView).offset(-16);
+        make.left.mas_equalTo(self.contentView).offset(12);
+        make.right.mas_equalTo(self.contentView).offset(-12);
         make.height.mas_equalTo([UIDevice btd_onePixel]);
     }];
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(16);
-        make.left.mas_equalTo(self.contentView).offset(16);
+        make.top.mas_equalTo(self.contentView).offset(12);
+        make.left.mas_equalTo(self.contentView).offset(12);
         make.right.mas_equalTo(self.rightBtn.mas_left).offset(-5);
         make.height.mas_equalTo(25);
     }];
     
     [self.rightBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.contentView).offset(-16);
+        make.right.mas_equalTo(self.contentView).offset(-12);
         make.height.mas_equalTo(25);
     }];
     
     [self.cornerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(13);
-        make.left.mas_equalTo(self.contentView).offset(16);
+        make.left.mas_equalTo(self.contentView).offset(12);
         make.width.mas_equalTo(42);
         make.height.mas_equalTo(18);
     }];
@@ -176,7 +176,7 @@
     
     [self.questionWriteBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.cornerLabel);
-        make.right.mas_equalTo(self.contentView).offset(-16);
+        make.right.mas_equalTo(self.contentView).offset(-12);
         make.height.mas_equalTo(24);
     }];
 }
