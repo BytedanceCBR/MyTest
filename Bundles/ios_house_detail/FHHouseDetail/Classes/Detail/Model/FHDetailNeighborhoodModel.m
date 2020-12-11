@@ -8,6 +8,15 @@
 //GENERATED CODE , DON'T EDIT
 #import "FHDetailNeighborhoodModel.h"
 @implementation FHDetailNeighborhoodDataCoreInfoModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+                           @"openUrl": @"open_url",
+                           };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;
@@ -52,6 +61,7 @@
                            @"neighborhoodTopImages":@"neighborhood_top_images",
                            @"neighborhoodEvaluation": @"neighborhood_evaluation",
                            @"neighborhoodDetailModules": @"neighborhood_detail_modules",
+                           @"statsMinfo":@"stats_minfo",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -157,6 +167,7 @@
                            @"areaName": @"area_name",
                            @"pricingPerSqmV": @"pricing_per_sqm_v",
                            @"districtId": @"district_id",
+                           @"districtName": @"district_name",
                            @"pricingPerSqm": @"pricing_per_sqm",
                            @"gaodeLat": @"gaode_lat",
                            @"imprId": @"impr_id",
@@ -169,6 +180,7 @@
                            @"gaodeImageUrl": @"gaode_image_url",
                            @"gaodeImage": @"gaode_image",
                            @"baiduPanoramaUrl": @"baidu_panorama_url",
+                           @"tradeAreaName": @"trade_area_name"
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -265,6 +277,39 @@
     @end
 
 
+@implementation FHDetailNeighborhoodDatastatsMinfoSaleModel : JSONModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"openUrl": @"open_irl",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
+
+@implementation FHDetailNeighborhoodDatastatsMinfoModel : JSONModel
++ (JSONKeyMapper*)keyMapper
+{
+    NSDictionary *dict = @{
+        @"onSale": @"on_sale",
+    };
+    return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+        return dict[keyName]?:keyName;
+    }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+@end
+
 @implementation FHDetailNeighborhoodDataCommentsModel
 + (JSONKeyMapper*)keyMapper
     {
@@ -279,7 +324,7 @@
     {
         return YES;
     }
-    @end
+@end
 
 
 @implementation FHDetailNeighborhoodDataCommentsCommentsWriteModel

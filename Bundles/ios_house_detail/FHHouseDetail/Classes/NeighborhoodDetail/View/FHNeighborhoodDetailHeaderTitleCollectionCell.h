@@ -12,11 +12,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailHeaderTitleCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 
+@property (nonatomic, copy) void(^mapBtnClickBlock)(NSString *);
+
 @end
 
 @interface FHNeighborhoodDetailHeaderTitleModel : NSObject<IGListDiffable>
 @property (nonatomic, copy) NSString *titleStr;
 @property (nonatomic, copy) NSString *address;
+@property (nonatomic, copy) NSString *districtName;//区域
+@property (nonatomic, copy) NSString *tradeAreaName;//商圈
+@property (nonatomic, copy) NSString *areaName;//街道
+
 
 @property (nonatomic, copy, nullable) NSString *gaodeLng;
 @property (nonatomic, copy, nullable) NSString *gaodeLat;
