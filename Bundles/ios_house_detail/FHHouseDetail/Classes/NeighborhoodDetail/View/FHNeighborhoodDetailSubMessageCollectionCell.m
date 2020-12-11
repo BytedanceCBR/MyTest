@@ -8,6 +8,7 @@
 #import "FHNeighborhoodDetailSubMessageCollectionCell.h"
 #import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHNeighborhoodDetailSubMessageCollectionCell ()
 @property (nonatomic, weak) YYLabel *priceLabel;
@@ -141,7 +142,7 @@
         }];
         [self.sepLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.containerView.mas_bottom);
-            make.height.mas_equalTo(0.5);
+            make.height.mas_equalTo([UIDevice btd_onePixel]);
             make.left.equalTo(self.contentView).offset(12);
             make.right.equalTo(self.contentView).offset(-12);
         }];
@@ -149,7 +150,7 @@
             make.top.mas_equalTo(self.sepLine).offset(16);
             make.bottom.mas_equalTo(self.contentView).offset(-16);
             make.centerX.mas_equalTo(self.contentView);
-            make.width.mas_equalTo(0.5);
+            make.width.mas_equalTo([UIDevice btd_onePixel]);
         }];
         
         [self.soldTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
