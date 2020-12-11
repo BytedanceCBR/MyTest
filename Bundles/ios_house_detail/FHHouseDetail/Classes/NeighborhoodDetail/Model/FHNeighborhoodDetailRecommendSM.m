@@ -14,7 +14,8 @@
     self.recommendCellModel = [[FHNeighborhoodDetailRecommendCellModel alloc] init];
     self.recommendCellModel.data = data;
     NSMutableArray *arrayM = [[NSMutableArray alloc] init];
-    for (id item in data.items) {
+    for (FHSearchHouseDataItemsModel *item in data.items) {
+        item.advantageDescription = nil;
         id obj = [FHHouseCardUtils getEntityFromModel:item];
         if (obj) {
             [arrayM addObject:obj];

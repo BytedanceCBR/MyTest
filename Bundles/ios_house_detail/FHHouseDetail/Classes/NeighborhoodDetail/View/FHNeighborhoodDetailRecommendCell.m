@@ -61,7 +61,7 @@
     self.backView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:self.backView];
     
-    self.cardView = [[FHHouseSecondCardView alloc] init];
+    self.cardView = [[FHHouseSecondCardView alloc] initWithLeftMargin:12 rightMargin:12];
     [self.contentView addSubview:self.cardView];
     
     self.line = [[UIView alloc] init];
@@ -77,8 +77,8 @@
         make.edges.mas_equalTo(0);
     }];
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
+        make.left.mas_equalTo(12);
+        make.right.mas_equalTo(-12);
         make.height.mas_equalTo(1);
         make.bottom.mas_equalTo(0);
     }];

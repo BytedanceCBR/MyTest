@@ -10,7 +10,7 @@
 #import "FHDetailSectionTitleCollectionView.h"
 #import "FHNeighborhoodDetailViewController.h"
 #import "FHNeighborhoodDetailHouseSaleSM.h"
-#import "FHNeighborhoodDetailHouseSaleTitleView.h"
+#import "FHNeighborhoodDetailRecommendTitleView.h"
 #import "FHCommonDefines.h"
 #import "FHNeighborhoodDetailRecommendCell.h"
 #import "FHNeighborhoodDetailRelatedHouseMoreCell.h"
@@ -117,8 +117,8 @@
 
 
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind atIndex:(NSInteger)index {
-    FHNeighborhoodDetailHouseSaleTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailHouseSaleTitleView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:18];
+    FHNeighborhoodDetailRecommendTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailRecommendTitleView class] atIndex:index];
+    titleView.titleLabel.font = [UIFont themeFontSemibold:16];
     titleView.titleLabel.textColor = [UIColor themeGray1];
     titleView.titleLabel.text = @"小区在售房源";
     return titleView;
@@ -130,7 +130,7 @@
 
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - 18, 34);
     }
     return CGSizeZero;
 }
