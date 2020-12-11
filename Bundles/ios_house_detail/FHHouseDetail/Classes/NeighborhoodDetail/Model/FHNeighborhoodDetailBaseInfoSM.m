@@ -11,6 +11,8 @@
 
 - (void)updateDetailModel:(FHDetailNeighborhoodModel *)model {
     
+    self.neighborhoodDetailModules = model.data.neighborhoodDetailModules;
+    
     NSMutableArray *mArr = [NSMutableArray array];
     [model.data.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if (obj.value.length > 0 && ![obj.value isEqualToString:@"-"]) {

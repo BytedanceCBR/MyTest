@@ -50,7 +50,8 @@
                            @"neighborhoodSaleHouseInfo": @"neighborhood_sale_house_info",
                            @"albumInfo": @"album_info",
                            @"neighborhoodTopImages":@"neighborhood_top_images",
-                           @"neighborhoodEvaluation": @"neighborhood_evaluation"
+                           @"neighborhoodEvaluation": @"neighborhood_evaluation",
+                           @"neighborhoodDetailModules": @"neighborhood_detail_modules",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
