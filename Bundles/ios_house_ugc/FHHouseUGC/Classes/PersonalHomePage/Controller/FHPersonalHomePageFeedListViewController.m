@@ -12,6 +12,7 @@
 
 @interface FHPersonalHomePageFeedListViewController ()
 @property(nonatomic,strong) FHPersonalHomePageFeedListViewModel *viewModel;
+@property(nonatomic,assign) BOOL isFirstLoad;
 @end
 
 @implementation FHPersonalHomePageFeedListViewController
@@ -20,6 +21,7 @@
     [super viewDidLoad];
     [self initView];
     [self initViewModel];
+    self.isFirstLoad = YES;
 }
 
 - (void)initView {
@@ -44,6 +46,13 @@
     _viewModel.homePageManager = homePageManager;
 }
 
+
+-(void)firstLoadData {
+    if(self.isFirstLoad) {
+        self.isFirstLoad = NO;
+        [self startLoadData];
+    }
+}
 
 - (void)startLoadData {
     [self.viewModel requestData:YES first:YES];

@@ -86,6 +86,7 @@
     self.feedViewController.view.frame = CGRectMake(0, profileInfoViewHeight, SCREEN_WIDTH, feedViewControllerHeight);
     
     [self initFeedStatus:tabListModel.data.tabList.count];
+    [self initFeedListVCArray:tabListModel.data.tabList.count];
     
     [self.feedViewController updateWithHeaderViewMdoel:tabListModel];
     self.scrollView.contentSize = CGSizeMake(SCREEN_WIDTH, profileInfoViewHeight + feedViewControllerHeight);
@@ -127,6 +128,14 @@
         [feedErrorArray addObject:@(YES)];
     }
     self.feedErrorArray = feedErrorArray;
+}
+
+- (void)initFeedListVCArray:(NSInteger)count {
+    NSMutableArray *feedListVCArray = [NSMutableArray array];
+    for(NSInteger i = 0;i < count;i++) {
+        [feedListVCArray addObject:[NSNull null]];
+    }
+    self.feedListVCArray = feedListVCArray;
 }
 
 -(void)scrollViewScroll:(UIScrollView *)scrollView {
@@ -195,6 +204,7 @@
 -(void)collectionViewBeginScroll:(UIScrollView *)scrollView {
     self.beginOffset = self.currentIndex * SCREEN_WIDTH;
     self.lastOffset = scrollView.contentOffset.x;
+    self.scrollView.scrollEnabled = NO;
 }
 
 -(void)collectionViewDidScroll:(UIScrollView *)scrollView {
@@ -217,6 +227,10 @@
     }
 
     self.lastOffset = scrollView.contentOffset.x;
+}
+
+-(void)collectionViewDidEndDragging:(UIScrollView *)scrollView {
+    self.scrollView.scrollEnabled = YES;
 }
 
 -(CGFloat)tabListOffset {
@@ -248,7 +262,9 @@
     self.tableViewScrollEnable = NO;
     dispatch_async(dispatch_get_main_queue(), ^{
         for(FHPersonalHomePageFeedListViewController *feedVC in self.feedListVCArray) {
-            [feedVC.tableView setContentOffset:CGPointZero animated:NO];
+            if([feedVC isKindOfClass:[FHPersonalHomePageFeedListViewController class]]) {
+                [feedVC.tableView setContentOffset:CGPointZero animated:NO];
+            }
         }
     });
 }

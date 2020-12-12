@@ -7,6 +7,7 @@
 
 #import "FHPersonalHomePageFeedViewModel.h"
 #import "FHPersonalHomePageFeedCollectionViewCell.h"
+#import "FHPersonalHomePageFeedListViewController.h"
 #import "FHPersonalHomePageManager.h"
 #import "FHCommonDefines.h"
 
@@ -60,12 +61,11 @@
 }
 
 - (void)updateSelectCell:(NSInteger)index {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if(index >= 0 && index < self.titleArray.count) {
-            self.homePageManager.currentIndex = index;
-            [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
-        }
-    });
+    if(index >= 0 && index < self.titleArray.count) {
+        self.homePageManager.currentIndex = index;
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        [self feedListVCLoadData:index];
+    }
 }
 
 #pragma mark collectionView protocol
@@ -86,10 +86,9 @@
         FHPersonalHomePageFeedCollectionViewCell *feedListCell = (FHPersonalHomePageFeedCollectionViewCell *)cell;
         if(index >= 0 && index < self.tabListModel.data.tabList.count) {
             FHPersonalHomePageTabItemModel *itemModel = self.tabListModel.data.tabList[index];
-            feedListCell.homePageManager = self.homePageManager;
-            [feedListCell updateTabName:itemModel.name index:index];
+            [feedListCell updateHomePageManager:self.homePageManager TabName:itemModel.name index:index];
             if(index == self.homePageManager.currentIndex) {
-                [feedListCell startLoadData];
+                [self feedListVCLoadData:index];
             }
         }
     }
@@ -101,12 +100,14 @@
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    if([scrollView isKindOfClass:[UICollectionView class]]) {
-        UICollectionView *collectionView = (UICollectionView *)scrollView;
-        UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:self.homePageManager.currentIndex inSection:0]];
-        if([cell isKindOfClass:[FHPersonalHomePageFeedCollectionViewCell class]]) {
-            FHPersonalHomePageFeedCollectionViewCell *feedListCell = (FHPersonalHomePageFeedCollectionViewCell *)cell;
-            [feedListCell startLoadData];
+    [self feedListVCLoadData:self.homePageManager.currentIndex];
+}
+
+- (void)feedListVCLoadData:(NSInteger)index {
+    if(index >= 0 && index < self.homePageManager.feedListVCArray.count) {
+        FHPersonalHomePageFeedListViewController *feedVC = self.homePageManager.feedListVCArray[index];
+        if([feedVC isKindOfClass:[FHPersonalHomePageFeedListViewController class]]) {
+            [feedVC firstLoadData];
         }
     }
 }
@@ -117,6 +118,9 @@
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self.homePageManager collectionViewDidScroll:scrollView];
+}
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [self.homePageManager collectionViewDidEndDragging:scrollView];
 }
 
 @end
