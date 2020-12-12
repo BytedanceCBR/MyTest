@@ -34,6 +34,7 @@
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
 @property(nonatomic,copy) NSString *categoryId;
 @property(nonatomic,strong) NSMutableArray *dataList;
+@property(nonatomic,assign) BOOL isFeedError;
 @end
 
 @implementation FHPersonalHomePageFeedListViewModel
@@ -46,6 +47,7 @@
         _dataList = [NSMutableArray array];
         _detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
         _detailJumpManager.refer = 1;
+        _isFeedError = NO;
         [self configTableView];
     }
     return self;
@@ -57,12 +59,20 @@
     
     self.cellManager = [[FHUGCCellManager alloc] init];
     [self.cellManager registerAllCell:self.tableView];
-    
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"error_cell"];
+
     WeakSelf;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         StrongSelf;
         [self requestData:NO first:NO];
     }];
+    self.viewController.emptyView.retryBlock = ^{
+        StrongSelf;
+        self.isFeedError = NO;
+        [self.tableView reloadData];
+        [self.viewController retryLoadData];
+    };
+    
     self.refreshFooter.hidden = YES;
     self.tableView.mj_footer = self.refreshFooter;
 }
@@ -143,8 +153,9 @@
 
 
 - (void)showErrorViewNoNetWork {
-    [self setFeedError:YES];
+    self.isFeedError = YES;
     [self.viewController.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
+    self.tableView.backgroundColor = [UIColor themeWhite];
     self.refreshFooter.hidden = YES;
     [self.tableView reloadData];
 }
@@ -159,6 +170,7 @@
 - (void)reloadTableViewDataWithHasMore:(BOOL)hasMore {
     if(self.dataList.count > 0){
         [self.viewController.emptyView hideEmptyView];
+        self.tableView.backgroundColor = [UIColor themeGray7];
 
         self.tableView.mj_footer.hidden = NO;
         if (hasMore) {
@@ -168,11 +180,12 @@
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }
         [self.homePageManager refreshScrollStatus];
-        [self setFeedError:NO];
+        self.isFeedError = NO;
     }else{
+        self.tableView.backgroundColor = [UIColor themeWhite];
         [self.viewController.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
         self.refreshFooter.hidden = YES;
-        [self setFeedError:YES];
+        self.isFeedError = YES;
     }
     [self.tableView reloadData];
 }
@@ -224,10 +237,21 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if(self.isFeedError) {
+        return 1;
+    }
     return self.dataList.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(self.isFeedError) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"error_cell"];
+        if(!cell) {
+            cell = [[UITableViewCell alloc] init];
+        }
+        [cell.contentView addSubview:self.viewController.emptyView];
+        return cell;
+    }
     NSInteger index = indexPath.row;
     if(index >= 0 && index < self.dataList.count) {
         FHFeedUGCCellModel *cellModel = self.dataList[index];
@@ -246,6 +270,9 @@
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(self.isFeedError) {
+        return CGRectGetHeight(self.tableView.frame);
+    }
     NSInteger index = indexPath.row;
     if(index >= 0 && index < self.dataList.count) {
         FHFeedUGCCellModel *cellModel = self.dataList[index];
@@ -258,19 +285,14 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(self.isFeedError) {
+        return;
+    }
     NSInteger index = indexPath.row;
     if(index >= 0 && index < self.dataList.count) {
         FHFeedUGCCellModel *cellModel = self.dataList[index];
         self.detailJumpManager.currentCell = [tableView cellForRowAtIndexPath:indexPath];
         [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
-    }
-}
-
--(void)setFeedError:(BOOL)isError {
-    NSMutableArray *feedErrorArray =  self.homePageManager.feedErrorArray;
-    NSInteger index = self.viewController.index;
-    if(index >= 0 && index < feedErrorArray.count){
-        feedErrorArray[index] = @(isError);
     }
 }
 

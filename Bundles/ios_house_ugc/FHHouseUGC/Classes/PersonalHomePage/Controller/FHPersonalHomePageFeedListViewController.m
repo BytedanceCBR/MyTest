@@ -33,7 +33,7 @@
     self.tableView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.tableView];
     
-    [self addDefaultEmptyViewFullScreen];
+    self.emptyView = [[FHErrorView alloc] init];
 }
 
 - (void)initViewModel {

@@ -53,9 +53,11 @@
     self.viewController.headerView.sectionTitles = self.titleArray;
 
     if(model.data.tabList.count > 0) {
+        self.homePageManager.isNoFeed = NO;
         [self.collectionView reloadData];
         [self updateSelectCell:0];
     } else {
+        self.homePageManager.isNoFeed = YES;
         [self.viewController.emptyView showEmptyWithTip:@"TA没有留下任何足迹，去其他地方看看吧！" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
     }
 }

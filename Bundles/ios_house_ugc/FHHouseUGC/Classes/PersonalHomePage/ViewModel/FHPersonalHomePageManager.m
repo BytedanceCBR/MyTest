@@ -29,7 +29,6 @@
 @property(nonatomic,assign) BOOL scrollViewScrollEnable;
 @property(nonatomic,assign) BOOL tableViewScrollEnable;
 @property(nonatomic,weak) FHPersonalHomePageTabListModel *tabListModel;
-@property(nonatomic,assign) BOOL isFeedError;
 @property(nonatomic,assign) CGFloat beginOffset;
 @property(nonatomic,assign) CGFloat lastOffset;
 @end
@@ -38,10 +37,9 @@
 
 -(instancetype)init {
     if(self = [super init]) {
-        self.feedErrorArray = [NSMutableArray array];
         self.feedListVCArray = [NSMutableArray array];
         self.userId = @"";
-        self.isFeedError = NO;
+        self.isNoFeed = YES;
         self.scrollViewScrollEnable = YES;
         self.tableViewScrollEnable = NO;
         self.viewController = nil;
@@ -85,7 +83,6 @@
     CGFloat feedViewControllerHeight = SCREEN_HEIGHT - self.navBar.height;
     self.feedViewController.view.frame = CGRectMake(0, profileInfoViewHeight, SCREEN_WIDTH, feedViewControllerHeight);
     
-    [self initFeedStatus:tabListModel.data.tabList.count];
     [self initFeedListVCArray:tabListModel.data.tabList.count];
     
     [self.feedViewController updateWithHeaderViewMdoel:tabListModel];
@@ -122,14 +119,6 @@
     self.tracerDict = tracerDict;
 }
 
-- (void)initFeedStatus:(NSInteger)count {
-    NSMutableArray *feedErrorArray = [NSMutableArray array];
-    for(NSInteger i = 0;i < count;i++) {
-        [feedErrorArray addObject:@(YES)];
-    }
-    self.feedErrorArray = feedErrorArray;
-}
-
 - (void)initFeedListVCArray:(NSInteger)count {
     NSMutableArray *feedListVCArray = [NSMutableArray array];
     for(NSInteger i = 0;i < count;i++) {
@@ -143,9 +132,10 @@
     CGFloat tabListOffset = [self tabListOffset];
     CGFloat backViewOffset = 120 + self.safeArea - self.navBar.height;
     CGFloat nameLabelOffset = 190 + self.safeArea - self.navBar.height;
+    CGFloat shadowViewHeight = 160 + self.safeArea;
     
 
-    if(!self.isFeedError){
+    if(!self.isNoFeed){
         if(offset >= tabListOffset) {
             scrollView.contentOffset = CGPointMake(0, tabListOffset);
             self.scrollViewScrollEnable = NO;
@@ -159,8 +149,14 @@
         }
     }
 
+
     offset = self.scrollView.contentOffset.y;
     if(offset < 0) {
+        self.profileInfoView.shadowView.transform = CGAffineTransformMakeScale(1 + offset/(-shadowViewHeight), 1 + offset/(-shadowViewHeight));
+        CGRect frame = self.profileInfoView.shadowView.frame;
+        frame.origin.y = offset;
+        self.profileInfoView.shadowView.frame = frame;
+        
         self.navBar.bgView.alpha = 0;
         self.navBar.title.alpha = 0;
     } else if(offset <= backViewOffset) {
@@ -247,14 +243,6 @@
 
 -(UIScrollView *)scrollView {
     return self.viewController.scrollView;
-}
-
--(BOOL)isFeedError {
-    if(self.currentIndex >= 0 && self.currentIndex < self.feedErrorArray.count) {
-        NSNumber *isError = self.feedErrorArray[self.currentIndex];
-        return [isError boolValue];
-    }
-    return YES;
 }
 
 -(void)scrollsToTop {
