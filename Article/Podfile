@@ -398,7 +398,7 @@ def appPods
 #    'Core',
 #    'Debug',
 #    ]
-    pod 'BDInstall', '1.5.0',:subspecs => [
+    pod 'BDInstall', '1.5.1',:subspecs => [
     	'Core',
     	'IDFA',
     	'URLConfig/China'
