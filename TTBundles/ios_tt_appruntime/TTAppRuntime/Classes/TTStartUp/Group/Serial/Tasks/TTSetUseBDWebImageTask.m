@@ -37,6 +37,8 @@ DEC_TASK("TTSetUseBDWebImageTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+9);
         }
         return nil;
     };
+    // 开启全局降采样，防止大图片解码内存暴涨
+    [BDWebImageManager sharedManager].enableAllImageDownsample = YES;
 }
 
 - (BOOL)isBDWebImageEnable {

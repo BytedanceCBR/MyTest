@@ -1136,7 +1136,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 CGRect rectInTableView = [tableView rectForRowAtIndexPath:indexPath];
                 CGRect rectInWindow = [tableView convertRect:rectInTableView toView:[tableView superview]];
 
-                CGFloat targetOriginY = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType] + topHeight + rectInWindow.origin.y + rectInWindow.size.height + kFHHomeSearchbarHeight;
+                CGFloat targetOriginY = [[FHHomeCellHelper sharedInstance] heightForFHHomeHeaderCellViewType] + topHeight + rectInWindow.origin.y + rectInWindow.size.height;
                 //超出屏幕的cell
                 if (targetOriginY > [UIScreen mainScreen].bounds.size.height) {
                     if (_maxFirstScreenCount == 0) {

@@ -48,6 +48,7 @@
 #import "SSCommonLogic.h"
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import <TTFavoriteViewController.h>
 
 NSInteger const kCustomEditControlWidth = 53.f;
 
@@ -465,6 +466,14 @@ NSInteger const kCustomEditControlWidth = 53.f;
             [statParams setValue:article.itemID forKey:@"item_id"];
             [statParams setValue:article.aggrType forKey:@"aggr_type"];
             [statParams setValue:orderedData forKey:@"ordered_data"];
+            
+            if([self.delegate isKindOfClass:[TTFavoriteViewController class]]){
+                [statParams setValue:@"click_favorite" forKey:@"origin_from"];
+                [statParams setValue:@"favorite" forKey:@"enter_from"];
+                NSString *groupId = [NSString stringWithFormat:@"%@",@(article.uniqueID)];
+                NSDictionary *tracer = @{@"origin_from":@"click_favorite",@"enter_from":@"favorite",@"group_id":groupId};
+                [statParams setValue:tracer forKey:@"tracer"];
+            }
             
             //打开详情页：优先判断openURL是否可以用外部schema打开，否则判断内部schema
             

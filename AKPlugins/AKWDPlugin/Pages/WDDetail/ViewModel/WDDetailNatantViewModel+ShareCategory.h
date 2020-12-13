@@ -13,6 +13,11 @@
 
 @interface WDDetailNatantViewModel (ShareCategory)
 
+- (NSString *)shareTitle;
+- (NSString *)shareDesc;
+- (NSString *)shareUrl;
+- (NSString *)shareImgUrl;
+- (UIImage *)shareImage;
 - (NSArray<id<TTActivityContentItemProtocol>> *)wd_shareItems;
 
 @end

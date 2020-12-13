@@ -32,7 +32,7 @@ static const CGFloat sliderWidth = 16.f;
 @property (nonatomic, strong) UIView *slider;
 
 //data
-@property (nonatomic , strong) NSArray *items;
+@property (nonatomic , copy) NSArray *items;
 
 @end
 

@@ -28,6 +28,7 @@
 #import "FHHouseDeatilRGCImageCell.h"
 #import "FHHouseDeatilRGCVideoCell.h"
 #import "FHUGCFullScreenVideoCell.h"
+#import "FHUGCShortVideoListCell.h"
 
 @interface FHUGCCellManager ()
 
@@ -67,7 +68,8 @@
                                 @"FHHouseDeatilRGCVideoCell",
                                 @"FHUGCAnswerCell",
                                 @"FHUGCQuestionCell",
-                                @"FHUGCFullScreenVideoCell"
+                                @"FHUGCFullScreenVideoCell",
+                                @"FHUGCShortVideoListCell"
                                 //可扩展
                                  ];
 }
@@ -140,6 +142,8 @@
             
         case FHUGCFeedListCellSubTypeFullVideo:
             return [FHUGCFullScreenVideoCell class];
+        case FHUGCFeedListCellSubTypeSmallVideoList:
+            return [FHUGCShortVideoListCell class];
             
         default:
             break;

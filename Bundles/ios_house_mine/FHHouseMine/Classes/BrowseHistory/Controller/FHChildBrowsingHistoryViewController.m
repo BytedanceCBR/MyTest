@@ -87,6 +87,9 @@
         make.edges.mas_equalTo(self.view);
     }];
     [self.view addSubview:self.tableView];
+    if (self.houseType != FHHouseTypeRentHouse) {
+        self.tableView.backgroundColor = [UIColor themeGray7];
+    }
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(self.view);
     }];
