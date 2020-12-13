@@ -639,7 +639,7 @@ def testPods
     pod 'FHErrorHubManager', '1.0.15'
     pod 'BDiOSDebugBinary', '0.0.4'
     pod 'BDTracker/Debug', '2.5.2'
-    pod 'BDInstall/Debug', '1.5.0'
+    pod 'BDInstall/Debug', '1.5.1'
 end
 
 target 'NewsLiteInHouse' do
