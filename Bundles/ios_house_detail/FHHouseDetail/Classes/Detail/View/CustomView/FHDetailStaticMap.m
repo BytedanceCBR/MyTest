@@ -232,6 +232,9 @@ const CGFloat kStaticMapHWRatio  = 7.0f / 16.0f;
     if (self.loaded) {
         return;
     }
+    if (!self.backLayerUrl.length) {
+        return;
+    }
     NSURL *URL = [NSURL URLWithString:self.backLayerUrl];
 
     CGFloat scale = SCREEN_SCALE;

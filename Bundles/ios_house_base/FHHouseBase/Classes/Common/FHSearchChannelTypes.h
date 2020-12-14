@@ -21,6 +21,7 @@ extern NSString const *CHANNEL_ID;
 extern NSString const *CHANNEL_ID_RECOMMEND; //首页二手房推荐 ✅
 extern NSString const *CHANNEL_ID_RECOMMEND_RENT; //首页租房推荐 ✅
 extern NSString const *CHANNEL_ID_RELATED_HOUSE; //相关二手房 ✅
+extern NSString const *CHANNEL_ID_NEIGHBOR_RELATED_HOUSE; ////小区详情页周边房源
 extern NSString const *CHANNEL_ID_RELATED_RENT; //相关租房 ✅
 extern NSString const *CHANNEL_ID_RELATED_NEIGHBORHOOD; //相关小区 ✅
 extern NSString const *CHANNEL_ID_SEARCH_COURT; //新房搜索 ✅
@@ -33,6 +34,7 @@ extern NSString const *CHANNEL_ID_SEARCH_RENT_WITH_BANNER; //租房大类页 ✅
 
 extern NSString const *CHANNEL_ID_SUGGESTION; //suggestion ✅
 extern NSString const *CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE; //同小区房源 ✅
+extern NSString const *CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE_NEIGHBOR; //同小区在售房源 ✅
 extern NSString const *CHANNEL_ID_SAME_NEIGHBORHOOD_RENT; //同小区租房 ✅
 extern NSString const *CHANNEL_ID_NEIGHBORHOOD_RECOMMEND_HOUSE; //小区推荐房源
 extern NSString const *CHANNEL_ID_RECOMMEND_SEARCH; //猜你想找 ✅

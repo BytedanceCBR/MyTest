@@ -14,6 +14,8 @@
 #import "FHNeighborhoodDetailViewController.h"
 #import <TTRoute/TTRoute.h>
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "FHSearchHouseModel.h"
+
 
 @interface FHNeighborhoodDetailCoreInfoSC ()
 
@@ -64,7 +66,7 @@
             [weakSelf addSoldClick:model.subMessageModel.soldUrl];
         };
         cell.clickOnSaleblock = ^{
-            [weakSelf addOnSaleClick:model.subMessageModel.onSaleUrl];
+            [weakSelf addOnSaleClick];
         };
         cell.clickAveragePriceblock = ^{
             [weakSelf addAveragePriceClick];
@@ -119,33 +121,68 @@
 //    }
 //}
 
-- (void)addOnSaleClick:(NSString *)url {
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];
+- (void)addOnSaleClick {
+    FHDetailNeighborhoodModel *detailModel = (FHDetailNeighborhoodModel*)self.detailViewController.viewModel.detailData;
+    NSString *neighborhood_id = @"be_null";
+    if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {
+        neighborhood_id = detailModel.data.neighborhoodInfo.id;
+    }
+    NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
+    tracerDic[@"enter_type"] = @"click";
+    tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB;
+    tracerDic[@"category_name"] = @"same_neighborhood_list";
+    tracerDic[@"element_from"] = @"same_neighborhood";
+    tracerDic[@"enter_from"] = @"neighborhood_detail";
+    [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
+    
+    NSMutableDictionary *userInfo = [NSMutableDictionary new];
+    userInfo[@"tracer"] = tracerDic;
+    userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+    if (detailModel.data.neighborhoodInfo.name.length > 0) {
+        userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
+    } else {
+        userInfo[@"title"] = @"小区房源";// 默认值
+    }
+    if (neighborhood_id.length > 0) {
+        userInfo[@"neighborhood_id"] = neighborhood_id;
+    }
+    if (self.detailViewController.viewModel.houseId.length > 0) {
+        userInfo[@"house_id"] = self.detailViewController.viewModel.houseId;
+    }
+    userInfo[@"list_vc_type"] = @(5);
+    
+    TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
+    NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
+    if (urlStr.length > 0) {
+        NSURL *url = [NSURL URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
+    }
 }
 
 - (void)addAveragePriceClick {
     NSMutableDictionary *params = @{}.mutableCopy;
     
     NSMutableDictionary *userInfo = @{}.mutableCopy;
-    userInfo[@"route"] = [@"/neighbor_price_detail" btd_stringByURLEncode];
+    userInfo[@"route"] = @"/neighbor_price_detail";
     
 //    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-    
+    //{"average_price_detail":"均价详情页"}
     NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
-    tracerDict[@"element_from"] = @"map";
+    tracerDict[@"element_from"] = @"average_price_detail";
     tracerDict[@"enter_from"] = @"neighborhood_detail";
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
     
-    
-    if (self.detailViewController.viewModel.detailData) {
-        
-        params[@"neighbor_info"] = [[self.detailViewController.viewModel.detailData toDictionary] btd_safeJsonStringEncoded];
+    if (self.detailViewController.viewModel.oritinDetailData) {
+        params[@"neighbor_info"] = self.detailViewController.viewModel.oritinDetailData;
+    } else if (self.detailViewController.viewModel.detailData) {
+        params[@"neighbor_info"] = [[self.detailViewController.viewModel.detailData.data toDictionary] btd_safeJsonStringEncoded];
     }
     
     userInfo[@"params"] = [params btd_jsonStringEncoded];
     
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
 }
+
 - (void)addSoldClick:(NSString *)url {
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];
 }

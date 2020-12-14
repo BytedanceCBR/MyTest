@@ -281,12 +281,13 @@
 + (JSONKeyMapper*)keyMapper
 {
     NSDictionary *dict = @{
-        @"openUrl": @"open_irl",
+        @"openUrl": @"open_url",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
     }];
 }
+
 + (BOOL)propertyIsOptional:(NSString *)propertyName
 {
     return YES;

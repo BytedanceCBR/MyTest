@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHNeighborhoodDetailViewController *detailController;
 @property (nonatomic, strong)   FHDetailNeighborhoodModel       *detailData; // 详情页数据：FHDetailOldDataModel等
+@property (nonatomic, copy) NSData *oritinDetailData;
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, strong) NSDictionary *extraInfo;
 @property (nonatomic, copy)   NSString* houseInfoBizTrace; // 房源详情下发通用bizTrace

@@ -9,7 +9,7 @@
 #import "FHDetailHeaderTitleView.h"
 #import "FHVideoAndImageItemCorrectingView.h"
 #import "FHCommonDefines.h"
-#import <ByteDanceKit/NSString+BTDAdditions.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHNeighborhoodDetailMediaHeaderView ()
 
@@ -52,6 +52,7 @@
     [self addSubview:self.scrollView];
 //    [self addSubview:self.bottomGradientView];
     self.itemView = [[FHVideoAndImageItemCorrectingView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 20)];
+    self.itemView.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
     self.itemView.hidden = YES;
 
     [self addSubview:self.itemView];
@@ -107,16 +108,16 @@
 
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);//
-        make.width.mas_equalTo(self.scrollView.mas_width);
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-16);//
+        make.width.mas_equalTo(0);
         make.height.mas_equalTo(20);
     }];
     
     [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(44);
         make.height.mas_equalTo(22);
-        make.right.mas_equalTo(self.scrollView.mas_right).offset(-15);
-        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);
+        make.right.mas_equalTo(self.scrollView.mas_right).offset(-9);
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-16);
     }];
 
     [self layoutIfNeeded];
@@ -146,6 +147,13 @@
         self.itemView.hidden = NO;
         [self setNeedsLayout];
         [self layoutIfNeeded];
+        [self.itemView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(self.itemArray.count * 44);
+        }];
+        CGRect frame = self.itemView.frame;
+        frame.size.width = self.itemArray.count * 44;
+        self.itemView.frame = frame;
+        [self.itemView setNeedsLayout];
         self.itemView.titleArray = _itemArray;
         [self.itemView selectedItem:_itemArray[0]];
     } else {

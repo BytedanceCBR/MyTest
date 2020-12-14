@@ -8,6 +8,7 @@
 #import "FHNeighborhoodDetailSubMessageCollectionCell.h"
 #import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHNeighborhoodDetailSubMessageCollectionCell ()
 @property (nonatomic, weak) YYLabel *priceLabel;
@@ -135,13 +136,13 @@
             make.left.equalTo(self.priceLabel);
         }];
         [self.arrowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.monthUpLabel);
+            make.centerY.equalTo(self.monthUp);
             make.left.equalTo(self.monthUpLabel.mas_right).offset(4);
             make.size.mas_equalTo(CGSizeMake(10, 10));
         }];
         [self.sepLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.containerView.mas_bottom);
-            make.height.mas_equalTo(0.5);
+            make.height.mas_equalTo([UIDevice btd_onePixel]);
             make.left.equalTo(self.contentView).offset(12);
             make.right.equalTo(self.contentView).offset(-12);
         }];
@@ -149,7 +150,7 @@
             make.top.mas_equalTo(self.sepLine).offset(16);
             make.bottom.mas_equalTo(self.contentView).offset(-16);
             make.centerX.mas_equalTo(self.contentView);
-            make.width.mas_equalTo(0.5);
+            make.width.mas_equalTo([UIDevice btd_onePixel]);
         }];
         
         [self.soldTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -262,7 +263,8 @@
 
 - (UIView *)containerView {
     if (!_containerView) {
-        UIView *containerView = [[UIView alloc]init];
+        UIView *containerView = [[UIView alloc] init];
+        containerView.userInteractionEnabled = NO;
         [self addSubview: containerView];
         _containerView = containerView;
     }
@@ -333,7 +335,7 @@
 - (UIImageView *)arrowImageView{
     if(!_arrowImageView){
         UIImageView *iamgeView = [[UIImageView alloc]init];
-        iamgeView.image = [UIImage imageNamed:@"arrow_right"];
+        iamgeView.image = [UIImage imageNamed:@"neighbor_detail_arrow_right"];
         _arrowImageView = iamgeView;
         [self.containerView addSubview:_arrowImageView];
     }
@@ -363,7 +365,7 @@
 - (UIImageView *)arrowOnSaleImageView{
     if(!_arrowOnSaleImageView){
         UIImageView *iamgeView = [[UIImageView alloc]init];
-        iamgeView.image = [UIImage imageNamed:@"arrow_right"];
+        iamgeView.image = [UIImage imageNamed:@"neighbor_detail_arrow_right"];
         _arrowOnSaleImageView = iamgeView;
         [self.contentView addSubview:_arrowOnSaleImageView];
     }
@@ -373,7 +375,7 @@
 - (UIImageView *)arrowSoldImageView{
     if(!_arrowSoldImageView){
         UIImageView *iamgeView = [[UIImageView alloc]init];
-        iamgeView.image = [UIImage imageNamed:@"arrow_right"];
+        iamgeView.image = [UIImage imageNamed:@"neighbor_detail_arrow_right"];
         _arrowSoldImageView = iamgeView;
         [self.contentView addSubview:_arrowSoldImageView];
     }

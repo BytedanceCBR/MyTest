@@ -9,6 +9,9 @@
 #import "FHEnvContext.h"
 #import "FHDetailStaticMapCell.h"
 #import "AMapSearchAPI.h"
+#import "MAMapView.h"
+#import "FHCommonDefines.h"
+#import "MAAnnotation.h"
 #import "MAMapKit.h"
 #import "FHDetailMapViewSnapService.h"
 #import <ByteDanceKit/ByteDanceKit.h>
@@ -17,7 +20,8 @@
 
 @interface FHNeighborhoodDetailMapCollectionCell ()<AMapSearchDelegate, FHStaticMapDelegate, MAMapViewDelegate>
 
-@property (nonatomic, strong) FHDetailStaticMap *mapView;
+//@property (nonatomic, strong) FHDetailStaticMap *mapView;
+@property(nonatomic, strong) MAMapView *mapView;
 @property (nonatomic, strong) UIImageView *nativeMapImageView;
 @property (nonatomic, strong) UIButton *mapMaskBtn;
 
@@ -26,7 +30,7 @@
 @property (nonatomic, strong) UIButton *baiduPanoButton;
 
 @property (nonatomic, assign) CLLocationCoordinate2D centerPoint;
-@property (nonatomic, strong) AMapSearchAPI *searchApi;
+//@property (nonatomic, strong) AMapSearchAPI *searchApi;
 
 //@property (nonatomic, strong) NSArray *nameArray;
 @property (nonatomic, strong) FHStaticMapAnnotation *centerAnnotation;
@@ -94,15 +98,13 @@
         
     [self cleanSubViews];
     [self setupViews];
-    
-
     [self refreshWithDataPoiDetail];
 }
 
 - (void)cleanSubViews {
     
-    [self.mapView removeFromSuperview];
-    self.mapView = nil;
+//    [self.mapView removeFromSuperview];
+//    self.mapView = nil;
     
     [self.nativeMapImageView removeFromSuperview];
     self.nativeMapImageView = nil;
@@ -119,24 +121,38 @@
     layer.path = maskPath.CGPath;
     self.layer.mask = layer;
     
-    self.mapView = [FHDetailStaticMap mapWithFrame:self.contentView.bounds];
-    self.mapView.backgroundColor = [UIColor colorWithHexStr:@"#ececec"];
+//    self.mapView = [FHDetailStaticMap mapWithFrame:self.contentView.bounds];
+//    self.mapView.backgroundColor = [UIColor colorWithHexStr:@"#ececec"];
+//    self.mapView.delegate = self;
+//    [self.contentView addSubview:self.mapView];
+//    [self.contentView sendSubviewToBack:self.mapView];
+//    [self.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.edges.mas_equalTo(UIEdgeInsetsZero);
+//    }];
+    
+    self.mapView = [[MAMapView alloc] initWithFrame:self.contentView.bounds];
+    self.mapView.runLoopMode = NSRunLoopCommonModes;
+    self.mapView.showsCompass = NO;
+    self.mapView.showsScale = NO;
+    self.mapView.zoomEnabled = NO;
+    self.mapView.scrollEnabled = NO;
+    self.mapView.zoomLevel = 15.5;
+    self.mapView.showsUserLocation = NO;
     self.mapView.delegate = self;
+    self.mapView.hidden = NO;
     [self.contentView addSubview:self.mapView];
-    [self.contentView sendSubviewToBack:self.mapView];
     [self.mapView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
     
     //初始化静态地图
-//    if (useNativeMap) {
-//        self.nativeMapImageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
-//        self.nativeMapImageView.image = [UIImage imageNamed:@"map_detail_default_bg"];
-//        [self.contentView addSubview:self.nativeMapImageView];
-//        [self.nativeMapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-//            make.edges.mas_equalTo(UIEdgeInsetsZero);
-//        }];
-//    }
+    self.nativeMapImageView = [[UIImageView alloc] initWithFrame:self.contentView.bounds];
+    self.nativeMapImageView.image = [UIImage imageNamed:@"map_detail_default_bg"];
+    self.nativeMapImageView.hidden = YES;
+    [self.contentView addSubview:self.nativeMapImageView];
+    [self.nativeMapImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
     
     self.mapMaskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:self.mapMaskBtn];
@@ -187,7 +203,7 @@
     UIImageView *iconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:icon]];
     [itemView addSubview:iconImageView];
     [iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.mas_equalTo(itemView).mas_offset(-24);
+        make.centerX.mas_equalTo(itemView).mas_offset(-14);
         make.centerY.mas_equalTo(itemView);
         make.size.mas_equalTo(CGSizeMake(16, 16));
     }];
@@ -229,51 +245,53 @@
 - (void)refreshWithDataPoiDetail {
     FHNeighborhoodDetailMapCellModel *dataModel = (FHNeighborhoodDetailMapCellModel *) self.currentData;
     
-    self.baiduPanoButton.hidden = !dataModel.baiduPanoramaUrl.length;
-//    if (!dataModel.useNativeMap) {
-//        if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
-//            NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";
-//            [self mapView:self.mapView loadFinished:NO message:message];
-//            return;
-//        }
-//        [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
-//
-//        [self showPoiInfo];
-//    }
-    
-    
-
-}
-
-- (void)showPoiInfo {
-    
     //地图标签
     NSMutableArray *annotations = [NSMutableArray array];
     //center
     self.centerAnnotation.coordinate = self.centerPoint;
     [annotations addObject:self.centerAnnotation];
     
-    FHNeighborhoodDetailMapCellModel *dataModel = (FHNeighborhoodDetailMapCellModel *) self.currentData;
+    self.baiduPanoButton.hidden = !dataModel.baiduPanoramaUrl.length;
     
-//    if (dataModel.useNativeMap) {
-//        [self takeSnapWith:nil annotations:annotations];
-//    } else {
-//        [self.mapView removeAllAnnotations];
-//        [self.mapView addAnnotations:annotations];
-//    }
+//    [self.mapView loadMap:nil center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
+
+    [self takeSnapWith:nil annotations:annotations.copy];
+}
+
+- (void)showPoiInfo {
+    
+
+    
+//    FHNeighborhoodDetailMapCellModel *dataModel = (FHNeighborhoodDetailMapCellModel *) self.currentData;
+//    [self.mapView removeAllAnnotations];
+//    [self.mapView addAnnotations:annotations];
+
+    
 }
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
     CGRect frame = self.contentView.bounds;
-    WeakSelf;
-    [[FHDetailMapViewSnapService sharedInstance] takeSnapWith:self.centerPoint frame:frame targetRect:frame annotations:annotations delegate:self block:^(FHDetailMapSnapTask *task, UIImage *image, BOOL success) {
-        StrongSelf;
-        if (!success) {
-            //展示默认图
-            self.nativeMapImageView.image = [UIImage imageNamed:@"static_map_empty"];
-            return;
-        }
-    }];
+    self.mapView.centerCoordinate = self.centerPoint;
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    [self.mapView addAnnotations:annotations];
+    __weak typeof(self) weakSelf = self;
+//    [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
+//        if (state == 1) {
+//
+//        }
+//
+//    }];
+//    WeakSelf;
+//    [[FHDetailMapViewSnapService sharedInstance] takeSnapWith:self.centerPoint frame:frame targetRect:frame annotations:annotations delegate:self block:^(FHDetailMapSnapTask *task, UIImage *image, BOOL success) {
+//        StrongSelf;
+//        if (!success) {
+//            //展示默认图
+//            self.nativeMapImageView.image = [UIImage imageNamed:@"map_detail_default_bg"];
+//        } else {
+//            self.nativeMapImageView.image = image;
+//        }
+////        [self showPoiInfo];
+//    }];
 }
 
 #pragma FHStaticMapDelegate
@@ -287,39 +305,18 @@
         }
         
         UILabel *titleLabel = annotationView.titleLabel;
-        titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
+        titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 12);
         titleLabel.text = annotation.title;
         
-        CGSize size = CGSizeMake(MAX([titleLabel btd_widthWithHeight:15], 62), 62);
-        annotationView.imageView.frame = CGRectMake(size.width / 2 - 31 , 0, 62, 62);
+        CGSize size = CGSizeMake([titleLabel btd_widthWithHeight:12], 34 + 12);
+        annotationView.imageView.frame = CGRectMake(size.width / 2 - 17 , 0, 34, 34);
         
         [titleLabel sizeToFit];
-        titleLabel.center = CGPointMake(size.width / 2, 31 + 12);
+        titleLabel.center = CGPointMake(size.width / 2, size.height - titleLabel.frame.size.height / 2);
         
         annotationView.annotationSize = size;
         return annotationView;
     }
-    
-//    if ([annotation.extra isEqualToString:@"poi_annotation"]) {
-//        NSString *reuseIdentifier = @"poi_annotation";
-//        FHDetailStaticMapPOIAnnotationView *annotationView = (FHDetailStaticMapPOIAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:reuseIdentifier];
-//        if (!annotationView) {
-//            annotationView = [[FHDetailStaticMapPOIAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
-//        }
-//        UILabel *titleLabel = annotationView.titleLabel;
-//        titleLabel.frame = CGRectMake(0, 0, titleLabel.text.length * 13, 32);
-//        titleLabel.text = annotation.title;
-//        [titleLabel sizeToFit];
-//
-//        UIImageView *backImageView = annotationView.backImageView;
-//        backImageView.frame = CGRectMake(0, 0, titleLabel.frame.size.width + 40, 35);
-//        titleLabel.center = CGPointMake(backImageView.center.x, backImageView.center.y - 1);
-//
-//        annotationView.arrowView.frame = CGRectMake(backImageView.frame.size.width / 2.0 - 5, backImageView.frame.size.height - 12, 10.5, 10.5);
-//        annotationView.centerOffset = CGPointMake(0, -16);
-//        annotationView.annotationSize = CGSizeMake(CGRectGetWidth(backImageView.frame), CGRectGetHeight(backImageView.frame));
-//        return annotationView;
-//    }
     return [[FHStaticMapAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
 }
 
@@ -347,6 +344,46 @@
     [self refreshWithDataPoiDetail];
 }
 
+- (MAAnnotationView *)mapView:(MAMapView *)mapView viewForAnnotation:(id <MAAnnotation>)annotation {
+    if ([annotation isKindOfClass:[FHStaticMapAnnotation class]]) {
+        FHStaticMapAnnotation *staticMapAnnotation = (FHStaticMapAnnotation *) annotation;
+        if ([staticMapAnnotation.extra isEqualToString:@"center_annotation"]) {
+            NSString *reuseIdentifier = @"center_annotation";
+            MAAnnotationView *annotationView = (MAAnnotationView *) [mapView dequeueReusableAnnotationViewWithIdentifier:reuseIdentifier];
+            if (!annotationView) {
+                annotationView = [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuseIdentifier];
+            }
+
+//            UIView *contentView = [[UIView alloc] init];
+//            contentView.backgroundColor = [UIColor clearColor];
+//            contentView.opaque = NO;
+//
+//            UIImageView *imageView = [[UIImageView alloc] init];
+//            imageView.image = [UIImage imageNamed:@"detail_map_neighbor_annotation"];
+//            imageView.contentMode = UIViewContentModeCenter;
+//            [contentView addSubview:imageView];
+//
+//            UILabel *titleLabel = [[UILabel alloc] init];
+//            titleLabel.font = [UIFont themeFontMedium:12];
+//            titleLabel.textColor = [UIColor themeGray1];
+//            titleLabel.numberOfLines = 1;
+//            titleLabel.textAlignment = NSTextAlignmentCenter;
+//            titleLabel.text = annotation.title;
+//            [contentView addSubview:titleLabel];
+//            [titleLabel sizeToFit];
+//
+//            CGSize size = CGSizeMake([titleLabel btd_widthWithHeight:12], 34 + 12);
+//            contentView.frame = CGRectMake(0, 0, size.width, size.height);
+//            imageView.frame = CGRectMake(size.width / 2 - 17 , 0, 34, 34);
+//            titleLabel.center = CGPointMake(size.width / 2, size.height - titleLabel.frame.size.height / 2);
+
+            annotationView.image = [UIImage imageNamed:@"detail_map_neighbor_annotation"];
+            annotationView.centerOffset = CGPointMake(0, 0);
+            return annotationView;
+        }
+    }
+    return [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
+}
 
 @end
 

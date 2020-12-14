@@ -182,6 +182,13 @@
     self.editingLabel.height = 23;
 }
 
+- (void)updateFrameFromNeighborhoodDetail {
+    self.avatarView.left = 12;
+    self.userName.left = self.avatarView.right + 10;
+    self.descLabel.left = self.avatarView.right + 10;
+    self.userAuthLabel.left = self.userName.right + 4;
+}
+
 - (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
     //设置userInfo
     self.cellModel = cellModel;

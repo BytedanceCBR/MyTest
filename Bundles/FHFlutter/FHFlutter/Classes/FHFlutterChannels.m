@@ -35,6 +35,14 @@
 
 + (void)processChannelsImp:(FlutterMethodCall *)call callback:(FlutterResult)resultCallBack{
     
+    NSString *methodName = call.method;
+    if ([methodName isEqualToString:@"callPhone"]) {
+        [self callPhoneWithParam:call callback:resultCallBack];
+    } else if ([methodName isEqualToString:@"showConsultForm"]) {
+        [self showConsultFormWithParam:call callback:resultCallBack];
+    } else if ([methodName isEqualToString:@"jumpToIM"]) {
+        [self jumpToIMWithParam:call callback:resultCallBack];
+    }
 //    if ([@"invalidReasonDialog" isEqualToString:call.method]) {
 //        [FHFlutterChannels invalidReasonDialogWithParam:call callback:resultCallBack];
 //    } else if([@"callPhone" isEqualToString:call.method]) {
@@ -51,30 +59,6 @@
 }
 
 //电话线索
-//- (void)phoneCall:()
-
-//IM线索
-
-//表单线索
-
-+ (void)invalidReasonDialogWithParam:(FlutterMethodCall *)call callback:(FlutterResult)resultCallBack
-{
-//    if ([@"invalidReasonDialog" isEqualToString:call.method]) {
-//        NSDictionary *param = call.arguments;
-//        NSString *customerID = param[@"customer_id"];
-//        NSString *reportParamsStr = param[@"reportParams"];
-//        NSDictionary *reportPramsDict = [reportParamsStr btd_jsonDictionary];
-//
-//        [FHBInvalidReasonChooserDialog showWithCustomterId:customerID reportParams:reportPramsDict complete:^(NSString *submitId, BOOL success) {
-//            if (resultCallBack) {
-//                //                NSMutableDictionary *data = [NSMutableDictionary dictionary];
-//                //                [data setValue:@(success)  forKey:@"success"];
-//                resultCallBack(@(success));
-//            }
-//        }];
-//    }
-}
-
 + (void)callPhoneWithParam:(FlutterMethodCall *)call callback:(FlutterResult)resultCallBack{
     /*
     if ([[TTReachability reachabilityForInternetConnection] currentReachabilityStatus] == NotReachable) {
@@ -179,6 +163,36 @@
     }
      */
 }
+
+//表单线索
++ (void)showConsultFormWithParam:(FlutterMethodCall *)call callback:(FlutterResult)resultCallBack {
+    
+}
+
+//IM线索
++ (void)jumpToIMWithParam:(FlutterMethodCall *)call callback:(FlutterResult)resultCallBack {
+    
+}
+
++ (void)invalidReasonDialogWithParam:(FlutterMethodCall *)call callback:(FlutterResult)resultCallBack
+{
+//    if ([@"invalidReasonDialog" isEqualToString:call.method]) {
+//        NSDictionary *param = call.arguments;
+//        NSString *customerID = param[@"customer_id"];
+//        NSString *reportParamsStr = param[@"reportParams"];
+//        NSDictionary *reportPramsDict = [reportParamsStr btd_jsonDictionary];
+//
+//        [FHBInvalidReasonChooserDialog showWithCustomterId:customerID reportParams:reportPramsDict complete:^(NSString *submitId, BOOL success) {
+//            if (resultCallBack) {
+//                //                NSMutableDictionary *data = [NSMutableDictionary dictionary];
+//                //                [data setValue:@(success)  forKey:@"success"];
+//                resultCallBack(@(success));
+//            }
+//        }];
+//    }
+}
+
+
 
 
 + (void)broadCastEnterPageNotifyWithParam:(FlutterMethodCall *)call callback:(FlutterResult)resultCallBack{

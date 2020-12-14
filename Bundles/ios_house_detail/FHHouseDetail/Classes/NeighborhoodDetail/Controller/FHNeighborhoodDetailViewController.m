@@ -58,7 +58,7 @@
 #import "FHNeighborhoodDetailBaseInfoSC.h"
 #import "FHNeighborhoodDetailSurroundingNeighborSM.h"
 #import "FHNeighborhoodDetailSurroundingNeighborSC.h"
-
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -107,14 +107,24 @@
 
 - (void)initMapping {
     
-    NSArray *name = @[@"基础信息",@"小区专家",@"小区点评",@"小区测评",@"周边配套",@"小区房源",@"小区房源",@"周边房源",@"猜你喜欢"];
+    NSArray *name = @[@"基础信息",
+                      @"小区信息",
+                      @"小区专家",
+                      @"小区点评",
+                      @"小区测评",
+                      @"周边配套",
+                      @"小区户型",
+                      @"周边小区",
+                      @"周边房源",
+                      @"猜你喜欢"];
     NSArray *type = @[@(FHNeighborhoodDetailSectionTypeCoreInfo),
+                      @(FHNeighborhoodDetailSectionTypeBaseInfo),
                       @(FHNeighborhoodDetailSectionTypeAgent),
                       @(FHNeighborhoodDetailSectionTypeCommentAndQuestion),
                       @(FHNeighborhoodDetailSectionTypeStrategy),
                       @(FHNeighborhoodDetailSectionTypeSurrounding),
                       @(FHNeighborhoodDetailSectionTypeFloorpan),
-                      @(FHNeighborhoodDetailSectionTypeHouseSale),
+                      @(FHNeighborhoodDetailSectionTypeSurroundingNeighbor),
                       @(FHNeighborhoodDetailSectionTypeSurroundingHouse),
                       @(FHNeighborhoodDetailSectionTypeRecommend)
     ];
@@ -959,7 +969,7 @@
         return;
     }
     //locate the scrollview which is in the centre
-    CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + self.navBar.btd_height + self.segmentTitleView.btd_height);
+    CGPoint centerPoint = CGPointMake(20, scrollView.contentOffset.y + CGRectGetHeight(self.view.bounds)*0.4);
     NSArray *attributesArray = [self.detailFlowLayout layoutAttributesForElementsInRect:CGRectMake(centerPoint.x, centerPoint.y, 1, 1)];
     UICollectionViewLayoutAttributes *attributes = attributesArray.firstObject;
     NSIndexPath *indexPath = attributes.indexPath;

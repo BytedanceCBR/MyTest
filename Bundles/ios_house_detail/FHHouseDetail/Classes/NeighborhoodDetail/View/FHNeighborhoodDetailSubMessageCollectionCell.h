@@ -26,8 +26,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic ,copy) NSString *onSale;
 @property(nonatomic ,copy) NSString *sold;
-@property(nonatomic ,copy) NSString *onSaleUrl;
 @property(nonatomic ,copy) NSString *soldUrl;
+
+
 @end
 
 NS_ASSUME_NONNULL_END
