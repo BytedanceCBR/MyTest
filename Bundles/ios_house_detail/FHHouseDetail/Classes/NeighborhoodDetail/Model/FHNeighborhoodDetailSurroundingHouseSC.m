@@ -66,7 +66,7 @@
             FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)item.model;
             NSMutableDictionary *traceParam = [NSMutableDictionary new];
             traceParam[@"log_pb"] = [model logPb] ? : UT_BE_NULL;;
-            traceParam[@"element_from"] = @"recommend_house";
+            traceParam[@"element_from"] = @"related";
             traceParam[@"origin_from"] = self.detailTracerDict[@"origin_from"] ? : UT_BE_NULL;
             traceParam[@"origin_search_id"] = model.searchId ? : UT_BE_NULL;
             traceParam[@"search_id"] = model.searchId ? : UT_BE_NULL;
@@ -94,8 +94,8 @@
             NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
             tracerDic[@"enter_type"] = @"click";
             tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB;
-            tracerDic[@"category_name"] = @"same_neighborhood_list";
-            tracerDic[@"element_from"] = @"same_neighborhood";
+            tracerDic[@"category_name"] = @"old_list";
+            tracerDic[@"element_from"] = @"related";
             tracerDic[@"enter_from"] = @"neighborhood_detail";
             [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
             
@@ -135,7 +135,6 @@
 #pragma mark - IGListDisplayDelegate
 
 - (void)listAdapter:(IGListAdapter *)listAdapter willDisplaySectionController:(IGListSectionController *)sectionController {
-    
 }
 
 /**
@@ -158,7 +157,31 @@
  */
 
 - (void)listAdapter:(IGListAdapter *)listAdapter willDisplaySectionController:(IGListSectionController *)sectionController cell:(UICollectionViewCell *)cell atIndex:(NSInteger)index {
-    
+    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
+    if (index >= 0 && index < SM.items.count) {
+        FHHouseSecondCardViewModel *item = SM.items[index];
+        if (![item.model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+            return;
+        }
+        FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)item.model;
+        NSString *tempKey = [NSString stringWithFormat:@"%@_%ld", NSStringFromClass([self class]), index];
+        if ([self.elementShowCaches valueForKey:tempKey]) {
+            return;
+        }
+        [self.elementShowCaches setValue:@(YES) forKey:tempKey];
+        NSMutableDictionary *traceParam = [NSMutableDictionary new];
+        traceParam[@"log_pb"] = [model logPb] ? : UT_BE_NULL;;
+        traceParam[@"element_type"] = @"related";
+        traceParam[@"origin_from"] = self.detailTracerDict[@"origin_from"] ? : UT_BE_NULL;
+        traceParam[@"page_type"] = @"neighborhood_detail";
+        traceParam[@"house_type"] = @"old";
+        traceParam[@"search_id"] = model.searchId ? : UT_BE_NULL;
+        traceParam[@"group_id"] = model.groupId ? : UT_BE_NULL;
+        traceParam[@"rank"] = @(index);
+        traceParam[@"impr_id"] = model.imprId ? : UT_BE_NULL;
+        traceParam[@"enter_from"] = self.detailTracerDict[@"enter_from"];
+        [FHUserTracker writeEvent:@"house_show" params:traceParam];
+    }
 }
 
 /**

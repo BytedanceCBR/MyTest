@@ -146,8 +146,8 @@
         NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
         tracerDic[@"enter_type"] = @"click";
         tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB;
-        tracerDic[@"category_name"] = @"same_neighborhood_list";
-        tracerDic[@"element_from"] = @"same_neighborhood";
+        tracerDic[@"category_name"] = @"old_list";
+        tracerDic[@"element_from"] = @"neighborhood_sale_house";
         tracerDic[@"enter_from"] = @"neighborhood_detail";
         [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
         
@@ -195,7 +195,7 @@
     tracerDic[@"card_type"] = @"left_pic";
     tracerDic[@"log_pb"] = item.logPb;
     tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeSecondHandHouse];
-    tracerDic[@"element_from"] = @"same_neighborhood";
+    tracerDic[@"element_from"] = @"neighborhood_sale_house";
     tracerDic[@"enter_from"] = @"neighborhood_detail";
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeSecondHandHouse)}];
     NSString * urlStr = [NSString stringWithFormat:@"sslocal://old_house_detail?house_id=%@",item.hid];
@@ -224,7 +224,7 @@
     tracerDic[@"card_type"] = @"left_pic";
     tracerDic[@"log_pb"] = item.logPb ? item.logPb : @"be_null";
     tracerDic[@"house_type"] = @"old";
-    tracerDic[@"element_type"] = @"sale_same_neighborhood";
+    tracerDic[@"element_type"] = @"neighborhood_sale_house";
     tracerDic[@"search_id"] = item.searchId.length > 0 ? item.searchId : @"be_null";
     tracerDic[@"group_id"] = item.groupId.length > 0 ? item.groupId : (item.hid.length > 0 ? item.hid : @"be_null");
     tracerDic[@"impr_id"] = item.imprId.length > 0 ? item.imprId : @"be_null";
