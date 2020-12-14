@@ -274,6 +274,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 //113 二级页面基础信息
 @property (nonatomic, copy, nullable) NSDictionary *neighborhoodDetailModules;
+
+//113 均价走势页面的线索
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *priceTrendAssociateInfo;
 @end
 
 @interface FHDetailNeighborhoodModel : JSONModel

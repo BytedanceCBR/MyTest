@@ -62,6 +62,7 @@
                            @"neighborhoodEvaluation": @"neighborhood_evaluation",
                            @"neighborhoodDetailModules": @"neighborhood_detail_modules",
                            @"statsMinfo":@"stats_minfo",
+                           @"priceTrendAssociateInfo": @"price_trend_associate_info",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
