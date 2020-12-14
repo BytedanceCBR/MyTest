@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *rate;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *count;
 @end
 
 @interface FHDetailNeighborhoodDataNeighborhoodEvaluationModel : JSONModel

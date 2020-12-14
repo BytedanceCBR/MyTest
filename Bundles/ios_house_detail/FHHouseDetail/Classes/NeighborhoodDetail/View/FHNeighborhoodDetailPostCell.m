@@ -110,7 +110,7 @@
         
         CGFloat leftPadding = 12;
         CGFloat rightPadding = 12;
-        CGFloat topPadding = 16;
+        CGFloat topPadding = 10;
         
         CGFloat elementMargin = 10; //元素之间的间距
         
@@ -141,7 +141,7 @@
     
     CGFloat leftPadding = 12;
     CGFloat rightPadding = 12;
-    CGFloat topPadding = 16;//往上10个像素剩余10+6
+    CGFloat topPadding = 10;//往上10个像素剩余10+6
     
     CGFloat elementMargin = 10; //元素之间的间距
     
@@ -158,6 +158,7 @@
     self.userInfoView.userName.font = [UIFont themeFontMedium:14];
     [self.userInfoView updateFrameFromNeighborhoodDetail];
     self.userInfoView.moreBtn.hidden = YES;
+    self.userInfoView.userAuthLabel.left = self.userInfoView.userName.right + 2;
     
     // 文本内容标签
     self.contentLabel.frame = CGRectMake(leftPadding, self.userInfoView.bottom + elementMargin, self.contentContainer.width - leftPadding - rightPadding, 0);
