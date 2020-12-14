@@ -140,11 +140,13 @@ static CGFloat const kSectionHeaderHeight = 38;
                                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
                             }
                         }
+                        [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
                     });
                 });
+            } else {
+                [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
             }
         }
-        [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
     }];
 }
 
