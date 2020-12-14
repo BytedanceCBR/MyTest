@@ -11,6 +11,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UILabel+House.h>
 #import <BDWebImage/BDWebImage.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @implementation FHDetailAgentItemTagsViewCell
 
@@ -141,6 +142,8 @@
 
 - (void)setupUI {
     self.avatorView = [[FHRealtorAvatarView alloc] init];
+    self.avatorView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
+    self.avatorView.avatarImageView.layer.borderWidth = [UIDevice btd_onePixel];
     [self addSubview:self.avatorView];
     [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(50);
@@ -148,11 +151,11 @@
         make.top.mas_equalTo(self.topMargin);
     }];
     
-    self.nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    self.nameLabel = [[UILabel alloc] init];
     self.nameLabel.textColor = [UIColor themeGray1];
     self.nameLabel.font = [UIFont themeFontMedium:16];
     self.nameLabel.textAlignment = NSTextAlignmentLeft;
-    [self.nameLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];
+    [self.nameLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self addSubview:self.nameLabel];
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.avatorView.mas_right).offset(10);
@@ -261,9 +264,6 @@
     FHDetailContactModel *model = self.model;
     
     self.nameLabel.text = model.realtorName;
-    if (model.realtorName.length > 5) {
-        self.nameLabel.text = [NSString stringWithFormat:@"%@...",[model.realtorName substringToIndex:5]];
-    }
     self.agencyLabel.text = model.agencyName;
     [self.avatorView updateAvatarWithModel:model];
     
@@ -377,6 +377,15 @@
         [self.tagsView reloadData];
     } else {
         self.tagsView.hidden = YES;
+    }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    FHDetailContactModel *model = self.model;
+    if (!self.agencyBac.hidden && self.agencyLabel.frame.size.width > 0 && [model.agencyName btd_widthWithFont:self.agencyLabel.font height:self.agencyLabel.frame.size.height] > self.agencyLabel.frame.size.width) {
+        self.agencyBac.hidden = YES;
     }
 }
 

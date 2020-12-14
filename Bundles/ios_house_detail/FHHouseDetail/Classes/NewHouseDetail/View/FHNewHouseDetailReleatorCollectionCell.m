@@ -33,6 +33,8 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.avatorView = [[FHRealtorAvatarView alloc] init];
+        self.avatorView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
+        self.avatorView.avatarImageView.layer.borderWidth = [UIDevice btd_onePixel];
         [self.contentView addSubview:self.avatorView];
         [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.width.mas_equalTo(50);
@@ -44,7 +46,7 @@
         self.nameLabel.textColor = [UIColor themeGray1];
         self.nameLabel.font = [UIFont themeFontMedium:16];
         self.nameLabel.textAlignment = NSTextAlignmentLeft;
-        [self.nameLabel setContentHuggingPriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisHorizontal];  //这个好神奇！！！
+        [self.nameLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
         [self.contentView addSubview:self.nameLabel];
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
@@ -144,6 +146,15 @@
         }];
     }
     return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    FHDetailContactModel *model = (FHDetailContactModel *)self.currentData;
+    if (!self.agencyBac.hidden && self.agencyLabel.frame.size.width > 0 && [model.agencyName btd_widthWithFont:self.agencyLabel.font height:self.agencyLabel.frame.size.height] > self.agencyLabel.frame.size.width) {
+        self.agencyBac.hidden = YES;
+    }
 }
 
 - (void)bindViewModel:(id)viewModel {
