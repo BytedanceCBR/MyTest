@@ -21,9 +21,16 @@
 #import "ToastManager.h"
 #import "FHUserTracker.h"
 #import "FHCommonDefines.h"
+#import "FHUGCConfig.h"
 #import "FHUtils.h"
         
 
+
+@interface FHPersonalHomePageFeedListErrorItemModel: NSObject
+@end
+
+@implementation FHPersonalHomePageFeedListErrorItemModel
+@end
 
 @interface FHPersonalHomePageFeedListViewModel () <UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,FHUGCBaseCellDelegate>
 @property(nonatomic,weak) FHPersonalHomePageFeedListViewController *viewController;
@@ -36,6 +43,7 @@
 @property(nonatomic,copy) NSString *categoryId;
 @property(nonatomic,strong) NSMutableArray *dataList;
 @property(nonatomic,assign) BOOL isFeedError;
+@property(nonatomic,assign) BOOL isNoFeedAfterDelete;
 @end
 
 @implementation FHPersonalHomePageFeedListViewModel
@@ -49,6 +57,8 @@
         _detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
         _detailJumpManager.refer = 1;
         _isFeedError = NO;
+        _isNoFeedAfterDelete = NO;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         [self configTableView];
     }
     return self;
@@ -70,12 +80,14 @@
     self.emptyView.retryBlock = ^{
         StrongSelf;
         self.isFeedError = NO;
+        [self.dataList removeAllObjects];
         [self.tableView reloadData];
         [self.viewController retryLoadData];
     };
     
     self.refreshFooter.hidden = YES;
     self.tableView.mj_footer = self.refreshFooter;
+    self.tableView.hasMore = NO;
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -156,9 +168,9 @@
 - (void)showErrorViewNoNetWork {
     self.isFeedError = YES;
     [self setupEmptyView];
-    [self.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
     self.tableView.backgroundColor = [UIColor themeWhite];
     self.refreshFooter.hidden = YES;
+    [self.dataList addObject:[[FHPersonalHomePageFeedListErrorItemModel alloc] init]];
     [self.tableView reloadData];
 }
 
@@ -186,9 +198,9 @@
     }else{
         self.tableView.backgroundColor = [UIColor themeWhite];
         [self setupEmptyView];
-        [self.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
         self.refreshFooter.hidden = YES;
         self.isFeedError = YES;
+        [self.dataList addObject:[[FHPersonalHomePageFeedListErrorItemModel alloc] init]];
     }
     [self.tableView reloadData];
 }
@@ -247,6 +259,44 @@
     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 
+- (void)postDeleteSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo && self.dataList) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        [self deleteCell:cellModel];
+    }
+}
+
+- (void)deleteCell:(FHFeedUGCCellModel *)cellModel {
+    NSInteger row = [self getCellIndex:cellModel];
+    if(row >= 0 && row < self.dataList.count){
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        [self.dataList removeObjectAtIndex:row];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        if(self.dataList.count == 0) {
+            self.refreshFooter.hidden = YES;
+            if(self.tableView.hasMore) {
+                [self requestData:YES first:YES];
+            } else {
+                self.isNoFeedAfterDelete = YES;
+                [self setupEmptyView];
+                [self.dataList addObject:[[FHPersonalHomePageFeedListErrorItemModel alloc] init]];
+                self.tableView.backgroundColor = [UIColor whiteColor];
+                [self.tableView reloadData];
+            }
+        }
+    }
+}
+
+- (NSInteger)getCellIndex:(FHFeedUGCCellModel *)cellModel {
+    for (NSInteger i = 0; i < self.dataList.count; i++) {
+        FHFeedUGCCellModel *model = self.dataList[i];
+        if([model.groupId isEqualToString:cellModel.groupId]){
+            return i;
+        }
+    }
+    return -1;
+}
 
 #pragma mark TableView protocol
 
@@ -255,63 +305,71 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(self.isFeedError) {
-        return 1;
-    }
     return self.dataList.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(self.isFeedError) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"error_cell"];
-        if(!cell) {
-            cell = [[UITableViewCell alloc] init];
-        }
-        cell.contentView.backgroundColor = [UIColor themeWhite];
-        [cell.contentView addSubview:self.emptyView];
-        return cell;
-    }
     NSInteger index = indexPath.row;
     if(index >= 0 && index < self.dataList.count) {
-        FHFeedUGCCellModel *cellModel = self.dataList[index];
-        NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
-        FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        if (cell == nil) {
-            Class cellClass = NSClassFromString(cellIdentifier);
-            cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        id model = self.dataList[index];
+        if([model isKindOfClass:[FHPersonalHomePageFeedListErrorItemModel class]]) {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"error_cell"];
+            if(!cell) {
+                cell = [[UITableViewCell alloc] init];
+            }
+            if(self.isFeedError) {
+                [self.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
+            } else if(self.isNoFeedAfterDelete){
+                [self.emptyView showEmptyWithTip:@"你还没有发布任何内容，快去发布吧" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
+            }
+            cell.contentView.backgroundColor = [UIColor themeWhite];
+            [cell.contentView addSubview:self.emptyView];
+            return cell;
+        } else if([model isKindOfClass:[FHFeedUGCCellModel class]]) {
+            FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)model;
+            NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
+            FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+            if (cell == nil) {
+                Class cellClass = NSClassFromString(cellIdentifier);
+                cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
+                cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            }
+            cell.delegate = self;
+            [cell refreshWithData:cellModel];
+            return cell;
         }
-        cell.delegate = self;
-        [cell refreshWithData:cellModel];
-        return cell;
     }
     return [[FHUGCBaseCell alloc] init];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(self.isFeedError) {
-        return CGRectGetHeight(self.tableView.frame);
-    }
     NSInteger index = indexPath.row;
     if(index >= 0 && index < self.dataList.count) {
-        FHFeedUGCCellModel *cellModel = self.dataList[index];
-        Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
-        if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
-            return [cellClass heightForData:cellModel];
+        id model = self.dataList[index];
+        if([model isKindOfClass:[FHPersonalHomePageFeedListErrorItemModel class]]) {
+            return CGRectGetHeight(self.tableView.frame);
+        } else if([model isKindOfClass:[FHFeedUGCCellModel class]]) {
+            FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)model;
+            Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
+            if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
+                return [cellClass heightForData:cellModel];
+            }
         }
     }
     return 100;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(self.isFeedError) {
-        return;
-    }
     NSInteger index = indexPath.row;
     if(index >= 0 && index < self.dataList.count) {
-        FHFeedUGCCellModel *cellModel = self.dataList[index];
-        self.detailJumpManager.currentCell = [tableView cellForRowAtIndexPath:indexPath];
-        [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+        id model = self.dataList[index];
+        if([model isKindOfClass:[FHPersonalHomePageFeedListErrorItemModel class]]) {
+            return;
+        } else if([model isKindOfClass:[FHFeedUGCCellModel class]]) {
+            FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)model;
+            self.detailJumpManager.currentCell = [tableView cellForRowAtIndexPath:indexPath];
+            [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
+        }
     }
 }
 
