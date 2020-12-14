@@ -10,13 +10,13 @@
 #import "FHHouseFindHouseHelperViewModel.h"
 #import "FHHouseNewComponentViewModel+HouseCard.h"
 #import "UIColor+Theme.h"
+#import "FHListBaseCell+HouseCard.h"
 
 @implementation FHFindHouseHelperCell(HouseCard)
 
-static const char view_model_key;
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
+    [super setViewModel:viewModel];
     FHHouseFindHouseHelperViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseFindHouseHelperViewModel.class] ? (FHHouseFindHouseHelperViewModel *)viewModel : nil;
-    objc_setAssociatedObject(self, &view_model_key, cardViewModel, OBJC_ASSOCIATION_RETAIN);
     if (cardViewModel) {
         self.backgroundColor = [UIColor clearColor];
         [self refreshWithData:cardViewModel.model];
@@ -24,28 +24,6 @@ static const char view_model_key;
         self.cellTapAction = ^(NSString * _Nonnull url) {
             [wself cellDidClickAtIndexPath:nil];
         };
-    }
-}
-
-- (id<FHHouseNewComponentViewModelObserver>)viewModel {
-    return objc_getAssociatedObject(self, &view_model_key);
-}
-
-- (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
-        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
-        if ([cardViewModel respondsToSelector:@selector(showCardAtIndexPath:)]) {
-            [cardViewModel showCardAtIndexPath:indexPath];
-        }
-    }
-}
-
-- (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
-        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
-        if ([cardViewModel respondsToSelector:@selector(clickCardAtIndexPath:)]) {
-            [cardViewModel clickCardAtIndexPath:indexPath];
-        }
     }
 }
 

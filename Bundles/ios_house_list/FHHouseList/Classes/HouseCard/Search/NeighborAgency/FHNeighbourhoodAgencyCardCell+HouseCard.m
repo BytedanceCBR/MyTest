@@ -9,30 +9,17 @@
 #import <objc/runtime.h>
 #import "FHHouseNeighborAgencyViewModel.h"
 #import "FHHouseNewComponentViewModel+HouseCard.h"
+#import "FHListBaseCell+HouseCard.h"
 
 @implementation FHNeighbourhoodAgencyCardCell(HouseCard)
 
-static const char view_model_key;
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
+    [super setViewModel:viewModel];
     FHHouseNeighborAgencyViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseNeighborAgencyViewModel.class] ? (FHHouseNeighborAgencyViewModel *)viewModel : nil;
-    objc_setAssociatedObject(self, &view_model_key, cardViewModel, OBJC_ASSOCIATION_RETAIN);
     if (cardViewModel) {
         self.backgroundColor = [UIColor clearColor];
         [self refreshWithData:cardViewModel.model];
         [self updateHeightByIsFirst:cardViewModel.cardIndex == 0];
-    }
-}
-
-- (id<FHHouseNewComponentViewModelObserver>)viewModel {
-    return objc_getAssociatedObject(self, &view_model_key);
-}
-
-- (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
-        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
-        if ([cardViewModel respondsToSelector:@selector(showCardAtIndexPath:)]) {
-            [cardViewModel showCardAtIndexPath:indexPath];
-        }
     }
 }
 

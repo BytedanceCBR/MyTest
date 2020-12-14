@@ -9,13 +9,14 @@
 #import <objc/runtime.h>
 #import "FHHouseLynxViewModel.h"
 #import "FHHouseNewComponentViewModel+HouseCard.h"
+#import "FHListBaseCell+HouseCard.h"
 
 @implementation FHDynamicLynxCell(HouseCard)
 
 static const char view_model_key;
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
+    [super setViewModel:viewModel];
     FHHouseLynxViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseLynxViewModel.class] ? (FHHouseLynxViewModel *)viewModel : nil;
-    objc_setAssociatedObject(self, &view_model_key, cardViewModel, OBJC_ASSOCIATION_RETAIN);
     if (cardViewModel) {
         self.backgroundColor = [UIColor clearColor];
         FHDynamicLynxCellModel *cellModel = cardViewModel.model;
@@ -24,19 +25,6 @@ static const char view_model_key;
             [self updateWithCellModel:cellModel];
         }
         [self refreshWithData:cardViewModel.model];
-    }
-}
-
-- (id<FHHouseNewComponentViewModelObserver>)viewModel {
-    return objc_getAssociatedObject(self, &view_model_key);
-}
-
-- (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
-        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
-        if ([cardViewModel respondsToSelector:@selector(showCardAtIndexPath:)]) {
-            [cardViewModel showCardAtIndexPath:indexPath];
-        }
     }
 }
 

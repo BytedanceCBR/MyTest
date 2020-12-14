@@ -6,13 +6,10 @@
 //
 
 #import "FHSuggestionSubscribCell.h"
-#import "FHHouseCardTableViewCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHSuggestionSubscribCell(HouseCard)<FHHouseCardTableViewCellProtocol>
-
-@property (nonatomic, strong) id<FHHouseNewComponentViewModelProtocol> viewModel;
+@interface FHSuggestionSubscribCell(HouseCard)
 
 @end
 
