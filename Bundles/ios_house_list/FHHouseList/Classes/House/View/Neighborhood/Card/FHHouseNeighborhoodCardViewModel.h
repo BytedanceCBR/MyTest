@@ -5,7 +5,7 @@
 //  Created by bytedance on 2020/11/9.
 //
 
-#import "FHHouseNewComponentViewModel.h"
+#import "FHHouseNewComponentViewModel+HouseCard.h"
 #import "FHHouseCardCellViewModelProtocol.h"
 #import "FHSearchHouseModel.h"
 
@@ -13,11 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FHHouseTitleAndTagViewModel;
 @class FHImageModel;
-@interface FHHouseNeighborhoodCardViewModel : FHHouseNewComponentViewModel<FHHouseCardCellViewModelProtocol>
-
-@property (nonatomic, assign) NSInteger cardIndex;
-
-@property (nonatomic, assign) NSInteger cardCount;
+@interface FHHouseNeighborhoodCardViewModel : FHHouseNewComponentViewModel
 
 @property (nonatomic, strong, readonly) FHImageModel *leftImageModel;
 

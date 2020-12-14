@@ -50,7 +50,6 @@
         
         if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
             FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)model;
-            item.topMargin = 5;
             _recommendViewModel = [[FHHouseRecommendViewModel alloc] initWithModel:item.advantageDescription];
             self.leftImageModel = [item.houseImage firstObject];
             self.price = item.displayPrice;
@@ -164,11 +163,13 @@
 }
 
 - (void)adjustIfNeedWithPreviousViewModel:(id<FHHouseCardCellViewModelProtocol>)viewModel {
-    if (viewModel == nil) {
-        //如果在首位，topMargin=10
-        if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
-            FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
+    if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
+        if (viewModel == nil) {
+            //如果在首位，topMargin=10
             model.topMargin = 10;
+        } else {
+            model.topMargin = 5;
         }
     }
 }
