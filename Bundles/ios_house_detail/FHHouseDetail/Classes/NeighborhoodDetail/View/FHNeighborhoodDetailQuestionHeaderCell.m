@@ -97,7 +97,7 @@
     _rightBtn.imageView.contentMode = UIViewContentModeCenter;
     [_rightBtn setImage:[UIImage imageNamed:@"neighborhood_detail_comment_right_arror"] forState:UIControlStateNormal];
     [_rightBtn setImage:[UIImage imageNamed:@"neighborhood_detail_comment_right_arror"] forState:UIControlStateHighlighted];
-    [_rightBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
+    [_rightBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     _rightBtn.titleLabel.font = [UIFont themeFontRegular:14];
     [_rightBtn setTitle:@"查看全部" forState:UIControlStateNormal];
     [_rightBtn sizeToFit];
@@ -169,7 +169,7 @@
     
     [self.emptyContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.cornerLabel);
-        make.left.mas_equalTo(self.cornerLabel.mas_right).offset(1);
+        make.left.mas_equalTo(self.cornerLabel.mas_right).offset(5);
         make.right.mas_equalTo(self.questionWriteBtn.mas_left).offset(-6);
         make.height.mas_equalTo(20);
     }];

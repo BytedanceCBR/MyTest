@@ -137,7 +137,6 @@ id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
         contactPhone = model.data.contact;
         contactPhone.unregistered = YES;
     }
-    contactPhone.isInstantData = model.isInstantData;
     contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
@@ -207,13 +206,13 @@ id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
             self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
         });
         
-        if (!model.isInstantData && model.data) {
+        if (model.data) {
             [weakSelf requestRelatedData:model.data.neighborhoodInfo.id];
         }
     });
 
     
-    [self.detailController updateLayout:model.isInstantData];
+    [self.detailController updateLayout];
 }
 
 // 周边数据请求，当网络请求都返回后刷新数据

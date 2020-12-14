@@ -311,6 +311,7 @@
     self.detailFlowLayout = [[FHNeighborhoodDetailFlowLayout alloc] init];
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.detailFlowLayout];
     self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    self.collectionView.showsVerticalScrollIndicator = NO;
     UITapGestureRecognizer *tapGesturRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
     tapGesturRecognizer.cancelsTouchesInView = NO;
     tapGesturRecognizer.delegate = self;
@@ -568,25 +569,15 @@
     }
 }
 
-- (void)updateLayout:(BOOL)isInstant
+- (void)updateLayout
 {
     [self.collectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
-        if (isInstant) {
-            make.bottom.mas_equalTo(self.view);
-        } else {
-            make.bottom.mas_equalTo(self.bottomBar.mas_top);
-        }
+        make.bottom.mas_equalTo(self.bottomBar.mas_top);
     }];
-    self.bottomBar.hidden = isInstant;
-    self.bottomMaskView.hidden = isInstant;
-    self.bottomStatusBar.hidden = isInstant;
-
-    if (isInstant) {
-        [self.view bringSubviewToFront:self.collectionView];
-    } else {
-        [self.view sendSubviewToBack:self.collectionView];
-    }
+    self.bottomBar.hidden = NO;
+    self.bottomMaskView.hidden = NO;
+    [self.view sendSubviewToBack:self.collectionView];
     [self.view setNeedsUpdateConstraints];
 }
 
