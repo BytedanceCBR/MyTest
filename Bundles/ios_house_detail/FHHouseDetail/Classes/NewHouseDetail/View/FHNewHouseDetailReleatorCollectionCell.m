@@ -237,6 +237,9 @@
     } else {
         self.scoreLabel.hidden = YES;
     }
+    
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (NSString *)elementType {

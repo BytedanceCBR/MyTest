@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   UILabel     *scoreLabel; //服务分 + 小区熟悉度
 
 
--(instancetype)initWithModel:(FHDetailContactModel *)model topMargin:(CGFloat )topMargin;
+-(instancetype)initWithModel:(FHDetailContactModel *)model topMargin:(CGFloat )topMargin frame:(CGRect )frame;
 
 @end
 

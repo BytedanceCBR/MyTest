@@ -294,6 +294,8 @@
         self.tagsView.hidden = YES;
     }
     
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
 }
 
 - (NSString *)elementType {

@@ -129,8 +129,8 @@
 
 @implementation FHDetailAgentItemView
 
--(instancetype)initWithModel:(FHDetailContactModel *)model topMargin:(CGFloat )topMargin{
-    if (self = [super init]) {
+-(instancetype)initWithModel:(FHDetailContactModel *)model topMargin:(CGFloat )topMargin frame:(CGRect )frame{
+    if (self = [super initWithFrame:frame]) {
         self.topMargin = topMargin;
         self.model = model;
         
@@ -257,6 +257,7 @@
         make.right.mas_lessThanOrEqualTo(-10);
         make.height.mas_equalTo(18);
     }];
+    
 }
 
 - (void)refreshData {
@@ -378,6 +379,10 @@
     } else {
         self.tagsView.hidden = YES;
     }
+    
+    [self setNeedsLayout];
+    [self layoutIfNeeded];
+
 }
 
 - (void)layoutSubviews {

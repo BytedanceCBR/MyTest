@@ -103,7 +103,7 @@
             }else {
                 vHeight = 74;
             }
-            FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj topMargin:12];
+            FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj topMargin:12 frame:CGRectMake(0, marginTop, CGRectGetWidth(self.containerView.bounds), vHeight)];
             // 添加事件
             itemView.tag = idx;
             itemView.licenseButton.tag = idx;
@@ -113,7 +113,6 @@
             [itemView.licenseButton addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.imBtn addTarget:self action:@selector(imclick:) forControlEvents:UIControlEventTouchUpInside];
-            
             [self.containerView addSubview:itemView];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(marginTop);

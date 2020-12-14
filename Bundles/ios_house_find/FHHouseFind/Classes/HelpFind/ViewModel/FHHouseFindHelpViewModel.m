@@ -248,6 +248,7 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
             [FHLoginTrackHelper loginResult:trackerDict error:error];
             if(!error){
                 //记录上一次登录成功的行为
+                [[ToastManager manager] showToast:@"登录成功"];
                 [[NSUserDefaults standardUserDefaults] setObject:@"phone_sms" forKey:FHLoginTrackLastLoginMethodKey];
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
