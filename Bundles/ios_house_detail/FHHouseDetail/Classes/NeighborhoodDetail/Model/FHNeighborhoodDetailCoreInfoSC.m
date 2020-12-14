@@ -15,7 +15,7 @@
 #import <TTRoute/TTRoute.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "FHSearchHouseModel.h"
-
+#import <Flutter/Flutter.h>
 
 @interface FHNeighborhoodDetailCoreInfoSC ()
 
@@ -173,12 +173,12 @@
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
     
     if (self.detailViewController.viewModel.oritinDetailData) {
-        params[@"neighbor_info"] = self.detailViewController.viewModel.oritinDetailData;
+        params[@"neighbor_info"] = [FlutterStandardTypedData typedDataWithBytes:self.detailViewController.viewModel.oritinDetailData];
     } else if (self.detailViewController.viewModel.detailData) {
         params[@"neighbor_info"] = [[self.detailViewController.viewModel.detailData.data toDictionary] btd_safeJsonStringEncoded];
     }
     
-    userInfo[@"params"] = [params btd_jsonStringEncoded];
+    userInfo[@"params"] = params;
     
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
 }

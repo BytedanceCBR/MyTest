@@ -154,7 +154,8 @@
         if ([paramsDict isKindOfClass:[NSDictionary class]]) {
             [resultPrams addEntriesFromDictionary:paramsDict];
         }
-        
+    } else if ([paramsStr isKindOfClass:[NSDictionary class]]) {
+        [resultPrams addEntriesFromDictionary:(NSDictionary *)paramsStr];
     }
     NSString *reportStr = resultPrams[@"report_params"];
 
