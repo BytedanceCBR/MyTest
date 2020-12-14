@@ -42,6 +42,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath;
 
+- (void)setTitleMaxWidth:(CGFloat)maxWidth;
+
 @end
 
 NS_ASSUME_NONNULL_END
