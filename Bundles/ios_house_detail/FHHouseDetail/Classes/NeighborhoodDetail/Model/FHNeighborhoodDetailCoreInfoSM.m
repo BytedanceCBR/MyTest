@@ -29,7 +29,7 @@
     
     if (model.data.coreInfo.count == 3) {
         FHNeighborhoodDetailSubMessageModel *subMessageModel = [[FHNeighborhoodDetailSubMessageModel alloc] init];
-        subMessageModel.perSquareMetre = [((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[0]).val stringByAppendingString:@" 元/平"];
+        subMessageModel.perSquareMetre = [((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[0]).val stringByAppendingFormat:@" %@",((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[0]).unit];
         subMessageModel.monthUp = ((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[1]).value ?: @"0";
         subMessageModel.subTitleText = ((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[2]).value ?: @"上个月参考均价";
         

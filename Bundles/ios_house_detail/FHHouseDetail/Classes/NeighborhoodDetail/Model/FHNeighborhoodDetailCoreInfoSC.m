@@ -129,12 +129,12 @@
     }
     NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
     tracerDic[@"enter_type"] = @"click";
+    tracerDic[@"page_type"] = @"old_list";
     tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB;
-    tracerDic[@"category_name"] = @"same_neighborhood_list";
-    tracerDic[@"element_from"] = @"same_neighborhood";
+    tracerDic[@"category_name"] = @"old_list";
+    tracerDic[@"element_from"] = @"sale_house";
     tracerDic[@"enter_from"] = @"neighborhood_detail";
-    [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
-    
+    [tracerDic removeObjectForKey:@"card_type"];
     NSMutableDictionary *userInfo = [NSMutableDictionary new];
     userInfo[@"tracer"] = tracerDic;
     userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
@@ -207,11 +207,11 @@
     
     NSMutableDictionary *tracer = self.detailTracerDict.mutableCopy;
     
-    
-    [tracer setValue:[self clickPositionFromQucikEntryName:quickEntryName] forKey:@"element_from"];
-    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+    [tracer setObject:@"map_detail" forKey:@"page_type"];
+    [tracer setValue:@"top_map" forKey:@"element_from"];
+    [tracer setObject:@"neighborhood_detail" forKey:@"enter_from"];
+    [tracer setObject:@"be_null" forKey:@"element_type"];
     [infoDict setValue:tracer forKey:@"tracer"];
-    
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
