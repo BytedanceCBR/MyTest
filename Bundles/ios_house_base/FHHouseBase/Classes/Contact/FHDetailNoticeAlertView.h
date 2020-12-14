@@ -14,7 +14,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *phoneNum;
 @property (nonatomic, copy) void (^confirmClickBlock)(NSString *phoneNum,FHDetailNoticeAlertView *alertView);
 @property (nonatomic, copy) void (^tipClickBlock)(void);
+
+//二次弹框的拒绝联系block
 @property (nonatomic, copy) void (^revokeAssociateDistributionBlock)(void);
+@property (nonatomic, copy) void (^secondConfirmBlock)(void);
 
 - (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
 

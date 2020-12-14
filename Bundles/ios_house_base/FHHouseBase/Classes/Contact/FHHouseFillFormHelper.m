@@ -48,8 +48,11 @@ extern NSString *const kFHToastCountKey;
             NSMutableDictionary *params = [NSMutableDictionary dictionary];
             // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
             [params setObject:@(YES) forKey:@"need_pop_vc"];
-            NSMutableDictionary *tracerDict = associateReport.reportParams.mutableCopy;
-            params[TRACER_KEY] = tracerDict.copy;
+            if (associateReport.reportParams.count) {
+                [params addEntriesFromDictionary:associateReport.reportParams];
+            }
+            params[@"trigger"] = @"user";
+            params[@"enter_method"] = @"click_button";
             [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
                 if (type == TTAccountAlertCompletionEventTypeDone) {
                     // 登录成功
@@ -135,9 +138,19 @@ extern NSString *const kFHToastCountKey;
             if ([SSCommonLogic isEnableVerifyFormAssociate]) {
                 FHFormAssociateInfoControlInfoModel *controlInfo = model.data.associateInfo.controlInfo;
                 if (controlInfo && [controlInfo.verifyType isEqualToString:@"3"] && controlInfo.dialog) {
+                    __block NSMutableDictionary *popupDict = associateReport.reportParams.mutableCopy;
+                    popupDict[@"popup_name"] = @"inform_sucess";
+                    popupDict[UT_ELEMENT_TYPE] = @"inform_sucess";
+                    [FHUserTracker writeEvent:@"popup_show" params:popupDict.copy];
                     __weak FHDetailNoticeAlertView *weakAlertView = alertView;
                     [alertView setRevokeAssociateDistributionBlock:^{
                         [FHHouseFillFormHelper revokeFillFormAssociate:model.data.associateId alertView:weakAlertView];
+                        popupDict[UT_CLICK_POSITION] = @"refuse_contact";
+                        [FHUserTracker writeEvent:@"popup_click" params:popupDict.copy];
+                    }];
+                    [alertView setSecondConfirmBlock:^{
+                        popupDict[UT_CLICK_POSITION] = @"confirm";
+                        [FHUserTracker writeEvent:@"popup_click" params:popupDict.copy];
                     }];
                     FHFormAssociateInfoControlInfoDialogModel *dialogModel = controlInfo.dialog;
                     [alertView showOtherDialogWithTitle:dialogModel.title subTitle:dialogModel.content confirmTitle:dialogModel.confirmBtnText cancelTitle:dialogModel.cancelBtnText];
@@ -212,7 +225,7 @@ extern NSString *const kFHToastCountKey;
     if (reportParams[@"picture_type"]) {
         params[@"picture_type"] = reportParams[@"picture_type"];
     }
-    params[@"element_type"] = @"";
+    params[@"element_type"] = @"inform_popup";
 
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }

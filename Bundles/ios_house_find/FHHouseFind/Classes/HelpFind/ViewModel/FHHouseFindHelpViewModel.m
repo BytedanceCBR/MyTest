@@ -1264,6 +1264,10 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
         pcell.delegate = (id)self;
         self.contactCell = pcell;
         pcell.phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
+        if ([SSCommonLogic isEnableVerifyFormAssociate] && ![TTAccount sharedAccount].isLogin) {
+            pcell.phoneNum = @"";
+        }
+        
         [pcell showFullPhoneNum:NO];
         
 //        if([TTAccount sharedAccount].isLogin){
@@ -1330,6 +1334,7 @@ static const NSInteger kDefaultPriceIndex = 4;  //1.0.8版本将价格区间的�
     }
     if (indexPath.item == 0) {
         
+
         if([TTAccount sharedAccount].isLogin){
             return CGSizeMake(collectionView.frame.size.width, 90);
         }

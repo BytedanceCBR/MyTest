@@ -95,6 +95,12 @@
             }];
         } else {
             self.phoneInput.userInteractionEnabled = NO;
+            
+            [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.right.mas_equalTo(self.phoneInput);
+                make.top.mas_equalTo(self.singleLine.mas_bottom).mas_offset(20);
+        //        make.bottom.mas_equalTo(-20);
+            }];
         }
     } else {
         [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
