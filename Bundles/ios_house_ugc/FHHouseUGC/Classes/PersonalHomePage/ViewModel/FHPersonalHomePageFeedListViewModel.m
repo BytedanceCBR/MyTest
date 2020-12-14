@@ -20,6 +20,7 @@
 #import "FHFeedListModel.h"
 #import "ToastManager.h"
 #import "FHUserTracker.h"
+#import "FHCommonDefines.h"
 #import "FHUtils.h"
         
 
@@ -66,7 +67,7 @@
         StrongSelf;
         [self requestData:NO first:NO];
     }];
-    self.viewController.emptyView.retryBlock = ^{
+    self.emptyView.retryBlock = ^{
         StrongSelf;
         self.isFeedError = NO;
         [self.tableView reloadData];
@@ -154,7 +155,8 @@
 
 - (void)showErrorViewNoNetWork {
     self.isFeedError = YES;
-    [self.viewController.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
+    [self setupEmptyView];
+    [self.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
     self.tableView.backgroundColor = [UIColor themeWhite];
     self.refreshFooter.hidden = YES;
     [self.tableView reloadData];
@@ -169,7 +171,7 @@
 
 - (void)reloadTableViewDataWithHasMore:(BOOL)hasMore {
     if(self.dataList.count > 0){
-        [self.viewController.emptyView hideEmptyView];
+        [self.emptyView hideEmptyView];
         self.tableView.backgroundColor = [UIColor themeGray7];
 
         self.tableView.mj_footer.hidden = NO;
@@ -183,11 +185,27 @@
         self.isFeedError = NO;
     }else{
         self.tableView.backgroundColor = [UIColor themeWhite];
-        [self.viewController.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
+        [self setupEmptyView];
+        [self.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
         self.refreshFooter.hidden = YES;
         self.isFeedError = YES;
     }
     [self.tableView reloadData];
+}
+
+- (FHErrorView *)emptyView {
+    if(!_emptyView) {
+        _emptyView = [[FHErrorView alloc] init];
+        _emptyView.hidden = YES;
+    }
+    return _emptyView;
+}
+
+- (void)setupEmptyView {
+    CGFloat tablistHeight = self.homePageManager.feedViewController.headerView.hidden ? 0 : 44;
+    CGFloat height = (SCREEN_HEIGHT -  self.homePageManager.viewController.profileInfoView.viewHeight + tablistHeight);
+    self.emptyView.hidden = NO;
+    self.emptyView.frame = CGRectMake(0,0,SCREEN_WIDTH ,height);
 }
 
 #pragma mark UGC
@@ -249,7 +267,7 @@
         if(!cell) {
             cell = [[UITableViewCell alloc] init];
         }
-        [cell.contentView addSubview:self.viewController.emptyView];
+        [cell.contentView addSubview:self.emptyView];
         return cell;
     }
     NSInteger index = indexPath.row;

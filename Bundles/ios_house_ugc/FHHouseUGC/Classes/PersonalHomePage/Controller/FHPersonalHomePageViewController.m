@@ -18,12 +18,29 @@
 #import "TTAccountManager.h"
 #import <ToastManager.h>
 
+#define dragBackEdge 30
+
 @interface FHPersonalHomePageScrollView : UIScrollView <UIGestureRecognizerDelegate>
 @end
 
 @implementation FHPersonalHomePageScrollView
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(nonnull UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
+}
+
+@end
+
+@interface FHPersonalHomePageView : UIView
+@end
+
+@implementation FHPersonalHomePageView
+
+-(UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    if(point.x <= dragBackEdge) {
+        return self;
+    } else {
+        return [super hitTest:point withEvent:event];
+    }
 }
 
 @end
@@ -48,6 +65,11 @@
     return self;
 }
 
+-(void)loadView {
+    FHPersonalHomePageView *view = [[FHPersonalHomePageView alloc] initWithFrame: [UIScreen mainScreen].bounds];
+    self.view = view;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initView];
@@ -61,8 +83,7 @@
 }
 
 - (void)initView {
-    self.ttDisableDragBack = YES;
-
+    self.ttDragBackLeftEdge = dragBackEdge;
     [self initScrollView];
 
     self.profileInfoView = [[FHPersonalHomePageProfileInfoView alloc] initWithFrame:CGRectZero];
@@ -101,6 +122,7 @@
     self.customNavBarView.title.alpha = 0;
     self.customNavBarView.bgView.alpha = 0;
     self.customNavBarView.seperatorLine.alpha = 0;
+    self.customNavBarView.leftBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [self.view addSubview:self.customNavBarView];
     [self.customNavBarView mas_makeConstraints:^(MASConstraintMaker *maker) {
         if (@available(iOS 13.0 , *)) {

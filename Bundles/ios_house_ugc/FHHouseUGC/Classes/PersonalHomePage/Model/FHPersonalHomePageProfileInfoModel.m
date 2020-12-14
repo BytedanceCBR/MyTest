@@ -17,6 +17,7 @@
     @"verifiedContent": @"verified_content",
     @"bigAvatarUrl": @"big_avatar_url",
     @"logPb": @"log_pb",
+    @"FHomePageAuth" : @"f_homepage_auth"
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

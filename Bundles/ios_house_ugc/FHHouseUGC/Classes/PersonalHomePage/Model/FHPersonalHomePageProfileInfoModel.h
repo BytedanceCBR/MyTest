@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *avatarUrl;
 @property (nonatomic, copy , nullable) NSString *bigAvatarUrl;
 @property (nonatomic, copy , nullable) NSString *verifiedContent;
+@property (nonatomic, copy , nullable) NSString *FHomePageAuth;
 @end
 
 @interface FHPersonalHomePageProfileInfoModel : JSONModel

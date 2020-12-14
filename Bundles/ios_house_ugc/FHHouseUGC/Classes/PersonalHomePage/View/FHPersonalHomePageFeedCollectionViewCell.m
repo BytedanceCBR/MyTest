@@ -20,7 +20,6 @@
         self.feedVC = [[FHPersonalHomePageFeedListViewController alloc] init];
         self.feedVC.view.frame = self.contentView.frame;
         self.feedVC.tableView.frame = self.contentView.frame;
-        self.feedVC.emptyView.frame = self.contentView.frame;
         [self.contentView addSubview:self.feedVC.view];
     }
     return self;

@@ -10,7 +10,7 @@
 #import "TTInteractExitHelper.h"
 #import "TTAccountManager.h"
 #import "UIImageView+BDWebImage.h"
-#import "NSString+BTDAdditions.h"
+#import "UILabel+BTDAdditions.h"
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
@@ -42,7 +42,6 @@
 @property(nonatomic,strong) UILabel *descLabel;
 @property(nonatomic,strong) UIButton *changeButton;
 @property(nonatomic,strong) UIView *seperatorView;
-@property(nonatomic,assign) CGSize descLabelSize;
 @property (nonatomic, copy , nullable) NSString *bigAvatarUrl;
 @end
 
@@ -133,11 +132,12 @@
     }
     
     if(!isEmptyString(desc)) {
-        CGSize descLabelSize = [model.desc btd_sizeWithFont:[UIFont themeFontRegular:14] width:SCREEN_WIDTH - 40];
-        self.descLabel.text = model.desc;
+        desc = [NSString stringWithFormat:@"简介：%@",model.desc];
+        self.descLabel.text = desc;
+        CGFloat descLabelHeight = [self.descLabel btd_heightWithWidth:SCREEN_WIDTH - 40];
         CGFloat offset = isVerifyShow ? 118 : 90;
-        self.descLabel.frame = CGRectMake(20, offset, descLabelSize.width, descLabelSize.height);
-        backViewHeight = backViewHeight + 8 + descLabelSize.height;
+        self.descLabel.frame = CGRectMake(20, offset, SCREEN_WIDTH - 40, descLabelHeight);
+        backViewHeight = backViewHeight + 8 + descLabelHeight;
     }
 
     if([model.userId isEqualToString:[TTAccountManager userID]]) {

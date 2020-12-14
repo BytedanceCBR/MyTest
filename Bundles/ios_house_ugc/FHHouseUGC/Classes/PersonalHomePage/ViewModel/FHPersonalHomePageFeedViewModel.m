@@ -6,9 +6,11 @@
 //
 
 #import "FHPersonalHomePageFeedViewModel.h"
+#import "FHPersonalHomePageViewController.h"
 #import "FHPersonalHomePageFeedCollectionViewCell.h"
 #import "FHPersonalHomePageFeedListViewController.h"
 #import "FHPersonalHomePageManager.h"
+#import "TTAccountManager.h"
 #import "FHCommonDefines.h"
 
 
@@ -17,6 +19,7 @@
 @property(nonatomic,weak) UICollectionView *collectionView;
 @property(nonatomic,strong) NSArray *titleArray;
 @property(nonatomic,weak) FHPersonalHomePageTabListModel *tabListModel;
+@property(nonatomic,strong) FHErrorView *emptyView;
 @end
 
 @implementation FHPersonalHomePageFeedViewModel
@@ -33,6 +36,12 @@
 
 
 -(void)updateWithHeaderViewMdoel:(FHPersonalHomePageTabListModel *)model {
+    if(!self.homePageManager.isOpen) {
+        self.homePageManager.isNoFeed = YES;
+        [self setupEmptyView];
+        [self.emptyView showEmptyWithTip:@"TA暂时没有对外公开个人页面" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
+        return;
+    }
     self.tabListModel = model;
     
     NSMutableArray *titleArray = [NSMutableArray array];
@@ -58,8 +67,25 @@
         [self updateSelectCell:0];
     } else {
         self.homePageManager.isNoFeed = YES;
-        [self.viewController.emptyView showEmptyWithTip:@"TA没有留下任何足迹，去其他地方看看吧！" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
+        [self setupEmptyView];
+        NSString *emptyTip = [[TTAccountManager userID] isEqualToString:self.homePageManager.userId] ? @"你还没有发布任何内容，快去发布吧" :@"TA没有留下任何足迹，去其他地方看看吧！";
+        [self.emptyView showEmptyWithTip:emptyTip errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
     }
+}
+
+- (FHErrorView *)emptyView {
+    if(!_emptyView) {
+        _emptyView = [[FHErrorView alloc] init];
+        _emptyView.hidden = YES;
+    }
+    return _emptyView;
+}
+
+- (void)setupEmptyView {
+    CGFloat height = SCREEN_HEIGHT -  self.homePageManager.viewController.profileInfoView.viewHeight;
+    self.emptyView.frame = CGRectMake(0,0, SCREEN_WIDTH, height);
+    self.emptyView.hidden = NO;
+    [self.viewController.view addSubview:self.emptyView];
 }
 
 - (void)updateSelectCell:(NSInteger)index {

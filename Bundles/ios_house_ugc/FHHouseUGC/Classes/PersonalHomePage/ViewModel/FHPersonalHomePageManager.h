@@ -21,6 +21,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong) NSDictionary *tracerDict;
 @property(nonatomic,assign) CGFloat safeArea;
 @property(nonatomic,assign) BOOL isNoFeed;
+@property(nonatomic,assign) BOOL isOpen;
 @property(nonatomic,weak) FHPersonalHomePageViewController *viewController;
 @property(nonatomic,weak) FHPersonalHomePageFeedViewController *feedViewController;
 @property(nonatomic,strong) NSMutableArray<FHPersonalHomePageFeedListViewController *> *feedListVCArray;

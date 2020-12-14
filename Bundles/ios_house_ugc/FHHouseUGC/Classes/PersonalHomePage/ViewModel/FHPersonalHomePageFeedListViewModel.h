@@ -10,9 +10,10 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHPersonalHomePageFeedListViewModel : NSObject
+@property(nonatomic,weak) FHPersonalHomePageManager *homePageManager;
+@property(nonatomic,strong) FHErrorView *emptyView;
 - (instancetype)initWithController:(FHPersonalHomePageFeedListViewController *)viewController tableView:(UITableView *)tableView;
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst;
-@property(nonatomic,weak) FHPersonalHomePageManager *homePageManager;
 @end
 
 NS_ASSUME_NONNULL_END

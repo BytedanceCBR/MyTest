@@ -12,6 +12,7 @@
 #import "FHPersonalHomePageFeedViewController.h"
 #import "FHPersonalHomePageViewController.h"
 #import "FHPersonalHomePageFeedListViewController.h"
+#import "TTAccountManager.h"
 #import "TTAccount+Multicast.h"
 #import "FHHouseUGCAPI.h"
 #import "FHEnvContext.h"
@@ -47,6 +48,7 @@
         self.tabListModel = nil;
         self.beginOffset = 0;
         self.lastOffset = 0;
+        self.isOpen = YES;
         [TTAccount addMulticastDelegate:self];
     }
     return self;
@@ -70,6 +72,11 @@
 }
 
 -(void)updateProfileInfoWithModel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel {
+    if(!profileInfoModel) {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        return;
+    }
+    self.isOpen = [[TTAccountManager userID] isEqualToString:self.userId] || ![profileInfoModel.data.FHomePageAuth boolValue];
     self.tabListModel = tabListModel;
     
     NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
@@ -92,6 +99,10 @@
 }
 
 -(void)updateProfileInfoWithModel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel {
+    if(!profileInfoModel) {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
+        return;
+    }
     NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
     BOOL isVerifyShow = [vwhiteList containsObject:self.userId];
     
@@ -135,20 +146,17 @@
     CGFloat shadowViewHeight = 160 + self.safeArea;
     
 
-    if(!self.isNoFeed){
-        if(offset >= tabListOffset) {
+    if(offset >= tabListOffset) {
+        scrollView.contentOffset = CGPointMake(0, tabListOffset);
+        self.scrollViewScrollEnable = NO;
+        self.tableViewScrollEnable = YES;
+    } else {
+        if(!self.scrollViewScrollEnable) {
             scrollView.contentOffset = CGPointMake(0, tabListOffset);
-            self.scrollViewScrollEnable = NO;
-            self.tableViewScrollEnable = YES;
         } else {
-            if(!self.scrollViewScrollEnable) {
-                scrollView.contentOffset = CGPointMake(0, tabListOffset);
-            } else {
-                
-            }
+            
         }
     }
-
 
     offset = self.scrollView.contentOffset.y;
     if(offset < 0) {
@@ -267,6 +275,11 @@
         self.scrollViewScrollEnable = YES;
         self.tableViewScrollEnable = NO;
     }
+}
+
+- (void)setIsNoFeed:(BOOL)isNoFeed {
+    _isNoFeed = isNoFeed;
+    self.scrollView.scrollEnabled = !isNoFeed;
 }
 
 -(CGFloat)safeArea {

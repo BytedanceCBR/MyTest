@@ -21,20 +21,7 @@
 @implementation FHPersonalHomePageCollectionView
 
 //-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-//    if([[FHPersonalHomePageManager shareInstance].viewController.navigationController isKindOfClass:[TTNavigationController class]]){
-//        TTNavigationController *navigationController = (TTNavigationController *)[FHPersonalHomePageManager shareInstance].viewController.navigationController;
-//        if(otherGestureRecognizer == navigationController.panRecognizer){
-//            if(otherGestureRecognizer.state == UIGestureRecognizerStateBegan && self.contentOffset.x == 0) {
-//                return YES;
-//            }
-//        }
-//    }
-//
-//    return NO;
-//}
-
-//- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-//    return NO;
+//    return YES;
 //}
 
 @end
@@ -58,7 +45,6 @@
     
     [self initHeaderView];
     [self initCollectionView];
-    [self addDefaultEmptyViewFullScreen];
 }
 
 - (void)initHeaderView {

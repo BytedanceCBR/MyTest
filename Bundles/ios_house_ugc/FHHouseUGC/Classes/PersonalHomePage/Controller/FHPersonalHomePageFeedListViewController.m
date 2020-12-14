@@ -32,8 +32,6 @@
     self.tableView.backgroundColor = [UIColor themeGray7];
     self.tableView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.tableView];
-    
-    self.emptyView = [[FHErrorView alloc] init];
 }
 
 - (void)initViewModel {
@@ -59,7 +57,7 @@
 }
 
 -(void)retryLoadData {
-    [self.emptyView hideEmptyView];
+    [self.viewModel.emptyView hideEmptyView];
     [self startLoadData];
 }
 
