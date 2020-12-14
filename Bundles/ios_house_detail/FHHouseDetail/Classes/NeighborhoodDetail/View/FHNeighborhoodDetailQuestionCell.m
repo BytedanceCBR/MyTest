@@ -68,7 +68,7 @@
     
     [self.questionIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.bgView);
-        make.left.mas_equalTo(self.bgView).offset(16);
+        make.left.mas_equalTo(self.bgView).offset(12);
         make.width.height.mas_equalTo(18);
     }];
     
@@ -80,8 +80,8 @@
     
     [self.questionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.bgView);
-        make.left.mas_equalTo(self.questionIcon.mas_right).offset(5);
-        make.right.mas_equalTo(self.descLabel.mas_left).offset(-16);
+        make.left.mas_equalTo(self.questionIcon.mas_right).offset(4);
+        make.right.mas_equalTo(self.descLabel.mas_left).offset(-12);
         make.height.mas_equalTo(20);
     }];
 }
