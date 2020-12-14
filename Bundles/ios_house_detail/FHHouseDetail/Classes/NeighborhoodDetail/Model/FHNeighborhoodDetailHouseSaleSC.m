@@ -12,7 +12,7 @@
 #import "FHNeighborhoodDetailHouseSaleSM.h"
 #import "FHNeighborhoodDetailRecommendTitleView.h"
 #import "FHCommonDefines.h"
-#import "FHNeighborhoodDetailRecommendCell.h"
+#import "FHNeighborhoodDetailHouseSaleCell.h"
 #import "FHNeighborhoodDetailRelatedHouseMoreCell.h"
 #import "FHHouseSecondCardViewModel.h"
 
@@ -50,7 +50,7 @@
 - (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
     FHNeighborhoodDetailHouseSaleSM *SM = (FHNeighborhoodDetailHouseSaleSM *)self.sectionModel;
     if (index >= 0 && index < SM.items.count) {
-        FHNeighborhoodDetailRecommendCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailRecommendCell class] withReuseIdentifier:NSStringFromClass([SM class]) forSectionController:self atIndex:index];
+        FHNeighborhoodDetailHouseSaleCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailHouseSaleCell class] withReuseIdentifier:NSStringFromClass([SM class]) forSectionController:self atIndex:index];
         [cell refreshWithData:SM.items[index] withLast:(index == SM.items.count - 1) ? YES : NO];
         return cell;
     } else {
