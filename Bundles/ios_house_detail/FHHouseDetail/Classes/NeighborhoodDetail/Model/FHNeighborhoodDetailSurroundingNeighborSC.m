@@ -13,7 +13,7 @@
 #import "FHDetailNeighborhoodModel.h"
 #import "FHDetailRelatedNeighborhoodResponseModel.h"
 
-@interface FHNeighborhoodDetailSurroundingNeighborSC ()<IGListSupplementaryViewSource>
+@interface FHNeighborhoodDetailSurroundingNeighborSC ()<IGListSupplementaryViewSource, IGListDisplayDelegate>
 
 @end
 
@@ -36,11 +36,10 @@
         
 //        NSString *searchId = model.relatedNeighborhoodData.searchId;
         NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
-        tracerDic[@"enter_type"] = @"click";
-        tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB ? self.detailViewController.viewModel.listLogPB : @"be_null";
-        tracerDic[@"category_name"] = @"neighborhood_nearby_list";
-        tracerDic[@"element_type"] = @"be_null";
-        tracerDic[@"element_from"] = @"neighborhood_nearby";
+        tracerDic[UT_ENTER_TYPE] = @"click";
+        tracerDic[UT_LOG_PB] = self.detailViewController.viewModel.listLogPB ? self.detailViewController.viewModel.listLogPB : @"be_null";
+        tracerDic[UT_ELEMENT_FROM] = @"related_neighborhood";
+        tracerDic[UT_ENTER_FROM] = @"neighborhood_detail";
         
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
         infoDict[@"tracer"] = tracerDic;
@@ -81,6 +80,28 @@
     }
 }
 
+- (void)houseShowIndex:(NSInteger )index {
+    FHNeighborhoodDetailSurroundingNeighborSM *sectionModel = (FHNeighborhoodDetailSurroundingNeighborSM *)self.sectionModel;
+    if (index >= 0 && index < sectionModel.model.items.count) {
+        FHDetailRelatedNeighborhoodResponseDataItemsModel *item = sectionModel.model.items[index];
+        if (![item isKindOfClass:[FHDetailRelatedNeighborhoodResponseDataItemsModel class]]) {
+            return;
+        }
+        NSString *tempKey = [NSString stringWithFormat:@"%@_%ld", NSStringFromClass([self class]), (long)index];
+        if ([self.elementShowCaches valueForKey:tempKey]) {
+            return;
+        }
+        [self.elementShowCaches setValue:@(YES) forKey:tempKey];
+        NSMutableDictionary *traceParam = self.detailTracerDict.mutableCopy;
+        traceParam[UT_LOG_PB] = [item logPb] ? : UT_BE_NULL;;
+        traceParam[UT_ELEMENT_TYPE] = @"related_neighborhood";
+        traceParam[UT_PAGE_TYPE] = @"neighborhood_detail";
+        traceParam[UT_HOUSE_TYPE] = @"old";
+        traceParam[UT_RANK] = @(index);
+        [FHUserTracker writeEvent:@"house_show" params:traceParam];
+    }
+}
+
 - (NSInteger)numberOfItems {
     return 1;
 }
@@ -96,7 +117,7 @@
     [cell refreshWithData:sectionModel.model];
     __weak typeof(self) weakSelf = self;
     [cell setHouseShowBlock:^(NSUInteger index) {
-        
+        [weakSelf houseShowIndex:index];
     }];
     [cell setSelectIndexBlock:^(NSInteger index) {
         [weakSelf collectionCellClick:index];
