@@ -297,6 +297,8 @@ static APNsManager *_sharedManager = nil;
                     }
 
                     // 上报收集的信息
+                    BOOL isDebug = [[NSUserDefaults standardUserDefaults] boolForKey:@"kDelayTTRouteServiceRegister"];
+                    params[@"isDebug"] = @(isDebug);
                     params[@"handledOpenUrl"] = handledOpenURL.absoluteString;
                     params[@"push_user_info"] = userInfo.allInfo;
                     [[HMDTTMonitor defaultManager] hmdTrackService:@"f_apns_manager_push_vc_error"
