@@ -77,7 +77,7 @@
         
         [self.subnameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(12);
-            make.right.mas_equalTo(self).offset(-12);
+            make.right.mas_equalTo(self.mapBtn.mas_left).offset(17);
             make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(4);
             make.bottom.mas_equalTo(self);
         }];

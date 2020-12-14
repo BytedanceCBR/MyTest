@@ -108,6 +108,10 @@
     }
 }
 
+-(NSString *)elementType {
+    return  @"search_related";
+}
+
 @end
 
 @implementation FHNeighborhoodDetailRecommendCellModel

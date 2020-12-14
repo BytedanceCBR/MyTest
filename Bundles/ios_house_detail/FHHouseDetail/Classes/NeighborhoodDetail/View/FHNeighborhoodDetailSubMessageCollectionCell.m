@@ -6,12 +6,11 @@
 //
 
 #import "FHNeighborhoodDetailSubMessageCollectionCell.h"
-#import "YYLabel.h"
 #import "NSAttributedString+YYText.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHNeighborhoodDetailSubMessageCollectionCell ()
-@property (nonatomic, weak) YYLabel *priceLabel;
+@property (nonatomic, weak) UILabel *priceLabel;
 @property (nonatomic, strong) UILabel *monthUp;
 @property (nonatomic, strong) UILabel *subLabel;
 @property (nonatomic, weak) UILabel  *monthUpLabel;
@@ -54,11 +53,13 @@
     self.currentData = data;
     FHNeighborhoodDetailSubMessageModel *model = (FHNeighborhoodDetailSubMessageModel *)data;
     if (model) {
-        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:model.perSquareMetre];
+        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:model.perSquareMetre ?: @""];
         NSDictionary *commonTextStyle = @{ NSFontAttributeName:[UIFont themeFontMedium:24],NSForegroundColorAttributeName:[UIColor colorWithHexStr:@"#fe5500"]};
         [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
         NSRange tapRange = [attrText.string rangeOfString:@"元/平"];
         [attrText yy_setFont:[UIFont themeFontRegular:14] range:tapRange];
+        [attrText addAttribute:NSBaselineOffsetAttributeName value:@(-2) range:NSMakeRange(0, attrText.length)];//调整字号不同引起的底部不对齐
+        [attrText addAttribute:NSBaselineOffsetAttributeName value:@(-1) range:tapRange];//调整字号不同引起的底部不对齐
         self.priceLabel.attributedText = attrText;
         
         CGFloat value = [model.monthUp floatValue] * 100;
@@ -270,9 +271,9 @@
     }
     return _containerView;
 }
-- (YYLabel *)priceLabel {
+- (UILabel *)priceLabel {
     if (!_priceLabel) {
-        YYLabel *priceLabel = [[YYLabel alloc] init];
+        UILabel *priceLabel = [[UILabel alloc] init];
         [self.containerView addSubview:priceLabel];
         _priceLabel = priceLabel;
     }

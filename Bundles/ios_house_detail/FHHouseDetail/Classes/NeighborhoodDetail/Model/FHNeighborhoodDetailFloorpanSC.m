@@ -29,14 +29,25 @@
     return self;
 }
 
+- (void)didUpdateToObject:(id)object {
+    [super didUpdateToObject:object];
+    FHNeighborhoodDetailFloorpanSM *model = (FHNeighborhoodDetailFloorpanSM *)self.sectionModel;
+    if (model.shouldShowSaleHouse) {
+        self.inset = UIEdgeInsetsMake(0, 9, 0, 9);
+    } else {
+        self.inset = UIEdgeInsetsMake(0, 9, 12, 9);
+    }
+    
+}
 
 -(NSInteger)numberOfItems {
     return 1;
 }
 
 -(CGSize)sizeForItemAtIndex:(NSInteger)index {
+    FHNeighborhoodDetailFloorpanSM *model = (FHNeighborhoodDetailFloorpanSM *)self.sectionModel;
     CGFloat width = self.collectionContext.containerSize.width - 18;
-    return CGSizeMake(width, 95 + 12);
+    return [FHNeighborhoodDetailFloorpanCollectionCell cellSizeWithData:model.floorpanCellModel width:width];
 }
 
 -(__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {

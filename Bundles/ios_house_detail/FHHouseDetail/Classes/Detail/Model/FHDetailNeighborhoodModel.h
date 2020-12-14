@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *rate;
 @property (nonatomic, copy , nullable) NSString *title;
+@property (nonatomic, copy , nullable) NSString *count;
 @end
 
 @interface FHDetailNeighborhoodDataNeighborhoodEvaluationModel : JSONModel
@@ -179,6 +180,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *val;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *unit;
+@property (nonatomic, copy , nullable) NSString *identifier;
+
 @end
 
 
@@ -274,6 +277,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 //113 二级页面基础信息
 @property (nonatomic, copy, nullable) NSDictionary *neighborhoodDetailModules;
+
+//113 均价走势页面的线索
+@property (nonatomic, strong , nullable) FHClueAssociateInfoModel *priceTrendAssociateInfo;
 @end
 
 @interface FHDetailNeighborhoodModel : JSONModel
@@ -281,7 +287,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataModel *data ;
-@property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @end
 NS_ASSUME_NONNULL_END
 //END OF HEADER

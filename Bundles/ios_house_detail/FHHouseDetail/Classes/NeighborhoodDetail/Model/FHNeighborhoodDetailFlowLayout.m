@@ -8,12 +8,42 @@
 #import "FHNeighborhoodDetailFlowLayout.h"
 #import "FHNeighborhoodDetailShadowView.h"
 #import "FHNeighborhoodDetailSectionModel.h"
+#import <objc/runtime.h>
+@interface UICollectionViewLayoutAttributes (FHNeighborhoodDetail)
+
+@property (nonatomic, assign) FHNeighborhoodDetailSectionType sectionType;
+
+@end
+
+@implementation UICollectionViewLayoutAttributes (FHNeighborhoodDetail)
+
+- (void)setSectionType:(FHNeighborhoodDetailSectionType)sectionType {
+    objc_setAssociatedObject(self, @selector(sectionType), @(sectionType), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (FHNeighborhoodDetailSectionType)sectionType {
+    NSNumber *value = objc_getAssociatedObject(self, _cmd);
+    return value.unsignedIntegerValue;
+}
+
+@end
 
 @implementation FHNeighborhoodDetailFlowLayout
 
 - (void)prepareLayout {
     [super prepareLayout];
     [self registerClass:[FHNeighborhoodDetailShadowView class] forDecorationViewOfKind:NSStringFromClass([FHNeighborhoodDetailShadowView class])];
+}
+
+- (void)setSectionModels:(NSArray<FHNeighborhoodDetailSectionModel *> *)sectionModels {
+    _sectionModels = sectionModels;
+    self.hasShowFloorpanInfo = NO;
+    for (FHNeighborhoodDetailSectionModel *model in sectionModels) {
+        if (model.sectionType == FHNeighborhoodDetailSectionTypeFloorpan) {
+            self.hasShowFloorpanInfo = YES;
+            break;
+        }
+    }
 }
 
 - (NSArray<UICollectionViewLayoutAttributes *> *)layoutAttributesForElementsInRect:(CGRect)rect {
@@ -36,12 +66,13 @@
         }
 
         FHNeighborhoodDetailSectionModel *model = self.sectionModels[attribute.indexPath.section];
-
-        if (model.sectionType != FHNeighborhoodDetailSectionTypeHeader &&
-            model.sectionType != FHNeighborhoodDetailSectionTypeOwnerSellHouse &&
-            ![sections containsObject:@(model.sectionType)]) {
-            [sections addObject:@(model.sectionType)];
+        FHNeighborhoodDetailSectionType sectionType = model.sectionType;
+        if (sectionType != FHNeighborhoodDetailSectionTypeHeader &&
+            sectionType != FHNeighborhoodDetailSectionTypeOwnerSellHouse &&
+            ![sections containsObject:@(sectionType)]) {
+            [sections addObject:@(sectionType)];
             UICollectionViewLayoutAttributes *newAttrs = [self layoutAttributesForDecorationViewOfKind:NSStringFromClass([FHNeighborhoodDetailShadowView class]) atIndexPath:[NSIndexPath indexPathForItem:0 inSection:attribute.indexPath.section]];
+            newAttrs.sectionType = sectionType;
             if (newAttrs && newAttrs.frame.size.height > 0) {
                 [newArray addObject:newAttrs];
             }
@@ -50,8 +81,23 @@
     
     //小区详情页 如果同时出现 FHNeighborhoodDetailSectionTypeFloorpan FHNeighborhoodDetailSectionTypeHouseSale
     //则需要合并2个decoration的attrs
-    if ([sections containsObject:@(FHNeighborhoodDetailSectionTypeFloorpan)] && [sections containsObject:@(FHNeighborhoodDetailSectionTypeHouseSale)]) {
-        
+    if (self.hasShowFloorpanInfo) {
+        UICollectionViewLayoutAttributes *houseSaleAttributes = nil;
+        for (UICollectionViewLayoutAttributes * attribute in newArray) {
+            if (attribute.sectionType == FHNeighborhoodDetailSectionTypeHouseSale) {
+                houseSaleAttributes = attribute;
+            }
+        }
+
+        if (houseSaleAttributes) {
+            UICollectionViewLayoutAttributes *newAttributes = houseSaleAttributes.copy;
+            CGRect houseSaleFrame = houseSaleAttributes.frame;
+            houseSaleFrame.origin.y -= 40;
+            houseSaleFrame.size.height += 40;
+            newAttributes.frame = houseSaleFrame;
+            [newArray removeObject:houseSaleAttributes];
+            [newArray addObject:newAttributes];
+        }
     }
 
     return newArray;

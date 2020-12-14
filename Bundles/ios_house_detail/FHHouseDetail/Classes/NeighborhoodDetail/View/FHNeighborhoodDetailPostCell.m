@@ -26,7 +26,6 @@
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
 @property(nonatomic ,strong) FHUGCCellMultiImageView *multiImageView;
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
-@property(nonatomic ,strong) UIImageView *essenceIcon;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,assign) CGFloat imageViewheight;
 
@@ -52,11 +51,6 @@
     self.contentContainer = [UIView new];
     self.contentContainer.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:self.contentContainer];
-    
-    self.essenceIcon = [[UIImageView alloc] init];
-    _essenceIcon.image = [UIImage imageNamed:@"fh_ugc_wenda_essence_small"];
-    _essenceIcon.hidden = YES;
-    [self.contentContainer addSubview:_essenceIcon];
 
     // 用户信息区
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
@@ -110,7 +104,7 @@
         
         CGFloat leftPadding = 12;
         CGFloat rightPadding = 12;
-        CGFloat topPadding = 16;
+        CGFloat topPadding = 10;
         
         CGFloat elementMargin = 10; //元素之间的间距
         
@@ -141,7 +135,7 @@
     
     CGFloat leftPadding = 12;
     CGFloat rightPadding = 12;
-    CGFloat topPadding = 16;//往上10个像素剩余10+6
+    CGFloat topPadding = 10;//往上10个像素剩余10+6
     
     CGFloat elementMargin = 10; //元素之间的间距
     
@@ -154,8 +148,8 @@
     self.userInfoView.frame = CGRectMake(0, topPadding, self.contentContainer.width, userInfoViewHeight);
     //设置userInfo
     self.userInfoView.userAuthLabel.text = self.cellModel.user.userAuthInfo;
-    [self.userInfoView refreshWithData:self.cellModel];
     self.userInfoView.userName.font = [UIFont themeFontMedium:14];
+    [self.userInfoView refreshWithData:self.cellModel];
     [self.userInfoView updateFrameFromNeighborhoodDetail];
     self.userInfoView.moreBtn.hidden = YES;
     
@@ -194,15 +188,7 @@
     //图片
     [self.multiImageView updateImageView:self.cellModel.imageList largeImageList:self.cellModel.largeImageList];
     
-    if(self.cellModel.isStick && (self.cellModel.stickStyle == FHFeedContentStickStyleGood || self.cellModel.stickStyle == FHFeedContentStickStyleTopAndGood)){
-        self.essenceIcon.width = 42;
-        self.essenceIcon.height = 42;
-        self.essenceIcon.centerY = self.userInfoView.centerY;
-        self.essenceIcon.right = self.userInfoView.right - 12;
-        self.essenceIcon.hidden = NO;
-    }else{
-        self.essenceIcon.hidden = YES;
-    }
+
 }
 
 #pragma mark - TTUGCAsyncLabelDelegate
