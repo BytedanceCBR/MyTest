@@ -109,29 +109,17 @@
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    if ([self.customDataSource respondsToSelector:@selector(numberOfSectionsInTableView:)]) {
-        return [self.customDataSource numberOfSectionsInTableView:tableView];
-    }
-    
     NSArray *dataList = [self.fhHouse_dataSource fhHouse_dataList];
     return dataList.count;
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if ([self.customDataSource respondsToSelector:@selector(tableView:numberOfRowsInSection:)]) {
-        return [self.customDataSource tableView:tableView numberOfRowsInSection:section];
-    }
-    
     NSArray *dataList = [self.fhHouse_dataSource fhHouse_dataList];
     NSArray *items = [dataList btd_objectAtIndex:section class:NSArray.class];
     return [items count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.customDataSource respondsToSelector:@selector(tableView:cellForRowAtIndexPath:)]) {
-        return [self.customDataSource tableView:tableView cellForRowAtIndexPath:indexPath];
-    }
-    
     NSObject<FHHouseCardCellViewModelProtocol> *viewModel = [self getViewModelAtIndexPath:indexPath];
     if (viewModel == nil) return [[UITableViewCell alloc] init];
     
@@ -149,11 +137,6 @@
 
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.customDelegate respondsToSelector:@selector(tableView:willDisplayCell:forRowAtIndexPath:)]) {
-        [self.customDelegate tableView:tableView willDisplayCell:cell forRowAtIndexPath:indexPath];
-        return;
-    }
-    
     if ([cell conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)]) {
         UITableViewCell<FHHouseCardTableViewCellProtocol> *componentCell = (UITableViewCell<FHHouseCardTableViewCellProtocol> *)cell;
         if ([componentCell respondsToSelector:@selector(cellWillShowAtIndexPath:)]) {
@@ -163,11 +146,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didEndDisplayingCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.customDelegate respondsToSelector:@selector(tableView:didEndDisplayingCell:forRowAtIndexPath:)]) {
-        [self.customDelegate tableView:tableView didEndDisplayingCell:cell forRowAtIndexPath:indexPath];
-        return;
-    }
-    
     if ([cell conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol) ]) {
         UITableViewCell<FHHouseCardTableViewCellProtocol> *componentCell = (UITableViewCell<FHHouseCardTableViewCellProtocol> *)cell;
         if ([componentCell respondsToSelector:@selector(cellDidEndShowAtIndexPath:)]) {
@@ -177,10 +155,6 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.customDelegate respondsToSelector:@selector(tableView:heightForRowAtIndexPath:)]) {
-        return [self.customDelegate tableView:tableView heightForRowAtIndexPath:indexPath];
-    }
-    
     NSObject<FHHouseCardCellViewModelProtocol> *viewModel = [self getViewModelAtIndexPath:indexPath];
     if (viewModel == nil) return 0.0f;
     
@@ -208,11 +182,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if ([self.customDelegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
-        [self.customDelegate tableView:tableView didSelectRowAtIndexPath:indexPath];
-        return;
-    }
-    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if ([cell conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol) ]) {
