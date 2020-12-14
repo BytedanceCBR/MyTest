@@ -77,7 +77,7 @@
     NSArray *items = [dataList btd_objectAtIndex:indexPath.section class:NSArray.class];
     if (!items || items.count <= indexPath.row) return nil;
     id item = [items btd_objectAtIndex:indexPath.row];
-    if (![item conformsToProtocol:@protocol(FHHouseNewComponentViewModelProtocol)]) return nil;
+    if (![item conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) return nil;
     NSObject<FHHouseCardCellViewModelProtocol> *viewModel = (NSObject<FHHouseCardCellViewModelProtocol> *)item;
     if ([viewModel respondsToSelector:@selector(setCardIndex:)]) {
         viewModel.cardIndex = indexPath.row;

@@ -701,14 +701,7 @@ extern NSString *const INSTANT_DATA_KEY;
 }
 
 - (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRefresh:(BOOL)isRefresh isRecommendSearch:(BOOL)isRecommendSearch
-{
-//    {
-//        NSString *path = [[NSBundle mainBundle] pathForResource:@"house_test" ofType:@"json"];
-//        NSData *data = [NSData dataWithContentsOfFile:path];
-//        NSError *error0 = nil;
-//        model = (FHListSearchHouseModel *)[FHHouseListAPI generateModel:data class:FHListSearchHouseModel.class error:&error0];
-//    }
-    
+{    
     if (error) {
         if (self.houseType == FHHouseTypeNewHouse && isRefresh) {
             [self.houseNewTopViewModel loadFailedWithError:error];

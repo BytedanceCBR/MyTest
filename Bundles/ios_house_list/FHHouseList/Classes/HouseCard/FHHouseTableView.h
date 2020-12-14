@@ -9,10 +9,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol FHHouseNewComponentViewModelProtocol;
+@protocol FHHouseCardCellViewModelProtocol;
 @protocol FHHouseTableViewDataSource <NSObject>
 
-- (NSArray<NSArray<id<FHHouseNewComponentViewModelProtocol>> *> *)fhHouse_dataList;
+- (NSArray<NSArray<id<FHHouseCardCellViewModelProtocol>> *> *)fhHouse_dataList;
 
 //{ViewModelClassName: CellClassName}
 - (NSDictionary<NSString *, NSString *> *)fhHouse_supportCellStyles;
