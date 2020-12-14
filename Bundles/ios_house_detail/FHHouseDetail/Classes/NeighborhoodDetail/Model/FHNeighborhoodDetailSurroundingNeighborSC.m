@@ -69,8 +69,8 @@
         tracerDic[@"card_type"] = @"slide";
         tracerDic[@"log_pb"] = dataItem.logPb ? dataItem.logPb : @"be_null";
         tracerDic[@"house_type"] = [[FHHouseTypeManager sharedInstance] traceValueForType:FHHouseTypeNeighborhood];
-        tracerDic[@"element_from"] = @"neighborhood_nearby";
-        tracerDic[@"enter_from"] = @"old_detail";
+        tracerDic[UT_ELEMENT_FROM] = @"related_neighborhood";
+        tracerDic[UT_ENTER_FROM] = @"neighborhood_detail";
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer":tracerDic,@"house_type":@(FHHouseTypeNeighborhood)}];
         NSString * urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",dataItem.id];
         if (urlStr.length > 0) {
