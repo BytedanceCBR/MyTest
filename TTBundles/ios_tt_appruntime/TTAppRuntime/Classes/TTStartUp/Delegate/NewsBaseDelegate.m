@@ -678,20 +678,24 @@ static NSTimeInterval lastTime;
 
 - (UINavigationController*)appTopNavigationController {
     
-//    if ([TTDeviceHelper isPadDevice]) {
-//        _navigationController = (TTNavigationController*)(self.window.rootViewController);
-//    } else {
-        TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)self.window.rootViewController;
-        if ([rootTabController isKindOfClass:[TTArticleTabBarController class]]) {
-            _navigationController = (TTNavigationController*)rootTabController.selectedViewController;
-            if(![_navigationController isKindOfClass:[UINavigationController class]]){                
-                [[HMDTTMonitor defaultManager] hmdTrackService:@"route_nav_controller_wrong" attributes:@{@"class":[NSString stringWithFormat:@"%@",_navigationController]?:@"unknown"}];
-                _navigationController = nil;
-            }
-        }else if ([rootTabController isKindOfClass:[TTNavigationController class]]) {
-            _navigationController = (TTNavigationController *)rootTabController;            
-        }
-//    }
+    TTArticleTabBarController * rootTabController = (TTArticleTabBarController*)self.window.rootViewController;
+    if ([rootTabController isKindOfClass:[TTArticleTabBarController class]]) {
+        _navigationController = (TTNavigationController*)rootTabController.selectedViewController;
+
+    }else if ([rootTabController isKindOfClass:[TTNavigationController class]]) {
+        _navigationController = (TTNavigationController *)rootTabController;
+    }
+        
+    if(![_navigationController isKindOfClass:[UINavigationController class]]){
+        
+        NSMutableDictionary *categoryDict = [NSMutableDictionary dictionary];
+        categoryDict[@"reason"] = (_navigationController == nil) ? @"not found navVC" : NSStringFromClass(_navigationController.class);
+        NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
+
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"route_nav_controller_wrong" metric:nil category:categoryDict.copy extra:extraDict.copy];
+        
+        _navigationController = nil;
+    }
     
     return _navigationController;
 }

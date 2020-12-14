@@ -256,6 +256,7 @@ API_AVAILABLE(ios(10.0))
 - (void)bdug_handleRemoteNotification:(BDUGNotificationContent *)content withCompletionHandler:(void (^)(void))completionHandler
 {
     if (content.userInfo != nil) {
+        // push点击跳转进入应用时不展示开屏广告
         [TTAdSplashManager shareInstance].splashADShowType = TTAdSplashShowTypeHide;
     }
     // todo zjing badge & coldLaunch

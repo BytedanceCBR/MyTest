@@ -25,7 +25,6 @@
 #import "FHEnvContext.h"
 #import "JSONAdditions.h"
 #import "FHBaseViewController.h"
-#import "TTUIResponderHelper.h"
 #import "UIViewController+TTMovieUtil.h"
 #import "FHIntroduceManager.h"
 #import "TTPushServiceDelegate.h"
@@ -33,6 +32,11 @@
 #import "FHCHousePushUtils.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "HMDTTMonitor.h"
+#import <ios_house_im/UIView+Utils.h>
+#import <ByteDanceKit.h>
+#import <objc/message.h>
+#import "SSCommonLogic.h"
+#import <ReactiveObjC.h>
 
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
@@ -102,7 +106,13 @@ static APNsManager *_sharedManager = nil;
     [[TTTrackerSessionHandler sharedHandler] setLaunchFrom:BDTrackerLaunchFromRemotePush];
 
     if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
-        //正在展示隐私弹窗        
+        //正在展示隐私弹窗
+        NSMutableDictionary *params = [NSMutableDictionary dictionary];
+        params[@"reason"] = @"permission_popup_displaying";
+        [[HMDTTMonitor defaultManager] hmdTrackService:@"f_apns_manager_push_vc_error"
+                                                metric:nil
+                                              category:nil
+                                                 extra:params.copy];
         return;
     }
     //当push进来引导页已经在显示了，则关闭
@@ -124,7 +134,7 @@ static APNsManager *_sharedManager = nil;
         NSString* openURL = [userInfo objectForKey:@"o_url"];
         NSURL *theUrl = [NSURL URLWithString:openURL];
         if (theUrl == nil) {
-            theUrl = [TTStringHelper URLWithURLString:openURL];
+            theUrl = [NSURL btd_URLWithString:openURL];
         }
 
         TTRouteParamObj *paramObj = [[TTRoute sharedRoute] routeParamObjWithURL:theUrl];
@@ -184,13 +194,13 @@ static APNsManager *_sharedManager = nil;
             
             [self dealWithOpenURL:&openURL];
 
-            NSURL *handledOpenURL = [TTStringHelper URLWithURLString:openURL];
+            NSURL *handledOpenURL = [NSURL btd_URLWithString:openURL];
             
         [FHEnvContext sharedInstance].refreshConfigRequestType = @"link_launch";
         TTRouteUserInfo *userInfo = [FHCHousePushUtils getPushUserInfo:paramObj];
             if ([[handledOpenURL host] isEqualToString:@"main"]) {
                 NSString * str = [openURL stringByAppendingString:@"&needToRoot=0"];
-                handledOpenURL = [TTStringHelper URLWithURLString:str];
+                handledOpenURL = [NSURL btd_URLWithString:str];
                 [[TTRoute sharedRoute] openURL:handledOpenURL userInfo:userInfo objHandler:nil];
 //                TTRouteParamObj* obj = [[TTRoute sharedRoute] routeParamObjWithURL:handledOpenURL];
 //                NSDictionary* params = [obj queryParams];
@@ -223,25 +233,65 @@ static APNsManager *_sharedManager = nil;
                 if (fSystemVersion >= 10.0 && fSystemVersion < 11.0) { // 10.0
                     userInfo.animated = @(0);
                 }
-                [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL userInfo:userInfo pushHandler:^(UINavigationController *nav, TTRouteObject *routeObj) {
-                    if(nav && [routeObj.instance isKindOfClass:UIViewController.class]) {
-                        UIViewController *vc = (UIViewController *)routeObj.instance;
-                        [nav pushViewController:vc animated:YES];
-                    } else {
-                        NSMutableDictionary *params = [NSMutableDictionary dictionary];
-                        params[@"nav_vc"] = nav ? NSStringFromClass(nav.class) : @"be_null";
-                        params[@"vc"] = routeObj.instance ? NSStringFromClass(routeObj.instance.class) : @"be_null";
+                
+                BOOL ret = [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL userInfo:userInfo];
+                
+                // 如果没有跳转成功，添加监控
+                BOOL isMonitorEnable = ![SSCommonLogic isDisableMonitorPushJumpError];
+                if(isMonitorEnable && !ret) {
+                    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+                    
+                    // 检查是否URL可以跳转
+                    BOOL canOpenUrl = [[TTRoute sharedRoute] canOpenURL:handledOpenURL];
+                    params[@"canOpenUrl"] = @(canOpenUrl);
+                    
+                    // 检查跳转目标是否有效
+                    TTRouteObject *routeObj = [[TTRoute sharedRoute] routeObjWithOpenURL:handledOpenURL userInfo:userInfo];
+                    if(routeObj) {
+                        params[@"routeObj"] = routeObj.instance ? NSStringFromClass(routeObj.instance.class) : @"routeObj.instance is empty";
                         params[@"allParams"] = routeObj.paramObj.allParams;
-                        [[HMDTTMonitor defaultManager] hmdTrackService:@"f_apns_manager_push_vc_error"
-                                                                metric:nil
-                                                              category:nil
-                                                                 extra:params.copy];
                     }
-                }];
+                    else {
+                        params[@"routeObj"] = @"empty object";
+                    }
+
+                    // 检查导航控制器是否存在
+                    TTRoute *route = [TTRoute sharedRoute];
+                    UINavigationController * navVC = ((UINavigationController* (*)(id, SEL))objc_msgSend)(route, NSSelectorFromString(@"_navigationControllerForRoute"));
+                    params[@"navVC"] = navVC ? NSStringFromClass(navVC.class) : @"be_null";
+                    
+                    if(!navVC) {
+                        // 业务提供的导航控制器是否为空
+                        UINavigationController *designatedNavVC = [route.designatedNavDatasource designatedRouteNavigationController];
+                        params[@"designatedNavDatasource"] = route.designatedNavDatasource ? NSStringFromClass(route.designatedNavDatasource.class) : @"be_null";
+                        params[@"desinatedRouteNavVC"] = designatedNavVC ? NSStringFromClass(designatedNavVC.class) : @"be_null";
+                        
+                        // 初始化默认导航控制器是否为空
+                        UINavigationController *initialRouteNavigationController = route.initialRouteNavigationController;
+                        params[@"initialRouteNavigationController"] = initialRouteNavigationController ? NSStringFromClass(initialRouteNavigationController.class) : @"be_null";
+                        
+                        // 通知响应链获取的顶部导航控制器是否为空
+                        UINavigationController *topMostNavVC = ((UINavigationController* (*)(id, SEL))objc_msgSend)(route, NSSelectorFromString(@"_topMostNavigationController"));
+                        params[@"topMostNavVC"] = topMostNavVC ? NSStringFromClass(topMostNavVC.class) : @"be_null";
+                        
+                        // 兜底逻辑，如果是由于导航控制器没有找到，则重试一次
+                        [[[RACObserve(route, designatedNavDatasource) distinctUntilChanged] deliverOnMainThread] subscribeNext:^(id  _Nullable x) {
+                            [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL userInfo:userInfo];
+                        }];
+                    }
+
+                    // 上报收集的信息
+                    params[@"handledOpenUrl"] = handledOpenURL.absoluteString;
+                    params[@"push_user_info"] = userInfo.allInfo;
+                    [[HMDTTMonitor defaultManager] hmdTrackService:@"f_apns_manager_push_vc_error"
+                                                            metric:nil
+                                                          category:nil
+                                                             extra:params.copy];
+                }
             }
         }
         else {
-            NSURL *pushURL = [TTStringHelper URLWithURLString:openURL];
+            NSURL *pushURL = [NSURL btd_URLWithString:openURL];
             if (pushURL) {
                 if (@available(iOS 10.0, *)) {
                     [[UIApplication sharedApplication] openURL:pushURL options:@{} completionHandler:^(BOOL success) {

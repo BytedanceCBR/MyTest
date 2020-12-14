@@ -22,9 +22,11 @@ SINGLETON_GCD(TTRouteService)
 
 + (void)registerTTRouteService
 {
-    [TTRoute sharedRoute].datasource = [TTRouteService sharedTTRouteService];
-    [TTRoute sharedRoute].delegate = [TTRouteService sharedTTRouteService];
-    [TTRoute sharedRoute].designatedNavDatasource = [TTRouteService sharedTTRouteService];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [TTRoute sharedRoute].datasource = [TTRouteService sharedTTRouteService];
+        [TTRoute sharedRoute].delegate = [TTRouteService sharedTTRouteService];
+        [TTRoute sharedRoute].designatedNavDatasource = [TTRouteService sharedTTRouteService];
+    });
 }
 
 #pragma mark - TTRouteLogicDatasource
