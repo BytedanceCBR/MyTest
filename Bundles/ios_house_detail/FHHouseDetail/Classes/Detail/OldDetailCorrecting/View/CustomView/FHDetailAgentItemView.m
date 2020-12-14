@@ -316,7 +316,7 @@
             scoreStringValue = [scoreStringValue stringByReplacingOccurrencesOfString:@"分" withString:@""];
         }
         
-        NSMutableAttributedString *scoreString = [[NSMutableAttributedString alloc] initWithString:scoreStringValue ?: @"" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexString:@"FE5500"], NSFontAttributeName: [UIFont themeFontRegular:12]}];
+        NSMutableAttributedString *scoreString = [[NSMutableAttributedString alloc] initWithString:scoreStringValue ?: @"" attributes:@{NSForegroundColorAttributeName: [UIColor colorWithHexString:@"FE5500"], NSFontAttributeName: [UIFont themeFontSemibold:12]}];
         [scoreString appendAttributedString:[[NSAttributedString alloc] initWithString:@" 服务分" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:12]}]];
         
         if (model.neighborhoodScoreDisplay.length) {

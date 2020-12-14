@@ -345,7 +345,7 @@
             self.tipNameLabel.text = model.tipText;
             if ([SSCommonLogic isEnableVerifyFormAssociate]) {
                 self.tipNameLabel.font = [UIFont themeFontSemibold:14];
-                self.tipNameLabel.text = @"高效找房，为您推荐专属找房顾问";
+                self.tipNameLabel.text = @"高效找房，为您推荐专属顾问";
                 
                 self.subscribeBtn.hidden = NO;
                 [self.subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
