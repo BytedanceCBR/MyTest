@@ -229,8 +229,8 @@
                    contentColor:[UIColor themeGray1]
                           color:[UIColor themeRed3]];
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel truncatedToken:more];
-        self.multiImageView.top = self.userIma.bottom + 20 + cellModel.contentHeight;
-        self.singleImageView.top = self.userIma.bottom + 20 + cellModel.contentHeight;
+        self.multiImageView.top = self.userIma.bottom + 15 + cellModel.contentHeight;
+        self.singleImageView.top = self.userIma.bottom + 15 + cellModel.contentHeight;
     }
 
     UIView *lastView = self.contentLabel;

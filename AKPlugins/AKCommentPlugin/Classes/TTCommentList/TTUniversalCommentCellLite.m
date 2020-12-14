@@ -133,7 +133,14 @@
 
 - (void)refreshAvatarView {
     [self.avatarView setAvatarUrl:self.commentModel.userAvatarURL];
-    [self.avatarView setUserId:self.commentModel.userID];
+    if ([self.commentModel.userID isKindOfClass:[NSNumber class]]) {
+        NSNumberFormatter* numberFormatter = [[NSNumberFormatter alloc] init];
+        NSString *uid = [numberFormatter stringFromNumber:self.commentModel.userID];
+        [self.avatarView setUserId: uid];
+    }else {
+        [self.avatarView setUserId: [NSString stringWithFormat:@"%@",self.commentModel.userID]];
+    }
+   
 //    [self.avatarView tt_setImageWithURLString:self.commentModel.userAvatarURL];
 //
 //    [self.avatarView showOrHideVerifyViewWithVerifyInfo:self.commentModel.userAuthInfo decoratorInfo:self.commentModel.userDecoration];
