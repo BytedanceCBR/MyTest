@@ -72,7 +72,7 @@
             traceParam[@"search_id"] = model.searchId ? : UT_BE_NULL;
             traceParam[@"rank"] = @(index);
             traceParam[@"enter_from"] = @"neighborhood_detail";
-            NSMutableDictionary *dict = @{@"house_type":@(2),
+            NSMutableDictionary *dict = @{
                                   @"tracer": traceParam
                                   }.mutableCopy;
             
