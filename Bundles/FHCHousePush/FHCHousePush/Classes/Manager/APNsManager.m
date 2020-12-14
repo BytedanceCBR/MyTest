@@ -41,6 +41,7 @@
 extern NSString * const TTArticleTabBarControllerChangeSelectedIndexNotification;
 
 @interface APNsManager ()
+@property (nonatomic, strong) RACDisposable *disposable;
 @end
 
 
@@ -265,6 +266,9 @@ static APNsManager *_sharedManager = nil;
                         UINavigationController *designatedNavVC = [route.designatedNavDatasource designatedRouteNavigationController];
                         params[@"designatedNavDatasource"] = route.designatedNavDatasource ? NSStringFromClass(route.designatedNavDatasource.class) : @"be_null";
                         params[@"desinatedRouteNavVC"] = designatedNavVC ? NSStringFromClass(designatedNavVC.class) : @"be_null";
+                        id<UIApplicationDelegate> delegate = [UIApplication sharedApplication].delegate;
+                        params[@"applicationDelegate"] = delegate ? NSStringFromClass(delegate.class) : @"be_null";
+                        
                         
                         // 初始化默认导航控制器是否为空
                         UINavigationController *initialRouteNavigationController = route.initialRouteNavigationController;
@@ -275,9 +279,21 @@ static APNsManager *_sharedManager = nil;
                         params[@"topMostNavVC"] = topMostNavVC ? NSStringFromClass(topMostNavVC.class) : @"be_null";
                         
                         // 兜底逻辑，如果是由于导航控制器没有找到，则重试一次
-                        [[[RACObserve(route, designatedNavDatasource) distinctUntilChanged] deliverOnMainThread] subscribeNext:^(id  _Nullable x) {
-                            [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL userInfo:userInfo];
-                        }];
+                        if(!designatedNavVC) {
+                            if(!self.disposable.isDisposed) {
+                                [self.disposable dispose];
+                                self.disposable = nil;
+                            }
+                            self.disposable = [[[RACObserve(route, designatedNavDatasource) distinctUntilChanged] deliverOnMainThread] subscribeNext:^(id  _Nullable x) {
+                                BOOL retryResult = [[TTRoute sharedRoute] openURLByPushViewController:handledOpenURL userInfo:userInfo];
+                                NSMutableDictionary *params = [NSMutableDictionary dictionary];
+                                params[@"retryResult"] = @(retryResult);
+                                [[HMDTTMonitor defaultManager] hmdTrackService:@"f_apns_manager_push_vc_error"
+                                                                        metric:nil
+                                                                      category:nil
+                                                                         extra:params.copy];
+                            }];
+                        }
                     }
 
                     // 上报收集的信息
