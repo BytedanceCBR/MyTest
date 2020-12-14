@@ -95,7 +95,7 @@ CGFloat kFHNeighborhoodDetailFloorpanItemCollectionCellHeight = 85;
 }
 
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(130, kFHNeighborhoodDetailFloorpanItemCollectionCellHeight);
+    return CGSizeMake(146, kFHNeighborhoodDetailFloorpanItemCollectionCellHeight);
 }
 
 -(void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {

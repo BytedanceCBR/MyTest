@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong) UILabel *editingLabel;// 编辑发送中
 @property(nonatomic ,strong) UIButton *moreBtn;
 @property(nonatomic ,strong) UILabel *titleLabel;
+@property(nonatomic ,strong) UIImageView *essenceIcon;
 
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic, copy) void(^deleteCellBlock)(void);

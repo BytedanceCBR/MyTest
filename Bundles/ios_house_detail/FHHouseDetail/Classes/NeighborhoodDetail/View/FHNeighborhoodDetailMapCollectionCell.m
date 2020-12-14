@@ -136,7 +136,7 @@
     self.mapView.showsScale = NO;
     self.mapView.zoomEnabled = NO;
     self.mapView.scrollEnabled = NO;
-    self.mapView.zoomLevel = 15.5;
+    self.mapView.zoomLevel = 14.5;
     self.mapView.showsUserLocation = NO;
     self.mapView.delegate = self;
     self.mapView.hidden = NO;
@@ -176,7 +176,7 @@
     if (!self.categoryStackView) {
         self.categoryStackView = [[UIStackView alloc] init];
         self.categoryStackView.axis = UILayoutConstraintAxisHorizontal;
-        self.categoryStackView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
+        self.categoryStackView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.96];
         self.categoryStackView.layer.masksToBounds = YES;
         self.categoryStackView.layer.cornerRadius = 4.0;
         [self.contentView addSubview:self.categoryStackView];

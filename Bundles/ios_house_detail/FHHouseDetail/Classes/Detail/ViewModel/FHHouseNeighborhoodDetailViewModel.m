@@ -143,11 +143,6 @@
     }
 }
 
--(BOOL)currentIsInstantData
-{
-    return [(FHDetailNeighborhoodModel *)self.detailData isInstantData];
-}
-
 // 处理详情页数据
 - (void)processDetailData:(FHDetailNeighborhoodModel *)model {
     
@@ -163,7 +158,7 @@
         contactPhone = model.data.contact;
         contactPhone.unregistered = YES;
     }
-    contactPhone.isInstantData = model.isInstantData;
+    contactPhone.isInstantData = NO;
     contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
@@ -351,13 +346,9 @@
     }
 
     self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
-    if (model.isInstantData) {
-        [self.tableView reloadData];
-    }else{
-        [self reloadData];
-    }
+    [self reloadData];
     
-    [self.detailController updateLayout:model.isInstantData];
+    [self.detailController updateLayout:NO];
 }
 //小区顶部i地图按钮点击事件
 - (void)mapImageClick {

@@ -109,7 +109,7 @@
             
             _questionHeaderModel.isEmpty = NO;
             _questionHeaderModel.hiddenTopLine = !isHaveComment;
-            _questionHeaderModel.topMargin = isHaveComment ? 14 : 18;
+            _questionHeaderModel.topMargin = isHaveComment ? 14 : 12;
             _questionHeaderModel.questionListSchema = model.data.question.content.questionListSchema;
             _questionHeaderModel.neighborhoodId = model.data.id;
             _questionHeaderModel.detailTracerDic = self.detailTracerDic;
@@ -151,7 +151,7 @@
             _questionHeaderModel.totalCount = 0;
             _questionHeaderModel.count = 0;
             _questionHeaderModel.hiddenTopLine = !isHaveComment;
-            _questionHeaderModel.topMargin = isHaveComment ? 14 : 18;
+            _questionHeaderModel.topMargin = isHaveComment ? 14 : 12;
             _questionHeaderModel.isEmpty = YES;
             _questionHeaderModel.questionWriteTitle = model.data.question.questionWrite.title;
             _questionHeaderModel.questionWriteSchema = model.data.question.questionWrite.schema;
