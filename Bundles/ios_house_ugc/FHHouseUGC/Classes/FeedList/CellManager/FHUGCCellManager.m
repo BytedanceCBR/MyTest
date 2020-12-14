@@ -30,6 +30,12 @@
 #import "FHUGCFullScreenVideoCell.h"
 #import "FHUGCShortVideoListCell.h"
 
+//布局类
+#import "FHBaseLayout.h"
+#import "FHArticleLayout.h"
+#import "FHPostLayout.h"
+#import "FHVideoLayout.h"
+
 @interface FHUGCCellManager ()
 
 @property(nonatomic, strong) NSArray *supportCellTypeList;
@@ -150,6 +156,78 @@
     }
     
     return [FHUGCPostCell class];
+}
+
++ (Class)cellLayoutClassFromCellViewType:(FHUGCFeedListCellSubType)cellType {
+    //这里这样写是为了以后一个key可能对应不同cell的变化
+    switch (cellType) {
+        case FHUGCFeedListCellSubTypePost:
+            return [FHPostLayout class];
+            
+        case FHUGCFeedListCellSubTypeArticle:
+            return [FHArticleLayout class];
+//
+//        case FHUGCFeedListCellSubTypeUGCRecommend:
+//            return [FHUGCRecommendCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCBanner:
+//            return [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName]] ? [FHUGCLynxBannerCell class] : [FHUGCBannerCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCHotTopic:
+//            return [FHUGCHotTopicCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCVote:
+//            return [FHUGCVoteCell class];
+//
+        case FHUGCFeedListCellSubTypeUGCVideo:
+            return [FHVideoLayout class];
+//
+//        case FHUGCFeedListCellSubTypeUGCSmallVideo:
+//            return [FHUGCSmallVideoCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCVoteDetail:
+//            return [FHUGCVoteDetailCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCHotCommunity:
+//            return [FHUGCHotCommunityCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion:
+//            return [FHNeighbourhoodQuestionCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCNeighbourhoodComments:
+//            return [FHNeighbourhoodCommentCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCRecommendCircle:
+//            return [FHUGCRecommendCircleCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCEncyclopedias:
+//            return [FHUGCEncyclopediasCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCLynx:
+//            return [FHUGCLynxCommonCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCBrokerImage:
+//            return [FHHouseDeatilRGCImageCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCBrokerVideo:
+//            return [FHHouseDeatilRGCVideoCell class];
+//
+//        case FHUGCFeedListCellSubTypeAnswer:
+//            return [FHUGCAnswerCell class];
+//
+//        case FHUGCFeedListCellSubTypeQuestion:
+//            return [FHUGCQuestionCell class];
+//
+//        case FHUGCFeedListCellSubTypeFullVideo:
+//            return [FHUGCFullScreenVideoCell class];
+//        case FHUGCFeedListCellSubTypeSmallVideoList:
+//            return [FHUGCShortVideoListCell class];
+            
+        default:
+            break;
+    }
+    
+    return nil;
 }
 
 + (SSImpressionModelType)impressModelTypeWithCellType:(FHUGCFeedListCellType)cellType {

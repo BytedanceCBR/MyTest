@@ -104,14 +104,6 @@
     self.diggType = FHDetailDiggTypeTHREAD;
 }
 
-- (FHUGCFeedGuideView *)guideView {
-    if(!_guideView){
-        _guideView = [[FHUGCFeedGuideView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 42)];
-        [self addSubview:_guideView];
-    }
-    return _guideView;
-}
-
 - (void)initConstraints {
     self.positionView.top = 0;
     self.positionView.left = 20;
@@ -130,6 +122,22 @@
     self.bottomSepView.top = self.positionView.bottom + 20;
     self.bottomSepView.height = 1;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
+}
+
+- (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
+    self.cellModel = cellModel;
+    
+    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
+    self.position.text = cellModel.community.name;
+    [self showPositionView:showCommunity];
+    
+    NSInteger commentCount = [cellModel.commentCount integerValue];
+    if(commentCount == 0){
+        [self.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
+    }else{
+        [self.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
+    }
+    [self updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
 }
 
 - (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
@@ -168,16 +176,6 @@
                 self.diggType = FHDetailDiggTypeTHREAD;
                 break;
         }
-    }
-    //设置是否显示引导
-    if(cellModel.isInsertGuideCell){
-        self.guideView.hidden = NO;
-        self.guideView.top = self.positionView.bottom;
-        self.guideView.left = 0;
-        self.guideView.width = self.bounds.size.width;
-        self.guideView.height = 42;
-    }else{
-        self.guideView.hidden = YES;
     }
     
     self.bottomSepView.left = cellModel.bottomLineLeftMargin;

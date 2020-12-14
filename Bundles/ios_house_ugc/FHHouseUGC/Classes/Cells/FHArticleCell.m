@@ -12,15 +12,9 @@
 #import "UIViewAdditions.h"
 #import "UIImageView+fhUgcImage.h"
 #import "UIFont+House.h"
+#import "FHArticleLayout.h"
 
 #define maxLines 3
-#define bottomViewHeight 36
-#define guideViewHeight 27
-#define topMargin 15
-#define singleImageViewHeight 90
-#define leftMargin 20
-#define rightMargin 20
-#define imagePadding 4
 
 @interface FHArticleCell ()
 
@@ -29,8 +23,6 @@
 @property(nonatomic ,strong) UIView *imageViewContainer;
 @property(nonatomic ,strong) UIImageView *singleImageView;
 @property(nonatomic ,strong) FHArticleCellBottomView *bottomView;
-@property(nonatomic ,assign) CGFloat imageWidth;
-@property(nonatomic ,assign) CGFloat imageHeight;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
@@ -55,11 +47,7 @@
 
 - (void)initUIs {
     _imageViewList = [[NSMutableArray alloc] init];
-    _imageWidth = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3;
-    _imageHeight = ceil(_imageWidth * 82.0f/109.0f);
-    
     [self initViews];
-    [self initConstraints];
 }
 
 - (void)initViews {
@@ -91,7 +79,6 @@
     _bottomView.deleteCellBlock = ^{
         [wself deleteCell];
     };
-    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
@@ -108,44 +95,27 @@
         imageView.layer.cornerRadius = 4;
         imageView.hidden = YES;
         [self.imageViewContainer addSubview:imageView];
-        
         [self.imageViewList addObject:imageView];
     }
 }
 
-- (void)initConstraints {
-    self.contentLabel.top = topMargin;
-    self.contentLabel.left = leftMargin;
-    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.contentLabel.height = 0;
+- (void)updateConstraints:(FHBaseLayout *)layout {
+    if (![layout isKindOfClass:[FHArticleLayout class]]) {
+        return;
+    }
     
-    self.singleImageView.top = topMargin;
-    self.singleImageView.left = self.contentLabel.right + 15;
-    self.singleImageView.width = 120;
-    self.singleImageView.height = singleImageViewHeight;
+    FHArticleLayout *cellLayout = (FHArticleLayout *)layout;
     
-    self.imageViewContainer.top = self.contentLabel.bottom + 10;
-    self.imageViewContainer.left = leftMargin;
-    self.imageViewContainer.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.imageViewContainer.height = self.imageHeight;
+    [FHLayoutItem updateView:self.contentLabel withLayout:cellLayout.contentLabelLayout];
+    [FHLayoutItem updateView:self.singleImageView withLayout:cellLayout.singleImageViewLayout];
+    [FHLayoutItem updateView:self.imageViewContainer withLayout:cellLayout.imageViewContainerLayout];
+    [FHLayoutItem updateView:self.bottomView withLayout:cellLayout.bottomViewLayout];
     
-    self.bottomView.top = self.contentLabel.bottom + 10;
-    self.bottomView.left = 0;
-    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
-    self.bottomView.height = bottomViewHeight;
-    
-    UIView *firstView = self.imageViewContainer;
-    for (UIImageView *imageView in self.imageViewList) {
-        if(firstView == self.imageViewContainer){
-            imageView.left = 0;
-        }else{
-            imageView.left = firstView.right + imagePadding;
+    for (NSInteger i = 0; i < self.imageViewList.count; i++) {
+        UIImageView *imageView = self.imageViewList[i];
+        if(i < cellLayout.imageLayouts.count){
+            [FHLayoutItem updateView:imageView withLayout:cellLayout.imageLayouts[i]];
         }
-        imageView.top = 0;
-        imageView.width = self.imageWidth;
-        imageView.height = self.imageHeight;
-        
-        firstView = imageView;
     }
 }
 
@@ -167,25 +137,17 @@
         return;
     }
     self.currentData = data;
-    self.cellModel= cellModel;
+    self.cellModel = cellModel;
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.title)){
         self.contentLabel.hidden = YES;
-        self.contentLabel.height = 0;
-        self.imageViewContainer.top = self.contentLabel.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
-        self.contentLabel.height = cellModel.contentHeight;
-        self.imageViewContainer.top = self.contentLabel.bottom + 10;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
-    self.bottomView.cellModel = cellModel;
-    self.bottomView.descLabel.attributedText = cellModel.desc;
     
-    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-    self.bottomView.position.text = cellModel.community.name;
-    [self.bottomView showPositionView:showCommunity];
+    [self.bottomView refreshWithData:cellModel];
     //图片
     NSArray *imageList = cellModel.imageList;
     if(imageList.count > 1){
@@ -199,14 +161,11 @@
                 if (imageModel) {
                     NSArray *urls = [FHUGCCellHelper convertToImageUrls:imageModel];
                     [imageView fh_setImageWithURLs:urls placeholder:nil reSize:imageView.size];
-//                    [imageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:imageView.size];
                 }
             }else{
                 imageView.hidden = YES;
             }
         }
-        self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-        self.bottomView.top = self.imageViewContainer.bottom + 10;
     }else if(imageList.count == 1){
         self.imageViewContainer.hidden = YES;
         self.singleImageView.hidden = NO;
@@ -215,65 +174,21 @@
         if (imageModel) {
             NSArray *urls = [FHUGCCellHelper convertToImageUrls:imageModel];
             [self.singleImageView fh_setImageWithURLs:urls placeholder:nil reSize:self.singleImageView.size];
-//            [self.singleImageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:self.singleImageView.size];
         }
-        
-        self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 120 - 15;
-        self.singleImageView.left = self.contentLabel.right + 15;
-        self.bottomView.top = self.singleImageView.bottom + 10;
     }else{
         self.imageViewContainer.hidden = YES;
         self.singleImageView.hidden = YES;
-        self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-        self.bottomView.top = self.contentLabel.bottom + 10;
     }
     
-    [self showGuideView];
+    [self updateConstraints:cellModel.layout];
 }
 
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = cellModel.contentHeight + bottomViewHeight + topMargin + 10;
-        
-        if(cellModel.imageList.count > 1){
-            CGFloat imageViewHeight = ceil(([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - imagePadding * 2)/3 * 82.0f/109.0f);
-            height += (imageViewHeight + 10);
-        }else if(cellModel.imageList.count == 1){
-            height = singleImageViewHeight + bottomViewHeight + topMargin + 10;
-        }
-        
-        if(cellModel.isInsertGuideCell){
-            height += guideViewHeight;
-        }
-        
-        return height;
+        return cellModel.layout.height;
     }
     return 44;
-}
-
-- (void)showGuideView {
-    if(_cellModel.isInsertGuideCell){
-        self.bottomView.height = bottomViewHeight + guideViewHeight;
-    }else{
-        self.bottomView.height = bottomViewHeight;
-    }
-}
-
-- (void)closeGuideView {
-    self.cellModel.isInsertGuideCell = NO;
-    [self.cellModel.tableView beginUpdates];
-    
-    [self showGuideView];
-    self.bottomView.cellModel = self.cellModel;
-    
-    [self setNeedsUpdateConstraints];
-    
-    [self.cellModel.tableView endUpdates];
-    
-    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
-        [self.delegate closeFeedGuide:self.cellModel];
-    }
 }
 
 - (void)deleteCell {

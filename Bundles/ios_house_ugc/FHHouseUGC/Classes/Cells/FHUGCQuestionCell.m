@@ -64,7 +64,6 @@
     _bottomView.deleteCellBlock = ^{
         [wself deleteCell];
     };
-    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
     [self.bottomView.positionView addGestureRecognizer:tap];
@@ -116,8 +115,7 @@
     BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
     self.bottomView.position.text = cellModel.community.name;
     [self.bottomView showPositionView:showCommunity];
-     [_bottomView updateIsQuestion];
-    [self showGuideView];
+    [_bottomView updateIsQuestion];
 }
 
 - (void)updateUserInfoView:(FHFeedUGCCellModel *)cellModel {
@@ -157,37 +155,9 @@
         
         CGFloat height = userInfoHeight + bottomViewHeight + topMargin + 10;
         
-        if(cellModel.isInsertGuideCell){
-            height += guideViewHeight;
-        }
-        
         return height;
     }
     return 44;
-}
-
-- (void)showGuideView {
-    if(_cellModel.isInsertGuideCell){
-        self.bottomView.height = bottomViewHeight + guideViewHeight;
-    }else{
-        self.bottomView.height = bottomViewHeight;
-    }
-}
-
-- (void)closeGuideView {
-    self.cellModel.isInsertGuideCell = NO;
-    [self.cellModel.tableView beginUpdates];
-    
-    [self showGuideView];
-    self.bottomView.cellModel = self.cellModel;
-    
-    [self setNeedsUpdateConstraints];
-    
-    [self.cellModel.tableView endUpdates];
-    
-    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
-        [self.delegate closeFeedGuide:self.cellModel];
-    }
 }
 
 - (void)deleteCell {

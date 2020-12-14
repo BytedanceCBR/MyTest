@@ -17,6 +17,7 @@
 #import "FHDetailBaseModel.h"
 #import "FHUGCFeedListProtocol.h"
 #import "FHBaseViewController.h"
+#import "FHBaseLayout.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -163,8 +164,6 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *originGroupId;
 //频道Id
 @property (nonatomic, copy , nullable) NSString *categoryId;
-//是否需要插入了引导页
-@property (nonatomic, assign) BOOL isInsertGuideCell;
 //圈子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellCommunityModel *community;
 //是否显示圈子名称，默认为YES
@@ -279,6 +278,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, assign ) BOOL userRepin;
 @property (nonatomic, copy, nullable) NSString *videoSourceIcon;
+@property (nonatomic, strong, nullable) FHBaseLayout *layout;
 
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;

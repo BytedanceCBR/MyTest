@@ -41,7 +41,6 @@
 }
 
 - (void)initViews {
-    
     self.positionView = [[UIView alloc] init];
     _positionView.backgroundColor = [UIColor themeOrange2];
     _positionView.layer.masksToBounds= YES;
@@ -86,14 +85,6 @@
     [self addSubview:_bottomSepView];
 }
 
-- (FHUGCFeedGuideView *)guideView {
-    if(!_guideView){
-        _guideView = [[FHUGCFeedGuideView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 42)];
-        [self addSubview:_guideView];
-    }
-    return _guideView;
-}
-
 - (void)initConstraints {
     self.positionView.top = 0;
     self.positionView.left = 20;
@@ -129,19 +120,17 @@
     return label;
 }
 
+- (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
+    self.cellModel = cellModel;
+    self.descLabel.attributedText = cellModel.desc;
+    
+    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
+    self.position.text = cellModel.community.name;
+    [self showPositionView:showCommunity];
+}
+
 - (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
     _cellModel = cellModel;
-    //设置是否显示引导
-    if(cellModel.isInsertGuideCell){
-        self.guideView.hidden = NO;
-        self.guideView.top = self.positionView.bottom;
-        self.guideView.left = 0;
-        self.guideView.width = [UIScreen mainScreen].bounds.size.width;
-        self.guideView.height = 42;
-        [self bringSubviewToFront:self.answerBtn];
-    }else{
-        self.guideView.hidden = YES;
-    }
     
     self.moreBtn.hidden = cellModel.hiddenMore;
     
@@ -213,12 +202,9 @@
     tracer[@"enter_from"] = self.cellModel.tracerDic[@"page_type"];
     tracer[@"enter_type"] = @"click";
     info[@"tracer"] = tracer;
-    //        info[@"gd_ext_json"] = self.cellModel.tracerDic[@"gd_ext_json"];
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:info];
     [[TTRoute sharedRoute] openURLByPresentViewController:openUrl userInfo:userInfo];
 }
-
-
 
 - (void)moreOperation {
     [self trackClickOptions];
@@ -269,10 +255,6 @@
 - (void)handleItemselected:(FHFeedOperationView *) view {
     __weak typeof(self) wself = self;
     if(view.selectdWord.type == FHFeedOperationWordTypeReport){
-        //举报
-//        if(self.deleteCellBlock){
-//            self.deleteCellBlock();
-//        }
         [[ToastManager manager] showToast:@"举报成功"];
     
         NSDictionary *dic = @{

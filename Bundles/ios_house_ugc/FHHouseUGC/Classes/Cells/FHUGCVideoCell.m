@@ -30,6 +30,7 @@
 #import "TTVFeedUserOpDataSyncMessage.h"
 #import "SSCommonLogic.h"
 #import "TTVFeedItem+TTVConvertToArticle.h"
+#import "FHVideoLayout.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -77,7 +78,6 @@
 - (void)initUIs {
     REGISTER_MESSAGE(TTVFeedUserOpDataSyncMessage, self);
     [self initViews];
-    [self initConstraints];
 }
 
 - (void)initViews {
@@ -106,39 +106,10 @@
 
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
     UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
     [self.bottomView.positionView addGestureRecognizer:tap];
-}
-
-- (void)initConstraints {
-    [self.userInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView).offset(20);
-        make.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(40);
-    }];
-    
-    [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        make.height.mas_equalTo(0);
-    }];
-    
-    [self.videoView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-        make.left.mas_equalTo(self.contentView).offset(leftMargin);
-        make.right.mas_equalTo(self.contentView).offset(-rightMargin);
-        make.height.mas_equalTo(([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * 188.0/335.0);
-    }];
-    
-    [self.bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.videoView.mas_bottom).offset(10);
-        make.height.mas_equalTo(49);
-        make.left.right.mas_equalTo(self.contentView);
-    }];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -146,6 +117,19 @@
     label.font = font;
     label.textColor = textColor;
     return label;
+}
+
+- (void)updateConstraints:(FHBaseLayout *)layout {
+    if (![layout isKindOfClass:[FHVideoLayout class]]) {
+        return;
+    }
+    
+    FHVideoLayout *cellLayout = (FHVideoLayout *)layout;
+    
+    [FHLayoutItem updateView:self.userInfoView withLayout:cellLayout.userInfoViewLayout];
+    [FHLayoutItem updateView:self.contentLabel withLayout:cellLayout.contentLabelLayout];
+    [FHLayoutItem updateView:self.videoView withLayout:cellLayout.videoViewLayout];
+    [FHLayoutItem updateView:self.bottomView withLayout:cellLayout.bottomViewLayout];
 }
 
 - (void)refreshWithData:(id)data {
@@ -164,29 +148,13 @@
     //设置userInfo
     [self.userInfoView refreshWithData:cellModel];
     //设置底部
-    self.bottomView.cellModel = cellModel;
-    
-    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-    self.bottomView.position.text = cellModel.community.name;
-    [self.bottomView showPositionView:showCommunity];
+    [self.bottomView refreshWithData:cellModel];
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
-        [self.videoView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(10);
-        }];
     }else{
         self.contentLabel.hidden = NO;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(cellModel.contentHeight);
-        }];
-        [self.videoView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.userInfoView.mas_bottom).offset(20 + cellModel.contentHeight);
-        }];
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     //处理视频
@@ -208,56 +176,15 @@
     [self updateCommentButton];
     [self updateDiggButton];
     
-    [self showGuideView];
+    [self updateConstraints:cellModel.layout];
 }
 
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 30;
-        
-        if(isEmptyString(cellModel.content)){
-            height -= 10;
-        }
-        
-        CGFloat videoViewheight = ([UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin) * 188.0/335.0;
-        height += videoViewheight;
-        
-        if(cellModel.isInsertGuideCell){
-            height += guideViewHeight;
-        }
-        
-        return height;
+        return cellModel.layout.height;
     }
     return 44;
-}
-
-- (void)showGuideView {
-    if(_cellModel.isInsertGuideCell){
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(66);
-        }];
-    }else{
-        [self.bottomView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(49);
-        }];
-    }
-}
-
-- (void)closeGuideView {
-    self.cellModel.isInsertGuideCell = NO;
-    [self.cellModel.tableView beginUpdates];
-    
-    [self showGuideView];
-    self.bottomView.cellModel = self.cellModel;
-    
-    [self setNeedsUpdateConstraints];
-    
-    [self.cellModel.tableView endUpdates];
-    
-    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
-        [self.delegate closeFeedGuide:self.cellModel];
-    }
 }
 
 - (void)deleteCell {

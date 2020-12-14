@@ -21,6 +21,7 @@
 #import "FHUtils.h"
 #import "UIFont+House.h"
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "FHUGCCellManager.h"
 
 #define kRecommendSocialGroupListNil @"kRecommendSocialGroupListNil"
 #define kHotTopicListNil @"kHotTopicListNil"
@@ -844,6 +845,14 @@
             [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40 - 120 - 15) numberOfLines:cellModel.numberOfLines];
         }
     }
+    
+    //计算layout
+    Class layout = [FHUGCCellManager cellLayoutClassFromCellViewType:cellModel.cellSubType];
+    if(layout){
+        cellModel.layout = [[layout alloc] init];
+        [cellModel.layout updateLayoutWithData:cellModel];
+    }
+    
     return cellModel;
 }
 
@@ -1040,6 +1049,12 @@
         [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
     }
 
+    //计算layout
+    Class layout = [FHUGCCellManager cellLayoutClassFromCellViewType:cellModel.cellSubType];
+    if(layout){
+        cellModel.layout = [[layout alloc] init];
+        [cellModel.layout updateLayoutWithData:cellModel];
+    }
     
     return cellModel;
 }

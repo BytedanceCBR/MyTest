@@ -7,7 +7,6 @@
 
 #import <UIKit/UIKit.h>
 #import "FHFeedUGCCellModel.h"
-#import "FHUGCFeedGuideView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong) UIButton *moreBtn;
 @property(nonatomic ,strong) UIButton *answerBtn;
 @property(nonatomic ,strong) UIView *positionView;
-@property(nonatomic ,strong) FHUGCFeedGuideView *guideView;
 @property(nonatomic, assign) CGFloat sepLineMorePadding;
  
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
@@ -28,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)showPositionView:(BOOL)isShow;
 
 - (void)updateIsQuestion;
+
+- (void)refreshWithData:(FHFeedUGCCellModel *)cellModel;
 
 @end
 

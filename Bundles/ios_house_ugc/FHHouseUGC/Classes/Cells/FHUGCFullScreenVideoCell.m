@@ -285,10 +285,6 @@
         
         height += bottomViewHeight;
         
-        if(cellModel.isInsertGuideCell){
-            height += guideViewHeight;
-        }
-        
         return height;
     }
     return 44;

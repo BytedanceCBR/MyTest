@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (Class)cellClassFromCellViewType:(FHUGCFeedListCellSubType)cellType data:(nullable id)data;
 
++ (Class)cellLayoutClassFromCellViewType:(FHUGCFeedListCellSubType)cellType;
+
 + (SSImpressionModelType)impressModelTypeWithCellType:(FHUGCFeedListCellType)cellType;
 
 @end
