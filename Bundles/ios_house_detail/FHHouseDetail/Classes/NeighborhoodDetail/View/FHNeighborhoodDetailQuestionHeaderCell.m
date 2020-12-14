@@ -169,7 +169,7 @@
     
     [self.emptyContentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.cornerLabel);
-        make.left.mas_equalTo(self.cornerLabel.mas_right).offset(6);
+        make.left.mas_equalTo(self.cornerLabel.mas_right).offset(1);
         make.right.mas_equalTo(self.questionWriteBtn.mas_left).offset(-6);
         make.height.mas_equalTo(20);
     }];

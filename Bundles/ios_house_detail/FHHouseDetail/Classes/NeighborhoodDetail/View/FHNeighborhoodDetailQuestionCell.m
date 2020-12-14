@@ -80,7 +80,7 @@
     
     [self.questionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.bgView);
-        make.left.mas_equalTo(self.questionIcon.mas_right).offset(10);
+        make.left.mas_equalTo(self.questionIcon.mas_right).offset(5);
         make.right.mas_equalTo(self.descLabel.mas_left).offset(-16);
         make.height.mas_equalTo(20);
     }];

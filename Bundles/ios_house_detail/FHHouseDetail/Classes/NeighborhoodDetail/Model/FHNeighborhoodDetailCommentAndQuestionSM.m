@@ -26,7 +26,7 @@
         if(!isEmptyString(model.data.comments.content.count)){
             NSInteger totalCount = [contentModel.count integerValue];
             if(totalCount > 0 && contentModel.data.count > 0){
-                _commentHeaderModel.title = [NSString stringWithFormat:@"%@（%li）",_commentHeaderModel.title,(long)totalCount];
+                _commentHeaderModel.title = [NSString stringWithFormat:@"%@(%li)",_commentHeaderModel.title,(long)totalCount];
             }
         }
         
@@ -50,6 +50,7 @@
                 FHNeighborhoodDetailCommentTagModel *tag = [[FHNeighborhoodDetailCommentTagModel alloc] init];
                 tag.persent = listModel.rate;
                 tag.content = listModel.title;
+                tag.count = listModel.count;
                 [tags addObject:tag];
             }
             _commentTagsModel.tags = tags;
@@ -102,7 +103,7 @@
             if(!isEmptyString(model.data.question.content.count)){
                 NSInteger totalCount = [contentModel.count integerValue];
                 if(totalCount > 0 && contentModel.data.count > 0){
-                    _questionHeaderModel.title = [NSString stringWithFormat:@"%@（%li）",_questionHeaderModel.title,(long)totalCount];
+                    _questionHeaderModel.title = [NSString stringWithFormat:@"%@(%li)",_questionHeaderModel.title,(long)totalCount];
                 }
             }
             

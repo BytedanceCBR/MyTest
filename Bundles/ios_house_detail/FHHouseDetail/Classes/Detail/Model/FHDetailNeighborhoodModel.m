@@ -12,6 +12,7 @@
 {
     NSDictionary *dict = @{
                            @"openUrl": @"open_url",
+                           @"identifier":@"id",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

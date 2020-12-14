@@ -22,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(nonatomic , copy) NSString *persent;
 @property(nonatomic , copy) NSString *content;
+@property(nonatomic , copy) NSString *count;
 
 @end
 

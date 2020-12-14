@@ -55,7 +55,7 @@
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index
 {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width - 9 * 2;
     FHNeighborhoodDetailCommentAndQuestionSM *model = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
     id cellModel = model.items[index];
     CGSize size = CGSizeZero;

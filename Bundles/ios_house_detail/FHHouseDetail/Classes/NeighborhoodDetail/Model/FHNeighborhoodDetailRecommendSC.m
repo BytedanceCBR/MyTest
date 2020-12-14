@@ -59,7 +59,7 @@
             FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)item.model;
             NSMutableDictionary *traceParam = [NSMutableDictionary new];
             traceParam[@"log_pb"] = [model logPb] ? : UT_BE_NULL;;
-            traceParam[@"element_from"] = @"recommend_house";
+            traceParam[@"element_from"] = @"search_related";
             traceParam[@"origin_from"] = self.detailTracerDict[@"origin_from"] ? : UT_BE_NULL;
             traceParam[@"origin_search_id"] = model.searchId ? : UT_BE_NULL;
             traceParam[@"search_id"] = model.searchId ? : UT_BE_NULL;
@@ -90,10 +90,10 @@
     [self.elementShowCaches setValue:@(YES) forKey:tempKey];
     NSMutableDictionary *traceParam = [NSMutableDictionary new];
     traceParam[@"log_pb"] = [model logPb] ? : UT_BE_NULL;;
-    traceParam[@"element_type"] = @"recommend_house";
+    traceParam[@"element_type"] = @"search_related";
     traceParam[@"origin_from"] = self.detailTracerDict[@"origin_from"] ? : UT_BE_NULL;
     traceParam[@"page_type"] = @"neighborhood_detail";
-    traceParam[@"house_type"] = @"old";
+    //traceParam[@"house_type"] = @"old";
     traceParam[@"search_id"] = model.searchId ? : UT_BE_NULL;
     traceParam[@"group_id"] = model.groupId ? : UT_BE_NULL;
     traceParam[@"rank"] = @(index);

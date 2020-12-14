@@ -27,11 +27,18 @@
     self.titleCellModel = houseTitleModel;
     [items addObject:self.titleCellModel];
     
-    if (model.data.coreInfo.count == 3) {
-        FHNeighborhoodDetailSubMessageModel *subMessageModel = [[FHNeighborhoodDetailSubMessageModel alloc] init];
-        subMessageModel.perSquareMetre = [((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[0]).val stringByAppendingFormat:@" %@",((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[0]).unit];
-        subMessageModel.monthUp = ((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[1]).value ?: @"0";
-        subMessageModel.subTitleText = ((FHDetailNeighborhoodDataCoreInfoModel *)model.data.coreInfo[2]).value ?: @"上个月参考均价";
+    if (model.data.coreInfo.count) {
+        __block FHNeighborhoodDetailSubMessageModel *subMessageModel = [[FHNeighborhoodDetailSubMessageModel alloc] init];
+        
+        [model.data.coreInfo enumerateObjectsUsingBlock:^(FHDetailNeighborhoodDataCoreInfoModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if(obj.identifier && [obj.identifier isEqualToString:@"price_per_sqm"]){
+                subMessageModel.perSquareMetre = [obj.val stringByAppendingFormat:@" %@",obj.unit];
+            }else if(obj.identifier && [obj.identifier isEqualToString:@"avg_month_up"]){
+                subMessageModel.monthUp = obj.value ?: @"0";
+            }else if(obj.identifier && [obj.identifier isEqualToString:@"price_cal_month"]){
+                subMessageModel.subTitleText = obj.value;
+            }
+        }];
         
         subMessageModel.onSale = model.data.statsMinfo.onSale.val ?:@"暂无数据" ;
         subMessageModel.sold = model.data.statsMinfo.sold.val ?: @"暂无数据";
