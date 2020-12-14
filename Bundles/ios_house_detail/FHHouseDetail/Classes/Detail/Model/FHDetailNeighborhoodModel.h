@@ -180,6 +180,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *val;
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property (nonatomic, copy , nullable) NSString *unit;
+@property (nonatomic, copy , nullable) NSString *identifier;
+
 @end
 
 
