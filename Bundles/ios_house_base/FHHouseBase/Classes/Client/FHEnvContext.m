@@ -1046,16 +1046,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
     static BOOL isHouseListComponentEnable = NO;
     static dispatch_once_t isHouseListComponentEnableOnceToken;
     dispatch_once(&isHouseListComponentEnableOnceToken, ^{
-//        /**
-//         增加服务端实验用于控制是否使用大类页/列表页列表组件，默认情况下不使用
-//         实验地址：https://data.bytedance.net/libra/flight/539777/edit
-//         */
-//        NSDictionary *settings = [SSCommonLogic fhSettings];
-//        if (settings && [settings isKindOfClass:[NSDictionary class]]) {
-//            isHouseListComponentEnable = [settings btd_boolValueForKey:@"f_houselist_component_enabled"];
-//        }
-        //命中实验添加打点
-        isHouseListComponentEnable = YES;
+        /**
+         增加服务端实验用于控制是否使用大类页/列表页列表组件，默认情况下不使用
+         实验地址：https://data.bytedance.net/libra/flight/558019/edit/
+         */
+        NSDictionary *settings = [SSCommonLogic fhSettings];
+        if (settings && [settings isKindOfClass:[NSDictionary class]]) {
+            isHouseListComponentEnable = [settings btd_boolValueForKey:@"f_houselist_component_enabled"];
+        }
+        
+        [FHUserTracker writeEvent:@"f_houselist_component_enabled" params:@{@"open":@(isHouseListComponentEnable)}];
     });
     return isHouseListComponentEnable;
 }

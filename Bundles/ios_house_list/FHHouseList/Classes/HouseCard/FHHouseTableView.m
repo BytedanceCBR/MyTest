@@ -13,7 +13,7 @@
 #import <ByteDanceKit/UIDevice+BTDAdditions.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <ByteDanceKit/NSArray+BTDAdditions.h>
-
+#import "FHUserTracker.h"
 
 @interface FHHouseTableView ()<UITableViewDelegate, UITableViewDataSource>
 @property (nonatomic, weak) id<UITableViewDelegate> customDelegate;
@@ -27,6 +27,7 @@
     if (self) {
         [self setDelegate:self];
         [self setDataSource:self];
+        [FHUserTracker writeEvent:@"f_houselist_use_list_component" params:nil];
     }
     return self;
 }
