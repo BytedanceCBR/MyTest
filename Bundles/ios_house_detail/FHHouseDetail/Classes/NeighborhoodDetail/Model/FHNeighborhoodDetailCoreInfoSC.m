@@ -172,13 +172,13 @@
     tracerDict[@"enter_from"] = @"neighborhood_detail";
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
     
-    if (self.detailViewController.viewModel.oritinDetailData) {
-        params[@"neighbor_info"] = [FlutterStandardTypedData typedDataWithBytes:self.detailViewController.viewModel.oritinDetailData];
+    if (self.detailViewController.viewModel.originDetailDict) {
+        params[@"neighbor_info"] = [self.detailViewController.viewModel.originDetailDict[@"data"] btd_safeJsonStringEncoded];
     } else if (self.detailViewController.viewModel.detailData) {
         params[@"neighbor_info"] = [[self.detailViewController.viewModel.detailData.data toDictionary] btd_safeJsonStringEncoded];
     }
     
-    userInfo[@"params"] = params;
+    userInfo[@"params"] = [params btd_safeJsonStringEncoded];
     
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
 }
