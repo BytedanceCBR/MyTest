@@ -139,6 +139,7 @@
         self.collectionView = [[UICollectionView alloc] initWithFrame:self.contentView.bounds collectionViewLayout:layout];
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;
+        self.collectionView.showsHorizontalScrollIndicator = NO;
         self.collectionView.backgroundColor = [UIColor clearColor];
         [self.collectionView registerClass:[FHNeighborhoodDetailSurroundingNeighborItemCell class] forCellWithReuseIdentifier:NSStringFromClass([FHNeighborhoodDetailSurroundingNeighborItemCell class])];
         [self.contentView addSubview:self.collectionView];
