@@ -37,13 +37,24 @@
 #import "FHIntroduceManager.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import <BDALog/BDAgileLog.h>
+#import "TTAccount+Multicast.h"
 
 DEC_TASK_N(FHCHandleAPNSTask,FHTaskTypeSerial,TASK_PRIORITY_HIGH+12);
 
 static NSString * const kTTAPNSRemoteNotificationDict = @"kTTAPNSRemoteNotificationDict";
 static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
 
+@interface FHCHandleAPNSTask()<TTAccountMulticastProtocol>
+@end
+
 @implementation FHCHandleAPNSTask
+
+- (instancetype)init {
+    if(self = [super init]) {
+        [TTAccount addMulticastDelegate:self];
+    }
+    return self;
+}
 
 - (void)startAndTrackWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions
 {
@@ -353,5 +364,19 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
     }
 }
 
+// 当用户帐号登出或者登录状态过期时，清除所有属于之前用户的push远程推送
+- (void)clearAllRemoteNotification {
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 1;
+    [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+}
 
+#pragma mark - TTAccountMulticastProtocol
+
+- (void)onAccountLogout {
+    [self clearAllRemoteNotification];
+}
+
+- (void)onAccountSessionExpired:(NSError *)error {
+    [self clearAllRemoteNotification];
+}
 @end
