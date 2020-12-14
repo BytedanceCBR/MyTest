@@ -15,18 +15,23 @@
 
 @end
 
+CGFloat kFHNeighborhoodDetailFloorpanItemCollectionCellHeight = 85;
 
 @implementation FHNeighborhoodDetailFloorpanCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, 95 + 12);
+    if ([data isKindOfClass:[FHNeighborhoodDetailFloorpanCellModel class]]) {
+        FHNeighborhoodDetailFloorpanCellModel *model = (FHNeighborhoodDetailFloorpanCellModel *)data;
+        return CGSizeMake(width, 12 + kFHNeighborhoodDetailFloorpanItemCollectionCellHeight + model.bottomMargin);
+    }
+    return CGSizeMake(width, 12 + kFHNeighborhoodDetailFloorpanItemCollectionCellHeight + 10);
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if(self = [super initWithFrame:frame]) {
         self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 12, 0, 15);
+        self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 12, 0, 12);
         self.flowLayout.minimumLineSpacing = 8;
         self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), CGRectGetHeight(self.contentView.bounds)) collectionViewLayout:self.flowLayout];
@@ -41,7 +46,7 @@
             make.top.mas_equalTo(self.contentView).offset(12);
             make.left.mas_equalTo(self.contentView);
             make.right.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(self.contentView).offset(-10);
+            make.height.mas_equalTo(kFHNeighborhoodDetailFloorpanItemCollectionCellHeight);
         }];
     }
     return self;
@@ -90,7 +95,7 @@
 }
 
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return CGSizeMake(130, 85);
+    return CGSizeMake(130, kFHNeighborhoodDetailFloorpanItemCollectionCellHeight);
 }
 
 -(void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {

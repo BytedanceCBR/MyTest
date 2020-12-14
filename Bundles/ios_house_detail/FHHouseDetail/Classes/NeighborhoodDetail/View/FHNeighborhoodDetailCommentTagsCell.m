@@ -7,7 +7,7 @@
 
 #import "FHNeighborhoodDetailCommentTagsCell.h"
 
-#define maxRowCount 3
+#define maxRowCount 2
 
 @interface FHNeighborhoodDetailCommentTagsCell ()
 

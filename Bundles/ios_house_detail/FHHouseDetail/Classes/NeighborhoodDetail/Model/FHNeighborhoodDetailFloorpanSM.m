@@ -13,6 +13,8 @@
 -(void)updateWithDataModel:(FHDetailNeighborhoodSaleHouseInfoListModel *)model{
     self.floorpanCellModel = [[FHNeighborhoodDetailFloorpanCellModel alloc] init];
     self.floorpanCellModel.saleHouseInfoModel = model;
+    
+    self.floorpanCellModel.bottomMargin = self.shouldShowSaleHouse ? 5 : 10;
 }
 
 @end

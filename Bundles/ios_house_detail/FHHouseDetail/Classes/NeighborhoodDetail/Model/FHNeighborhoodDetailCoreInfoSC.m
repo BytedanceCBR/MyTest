@@ -16,6 +16,7 @@
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "FHSearchHouseModel.h"
 #import <Flutter/Flutter.h>
+#import "FHFlutterChannels.h"
 
 @interface FHNeighborhoodDetailCoreInfoSC ()
 
@@ -181,6 +182,8 @@
     userInfo[@"params"] = [params btd_safeJsonStringEncoded];
     
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
+    
+    [[FHFlutterChannels sharedInstance] updateTempNeighborhoodViewModel:self.detailViewController.viewModel];
 }
 
 - (void)addSoldClick:(NSString *)url {
