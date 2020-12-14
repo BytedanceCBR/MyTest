@@ -59,6 +59,7 @@
     @"displayStatsInfo": @"display_stats_info",
     @"baseInfoMap": @"base_info_map",
     @"searchId": @"search_id",
+    @"displayBuiltType": @"display_built_type",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

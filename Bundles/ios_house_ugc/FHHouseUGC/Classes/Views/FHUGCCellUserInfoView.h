@@ -36,6 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)refreshWithData:(FHFeedUGCCellModel *)cellModel;
 
 - (void)setTitleModel:(FHFeedUGCCellModel *)cellModel;
+
+- (void)updateFrameFromNeighborhoodDetail;
 @end
 
 NS_ASSUME_NONNULL_END

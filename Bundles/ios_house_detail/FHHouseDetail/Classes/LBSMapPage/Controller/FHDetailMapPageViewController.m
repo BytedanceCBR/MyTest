@@ -565,7 +565,7 @@ static MAMapView *kFHPageMapView = nil;
     }
     
     AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
-    requestPoi.keywords = [FHOldDetailStaticMapCell keyWordConver:categoryName];
+    requestPoi.keywords = [FHDetailStaticMap keyWordConver:categoryName];
     requestPoi.location = [AMapGeoPoint locationWithLatitude:self.centerPoint.latitude longitude:self.centerPoint.longitude];
     requestPoi.requireExtension = YES;
     requestPoi.requireSubPOIs = YES;
@@ -605,15 +605,15 @@ static MAMapView *kFHPageMapView = nil;
         kFHPageMapView = [[MAMapView alloc] initWithFrame:mapFrame];// 不会同时出两个页面
 
         //设置地图style
-        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style.data" ofType:nil];
-        NSData *data = [NSData dataWithContentsOfFile:stylePath];
-        NSString *extraPath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style_extra.data" ofType:nil];
-        NSData *extraData = [NSData dataWithContentsOfFile:extraPath];
-        MAMapCustomStyleOptions *options = [MAMapCustomStyleOptions new];
-        options.styleData = data;
-        options.styleExtraData = extraData;
-        [kFHPageMapView setCustomMapStyleOptions:options];
-        [kFHPageMapView setCustomMapStyleEnabled:YES];
+//        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style.data" ofType:nil];
+//        NSData *data = [NSData dataWithContentsOfFile:stylePath];
+//        NSString *extraPath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style_extra.data" ofType:nil];
+//        NSData *extraData = [NSData dataWithContentsOfFile:extraPath];
+//        MAMapCustomStyleOptions *options = [MAMapCustomStyleOptions new];
+//        options.styleData = data;
+//        options.styleExtraData = extraData;
+//        [kFHPageMapView setCustomMapStyleOptions:options];
+//        [kFHPageMapView setCustomMapStyleEnabled:YES];
 
         kFHPageMapView.zoomLevel  = 15.5;
         [kFHPageMapView setCenterCoordinate:self.centerPoint];
@@ -790,7 +790,7 @@ static MAMapView *kFHPageMapView = nil;
         [self.mapView setCenterCoordinate:self.centerPoint];
         return;
     }
-    NSString *keyWords =[FHOldDetailStaticMapCell keyWordConverReverse:searchReqeust.keywords];
+    NSString *keyWords =[FHDetailStaticMap keyWordConverReverse:searchReqeust.keywords];
     if (keyWords.length <= 0) {
         [[ToastManager manager] showToast:@"暂无相关信息"];
         [self.mapView setCenterCoordinate:self.centerPoint];

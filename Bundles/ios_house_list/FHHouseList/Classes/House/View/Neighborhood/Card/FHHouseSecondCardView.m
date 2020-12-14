@@ -32,14 +32,29 @@
 @property (nonatomic, strong) FHHouseRecommendView *recommendView;
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 
+@property (nonatomic, assign) CGFloat leftMargin;
+@property (nonatomic, assign) CGFloat rightMargin;
 
 @end
 
 @implementation FHHouseSecondCardView
 
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
+- (instancetype)initWithLeftMargin:(CGFloat)left rightMargin:(CGFloat)right {
+    self = [super init];
     if (self) {
+        self.leftMargin = left;
+        self.rightMargin = right;
+        [self setupUI];
+        [self setupConstraints];
+    }
+    return self;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.leftMargin = 15;
+        self.rightMargin = 15;
         [self setupUI];
         [self setupConstraints];
     }
@@ -85,7 +100,8 @@
 
 - (void)setupConstraints {
     [self.leftImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(15);
+        make.top.mas_equalTo(15);
+        make.left.mas_equalTo(self.leftMargin);
         make.width.height.mas_equalTo(84);
     }];
     
@@ -98,7 +114,7 @@
     [self.titleAndTagView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftImageView.mas_right).offset(8);
         make.top.mas_equalTo(12);
-        make.right.mas_equalTo(-15);
+        make.right.mas_equalTo(-self.rightMargin);
         make.height.mas_equalTo(22);
     }];
     
@@ -124,7 +140,7 @@
     [self.pricePerSqmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.priceLabel.mas_top).offset(4);
         make.left.mas_equalTo(self.priceLabel.mas_right).offset(4);
-        make.right.mas_equalTo(0);
+        make.right.mas_equalTo(self.titleAndTagView);
         make.bottom.mas_equalTo(self.priceLabel);
     }];
     [self.recommendView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -145,7 +161,7 @@
         make.height.mas_equalTo(titleHeight);
     }];
     self.subTitleLabel.text = secondViewModel.subtitle;
-    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:secondViewModel.tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152];
+    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:secondViewModel.tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 122 - self.leftMargin - self.rightMargin];
     self.priceLabel.text = secondViewModel.price;
     CGFloat width = [self.priceLabel btd_widthWithHeight:22];
     [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {

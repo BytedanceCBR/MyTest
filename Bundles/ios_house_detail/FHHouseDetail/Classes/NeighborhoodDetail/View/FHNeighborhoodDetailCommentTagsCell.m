@@ -27,7 +27,7 @@
         FHNeighborhoodDetailCommentTagsModel *model = (FHNeighborhoodDetailCommentTagsModel *)data;
         
         CGFloat height = 26;
-        CGFloat maxWidth = width - 32;
+        CGFloat maxWidth = width - 24;
         CGFloat row = 0;
         CGFloat currentWidth = 0;
         
@@ -74,11 +74,11 @@
     self = [super initWithFrame:frame];
     if (self) {
         _tagViews = [NSMutableArray array];
-        _maxWidth = [UIScreen mainScreen].bounds.size.width - 30 - 32;
+        _maxWidth = [UIScreen mainScreen].bounds.size.width - 30 - 24;
         _currentWidth = 0;
         _row = 0;
         _topMargin = 0;
-        _leftMargin = 16;
+        _leftMargin = 12;
     }
     return self;
 }
@@ -98,9 +98,9 @@
     if(self.currentWidth > self.maxWidth){
         self.row++;
         self.currentWidth = tagWidth;
-        self.leftMargin = 16;
+        self.leftMargin = 12;
     }else{
-        self.leftMargin = 16 + (self.currentWidth - tagWidth);
+        self.leftMargin = 12 + (self.currentWidth - tagWidth);
     }
     
     if(self.row < maxRowCount){
@@ -125,7 +125,7 @@
     _currentWidth = 0;
     _row = 0;
     _topMargin = 0;
-    _leftMargin = 16;
+    _leftMargin = 12;
 }
 
 @end

@@ -60,6 +60,7 @@
 
     // 用户信息区
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
+    self.userInfoView.titleLabel.font = [UIFont themeFontMedium:14];
     [self.contentContainer addSubview:self.userInfoView];
     
     // 文本区
@@ -107,8 +108,8 @@
         CGFloat rightMargin = 0;
         CGFloat topMargin = 0;
         
-        CGFloat leftPadding = 16;
-        CGFloat rightPadding = 16;
+        CGFloat leftPadding = 12;
+        CGFloat rightPadding = 12;
         CGFloat topPadding = 16;
         
         CGFloat elementMargin = 10; //元素之间的间距
@@ -138,8 +139,8 @@
     CGFloat rightMargin = 0;
     CGFloat topMargin = 0;
     
-    CGFloat leftPadding = 16;
-    CGFloat rightPadding = 16;
+    CGFloat leftPadding = 12;
+    CGFloat rightPadding = 12;
     CGFloat topPadding = 16;//往上10个像素剩余10+6
     
     CGFloat elementMargin = 10; //元素之间的间距
@@ -154,6 +155,8 @@
     //设置userInfo
     self.userInfoView.userAuthLabel.text = self.cellModel.user.userAuthInfo;
     [self.userInfoView refreshWithData:self.cellModel];
+    self.userInfoView.userName.font = [UIFont themeFontMedium:14];
+    [self.userInfoView updateFrameFromNeighborhoodDetail];
     self.userInfoView.moreBtn.hidden = YES;
     
     // 文本内容标签
@@ -162,6 +165,8 @@
     BOOL isContentEmpty = isEmptyString(self.cellModel.content);
     self.contentLabel.hidden = isContentEmpty;
     self.contentLabel.height = isContentEmpty ? 0 : self.cellModel.contentHeight;
+    self.contentLabel.font = [UIFont themeFontRegular:14];
+//    self.contentLabel
     [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:self.cellModel ];
     
     // 设置图片
@@ -193,7 +198,7 @@
         self.essenceIcon.width = 42;
         self.essenceIcon.height = 42;
         self.essenceIcon.centerY = self.userInfoView.centerY;
-        self.essenceIcon.right = self.userInfoView.right - 16;
+        self.essenceIcon.right = self.userInfoView.right - 12;
         self.essenceIcon.hidden = NO;
     }else{
         self.essenceIcon.hidden = YES;

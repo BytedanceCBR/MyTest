@@ -6,9 +6,7 @@
 //
 
 #import "FHNeighborhoodDetailSurroundingSM.h"
-#import "FHNewHouseDetailMapCollectionCell.h"
-#import "FHNewHouseDetailMapResultCollectionCell.h"
-#import "FHNeighborhoodDetailPriceTrendCollectionCell.h"
+#import "FHNeighborhoodDetailMapCollectionCell.h"
 
 @implementation FHNeighborhoodDetailSurroundingSM
 
@@ -16,7 +14,7 @@
     self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
     //地图
     if(model.data.neighborhoodInfo.gaodeLat.length && model.data.neighborhoodInfo.gaodeLng.length){
-        FHNewHouseDetailMapCellModel *staticMapModel = [[FHNewHouseDetailMapCellModel alloc] init];
+        FHNeighborhoodDetailMapCellModel *staticMapModel = [[FHNeighborhoodDetailMapCellModel alloc] init];
         staticMapModel.baiduPanoramaUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
         staticMapModel.mapCentertitle = model.data.neighborhoodInfo.name;
         staticMapModel.gaodeLat = model.data.neighborhoodInfo.gaodeLat;
@@ -43,14 +41,11 @@
     }
 
     // 均价走势
-    if (model.data.priceTrend.count > 0) {
-        FHNeighborhoodDetailPriceTrendCellModel *priceTrendModel = [[FHNeighborhoodDetailPriceTrendCellModel alloc] init];
-//        priceTrendModel.housetype  = self.houseType;
-//        priceTrendModel.houseModelType = FHPlotHouseModelTypeLocationPeriphery;
-        priceTrendModel.priceTrends = model.data.priceTrend;
-//        priceTrendModel.tableView = self.tableView;
-        self.priceTrendModel = priceTrendModel;
-    }
+//    if (model.data.priceTrend.count > 0) {
+//        FHNeighborhoodDetailPriceTrendCellModel *priceTrendModel = [[FHNeighborhoodDetailPriceTrendCellModel alloc] init];
+//        priceTrendModel.priceTrends = model.data.priceTrend;
+//        self.priceTrendModel = priceTrendModel;
+//    }
 }
 
 - (NSArray *)dataItems {
@@ -58,18 +53,18 @@
     if (self.mapCellModel) {
         [items addObject:self.mapCellModel];
     }
-    if (self.mapCellModel.annotations.count) {
-        [items addObjectsFromArray:self.mapCellModel.annotations];
-    } else {
-        [items addObject:self.mapCellModel.emptyString?:@"附近没有交通信息"];
-    }
-    if (!self.priceTrendModel.priceTrends.count) {
-        [items addObject:@""];
-    } else {
-        if (self.priceTrendModel) {
-            [items addObject:self.priceTrendModel];
-        }
-    }
+//    if (self.mapCellModel.annotations.count) {
+//        [items addObjectsFromArray:self.mapCellModel.annotations];
+//    } else {
+//        [items addObject:self.mapCellModel.emptyString?:@"附近没有交通信息"];
+//    }
+//    if (!self.priceTrendModel.priceTrends.count) {
+//        [items addObject:@""];
+//    } else {
+//        if (self.priceTrendModel) {
+//            [items addObject:self.priceTrendModel];
+//        }
+//    }
     return items.copy;
 }
 

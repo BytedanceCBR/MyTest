@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *schema;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
+@property (nonatomic, strong , nullable) NSDictionary *compare;
 @property (nonatomic, copy , nullable) NSString *iconUrl;
 @property (nonatomic, assign) BOOL hiddenBottomLine;
 @end
@@ -46,6 +47,9 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNeighborhoodDataStrategyModel : JSONModel
 
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataStrategyArticleListModel> *articleList;
+@property (nonatomic, strong , nullable) NSDictionary *article;
+@property (nonatomic, strong , nullable) NSDictionary *score;
+@property (nonatomic, strong , nullable) NSDictionary *compare;
 @property (nonatomic, copy , nullable) NSString *title;
 @end
 
@@ -113,6 +117,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNeighborhoodDataNeighborhoodInfoModel : JSONModel
 
+@property (nonatomic, copy) NSString *tradeAreaName;//商圈
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *areaId;
 @property (nonatomic, copy , nullable) NSString *name;
@@ -171,6 +176,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy , nullable) NSString *attr;
 @property (nonatomic, copy , nullable) NSString *value;
+@property (nonatomic, copy , nullable) NSString *val;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *unit;
+@property (nonatomic, copy , nullable) NSString *identifier;
+
 @end
 
 
@@ -218,8 +228,21 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataCommentsContentModel *content;
 @end
 
+@interface FHDetailNeighborhoodDatastatsMinfoSaleModel : JSONModel
+@property (nonatomic, copy , nullable) NSString *attr;
+@property (nonatomic, copy , nullable) NSString *openUrl;
+@property (nonatomic, copy , nullable) NSString *unit;
+@property (nonatomic, copy , nullable) NSString *val;
+@end
+
+@interface FHDetailNeighborhoodDatastatsMinfoModel : JSONModel
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDatastatsMinfoSaleModel *onSale;
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDatastatsMinfoSaleModel *sold;
+@end
+
 @interface FHDetailNeighborhoodDataModel : JSONModel
 
+@property (nonatomic, strong , nullable) FHDetailNeighborhoodDatastatsMinfoModel *statsMinfo;
 @property (nonatomic, strong , nullable) NSArray<FHDetailPriceTrendModel> *priceTrend;
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
 @property (nonatomic, strong , nullable) NSArray<FHDetailNeighborhoodDataStatsInfoModel> *statsInfo;
@@ -251,6 +274,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong , nullable) FHHouseDetailMediaInfo *neighborhoodTopImages;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataNeighborhoodEvaluationModel *neighborhoodEvaluation ; 
 
+//113 二级页面基础信息
+@property (nonatomic, copy, nullable) NSDictionary *neighborhoodDetailModules;
 @end
 
 @interface FHDetailNeighborhoodModel : JSONModel

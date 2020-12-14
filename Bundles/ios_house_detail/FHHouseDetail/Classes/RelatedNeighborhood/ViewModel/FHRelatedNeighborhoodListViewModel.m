@@ -116,7 +116,7 @@
     }
 
     __weak typeof(self) wSelf = self;
-    TTHttpTask *httpTask = [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:searchId offset:offset query:nil count:15 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
+    TTHttpTask *httpTask = [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId isShowNeighborhood:YES searchId:searchId offset:offset query:nil count:15 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
 
         wSelf.relatedNeighborhoodData = model.data;
         [wSelf processDetailRelatedData:model error:error];
