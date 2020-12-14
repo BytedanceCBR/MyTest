@@ -31,6 +31,7 @@
 #import "TTAccountLoginManager.h"
 #import "TTAccountManager.h"
 #import "ToastManager.h"
+#import "FHUGCCommonAvatar.h"
 
 
 NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifier";
@@ -41,7 +42,7 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 @interface TTCommentDetailCell () <TTUGCAttributedLabelDelegate>
 @property (nonatomic, strong) TTCommentDetailReplyCommentModel *commentModel;
 @property (nonatomic, strong) TTCommentDetailCellLayout *layout;
-@property (nonatomic, strong) TTAsyncCornerImageView *avatarView;
+@property (nonatomic, strong) FHUGCCommonAvatar*avatarView;
 @property (nonatomic, strong) TTUserInfoView *nameView;
 @property (nonatomic, strong) TTDiggButton *digButton;
 @property (nonatomic, strong) TTAsyncLabel *userInfoLabel;         //用户信息(头条号+认证信息)
@@ -100,8 +101,8 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 }
 
 - (void)refreshAvatarView {
-    [self.avatarView tt_setImageWithURLString:self.commentModel.user.avatarURLString];
-    [self.avatarView showOrHideVerifyViewWithVerifyInfo:self.commentModel.user.userAuthInfo decoratorInfo:self.commentModel.user.userDecoration sureQueryWithID:YES userID:nil];
+    [self.avatarView setAvatarUrl:self.commentModel.user.avatarURLString];
+    [self.avatarView setUserId: self.commentModel.user.ID];
 }
 
 - (void)refreshNameView {
@@ -362,17 +363,14 @@ NSString *const kTTCommentDetailCellIdentifier = @"kTTCommentDetailCellIdentifie
 
 #pragma mark - getter & setter
 
-- (TTAsyncCornerImageView *)avatarView {
+- (FHUGCCommonAvatar *)avatarView {
     if (!_avatarView) {
-        _avatarView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake([TTCommentDetailCellHelper cellHorizontalPadding], [TTCommentDetailCellHelper cellVerticalPadding], [TTCommentDetailCellHelper avatarSize], [TTCommentDetailCellHelper avatarSize]) allowCorner:YES];
-        _avatarView.cornerRadius = [TTCommentDetailCellHelper avatarSize] / 2;
-        _avatarView.placeholderName = @"big_defaulthead_head";
-        _avatarView.borderWidth = 0;
-        _avatarView.borderColor = [UIColor clearColor];
-//        [_avatarView setupVerifyViewForLength:[TTCommentDetailCellHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
-//            return [TTCommentDetailCellHelper verifyLogoSize:standardSize];
-//        }];
-        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        _avatarView = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake([TTCommentDetailCellHelper cellHorizontalPadding], [TTCommentDetailCellHelper cellVerticalPadding], [TTCommentDetailCellHelper avatarSize], [TTCommentDetailCellHelper avatarSize])];
+        [_avatarView setPlaceholderImage:@"big_defaulthead_head"];
+        [_avatarView addGestureRecognizer:({
+            UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(avatarViewOnClick:)];
+            gesture;
+        })];
     }
     return _avatarView;
 }
