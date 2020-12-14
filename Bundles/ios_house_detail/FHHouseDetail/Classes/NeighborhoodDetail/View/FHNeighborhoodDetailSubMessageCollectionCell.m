@@ -54,7 +54,7 @@
     self.currentData = data;
     FHNeighborhoodDetailSubMessageModel *model = (FHNeighborhoodDetailSubMessageModel *)data;
     if (model) {
-        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:model.perSquareMetre?:@""];
+        NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:model.perSquareMetre];
         NSDictionary *commonTextStyle = @{ NSFontAttributeName:[UIFont themeFontMedium:24],NSForegroundColorAttributeName:[UIColor colorWithHexStr:@"#fe5500"]};
         [attrText addAttributes:commonTextStyle range:NSMakeRange(0, attrText.length)];
         NSRange tapRange = [attrText.string rangeOfString:@"元/平"];
