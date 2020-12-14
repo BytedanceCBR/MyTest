@@ -267,6 +267,7 @@
         if(!cell) {
             cell = [[UITableViewCell alloc] init];
         }
+        cell.contentView.backgroundColor = [UIColor themeWhite];
         [cell.contentView addSubview:self.emptyView];
         return cell;
     }
