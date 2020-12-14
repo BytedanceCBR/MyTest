@@ -15,7 +15,7 @@
 #import <TTRoute/TTRoute.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "FHSearchHouseModel.h"
-
+#import <Flutter/Flutter.h>
 
 @interface FHNeighborhoodDetailCoreInfoSC ()
 
@@ -129,12 +129,12 @@
     }
     NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
     tracerDic[@"enter_type"] = @"click";
+    tracerDic[@"page_type"] = @"old_list";
     tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB;
-    tracerDic[@"category_name"] = @"same_neighborhood_list";
-    tracerDic[@"element_from"] = @"same_neighborhood";
+    tracerDic[@"category_name"] = @"old_list";
+    tracerDic[@"element_from"] = @"sale_house";
     tracerDic[@"enter_from"] = @"neighborhood_detail";
-    [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
-    
+    [tracerDic removeObjectForKey:@"card_type"];
     NSMutableDictionary *userInfo = [NSMutableDictionary new];
     userInfo[@"tracer"] = tracerDic;
     userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
@@ -172,13 +172,13 @@
     tracerDict[@"enter_from"] = @"neighborhood_detail";
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
     
-    if (self.detailViewController.viewModel.oritinDetailData) {
-        params[@"neighbor_info"] = self.detailViewController.viewModel.oritinDetailData;
+    if (self.detailViewController.viewModel.originDetailDict) {
+        params[@"neighbor_info"] = [self.detailViewController.viewModel.originDetailDict[@"data"] btd_safeJsonStringEncoded];
     } else if (self.detailViewController.viewModel.detailData) {
         params[@"neighbor_info"] = [[self.detailViewController.viewModel.detailData.data toDictionary] btd_safeJsonStringEncoded];
     }
     
-    userInfo[@"params"] = [params btd_jsonStringEncoded];
+    userInfo[@"params"] = [params btd_safeJsonStringEncoded];
     
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
 }
@@ -207,11 +207,11 @@
     
     NSMutableDictionary *tracer = self.detailTracerDict.mutableCopy;
     
-    
-    [tracer setValue:[self clickPositionFromQucikEntryName:quickEntryName] forKey:@"element_from"];
-    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+    [tracer setObject:@"map_detail" forKey:@"page_type"];
+    [tracer setValue:@"top_map" forKey:@"element_from"];
+    [tracer setObject:@"neighborhood_detail" forKey:@"enter_from"];
+    [tracer setObject:@"be_null" forKey:@"element_type"];
     [infoDict setValue:tracer forKey:@"tracer"];
-    
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }

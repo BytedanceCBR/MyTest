@@ -656,6 +656,7 @@
     tracerDict[@"enter_from"] = enter_from.length > 0 ? enter_from : @"be_null";
     NSString *element_from = self.listController.tracerDict[@"element_from"];
     tracerDict[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
+    tracerDict[@"page_type"]  = self.listController.tracerDict[@"page_type"] ? : @"be_null";
     return tracerDict;
 }
 
