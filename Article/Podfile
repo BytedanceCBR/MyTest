@@ -154,7 +154,7 @@ def appPods
     pod 'TTImagePicker', '7.5.5.12'
     pod 'TTImagePickerBase', '1.0.4'
   
-    pod 'MetaSecML', '4.1.20'
+    pod_binary 'MetaSecML', '4.1.20'
     
     pod_binary 'IESGeckoKit', '0.4.0'
     pod_binary 'IESWebKit', '0.2.0-rc.3'
