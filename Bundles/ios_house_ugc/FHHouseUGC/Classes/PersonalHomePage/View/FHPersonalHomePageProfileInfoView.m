@@ -11,6 +11,7 @@
 #import "TTAccountManager.h"
 #import "UIImageView+BDWebImage.h"
 #import "UILabel+BTDAdditions.h"
+#import "NSString+BTDAdditions.h"
 #import "FHCommonDefines.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
@@ -37,7 +38,6 @@
 @property(nonatomic,strong) UIView *backView;
 @property(nonatomic,strong) UIImageView *iconView;
 @property(nonatomic,strong) UILabel *userNameLabel;
-@property(nonatomic,strong) UIImageView *verifyIconView;
 @property(nonatomic,strong) UILabel *verifyContentLabel;
 @property(nonatomic,strong) UILabel *descLabel;
 @property(nonatomic,strong) UIButton *changeButton;
@@ -54,14 +54,14 @@
 }
 
 - (void)initView {
-    self.shadowView = [[FHPersonalHomePageProfileInfoImageView alloc] initWithFrame:CGRectMake(0,0, SCREEN_WIDTH, 160 + self.homePageManager.safeArea)];
+    self.shadowView = [[FHPersonalHomePageProfileInfoImageView alloc] initWithFrame:CGRectZero];
     [self addSubview:self.shadowView];
     
     self.backView = [[FHPersonalHomePageProfileInfoBackView alloc] initWithFrame:CGRectZero];
     self.backView.backgroundColor = [UIColor themeWhite];
     [self addSubview:self.backView];
     
-    self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 74 + self.homePageManager.safeArea, 80, 80)];
+    self.iconView = [[UIImageView alloc] initWithFrame:CGRectZero];
     self.iconView.layer.cornerRadius = 40;
     self.iconView.layer.borderColor = [UIColor themeWhite].CGColor;
     self.iconView.layer.borderWidth = 2;
@@ -77,15 +77,10 @@
     self.descLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     self.descLabel.textColor = [UIColor themeGray2];
     self.descLabel.font = [UIFont themeFontRegular:14];
-    self.descLabel.numberOfLines = 0;
-    
-    self.verifyIconView = [[UIImageView alloc] initWithFrame:CGRectMake(20, 92, 16, 16)];
-    self.verifyIconView.image = [UIImage imageNamed:@"ugc_v_tag"];
-    self.verifyIconView.hidden = YES;
-    
-    self.verifyContentLabel = [[UILabel alloc] initWithFrame:CGRectMake(40, 90, SCREEN_WIDTH - 40, 20)];
-    self.verifyContentLabel.font = [UIFont themeFontRegular:14];
-    self.verifyContentLabel.textColor = [UIColor themeGray1];
+    self.descLabel.numberOfLines = 5;
+
+    self.verifyContentLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    self.verifyContentLabel.numberOfLines = 2;
     self.verifyContentLabel.hidden = YES;
 
     self.changeButton = [[UIButton alloc] initWithFrame:CGRectMake(SCREEN_WIDTH - 92, 14, 72, 30)];
@@ -104,7 +99,6 @@
     [self addSubview:self.seperatorView];
     
     [self.backView addSubview:self.userNameLabel];
-    [self.backView addSubview:self.verifyIconView];
     [self.backView addSubview:self.verifyContentLabel];
     [self.backView addSubview:self.descLabel];
     [self.backView addSubview:self.changeButton];
@@ -113,17 +107,38 @@
 - (void)updateWithModel:(FHPersonalHomePageProfileInfoDataModel *)model isVerifyShow:(BOOL)isVerifyShow {
     CGFloat backViewHeight = 90 - 8 + 15;
     
+    self.shadowView.frame = CGRectMake(0,0, SCREEN_WIDTH, 130 + self.homePageManager.safeArea);
     [self.shadowView updateWithUrl:model.avatarUrl];
     self.iconView.frame = CGRectMake(20, 74 + self.homePageManager.safeArea, 80, 80);
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     self.bigAvatarUrl = model.bigAvatarUrl;
     self.userNameLabel.text = model.name;
     
+    CGFloat verifyHeight = 0;
     if(isVerifyShow) {
-        self.verifyContentLabel.text = model.verifiedContent;
+        NSString *verifiedString = [NSString stringWithFormat:@" 认证：%@",model.verifiedContent];
+        
+        NSMutableAttributedString *attrStr = [[NSMutableAttributedString  alloc] initWithString:verifiedString];
+        [attrStr addAttributes:@{
+            NSFontAttributeName :[UIFont themeFontRegular:14],
+            NSForegroundColorAttributeName : [UIColor themeGray1]
+        } range:NSMakeRange(0, verifiedString.length)];
+        NSTextAttachment *attachMent = [[NSTextAttachment alloc] init];
+        attachMent.image = [UIImage imageNamed:@"ugc_v_tag"];
+        attachMent.bounds = CGRectMake(-2, -2, 16, 16);
+        [attrStr insertAttributedString:[NSAttributedString attributedStringWithAttachment:attachMent] atIndex:0];
+
+        self.verifyContentLabel.attributedText = attrStr;
+        CGFloat height = [self.verifyContentLabel btd_heightWithWidth:SCREEN_WIDTH - 40];
+        if(height > 25) {
+            height = 40;
+        } else {
+            height = 20;
+        }
+        verifyHeight = 8 + height;
+        backViewHeight = backViewHeight + verifyHeight;
+        self.verifyContentLabel.frame = CGRectMake(20, 90, SCREEN_WIDTH - 40, height);
         self.verifyContentLabel.hidden = NO;
-        self.verifyIconView.hidden = NO;
-        backViewHeight = backViewHeight + 8 + 20;
     }
    
     NSString *desc = model.desc;
@@ -134,8 +149,8 @@
     if(!isEmptyString(desc)) {
         desc = [NSString stringWithFormat:@"简介：%@",model.desc];
         self.descLabel.text = desc;
-        CGFloat descLabelHeight = [self.descLabel btd_heightWithWidth:SCREEN_WIDTH - 40];
-        CGFloat offset = isVerifyShow ? 118 : 90;
+        CGFloat descLabelHeight = [desc btd_sizeWithFont: [UIFont themeFontRegular:14] width:SCREEN_WIDTH - 40 maxLine:5].height;
+        CGFloat offset = 90 + verifyHeight;
         self.descLabel.frame = CGRectMake(20, offset, SCREEN_WIDTH - 40, descLabelHeight);
         backViewHeight = backViewHeight + 8 + descLabelHeight;
     }
@@ -193,6 +208,8 @@
 
 @interface FHPersonalHomePageProfileInfoImageView ();
 @property(nonatomic,strong) UIImageView *imageView;
+@property(nonatomic,strong) UIVisualEffectView *effectView;
+@property(nonatomic,strong) UIView *blackView;
 @end
 
 @implementation FHPersonalHomePageProfileInfoImageView
@@ -203,16 +220,15 @@
         _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, - 0.2 * SCREEN_WIDTH, SCREEN_WIDTH, SCREEN_WIDTH)];
         [self addSubview:_imageView];
         
-        UIView *blackView = [[UIView alloc] initWithFrame:frame];
-        blackView.backgroundColor = [UIColor themeBlack];
-        blackView.alpha = 0.08;
-        [self addSubview:blackView];
+        _blackView = [[UIView alloc] initWithFrame:frame];
+        _blackView.backgroundColor = [UIColor themeBlack];
+        _blackView.alpha = 0.08;
+        [self addSubview:_blackView];
         
-        UIVisualEffectView *effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-        effectView.frame = frame;
-        effectView.alpha = 1;
-        [self addSubview:effectView];
-        [self bringSubviewToFront:effectView];
+        _effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
+        _effectView.alpha = 1;
+        [self addSubview:_effectView];
+        [self bringSubviewToFront:_effectView];
         self.layer.masksToBounds = YES;
     }
     return self;
@@ -220,6 +236,8 @@
 
 -(void)updateWithUrl:(NSString *)url {
     [self.imageView bd_setImageWithURL:[NSURL URLWithString:url] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
+    self.blackView.frame = self.frame;
+    self.effectView.frame = self.frame;
 }
 @end
 

@@ -141,10 +141,10 @@
 -(void)scrollViewScroll:(UIScrollView *)scrollView {
     CGFloat offset = scrollView.contentOffset.y;
     CGFloat tabListOffset = [self tabListOffset];
-    CGFloat backViewOffset = 120 + self.safeArea - self.navBar.height;
-    CGFloat nameLabelOffset = 190 + self.safeArea - self.navBar.height;
-    CGFloat shadowViewHeight = 160 + self.safeArea;
-    
+    CGFloat shadowViewHeight = 130 + self.safeArea;
+    CGFloat backViewOffset = shadowViewHeight -  self.navBar.height;
+    CGFloat nameLabelOffset = backViewOffset + 60;
+
 
     if(offset >= tabListOffset) {
         scrollView.contentOffset = CGPointMake(0, tabListOffset);
