@@ -106,11 +106,7 @@
             userInfo[@"tracer"] = tracerDic;
             userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
             if (detailModel.data.neighborhoodInfo.name.length > 0) {
-                if (SM.model.total.length > 0) {
-                    userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.neighborhoodInfo.name,SM.model.total];
-                } else {
-                    userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
-                }
+                userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
             } else {
                 userInfo[@"title"] = @"小区房源";// 默认值
             }
@@ -209,10 +205,11 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHNeighborhoodDetailRecommendTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailRecommendTitleView class] atIndex:index];
-    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
+//    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
     titleView.titleLabel.font = [UIFont themeFontMedium:16];
     titleView.titleLabel.textColor = [UIColor themeGray1];
-    titleView.titleLabel.text = [NSString stringWithFormat:@"周边房源(%@)", SM.total];//@"周边房源";
+    titleView.titleLabel.text = @"周边房源";
+//    titleView.titleLabel.text = [NSString stringWithFormat:@"周边房源(%@)", SM.total];//@"周边房源";
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
     return titleView;
