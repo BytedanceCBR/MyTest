@@ -14,8 +14,6 @@
 #import "UIFont+House.h"
 #import "FHArticleLayout.h"
 
-#define maxLines 3
-
 @interface FHArticleCell ()
 
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
@@ -52,7 +50,7 @@
 
 - (void)initViews {
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
-    _contentLabel.numberOfLines = maxLines;
+    _contentLabel.numberOfLines = 3;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
     _contentLabel.font = [UIFont themeFontMedium:16];

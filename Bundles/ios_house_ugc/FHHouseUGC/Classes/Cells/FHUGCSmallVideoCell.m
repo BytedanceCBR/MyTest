@@ -33,9 +33,9 @@
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,assign) CGFloat imageViewheight;
 @property(nonatomic ,assign) CGFloat imageViewWidth;
-@property (nonatomic, strong)   UIImageView       *playIcon;
-@property (nonatomic, strong)   UIView       *timeBgView;
-@property (nonatomic, strong)   UILabel       *timeLabel;
+@property(nonatomic ,strong) UIImageView *playIcon;
+@property(nonatomic ,strong) UIView *timeBgView;
+@property(nonatomic ,strong) UILabel *timeLabel;
 
 @end
 
@@ -168,26 +168,9 @@
     self.currentData = data;
     self.cellModel = cellModel;
     //设置userInfo
-//    self.userInfoView.cellModel = cellModel;
-//    self.userInfoView.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
-//    [self.userInfoView updateDescLabel];
-//    [self.userInfoView updateEditState];
-//    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     [self.userInfoView refreshWithData:cellModel];
     //设置底部
-    self.bottomView.cellModel = cellModel;
-    
-    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-    self.bottomView.position.text = cellModel.community.name;
-    [self.bottomView showPositionView:showCommunity];
-    
-    NSInteger commentCount = [cellModel.commentCount integerValue];
-    if(commentCount == 0){
-        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
-    }else{
-        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
-    }
-    [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
+    [self.bottomView refreshWithData:cellModel];
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     //图片
@@ -231,7 +214,6 @@
         timeStr = [NSString stringWithFormat:@"%@:%@",mStr,sStr];
     }
     self.timeLabel.text = timeStr;
-    // [self.timeLabel sizeToFit];
     [self.timeLabel layoutIfNeeded];
     
     if(isEmptyString(cellModel.content)){

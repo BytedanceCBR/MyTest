@@ -35,6 +35,8 @@
 #import "FHArticleLayout.h"
 #import "FHPostLayout.h"
 #import "FHVideoLayout.h"
+#import "FHAnswerLayout.h"
+#import "FHFullScreenVideoLayout.h"
 
 @interface FHUGCCellManager ()
 
@@ -212,14 +214,14 @@
 //        case FHUGCFeedListCellSubTypeUGCBrokerVideo:
 //            return [FHHouseDeatilRGCVideoCell class];
 //
-//        case FHUGCFeedListCellSubTypeAnswer:
-//            return [FHUGCAnswerCell class];
+        case FHUGCFeedListCellSubTypeAnswer:
+            return [FHAnswerLayout class];
 //
 //        case FHUGCFeedListCellSubTypeQuestion:
 //            return [FHUGCQuestionCell class];
 //
-//        case FHUGCFeedListCellSubTypeFullVideo:
-//            return [FHUGCFullScreenVideoCell class];
+        case FHUGCFeedListCellSubTypeFullVideo:
+            return [FHFullScreenVideoLayout class];
 //        case FHUGCFeedListCellSubTypeSmallVideoList:
 //            return [FHUGCShortVideoListCell class];
             

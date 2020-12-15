@@ -17,10 +17,10 @@
 #import "TTRoute.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "UIViewAdditions.h"
-#import "FHUGCCellAttachCardView.h"
 #import "TTAsyncCornerImageView.h"
 #import "FHUGCCommonAvatar.h"
 #import "FHEnvContext.h"
+#import "FHAnswerLayout.h"
 
 #define leftMargin 20
 #define rightMargin 20
@@ -28,10 +28,7 @@
 
 #define userInfoViewHeight 30
 #define bottomViewHeight 46
-#define guideViewHeight 17
 #define topMargin 20
-#define originViewHeight 80
-#define attachCardViewHeight 57
 
 @interface FHUGCAnswerCell ()<TTUGCAsyncLabelDelegate>
 
@@ -44,9 +41,6 @@
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
-@property(nonatomic ,strong) FHUGCCellAttachCardView *attachCardView;
-@property(nonatomic, strong) TTAsyncCornerImageView *contentImage;
-//@property(nonatomic ,assign) CGFloat imageViewheight;
 
 @end
 
@@ -70,7 +64,6 @@
 
 - (void)initUIs {
     [self initViews];
-    [self initConstraints];
 }
 
 - (void)initViews {
@@ -81,8 +74,6 @@
     self.userIma = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     [_userIma setPlaceholderImage:@"fh_mine_avatar"];
     _userIma.contentMode = UIViewContentModeScaleAspectFill;
-//    _userIma.borderWidth = 1;
-//    _userIma.borderColor = [UIColor themeGray6];
     [self addSubview:self.userIma];
     
     self.username = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
@@ -112,11 +103,6 @@
     _singleImageView.fixedSingleImage = YES;
     [self.contentView addSubview:_singleImageView];
     
-    
-    self.attachCardView = [[FHUGCCellAttachCardView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, attachCardViewHeight)];
-    _attachCardView.hidden = YES;
-    [self.contentView addSubview:_attachCardView];
-    
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
@@ -125,58 +111,22 @@
     [self.bottomView.positionView addGestureRecognizer:tap];
 }
 
-- (void)initConstraints {
-    self.userInfoView.top = topMargin;
-    self.userInfoView.left = 0;
-    self.userInfoView.width = [UIScreen mainScreen].bounds.size.width;
-    self.userInfoView.height = userInfoViewHeight;
+- (void)updateConstraints:(FHBaseLayout *)layout {
+    if (![layout isKindOfClass:[FHAnswerLayout class]]) {
+        return;
+    }
     
-    self.userIma.top =  self.userInfoView.bottom + 5;
-    self.userIma.left = leftMargin;
-    self.userIma.width = 20;
-    self.userIma.height = 20;
+    FHAnswerLayout *cellLayout = (FHAnswerLayout *)layout;
     
-    self.username.centerY =  self.userIma.centerY;
-    self.username.left = self.userIma.right + 4;
-    self.username.height = 18;
-    
-    self.useride.centerY =  self.username.centerY;
-    self.useride.left = self.username.right + 4;
-    self.useride.height = 18;
-    
-    
-    self.contentLabel.top = self.userIma.bottom + 5;
-    self.contentLabel.left = leftMargin;
-    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.contentLabel.height = 0;
-    
-    self.contentImage.top = 0;
-    self.contentImage.left = 0;
-    self.contentImage.width = 20;
-    self.contentImage.height = 20;
-    
-    self.multiImageView.top = self.contentLabel.bottom + 10;
-    self.multiImageView.left = leftMargin;
-    self.multiImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.multiImageView.height = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-    
-    self.singleImageView.top = self.contentLabel.bottom + 10;
-    self.singleImageView.left = leftMargin;
-    self.singleImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.singleImageView.height = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-
-    self.bottomView.top = self.multiImageView.bottom + 10;
-    self.bottomView.left = 0;
-    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
-    self.bottomView.height = bottomViewHeight;
-    
-    
-    self.attachCardView.top = self.multiImageView.bottom + 10;
-    self.attachCardView.left = leftMargin;
-    self.attachCardView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.attachCardView.height = attachCardViewHeight;
+    [FHLayoutItem updateView:self.userInfoView withLayout:cellLayout.userInfoViewLayout];
+    [FHLayoutItem updateView:self.userIma withLayout:cellLayout.userImaLayout];
+    [FHLayoutItem updateView:self.username withLayout:cellLayout.usernameLayout];
+    [FHLayoutItem updateView:self.useride withLayout:cellLayout.userideLayout];
+    [FHLayoutItem updateView:self.contentLabel withLayout:cellLayout.contentLabelLayout];
+    [FHLayoutItem updateView:self.multiImageView withLayout:cellLayout.multiImageViewLayout];
+    [FHLayoutItem updateView:self.singleImageView withLayout:cellLayout.singleImageViewLayout];
+    [FHLayoutItem updateView:self.bottomView withLayout:cellLayout.bottomViewLayout];
 }
-
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
@@ -219,52 +169,28 @@
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
-        self.contentLabel.height = 0;
-        self.multiImageView.top = self.userIma.bottom + 10;
-        self.singleImageView.top = self.userIma.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
-        self.contentLabel.height = cellModel.contentHeight;
         NSAttributedString *more =   [FHUGCCellHelper truncationFont:[UIFont themeFontRegular:14]
                    contentColor:[UIColor themeGray1]
                           color:[UIColor themeRed3]];
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel truncatedToken:more];
-        self.multiImageView.top = self.userIma.bottom + 15 + cellModel.contentHeight;
-        self.singleImageView.top = self.userIma.bottom + 15 + cellModel.contentHeight;
     }
-
-    UIView *lastView = self.contentLabel;
-    CGFloat topOffset = 10;
     //图片
     if(cellModel.imageList.count > 1){
-        lastView = self.multiImageView;
         self.multiImageView.hidden = NO;
         self.singleImageView.hidden = YES;
         [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     }else if(cellModel.imageList.count == 1){
-        lastView = self.singleImageView;
         self.multiImageView.hidden = YES;
         self.singleImageView.hidden = NO;
         [self.singleImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     }else{
-        lastView = self.contentLabel;
         self.multiImageView.hidden = YES;
         self.singleImageView.hidden = YES;
     }
-//    [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     
-    //attach card
-    if(cellModel.attachCardInfo){
-        self.attachCardView.hidden = NO;
-        [self.attachCardView refreshWithdata:cellModel];
-        self.attachCardView.top = lastView.bottom + topOffset;
-        topOffset += attachCardViewHeight;
-        topOffset += 10;
-    }else{
-        self.attachCardView.hidden = YES;
-    }
-    
-    self.bottomView.top = lastView.bottom + topOffset;
+    [self updateConstraints:cellModel.layout];
 }
 
 - (void)updateUserInfoView:(FHFeedUGCCellModel *)cellModel {
@@ -277,64 +203,12 @@
 
     [self.userIma setAvatarUrl:cellModel.user.avatarUrl];
     self.userIma.userId = cellModel.user.userId;
-    NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    %@",cellModel.originItemModel.content] : @"";
-    CGRect titleRect = [titleStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:0 attributes:@{NSFontAttributeName : [UIFont themeFontMedium:16]} context:nil];
-//    CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
-    CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
-    if(titleRect.size.width > maxTitleLabelSizeWidth){
-        self.userInfoView.height = 50;
-    }else {
-         self.userInfoView.height = 30;
-    }
-    [self updateFarme];
-}
-
-- (void)updateFarme {
-    self.userIma.top =  self.userInfoView.bottom + 5;
-    CGRect titleRect = [self.username.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:0 attributes:@{NSFontAttributeName : [UIFont themeFontMedium:16]} context:nil];
-    self.username.width = titleRect.size.width;
-    self.useride.width =  [UIScreen mainScreen].bounds.size.width-30 -40 -titleRect.size.width;
-    self.username.centerY =  self.userIma.centerY;
-    self.useride.centerY =  self.username.centerY;
-    self.useride.left = self.username.right + 4;
-    self.contentLabel.top = self.userIma.bottom + 5;
-    self.multiImageView.top = self.contentLabel.bottom + 10;
-    self.singleImageView.top = self.contentLabel.bottom + 10;
-    self.bottomView.top = self.multiImageView.bottom + 10;
-    self.attachCardView.top = self.multiImageView.bottom + 10;
 }
 
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    %@",cellModel.originItemModel.content] : @"";
-        CGRect titleRect = [titleStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:0 attributes:@{NSFontAttributeName : [UIFont themeFontMedium:16]} context:nil];
-        CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
-        CGFloat userInfoHeight = 0;
-        if(titleRect.size.width > maxTitleLabelSizeWidth){
-            userInfoHeight = 50;
-        }else {
-            userInfoHeight = 30;
-        }
-        CGFloat height = userInfoHeight +30+ bottomViewHeight + topMargin;
-        
-        if(!isEmptyString(cellModel.content)){
-            height += (cellModel.contentHeight + 10);
-        }
-        
-        if(cellModel.imageList.count > 1){
-            CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-            height += (imageViewheight + 10);
-        }else if(cellModel.imageList.count == 1){
-            CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-            height += (imageViewheight + 10);
-        }
-        
-        if(cellModel.attachCardInfo){
-            height += (attachCardViewHeight + 10);
-        }
-        
-        return height;
+        return cellModel.layout.height;
     }
     return 44;
 }

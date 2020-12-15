@@ -277,19 +277,7 @@
         [viewModel.detailController goBack];
     };
     //设置底部
-    self.bottomView.cellModel = self.cellModel;
-    
-    BOOL showCommunity = self.cellModel.showCommunity && !isEmptyString(self.cellModel.community.name);
-    self.bottomView.position.text = self.cellModel.community.name;
-    [self.bottomView showPositionView:showCommunity];
-    
-    NSInteger commentCount = [self.cellModel.commentCount integerValue];
-    if(commentCount == 0){
-        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
-    }else{
-        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
-    }
-    [self.bottomView updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+    [self.bottomView refreshWithData:cellModel];
     //内容
     self.contentLabel.numberOfLines = self.cellModel.numberOfLines;
     if(isEmptyString(self.cellModel.voteInfo.title)){

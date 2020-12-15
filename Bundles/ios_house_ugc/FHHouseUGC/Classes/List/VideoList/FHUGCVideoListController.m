@@ -18,6 +18,7 @@
 #import "FHUGCCellHelper.h"
 #import "FHHouseUGCHeader.h"
 #import "UIScrollView+Refresh.h"
+#import "FHUGCCellManager.h"
 
 @interface FHUGCVideoListController ()<SSImpressionProtocol>
 
@@ -36,6 +37,12 @@
         self.currentVideo.isVideoJumpDetail = YES;
         self.currentVideo.numberOfLines = 2;
         [FHUGCCellHelper setRichContentWithModel:self.currentVideo width:(screenWidth - 30) numberOfLines:self.currentVideo.numberOfLines font:[UIFont themeFontMedium:16]];
+        //计算layout
+        Class layout = [FHUGCCellManager cellLayoutClassFromCellViewType:self.currentVideo.cellSubType];
+        if(layout){
+            self.currentVideo.layout = [[layout alloc] init];
+            [self.currentVideo.layout updateLayoutWithData:self.currentVideo];
+        }
         
         FHFeedUGCCellModel *cellModel = paramObj.allParams[@"cellModel"];
         if(cellModel){
