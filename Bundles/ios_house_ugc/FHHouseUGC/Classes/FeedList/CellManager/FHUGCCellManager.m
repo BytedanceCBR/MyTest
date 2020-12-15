@@ -37,6 +37,7 @@
 #import "FHVideoLayout.h"
 #import "FHAnswerLayout.h"
 #import "FHFullScreenVideoLayout.h"
+#import "FHSmallVideoLayout.h"
 
 @interface FHUGCCellManager ()
 
@@ -183,9 +184,9 @@
 //
         case FHUGCFeedListCellSubTypeUGCVideo:
             return [FHVideoLayout class];
-//
-//        case FHUGCFeedListCellSubTypeUGCSmallVideo:
-//            return [FHUGCSmallVideoCell class];
+
+        case FHUGCFeedListCellSubTypeUGCSmallVideo:
+            return [FHSmallVideoLayout class];
 //
 //        case FHUGCFeedListCellSubTypeUGCVoteDetail:
 //            return [FHUGCVoteDetailCell class];

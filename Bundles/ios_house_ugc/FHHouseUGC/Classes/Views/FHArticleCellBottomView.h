@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong) UIButton *moreBtn;
 @property(nonatomic ,strong) UIButton *answerBtn;
 @property(nonatomic ,strong) UIView *positionView;
-@property(nonatomic, assign) CGFloat sepLineMorePadding;
  
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic, copy) void(^deleteCellBlock)(void);

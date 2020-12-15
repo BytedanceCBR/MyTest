@@ -365,11 +365,6 @@
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
-
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    [self.detailJumpManager goToCommunityDetail:cellModel];
-}
-
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
     // PM要求点富文本链接也进入详情页
     [self lookAllLinkClicked:cellModel cell:nil];

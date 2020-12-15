@@ -15,15 +15,11 @@
 #import "UIViewAdditions.h"
 #import "UIImageView+fhUgcImage.h"
 #import "FHUGCFeedDetailJumpManager.h"
+#import "FHSmallVideoLayout.h"
 
-#define leftMargin 20
-#define rightMargin 20
 #define maxLines 3
-
 #define userInfoViewHeight 40
-#define bottomViewHeight 46
-#define guideViewHeight 17
-#define topMargin 20
+#define bottomViewHeight 45
 
 @interface FHUGCSmallVideoCell ()<TTUGCAsyncLabelDelegate>
 
@@ -31,8 +27,6 @@
 @property(nonatomic ,strong) FHUGCCellUserInfoView *userInfoView;
 @property(nonatomic ,strong) FHUGCCellBottomView *bottomView;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
-@property(nonatomic ,assign) CGFloat imageViewheight;
-@property(nonatomic ,assign) CGFloat imageViewWidth;
 @property(nonatomic ,strong) UIImageView *playIcon;
 @property(nonatomic ,strong) UIView *timeBgView;
 @property(nonatomic ,strong) UILabel *timeLabel;
@@ -59,23 +53,20 @@
 
 - (void)initUIs {
     [self initViews];
-    [self initConstraints];
 }
 
 - (void)initViews {
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
     
-    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] init];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
     _contentLabel.delegate = self;
     [self.contentView addSubview:_contentLabel];
     
-    self.imageViewheight = 200;
-    self.imageViewWidth = 150;
-    self.videoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.imageViewWidth, self.imageViewheight)];
+    self.videoImageView = [[UIImageView alloc] init];
     _videoImageView.backgroundColor = [UIColor themeGray7];
     _videoImageView.layer.masksToBounds = YES;
     _videoImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -101,50 +92,22 @@
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
-    
-    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-    [self.bottomView.positionView addGestureRecognizer:tap];
 }
 
-- (void)initConstraints {
-    self.userInfoView.top = topMargin;
-    self.userInfoView.left = 0;
-    self.userInfoView.width = [UIScreen mainScreen].bounds.size.width;
-    self.userInfoView.height = userInfoViewHeight;
+- (void)updateConstraints:(FHBaseLayout *)layout {
+    if (![layout isKindOfClass:[FHSmallVideoLayout class]]) {
+        return;
+    }
     
-    self.contentLabel.top = self.userInfoView.bottom + 10;
-    self.contentLabel.left = leftMargin;
-    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.contentLabel.height = 0;
+    FHSmallVideoLayout *cellLayout = (FHSmallVideoLayout *)layout;
     
-    self.videoImageView.top = self.userInfoView.bottom + 10;
-    self.videoImageView.left = leftMargin;
-    self.videoImageView.width = self.imageViewWidth;
-    self.videoImageView.height = self.imageViewheight;
-
-    self.bottomView.top = self.videoImageView.bottom + 10;
-    self.bottomView.left = 0;
-    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
-    self.bottomView.height = bottomViewHeight;
-    
-    [self.playIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.mas_equalTo(self.videoImageView);
-        make.width.height.mas_equalTo(44);
-    }];
-
-    [self.timeBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(self.videoImageView.mas_right).offset(-4);
-        make.bottom.mas_equalTo(self.videoImageView.mas_bottom).offset(-4);
-        make.height.mas_equalTo(20);
-        make.width.mas_greaterThanOrEqualTo(44);
-    }];
-
-    [self.timeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.mas_equalTo(self.timeBgView);
-        make.height.mas_equalTo(14);
-        make.left.mas_equalTo(6);
-        make.right.mas_equalTo(-6);
-    }];
+    [FHLayoutItem updateView:self.userInfoView withLayout:cellLayout.userInfoViewLayout];
+    [FHLayoutItem updateView:self.contentLabel withLayout:cellLayout.contentLabelLayout];
+    [FHLayoutItem updateView:self.videoImageView withLayout:cellLayout.videoImageViewLayout];
+    [FHLayoutItem updateView:self.playIcon withLayout:cellLayout.playIconLayout];
+    [FHLayoutItem updateView:self.timeBgView withLayout:cellLayout.timeBgViewLayout];
+    [FHLayoutItem updateView:self.timeLabel withLayout:cellLayout.timeLabelLayout];
+    [FHLayoutItem updateView:self.bottomView withLayout:cellLayout.bottomViewLayout];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -167,6 +130,7 @@
     
     self.currentData = data;
     self.cellModel = cellModel;
+    [self updateConstraints:cellModel.layout];
     //设置userInfo
     [self.userInfoView refreshWithData:cellModel];
     //设置底部
@@ -176,88 +140,25 @@
     //图片
     if (cellModel.imageList.count > 0) {
         FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-        CGFloat wid = [imageModel.width floatValue];
-        CGFloat hei = [imageModel.height floatValue];
-        if (wid <= hei) {
-            self.imageViewheight = 200;
-            self.imageViewWidth = 150;
-        } else {
-            self.imageViewheight = 152;
-            self.imageViewWidth = 270;
-        }
-        
-        self.videoImageView.width = self.imageViewWidth;
-        self.videoImageView.height = self.imageViewheight;
-        
         if (imageModel && imageModel.url.length > 0) {
             NSURL *url = [NSURL URLWithString:imageModel.url];
             [self.videoImageView fh_setImageWithURL:url placeholder:nil reSize:self.videoImageView.size];
         }
     }
-    // 时间
-    NSString *timeStr = @"00:00";
-    if (cellModel.videoDuration > 0) {
-        NSInteger minute = cellModel.videoDuration / 60;
-        NSInteger second = cellModel.videoDuration % 60;
-        NSString *mStr = @"00";
-        if (minute < 10) {
-            mStr = [NSString stringWithFormat:@"%02ld",minute];
-        } else {
-            mStr = [NSString stringWithFormat:@"%ld",minute];
-        }
-        NSString *sStr = @"00";
-        if (second < 10) {
-            sStr = [NSString stringWithFormat:@"%02ld",second];
-        } else {
-            sStr = [NSString stringWithFormat:@"%ld",second];
-        }
-        timeStr = [NSString stringWithFormat:@"%@:%@",mStr,sStr];
-    }
-    self.timeLabel.text = timeStr;
-    [self.timeLabel layoutIfNeeded];
-    
+ 
+    self.timeLabel.text = cellModel.videoDurationStr;
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
-        self.contentLabel.height = 0;
-        self.videoImageView.top = self.userInfoView.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
-        self.contentLabel.height = cellModel.contentHeight;
-        self.videoImageView.top = self.contentLabel.bottom + 10;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
-    
-    self.bottomView.top = self.videoImageView.bottom + 10;
 }
 
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = cellModel.contentHeight + userInfoViewHeight + bottomViewHeight + topMargin + 30;
-        
-        if(isEmptyString(cellModel.content)){
-            height -= 10;
-        }
-        
-        CGFloat imageViewheight = 200;
-        if (cellModel.imageList.count > 0) {
-            FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];
-            CGFloat wid = [imageModel.width floatValue];
-            CGFloat hei = [imageModel.height floatValue];
-            if (wid <= hei) {
-                imageViewheight = 200;
-            } else {
-                imageViewheight = 152;
-            }
-        }
-        
-        height += imageViewheight;
-        
-        if(cellModel.originItemModel){
-            height += (cellModel.originItemHeight + 10);
-        }
-        
-        return height;
+        return cellModel.layout.height;
     }
     return 44;
 }
@@ -272,13 +173,6 @@
 - (void)commentBtnClick {
     if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:cell:)]){
         [self.delegate commentClicked:self.cellModel cell:self];
-    }
-}
-
-//进入圈子详情
-- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
-        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 

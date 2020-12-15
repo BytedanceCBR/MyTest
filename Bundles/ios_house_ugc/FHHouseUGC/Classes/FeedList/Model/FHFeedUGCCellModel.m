@@ -59,7 +59,7 @@
     self = [super init];
     if (self) {
         _showCommunity = YES;
-        _bottomLineHeight = 1.2;
+        _bottomLineHeight = 1;
         _bottomLineLeftMargin = 20;
         _bottomLineRightMargin = 20;
     }
@@ -730,7 +730,26 @@
         } else {
             cellModel.videoDuration = 0;
         }
-        
+        // 时间
+        NSString *timeStr = @"00:00";
+        if (cellModel.videoDuration > 0) {
+            NSInteger minute = cellModel.videoDuration / 60;
+            NSInteger second = cellModel.videoDuration % 60;
+            NSString *mStr = @"00";
+            if (minute < 10) {
+                mStr = [NSString stringWithFormat:@"%02ld",minute];
+            } else {
+                mStr = [NSString stringWithFormat:@"%ld",minute];
+            }
+            NSString *sStr = @"00";
+            if (second < 10) {
+                sStr = [NSString stringWithFormat:@"%02ld",second];
+            } else {
+                sStr = [NSString stringWithFormat:@"%ld",second];
+            }
+            timeStr = [NSString stringWithFormat:@"%@:%@",mStr,sStr];
+        }
+        cellModel.videoDurationStr = timeStr;
         
         FHFeedUGCCellRealtorModel *realtor = [[FHFeedUGCCellRealtorModel alloc] init];
         realtor.agencyName = model.rawData.realtor.agencyName;

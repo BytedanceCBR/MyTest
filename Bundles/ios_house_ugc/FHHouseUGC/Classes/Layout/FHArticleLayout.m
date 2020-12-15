@@ -8,12 +8,12 @@
 #import "FHArticleLayout.h"
 #import "FHFeedUGCCellModel.h"
 
-#define bottomViewHeight 36
 #define topMargin 15
-#define singleImageViewHeight 90
 #define leftMargin 20
 #define rightMargin 20
 #define imagePadding 4
+#define singleImageViewHeight 90
+#define bottomViewHeight 35
 
 @interface FHArticleLayout ()
 

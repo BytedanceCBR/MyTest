@@ -70,7 +70,7 @@
     self.bottomSepView.top = self.bannerImageView.bottom + 20;
     self.bottomSepView.left = 20;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
-    self.bottomSepView.height = 1.2;
+    self.bottomSepView.height = 1;
 }
 
 -(UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -112,7 +112,7 @@
     CGFloat imageWidth = [UIScreen mainScreen].bounds.size.width - 40;
     CGFloat imageHeight = imageWidth * 58.0/335.0;
     //    CGFloat height = imageHeight + topMargin + 25;
-    CGFloat height = imageHeight + 1.2;
+    CGFloat height = imageHeight + 1;
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         
@@ -128,7 +128,7 @@
         }
         //
         if (cellModel.hidelLine) {
-            height -= 1.2;
+            height -= 1;
         }
         return height;
     }

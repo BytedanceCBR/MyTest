@@ -135,10 +135,6 @@
     }
 }
 
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    [self.detailJumpManager goToCommunityDetail:cellModel];
-}
-
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
     NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
     TRACK_EVENT(@"click_comment", dict);

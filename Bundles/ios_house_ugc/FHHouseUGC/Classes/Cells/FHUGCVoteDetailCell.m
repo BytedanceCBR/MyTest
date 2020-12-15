@@ -30,7 +30,7 @@
 #define kFHMaxLines 0
 
 #define userInfoViewHeight 40
-#define bottomViewHeight 46
+#define bottomViewHeight 45
 #define guideViewHeight 17
 #define topMargin 20
 #define originViewHeight 80
@@ -154,9 +154,6 @@
     self.bottomLine.backgroundColor = [UIColor themeGray6];
     self.bottomLine.hidden = YES;
     [self.contentView addSubview:self.bottomLine];
-    
-    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-    [self.bottomView.positionView addGestureRecognizer:tap];
 }
 
 - (void)setupUIFrames {
@@ -232,28 +229,6 @@
     label.font = font;
     label.textColor = textColor;
     return label;
-}
-
-- (void)gotoCommunityDetail {
-    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
-    if (cellModel) {
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        NSDictionary *log_pb = cellModel.tracerDic[@"log_pb"];
-        dict[@"community_id"] = cellModel.community.socialGroupId;
-        NSString *enter_from = cellModel.tracerDic[@"page_type"] ?: @"be_null";
-        NSString *originFrom = cellModel.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
-        dict[@"tracer"] = @{
-            @"origin_from":originFrom,
-            @"enter_from":enter_from,
-            @"enter_type":@"click",
-            @"group_id":cellModel.groupId ?: @"be_null",
-            @"log_pb":log_pb ?: @"be_null"
-        };
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        // 跳转到圈子详情页
-        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }
 }
 
 - (void)refreshWithData:(id)data {
@@ -427,13 +402,6 @@
 - (void)commentBtnClick {
     if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:cell:)]){
         [self.delegate commentClicked:self.cellModel cell:self];
-    }
-}
-
-// 进入圈子详情
-- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
-        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 

@@ -14,7 +14,7 @@
 #import "FHUGCCellUserInfoView.h"
 
 #define maxLines 3
-#define bottomViewHeight 46
+#define bottomViewHeight 45
 #define guideViewHeight 17
 #define topMargin 15
 #define singleImageViewHeight 90
@@ -59,15 +59,11 @@
 
     
     self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectZero];
-    self.bottomView.sepLineMorePadding = 10;
     __weak typeof(self) wself = self;
     _bottomView.deleteCellBlock = ^{
         [wself deleteCell];
     };
     [self.contentView addSubview:_bottomView];
-    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-    [self.bottomView.positionView addGestureRecognizer:tap];
-    
 }
 
 - (void)initConstraints {
@@ -163,13 +159,6 @@
 - (void)deleteCell {
     if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
         [self.delegate deleteCell:self.cellModel];
-    }
-}
-
-//进入圈子详情
-- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
-        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 

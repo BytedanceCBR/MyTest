@@ -13,7 +13,7 @@
 #define leftMargin 20
 #define rightMargin 20
 #define userInfoViewHeight 40
-#define bottomViewHeight 46
+#define bottomViewHeight 45
 #define singleImageViewHeight 90
 #define originViewHeight 80
 #define attachCardViewHeight 57

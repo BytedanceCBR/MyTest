@@ -13,7 +13,7 @@
 #define leftMargin 20
 #define rightMargin 20
 #define userInfoViewHeight 30
-#define bottomViewHeight 46
+#define bottomViewHeight 45
 #define singleImageViewHeight 90
 
 @implementation FHAnswerLayout

@@ -182,6 +182,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, strong , nullable) TTVFeedItem *videoFeedItem;
 @property (nonatomic, strong , nullable) TTVFeedListItem *videoItem;
 @property (nonatomic, assign) NSInteger videoDuration;
+@property (nonatomic, copy) NSString *videoDurationStr;
 @property (nonatomic, strong , nullable) FHFeedContentVideoDetailInfoModel *videoDetailInfo ;
 //埋点相关
 @property (nonatomic, strong , nullable) NSDictionary *logPb;

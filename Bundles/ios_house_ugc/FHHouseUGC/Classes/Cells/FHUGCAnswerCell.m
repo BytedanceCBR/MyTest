@@ -27,7 +27,7 @@
 #define maxLines 3
 
 #define userInfoViewHeight 30
-#define bottomViewHeight 46
+#define bottomViewHeight 45
 #define topMargin 20
 
 @interface FHUGCAnswerCell ()<TTUGCAsyncLabelDelegate>
@@ -106,9 +106,6 @@
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
-    
-    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-    [self.bottomView.positionView addGestureRecognizer:tap];
 }
 
 - (void)updateConstraints:(FHBaseLayout *)layout {
@@ -223,13 +220,6 @@
 - (void)commentBtnClick {
     if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:cell:)]){
         [self.delegate commentClicked:self.cellModel cell:self];
-    }
-}
-
-//进入圈子详情
-- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
-        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 

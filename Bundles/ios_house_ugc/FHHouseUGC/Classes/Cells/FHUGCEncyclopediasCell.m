@@ -57,7 +57,7 @@
     [self.contentView addSubview:_bottomSepView];
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.left.bottom.equalTo(self.contentView);
-        make.height.mas_offset(1.2);
+        make.height.mas_offset(1);
     }];
 }
 

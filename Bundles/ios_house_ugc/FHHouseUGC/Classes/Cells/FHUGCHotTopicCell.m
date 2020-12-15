@@ -116,7 +116,7 @@
     self.seprateLine.top = self.headerView.bottom;
     self.seprateLine.left = 0;
     self.seprateLine.width = self.headerView.width;
-    self.seprateLine.height = 1.2;
+    self.seprateLine.height = 1;
 
 //    [self.seprateLine mas_updateConstraints:^(MASConstraintMaker *make) {
 //        make.top.mas_equalTo(self.headerView.mas_bottom);
@@ -137,7 +137,7 @@
     self.bottomSepView.top = self.collectionView.bottom + 3;
     self.bottomSepView.left = 20;
     self.bottomSepView.width = self.headerView.width - 40;
-    self.bottomSepView.height = 1.2;
+    self.bottomSepView.height = 1;
 
 //    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
 //        make.bottom.left.right.mas_equalTo(self.contentView);
@@ -177,7 +177,7 @@
 }
 
 + (CGFloat)heightForData:(id)data {
-    CGFloat height = headerViewHeight + 1 + 10 + 1.2 + 3;
+    CGFloat height = headerViewHeight + 1 + 10 + 1 + 3;
     if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
         NSArray *dataList = model.hotTopicList;

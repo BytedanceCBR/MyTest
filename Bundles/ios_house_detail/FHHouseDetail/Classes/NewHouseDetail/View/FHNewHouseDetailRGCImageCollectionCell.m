@@ -8,7 +8,6 @@
 #import "FHNewHouseDetailRGCImageCollectionCell.h"
 #import "FHHouseDeatilRGCCellHeader.h"
 #import "FHHouseDetailRGCMultiImageView.h"
-#import "FHUGCCellBottomView.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 #import "FHUGCCellUserInfoView.h"

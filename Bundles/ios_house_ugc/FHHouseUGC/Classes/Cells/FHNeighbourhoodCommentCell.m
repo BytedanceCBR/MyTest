@@ -249,13 +249,6 @@
     }
 }
 
-//进入圈子详情
-- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
-        [self.delegate goToCommunityDetail:self.cellModel];
-    }
-}
-
 #pragma mark - TTUGCAsyncLabelDelegate
 
 - (void)asyncLabel:(TTUGCAsyncLabel *)label didSelectLinkWithURL:(NSURL *)url {

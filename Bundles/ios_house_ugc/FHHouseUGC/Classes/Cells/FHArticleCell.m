@@ -14,6 +14,8 @@
 #import "UIFont+House.h"
 #import "FHArticleLayout.h"
 
+#define bottomViewHeight 35
+
 @interface FHArticleCell ()
 
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
@@ -49,7 +51,7 @@
 }
 
 - (void)initViews {
-    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] init];
     _contentLabel.numberOfLines = 3;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
@@ -57,7 +59,7 @@
     [self.contentView addSubview:_contentLabel];
     
     //单图
-    self.singleImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+    self.singleImageView = [[UIImageView alloc] init];
     _singleImageView.hidden = YES;
     _singleImageView.clipsToBounds = YES;
     _singleImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -72,18 +74,15 @@
     _imageViewContainer.hidden = YES;
     [self.contentView addSubview:_imageViewContainer];
     
-    self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectZero];
+    self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     __weak typeof(self) wself = self;
     _bottomView.deleteCellBlock = ^{
         [wself deleteCell];
     };
     [self.contentView addSubview:_bottomView];
     
-    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-    [self.bottomView.positionView addGestureRecognizer:tap];
-    
     for (NSInteger i = 0; i < 3; i++) {
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        UIImageView *imageView = [[UIImageView alloc] init];
         imageView.clipsToBounds = YES;
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
@@ -136,6 +135,8 @@
     }
     self.currentData = data;
     self.cellModel = cellModel;
+    //更新布局
+    [self updateConstraints:cellModel.layout];
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.title)){
@@ -177,8 +178,6 @@
         self.imageViewContainer.hidden = YES;
         self.singleImageView.hidden = YES;
     }
-    
-    [self updateConstraints:cellModel.layout];
 }
 
 + (CGFloat)heightForData:(id)data {
@@ -192,13 +191,6 @@
 - (void)deleteCell {
     if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
         [self.delegate deleteCell:self.cellModel];
-    }
-}
-
-//进入圈子详情
-- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
-        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 

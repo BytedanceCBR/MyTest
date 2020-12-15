@@ -22,6 +22,7 @@
 #import "TTVideoArticleServiceMessage.h"
 #import "TTVFeedUserOpDataSyncMessage.h"
 #import "UIButton+FHUGCMultiDigg.h"
+#import "FHUGCFeedDetailJumpManager.h"
 
 @interface FHUGCCellBottomView ()
 
@@ -61,6 +62,9 @@
     _positionView.userInteractionEnabled = YES;
     _positionView.hidden = YES;
     [self addSubview:_positionView];
+    
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
+    [self.positionView addGestureRecognizer:tap];
     
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeOrange1]];
     _position.layer.masksToBounds = YES;
@@ -179,9 +183,9 @@
     }
     
     self.bottomSepView.left = cellModel.bottomLineLeftMargin;
-    self.bottomSepView.top = self.positionView.bottom + 20;
+    self.bottomSepView.top = self.height - cellModel.bottomLineHeight;
     self.bottomSepView.height = cellModel.bottomLineHeight;
-    self.bottomSepView.width = self.bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -361,6 +365,11 @@
     }else{
         TRACK_EVENT(@"click_like", dict);
     }
+}
+
+//进入圈子详情
+- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
+    [FHUGCFeedDetailJumpManager goToCommunityDetail:self.cellModel];
 }
 
 @end

@@ -20,6 +20,7 @@
 #import "ToastManager.h"
 #import "UIViewAdditions.h"
 #import "TTAccountManager.h"
+#import "FHUGCFeedDetailJumpManager.h"
 
 @interface FHArticleCellBottomView ()
 
@@ -48,6 +49,9 @@
     _positionView.userInteractionEnabled = YES;
     _positionView.hidden = YES;
     [self addSubview:_positionView];
+    
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
+    [self.positionView addGestureRecognizer:tap];
     
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeOrange1]];
     _position.layer.masksToBounds = YES;
@@ -108,7 +112,7 @@
     
 
     self.bottomSepView.left = 20;
-    self.bottomSepView.top = self.positionView.bottom + 10 + self.sepLineMorePadding;
+    self.bottomSepView.top = self.positionView.bottom + 10;
     self.bottomSepView.height = 1;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
 }
@@ -135,7 +139,7 @@
     self.moreBtn.hidden = cellModel.hiddenMore;
     
     self.bottomSepView.left = cellModel.bottomLineLeftMargin;
-    self.bottomSepView.top = self.positionView.bottom + 10 + self.sepLineMorePadding;
+    self.bottomSepView.top = self.height - cellModel.bottomLineHeight;
     self.bottomSepView.height = cellModel.bottomLineHeight;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
 }
@@ -144,7 +148,6 @@
     self.positionView.hidden = !isShow;
     self.showPositionView = isShow;
     if(isShow){
-        
         self.position.top = 3;
         self.position.height = 18;
         self.position.left = 6;
@@ -519,4 +522,10 @@
      self.answerBtn.left = self.descLabel.right + 20;
     self.answerBtn.centerY = self.descLabel.centerY;
 }
+
+//进入圈子详情
+- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
+    [FHUGCFeedDetailJumpManager goToCommunityDetail:self.cellModel];
+}
+
 @end
