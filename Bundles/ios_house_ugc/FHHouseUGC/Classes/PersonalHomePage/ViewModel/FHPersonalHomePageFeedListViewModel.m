@@ -25,8 +25,14 @@
 #import "FHUtils.h"
         
 
+typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
+    FHPersonalHomePageFeedListTypeDefault,
+    FHPersonalHomePageFeedListTypeError,
+    FHPersonalHomePageFeedListTypeNoFeed,
+};
 
 @interface FHPersonalHomePageFeedListErrorItemModel: NSObject
+@property(nonatomic,assign) FHPersonalHomePageFeedListType feedType;
 @end
 
 @implementation FHPersonalHomePageFeedListErrorItemModel
@@ -42,8 +48,6 @@
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
 @property(nonatomic,copy) NSString *categoryId;
 @property(nonatomic,strong) NSMutableArray *dataList;
-@property(nonatomic,assign) BOOL isFeedError;
-@property(nonatomic,assign) BOOL isNoFeedAfterDelete;
 @end
 
 @implementation FHPersonalHomePageFeedListViewModel
@@ -56,8 +60,6 @@
         _dataList = [NSMutableArray array];
         _detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
         _detailJumpManager.refer = 1;
-        _isFeedError = NO;
-        _isNoFeedAfterDelete = NO;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
         [self configTableView];
     }
@@ -79,7 +81,6 @@
     }];
     self.emptyView.retryBlock = ^{
         StrongSelf;
-        self.isFeedError = NO;
         [self.dataList removeAllObjects];
         [self.tableView reloadData];
         [self.viewController retryLoadData];
@@ -166,11 +167,12 @@
 
 
 - (void)showErrorViewNoNetWork {
-    self.isFeedError = YES;
-    [self setupEmptyView];
     self.tableView.backgroundColor = [UIColor themeWhite];
     self.refreshFooter.hidden = YES;
-    [self.dataList addObject:[[FHPersonalHomePageFeedListErrorItemModel alloc] init]];
+    [self setupEmptyView];
+    FHPersonalHomePageFeedListErrorItemModel *item = [[FHPersonalHomePageFeedListErrorItemModel alloc] init];
+    item.feedType = FHPersonalHomePageFeedListTypeError;
+    [self.dataList addObject:item];
     [self.tableView reloadData];
 }
 
@@ -194,13 +196,13 @@
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }
         [self.homePageManager refreshScrollStatus];
-        self.isFeedError = NO;
     }else{
         self.tableView.backgroundColor = [UIColor themeWhite];
-        [self setupEmptyView];
         self.refreshFooter.hidden = YES;
-        self.isFeedError = YES;
-        [self.dataList addObject:[[FHPersonalHomePageFeedListErrorItemModel alloc] init]];
+        [self setupEmptyView];
+        FHPersonalHomePageFeedListErrorItemModel *item = [[FHPersonalHomePageFeedListErrorItemModel alloc] init];
+        item.feedType = FHPersonalHomePageFeedListTypeError;
+        [self.dataList addObject:item];
     }
     [self.tableView reloadData];
 }
@@ -278,9 +280,10 @@
             if(self.tableView.hasMore) {
                 [self requestData:YES first:YES];
             } else {
-                self.isNoFeedAfterDelete = YES;
                 [self setupEmptyView];
-                [self.dataList addObject:[[FHPersonalHomePageFeedListErrorItemModel alloc] init]];
+                FHPersonalHomePageFeedListErrorItemModel *item = [[FHPersonalHomePageFeedListErrorItemModel alloc] init];
+                item.feedType = FHPersonalHomePageFeedListTypeNoFeed;
+                [self.dataList addObject:item];
                 self.tableView.backgroundColor = [UIColor whiteColor];
                 [self.tableView reloadData];
             }
@@ -317,9 +320,10 @@
             if(!cell) {
                 cell = [[UITableViewCell alloc] init];
             }
-            if(self.isFeedError) {
+            FHPersonalHomePageFeedListErrorItemModel *item = (FHPersonalHomePageFeedListErrorItemModel *)model;
+            if(item.feedType == FHPersonalHomePageFeedListTypeError) {
                 [self.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
-            } else if(self.isNoFeedAfterDelete){
+            } else if(item.feedType == FHPersonalHomePageFeedListTypeNoFeed){
                 [self.emptyView showEmptyWithTip:@"你还没有发布任何内容，快去发布吧" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
             }
             cell.contentView.backgroundColor = [UIColor themeWhite];
