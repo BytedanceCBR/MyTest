@@ -174,7 +174,29 @@
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
     
     if (self.detailViewController.viewModel.originDetailDict) {
-        params[@"neighbor_info"] = [self.detailViewController.viewModel.originDetailDict[@"data"] btd_safeJsonStringEncoded];
+        NSMutableDictionary *dataInfo = [self.detailViewController.viewModel.originDetailDict btd_dictionaryValueForKey:@"data"].mutableCopy;
+        if (dataInfo.count) {
+            NSArray *keys = @[
+                @"base_info",
+                @"neighborhood_image",
+                @"total_sales",
+                @"recommended_realtors",
+                @"question",
+                @"comments",
+                @"sale_house_entrance",
+                @"album_info",
+                @"neighborhood_top_images",
+                @"neighborhood_sale_house_info",
+                @"neighborhood_top_images",
+                @"recommend_realtors_associate_info",
+                @"highlighted_realtor_associate_info",
+                @"neighborhood_detail_modules"
+            ];
+            for (NSString *key in keys) {
+                [dataInfo removeObjectForKey:key];
+            }
+            params[@"neighbor_info"] = [dataInfo btd_safeJsonStringEncoded];
+        }
     } else if (self.detailViewController.viewModel.detailData) {
         params[@"neighbor_info"] = [[self.detailViewController.viewModel.detailData.data toDictionary] btd_safeJsonStringEncoded];
     }

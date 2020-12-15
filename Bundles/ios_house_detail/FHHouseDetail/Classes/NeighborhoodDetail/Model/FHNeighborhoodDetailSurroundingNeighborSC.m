@@ -32,7 +32,7 @@
 - (void)moreButtonClick {
     FHNeighborhoodDetailSurroundingNeighborSM *sectionModel = (FHNeighborhoodDetailSurroundingNeighborSM *)self.sectionModel;
     
-    if (sectionModel.model && sectionModel.model.hasMore) {
+    if (sectionModel.model) {
         
 //        NSString *searchId = model.relatedNeighborhoodData.searchId;
         NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
@@ -137,18 +137,25 @@
     [titleView setupNeighborhoodDetailStyle];
     FHNeighborhoodDetailSurroundingNeighborSM *sectionModel = (FHNeighborhoodDetailSurroundingNeighborSM *)self.sectionModel;
     titleView.titleLabel.text = sectionModel.titleName;
-    titleView.subTitleLabel.text = sectionModel.moreTitle;
-    titleView.arrowsImg.hidden = NO;
-    titleView.subTitleLabel.hidden = NO;
-    [titleView.subTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(titleView.arrowsImg.mas_left).mas_offset(-2);
-        make.centerY.mas_equalTo(titleView.titleLabel);
-    }];
-    __weak typeof(self) weakSelf = self;
-    [titleView setMoreActionBlock:^{
-        //小区列表
-        [weakSelf moreButtonClick];
-    }];
+
+    if (sectionModel.model.total.integerValue <= 5) {
+        titleView.arrowsImg.hidden = YES;
+        titleView.subTitleLabel.hidden = YES;
+        titleView.moreActionBlock = nil;
+    } else {
+        titleView.subTitleLabel.text = sectionModel.moreTitle;
+        titleView.arrowsImg.hidden = NO;
+        titleView.subTitleLabel.hidden = NO;
+        [titleView.subTitleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.right.mas_equalTo(titleView.arrowsImg.mas_left).mas_offset(-2);
+            make.centerY.mas_equalTo(titleView.titleLabel);
+        }];
+        __weak typeof(self) weakSelf = self;
+        [titleView setMoreActionBlock:^{
+            //小区列表
+            [weakSelf moreButtonClick];
+        }];
+    }
     return titleView;
 }
 

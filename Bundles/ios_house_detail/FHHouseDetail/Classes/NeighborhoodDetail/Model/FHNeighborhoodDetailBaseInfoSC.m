@@ -71,6 +71,10 @@
     return cell;
 }
 
+- (void)didSelectItemAtIndex:(NSInteger)index {
+    [self pushBaseInfo];
+}
+
 #pragma mark - IGListSupplementaryViewSource
 - (NSArray<NSString *> *)supportedElementKinds {
     return @[UICollectionElementKindSectionHeader];
@@ -84,6 +88,10 @@
     [titleView setupNeighborhoodDetailStyle];
     titleView.titleLabel.text = @"小区信息";
     // 设置下发标题
+    __weak typeof(self) weakSelf = self;
+    [titleView setMoreActionBlock:^{
+        [weakSelf pushBaseInfo];
+    }];
     return titleView;
 }
 

@@ -328,7 +328,7 @@ id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
         }
 
         // 周边小区
-        if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
+        if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 2) {
             FHNeighborhoodDetailSurroundingNeighborSM *surroundingNeighborSM = [[FHNeighborhoodDetailSurroundingNeighborSM alloc] initWithDetailModel:self.detailData];
             [surroundingNeighborSM updateWithDataModel:self.relatedNeighborhoodData];
             surroundingNeighborSM.sectionType = FHNeighborhoodDetailSectionTypeSurroundingNeighbor;

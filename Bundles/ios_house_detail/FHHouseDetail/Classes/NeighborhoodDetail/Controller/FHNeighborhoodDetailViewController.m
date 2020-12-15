@@ -59,6 +59,7 @@
 #import "FHNeighborhoodDetailSurroundingNeighborSM.h"
 #import "FHNeighborhoodDetailSurroundingNeighborSC.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
+#import <TTAccountSDK/TTAccount.h>
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -107,7 +108,7 @@
 
 - (void)initMapping {
     
-    NSArray *name = @[@"基础信息",
+    NSArray *name = @[@"小区概况",
                       @"小区信息",
                       @"小区专家",
                       @"小区点评",
@@ -272,6 +273,11 @@
         [self clickTabTrackWithEnterType:@"default" sectionType:FHNeighborhoodDetailSectionTypeCoreInfo];
     } token:FHExecuteOnceUniqueTokenForCurrentContext];
      //   [self.viewModel vc_viewDidAppear:animated];
+    
+    if (self.viewModel.contactViewModel.isShowLogin && ![[TTAccount sharedAccount] isLogin]) {
+        [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+        self.viewModel.contactViewModel.isShowLogin = NO;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
