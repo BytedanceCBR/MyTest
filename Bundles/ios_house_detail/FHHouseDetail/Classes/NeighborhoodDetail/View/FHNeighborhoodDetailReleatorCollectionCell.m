@@ -173,9 +173,12 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    FHDetailContactModel *model = (FHDetailContactModel *)self.currentData;
-    if (!self.agencyBac.hidden && self.agencyLabel.frame.size.width > 0 && [model.agencyName btd_widthWithFont:self.agencyLabel.font height:self.agencyLabel.frame.size.height] > self.agencyLabel.frame.size.width) {
-        self.agencyBac.hidden = YES;
+    if (CGRectGetWidth(self.bounds) > 0) {
+        FHDetailContactModel *model = (FHDetailContactModel *)self.currentData;
+        CGFloat agencyWidth = [model.agencyName btd_widthWithFont:self.agencyLabel.font height:self.agencyLabel.frame.size.height];
+        if (!self.agencyBac.hidden && self.agencyBac.frame.size.width > 0 && agencyWidth > (CGRectGetWidth(self.agencyBac.bounds) - 10)) {
+            self.agencyBac.hidden = YES;
+        }
     }
 }
 
