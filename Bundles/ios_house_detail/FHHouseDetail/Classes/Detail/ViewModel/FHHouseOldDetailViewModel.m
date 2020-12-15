@@ -143,7 +143,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     return NSStringFromClass(cls);
 }
 // 获得数据后通过cache或者网络请求
-- (void)afterLoadData:(FHDetailOldModel *)model{
+- (void)afterLoadData:(FHDetailOldModel *)model isCachemodel:(BOOL)isCachemodel{
     [self processDetailData:model];
     self.detailController.hasValidateData = YES;
     // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
@@ -153,7 +153,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     NSString *neighborhoodId = model.data.neighborhoodInfo.id;
     self.neighborhoodId = neighborhoodId;
     // 周边数据请求
-    [self requestRelatedData:neighborhoodId];
+    if(!isCachemodel){
+        [self requestRelatedData:neighborhoodId];
+    }
     self.contactViewModel.imShareInfo = (FHDetailImShareInfoModel*)model.data.imShareInfo;
 }
 //处理网络请求错误
@@ -171,7 +173,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     FHDetailOldModel *cacheModel = [[FHHousedetailModelManager sharedInstance] getHouseDetailModelWith:key.copy];
     if(cacheModel){
         self.isCache = YES;
-        [self afterLoadData:cacheModel];
+        [self afterLoadData:cacheModel isCachemodel:YES];
     }
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestOldDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId bizTrace:self.detailController.bizTrace
@@ -179,7 +181,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         if (model && error == NULL) {
             if (model.data) {
                 [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:key.copy];
-                [wSelf afterLoadData:model];
+                [wSelf afterLoadData:model isCachemodel:NO];
             }
         } else {
             [wSelf requsetDataErrorWithModel:model Message:error.domain?:@"empty"];
