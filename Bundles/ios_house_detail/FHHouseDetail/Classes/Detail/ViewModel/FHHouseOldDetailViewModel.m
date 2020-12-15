@@ -65,6 +65,7 @@
 #import "BDABTestManager.h"
 #import "FHHousedetailModelManager.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
+#import "NSString+BTDAdditions.h"
 
 extern NSString *const kFHSubscribeHouseCacheKey;
 
@@ -167,18 +168,25 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 - (void)startLoadData {
    self.isCache = NO ;
     NSString *key = [NSString stringWithFormat:@"%@+%@+%@",self.houseId,self.ridcode,self.realtorId];
-    FHDetailOldModel *model = [[FHHousedetailModelManager sharedInstance] getHouseDetailModelWith:key.copy];
-    if(model){
+    FHDetailOldModel *cacheModel = [[FHHousedetailModelManager sharedInstance] getHouseDetailModelWith:key.copy];
+    if(cacheModel){
         self.isCache = YES;
-        [self afterLoadData:model];
+        [self afterLoadData:cacheModel];
     }
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestOldDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId bizTrace:self.detailController.bizTrace
 logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
-                [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:key.copy];
-                if(!wSelf.isCache){
+                BOOL modelEqual = YES;
+                if(wSelf.isCache){
+                    
+                    NSString *s1 = [model toJSONString];
+                    NSString *s2 = [cacheModel toJSONString];
+                    modelEqual = [s1 isEqualToString:s2];
+                }
+                if(!wSelf.isCache || !modelEqual){
+                    [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:key.copy];
                     [wSelf afterLoadData:model];
                 }
             }

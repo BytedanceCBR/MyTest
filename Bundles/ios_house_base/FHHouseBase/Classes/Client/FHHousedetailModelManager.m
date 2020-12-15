@@ -39,6 +39,8 @@
 - (YYCache *)houseDtailManagerCache{
     if(! _houseDtailManagerCache){
         _houseDtailManagerCache = [[YYCache alloc] initWithName:@"old_house_detail_cache"];
+        [_houseDtailManagerCache.memoryCache setAgeLimit:604800];
+        [_houseDtailManagerCache.diskCache setAgeLimit:604800];
     }
     return  _houseDtailManagerCache;
 }
