@@ -35,7 +35,7 @@
     FHNeighborhoodDetailBaseInfoSM *model = (FHNeighborhoodDetailBaseInfoSM *)self.sectionModel;
     
     NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
-    tracerDict[@"element_from"] = @"map";
+    tracerDict[@"element_from"] = @"neighborhood_info";
     tracerDict[@"enter_from"] = @"neighborhood_detail";
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
     

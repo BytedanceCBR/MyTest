@@ -52,6 +52,10 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
     return CGSizeMake(width, height);
 }
 
+- (NSString *)elementType {
+    return @"neighborhood_info";
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];

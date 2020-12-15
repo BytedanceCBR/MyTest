@@ -65,7 +65,7 @@
     [self.contentView addSubview:self.cardView];
     
     self.line = [[UIView alloc] init];
-    self.line.backgroundColor = [UIColor themeGray7];
+    self.line.backgroundColor = [UIColor themeGray6];
     [self.contentView addSubview:self.line];
 }
 
@@ -79,7 +79,7 @@
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(12);
         make.right.mas_equalTo(-12);
-        make.height.mas_equalTo(1);
+        make.height.mas_equalTo(0.5);
         make.bottom.mas_equalTo(0);
     }];
 }

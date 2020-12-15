@@ -63,7 +63,7 @@
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     //    layout.estimatedItemSize = CGSizeMake(71, 22);
-    layout.sectionInset = UIEdgeInsetsMake(0, 12, 0, 12);
+    layout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0.01f;
@@ -103,11 +103,11 @@
         
         _titleIndex = titleIndex;
         [self.colletionView reloadData];
-//        if (titleIndex >= 0 && titleIndex < self.titleNames.count) {
-//            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:titleIndex inSection:0];
-//            if (indexPath) {
-//                [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
-//            }
+        if (titleIndex >= 0 && titleIndex < self.titleNames.count) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:titleIndex inSection:0];
+            if (indexPath) {
+                [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
+            }
 //            UICollectionViewLayoutAttributes *attributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
 //            CGRect frame = attributes.frame;
 //
@@ -118,7 +118,7 @@
 //                self.indicatorView.frame = CGRectMake(frame.origin.x + frame.size.width/2 - 10, CGRectGetHeight(self.colletionView.frame) - bottomSpace, 20, 4);
 //            }];
 //
-//        }
+        }
     }
     _selectIndex = selectIndex; // 图片索引
 }
@@ -164,7 +164,7 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.titleNames.count) {
         NSString *title = self.titleNames[row];
-        CGSize size = CGSizeMake([title btd_widthWithFont:[UIFont themeFontRegular:16] height:22], CGRectGetHeight(collectionView.frame));
+        CGSize size = CGSizeMake([title btd_widthWithFont:[UIFont themeFontRegular:14] height:22], CGRectGetHeight(collectionView.frame));
         size.width += 12 * 2;
         
         return size;

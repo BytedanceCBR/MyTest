@@ -99,9 +99,10 @@
             [FHFlutterChannels sharedInstance].phoneCallBlock = nil;
         }];
         NSMutableDictionary *extraDic = @{
-            @"realtor_position":@"detail_button",
-            @"position":@"report_button",
-            @"element_from":@"building"
+            @"realtor_position": @"detail_button",
+            @"enter_from": @"neighborhood_detail",
+            @"element_from": @"average_price",
+            @"page_type": @"average_price_detail"
         }.mutableCopy;
 //        [extraDic addEntriesFromDictionary:self.tracerDict];
         extraDic[kFHAssociateInfo] = tempNeighborhoodViewModel.detailData.data.priceTrendAssociateInfo.phoneInfo;
@@ -118,9 +119,10 @@
     if (tempNeighborhoodViewModel && tempAssociateViewModel) {
 
         NSMutableDictionary *extraDic = @{
-            @"realtor_position":@"detail_button",
-            @"position":@"report_button",
-            @"element_from":@"building"
+            @"realtor_position": @"detail_button",
+            @"enter_from": @"neighborhood_detail",
+            @"element_from": @"average_price",
+            @"page_type": @"average_price_detail"
         }.mutableCopy;
 //        [extraDic addEntriesFromDictionary:self.tracerDict];
 
@@ -142,11 +144,12 @@
     FHNeighborhoodDetailViewModel *tempNeighborhoodViewModel = [FHFlutterChannels sharedInstance].tempNeighborhoodViewModel;
     FHHouseDetailContactViewModel *tempAssociateViewModel = tempNeighborhoodViewModel.contactViewModel;
     if (tempNeighborhoodViewModel && tempAssociateViewModel) {
-        NSMutableDictionary *extraDic = @{}.mutableCopy;
-//        [extraDic addEntriesFromDictionary:self.tracerDict];
-        extraDic[@"realtor_position"] = @"detail_button";
-        extraDic[@"element_from"] = @"building";
-        extraDic[@"from"] = @"app_newhouse_property_picture";
+        NSMutableDictionary *extraDic = @{
+            @"realtor_position": @"detail_button",
+            @"enter_from": @"neighborhood_detail",
+            @"element_from": @"average_price",
+            @"page_type": @"average_price_detail"
+        }.mutableCopy;
         if(tempNeighborhoodViewModel.detailData.data.priceTrendAssociateInfo) {
             extraDic[kFHAssociateInfo] = tempNeighborhoodViewModel.detailData.data.priceTrendAssociateInfo;
         }
