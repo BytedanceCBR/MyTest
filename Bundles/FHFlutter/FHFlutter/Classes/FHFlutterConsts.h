@@ -18,7 +18,7 @@ static NSString const *kFHFlutterchemaViewTokenKey = @"view_token";
 
 static NSString const *kFHFlutterchemaParamsKey = @"params";
 
-static NSString const *kFHFlutterBDefaultModuleName = @"BFlutterBusiness";
+static NSString const *kFHFlutterBDefaultModuleName = @"CFlutterBusiness";
 
 
 #endif /* FHFlutterConsts_h */
