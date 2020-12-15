@@ -70,6 +70,8 @@
     if ([[FHEnvContext sharedInstance] isColdStart] && [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue]) {
         [requestParam setValue:@(1) forKey:@"app_cold_start"];
         [[FHEnvContext sharedInstance] setColdStart];
+    } else {
+        [requestParam setValue:@(0) forKey:@"app_cold_start"];
     }
     if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
         requestParam[@"app_first_start"] = @(1);
