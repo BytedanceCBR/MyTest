@@ -6,6 +6,7 @@
 //
 
 #import "FHHouseNewComponentView.h"
+#import "FHHouseNeighborhoodCardViewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

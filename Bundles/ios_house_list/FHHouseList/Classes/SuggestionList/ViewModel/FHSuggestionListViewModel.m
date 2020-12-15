@@ -60,6 +60,12 @@
     [cell.vc textFiledTextChange:text andIsCanTrack:YES];
 }
 
+- (void)textFieldWillClear {
+    NSString *rowStr = [NSString stringWithFormat:@"%zi", _currentTabIndex];
+    FHSuggestionCollectionViewCell *cell = _cellDict[rowStr];
+    [cell.vc textFieldWillClear];
+}
+
 - (void)initCollectionView:(FHSuggestionCollectionView *)collectionView
 {
     self.collectionView = collectionView;

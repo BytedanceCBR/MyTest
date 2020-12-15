@@ -61,6 +61,16 @@
     return self;
 }
 
+- (void)updateHeightByIsFirst:(BOOL)isFirst {
+    CGFloat top = 5;
+    if (isFirst) {
+        top = 10;
+    }
+    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self).offset(top);
+    }];
+}
+
 - (void)initUI {
 
     self.contentView.clipsToBounds = NO;
@@ -68,7 +78,7 @@
 
     _shadowView = [[FHShadowView alloc] initWithFrame:CGRectZero];
     [_shadowView setCornerRadius:10];
-    [_shadowView setShadowColor:[UIColor colorWithRed:110.f/255.f green:110.f/255.f blue:110.f/255.f alpha:1]];
+    [_shadowView setShadowColor:[UIColor whiteColor]];
     [_shadowView setShadowOffset:CGSizeMake(0, 2)];
     [self.contentView addSubview:_shadowView];
 
@@ -169,8 +179,8 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).mas_offset(15);
         make.right.mas_equalTo(self).mas_offset(-15);
-        make.top.mas_equalTo(self).offset(10);
-        make.bottom.mas_equalTo(self).offset(-10);
+        make.top.mas_equalTo(self).offset(5);
+        make.bottom.mas_equalTo(self).offset(-5);
     }];
 
     [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {

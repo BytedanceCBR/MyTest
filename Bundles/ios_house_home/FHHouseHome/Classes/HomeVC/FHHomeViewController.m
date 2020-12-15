@@ -82,13 +82,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.ttNeedIgnoreZoomAnimation = YES;
 
     self.ttTrackStayEnable = YES;
-    [self.view addSubview:self.topBar];
-    
-    FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel];
-    //    NIHSearchPanelViewModel *panelVM = [[NIHSearchPanelViewModel alloc] initWithSearchPanel:self.topBar.pageSearchPanel viewController:self];
-    panelVM.viewController = self;
-    self.panelVM = panelVM;
-    
     self.isRefreshing = NO;
     self.adColdHadJump = NO;
     self.adUGCHadJump = NO;
@@ -98,7 +91,23 @@ static CGFloat const kSectionHeaderHeight = 38;
     [self registerNotifications];
     
     [self resetMaintableView];
-    self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
+
+    // 当HomeViewController被添加为FHHomeMainViewController的子控制器时触发ViewModel的创建和配置
+    @weakify(self);
+    [[[[RACObserve(self, parentViewController) filter:^BOOL(id  _Nullable value) {
+        return value != nil;
+    }] take: 1] deliverOnMainThread] subscribeNext:^(id  _Nullable x) {
+        @strongify(self);
+        if([x isKindOfClass:[FHHomeMainViewController class]]) {
+            FHHomeMainViewController *mainVC = (FHHomeMainViewController *)x;
+            FHHomeSearchPanelView *searchPanel = mainVC.topView.searchPanelView;
+            // 获取导航条上的搜索控件，用于赋值滚动搜索文字
+            FHHomeSearchPanelViewModel *panelVM = [[FHHomeSearchPanelViewModel alloc] initWithSearchPanel:searchPanel];
+            panelVM.viewController = self;
+            self.panelVM = panelVM;
+            self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
+        }
+    }];
 }
 
 - (void)bindIndexChangedBlock
@@ -126,7 +135,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     [self addDefaultEmptyViewFullScreen];
     
     if (!_isMainTabVC) {
-        [self.topBar removeFromSuperview];
         [self.mainTableView removeFromSuperview];
         [self.emptyView showEmptyWithTip:@"功能暂未开通" errorImage:[UIImage imageNamed:@"group-9"] showRetry:NO];
     }
@@ -209,19 +217,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     {
         [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 49)];
     }
-}
-
-- (TTTopBar *)topBar {
-    if (!_topBar) {
-        _topBar = [[TTTopBar alloc] init];
-        _topBar.fh_pageType = [self fh_pageType];
-        _topBar.fh_originFrom = @"maintab_search";
-        _topBar.isShowTopSearchPanel = YES;
-        _topBar.tab = @"home";
-        _topBar.delegate = self;
-        [_topBar setupSubviews];
-    }
-    return _topBar;
 }
 
 #pragma mark  埋点
@@ -323,11 +318,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     
     //首次无网启动点击加载重试，增加拉取频道
     if ([TTSandBoxHelper isAPPFirstLaunch]) {
-        if([FHEnvContext isHomeNewDiscovery]){
-            [[FHUGCCategoryManager sharedManager] startGetCategory];
-        }else{
-            [[TTArticleCategoryManager sharedManager] startGetCategory];
-        }
+        [[FHUGCCategoryManager sharedManager] startGetCategory];
     }
 }
 

@@ -66,6 +66,7 @@
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import "FHNewHouseDetailViewController.h"
 #import "FHNeighborhoodDetailViewController.h"
+#import <FHShareManager.h>
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -281,6 +282,11 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 // 详情页分享
 - (void)shareAction {
+    if([[FHShareManager shareInstance] isShareOptimization]) {
+        [self showSharePanel];
+        return;
+    }
+    
     [self shareActionWithShareExtra:@{}];
 }
 
@@ -327,6 +333,39 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     TTCopyContentItem *copyContentItem = [[TTCopyContentItem alloc] initWithDesc:webPageUrl];
     [shareContentItems addObject:copyContentItem];
     [self.shareManager displayActivitySheetWithContent:shareContentItems];
+}
+
+- (void)showSharePanel {
+    FHShareDataModel *dataModel = [[FHShareDataModel alloc] init];
+    
+    NSMutableArray *itemArray = [NSMutableArray arrayWithArray: @[@(FHShareChannelTypeWeChat),@(FHShareChannelTypeWeChatTimeline),@(FHShareChannelTypeQQFriend),@(FHShareChannelTypeQQZone),@(FHShareChannelTypeCopyLink)]];
+    
+    FHShareCommonDataModel *commonDataModel = [[FHShareCommonDataModel alloc] init];
+    commonDataModel.title = self.shareInfo.title;
+    commonDataModel.desc = self.shareInfo.desc;
+    commonDataModel.shareUrl = self.shareInfo.shareUrl;
+    commonDataModel.thumbImage = [[BDImageCache sharedImageCache]imageFromDiskCacheForKey:self.shareInfo.coverImage] ? : [UIImage imageNamed:@"default_image"];
+    commonDataModel.shareType = BDUGShareWebPage;
+    dataModel.commonDataModel = commonDataModel;
+    
+
+    if(TTAccountManager.isLogin && (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeRentHouse) && self.imShareInfo && [self hasImUser]) {
+        FHShareIMDataModel *imDataModel = [[FHShareIMDataModel alloc] init];
+        imDataModel.imShareInfo = self.imShareInfo;
+        NSMutableDictionary* dict = [self.tracerDict mutableCopy] ;
+        dict[@"enter_from"] = dict[@"page_type"];
+        imDataModel.tracer = dict;
+        if (self.houseInfoBizTrace) {
+            imDataModel.extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
+        }
+        dataModel.imDataModel = imDataModel;
+        [itemArray insertObject:@(FHShareChannelTypeIM) atIndex:0];
+    }
+    NSArray *contentItemArray = @[itemArray];
+
+
+    FHShareContentModel *model = [[FHShareContentModel alloc] initWithDataModel:dataModel contentItemArray:contentItemArray];
+    [[FHShareManager shareInstance] showSharePanelWithModel:model tracerDict:[self baseParams]];
 }
 
 -(BOOL)hasImUser {

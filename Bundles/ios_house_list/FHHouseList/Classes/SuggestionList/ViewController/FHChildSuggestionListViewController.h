@@ -49,6 +49,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)textFiledTextChange:(NSString *)text andIsCanTrack:(BOOL)isCanTrack;
 
+- (void)textFieldWillClear;
+
 @end
 
 NS_ASSUME_NONNULL_END

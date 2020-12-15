@@ -23,7 +23,7 @@
 }
 
 + (CGFloat)heightForData:(id)data {
-    if ([data isKindOfClass:[JSONModel class]]) {
+    if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)data;
         if (itemModel.advantageDescription.text) {
             return 130;

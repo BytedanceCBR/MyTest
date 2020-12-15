@@ -1669,7 +1669,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         
         __weak typeof(self)wself = self;
-        if ([FHEnvContext isDisplayNewCardType] && self.houseType == FHHouseTypeRentHouse) {
+        if ([FHEnvContext isDisplayNewCardType] && [identifier isEqualToString:NSStringFromClass([FHHouseListRentCell class])]) {
             FHHouseBaseCell *cell = (FHHouseBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
             [cell refreshWithData:data];
             return cell;
@@ -2639,12 +2639,25 @@ extern NSString *const INSTANT_DATA_KEY;
     if (_mainListPage && _houseType == FHHouseTypeRentHouse) {
         //JUMP to cat list page
         
+        /**
+         如果从搜索中间页跳转过来会带着enter_from参数，value=search_detail，
+         此时要把这个enter_from带到搜索结果页
+         */
+        NSString *originEnterFrom;
+        NSDictionary *routeTracerDict = allInfo[@"tracer"];
+        if ([routeTracerDict isKindOfClass:[NSDictionary class]]) {
+            originEnterFrom = [routeTracerDict btd_stringValueForKey:@"enter_from"];
+        }
+        
         NSMutableDictionary *tracerDict = [self baseLogParam];
         [tracerDict addEntriesFromDictionary:allInfo[@"houseSearch"]];
         tracerDict[UT_CATEGORY_NAME] = @"rent_list";
         tracerDict[UT_ELEMENT_FROM] = @"renting_search";
         tracerDict[UT_PAGE_TYPE] = @"renting";
         tracerDict[UT_ORIGIN_FROM] = allInfo[@"tracer"][UT_ORIGIN_FROM] ? allInfo[@"tracer"][UT_ORIGIN_FROM] : @"be_null";
+        if (originEnterFrom.length > 0) {
+            tracerDict[UT_ENTER_FROM] = originEnterFrom;
+        }
         
         NSMutableDictionary *houseSearchDict = [[NSMutableDictionary alloc] initWithDictionary:allInfo[@"houseSearch"]];
         houseSearchDict[UT_PAGE_TYPE] = @"renting";

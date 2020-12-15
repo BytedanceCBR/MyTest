@@ -68,9 +68,9 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
         }else if(defaultTabName.length > 0){
             [[FHEnvContext sharedInstance] jumpTab:defaultTabName];
         }else{
-            if (![FHEnvContext isCurrentCityNormalOpen] && lastCityId) {
-                [[FHEnvContext sharedInstance] jumpUGCTab];
-            }
+//            if (![FHEnvContext isCurrentCityNormalOpen] && lastCityId) {
+//                [[FHEnvContext sharedInstance] jumpUGCTab];
+//            }
         }
     }
 
