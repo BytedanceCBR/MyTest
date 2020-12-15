@@ -143,11 +143,7 @@
     NSMutableDictionary *userInfo = [NSMutableDictionary new];
     userInfo[@"tracer"] = tracerDic;
     userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
-    if (detailModel.data.neighborhoodInfo.name.length > 0) {
-        userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
-    } else {
-        userInfo[@"title"] = @"小区房源";// 默认值
-    }
+    userInfo[@"title"] = @"小区在售房源";// 默认值
     if (neighborhood_id.length > 0) {
         userInfo[@"neighborhood_id"] = neighborhood_id;
     }
