@@ -325,6 +325,9 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
             } else if(item.feedType == FHPersonalHomePageFeedListTypeNoFeed){
                 [self.emptyView showEmptyWithTip:@"你还没有发布任何内容，快去发布吧" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
             }
+            UIView *selectedBackgroundView = [[UIView alloc] initWithFrame:self.tableView.frame];
+            selectedBackgroundView.backgroundColor = [UIColor themeWhite];
+            cell.selectedBackgroundView = selectedBackgroundView;
             cell.contentView.backgroundColor = [UIColor themeWhite];
             [cell.contentView addSubview:self.emptyView];
             return cell;
@@ -360,10 +363,6 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
         }
     }
     return 100;
-}
-
--(BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
-    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
