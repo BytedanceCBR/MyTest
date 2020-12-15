@@ -123,7 +123,7 @@
         FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
 
         NSString *title = @"开盘通知";
-        NSString *subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
+        NSString *subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机。";
         NSString *btnTitle = @"提交";
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
         associateParamDict[kFHAssociateInfo] = model.openAssociateInfo.reportFormInfo;
@@ -145,7 +145,7 @@
     if ([model.contactModel isKindOfClass:[FHHouseDetailContactViewModel class]]) {
         FHHouseDetailContactViewModel *contactViewModel = (FHHouseDetailContactViewModel *)model.contactModel;
         NSString *title = @"变价通知";
-        NSString *subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
+        NSString *subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机。";
         NSString *btnTitle = @"提交";
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
         associateParamDict[kFHAssociateInfo] = model.priceAssociateInfo.reportFormInfo;

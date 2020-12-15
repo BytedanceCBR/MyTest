@@ -392,6 +392,7 @@
         }
         [self.submitBtn removeTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
         [self.submitBtn btd_addActionBlock:^(__kindof UIControl * _Nonnull sender) {
+            [weakSelf dismiss];
             if (weakSelf.secondConfirmBlock) {
                 weakSelf.secondConfirmBlock();
             }

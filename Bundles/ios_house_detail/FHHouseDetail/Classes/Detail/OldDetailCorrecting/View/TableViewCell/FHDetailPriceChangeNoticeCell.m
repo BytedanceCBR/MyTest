@@ -194,7 +194,7 @@
         NSMutableDictionary *associateParamDict = @{@"position":@"change_price"
                                           }.mutableCopy;
         associateParamDict[@"title"] = @"变价通知";
-        associateParamDict[@"subtitle"] = @"订阅变价通知，房源变价信息会及时发送到您的手机";
+        associateParamDict[@"subtitle"] = @"订阅变价通知，房源变价信息会及时发送到您的手机。";
         associateParamDict[@"btn_title"] = @"提交";
         associateParamDict[kFHAssociateInfo] = model.associateInfo.reportFormInfo;
         NSMutableDictionary *reportParamsDict = [model.contactModel baseParams].mutableCopy;

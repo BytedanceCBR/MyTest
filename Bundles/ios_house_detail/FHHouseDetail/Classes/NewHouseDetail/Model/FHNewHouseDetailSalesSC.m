@@ -13,6 +13,7 @@
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <FHWebView/SSWebViewController.h>
 #import <TTAccountSDK/TTAccount.h>
+#import "SSCommonLogic.h"
 
 @interface FHNewHouseDetailSalesSC()<IGListSupplementaryViewSource>
 
@@ -85,6 +86,13 @@
     NSString *subtitle = itemInfo.discountReportSubTitle;
     NSString *toast = [NSString stringWithFormat:@"%@，%@",itemInfo.discountReportDoneTitle,itemInfo.discountReportDoneSubTitle];
     NSString *btnTitle = itemInfo.discountButtonText;
+    
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        title = @"领取优惠";
+        subtitle = @"提交后，我们将给您匹配专业的置业顾问为您提供优惠咨询服务。";
+        btnTitle = @"领取优惠";
+    }
+    
     NSMutableDictionary *extraDic = @{@"position":@"coupon"
                                       }.mutableCopy;
     extraDic[kFHCluePage] = itemInfo.page;

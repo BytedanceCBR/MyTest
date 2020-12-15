@@ -537,7 +537,42 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
         associateParamDict[kFHReportParams] = reportParamsDict;
         associateParamDict[kFHAssociateInfo] = associateInfoDict;
-        [self fillFormActionWithParams:associateParamDict];
+        
+        NSString *title = nil;
+        NSString *subtitle = nil;
+        NSString *btnTitle = nil;
+        if (self.houseType == FHHouseTypeNeighborhood) {
+            title = @"咨询经纪人";
+            btnTitle = @"提交";
+        }
+        if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+            switch (self.houseType) {
+                case FHHouseTypeSecondHandHouse:
+                case FHHouseTypeNeighborhood:
+                    title = @"询底价";
+                    subtitle = @"提交后，我们将给您匹配专业的经纪人为您提供接待服务。";
+                    btnTitle = @"获取底价";
+                    break;
+                case FHHouseTypeNewHouse:
+                    title = @"询底价";
+                    subtitle = @"提交后，我们将给您匹配专业的置业顾问为您提供接待服务。";
+                    btnTitle = @"获取底价";
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        if (title.length) {
+            associateParamDict[@"title"] = title;
+        }
+        if (subtitle.length) {
+            associateParamDict[@"subtitle"] = subtitle;
+        }
+        if (btnTitle.length) {
+            associateParamDict[@"btn_title"] = btnTitle;
+        }
+        [self fillFormActionWithParams:associateParamDict.copy];
     }else {
         
         //        associatePhone.realtorType = self.contactPhone.realtorType;
@@ -683,15 +718,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         toast = formParamsDict[@"toast"];
     }
     
-//    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
-//        title = @"询底价";
-//        subtitle = @"填写手机号，我们将给您匹配专业的经纪人为您提供接待服务。";
-//    }
-    FHAssociateFormReportModel *associateReport = [[FHAssociateFormReportModel alloc]init];
-    if (self.houseType == FHHouseTypeNeighborhood) {
-        associateReport.title = @"咨询经纪人";
-        associateReport.btnTitle = @"提交";
-    }
+    FHAssociateFormReportModel *associateReport = [[FHAssociateFormReportModel alloc] init];
+
     if (title.length > 0) {
         associateReport.title = title;
     }
