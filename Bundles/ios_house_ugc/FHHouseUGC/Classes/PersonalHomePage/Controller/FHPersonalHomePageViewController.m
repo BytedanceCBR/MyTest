@@ -78,7 +78,6 @@
     self.homePageManager.viewController = self;
     self.homePageManager.feedViewController = self.feedViewController;
     self.feedViewController.homePageManager = self.homePageManager;
-    
     [self startLoadData];
 }
 
@@ -97,6 +96,7 @@
     
     [self initNavBar];
     [self addDefaultEmptyViewFullScreen];
+    self.automaticallyAdjustsScrollViewInsets = NO;
 }
 
 
@@ -105,7 +105,7 @@
     self.scrollView.backgroundColor = [UIColor themeWhite];
     self.scrollView.contentSize = self.view.bounds.size;
     if (@available(iOS 11.0, *)) {
-        self.scrollView.insetsLayoutMarginsFromSafeArea = NO;
+//        self.scrollView.insetsLayoutMarginsFromSafeArea = NO;
         self.scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
     }
     self.scrollView.bounces = YES;

@@ -119,18 +119,17 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
     }
     
     double behotTime = 0;
+    NSString *lastGroupId = nil;
     if(!isHead && listCount > 0){
         FHFeedUGCCellModel *cellModel = [self.dataList lastObject];
         behotTime = [cellModel.behotTime doubleValue];
+        lastGroupId = cellModel.groupId;
     }
-    if(isHead && listCount > 0){
-        FHFeedUGCCellModel *cellModel = [self.dataList firstObject];
-        behotTime = [cellModel.behotTime doubleValue];
-    }
-    
+
     NSMutableDictionary *extraDic = [NSMutableDictionary dictionary];
     extraDic[@"user_id"] = self.homePageManager.userId;
     extraDic[@"tab_name"] = self.viewController.tabName;
+    extraDic[@"last_group_id"] = lastGroupId;
     self.categoryId = @"f_user_profile";
     
     WeakSelf;
