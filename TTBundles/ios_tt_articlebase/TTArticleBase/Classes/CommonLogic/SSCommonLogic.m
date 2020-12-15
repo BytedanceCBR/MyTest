@@ -5538,6 +5538,14 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
     }
     return NO;
 }
++ (BOOL)isDisableMonitorPushJumpError {
+    NSDictionary *fhSettings = [self fhSettings];
+    if (fhSettings != nil && [fhSettings objectForKey:@"f_disable_monitor_push_jump_error"] != nil) {
+        BOOL isEnableLinkChatPage = [[fhSettings objectForKey:@"f_disable_monitor_push_jump_error"] boolValue];
+        return isEnableLinkChatPage;
+    }
+    return NO;
+}
 @end
 
 @implementation SSCommonLogic (FHShare)

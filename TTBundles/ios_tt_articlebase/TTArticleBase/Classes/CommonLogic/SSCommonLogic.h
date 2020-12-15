@@ -1427,6 +1427,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)isEnableHouseDetailNativeReport;
 // 是否使用link chat页面
 + (BOOL)isEnableLinkChatPage;
+/// 是否禁用监控push跳转失败
++ (BOOL)isDisableMonitorPushJumpError;
 @end
 
 @interface SSCommonLogic (FHShare)
