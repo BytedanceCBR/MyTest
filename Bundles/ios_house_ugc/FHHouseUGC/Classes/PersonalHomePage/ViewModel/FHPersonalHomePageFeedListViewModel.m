@@ -362,6 +362,10 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
     return 100;
 }
 
+-(BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
+    return NO;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger index = indexPath.row;
     if(index >= 0 && index < self.dataList.count) {
