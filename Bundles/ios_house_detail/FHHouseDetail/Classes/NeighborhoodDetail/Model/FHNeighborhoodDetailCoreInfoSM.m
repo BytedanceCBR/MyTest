@@ -39,9 +39,16 @@
                 subMessageModel.subTitleText = obj.value;
             }
         }];
-        
-        subMessageModel.onSale = model.data.statsMinfo.onSale.val ?:@"暂无数据" ;
-        subMessageModel.sold = model.data.statsMinfo.sold.val ?: @"暂无数据";
+        if(!model.data.statsMinfo.onSale.val || [model.data.statsMinfo.onSale.val isEqual:@"0"]){
+            subMessageModel.onSale = @"暂无数据";
+        }else{
+            subMessageModel.onSale = model.data.statsMinfo.onSale.val;
+        }
+        if(!model.data.statsMinfo.sold.val || [model.data.statsMinfo.sold.val isEqual:@"0"]){
+            subMessageModel.sold = @"暂无数据";
+        }else{
+            subMessageModel.sold = model.data.statsMinfo.sold.val;
+        }
         subMessageModel.soldUrl = model.data.statsMinfo.sold.openUrl;
         self.subMessageModel = subMessageModel;
         [items addObject:self.subMessageModel];

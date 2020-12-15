@@ -63,12 +63,16 @@
         return cell;
     } else if (model.items[index] == model.subMessageModel) {
         FHNeighborhoodDetailSubMessageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSubMessageCollectionCell class] withReuseIdentifier:NSStringFromClass([model.subMessageModel class]) forSectionController:self atIndex:index];
-        cell.clickSoldblock = ^{
-            [weakSelf addSoldClick:model.subMessageModel.soldUrl];
-        };
-        cell.clickOnSaleblock = ^{
-            [weakSelf addOnSaleClick];
-        };
+        if(![model.subMessageModel.sold isEqualToString:@"暂无数据"]){
+            cell.clickSoldblock = ^{
+                [weakSelf addSoldClick:model.subMessageModel.soldUrl];
+            };
+        }
+        if(![model.subMessageModel.onSale isEqualToString:@"暂无数据"]){
+            cell.clickOnSaleblock = ^{
+                [weakSelf addOnSaleClick];
+            };
+        }
         cell.clickAveragePriceblock = ^{
             [weakSelf addAveragePriceClick];
         };
