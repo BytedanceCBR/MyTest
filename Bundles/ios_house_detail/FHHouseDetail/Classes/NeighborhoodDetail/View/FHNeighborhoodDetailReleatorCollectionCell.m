@@ -124,7 +124,6 @@
             make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
             make.size.mas_equalTo(CGSizeMake(18, 16));
             make.centerY.mas_equalTo(self.nameLabel);
-            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
         }];
         
         self.agencyBac = [[UIImageView alloc] init];

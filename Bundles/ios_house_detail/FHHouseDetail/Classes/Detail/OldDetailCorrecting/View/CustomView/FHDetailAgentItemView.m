@@ -195,7 +195,6 @@
         make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
         make.size.mas_equalTo(CGSizeMake(18, 16));
         make.centerY.mas_equalTo(self.nameLabel.mas_centerY);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
     
     self.agencyBac = [[UIImageView alloc] init];
@@ -218,7 +217,10 @@
     self.agencyLabel.textAlignment = NSTextAlignmentCenter;
     [self.agencyBac addSubview:self.agencyLabel];
     [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(3, 5, 3, 5));
+        make.left.mas_equalTo(5);
+        make.right.mas_equalTo(-5);
+        make.centerY.mas_equalTo(self.agencyBac);
+//        make.edges.mas_equalTo(UIEdgeInsetsMake(3, 5, 3, 5));
     }];
     
     self.scoreLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
@@ -380,6 +382,7 @@
         self.tagsView.hidden = YES;
     }
     
+    [self updateConstraints];
     [self setNeedsLayout];
     [self layoutIfNeeded];
 
@@ -388,9 +391,12 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    FHDetailContactModel *model = self.model;
-    if (!self.agencyBac.hidden && self.agencyLabel.frame.size.width > 0 && [model.agencyName btd_widthWithFont:self.agencyLabel.font height:self.agencyLabel.frame.size.height] > self.agencyLabel.frame.size.width) {
-        self.agencyBac.hidden = YES;
+    if (CGRectGetWidth(self.bounds) > 0) {
+        FHDetailContactModel *model = self.model;
+        CGFloat agencyWidth = [model.agencyName btd_widthWithFont:self.agencyLabel.font height:self.agencyLabel.frame.size.height];
+        if (!self.agencyBac.hidden && self.agencyBac.frame.size.width > 0 && agencyWidth > (CGRectGetWidth(self.agencyBac.bounds) - 10)) {
+            self.agencyBac.hidden = YES;
+        }
     }
 }
 
