@@ -42,10 +42,6 @@
         _identifyImageView.contentMode = UIViewContentModeScaleAspectFill;
         _identifyImageView.hidden = YES;
         [self addSubview:_identifyImageView];
-        [self.identifyImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.bottom.right.mas_equalTo(self);
-            make.height.mas_equalTo(0);
-        }];
     }
     return _identifyImageView;
 }
@@ -77,7 +73,8 @@
                 if (image.size.height > 0 && image.size.width) {
                     ratio = image.size.height / image.size.width;
                 }
-                [self.identifyImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                [self.identifyImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.bottom.right.mas_equalTo(self);
                     make.height.mas_equalTo(self.avatarImageView.mas_width).multipliedBy(ratio);
                 }];
             }
