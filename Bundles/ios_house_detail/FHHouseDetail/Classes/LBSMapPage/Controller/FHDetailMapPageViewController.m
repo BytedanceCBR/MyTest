@@ -155,11 +155,11 @@ static MAMapView *kFHPageMapView = nil;
     
     NSArray *facilities = @[@"traffic", @"education", @"hospital", @"life", @"entertainment"];
     if (index >= 0 && index < facilities.count) {
-        NSMutableDictionary *tracerDict = self.traceDict.mutableCopy;
+        NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
         [tracerDict removeObjectForKey:@"element_from"];
         [tracerDict setValue:@"map_detail" forKey:@"page_type"];
-        if ([self.traceDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
-            tracerDict[@"group_id"] = self.traceDict[@"log_pb"][@"group_id"];
+        if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+            tracerDict[@"group_id"] = self.tracerDict[@"log_pb"][@"group_id"];
         }
         // click_facilities
 //        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
@@ -177,8 +177,8 @@ static MAMapView *kFHPageMapView = nil;
 //        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
 //        tracerDic[@"element_type"] = [self elementTypeString:self.baseViewModel.houseType];
         tracerDict[@"click_position"] = name;
-        if ([self.traceDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
-            tracerDict[@"group_id"] = self.traceDict[@"log_pb"][@"group_id"];
+        if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+            tracerDict[@"group_id"] = self.tracerDict[@"log_pb"][@"group_id"];
         }
         [FHUserTracker writeEvent:@"click_map" params:tracerDict];
 }
@@ -194,8 +194,7 @@ static MAMapView *kFHPageMapView = nil;
     if (duration == 0) {//当前页面没有在展示过
         return;
     }
-    NSMutableDictionary *params = @{}.mutableCopy;
-    [params addEntriesFromDictionary:self.traceDict];
+    NSMutableDictionary *params = self.tracerDict.mutableCopy;
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHEnvContext recordEvent:params andEventKey:@"stay_map"];
 }
@@ -874,7 +873,7 @@ static MAMapView *kFHPageMapView = nil;
     }
 
     if (CLLocationCoordinate2DIsValid(self.centerPoint)) {
-        NSMutableDictionary *tracerDict = self.traceDict.mutableCopy;
+        NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
         tracerDict[@"element_from"] = @"map";
         NSMutableDictionary *param = [NSMutableDictionary new];
         param[TRACER_KEY] = tracerDict.copy;

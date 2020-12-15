@@ -96,7 +96,7 @@
         if (model.displayBuiltYear) {
             [infoString appendString:model.displayBuiltYear];
         }
-        if (model.displayBuiltType) {
+        if (model.displayBuiltType.length) {
             if (infoString.length) {
                 [infoString appendFormat:@" | %@",model.displayBuiltType];
             } else {
