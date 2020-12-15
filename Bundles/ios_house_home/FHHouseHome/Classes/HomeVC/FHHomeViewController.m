@@ -42,6 +42,7 @@
 #import "FHUserTracker.h"
 #import "FHHomeRenderFlow.h"
 #import "FHFirstPageManager.h"
+#import <BytedanceKit.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -129,8 +130,13 @@ static CGFloat const kSectionHeaderHeight = 38;
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     dispatch_async(dispatch_get_main_queue(), ^{
                         if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
-                            NSURLComponents *urlComponent = [[NSURLComponents alloc] initWithString:currentDataModel.jump2AdRecommend];
-                            [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:urlComponent.host withUrl:currentDataModel.jump2AdRecommend withTabName:@"" withPriority:1];
+                            NSURL *url = [NSURL btd_URLWithString:currentDataModel.jump2AdRecommend];
+                            NSString *pageType = url.host;
+                            if ([pageType isEqualToString:@"house_list"]) {
+                                NSString *houseType = [[url btd_queryItems] btd_stringValueForKey:@"house_type" default:@"2"];
+                                pageType = [NSString stringWithFormat:@"%@&house_type=%@", pageType, houseType];
+                            }
+                            [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:pageType withUrl:currentDataModel.jump2AdRecommend withTabName:@"" withPriority:1];
                             [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
                             if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
                                 //通勤找房
