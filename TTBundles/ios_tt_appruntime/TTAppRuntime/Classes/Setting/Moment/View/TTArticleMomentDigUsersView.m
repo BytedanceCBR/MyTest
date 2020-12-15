@@ -26,6 +26,7 @@
 #import <TTBaseLib/UIViewAdditions.h>
 #import <TTBaseLib/TTUIResponderHelper.h>
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
+#import "FHUGCCommonAvatar.h"
 
 #define SIZE_FIT(size6, size5)
 #define kLoadOnceCount 20
@@ -71,7 +72,7 @@
 
 @property(nonatomic, retain)TTUserInfoView * nameView;
 @property(nonatomic, retain)SSThemedLabel * descLabel;
-@property(nonatomic, retain)ArticleAvatarView * avatarView;
+@property(nonatomic, retain)FHUGCCommonAvatar * avatarView;
 @property(nonatomic, retain)SSUserModel * userModel;
 @property(nonatomic, assign)BOOL isBanShowAuthor;
 
@@ -95,13 +96,13 @@
         }
         self.backgroundColorThemeKey = kColorBackground4;
         self.needMargin = YES;
-        self.avatarView = [[ArticleAvatarView alloc] initWithFrame:CGRectMake(kCellAvatarViewLeftPadding, 0, kCellAvatarViewWidth, kCellAvatarViewHeight)];
+        self.avatarView = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake(kCellAvatarViewLeftPadding, 0, kCellAvatarViewWidth, kCellAvatarViewHeight)];
         self.avatarView.centerY = self.centerY;
-        _avatarView.avatarStyle = SSAvatarViewStyleRound;
-        _avatarView.avatarImgPadding = 0.f;
-        
-        _avatarView.userInteractionEnabled = NO;
-        _avatarView.avatarButton.enabled = NO;
+//        _avatarView.avatarStyle = SSAvatarViewStyleRound;
+//        _avatarView.avatarImgPadding = 0.f;
+//
+//        _avatarView.userInteractionEnabled = NO;
+//        _avatarView.avatarButton.enabled = NO;
 //        [_avatarView setupVerifyViewForLength:kCellAvatarViewNormalLength adaptationSizeBlock:^CGSize(CGSize standardSize) {
 //            return [TTArticleMomentDigUsersViewCellUIHelper fitSizeForVerifyLogo:standardSize];
 //        }];
@@ -129,9 +130,10 @@
 
 - (void)refreshUserModel:(SSUserModel *)userModel width:(CGFloat)width {
     self.userModel = userModel;
-    
-    [_avatarView showAvatarByURL:userModel.avatarURLString];
-    [_avatarView showOrHideVerifyViewWithVerifyInfo:userModel.userAuthInfo decoratorInfo:userModel.userDecoration sureQueryWithID:YES userID:nil];
+    [_avatarView setAvatarUrl:userModel.avatarURLString];
+    [_avatarView setUserId:userModel.ID];
+//    [_avatarView showAvatarByURL:];
+//    [_avatarView showOrHideVerifyViewWithVerifyInfo:userModel.userAuthInfo decoratorInfo:userModel.userDecoration sureQueryWithID:YES userID:nil];
     
     NSString *text = [userModel.name isKindOfClass:[NSString class]] ? userModel.name : nil;
     CGFloat maxWidth = width - CGRectGetMaxX(_avatarView.frame) - kCellAvatarViewRightPadding - kCellRightPadding;

@@ -64,9 +64,25 @@
     self.tagView.hidden = !_showTag;
 }
 
-- (void)setUserId:(NSString *)userId {
+//- (void)setUserId:(NSString *)userId {
+//    NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
+//    if ([vwhiteList containsObject:userId]) {
+//        self.tagView.hidden = NO;
+//    }else {
+//        self.tagView.hidden = YES;
+//    }
+//}
+
+- (void)setUserId:(id)userId {
+    NSString *uid = @"";
+    if ([userId isKindOfClass:[NSNumber class]]) {
+        NSNumberFormatter* numberFormatter = [[NSNumberFormatter alloc] init];
+        uid = [numberFormatter stringFromNumber:userId];
+    }else {
+        uid = userId;
+    }
     NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
-    if ([vwhiteList containsObject:userId]) {
+    if ([vwhiteList containsObject:uid]) {
         self.tagView.hidden = NO;
     }else {
         self.tagView.hidden = YES;
