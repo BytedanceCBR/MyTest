@@ -33,9 +33,9 @@
     [super didUpdateToObject:object];
     FHNeighborhoodDetailFloorpanSM *model = (FHNeighborhoodDetailFloorpanSM *)self.sectionModel;
     if (model.shouldShowSaleHouse) {
-        self.inset = UIEdgeInsetsMake(0, 9, 12, 9);
-    } else {
         self.inset = UIEdgeInsetsMake(0, 9, 0, 9);
+    } else {
+        self.inset = UIEdgeInsetsMake(0, 9, 12, 9);
     }
     
 }

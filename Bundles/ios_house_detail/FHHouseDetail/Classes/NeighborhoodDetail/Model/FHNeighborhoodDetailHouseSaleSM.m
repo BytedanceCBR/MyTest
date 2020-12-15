@@ -7,6 +7,8 @@
 
 #import "FHNeighborhoodDetailHouseSaleSM.h"
 #import "FHHouseCardUtils.h"
+#import "FHHouseSecondCardViewModel.h"
+#import "FHCommonDefines.h"
 
 @implementation FHNeighborhoodDetailHouseSaleSM
 
@@ -15,9 +17,12 @@
     for (FHSearchHouseDataItemsModel *item in model.items) {
         item.advantageDescription = nil;
         id obj = [FHHouseCardUtils getEntityFromModel:item];
-        if (obj) {
+        if (obj && [obj isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+            FHHouseSecondCardViewModel *model = (FHHouseSecondCardViewModel *)obj;
+            [model setTitleMaxWidth:SCREEN_WIDTH - 30 * 2 - 84 - 8 + 18];
             [arrayM addObject:obj];
         }
+
     }
     self.items = arrayM.copy;
     self.moreTitle = [NSString stringWithFormat:@"查看在售%@套房源", model.total];

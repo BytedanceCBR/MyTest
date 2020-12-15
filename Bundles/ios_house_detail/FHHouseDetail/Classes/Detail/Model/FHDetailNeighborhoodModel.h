@@ -287,7 +287,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *status;
 @property (nonatomic, copy , nullable) NSString *message;
 @property (nonatomic, strong , nullable) FHDetailNeighborhoodDataModel *data ;
-@property (nonatomic, assign) BOOL isInstantData;//是否是列表页带入的
 @end
 NS_ASSUME_NONNULL_END
 //END OF HEADER

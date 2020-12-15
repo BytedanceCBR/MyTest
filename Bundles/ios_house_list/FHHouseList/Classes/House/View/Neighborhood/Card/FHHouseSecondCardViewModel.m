@@ -132,6 +132,12 @@
     }
 }
 
+- (void)setTitleMaxWidth:(CGFloat)maxWidth{
+    if (_titleAndTag) {
+        _titleAndTag.maxWidth = maxWidth;
+    }
+}
+
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath {
     __weak typeof(self) weakSelf = self;
     [self executeOnce:^{
