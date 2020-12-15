@@ -543,9 +543,15 @@
         _tipLabel = [[UILabel alloc]init];
         _tipLabel.font = [UIFont themeFontRegular:12];
         _tipLabel.textColor = [UIColor themeGray4];
-        NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"提交即视为同意《个人信息保护声明》"];
-        [attrStr addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(8, @"个人信息保护声明".length)];
-        _tipLabel.attributedText = attrStr;
+        if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+            NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"我已阅读《个人信息保护声明》"];
+            [attrStr addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(5, @"个人信息保护声明".length)];
+            _tipLabel.attributedText = attrStr;
+        } else {
+            NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"提交即视为同意《个人信息保护声明》"];
+            [attrStr addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(8, @"个人信息保护声明".length)];
+            _tipLabel.attributedText = attrStr;
+        }
     }
     return _tipLabel;
 }
