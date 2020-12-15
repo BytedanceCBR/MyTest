@@ -13,6 +13,8 @@
 
 @property (nonatomic, copy) NSMutableArray *array;
 
+@property (nonatomic, assign) NSInteger isTracked;
+
 @end
 
 @implementation FHFirstPageManager
@@ -34,6 +36,9 @@
 }
 
 - (void)addFirstPageModelWithPageType:(NSString *)pageType withUrl:(NSString *)url withTabName:(NSString *)tabName withPriority:(NSInteger)priorityIndex {
+    if (self.isTracked) {
+        return;
+    }
     FHFirstPageModel *model = [[FHFirstPageModel alloc] init];
     model.pageType = pageType;
     model.url = url;
@@ -62,6 +67,7 @@
                 [dict setValue:model.tabName forKey:@"tab_name"];
             }
             TRACK_EVENT(@"first_start_page", dict);
+            wSelf.isTracked = YES;
         }
     } token:FHExecuteOnceUniqueTokenForCurrentContext];
 }

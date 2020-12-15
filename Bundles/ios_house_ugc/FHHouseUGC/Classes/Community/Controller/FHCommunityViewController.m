@@ -37,7 +37,6 @@
 #import "FHUGCCategoryManager.h"
 #import "FHLoginTipView.h"
 #import "UIDevice+BTDAdditions.h"
-#import "FHFirstPageManager.h"
 
 @interface FHCommunityViewController ()<FHUGCPostMenuViewDelegate>
 
@@ -58,9 +57,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-    [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:@"maintab" withUrl:@"" withTabName:currentDataModel.jumpPageOnStartup withPriority:0];
-    [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     //test
@@ -720,6 +716,10 @@
 
 - (void)trackStartedByAppWillEnterForground {
     self.stayTime = [[NSDate date] timeIntervalSince1970];
+}
+
+- (NSString *)fh_pageType {
+    return [self.viewModel pageType];
 }
 
 @end
