@@ -928,11 +928,12 @@
         return;
     }
     
-    NSMutableDictionary *tracerDic = [[NSMutableDictionary alloc] init];
-    tracerDic[@"event_type"] = @"house_app2c_v2";
-    tracerDic[@"enter_type"] = enterType;
+    NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
+    tracerDic[UT_ENTER_TYPE] = enterType;
     tracerDic[@"tab_name"] = [self getTabNameBySectionType:sectionType];
-    tracerDic[@"page_type"] = [self pageTypeString];
+    tracerDic[UT_PAGE_TYPE] = [self pageTypeString];
+    tracerDic[UT_ELEMENT_FROM] = @"be_null";
+    tracerDic[UT_ELEMENT_TYPE] = @"top_navigation_bar";
     [FHUserTracker writeEvent:@"click_tab" params:tracerDic];
 }
 
@@ -940,8 +941,8 @@
 {
     if (elementType.length) {
         NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
-        tracerDic[@"element_type"] = elementType;
-        [tracerDic removeObjectForKey:@"element_from"];
+        tracerDic[UT_ELEMENT_TYPE] = elementType;
+        tracerDic[UT_ELEMENT_FROM] = @"be_null";
         tracerDic[@"page_type"] = [self pageTypeString];
         [FHUserTracker writeEvent:@"element_show" params:tracerDic];
     }

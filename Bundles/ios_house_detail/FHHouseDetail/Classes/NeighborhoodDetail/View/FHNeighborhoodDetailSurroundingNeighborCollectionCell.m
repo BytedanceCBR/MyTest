@@ -121,7 +121,7 @@
 @implementation FHNeighborhoodDetailSurroundingNeighborCollectionCell
 
 - (NSString *)elementType {
-    return @"neighborhood_nearby";
+    return @"related_neighborhood";
 }
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {

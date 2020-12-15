@@ -154,6 +154,7 @@
                 click_position = @"entertaiment";
             }
             tracerDict[UT_CLICK_POSITION] = click_position ?: @"be_null";
+            tracerDict[UT_ELEMENT_FROM] = @"be_null";
             [FHUserTracker writeEvent:@"click_options" params:tracerDict.copy];
             [weakSelf mapMaskBtnClick:nil];
         }];

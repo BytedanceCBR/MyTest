@@ -56,7 +56,6 @@ static MAMapView *kFHPageMapView = nil;
 @property (nonatomic, assign) CLLocationCoordinate2D centerPoint;
 @property (nonatomic, strong) AMapSearchAPI *searchApi;
 @property (nonatomic, strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
-@property (nonatomic, strong) NSMutableDictionary *traceDict;
 @property (nonatomic , strong) FHMyMAAnnotation *pointCenterAnnotation;
 @property (nonatomic , strong) MACircle *locationCircle;
 @property (nonatomic , strong) NSString *titleStr;
@@ -82,7 +81,6 @@ static MAMapView *kFHPageMapView = nil;
         self.searchApi.delegate = self;
         self.selectedIndex = 0;
         self.ttTrackStayEnable = YES;
-        _traceDict =[NSMutableDictionary dictionaryWithDictionary:paramObj.allParams[@"tracer"]];
         
         if ([paramObj.allParams objectForKey:@"latitude"] && [paramObj.allParams objectForKey:@"longitude"]) {
             CGFloat latitatue = [[paramObj.allParams objectForKey:@"latitude"] doubleValue];
@@ -135,12 +133,10 @@ static MAMapView *kFHPageMapView = nil;
     
     [self setUpBottomBarView];
     
-    [_traceDict removeObjectForKey:@"page_type"];
-    [_traceDict removeObjectForKey:@"card_type"];
-    [_traceDict removeObjectForKey:@"rank"];
-    [_traceDict setObject:@"map_detail" forKey:@"page_type"];
-
-    [FHEnvContext recordEvent:_traceDict andEventKey:@"enter_map"];
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[UT_PAGE_TYPE] = @"map_detail";
+    tracerDict[UT_ELEMENT_TYPE] = @"be_null";
+    [FHEnvContext recordEvent:tracerDict.copy andEventKey:@"enter_map"];
     // Do any additional setup after loading the view.
 }
 

@@ -55,6 +55,8 @@
 @property (nonatomic, strong , nullable) FHSearchHouseDataModel *recommendHouseData; //推荐房源，猜你喜欢
 @property (nonatomic, copy , nullable) NSString *neighborhoodId;// 周边小区房源id
 
+@property (nonatomic, assign) BOOL relateDataFinished;
+
 @end
 
 id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions readingOptions) {
@@ -121,10 +123,13 @@ id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 //            }
         }
     }];
+    
+    [self requestRelatedData:self.houseId];
 }
 
 // 处理详情页数据
 - (void)processDetailData:(FHDetailNeighborhoodModel *)model {
+    [self.detailController updateLayout];
     self.detailData = model;
     self.contactViewModel.shareInfo = model.data.shareInfo;
     self.contactViewModel.followStatus = model.data.neighbordhoodStatus.neighborhoodSubStatus;
@@ -144,7 +149,6 @@ id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
     self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
 
-    
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [self addDetailCoreInfoExcetionLog];
@@ -185,8 +189,6 @@ id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
             [strategyModel updateDetailModel:self.detailData];
             [sectionModels addObject:strategyModel];
         }
-
-        __weak typeof(self) weakSelf = self;
         
         //小区基本信息
         if (model.data.baseInfo.count) {
@@ -201,18 +203,16 @@ id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
             surroundingSM.sectionType = FHNeighborhoodDetailSectionTypeSurrounding;
             [sectionModels addObject:surroundingSM];
         }
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             self.sectionModels = [self formattSectionModels:sectionModels.copy];
             self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
         });
-        
-        if (model.data) {
-            [weakSelf requestRelatedData:model.data.neighborhoodInfo.id];
+
+        if (self.relateDataFinished) {
+            [self processDetailRelatedData];
         }
     });
-
-    
-    [self.detailController updateLayout];
 }
 
 // 周边数据请求，当网络请求都返回后刷新数据
@@ -261,14 +261,24 @@ id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 
     
     dispatch_group_notify(relateGroup, relateQueue, ^{
+        self.relateDataFinished = YES;
         [self processDetailRelatedData];
     });
     
 }
 
+- (void)processMiddleData {
+    if (!self.detailData) {
+        return;
+    }
+
+}
+
 // 处理详情页周边请求数据
 - (void)processDetailRelatedData {
-        
+    if (!self.detailData) {
+        return;
+    }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         self.detailController.isLoadingData = NO;
         NSMutableArray *sectionModels = self.sectionModels.mutableCopy;
@@ -467,6 +477,7 @@ id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
     if (self.trackingId && self.trackingId.length) {
         params[@"event_tracking_id"] = self.trackingId;
     }
+    params[UT_ELEMENT_TYPE] = @"be_null";
     [FHUserTracker writeEvent:@"go_detail" params:params];
 }
 

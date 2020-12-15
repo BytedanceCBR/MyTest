@@ -95,9 +95,9 @@
                 neighborhood_id = detailModel.data.neighborhoodInfo.id;
             }
             NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
-            tracerDic[@"enter_type"] = @"click";
-            tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB;
-            tracerDic[@"category_name"] = @"old_list";
+            tracerDic[UT_ENTER_TYPE] = @"click";
+            tracerDic[UT_LOG_PB] = self.detailViewController.viewModel.listLogPB;
+            tracerDic[UT_CATEGORY_NAME] = @"old_list";
             tracerDic[@"element_from"] = @"related";
             tracerDic[@"enter_from"] = @"neighborhood_detail";
             [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];

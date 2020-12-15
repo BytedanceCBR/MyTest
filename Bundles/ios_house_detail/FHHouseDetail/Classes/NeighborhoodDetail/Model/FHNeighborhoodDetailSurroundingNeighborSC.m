@@ -40,6 +40,7 @@
         tracerDic[UT_LOG_PB] = self.detailViewController.viewModel.listLogPB ? self.detailViewController.viewModel.listLogPB : @"be_null";
         tracerDic[UT_ELEMENT_FROM] = @"related_neighborhood";
         tracerDic[UT_ENTER_FROM] = @"neighborhood_detail";
+        tracerDic[UT_CATEGORY_NAME] = @"neighborhood_list";
         
         NSMutableDictionary *infoDict = [NSMutableDictionary new];
         infoDict[@"tracer"] = tracerDic;

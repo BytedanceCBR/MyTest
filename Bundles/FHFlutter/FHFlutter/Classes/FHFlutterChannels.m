@@ -102,7 +102,8 @@
             @"realtor_position": @"detail_button",
             @"enter_from": @"neighborhood_detail",
             @"element_from": @"average_price",
-            @"page_type": @"average_price_detail"
+            @"page_type": @"average_price_detail",
+            UT_ELEMENT_TYPE: @"be_null"
         }.mutableCopy;
 //        [extraDic addEntriesFromDictionary:self.tracerDict];
         extraDic[kFHAssociateInfo] = tempNeighborhoodViewModel.detailData.data.priceTrendAssociateInfo.phoneInfo;
@@ -122,7 +123,8 @@
             @"realtor_position": @"detail_button",
             @"enter_from": @"neighborhood_detail",
             @"element_from": @"average_price",
-            @"page_type": @"average_price_detail"
+            @"page_type": @"average_price_detail",
+            UT_ELEMENT_TYPE: @"be_null"
         }.mutableCopy;
 //        [extraDic addEntriesFromDictionary:self.tracerDict];
 
@@ -148,7 +150,8 @@
             @"realtor_position": @"detail_button",
             @"enter_from": @"neighborhood_detail",
             @"element_from": @"average_price",
-            @"page_type": @"average_price_detail"
+            @"page_type": @"average_price_detail",
+            UT_ELEMENT_TYPE: @"be_null"
         }.mutableCopy;
         if(tempNeighborhoodViewModel.detailData.data.priceTrendAssociateInfo) {
             extraDic[kFHAssociateInfo] = tempNeighborhoodViewModel.detailData.data.priceTrendAssociateInfo;
