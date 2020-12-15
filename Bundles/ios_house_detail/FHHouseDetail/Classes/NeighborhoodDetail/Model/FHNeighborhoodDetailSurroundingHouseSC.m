@@ -120,7 +120,7 @@
             if (SM.model.searchId.length > 0) {
                 userInfo[@"search_id"] = SM.model.searchId;
             }
-            userInfo[@"list_vc_type"] = @(5);
+            userInfo[@"list_vc_type"] = @(2);
             
             TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
             NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];

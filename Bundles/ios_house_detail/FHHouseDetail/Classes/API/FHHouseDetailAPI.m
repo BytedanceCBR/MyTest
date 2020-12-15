@@ -285,6 +285,7 @@
     paramDic[CHANNEL_ID] = CHANNEL_ID_RELATED_NEIGHBORHOOD;
     if (isShowNeighborhood) {
         paramDic[@"is_show_neighborhood"] = @(1);
+        paramDic[CHANNEL_ID] = @"94349557959";
     }
     return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailRelatedNeighborhoodResponseModel class] completion:^(JSONModel * _Nullable m, NSError * _Nullable error) {
         FHDetailRelatedNeighborhoodResponseModel *model = (FHDetailRelatedNeighborhoodResponseModel *)m;
