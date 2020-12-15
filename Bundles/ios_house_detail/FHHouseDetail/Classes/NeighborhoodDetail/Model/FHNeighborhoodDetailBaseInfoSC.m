@@ -30,7 +30,7 @@
     NSMutableDictionary *params = @{}.mutableCopy;
     
     NSMutableDictionary *userInfo = @{}.mutableCopy;
-    userInfo[@"route"] = [@"/neighbor_info_list_page" btd_stringByURLEncode];
+    userInfo[@"route"] = @"/neighbor_info_list_page";
     
     FHNeighborhoodDetailBaseInfoSM *model = (FHNeighborhoodDetailBaseInfoSM *)self.sectionModel;
     
