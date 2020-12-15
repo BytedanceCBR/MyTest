@@ -412,9 +412,12 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     if ([FHEnvContext isHouseListComponentEnable]) {
         [(FHHouseTableView *)self.tableView setFhHouse_dataSource:self];
+        [(FHHouseTableView *)self.tableView registerCellStyles];
     } else {
         self.tableView.delegate = self;
         self.tableView.dataSource = self;
+        [self.tableView fhHouseCard_registerCellStyles];
+        [self registerCellClasses];
     }
     
     __weak typeof(self)wself = self;
@@ -426,12 +429,6 @@ extern NSString *const INSTANT_DATA_KEY;
     
     if ([self isNeighborhoodList]) {
         self.tableView.backgroundColor = [UIColor themeGray7];
-    }
-    
-    [self.tableView fhHouseCard_registerCellStyles];
-    
-    if (![FHEnvContext isHouseListComponentEnable]) {
-        [self registerCellClasses];
     }
 }
 

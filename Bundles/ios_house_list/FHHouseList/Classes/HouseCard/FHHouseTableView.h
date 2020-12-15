@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<FHHouseTableViewDataSource> fhHouse_dataSource;
 
+- (void)registerCellStyles;
+
 - (void)handleAppWillEnterForground;
 
 - (void)handleAppDidEnterBackground;

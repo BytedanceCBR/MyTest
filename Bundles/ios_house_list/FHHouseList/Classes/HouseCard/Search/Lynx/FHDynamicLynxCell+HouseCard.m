@@ -13,7 +13,6 @@
 
 @implementation FHDynamicLynxCell(HouseCard)
 
-static const char view_model_key;
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
     FHHouseLynxViewModel *cardViewModel = [viewModel isKindOfClass:FHHouseLynxViewModel.class] ? (FHHouseLynxViewModel *)viewModel : nil;

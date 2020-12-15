@@ -153,8 +153,6 @@ NS_ASSUME_NONNULL_BEGIN
 //上报跳转详情页信息到浏览历史
 + (TTHttpTask *)requestAddHistory:(NSDictionary *)params completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
 
-+(JSONModel *)generateModel:(NSData *)jsonData class:(Class)class error:(NSError *__autoreleasing *)error;
-
 @end
 
 NS_ASSUME_NONNULL_END

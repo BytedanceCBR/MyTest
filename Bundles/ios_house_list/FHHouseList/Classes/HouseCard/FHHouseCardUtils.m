@@ -44,7 +44,24 @@
 //支持的Cell样式, key: viewModelClassName value: cellClassName
 + (NSDictionary *)supportCellStyleMap {
     if ([FHEnvContext isHouseListComponentEnable]) {
-        return [self houseList_supportCellStyleMap];
+        return @{
+            NSStringFromClass(FHHousePlaceholderStyle1ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle1Cell.class),
+            NSStringFromClass(FHHousePlaceholderStyle2ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle2Cell.class),
+            NSStringFromClass(FHHousePlaceholderStyle3ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle3Cell.class),
+            NSStringFromClass(FHHouseSecondCardViewModel.class): NSStringFromClass(FHHouseSecondCell.class),
+            NSStringFromClass(FHHouseNewCardViewModel.class): NSStringFromClass(FHHouseNewCell.class),
+            NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHHouseNeighborhoodCell.class),
+            NSStringFromClass(FHHouseSearchRentHouseViewModel.class): NSStringFromClass(FHHouseListRentCell.class),
+            NSStringFromClass(FHHouseSubscribeViewModel.class): NSStringFromClass(FHSuggestionSubscribCell.class),
+            NSStringFromClass(FHHouseNeighborAgencyViewModel.class): NSStringFromClass(FHNeighbourhoodAgencyCardCell.class),
+            NSStringFromClass(FHHouseGuessYouWantTipViewModel.class): NSStringFromClass(FHHouseListRecommendTipCell.class),
+            NSStringFromClass(FHHouseGuessYouWantContentViewModel.class): NSStringFromClass(FHRecommendSecondhandHouseTitleCell.class),
+            NSStringFromClass(FHHouseReserveAdviserViewModel.class): NSStringFromClass(FHHousReserveAdviserCell.class),
+            NSStringFromClass(FHHouseFindHouseHelperViewModel.class): NSStringFromClass(FHFindHouseHelperCell.class),
+            NSStringFromClass(FHHouseLynxViewModel.class): NSStringFromClass(FHDynamicLynxCell.class),
+            NSStringFromClass(FHHouseRedirectTipViewModel.class): NSStringFromClass(FHHouseListRedirectTipCell.class),
+            NSStringFromClass(FHHouseNoResultViewModel.class): NSStringFromClass(FHHouseNoResultCell.class),
+        };
     }
     
     return @{
@@ -56,7 +73,47 @@
 
 + (id)getEntityFromModel:(id)model {
     if ([FHEnvContext isHouseListComponentEnable]) {
-        return [self houseList_getEntityFromModel:model];
+        if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+            FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)model;
+            switch ([itemModel.houseType integerValue]) { //有些接口数据没有返回cardType, 这里用houseType保险点
+                case FHSearchCardTypeNewHouse: {
+                    return [[FHHouseNewCardViewModel alloc] initWithModel:itemModel];
+                    break;
+                }
+                case FHSearchCardTypeSecondHouse: {
+                    return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
+                    break;
+                }
+                case FHSearchCardTypeNeighborhood: {
+                    return [[FHHouseNeighborhoodCardViewModel alloc] initWithModel:itemModel];
+                    break;
+                }
+                case FHSearchCardTypeRentHouse: {
+                    return [[FHHouseSearchRentHouseViewModel alloc] initWithModel:itemModel];
+                    break;
+                }
+                default:
+                    break;
+            }
+        } else if ([model isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+            return [[FHHouseSubscribeViewModel alloc] initWithModel:model];
+        } else if ([model isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
+            return [[FHHouseNeighborAgencyViewModel alloc] initWithModel:model];
+        } else if ([model isKindOfClass:[FHSearchGuessYouWantTipsModel class]]) {
+            return [[FHHouseGuessYouWantTipViewModel alloc] initWithModel:model];
+        } else if ([model isKindOfClass:[FHSearchGuessYouWantContentModel class]]) {
+            return [[FHHouseGuessYouWantContentViewModel alloc] initWithModel:model];
+        } else if ([model isKindOfClass:[FHSearchHouseDataRedirectTipsModel class]]) {
+            return [[FHHouseRedirectTipViewModel alloc] initWithModel:model];
+        } else if ([model isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
+            return [[FHHouseFindHouseHelperViewModel alloc] initWithModel:model];
+        } else if ([model isKindOfClass:[FHDynamicLynxCellModel class]]) {
+            return [[FHHouseLynxViewModel alloc] initWithModel:model];
+        } else if ([model isKindOfClass:[FHHouseReserveAdviserModel class]]) {
+            return [[FHHouseReserveAdviserViewModel alloc] initWithModel:model];
+        }
+        
+        return nil;
     }
     
     if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
@@ -80,71 +137,6 @@
     return nil;
 }
 
-+ (NSDictionary *)houseList_supportCellStyleMap {
-    return @{
-        NSStringFromClass(FHHousePlaceholderStyle1ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle1Cell.class),
-        NSStringFromClass(FHHousePlaceholderStyle2ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle2Cell.class),
-        NSStringFromClass(FHHousePlaceholderStyle3ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle3Cell.class),
-        NSStringFromClass(FHHouseSecondCardViewModel.class): NSStringFromClass(FHHouseSecondCell.class),
-        NSStringFromClass(FHHouseNewCardViewModel.class): NSStringFromClass(FHHouseNewCell.class),
-        NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHHouseNeighborhoodCell.class),
-        NSStringFromClass(FHHouseSearchRentHouseViewModel.class): NSStringFromClass(FHHouseListRentCell.class),
-        NSStringFromClass(FHHouseSubscribeViewModel.class): NSStringFromClass(FHSuggestionSubscribCell.class),
-        NSStringFromClass(FHHouseNeighborAgencyViewModel.class): NSStringFromClass(FHNeighbourhoodAgencyCardCell.class),
-        NSStringFromClass(FHHouseGuessYouWantTipViewModel.class): NSStringFromClass(FHHouseListRecommendTipCell.class),
-        NSStringFromClass(FHHouseGuessYouWantContentViewModel.class): NSStringFromClass(FHRecommendSecondhandHouseTitleCell.class),
-        NSStringFromClass(FHHouseReserveAdviserViewModel.class): NSStringFromClass(FHHousReserveAdviserCell.class),
-        NSStringFromClass(FHHouseFindHouseHelperViewModel.class): NSStringFromClass(FHFindHouseHelperCell.class),
-        NSStringFromClass(FHHouseLynxViewModel.class): NSStringFromClass(FHDynamicLynxCell.class),
-        NSStringFromClass(FHHouseRedirectTipViewModel.class): NSStringFromClass(FHHouseListRedirectTipCell.class),
-        NSStringFromClass(FHHouseNoResultViewModel.class): NSStringFromClass(FHHouseNoResultCell.class),
-    };
-}
-
-+ (id)houseList_getEntityFromModel:(id)model {
-    if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
-        FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)model;
-        switch ([itemModel.houseType integerValue]) { //有些接口数据没有返回cardType, 这里用houseType保险点
-            case FHSearchCardTypeNewHouse: {
-                return [[FHHouseNewCardViewModel alloc] initWithModel:itemModel];
-                break;
-            }
-            case FHSearchCardTypeSecondHouse: {
-                return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
-                break;
-            }
-            case FHSearchCardTypeNeighborhood: {
-                return [[FHHouseNeighborhoodCardViewModel alloc] initWithModel:itemModel];
-                break;
-            }
-            case FHSearchCardTypeRentHouse: {
-                return [[FHHouseSearchRentHouseViewModel alloc] initWithModel:itemModel];
-                break;
-            }
-            default:
-                break;
-        }
-    } else if ([model isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
-        return [[FHHouseSubscribeViewModel alloc] initWithModel:model];
-    } else if ([model isKindOfClass:[FHHouseNeighborAgencyModel class]]) {
-        return [[FHHouseNeighborAgencyViewModel alloc] initWithModel:model];
-    } else if ([model isKindOfClass:[FHSearchGuessYouWantTipsModel class]]) {
-        return [[FHHouseGuessYouWantTipViewModel alloc] initWithModel:model];
-    } else if ([model isKindOfClass:[FHSearchGuessYouWantContentModel class]]) {
-        return [[FHHouseGuessYouWantContentViewModel alloc] initWithModel:model];
-    } else if ([model isKindOfClass:[FHSearchHouseDataRedirectTipsModel class]]) {
-        return [[FHHouseRedirectTipViewModel alloc] initWithModel:model];
-    } else if ([model isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
-        return [[FHHouseFindHouseHelperViewModel alloc] initWithModel:model];
-    } else if ([model isKindOfClass:[FHDynamicLynxCellModel class]]) {
-        return [[FHHouseLynxViewModel alloc] initWithModel:model];
-    } else if ([model isKindOfClass:[FHHouseReserveAdviserModel class]]) {
-        return [[FHHouseReserveAdviserViewModel alloc] initWithModel:model];
-    }
-    
-    return nil;
-}
-
 + (id)getNoResultViewModelWithExistModel:(id)existModel containerHeight:(CGFloat)containerHeight {
     NSArray *canShowNoResultList = @[
         @"FHHouseGuessYouWantTipViewModel",
@@ -162,7 +154,7 @@
         }
         
         if (!canShowNoResult) return nil;
-        NSString *cellClassName = [[self houseList_supportCellStyleMap] btd_stringValueForKey:viewModelClassName];
+        NSString *cellClassName = [[self supportCellStyleMap] btd_stringValueForKey:viewModelClassName];
         if (cellClassName) {
             Class cellClass = NSClassFromString(cellClassName);
             if (cellClass && [cellClass conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)] && [cellClass respondsToSelector:@selector(viewHeightWithViewModel:)]) {

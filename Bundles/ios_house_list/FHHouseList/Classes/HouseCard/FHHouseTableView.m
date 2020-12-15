@@ -50,6 +50,16 @@
     [super setDataSource:dataSource];
 }
 
+- (void)registerCellStyles {
+    NSDictionary *supportCellStyles = [self.fhHouse_dataSource fhHouse_supportCellStyles];
+    for (NSString *cellClassName in [supportCellStyles allValues]) {
+        Class cellClass = NSClassFromString(cellClassName);
+        if (cellClass) {
+            [self registerClass:cellClass forCellReuseIdentifier:cellClassName];
+        }
+    }
+}
+
 - (void)handleAppWillEnterForground {
     NSArray *tableCells = [self visibleCells];
     if (tableCells) {

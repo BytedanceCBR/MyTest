@@ -155,7 +155,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
         if ([FHEnvContext isHouseListComponentEnable]) {
             [(FHHouseTableView *)self.tableView setFhHouse_dataSource:self];
-            [self.tableView fhHouseCard_registerCellStyles];
+            [(FHHouseTableView *)self.tableView registerCellStyles];
         } else {
             self.tableView.delegate = self;
             self.tableView.dataSource = self;
