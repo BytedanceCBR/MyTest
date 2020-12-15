@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, copy) NSString *moreTitle;
 
+@property (nonatomic, assign) NSInteger total;
+
 @property (nonatomic, strong) FHDetailSameNeighborhoodHouseResponseDataModel *model;
 
 - (void)updateWithDataModel:(FHDetailSameNeighborhoodHouseResponseDataModel *)model;

@@ -31,6 +31,9 @@
 
 - (NSInteger)numberOfItems {
     FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
+    if ([SM.total integerValue] <= 5) {
+        return SM.items.count;
+    }
     return SM.items.count + 1;
 }
 

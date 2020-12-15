@@ -27,6 +27,7 @@
     self.items = arrayM.copy;
     self.moreTitle = [NSString stringWithFormat:@"查看在售%@套房源", model.total];
     self.model = model;
+    self.total = [model.total integerValue];
 }
 
 @end
