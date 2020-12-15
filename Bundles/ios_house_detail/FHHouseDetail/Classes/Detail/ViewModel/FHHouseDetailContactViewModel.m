@@ -517,6 +517,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSDictionary *associateInfoDict = self.contactPhone.enablePhone ? self.highlightedRealtorAssociateInfo.phoneInfo : self.highlightedRealtorAssociateInfo.reportFormInfo;
     extraDict[kFHAssociateInfo] = associateInfoDict?:@{};
     extraDict[@"position"] = @"button";
+    extraDict[@"enter_type"] = @"click_button";
     [self contactActionWithExtraDict:extraDict];
 }
 - (void)contactActionWithExtraDict:(NSDictionary *)extraDict

@@ -983,7 +983,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         formReportModel.associateInfo = subscribeModel.associateInfo.reportFormInfo;
         NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
         tracerDic[@"position"] = @"card";
-        tracerDic[@"enter_from"] = tracerDic[@"page_type"] ?: @"be_null";
         tracerDic[@"enter_type"] = @"click_subscribe";
         formReportModel.reportParams = tracerDic.copy;
         formReportModel.extraInfo = extraInfo;

@@ -426,9 +426,16 @@
         FHAssociateFormReportModel *formReportModel = [[FHAssociateFormReportModel alloc] init];
         formReportModel.associateInfo = self.modelData.associateInfo.reportFormInfo;
         NSMutableDictionary *tracerDic = self.modelData.tracerDict.mutableCopy;
-        tracerDic[@"position"] = @"card";
         tracerDic[@"enter_from"] = self.traceParams[@"page_type"] ?: @"be_null";
         tracerDic[@"enter_type"] = @"click_subscribe";
+        if([self.modelData.realtorType isEqualToString:@"4"]){
+            //小区
+            tracerDic[@"position"] = @"neighborhood_expert_card";
+        } else if ([self.modelData.realtorType isEqualToString:@"5"]){
+            //商圈
+            tracerDic[@"position"] = @"area_expert_card";
+        }
+        
         formReportModel.reportParams = tracerDic.copy;
         formReportModel.houseType = FHHouseTypeNeighborhood;
         formReportModel.title = @"免费预约";
