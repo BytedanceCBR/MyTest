@@ -38,6 +38,7 @@ NSString *const FHLoginTrackLoginSuggestMethodKey = @"FHLoginTrackLoginSuggestMe
     }
     trackDict[@"element_type"] = @"be_null";
     trackDict[@"params_for_special"] = @"uc_login";
+    trackDict[@"page_type"] = @"login_page";
     TRACK_EVENT(@"uc_login_notify", trackDict.copy);
 }
 
@@ -55,6 +56,7 @@ NSString *const FHLoginTrackLoginSuggestMethodKey = @"FHLoginTrackLoginSuggestMe
         trackDict[@"last_login_method"] = lastLoginMethod;
     }
     trackDict[@"params_for_special"] = @"uc_login";
+    trackDict[@"page_type"] = @"login_page";
     TRACK_EVENT(@"uc_login_submit", trackDict.copy);
 }
 
@@ -83,6 +85,7 @@ NSString *const FHLoginTrackLoginSuggestMethodKey = @"FHLoginTrackLoginSuggestMe
             trackDict[@"status"] = @"fail";
         }
     }
+    trackDict[@"page_type"] = @"login_page";
     TRACK_EVENT(@"uc_login_result", trackDict.copy);
 }
 
