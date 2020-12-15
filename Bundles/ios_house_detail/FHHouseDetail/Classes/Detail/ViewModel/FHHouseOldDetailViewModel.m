@@ -175,20 +175,11 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestOldDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId bizTrace:self.detailController.bizTrace
-logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
+                                 logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
-                BOOL modelEqual = YES;
-                if(wSelf.isCache){
-                    
-                    NSString *s1 = [model toJSONString];
-                    NSString *s2 = [cacheModel toJSONString];
-                    modelEqual = [s1 isEqualToString:s2];
-                }
-                if(!wSelf.isCache || !modelEqual){
-                    [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:key.copy];
-                    [wSelf afterLoadData:model];
-                }
+                [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:key.copy];
+                [wSelf afterLoadData:model];
             }
         } else {
             [wSelf requsetDataErrorWithModel:model Message:error.domain?:@"empty"];
