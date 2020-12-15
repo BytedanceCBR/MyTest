@@ -200,4 +200,14 @@
     [[HMDTTMonitor defaultManager] hmdTrackService:@"f_flutter_monitor" metric:metricDict category:cat extra:extra];
 }
 
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations
+{
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation
+{
+    return UIInterfaceOrientationPortrait;
+}
+
 @end
