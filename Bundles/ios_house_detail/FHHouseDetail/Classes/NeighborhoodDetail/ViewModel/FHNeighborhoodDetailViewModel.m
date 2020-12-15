@@ -411,7 +411,7 @@ id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions 
 // 周边房源
 - (void)requestRelatedHouseSearch:(NSString *)neighborhoodId completion:(void (^)(void))completion {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestRelatedHouseSearch:nil neighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:3 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestRelatedHouseSearch:nil neighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.relatedHouseData = model.data;
         if (completion) {
             dispatch_async(dispatch_get_main_queue(), ^{

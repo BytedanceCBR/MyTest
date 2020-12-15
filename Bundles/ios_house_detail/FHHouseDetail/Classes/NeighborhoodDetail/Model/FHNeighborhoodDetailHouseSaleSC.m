@@ -33,7 +33,7 @@
 
 -(NSInteger)numberOfItems {
     FHNeighborhoodDetailHouseSaleSM *model = (FHNeighborhoodDetailHouseSaleSM *)self.sectionModel;
-    if (model.items.count <= 3) {
+    if (model.total <= 3) {
         return model.items.count;
     }
     return model.items.count + 1;
