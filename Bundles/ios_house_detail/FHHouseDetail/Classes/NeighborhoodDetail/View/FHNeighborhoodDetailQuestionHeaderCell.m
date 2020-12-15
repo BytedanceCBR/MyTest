@@ -119,7 +119,7 @@
     
     self.emptyContentLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
     _emptyContentLabel.hidden = YES;
-    _emptyContentLabel.textColor = [UIColor themeGray3];
+    _emptyContentLabel.textColor = [UIColor themeGray1];
     _emptyContentLabel.font = [UIFont themeFontRegular:14];
     [self.contentView addSubview:_emptyContentLabel];
     

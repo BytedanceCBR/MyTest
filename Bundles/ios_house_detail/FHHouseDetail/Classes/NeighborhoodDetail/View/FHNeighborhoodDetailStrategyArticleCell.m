@@ -79,7 +79,8 @@
     baesparmas.bridgePrivate = self;
     [self.articleCardView loadLynxWithParams:baesparmas];
     NSMutableDictionary *dics = [dic mutableCopy];
-    [dics setObject:@{@"display_width":[@([UIScreen mainScreen].bounds.size.width - 42) stringValue]}  forKey:@"common_params"];
+    CGFloat height = ceil(([UIScreen mainScreen].bounds.size.width - 42)*(140.0f/332.0f) + 34);
+    [dics setObject:@{@"display_height":@(height),@"display_width":@([UIScreen mainScreen].bounds.size.width - 42)}  forKey:@"common_params"];
 //    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"search_agency_card" templateKey:[FHLynxManager defaultJSFileName] version:0];
 //    NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.172.166:3344/community_evaluation/template.js"]];
 //    NSString *lynxData = [dics btd_jsonStringEncoded];
