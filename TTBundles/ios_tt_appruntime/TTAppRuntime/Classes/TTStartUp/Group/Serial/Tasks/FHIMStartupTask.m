@@ -350,7 +350,6 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 - (BOOL)isEnableIMRealtorLocking {
     return [SSCommonLogic enableIMRealtorLocking];
 }
-
 - (void)trackEvent:(NSString *)event params:(NSDictionary *)params {
     TRACK_EVENT(event, params);
 }
