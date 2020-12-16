@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 +(instancetype)sharedInstance;
 - (id)getHouseDetailModelWith:(NSString *)key;
 - (void)saveHouseDetailModel:(id)model With:(NSString *)key;
-
+- (CGFloat)getSizeOfCache;
+- (void )cleanCache;
 @end
 
 

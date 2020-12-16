@@ -8,6 +8,7 @@
 #import "FHHousedetailModelManager.h"
 #import "FHDetailNewModel.h"
 #import "YYCache.h"
+#import "FHEnvContext.h"
 
 @interface FHHousedetailModelManager ()
 
@@ -46,12 +47,18 @@
 }
 
 - (void)saveHouseDetailModel:(id)model With:(NSString *)key{
+    if(![FHEnvContext isOldDetailLoadOptimization]){
+        return ;
+    }
     if([model isKindOfClass:[FHDetailOldModel class]] && key){
         [self.houseDtailManagerCache setObject:model forKey:key];
     }
 }
 
 - (id)getHouseDetailModelWith:(NSString *)key{
+    if(![FHEnvContext isOldDetailLoadOptimization]){
+        return nil;
+    }
     if ([self.houseDtailManagerCache containsObjectForKey:key]) {
         id value = [self.houseDtailManagerCache objectForKey:key];
         if([value isKindOfClass:[FHDetailOldModel class]]){
@@ -59,6 +66,16 @@
         }
     }
     return nil;
+}
+
+- (CGFloat)getSizeOfCache{
+    NSInteger size = [self.houseDtailManagerCache.diskCache totalCost];
+    return size;
+}
+
+- (void )cleanCache{
+    [self.houseDtailManagerCache.diskCache removeAllObjects];
+    [self.houseDtailManagerCache.memoryCache removeAllObjects];
 }
 
 @end

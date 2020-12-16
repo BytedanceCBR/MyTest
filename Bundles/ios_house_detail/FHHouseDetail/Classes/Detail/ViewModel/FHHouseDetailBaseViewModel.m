@@ -336,7 +336,11 @@
     if (cellHeight) {
         return [cellHeight floatValue];
     }
-    return 200;
+    if(![FHEnvContext isOldDetailLoadOptimization]){
+        return UITableViewAutomaticDimension;
+    }else{
+        return 200;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -790,8 +794,6 @@
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_house_detail_old" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
             }
         }
-        
-
     });
 }
 #pragma mark - poplayer

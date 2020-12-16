@@ -332,6 +332,8 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 
 //是否展展示登陆弹窗
 +(BOOL)canShowLoginTip;
+//优化二手房详情页加载开关
++ (BOOL)isOldDetailLoadOptimization;
 
 @end
 
