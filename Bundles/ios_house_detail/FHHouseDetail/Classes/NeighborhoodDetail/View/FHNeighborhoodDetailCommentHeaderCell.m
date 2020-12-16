@@ -83,6 +83,7 @@
     [_rightBtn setTitle:@"查看全部" forState:UIControlStateNormal];
     [_rightBtn sizeToFit];
     [_rightBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, - _rightBtn.imageView.image.size.width, 0, _rightBtn.imageView.image.size.width)];
+    [_rightBtn setImageEdgeInsets:UIEdgeInsetsMake(0, _rightBtn.titleLabel.frame.size.width, 0, 0)];
     [_rightBtn setUserInteractionEnabled:NO];
     [self.contentView addSubview:_rightBtn];
 }

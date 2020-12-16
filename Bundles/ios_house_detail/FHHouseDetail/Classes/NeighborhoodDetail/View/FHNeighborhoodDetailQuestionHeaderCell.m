@@ -163,7 +163,7 @@
     }];
     
     [self.cornerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(13);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(9);
         make.left.mas_equalTo(self.contentView).offset(12);
         make.width.mas_equalTo(42);
         make.height.mas_equalTo(18);
