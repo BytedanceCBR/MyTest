@@ -27,6 +27,8 @@
 
 - (NSString *)imageURL;
 
+- (NSString *)userId;
+
 - (BOOL)isFollowing;
 
 - (TTShortVideoModel *)shortVideoModel;

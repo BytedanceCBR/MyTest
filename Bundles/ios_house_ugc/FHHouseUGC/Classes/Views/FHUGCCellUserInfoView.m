@@ -27,6 +27,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHEnvContext.h"
 
 
 @interface FHUGCCellUserInfoView()
@@ -81,8 +82,6 @@
 
 - (void)initViews {
     _avatarView = [[FHRealtorAvatarView alloc] init];
-    _avatarView.avatarImageView.layer.borderWidth = 1;
-    _avatarView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
     _avatarView.placeHoldName = @"fh_mine_avatar";
     _avatarView.userInteractionEnabled = YES;
     [self addSubview:_avatarView];
@@ -97,6 +96,12 @@
     self.titleLabel.numberOfLines = 0;
     self.titleLabel.hidden = YES;
     [self addSubview:_titleLabel];
+    
+    _questionIcon = [[UIImageView alloc]init];
+    _questionIcon.contentMode = UIViewContentModeScaleAspectFit;
+    _questionIcon.image = [UIImage imageNamed:@"ugc_question_icon"];
+    [self addSubview:_questionIcon];
+    _questionIcon.hidden = YES;
     
     _userName.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
@@ -143,7 +148,6 @@
     self.avatarView.left = 20;
     self.avatarView.width = 40;
     self.avatarView.height = 40;
-    
     self.userName.top = 0;
     self.userName.left = self.avatarView.right + 10;
     self.userName.width = 100;
@@ -154,6 +158,10 @@
     self.titleLabel.width = 100;
     self.titleLabel.height = 50;
     
+    self.questionIcon.top = 5.4;
+    self.questionIcon.left =  20;
+    self.questionIcon.width = 18;
+    self.questionIcon.height = 18;
     
     self.moreBtn.top = 10;
     self.moreBtn.width = 20;
@@ -189,7 +197,6 @@
     [self.avatarView updateAvatarWithUGCCellModel:cellModel];
 
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
-    
     [self updateUserAuth];
     [self updateDescLabel];
     [self updateEditState];
@@ -199,7 +206,8 @@
 - (void)setTitleModel:(FHFeedUGCCellModel *)cellModel {
     //设置userInfo
     self.cellModel = cellModel;
-    self.titleLabel.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
+    self.titleLabel.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    %@",cellModel.originItemModel.content] : @"";
+    self.questionIcon.hidden = NO;
     CGSize titleLabelSize = [self.titleLabel sizeThatFits:CGSizeMake(MAXFLOAT, 50)];
     self.titleLabel.width = titleLabelSize.width;
     CGFloat maxTitleLabelSizeWidth = self.width - 20 - 20 - 20 -5 ;
