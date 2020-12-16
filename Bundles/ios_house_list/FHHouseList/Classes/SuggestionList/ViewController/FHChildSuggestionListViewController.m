@@ -334,6 +334,11 @@
     if (userInputText.length == 0 && self.viewModel.houseType == self.defaultHouseType) {
         userInputText = [self.homePageRollDic btd_stringValueForKey:@"text"];
     }
+    
+    if (userInputText == nil) {
+        userInputText = @"";
+    }
+    
     // 保存关键词搜索到历史记录
     /*
     NSString *tempStr = [userInputText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
