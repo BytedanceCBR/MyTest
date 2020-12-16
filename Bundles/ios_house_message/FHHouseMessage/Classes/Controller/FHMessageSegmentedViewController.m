@@ -570,13 +570,15 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     
     // 先添加监控息tab的未读数更新逻辑
     [self monitorBadgetNumberAndReport:systemMessageNumber chatNumber:chatNumber];
-    // 用单例记录一下系统消息未读数和微聊消息未读数，用于之后比较消息tab未读数
-    [[FHMessageBadgetNumberMonitorHelper shared] updateSystemUnreadNumber:systemMessageNumber chatUnreadNumber:chatNumber];
-    // 刷新消息tab未读数
+    // 后刷新消息tab未读数
     [[FHEnvContext sharedInstance].messageManager refreshBadgeNumber];
 }
 
 - (void)monitorBadgetNumberAndReport:(NSInteger)systemMessageNumber chatNumber:(NSInteger)chatNumber {
+    
+    // 用单例记录一下系统消息未读数和微聊消息未读数，用于之后比较消息tab未读数
+    [[FHMessageBadgetNumberMonitorHelper shared] updateSystemUnreadNumber:systemMessageNumber chatUnreadNumber:chatNumber];
+    
     // 监听消息tab的未读数变化事件，每次变化比较和当前系统通知未读数与微聊未读数的和是否相等，不相等就上报
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -591,13 +593,42 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                 categoryDict[@"error"] = @"1";
                 categoryDict[@"reason"] = @"消息tab未读数与分段页面未读数之和不相等";
                 NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
-                extraDict[@"sysUnreadNumber"] = @(sysUnreadNumber).stringValue;
-                extraDict[@"chatUnreadNumber"] = @(chatUnreadNumber).stringValue;
-                extraDict[@"msgTabBadgeNumber"] = @(messageTabBadgeNumber).stringValue;
-                extraDict[@"contextTotalNumber"] = @([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]).stringValue;
-                extraDict[@"sysMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager systemMsgUnreadNumber]).stringValue;
-                extraDict[@"ugcMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager ugcMsgUnreadNumber]).stringValue;
-                extraDict[@"chatMsgUnreadNumber"] = @([[FHEnvContext sharedInstance].messageManager chatMsgUnreadNumber]).stringValue;
+                extraDict[@"1.top:notify_tab_unread"] = @(sysUnreadNumber).stringValue;
+                extraDict[@"1.top:chat_tab_unread"] = @(chatUnreadNumber).stringValue;
+                extraDict[@"2.bottom:message_tab_unread"] = @(messageTabBadgeNumber).stringValue;
+                extraDict[@"3.manager:total_unread"] = @([[FHEnvContext sharedInstance].messageManager getTotalUnreadMessageCount]).stringValue;
+                extraDict[@"3.manager:sysMsg_unread"] = @([[FHEnvContext sharedInstance].messageManager systemMsgUnreadNumber]).stringValue;
+                extraDict[@"3.manager:ugcMsg_unread"] = @([[FHEnvContext sharedInstance].messageManager ugcMsgUnreadNumber]).stringValue;
+                extraDict[@"3.manager:im_chat_unread"] = @([[FHEnvContext sharedInstance].messageManager chatMsgUnreadNumber]).stringValue;
+                extraDict[@"4.im_sdk:unmute_conv_unread"] = @([[IMManager shareInstance] chatUnmuteUnreadTotalNumber]);
+                extraDict[@"4.im_sdk:mute_conv_unread"]  = @([[IMManager shareInstance] chatMutedUnreadTotalNumber]);
+                
+                NSDictionary *allConversationsInfo = [[IMManager shareInstance].chatService allConversationsInfoDict];
+                extraDict[@"5.im_sdk:unmute_conv_info"] = allConversationsInfo;
+                NSDictionary *allTIMOConversationsInfo = [[IMManager shareInstance].chatService allTIMOConversationsInfoDict];
+                extraDict[@"5.im_sdk:unmute_timo_conv_info"] = allTIMOConversationsInfo;
+                
+                NSSet *allConversationSet = [NSSet setWithArray:allConversationsInfo.allKeys];
+                NSSet *allTIMOConversationSet = [NSSet setWithArray:allTIMOConversationsInfo.allKeys];
+                
+                NSMutableSet *diffSet1 = [NSMutableSet setWithSet:allConversationSet];
+                [diffSet1 minusSet:allTIMOConversationSet];
+                
+                NSMutableDictionary *diffDict1 = [NSMutableDictionary dictionary];
+                [diffSet1 enumerateObjectsUsingBlock:^(NSString * _Nonnull convId, BOOL * _Nonnull stop) {
+                    diffDict1[convId] = allConversationsInfo[convId];
+                }];
+                extraDict[@"6.diffConvDict"] = diffDict1;
+                
+                NSMutableSet *diffSet2 = [NSMutableSet setWithSet:allTIMOConversationSet];
+                [diffSet2 minusSet:allConversationSet];
+                NSMutableDictionary *diffDict2 = [NSMutableDictionary dictionary];
+                [diffSet2 enumerateObjectsUsingBlock:^(NSString * _Nonnull convId, BOOL * _Nonnull stop) {
+                    diffDict2[convId] = allTIMOConversationsInfo[convId];
+                }];
+                extraDict[@"6.diffTIMOConvDict"] = diffDict2;
+                
+                extraDict[@"7.currentTab"] = [FHEnvContext getCurrentTabIdentifier];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"f_message_tab_badget_number_display_error"
                                                         metric:nil
                                                       category:categoryDict.copy
