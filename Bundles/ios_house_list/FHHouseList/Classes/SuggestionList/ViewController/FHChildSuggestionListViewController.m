@@ -35,13 +35,14 @@
 @property (nonatomic, weak)     UIViewController   *backListVC; // 需要返回到的页面
 
 @property (nonatomic, strong)   NSMutableDictionary       *homePageRollDic;// 传入搜索列表的轮播词-只用于搜索框展示和搜索用
-@property (nonatomic, assign)   BOOL       canSearchWithRollData; // 如果为YES，支持placeholder搜索
 @property (nonatomic, assign)   BOOL       hasDismissedVC;
 
 @property (nonatomic, assign)   BOOL isShowHistory;
 @property (nonatomic, copy)     NSString *textFieldText;
 
 @property (nonatomic, copy)     NSString *lastSearchWord;
+
+@property (nonatomic, assign)   NSInteger defaultHouseType;
 
 @end
 
@@ -69,6 +70,9 @@
             _viewModel.houseType = 2;// 默认二手房
         }
         _viewModel.fromPageType = self.fromSource;
+        
+        _defaultHouseType = _viewModel.houseType;
+        
         // 3、sug_delegate 代理
         /*
          NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
@@ -161,7 +165,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.canSearchWithRollData = NO;
     self.hasDismissedVC = NO;
     [self setupUI];
     [self addDefaultEmptyViewFullScreen];
@@ -185,16 +188,6 @@
 - (void)setFatherVC:(FHSuggestionListViewController *)fatherVC
 {
     _fatherVC = fatherVC;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    if (self.homePageRollDic) {
-         NSString *text = self.homePageRollDic[@"text"];
-         if (text.length > 0) {
-             self.canSearchWithRollData = YES;
-         }
-     }
-    [super viewWillAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -275,9 +268,7 @@
     if (_houseType == houseType) {
         return;
     }
-    if (self.canSearchWithRollData) {
-        self.canSearchWithRollData = NO;
-    }
+    
     _houseType = houseType;
     self.viewModel.houseType = self.houseType;
     // 清空埋点key
@@ -339,12 +330,9 @@
     
     NSString *userInputText = text;
     
-    // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
-    NSString *rollText = self.homePageRollDic[@"text"];
-    if (self.canSearchWithRollData) {
-        if (userInputText.length <= 0 && rollText.length > 0) {
-            userInputText = rollText;
-        }
+    // 如果外部传入搜索文本homePageRollData并且当前tab是默认tab，直接当搜索内容进行搜索
+    if (userInputText.length == 0 && self.viewModel.houseType == self.defaultHouseType) {
+        userInputText = [self.homePageRollDic btd_stringValueForKey:@"text"];
     }
     // 保存关键词搜索到历史记录
     /*
