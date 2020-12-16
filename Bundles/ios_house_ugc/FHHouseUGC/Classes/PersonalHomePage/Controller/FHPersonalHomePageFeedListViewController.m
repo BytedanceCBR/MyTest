@@ -8,6 +8,7 @@
 #import "FHPersonalHomePageFeedListViewController.h"
 #import "FHPersonalHomePageManager.h"
 #import "FHPersonalHomePageFeedListViewModel.h"
+#import "UIDevice+BTDAdditions.h"
 #import "TTReachability.h"
 
 @interface FHPersonalHomePageFeedListViewController ()
@@ -19,6 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     [self initView];
     [self initViewModel];
     self.isFirstLoad = YES;
@@ -31,6 +33,16 @@
     self.tableView.separatorStyle = UITableViewCellSelectionStyleNone;
     self.tableView.backgroundColor = [UIColor themeGray7];
     self.tableView.showsVerticalScrollIndicator = NO;
+    if (@available(iOS 11.0 , *)) {
+        _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        _tableView.estimatedRowHeight = 0;
+        _tableView.estimatedSectionFooterHeight = 0;
+        _tableView.estimatedSectionHeaderHeight = 0;
+    }
+    
+    if ([UIDevice btd_isIPhoneXSeries]) {
+        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+    }
     [self.view addSubview:self.tableView];
 }
 
