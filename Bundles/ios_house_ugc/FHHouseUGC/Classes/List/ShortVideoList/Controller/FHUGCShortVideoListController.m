@@ -23,6 +23,7 @@
 #import "FHBaseCollectionView.h"
 #import "UIViewController+Track.h"
 #import "ExploreLogicSetting.h"
+#import "FHFirstPageManager.h"
 
 @interface FHUGCShortVideoListController ()<SSImpressionProtocol>
 
@@ -50,6 +51,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:[self fh_pageType] withUrl:@"" withTabName:@"" withPriority:1];
+    [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
     // Do any additional setup after loading the view.
     self.startMonitorTime = [[NSDate date] timeIntervalSince1970];
     self.automaticallyAdjustsScrollViewInsets = NO;
@@ -385,6 +388,10 @@
     }
     
 //    [self addStayCategoryLog:tracerDict[@"enter_type"]];
+}
+
+- (NSString *)fh_pageType {
+    return @"f_house_smallvideo";
 }
 
 @end

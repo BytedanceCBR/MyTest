@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHNeighborhoodDetailViewController *detailController;
 @property (nonatomic, strong)   FHDetailNeighborhoodModel       *detailData; // 详情页数据：FHDetailOldDataModel等
+@property (nonatomic, copy) NSDictionary *originDetailDict;
 @property (nonatomic, strong) FHHouseDetailContactViewModel *contactViewModel;
 @property (nonatomic, strong) NSDictionary *extraInfo;
 @property (nonatomic, copy)   NSString* houseInfoBizTrace; // 房源详情下发通用bizTrace
@@ -44,17 +45,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 - (void)startLoadData;
-
-// 刷新数据
-//- (void)reloadData;
-
-// 是否弹出ugc表单
-// FHHouseFillFormConfigModel
-// FHHouseContactConfigModel
-- (BOOL)needShowSocialInfoForm:(id)model;
-
-//-(void)scrollViewDidScroll:(UIScrollView *)scrollView;
-//-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView;
 
 // 二级页所需数据
 - (NSDictionary *)subPageParams;
@@ -71,11 +61,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)isMissImage;
 - (BOOL)isMissCoreInfo;
 - (void)addDetailRequestFailedLog:(NSInteger)status message:(NSString *)message;
-
-
-- (void)enableController:(BOOL)enabled;
-- (void)popLayerReport:(id)model;
-- (void)poplayerFeedBack:(id)model type:(NSInteger)type completion:(void (^)(BOOL success))completion;
 
 /**
  1.0.4 版本统计二手房详情页加载总时长

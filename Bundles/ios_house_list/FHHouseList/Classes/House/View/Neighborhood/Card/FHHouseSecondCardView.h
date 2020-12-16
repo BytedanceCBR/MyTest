@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseSecondCardView : FHHouseNewComponentView
 
+- (instancetype)initWithLeftMargin:(CGFloat)left rightMargin:(CGFloat)right;
+
 @end
 
 NS_ASSUME_NONNULL_END

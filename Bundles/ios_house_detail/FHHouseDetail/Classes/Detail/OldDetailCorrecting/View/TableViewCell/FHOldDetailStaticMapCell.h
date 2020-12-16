@@ -7,7 +7,4 @@
 
 @interface FHOldDetailStaticMapCell : FHDetailBaseCell
 
-+ (NSString *)keyWordConver:(NSString *)category;
-+ (NSString *)keyWordConverReverse:(NSString *)category;
-
 @end

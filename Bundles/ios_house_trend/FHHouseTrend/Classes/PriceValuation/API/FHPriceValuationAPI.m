@@ -121,7 +121,7 @@
         NSMutableDictionary *resultDic = [NSMutableDictionary dictionary];
         __block NSError *errorTotal = nil;
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-        [FHHouseDetailAPI requestNeighborhoodDetail:neighborhoodId ridcode:nil realtorId:nil logPB:nil query:nil extraInfo:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
+        [FHHouseDetailAPI requestNeighborhoodDetail:neighborhoodId ridcode:nil realtorId:nil logPB:nil query:nil extraInfo:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSData * _Nullable resultData, NSError * _Nullable error) {
             if (model && !error) {
                 resultDic[@"chartData"] = model;
             }else{

@@ -28,6 +28,10 @@
 #import "FHMainApi+Contact.h"
 #import <FHHouseBase/FHUserInfoManager.h>
 #import <FHHouseBase/NSObject+FHOptimize.h>
+#import "SSCommonLogic.h"
+#import "TTAccountLoginManager.h"
+#import <TTAccountSDK/TTAccount.h>
+#import <FHHouseBase/FHHouseFillFormHelper.h>
 
 @interface FHHousReserveAdviserCell ()<UITextFieldDelegate>
 
@@ -186,7 +190,7 @@
     }];
 
     [self.mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.topInfoView).offset(16);
+        make.centerY.mas_equalTo(self.topInfoView).mas_offset(-14);
         make.left.mas_equalTo(self.topInfoView).offset(15);
         make.height.mas_equalTo(22);
         make.right.mas_lessThanOrEqualTo(self.pricePerSqmLabel.mas_left).offset(-10);
@@ -248,8 +252,12 @@
 }
 
 - (void)setPhoneNumber {
-    self.phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
-    [self showFullPhoneNum:NO];
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        self.subscribeBtn.enabled = YES;
+    } else {
+        self.phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
+        [self showFullPhoneNum:NO];
+    }
 }
 
 - (void)setLegalAnnouncement {
@@ -292,10 +300,6 @@
         
         self.tipNameLabel.text = model.tipText;
         
-        self.subscribeBtn.hidden = model.isSubcribed;
-        self.textField.hidden = model.isSubcribed;
-        self.legalAnnouncement.hidden = model.isSubcribed;
-        
         if([model.realtorType isEqualToString:@"4"]){
             //小区
             [self.pricePerSqmLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -328,14 +332,70 @@
             [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo(53);
             }];
+            if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+                [self.tipNameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self.bottomInfoView).offset(15);
+                    make.right.mas_equalTo(self.bottomInfoView).offset(-5);
+                    make.height.mas_equalTo(20);
+                    make.centerY.mas_equalTo(self.bottomInfoView);
+                }];
+            }
         }else{
+            //新增实验
             self.tipNameLabel.text = model.tipText;
-            self.subscribeBtn.hidden = NO;
-            self.textField.hidden = NO;
-            self.legalAnnouncement.hidden = NO;
-            [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(118);
-            }];
+            if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+                self.tipNameLabel.font = [UIFont themeFontSemibold:14];
+                self.tipNameLabel.text = @"高效找房，为您推荐专属顾问";
+                
+                self.subscribeBtn.hidden = NO;
+                [self.subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+                self.subscribeBtn.layer.cornerRadius = 15;
+//                _subscribeBtn.layer.borderColor = [UIColor colorWithHexStr:@"#c8a572"].CGColor;
+                self.subscribeBtn.layer.borderWidth = 0;
+                self.subscribeBtn.backgroundColor = [UIColor colorWithHexString:@"#d4b382"];
+                self.textField.hidden = YES;
+                self.legalAnnouncement.hidden = YES;
+                
+                [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.mas_equalTo(58);
+                }];
+                
+                [self.subscribeBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.centerY.mas_equalTo(self.bottomInfoView).mas_offset(-3);
+                    make.right.mas_equalTo(self.bottomInfoView).offset(-15);
+                    make.width.mas_equalTo(86);
+                    make.height.mas_equalTo(30);
+                }];
+                
+                [self.tipNameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self.bottomInfoView).offset(15);
+                    make.right.mas_equalTo(self.subscribeBtn.mas_left).offset(0);
+                    make.height.mas_equalTo(20);
+                    make.centerY.mas_equalTo(self.subscribeBtn.mas_centerY);
+                }];
+            } else {
+                self.subscribeBtn.hidden = NO;
+                self.textField.hidden = NO;
+                self.legalAnnouncement.hidden = NO;
+                
+                [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
+                    make.height.mas_equalTo(118);
+                }];
+                
+                [self.subscribeBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.top.mas_equalTo(self.tipNameLabel.mas_bottom).offset(10);
+                    make.right.mas_equalTo(self.bottomInfoView).offset(-15);
+                    make.width.mas_equalTo(89);
+                    make.height.mas_equalTo(30);
+                }];
+                
+                [self.tipNameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.left.mas_equalTo(self.bottomInfoView).offset(15);
+                    make.right.mas_equalTo(self.bottomInfoView).offset(-15);
+                    make.top.mas_equalTo(self.bottomInfoView).offset(16);
+                    make.height.mas_equalTo(22);
+                }];
+            }
         }
     }
 }
@@ -352,13 +412,43 @@
 {
     if ([data isKindOfClass:[FHHouseReserveAdviserModel class]]) {
         FHHouseReserveAdviserModel *model = (FHHouseReserveAdviserModel *)data;
-        return model.isSubcribed ? 146 : 211;
+        if ([SSCommonLogic isEnableVerifyFormAssociate] || model.isSubcribed) {
+            return 126;
+        }
     }
     
     return 211;
 }
 
 - (void)subscribe {
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        __weak typeof(self) weakSelf = self;
+        FHAssociateFormReportModel *formReportModel = [[FHAssociateFormReportModel alloc] init];
+        formReportModel.associateInfo = self.modelData.associateInfo.reportFormInfo;
+        NSMutableDictionary *tracerDic = self.modelData.tracerDict.mutableCopy;
+        tracerDic[@"enter_type"] = @"click_subscribe";
+        if([self.modelData.realtorType isEqualToString:@"4"]){
+            //小区
+            tracerDic[@"position"] = @"neighborhood_expert_card";
+        } else if ([self.modelData.realtorType isEqualToString:@"5"]){
+            //商圈
+            tracerDic[@"position"] = @"area_expert_card";
+        }
+        
+        formReportModel.reportParams = tracerDic.copy;
+        formReportModel.houseType = FHHouseTypeNeighborhood;
+        formReportModel.title = @"免费预约";
+        formReportModel.btnTitle = @"立即预约";
+        formReportModel.subtitle = @"预约后，我们将为您匹配专业的找房顾问，提供优质的咨询服务。";
+        formReportModel.topViewController = self.modelData.belongsVC;
+        [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:formReportModel completion:^{
+            if(weakSelf.modelData.subscribeCache && weakSelf.modelData.targetId){
+                weakSelf.modelData.subscribeCache[weakSelf.modelData.targetId] = @(YES);
+            }
+            [weakSelf subscribeSuccess];
+        }];
+        return;
+    }
     NSString *phoneNum = self.phoneNum;
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [FHUserInfoManager checkPureIntFormatted:phoneNum]) {
         NSMutableDictionary *tracerDic = self.modelData.tracerDict.mutableCopy;
@@ -380,9 +470,23 @@
     self.textField.hidden = YES;
     self.legalAnnouncement.hidden = YES;
     self.tipNameLabel.text = @"已为您预约顾问，稍后会和您联系";
-    [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(53);
-    }];
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        [self.tipNameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.bottomInfoView).offset(15);
+            make.right.mas_equalTo(self.bottomInfoView).offset(0);
+            make.height.mas_equalTo(20);
+            make.centerY.mas_equalTo(self.bottomInfoView);
+        }];
+        
+        [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(58);
+        }];
+
+    } else {
+        [self.bottomInfoView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(53);
+        }];
+    }
     
     [self setNeedsUpdateConstraints];
     
@@ -424,7 +528,7 @@
     }
 
     __weak typeof(self) wself = self;
-    [FHMainApi requestCallReportByHouseId:nil phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:self.modelData.associateInfo.reportFormInfo agencyList:nil extraInfo:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:nil phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:self.modelData.associateInfo.reportFormInfo agencyList:nil extraInfo:nil completion:^(FHDetailFillFormResponseModel * _Nullable model, NSError * _Nullable error) {
 
         if (model.status.integerValue == 0 && !error) {
             if(wself.modelData.subscribeCache && wself.modelData.targetId){

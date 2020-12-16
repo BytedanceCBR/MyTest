@@ -21,6 +21,7 @@ extern NSString const *CHANNEL_ID;
 extern NSString const *CHANNEL_ID_RECOMMEND; //首页二手房推荐 ✅
 extern NSString const *CHANNEL_ID_RECOMMEND_RENT; //首页租房推荐 ✅
 extern NSString const *CHANNEL_ID_RELATED_HOUSE; //相关二手房 ✅
+extern NSString const *CHANNEL_ID_NEIGHBOR_RELATED_HOUSE; ////小区详情页周边房源
 extern NSString const *CHANNEL_ID_RELATED_RENT; //相关租房 ✅
 extern NSString const *CHANNEL_ID_RELATED_NEIGHBORHOOD; //相关小区 ✅
 extern NSString const *CHANNEL_ID_SEARCH_COURT; //新房搜索 ✅

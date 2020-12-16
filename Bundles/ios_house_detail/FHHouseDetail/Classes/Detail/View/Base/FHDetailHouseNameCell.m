@@ -69,16 +69,6 @@
     [self setAlias:model.aliasName];
     [self setTags:model.tags Type:type];
     
-    if(self.baseViewModel.houseType == FHHouseTypeSecondHandHouse) {
-        if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
-            FHDetailOldModel *detailOldModel = self.baseViewModel.detailData;
-            if(detailOldModel.data.baseExtra.detective.detectiveInfo.showSkyEyeLogo) {
-                [self.nameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                    make.top.mas_equalTo(6);
-                }];
-            }
-        }
-    }
     [self layoutIfNeeded];
 }
 

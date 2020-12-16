@@ -83,6 +83,7 @@
 #import "FHHouseListRentCell.h"
 #import "NSObject+FHTracker.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHSuggestionDefines.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -1013,7 +1014,7 @@ extern NSString *const INSTANT_DATA_KEY;
     //house_search
     NSObject *sugDelegateTable = WRAP_WEAK(self);
     
-    NSInteger fromHome = 3;//list
+    NSInteger fromHome = FHEnterSuggestionTypeList;//list
     NSMutableDictionary *traceParam = [self baseLogParam];
     if (_mainListPage) {
         
@@ -1023,16 +1024,15 @@ extern NSString *const INSTANT_DATA_KEY;
             SETTRACERKV(UT_ORIGIN_FROM,originFrom);
             id<FHHouseEnvContextBridge> envBridge = [[FHHouseBridgeManager sharedInstance] envContextBridge];
             [envBridge setTraceValue:originFrom forKey:UT_ORIGIN_FROM];
-            fromHome = 4;//rent
+            fromHome = FHEnterSuggestionTypeRenting;//rent
             traceParam[UT_ELEMENT_FROM] = originFrom;
             traceParam[UT_PAGE_TYPE] = @"renting";
 //            traceParam[UT_ORIGIN_FROM] = originFrom;
         }else if (_houseType == FHHouseTypeSecondHandHouse){
-            fromHome = 5; // list main
+            fromHome = FHEnterSuggestionTypeOldMain; // list main
             sugDelegateTable = nil;
         }else {
-            /// TODO:先跟二手房保持一致，之后定义一个新的枚举值
-            fromHome = 5;
+            fromHome = FHEnterSuggestionTypeNewMain;
             sugDelegateTable = nil;
         }
         
@@ -2498,19 +2498,21 @@ extern NSString *const INSTANT_DATA_KEY;
                                  @"enter_from":@"search"};
         [FHUserTracker writeEvent:@"city_switch_show" params:params];
     }else if ([cellModel isKindOfClass:[FHHouseReserveAdviserModel class]]) {
-        FHHouseReserveAdviserModel *cm = (FHHouseReserveAdviserModel *)cellModel;
-        tracerDict[@"page_type"] = [self pageTypeString];
-        tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
-        tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
-        if(self.houseType == FHHouseTypeNeighborhood){
-            tracerDict[@"element_type"] = @"neighborhood_expert_card";
-        }else{
-            tracerDict[@"element_type"] = @"area_expert_card";
+        if (![SSCommonLogic isEnableVerifyFormAssociate]) {
+            FHHouseReserveAdviserModel *cm = (FHHouseReserveAdviserModel *)cellModel;
+            tracerDict[@"page_type"] = [self pageTypeString];
+            tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
+            tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
+            if(self.houseType == FHHouseTypeNeighborhood){
+                tracerDict[@"element_type"] = @"neighborhood_expert_card";
+            }else{
+                tracerDict[@"element_type"] = @"area_expert_card";
+            }
+            tracerDict[@"origin_from"] = originFrom;
+            tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+            tracerDict[@"log_pb"] = cm.logPb ? : @"be_null";
+            [FHUserTracker writeEvent:@"inform_show" params:tracerDict];
         }
-        tracerDict[@"origin_from"] = originFrom;
-        tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
-        tracerDict[@"log_pb"] = cm.logPb ? : @"be_null";
-        [FHUserTracker writeEvent:@"inform_show" params:tracerDict];
     }else if ([cellModel isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
         NSDictionary *params = @{@"origin_from":originFrom,
                                  @"event_type":@"house_app2c_v2",

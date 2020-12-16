@@ -32,6 +32,7 @@
 #import <TTUGCFoundation/TTRichSpanText+Emoji.h>
 #import "UIColor+Theme.h"
 #import "TTRichSpanText+Link.h"
+#import "FHUGCCommonAvatar.h"
 
 @interface TTCommentDetailHeaderUIHelper : NSObject
 
@@ -159,7 +160,7 @@
 
 @interface TTCommentDetailHeader()<TTCommentDetailHeaderDigItemDelegate, TTUGCAttributedLabelDelegate>
 @property (nonatomic, strong) TTCommentDetailModel *model;
-@property (nonatomic, strong) TTAsyncCornerImageView *avatarView;
+@property (nonatomic, strong) FHUGCCommonAvatar *avatarView;
 @property (nonatomic, strong) TTUserInfoView *nameView;
 @property (nonatomic, strong) TTDiggButton *digButton;
 @property (nonatomic, strong) SSThemedLabel *userInfoLabel;         //用户信息(头条号+认证信息)
@@ -205,8 +206,10 @@
     self.model = model;
     [self _refreshFollowButtonStateWithModel:model];
     
-    [self.avatarView tt_setImageWithURLString:model.user.avatarURLString];
-    [self.avatarView showOrHideVerifyViewWithVerifyInfo:model.user.userAuthInfo decoratorInfo:model.user.userDecoration sureQueryWithID:YES userID:nil];
+    [self.avatarView setAvatarUrl:model.user.avatarURLString];
+    [self.avatarView setUserId:model.user.ID];
+//    [self.avatarView tt_setImageWithURLString:model.user.avatarURLString];
+//    [self.avatarView showOrHideVerifyViewWithVerifyInfo:model.user.userAuthInfo decoratorInfo:model.user.userDecoration sureQueryWithID:YES userID:nil];
 
     
     CGFloat maxWidth = (self.followButton.isHidden? self.width: self.followButton.left) - self.nameView.left - [TTCommentDetailHeaderUIHelper cellHorizontalPadding];
@@ -623,17 +626,14 @@
 }
 
 #pragma mark - getter & setter
-- (TTAsyncCornerImageView *)avatarView {
+- (FHUGCCommonAvatar *)avatarView {
     if (!_avatarView) {
-        _avatarView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake([TTCommentDetailHeaderUIHelper cellHorizontalPadding], [TTCommentDetailHeaderUIHelper cellVerticalPadding], [TTCommentDetailHeaderUIHelper avatarSize], [TTCommentDetailHeaderUIHelper avatarSize]) allowCorner:YES];
-        _avatarView.cornerRadius = _avatarView.height / 2;
-        _avatarView.placeholderName = @"big_defaulthead_head";
-        _avatarView.borderWidth = 0;
-        _avatarView.borderColor = [UIColor clearColor];
-//        [_avatarView setupVerifyViewForLength:[TTCommentDetailHeaderUIHelper avatarNormalSize] adaptationSizeBlock:^CGSize(CGSize standardSize) {
-//            return [TTCommentDetailHeaderUIHelper verifyLogoSize:standardSize];
-//        }];
-        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        _avatarView = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake([TTCommentDetailHeaderUIHelper cellHorizontalPadding], [TTCommentDetailHeaderUIHelper cellVerticalPadding], [TTCommentDetailHeaderUIHelper avatarSize], [TTCommentDetailHeaderUIHelper avatarSize])];
+        [_avatarView setPlaceholderImage:@"big_defaulthead_head"];
+        [_avatarView addGestureRecognizer:({
+            UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(avatarViewOnClick:)];
+            gesture;
+        })];
     }
     return _avatarView;
 }

@@ -623,7 +623,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     }
     //先显示时间
     [self.detailStateStore sendAction:TTVDetailEventTypeCommentDetailViewWillDisappear payload:_replyVC.commentModel];
-    
+    [self.replyWriteView dismissAnimated:YES];
     self.detailStateStore.state.isBackAction = ![self.navigationController.viewControllers containsObject:self.parentViewController] || [self.navigationController.viewControllers containsObject:self];
     [self.detailStateStore sendAction:TTVDetailEventTypeViewWillDisappear payload:nil];
     [[NSNotificationCenter defaultCenter] postNotificationName:UIMenuControllerWillHideMenuNotification object:nil];
