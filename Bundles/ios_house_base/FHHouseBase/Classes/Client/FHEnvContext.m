@@ -1052,6 +1052,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
 }
 
++ (BOOL)isOldDetailLoadOptimization {
+    NSDictionary *Settings= [SSCommonLogic fhSettings].copy;
+    BOOL isOpen = [Settings btd_boolValueForKey:@"old_detail_load_optimization" default:NO];
+    return isOpen;
+}
+
+
 + (BOOL)isHomeNewDiscovery {
     return YES;
 }

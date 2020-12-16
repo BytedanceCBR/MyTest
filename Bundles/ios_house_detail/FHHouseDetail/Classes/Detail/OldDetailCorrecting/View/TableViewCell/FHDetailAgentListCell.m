@@ -114,11 +114,7 @@
             [itemView.callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.imBtn addTarget:self action:@selector(imclick:) forControlEvents:UIControlEventTouchUpInside];
             [self.containerView addSubview:itemView];
-            [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(marginTop);
-                make.left.right.mas_equalTo(self.containerView);
-                make.height.mas_equalTo(vHeight);
-            }];
+            itemView.frame = CGRectMake(0, marginTop, UIScreen.mainScreen.bounds.size.width - 30, vHeight);
             marginTop = marginTop +vHeight;
 
             itemsCount += 1;
