@@ -235,7 +235,10 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
     }
     [SharedAppDelegate setIsColdLaunch:NO];
 
-    application.applicationIconBadgeNumber = [[userInfo objectForKey:@"badge"] integerValue];
+    /**
+     修复push点击拉起app后清空通知中心列表问题
+     */
+//    application.applicationIconBadgeNumber = [[userInfo objectForKey:@"badge"] integerValue];
     if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive &&
         [[UIDevice currentDevice].systemVersion floatValue] < 10.0) {
         /**

@@ -21,7 +21,7 @@
 #import "FHErrorView.h"
 #import "IFHMyFavoriteController.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
-
+#import "FHUserTracker.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHErrorHubManagerUtil.h"
 
