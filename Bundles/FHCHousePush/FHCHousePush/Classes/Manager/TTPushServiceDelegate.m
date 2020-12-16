@@ -261,7 +261,10 @@ API_AVAILABLE(ios(10.0))
     }
     // todo zjing badge & coldLaunch
     [SharedAppDelegate setIsColdLaunch:NO];
-    [UIApplication sharedApplication].applicationIconBadgeNumber = [[content.userInfo objectForKey:@"badge"] integerValue];
+    /**
+     修复push点击拉起app后清空通知中心列表问题
+     */
+//    [UIApplication sharedApplication].applicationIconBadgeNumber = [[content.userInfo objectForKey:@"badge"] integerValue];
 
     if (@available(iOS 10.0, *)) {
         if ([content.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
