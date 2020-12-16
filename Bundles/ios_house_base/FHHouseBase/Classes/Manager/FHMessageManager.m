@@ -163,8 +163,8 @@
 #pragma -- IMChatMessageUnreadCountObserver --
 - (void)onMessageUnreadCountChanged:(NSInteger)unreadCount {
     // 不使用SDK发过来的未读数,这个未读数据源有机率和所有会话未读数总和不一致，所有微聊未读数以所有会话未读数总和为准
+    // 等SDK修复后，再使用，对接人 屈永播<quyongbo@bytedance.com>
     // [self setUnreadChatMsgCount:unreadCount];
-    
 }
 - (void)clearAllMessageUnreadCount {
     [self setUnreadChatMsgCount:0];
