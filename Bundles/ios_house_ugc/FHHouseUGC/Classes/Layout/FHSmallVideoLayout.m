@@ -91,7 +91,7 @@
     }
     // 时间
     CGRect timeLabelRect = [cellModel.videoDurationStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 14) options:0 attributes:@{NSFontAttributeName : [UIFont themeFontRegular:10]} context:nil];
-    self.timeLabelLayout.width = timeLabelRect.size.width;
+    self.timeLabelLayout.width = ceil(timeLabelRect.size.width);
     self.timeBgViewLayout.width = self.timeLabelLayout.width + 12;
     self.timeBgViewLayout.left = self.imageViewWidth - self.timeBgViewLayout.width - 4;
     self.timeLabelLayout.left = 6;

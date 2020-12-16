@@ -327,7 +327,7 @@ CGFloat const FHBottomBarLeftViewNameLabelLeftMargin = 8;
 - (FHRealtorAvatarView *)avatarView
 {
     if (!_avatarView) {
-        _avatarView = [[FHRealtorAvatarView alloc]init];
+        _avatarView = [[FHRealtorAvatarView alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
     }
     return _avatarView;
 }

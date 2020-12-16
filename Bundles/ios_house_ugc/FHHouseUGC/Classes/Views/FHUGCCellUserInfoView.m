@@ -81,7 +81,7 @@
 }
 
 - (void)initViews {
-    _avatarView = [[FHRealtorAvatarView alloc] init];
+    _avatarView = [[FHRealtorAvatarView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
     _avatarView.placeHoldName = @"fh_mine_avatar";
     _avatarView.userInteractionEnabled = YES;
     [self addSubview:_avatarView];

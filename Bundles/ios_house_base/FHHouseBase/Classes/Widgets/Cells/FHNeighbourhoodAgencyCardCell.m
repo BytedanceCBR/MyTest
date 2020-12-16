@@ -125,7 +125,7 @@
     _lineView.backgroundColor = [UIColor themeGray7];
      [self.bottomInfoView addSubview:_lineView];
 
-    self.avatarView = [[FHRealtorAvatarView alloc] init];
+    self.avatarView = [[FHRealtorAvatarView alloc] initWithFrame:CGRectMake(0, 0, 46, 46)];
     [self.bottomInfoView addSubview:self.avatarView];
 
     _licenceIcon = [[UIButton alloc] init];

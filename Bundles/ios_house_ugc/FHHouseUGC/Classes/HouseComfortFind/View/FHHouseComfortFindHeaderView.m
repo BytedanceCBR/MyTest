@@ -81,7 +81,7 @@
     }
     
     UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];;
-    CGFloat iconMargin = (SCREEN_WIDTH - 5 * iconWidth - 2 * horizontalMargin) / 4;
+    CGFloat iconMargin = ceil((SCREEN_WIDTH - 5 * iconWidth - 2 * horizontalMargin) / 4);
     
     for (NSInteger i = 0 ; i < self.items.count; i++) {
         FHConfigDataOpDataItemsModel *model = self.items[i];

@@ -224,7 +224,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         _userInfoContainerView = [[UIView alloc] init];
         _userInfoContainerView.backgroundColor = [UIColor clearColor];
 
-        _avatarView = [[FHRealtorAvatarView alloc] init];
+        _avatarView = [[FHRealtorAvatarView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
         _avatarView.userInteractionEnabled = YES;
         
         _nameLabel = [[UILabel alloc] init];

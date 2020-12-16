@@ -470,7 +470,7 @@
 }
 
 - (void)setupUI {
-    self.avatorView = [[FHRealtorAvatarView alloc] init];
+    self.avatorView = [[FHRealtorAvatarView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
     [self addSubview:self.avatorView];
     [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(50);
