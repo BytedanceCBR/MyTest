@@ -520,6 +520,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     extraDict[@"enter_type"] = @"click_button";
     [self contactActionWithExtraDict:extraDict];
 }
+
 - (void)contactActionWithExtraDict:(NSDictionary *)extraDict
 {
     NSDictionary *associateInfoDict = nil;

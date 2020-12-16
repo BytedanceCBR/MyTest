@@ -51,8 +51,9 @@ extern NSString *const kFHToastCountKey;
             if (associateReport.reportParams.count) {
                 [params addEntriesFromDictionary:associateReport.reportParams];
             }
+            params[UT_ENTER_FROM] = params[UT_PAGE_TYPE] ?: @"be_null";
             params[@"trigger"] = @"user";
-            params[@"enter_method"] = @"click_button";
+            params[UT_ENTER_TYPE] = @"click_button";
             [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
                 if (type == TTAccountAlertCompletionEventTypeDone) {
                     // 登录成功

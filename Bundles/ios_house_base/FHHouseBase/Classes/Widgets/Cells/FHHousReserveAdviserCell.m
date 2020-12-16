@@ -426,7 +426,6 @@
         FHAssociateFormReportModel *formReportModel = [[FHAssociateFormReportModel alloc] init];
         formReportModel.associateInfo = self.modelData.associateInfo.reportFormInfo;
         NSMutableDictionary *tracerDic = self.modelData.tracerDict.mutableCopy;
-        tracerDic[@"enter_from"] = self.traceParams[@"page_type"] ?: @"be_null";
         tracerDic[@"enter_type"] = @"click_subscribe";
         if([self.modelData.realtorType isEqualToString:@"4"]){
             //小区
