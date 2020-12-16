@@ -46,7 +46,8 @@ def fhPods
     pod 'FHLynxKit' , :path => '../Bundles/ios_common_lynx', :inhibit_warnings => false
 
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
-    pod 'ios_house_filter' , '1.0.3-rc.0', :inhibit_warnings => false
+#    pod 'ios_house_filter' , '1.0.3-rc.0', :inhibit_warnings => false
+    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '5a224775af42b8dc246f7d492d42da61ce26ae8f'
 
 
 #    pod 'FHCommonUI','0.9.0.4', :inhibit_warnings => false
@@ -66,9 +67,9 @@ def fhPods
 #    'DelegateForC'
 #    ]
     
-#    pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
-   pod 'ios_house_im' ,'0.10.0.0-alpha.1', :inhibit_warnings => false
-#   pod 'ios_house_im' ,'0.9.0.21', :inhibit_warnings => false
+#   pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
+    pod 'ios_house_im' ,'0.10.0.0-alpha.2', :inhibit_warnings => false
+#   pod 'ios_house_im' ,'0.10.0.0-alpha.1', :inhibit_warnings => false
 
 end
 
@@ -154,7 +155,7 @@ def appPods
     pod 'TTImagePicker', '7.5.5.12'
     pod 'TTImagePickerBase', '1.0.4'
   
-    pod_binary 'SecGuard' , '0.8.16.9'
+    pod_binary 'MetaSecML', '4.1.20'
     
     pod_binary 'IESGeckoKit', '0.4.0'
     pod_binary 'IESWebKit', '0.2.0-rc.3'
@@ -647,8 +648,6 @@ target 'NewsLiteInHouse' do
     fhPods
     appPods
     appDevelopPods
-    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
-
 end
 
 target 'f100InHouse' do
@@ -666,7 +665,6 @@ target 'f100' do
     fhPods
     appPods
     appDevelopPods
-    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
 end
 
 target 'serviceNofExtension' do

@@ -105,6 +105,11 @@
 
 - (void)dataLoaded:(FHUnreadMsgModel *)unreadMsg error:(NSError *)error ugcUnread:(FHUnreadMsgDataUnreadModel *)ugcUnread {
     
+    // 如果请求被取消，则不处理
+    if(error.code == -999) {
+        return ;
+    }
+    
     BOOL isLogin = [IMManager shareInstance].isClientLogin;
     if(isLogin) {
         NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
