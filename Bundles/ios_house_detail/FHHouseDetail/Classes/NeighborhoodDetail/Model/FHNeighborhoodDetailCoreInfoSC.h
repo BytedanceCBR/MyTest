@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHNeighborhoodDetailCoreInfoSC : FHNeighborhoodDetailBindingSectionController
+@interface FHNeighborhoodDetailCoreInfoSC : FHNeighborhoodDetailSectionController
 
 @end
 

@@ -135,6 +135,10 @@
     [self addSubview:_editingLabel];
     self.editingLabel.hidden = YES;
     
+    self.essenceIcon = [[UIImageView alloc] init];
+    _essenceIcon.image = [UIImage imageNamed:@"fh_ugc_wenda_essence_small_new"];
+    _essenceIcon.hidden = YES;
+    [self addSubview:_essenceIcon];
     
     self.moreBtn = [[UIButton alloc] init];
     [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
@@ -142,6 +146,20 @@
     _moreBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [self addSubview:_moreBtn];
 }
+
+- (void)showEssenceIcon {
+    if(self.cellModel.isStick && (self.cellModel.stickStyle == FHFeedContentStickStyleGood || self.cellModel.stickStyle == FHFeedContentStickStyleTopAndGood)){
+        self.essenceIcon.width = 24;
+        self.essenceIcon.height = 16;
+        self.essenceIcon.centerY = self.userName.centerY;
+        self.essenceIcon.right = self.userAuthLabel.right + 5;
+        self.essenceIcon.hidden = NO;
+    }else{
+        self.essenceIcon.hidden = YES;
+    }
+}
+
+
 
 - (void)initConstraints {
     self.avatarView.top = 0;
@@ -190,6 +208,13 @@
     self.editingLabel.height = 23;
 }
 
+- (void)updateFrameFromNeighborhoodDetail {
+    self.avatarView.left = 12;
+    self.userName.left = self.avatarView.right + 10;
+    self.descLabel.left = self.avatarView.right + 10;
+    self.userAuthLabel.left = self.userName.right + 4;
+}
+
 - (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
     //设置userInfo
     self.cellModel = cellModel;
@@ -201,6 +226,7 @@
     [self updateDescLabel];
     [self updateEditState];
     [self updateFrame];
+    [self showEssenceIcon];
 }
 
 - (void)setTitleModel:(FHFeedUGCCellModel *)cellModel {

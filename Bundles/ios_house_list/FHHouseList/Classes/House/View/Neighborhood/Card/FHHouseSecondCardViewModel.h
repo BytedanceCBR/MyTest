@@ -9,6 +9,7 @@
 #import "FHSearchHouseModel.h"
 #import "FHHouseListBaseItemModel.h"
 #import "FHSingleImageInfoCellModel.h"
+#import "UIFont+House.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -36,11 +37,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign, readonly) BOOL isFirst;
 
+@property (nonatomic, assign) CGFloat tagListMaxWidth;
+
 - (instancetype)initWithModel:(id)model;
 
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath;
 
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath;
+
+- (void)setTitleMaxWidth:(CGFloat)maxWidth;
+
+- (void)cutTagListWithFont:(UIFont *)font;
 
 @end
 

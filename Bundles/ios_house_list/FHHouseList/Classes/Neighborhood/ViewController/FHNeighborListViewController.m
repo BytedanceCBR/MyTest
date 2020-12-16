@@ -135,6 +135,7 @@
 - (void)setupUI {
     [self setupDefaultNavBar:NO];
     self.ttNeedHideBottomLine = YES;
+    self.customNavBarView.seperatorLine.hidden = YES;
     if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
         [self.customNavBarView.seperatorLine setHidden:YES];
     }

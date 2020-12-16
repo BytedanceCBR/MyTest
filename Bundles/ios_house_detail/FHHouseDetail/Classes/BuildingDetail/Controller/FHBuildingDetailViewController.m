@@ -64,7 +64,7 @@
         if (paramObj.allParams[@"contactViewModel"]) {
             FHHouseDetailContactViewModel *contactViewModel = paramObj.allParams[@"contactViewModel"];
             FHDetailContactModel *contactPhone = contactViewModel.contactPhone;
-            contactPhone.isInstantData = YES;
+            contactPhone.isInstantData = NO;
             self.contactViewModel.contactPhone = contactPhone;
             self.contactViewModel.showenOnline = contactViewModel.showenOnline;
             self.contactViewModel.phoneCallName = contactViewModel.phoneCallName;
@@ -278,7 +278,7 @@
     
     if (self.viewModel.buildingDetailModel.data.highlightedRealtor) {
         contactPhone = self.viewModel.buildingDetailModel.data.highlightedRealtor;
-        contactPhone.isInstantData = YES;
+        contactPhone.isInstantData = NO;
     }
 //    else {
 //        contactPhone = model.data.contact;

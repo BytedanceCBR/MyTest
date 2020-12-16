@@ -36,8 +36,7 @@
 @property(nonatomic, strong) FHStaticMapAnnotation *centerAnnotation;
 @property(nonatomic, strong) NSMutableDictionary<NSString *, NSNumber *> *poiSearchStatus;
 
-+ (NSString *)keyWordConver:(NSString *)category;
-+ (NSString *)keyWordConverReverse:(NSString *)category;
+
 @end
 
 @implementation FHNewHouseDetailMapCollectionCell
@@ -303,45 +302,13 @@
         }
         AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
         
-        requestPoi.keywords = [FHNewHouseDetailMapCollectionCell keyWordConver:categoryName];
+        requestPoi.keywords = [FHDetailStaticMap keyWordConver:categoryName];
         requestPoi.location = [AMapGeoPoint locationWithLatitude:center.latitude longitude:center.longitude];
         requestPoi.requireExtension = YES;
         requestPoi.radius = 2000;
         requestPoi.requireSubPOIs = NO;
         
         [self.searchApi AMapPOIAroundSearch:requestPoi];
-    }
-}
-
-+ (NSString *)keyWordConver:(NSString *)category{
-    if([category isEqualToString:@"交通"]){
-        return @"公交地铁";
-    }else if([category isEqualToString:@"教育"]){
-        return @"学校";
-    }else if([category isEqualToString:@"医疗"]){
-        return @"医院";
-    }else if([category isEqualToString:@"生活"]){
-        return @"购物|银行";
-    }else if([category isEqualToString:@"休闲"]){
-        return @"电影院|咖啡厅|影剧院";
-    }else{
-        return @"公交地铁";
-    }
-}
-
-+ (NSString *)keyWordConverReverse:(NSString *)category{
-    if([category isEqualToString:@"公交地铁"]){
-        return @"交通";
-    }else if([category isEqualToString:@"学校"]){
-        return @"教育";
-    }else if([category isEqualToString:@"医院"]){
-        return @"医疗";
-    }else if([category isEqualToString:@"购物|银行"]){
-        return @"生活";
-    }else if([category isEqualToString:@"电影院|咖啡厅|影剧院"]){
-        return @"休闲";
-    }else{
-        return @"交通";
     }
 }
 
@@ -492,7 +459,7 @@
         }
     }
     AMapPOIKeywordsSearchRequest *searchRequest = (AMapPOIKeywordsSearchRequest *) request;
-    NSString *category = [FHNewHouseDetailMapCollectionCell keyWordConverReverse:searchRequest.keywords];
+    NSString *category = [FHDetailStaticMap keyWordConverReverse:searchRequest.keywords];
     NSMutableArray *annotations = [NSMutableArray array];
     FHStaticMapAnnotation *annotation = nil;
     for (NSUInteger i = 0; i < poiArray.count; i++) {
