@@ -336,7 +336,7 @@
 - (UIImageView *)arrowImageView{
     if(!_arrowImageView){
         UIImageView *iamgeView = [[UIImageView alloc]init];
-        iamgeView.image = [UIImage imageNamed:@"neighbor_detail_arrow_right"];
+        iamgeView.image = [UIImage imageNamed:@"neighbor_detail_v3_arrow_small"];
         _arrowImageView = iamgeView;
         [self.containerView addSubview:_arrowImageView];
     }
@@ -366,7 +366,7 @@
 - (UIImageView *)arrowOnSaleImageView{
     if(!_arrowOnSaleImageView){
         UIImageView *iamgeView = [[UIImageView alloc]init];
-        iamgeView.image = [UIImage imageNamed:@"neighbor_detail_arrow_right"];
+        iamgeView.image = [UIImage imageNamed:@"neighbor_detail_v3_arrow_small"];
         _arrowOnSaleImageView = iamgeView;
         [self.contentView addSubview:_arrowOnSaleImageView];
     }
@@ -376,7 +376,7 @@
 - (UIImageView *)arrowSoldImageView{
     if(!_arrowSoldImageView){
         UIImageView *iamgeView = [[UIImageView alloc]init];
-        iamgeView.image = [UIImage imageNamed:@"neighbor_detail_arrow_right"];
+        iamgeView.image = [UIImage imageNamed:@"neighbor_detail_v3_arrow_small"];
         _arrowSoldImageView = iamgeView;
         [self.contentView addSubview:_arrowSoldImageView];
     }

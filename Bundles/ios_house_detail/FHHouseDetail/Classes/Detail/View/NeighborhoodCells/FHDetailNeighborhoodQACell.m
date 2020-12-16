@@ -394,7 +394,7 @@
     button.backgroundColor = [UIColor themeGray7];
     button.imageView.contentMode = UIViewContentModeCenter;
     [button setTitle:@"查看全部" forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"detail_question_right_arror"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     button.titleLabel.font = [UIFont themeFontRegular:14];
     [button setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];

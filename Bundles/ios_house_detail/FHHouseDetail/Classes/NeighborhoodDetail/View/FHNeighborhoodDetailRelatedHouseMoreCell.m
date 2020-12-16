@@ -38,7 +38,7 @@
             make.height.mas_equalTo(19);
         }];
         
-        self.arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_question_right_arror"]];
+        self.arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"]];
         [self addSubview:self.arrowsImg];
         [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.textLabel.mas_right).offset(4);

@@ -248,11 +248,10 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
     FHNeighborhoodDetailAgentSM *agentSM = (FHNeighborhoodDetailAgentSM *)self.sectionModel;
     // 设置下发标题
-    if(agentSM.recommendedRealtorsTitle.length > 0) {
-        titleView.titleLabel.text = agentSM.recommendedRealtorsTitle;
-    }else {
-        titleView.titleLabel.text = @"推荐经纪人";
-    }
+//    if(agentSM.recommendedRealtorsTitle.length > 0) {
+//        titleView.titleLabel.text = agentSM.recommendedRealtorsTitle;
+//    }
+    titleView.titleLabel.text = @"小区专家";
     [titleView setupNeighborhoodDetailStyle];
     return titleView;
 }
