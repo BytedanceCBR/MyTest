@@ -96,7 +96,7 @@
         if (model.displayBuiltYear) {
             [infoString appendString:model.displayBuiltYear];
         }
-        if (model.displayBuiltType) {
+        if (model.displayBuiltType.length) {
             if (infoString.length) {
                 [infoString appendFormat:@" | %@",model.displayBuiltType];
             } else {
@@ -121,7 +121,7 @@
 @implementation FHNeighborhoodDetailSurroundingNeighborCollectionCell
 
 - (NSString *)elementType {
-    return @"neighborhood_nearby";
+    return @"related_neighborhood";
 }
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
@@ -139,6 +139,7 @@
         self.collectionView = [[UICollectionView alloc] initWithFrame:self.contentView.bounds collectionViewLayout:layout];
         self.collectionView.delegate = self;
         self.collectionView.dataSource = self;
+        self.collectionView.showsHorizontalScrollIndicator = NO;
         self.collectionView.backgroundColor = [UIColor clearColor];
         [self.collectionView registerClass:[FHNeighborhoodDetailSurroundingNeighborItemCell class] forCellWithReuseIdentifier:NSStringFromClass([FHNeighborhoodDetailSurroundingNeighborItemCell class])];
         [self.contentView addSubview:self.collectionView];

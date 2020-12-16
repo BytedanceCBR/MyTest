@@ -17,6 +17,7 @@
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "HMDUserExceptionTracker.h"
 #import <TTSettingsManager/TTSettingsManager.h>
+#import <FHHouseBase/NSObject+FHOptimize.h>
 
 @interface FHNeighborhoodDetailMapCollectionCell ()<AMapSearchDelegate, FHStaticMapDelegate, MAMapViewDelegate>
 
@@ -25,6 +26,7 @@
 @property (nonatomic, strong) UIImageView *nativeMapImageView;
 @property (nonatomic, strong) UIButton *mapMaskBtn;
 
+@property (nonatomic, strong) UIView *categoryContentView;
 @property (nonatomic, strong) UIStackView *categoryStackView;
 
 @property (nonatomic, strong) UIButton *baiduPanoButton;
@@ -40,7 +42,7 @@
 @implementation FHNeighborhoodDetailMapCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, width/16.0*9.0);
+    return CGSizeMake(width, ceil(width/16.0*9.0));
 }
 
 - (NSString *)elementType {
@@ -131,12 +133,12 @@
 //    }];
     
     self.mapView = [[MAMapView alloc] initWithFrame:self.contentView.bounds];
-    self.mapView.runLoopMode = NSRunLoopCommonModes;
+    self.mapView.runLoopMode = NSDefaultRunLoopMode;
     self.mapView.showsCompass = NO;
     self.mapView.showsScale = NO;
     self.mapView.zoomEnabled = NO;
     self.mapView.scrollEnabled = NO;
-    self.mapView.zoomLevel = 15.5;
+    self.mapView.zoomLevel = 14.5;
     self.mapView.showsUserLocation = NO;
     self.mapView.delegate = self;
     self.mapView.hidden = NO;
@@ -174,17 +176,23 @@
 //        }];
 //    }
     if (!self.categoryStackView) {
-        self.categoryStackView = [[UIStackView alloc] init];
-        self.categoryStackView.axis = UILayoutConstraintAxisHorizontal;
-        self.categoryStackView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.9];
-        self.categoryStackView.layer.masksToBounds = YES;
-        self.categoryStackView.layer.cornerRadius = 4.0;
-        [self.contentView addSubview:self.categoryStackView];
-        [self.categoryStackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        self.categoryContentView = [[UIView alloc] init];
+        self.categoryContentView.backgroundColor = [[UIColor whiteColor] colorWithAlphaComponent:0.96];
+        self.categoryContentView.layer.masksToBounds = YES;
+        self.categoryContentView.layer.cornerRadius = 4.0;
+        [self.contentView addSubview:self.categoryContentView];
+        [self.categoryContentView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(12);
             make.right.mas_equalTo(-12);
             make.bottom.mas_equalTo(-12);
             make.height.mas_equalTo(40);
+        }];
+        
+        self.categoryStackView = [[UIStackView alloc] init];
+        self.categoryStackView.axis = UILayoutConstraintAxisHorizontal;
+        [self.categoryContentView addSubview:self.categoryStackView];
+        [self.categoryStackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsZero);
         }];
         
         [self.categoryStackView addArrangedSubview:[self itemViewWithName:@"交通" icon:@"detail_map_v3_sub_icon"]];
@@ -193,7 +201,7 @@
         [self.categoryStackView addArrangedSubview:[self itemViewWithName:@"生活" icon:@"detail_map_v3_eat_icon"]];
         [self.categoryStackView addArrangedSubview:[self itemViewWithName:@"休闲" icon:@"detail_map_v3_play_icon"]];
     }
-    [self.contentView bringSubviewToFront:self.categoryStackView];
+    [self.contentView bringSubviewToFront:self.categoryContentView];
     
 }
 
@@ -255,7 +263,9 @@
     
 //    [self.mapView loadMap:nil center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
 
-    [self takeSnapWith:nil annotations:annotations.copy];
+    self.mapView.centerCoordinate = self.centerPoint;
+    [self.mapView removeAnnotations:self.mapView.annotations];
+    [self.mapView addAnnotations:annotations];
 }
 
 - (void)showPoiInfo {
@@ -270,11 +280,8 @@
 }
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
-    CGRect frame = self.contentView.bounds;
-    self.mapView.centerCoordinate = self.centerPoint;
-    [self.mapView removeAnnotations:self.mapView.annotations];
-    [self.mapView addAnnotations:annotations];
-    __weak typeof(self) weakSelf = self;
+//    CGRect frame = self.contentView.bounds;
+
 //    [self.mapView takeSnapshotInRect:frame withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
 //        if (state == 1) {
 //
@@ -383,6 +390,30 @@
         }
     }
     return [[MAAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:@"default"];
+}
+
+- (void)updateStaticImage:(UIImage *)image {
+//    self.nativeMapImageView.image = [UIImage imageNamed:@"map_detail_default_bg"];
+    self.nativeMapImageView.hidden = NO;
+    self.nativeMapImageView.image = image;
+    self.mapView.delegate = nil;
+    [self.mapView removeFromSuperview];
+    self.mapView = nil;
+}
+
+- (void)startSnapMap {
+    __weak typeof(self) weakSelf = self;
+    [self.mapView takeSnapshotInRect:self.contentView.bounds withCompletionBlock:^(UIImage *resultImage, NSInteger state) {
+        if (state == 1 && resultImage) {
+            //完整截图
+            [weakSelf updateStaticImage:resultImage];
+        }
+    }];
+}
+
+- (void)mapViewDidFinishLoadingMap:(MAMapView *)mapView {
+    NSLog(@"mapViewDidFinishLoadingMap");
+    [self startSnapMap];
 }
 
 @end

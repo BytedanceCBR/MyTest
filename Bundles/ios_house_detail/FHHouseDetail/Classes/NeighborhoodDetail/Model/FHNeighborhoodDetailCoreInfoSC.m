@@ -16,6 +16,7 @@
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "FHSearchHouseModel.h"
 #import <Flutter/Flutter.h>
+#import "FHFlutterChannels.h"
 
 @interface FHNeighborhoodDetailCoreInfoSC ()
 
@@ -62,12 +63,16 @@
         return cell;
     } else if (model.items[index] == model.subMessageModel) {
         FHNeighborhoodDetailSubMessageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSubMessageCollectionCell class] withReuseIdentifier:NSStringFromClass([model.subMessageModel class]) forSectionController:self atIndex:index];
-        cell.clickSoldblock = ^{
-            [weakSelf addSoldClick:model.subMessageModel.soldUrl];
-        };
-        cell.clickOnSaleblock = ^{
-            [weakSelf addOnSaleClick];
-        };
+        if(![model.subMessageModel.sold isEqualToString:@"暂无数据"]){
+            cell.clickSoldblock = ^{
+                [weakSelf addSoldClick:model.subMessageModel.soldUrl];
+            };
+        }
+        if(![model.subMessageModel.onSale isEqualToString:@"暂无数据"]){
+            cell.clickOnSaleblock = ^{
+                [weakSelf addOnSaleClick];
+            };
+        }
         cell.clickAveragePriceblock = ^{
             [weakSelf addAveragePriceClick];
         };
@@ -138,11 +143,7 @@
     NSMutableDictionary *userInfo = [NSMutableDictionary new];
     userInfo[@"tracer"] = tracerDic;
     userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
-    if (detailModel.data.neighborhoodInfo.name.length > 0) {
-        userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
-    } else {
-        userInfo[@"title"] = @"小区房源";// 默认值
-    }
+    userInfo[@"title"] = @"小区在售房源";// 默认值
     if (neighborhood_id.length > 0) {
         userInfo[@"neighborhood_id"] = neighborhood_id;
     }
@@ -168,12 +169,34 @@
 //    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
     //{"average_price_detail":"均价详情页"}
     NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
-    tracerDict[@"element_from"] = @"average_price_detail";
+    tracerDict[@"element_from"] = @"average_price";
     tracerDict[@"enter_from"] = @"neighborhood_detail";
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
     
     if (self.detailViewController.viewModel.originDetailDict) {
-        params[@"neighbor_info"] = [self.detailViewController.viewModel.originDetailDict[@"data"] btd_safeJsonStringEncoded];
+        NSMutableDictionary *dataInfo = [self.detailViewController.viewModel.originDetailDict btd_dictionaryValueForKey:@"data"].mutableCopy;
+        if (dataInfo.count) {
+            NSArray *keys = @[
+                @"base_info",
+                @"neighborhood_image",
+                @"total_sales",
+                @"recommended_realtors",
+                @"question",
+                @"comments",
+                @"sale_house_entrance",
+                @"album_info",
+                @"neighborhood_top_images",
+                @"neighborhood_sale_house_info",
+                @"neighborhood_top_images",
+                @"recommend_realtors_associate_info",
+                @"highlighted_realtor_associate_info",
+                @"neighborhood_detail_modules"
+            ];
+            for (NSString *key in keys) {
+                [dataInfo removeObjectForKey:key];
+            }
+            params[@"neighbor_info"] = [dataInfo btd_safeJsonStringEncoded];
+        }
     } else if (self.detailViewController.viewModel.detailData) {
         params[@"neighbor_info"] = [[self.detailViewController.viewModel.detailData.data toDictionary] btd_safeJsonStringEncoded];
     }
@@ -181,6 +204,8 @@
     userInfo[@"params"] = [params btd_safeJsonStringEncoded];
     
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
+    
+    [[FHFlutterChannels sharedInstance] updateTempNeighborhoodViewModel:self.detailViewController.viewModel];
 }
 
 - (void)addSoldClick:(NSString *)url {
@@ -206,11 +231,10 @@
     }
     
     NSMutableDictionary *tracer = self.detailTracerDict.mutableCopy;
+    tracer[UT_ELEMENT_FROM] = @"top_map";
+    tracer[UT_ENTER_FROM] = @"neighborhood_detail";
+    tracer[UT_ELEMENT_TYPE] = @"be_null";
     
-    [tracer setObject:@"map_detail" forKey:@"page_type"];
-    [tracer setValue:@"top_map" forKey:@"element_from"];
-    [tracer setObject:@"neighborhood_detail" forKey:@"enter_from"];
-    [tracer setObject:@"be_null" forKey:@"element_type"];
     [infoDict setValue:tracer forKey:@"tracer"];
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];

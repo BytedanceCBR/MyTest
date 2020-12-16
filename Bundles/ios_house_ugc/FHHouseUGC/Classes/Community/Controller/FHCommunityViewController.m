@@ -85,17 +85,19 @@
 
     self.isFirstLoad = YES;
     //切换开关
-    WeakSelf;
-    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id _Nullable x) {
-        StrongSelf;
-        FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *) x;
+    if(!self.isInHomePage){
+        WeakSelf;
+        [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id _Nullable x) {
+            StrongSelf;
+            FHConfigDataModel *xConfigDataModel = (FHConfigDataModel *) x;
 
-        if (self.isUgcOpen != xConfigDataModel.ugcCitySwitch) {
-            self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
-            [self initViewModel];
-        }
-        self.segmentControl.sectionTitles = [self getSegmentTitles];
-    }];
+            if (self.isUgcOpen != xConfigDataModel.ugcCitySwitch) {
+                self.isUgcOpen = xConfigDataModel.ugcCitySwitch;
+                [self initViewModel];
+            }
+            self.segmentControl.sectionTitles = [self getSegmentTitles];
+        }];
+    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onFocusHaveNewContents) name:kFHUGCFocusTabHasNewNotification object:nil];
     
@@ -104,10 +106,9 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kExploreMixedListRefreshTypeNotification object:nil];
     }else{
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshData) name:kFindTabbarKeepClickedNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSegmentView) name:kUGCCategoryGotFinishedNotification object:nil];
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTab) name:kFHUGCForumPostThreadFinish object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateSegmentView) name:kUGCCategoryGotFinishedNotification object:nil];
     
     [TTForumPostThreadStatusViewModel sharedInstance_tt];
     self.isFirstLoad = NO;
@@ -194,9 +195,9 @@
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-//    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
+    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
         [self.viewModel viewWillDisappear];
-//    }
+    }
     
     if (self.loginTipview) {
          [self.loginTipview pauseTimer];
@@ -212,9 +213,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-//    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
+    if(![FHEnvContext sharedInstance].isShowingHomeHouseFind || !self.isInHomePage){
         [self.viewModel viewWillAppear];
-//    }
+    }
     
     [self initLoginTipView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];

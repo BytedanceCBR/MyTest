@@ -46,7 +46,6 @@
     FHNeighborhoodDetailRecommendCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailRecommendCell class] withReuseIdentifier:NSStringFromClass([SM.recommendCellModel class]) forSectionController:self atIndex:index];
     if (index >= 0 && index < SM.items.count) {
         [cell refreshWithData:SM.items[index] withLast:(index == SM.items.count - 1) ? YES : NO];
-        [cell refreshIndexCorner:NO andLast:(index == SM.items.count - 1) ? YES : NO];
     }
     return cell;
 }
@@ -156,7 +155,7 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHNeighborhoodDetailRecommendTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailRecommendTitleView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:16];
+    titleView.titleLabel.font = [UIFont themeFontSemibold:16];
     titleView.titleLabel.textColor = [UIColor themeGray1];
     titleView.titleLabel.text = @"猜你喜欢";
     titleView.arrowsImg.hidden = YES;

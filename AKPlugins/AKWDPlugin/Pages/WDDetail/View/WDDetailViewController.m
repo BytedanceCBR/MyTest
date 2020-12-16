@@ -291,7 +291,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     }
     
     self.ttTrackStayEnable = YES;
-    [self p_setupMenuItems];
+//    [self p_setupMenuItems];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -351,6 +351,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [self p_removeIndicatorPolicyView];
     
     [self.detailView willDisappear];
+    [self.commentWriteView dismissAnimated:YES];
 }
 
 - (void)viewDidDisappear:(BOOL)animated

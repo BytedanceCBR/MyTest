@@ -15,6 +15,7 @@
 #import "FHFeedUGCCellModel.h"
 #import "FHUGCBaseViewModel.h"
 #import "TTBaseMacro.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

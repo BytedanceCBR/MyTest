@@ -31,6 +31,9 @@
 
 - (NSInteger)numberOfItems {
     FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
+    if ([SM.total integerValue] <= 5) {
+        return SM.items.count;
+    }
     return SM.items.count + 1;
 }
 
@@ -92,9 +95,9 @@
                 neighborhood_id = detailModel.data.neighborhoodInfo.id;
             }
             NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
-            tracerDic[@"enter_type"] = @"click";
-            tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB;
-            tracerDic[@"category_name"] = @"old_list";
+            tracerDic[UT_ENTER_TYPE] = @"click";
+            tracerDic[UT_LOG_PB] = self.detailViewController.viewModel.listLogPB;
+            tracerDic[UT_CATEGORY_NAME] = @"old_list";
             tracerDic[@"element_from"] = @"related";
             tracerDic[@"enter_from"] = @"neighborhood_detail";
             [tracerDic removeObjectsForKeys:@[@"page_type",@"card_type"]];
@@ -102,15 +105,10 @@
             NSMutableDictionary *userInfo = [NSMutableDictionary new];
             userInfo[@"tracer"] = tracerDic;
             userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
-            if (detailModel.data.neighborhoodInfo.name.length > 0) {
-                if (SM.model.total.length > 0) {
-                    userInfo[@"title"] = [NSString stringWithFormat:@"%@(%@)",detailModel.data.neighborhoodInfo.name,SM.model.total];
-                } else {
-                    userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
-                }
-            } else {
-                userInfo[@"title"] = @"小区房源";// 默认值
-            }
+            userInfo[@"title"] = @"周边房源";// 默认值
+//            if (detailModel.data.neighborhoodInfo.name.length > 0) {
+//                userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
+//            }
             if (neighborhood_id.length > 0) {
                 userInfo[@"neighborhood_id"] = neighborhood_id;
             }
@@ -120,7 +118,7 @@
             if (SM.model.searchId.length > 0) {
                 userInfo[@"search_id"] = SM.model.searchId;
             }
-            userInfo[@"list_vc_type"] = @(5);
+            userInfo[@"list_vc_type"] = @(2);
             
             TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
             NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
@@ -206,10 +204,11 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHNeighborhoodDetailRecommendTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailRecommendTitleView class] atIndex:index];
-    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
+//    FHNeighborhoodDetailSurroundingHouseSM *SM = (FHNeighborhoodDetailSurroundingHouseSM *)self.sectionModel;
     titleView.titleLabel.font = [UIFont themeFontMedium:16];
     titleView.titleLabel.textColor = [UIColor themeGray1];
-    titleView.titleLabel.text = [NSString stringWithFormat:@"周边房源(%@)", SM.total];//@"周边房源";
+    titleView.titleLabel.text = @"周边房源";
+//    titleView.titleLabel.text = [NSString stringWithFormat:@"周边房源(%@)", SM.total];//@"周边房源";
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
     return titleView;

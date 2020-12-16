@@ -10,6 +10,7 @@
 #import <TTBaseMacro.h>
 #import "UIDevice+BTDAdditions.h"
 #import <UILabel+BTDAdditions.h>
+#import "UIViewAdditions.h"
 
 
 #import "FHLynxView.h"
@@ -49,7 +50,6 @@
 
 - (void)initUIs {
     [self initViews];
-//    [self initConstraints];
 }
 
 - (void)initViews {
@@ -64,14 +64,7 @@
     self.articleCardView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 42, 0)];
     self.articleCardView.lynxDelegate = self;
     [self.cardBac addSubview:self.articleCardView];
-
 }
-
-//- (void)initConstraints {
-//    [self.articleCardView mas_makeConstraints:^(MASConstraintMaker *make) {
-//          make.edges.equalTo(self.contentView);
-//      }];
-//}
 
 - (void)reloadDataWithDic:(NSDictionary *)dic {
     FHLynxViewBaseParams *baesparmas = [[FHLynxViewBaseParams alloc] init];
@@ -79,12 +72,8 @@
     baesparmas.bridgePrivate = self;
     [self.articleCardView loadLynxWithParams:baesparmas];
     NSMutableDictionary *dics = [dic mutableCopy];
-    [dics setObject:@{@"display_width":[@([UIScreen mainScreen].bounds.size.width - 42) stringValue]}  forKey:@"common_params"];
-//    NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"search_agency_card" templateKey:[FHLynxManager defaultJSFileName] version:0];
-//    NSData *templateData = [NSData dataWithContentsOfURL:[NSURL URLWithString:@"http://10.95.172.166:3344/community_evaluation/template.js"]];
-//    NSString *lynxData = [dics btd_jsonStringEncoded];
-//    LynxTemplateData *data = [[LynxTemplateData alloc]initWithJson:lynxData];
-//    [self.articleCardView.lynxView loadTemplate:templateData withURL:@"local" initData:data];
+    CGFloat height = ceil(([UIScreen mainScreen].bounds.size.width - 42)*(140.0f/332.0f));
+    [dics setObject:@{@"display_height":@(height),@"display_width":@([UIScreen mainScreen].bounds.size.width - 42)}  forKey:@"common_params"];
     if (dics && self.articleCardView) {
         [self.articleCardView updateData:dics];
     }
@@ -96,6 +85,7 @@
         CGFloat cellHeight =  size.height + 24;
         self.lynxEndLoadBlock(cellHeight);
     }
+    self.articleCardView.height = size.height;
 }
 
 @end

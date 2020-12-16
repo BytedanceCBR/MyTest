@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 @class FHDetailDataBaseExtraOfficialModel;
-@class FHDetailDataBaseExtraDetectiveModel,FHDetailDataBaseExtraDetectiveReasonInfo;
+@class FHDetailDataBaseExtraDetectiveReasonInfo;
 @class FHRentDetailDataBaseExtraModel;
 @interface FHDetailHalfPopLayer : UIView
 
@@ -19,8 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^dismissBlock)(void);
 
 - (void)showWithOfficialData:(FHDetailDataBaseExtraOfficialModel *)data trackInfo:(NSDictionary *)trackInfo;
-
-- (void)showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)data trackInfo:(NSDictionary *)trackInfo;
 
 - (void)showDealData:(FHRentDetailDataBaseExtraModel *)data trackInfo:(NSDictionary *)trackInfo;
 

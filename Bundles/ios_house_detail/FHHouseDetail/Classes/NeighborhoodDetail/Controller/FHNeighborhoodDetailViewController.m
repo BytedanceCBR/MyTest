@@ -59,6 +59,7 @@
 #import "FHNeighborhoodDetailSurroundingNeighborSM.h"
 #import "FHNeighborhoodDetailSurroundingNeighborSC.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
+#import <TTAccountSDK/TTAccount.h>
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -107,8 +108,8 @@
 
 - (void)initMapping {
     
-    NSArray *name = @[@"基础信息",
-                      @"小区信息",
+    NSArray *name = @[@"小区概况",
+                      @"基础信息",
                       @"小区专家",
                       @"小区点评",
                       @"小区测评",
@@ -131,6 +132,30 @@
     
     self.names = name.copy;
     self.types = type.copy;
+}
+
+- (NSString *)nameToEn:(NSString *)name {
+    /**
+     {"neighborhood_summary":"小区概况","test_evaluate":"小区测评","basic_info":"基础信息","related":"周边配套","neighborhood_model":"小区户型","sale_house":"在售房源","evaluate":"小区点评","neighborhood_expert":"小区专家","related_neighborhood":"周边小区","related_house":"周边房源","search_related":"猜你喜欢","neighborhood_info":"小区信息"}
+     */
+    static NSDictionary *enDict = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSDictionary *enDict = @{
+            @"小区概况": @"neighborhood_summary",
+            @"基础信息": @"basic_info",
+            @"小区专家": @"neighborhood_expert",
+            @"小区点评": @"evaluate",
+            @"小区测评": @"test_evaluate",
+            @"周边配套": @"related",
+            @"小区户型": @"neighborhood_model",
+            @"周边小区": @"related_neighborhood",
+            @"周边房源": @"related_house",
+            @"猜你喜欢": @"search_related"
+        };
+    });
+
+    return [enDict btd_stringValueForKey:name default:@"be_null"];
 }
 //这个只会是一对一
 - (NSString *)getTabNameBySectionType:(FHNeighborhoodDetailSectionType)sectionType {
@@ -272,6 +297,11 @@
         [self clickTabTrackWithEnterType:@"default" sectionType:FHNeighborhoodDetailSectionTypeCoreInfo];
     } token:FHExecuteOnceUniqueTokenForCurrentContext];
      //   [self.viewModel vc_viewDidAppear:animated];
+    
+    if (self.viewModel.contactViewModel.isShowLogin && ![[TTAccount sharedAccount] isLogin]) {
+        [[ToastManager manager] showToast:@"需要先登录才能进行操作哦"];
+        self.viewModel.contactViewModel.isShowLogin = NO;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -311,6 +341,7 @@
     self.detailFlowLayout = [[FHNeighborhoodDetailFlowLayout alloc] init];
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.detailFlowLayout];
     self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
+    self.collectionView.showsVerticalScrollIndicator = NO;
     UITapGestureRecognizer *tapGesturRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
     tapGesturRecognizer.cancelsTouchesInView = NO;
     tapGesturRecognizer.delegate = self;
@@ -568,25 +599,15 @@
     }
 }
 
-- (void)updateLayout:(BOOL)isInstant
+- (void)updateLayout
 {
     [self.collectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.view);
-        if (isInstant) {
-            make.bottom.mas_equalTo(self.view);
-        } else {
-            make.bottom.mas_equalTo(self.bottomBar.mas_top);
-        }
+        make.bottom.mas_equalTo(self.bottomBar.mas_top);
     }];
-    self.bottomBar.hidden = isInstant;
-    self.bottomMaskView.hidden = isInstant;
-    self.bottomStatusBar.hidden = isInstant;
-
-    if (isInstant) {
-        [self.view bringSubviewToFront:self.collectionView];
-    } else {
-        [self.view sendSubviewToBack:self.collectionView];
-    }
+    self.bottomBar.hidden = NO;
+    self.bottomMaskView.hidden = NO;
+    [self.view sendSubviewToBack:self.collectionView];
     [self.view setNeedsUpdateConstraints];
 }
 
@@ -644,7 +665,6 @@
     }
 
     if ([call.callState isEqualToString:CTCallStateDisconnected]) {
-        [self checkShowSocialAlert];
         self.isPhoneCalled = NO;
     } else if ([call.callState isEqualToString:CTCallStateConnected]) {
         //通话中
@@ -656,17 +676,6 @@
         self.isPhoneCalled = YES;
     } else {
         //doNothing
-    }
-}
-
-- (void)checkShowSocialAlert
-{
-    // 新房留资后弹窗
-    if (self.isPhoneCalled) {
-        self.isPhoneCalled = NO;
-        [self.viewModel.contactViewModel checkSocialPhoneCall];
-    } else {
-        self.viewModel.contactViewModel.socialContactConfig = nil;
     }
 }
 
@@ -937,11 +946,12 @@
         return;
     }
     
-    NSMutableDictionary *tracerDic = [[NSMutableDictionary alloc] init];
-    tracerDic[@"event_type"] = @"house_app2c_v2";
-    tracerDic[@"enter_type"] = enterType;
-    tracerDic[@"tab_name"] = [self getTabNameBySectionType:sectionType];
-    tracerDic[@"page_type"] = [self pageTypeString];
+    NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
+    tracerDic[UT_ENTER_TYPE] = enterType;
+    tracerDic[@"tab_name"] = [self nameToEn:[self getTabNameBySectionType:sectionType]];
+    tracerDic[UT_PAGE_TYPE] = [self pageTypeString];
+    tracerDic[UT_ELEMENT_FROM] = @"be_null";
+    tracerDic[UT_ELEMENT_TYPE] = @"top_navigation_bar";
     [FHUserTracker writeEvent:@"click_tab" params:tracerDic];
 }
 
@@ -949,8 +959,8 @@
 {
     if (elementType.length) {
         NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
-        tracerDic[@"element_type"] = elementType;
-        [tracerDic removeObjectForKey:@"element_from"];
+        tracerDic[UT_ELEMENT_TYPE] = elementType;
+        tracerDic[UT_ELEMENT_FROM] = @"be_null";
         tracerDic[@"page_type"] = [self pageTypeString];
         [FHUserTracker writeEvent:@"element_show" params:tracerDic];
     }

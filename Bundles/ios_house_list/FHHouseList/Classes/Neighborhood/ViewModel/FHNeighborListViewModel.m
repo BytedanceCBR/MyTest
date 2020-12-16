@@ -501,7 +501,7 @@
     }
     __weak typeof(self) wself = self;
     // condition添加请求参数到url后面
-    self.httpTask = [FHHouseListAPI requestRelatedHouseSearchWithQuery:self.condition houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHListResultHouseModel class] completion:(FHMainApiCompletion)^(FHListResultHouseModel * _Nonnull model, NSError * _Nonnull error) {
+    self.httpTask = [FHHouseListAPI requestRelatedHouseSearchWithQuery:self.condition neighborhoodId:neighborhoodId houseId:houseId searchId:self.searchId offset:offset count:15 class:[FHListResultHouseModel class] completion:(FHMainApiCompletion)^(FHListResultHouseModel * _Nonnull model, NSError * _Nonnull error) {
         [wself processQueryData:model error:error];
     }];
 }
@@ -619,7 +619,6 @@
 
 -(void)addEnterCategoryLog {
     NSMutableDictionary *tracerDict = [self categoryLogDict].mutableCopy;
-    tracerDict[@"event_tracking_id"] = @"113196";
     [FHUserTracker writeEvent:@"enter_category" params:tracerDict];
 }
 
@@ -644,19 +643,19 @@
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     NSString *origin_from = self.listController.tracerDict[@"origin_from"];
-    tracerDict[@"origin_from"] = origin_from.length > 0 ? origin_from : @"be_null";
+    tracerDict[UT_ORIGIN_FROM] = origin_from.length > 0 ? origin_from : @"be_null";
     NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
     tracerDict[@"origin_search_id"] = origin_search_id.length > 0 ? origin_search_id : @"be_null";
     tracerDict[@"search_id"] = self.searchId.length > 0 ? self.searchId : @"be_null";
     NSString *enter_type = self.listController.tracerDict[@"enter_type"];
-    tracerDict[@"enter_type"] = enter_type.length > 0 ? enter_type : @"be_null";
+    tracerDict[UT_ENTER_TYPE] = enter_type.length > 0 ? enter_type : @"be_null";
     NSString *category_name = self.listController.tracerDict[@"category_name"];
-    tracerDict[@"category_name"] = category_name.length > 0 ? category_name : @"be_null";
+    tracerDict[UT_CATEGORY_NAME] = category_name.length > 0 ? category_name : @"be_null";
+    tracerDict[UT_PAGE_TYPE] = tracerDict[UT_CATEGORY_NAME];
     NSString *enter_from = self.listController.tracerDict[@"enter_from"];
-    tracerDict[@"enter_from"] = enter_from.length > 0 ? enter_from : @"be_null";
+    tracerDict[UT_ENTER_FROM] = enter_from.length > 0 ? enter_from : @"be_null";
     NSString *element_from = self.listController.tracerDict[@"element_from"];
-    tracerDict[@"element_from"] = element_from.length > 0 ? element_from : @"be_null";
-    tracerDict[@"page_type"]  = self.listController.tracerDict[@"page_type"] ? : @"be_null";
+    tracerDict[UT_ELEMENT_FROM] = element_from.length > 0 ? element_from : @"be_null";
     return tracerDict;
 }
 

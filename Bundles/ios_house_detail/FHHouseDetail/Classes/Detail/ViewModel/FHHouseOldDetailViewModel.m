@@ -66,6 +66,7 @@
 #import "FHHousedetailModelManager.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import "NSString+BTDAdditions.h"
+#import "FHHouseFillFormHelper.h"
 
 extern NSString *const kFHSubscribeHouseCacheKey;
 
@@ -475,16 +476,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     NSString *houseType = [NSString stringWithFormat:@"%ld", (long)self.houseType];
     NSString *houseDes = [NSString stringWithFormat:@"%@/%@/%@", area, face, tag];
-//    // 幸福天眼
-//    __weak typeof(self)wself = self;
-//    if (model.data.baseExtra.detective) {
-//        FHDetailDetectiveModel *detectiveModel = [[FHDetailDetectiveModel alloc] init];
-//        detectiveModel.detective = model.data.baseExtra.detective;
-//        detectiveModel.feedBack = ^(NSInteger type, id  _Nonnull data, void (^ _Nonnull compltion)(BOOL)) {
-//            [wself poplayerFeedBack:data type:type completion:compltion];
-//        };
-//        [self.items addObject:detectiveModel];
-//    }
+
     // 房源概况
     if (model.data.houseOverreview.list.count > 0) {        
         FHDetailHouseOutlineInfoCorrectingModel *infoModel = [[FHDetailHouseOutlineInfoCorrectingModel alloc] init];
@@ -990,11 +982,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 }
 
 - (void)subscribeFormRequest:(NSString *)phoneNum subscribeModel:(FHDetailHouseSubscribeCorrectingModel *)subscribeModel {
-    __weak typeof(self)wself = self;
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
-        return;
-    }
+    __weak typeof(self)weakSelf = self;
+    
     NSString *houseId = self.houseId;
 //    NSString *from = @"app_oldhouse_subscription";
     NSDictionary *extraInfo = nil;
@@ -1002,8 +991,37 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     if (self.houseInfoBizTrace) {
         extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
     }
+    
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        __weak typeof(self) weakSelf = self;
+        FHAssociateFormReportModel *formReportModel = [[FHAssociateFormReportModel alloc] init];
+        formReportModel.associateInfo = subscribeModel.associateInfo.reportFormInfo;
+        NSMutableDictionary *tracerDic = self.detailTracerDic.mutableCopy;
+        tracerDic[@"position"] = @"card";
+        tracerDic[@"enter_type"] = @"click_subscribe";
+        formReportModel.reportParams = tracerDic.copy;
+        formReportModel.extraInfo = extraInfo;
+        formReportModel.houseType = FHHouseTypeNeighborhood;
+        formReportModel.title = @"房源订阅";
+        formReportModel.btnTitle = @"立即订阅";
+        formReportModel.subtitle = @"订阅后、房源价格、售卖信息变动，专业的找房顾问将第一时间与您联系。";
+        formReportModel.topViewController = self.detailController;
+        [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:formReportModel completion:^{
+            YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
+            [subscribeHouseCache setObject:@"1" forKey:weakSelf.houseId];
+            [weakSelf.items removeObject:subscribeModel];
+            [weakSelf reloadData];
+        }];
+        return;
+    }
+    
+    if (![TTReachability isNetworkConnected]) {
+        [[ToastManager manager] showToast:@"网络异常"];
+        return;
+    }
 
-    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil extraInfo:extraInfo completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+
+    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil extraInfo:extraInfo completion:^(FHDetailFillFormResponseModel * _Nullable model, NSError * _Nullable error) {
 
 //    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:from cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
         
@@ -1016,10 +1034,10 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             [[ToastManager manager] showToast:toast];
             [FHUserInfoManager savePhoneNumber:phoneNum];
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
-            [subscribeHouseCache setObject:@"1" forKey:wself.houseId];
+            [subscribeHouseCache setObject:@"1" forKey:weakSelf.houseId];
             
-            [wself.items removeObject:subscribeModel];
-            [wself reloadData];
+            [weakSelf.items removeObject:subscribeModel];
+            [weakSelf reloadData];
         }else {
             [[ToastManager manager] showToast:[NSString stringWithFormat:@"%@%@",model.message.length ? @"" : @"提交失败 ", model.message]];
         }
@@ -1108,12 +1126,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         //        trackInfo[UT_ENTER_FROM] = position;
         [popLayer showDetectiveReasonInfoData:(FHDetailDataBaseExtraDetectiveReasonInfo *)model trackInfo:trackInfo];
     }
-        else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-            position = @"happiness_eye";
-            trackInfo[UT_ENTER_FROM] = position;
-            [popLayer showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)model trackInfo:trackInfo];
-    
-        }
     
     [self addClickOptionLog:position];
     

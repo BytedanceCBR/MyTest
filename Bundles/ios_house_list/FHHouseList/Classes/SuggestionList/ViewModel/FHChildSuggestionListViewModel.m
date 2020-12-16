@@ -673,6 +673,9 @@
         case FHEnterSuggestionTypeOldMain:
             retPageTypeStr = @"old_kind_list";
             break;
+        case FHEnterSuggestionTypeNewMain:
+            retPageTypeStr = @"new_kind_list";
+            break;
         default:
             retPageTypeStr = @"maintab";
             break;

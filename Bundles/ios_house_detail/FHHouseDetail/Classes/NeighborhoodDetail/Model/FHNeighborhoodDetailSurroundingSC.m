@@ -46,9 +46,10 @@
         infoDict[@"baiduPanoramaUrl"] = model.baiduPanoramaUrl;
     }
     NSMutableDictionary *tracer = [NSMutableDictionary dictionaryWithDictionary:self.detailTracerDict];
-    [tracer setValue:clickType forKey:@"click_type"];
-    [tracer setValue:@"map" forKey:@"element_from"];
-    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
+    tracer[@"click_type"] = clickType ?: @"be_null";
+    tracer[UT_ELEMENT_FROM] = @"map";
+    tracer[UT_ENTER_FROM] = tracer[@"page_type"] ?: @"be_null";
+    tracer[UT_ELEMENT_TYPE] = @"be_null";
     [infoDict setValue:tracer forKey:@"tracer"];
 
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
@@ -89,10 +90,10 @@
 }
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
-    FHNeighborhoodDetailSurroundingSM *model = (FHNeighborhoodDetailSurroundingSM *)self.sectionModel;
-    if ([model.dataItems[index] isKindOfClass:[FHStaticMapAnnotation class]] || [model.dataItems[index] isKindOfClass:[NSString class]]) {
-        [self mapMaskBtnClick:@"map_click"];
-    }
+//    FHNeighborhoodDetailSurroundingSM *model = (FHNeighborhoodDetailSurroundingSM *)self.sectionModel;
+//    if ([model.dataItems[index] isKindOfClass:[FHStaticMapAnnotation class]] || [model.dataItems[index] isKindOfClass:[NSString class]]) {
+//        [self mapMaskBtnClick:@"map_click"];
+//    }
 }
 
 #pragma mark - datasource
@@ -138,6 +139,24 @@
         [cell refreshWithData:model.mapCellModel];
         [cell setCategoryClickBlock:^(NSString * _Nonnull category) {
             model.curCategory = category;
+            NSMutableDictionary *tracerDict = weakSelf.detailTracerDict.mutableCopy;
+            tracerDict[UT_ELEMENT_TYPE] = @"map";
+            tracerDict[UT_PAGE_TYPE] = @"neighborhood_detail";
+            NSString *click_position = nil;
+            if ([category isEqualToString:@"教育"]) {
+                click_position = @"education";
+            } else if ([category isEqualToString:@"生活"]) {
+                click_position = @"life";
+            } else if ([category isEqualToString:@"交通"]) {
+                click_position = @"traffic";
+            } else if ([category isEqualToString:@"医疗"]) {
+                click_position = @"hostital";
+            } else if ([category isEqualToString:@"休闲"]) {
+                click_position = @"entertaiment";
+            }
+            tracerDict[UT_CLICK_POSITION] = click_position ?: @"be_null";
+            tracerDict[UT_ELEMENT_FROM] = @"be_null";
+            [FHUserTracker writeEvent:@"click_options" params:tracerDict.copy];
             [weakSelf mapMaskBtnClick:nil];
         }];
         cell.mapBtnClickBlock = ^(NSString * _Nonnull clickType) {

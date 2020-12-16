@@ -52,6 +52,10 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
     return CGSizeMake(width, height);
 }
 
+- (NSString *)elementType {
+    return @"neighborhood_info";
+}
+
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -74,7 +78,7 @@ static CGFloat const kFHPropertyItemInfoHeight = 30.0f;
         self.allButton.layer.masksToBounds = YES;
         self.allButton.layer.cornerRadius = 4.0;
         [self.allButton setTitle:@"查看全部信息" forState:UIControlStateNormal];
-        [self.allButton setImage:[UIImage imageNamed:@"arrowicon-feed-4"] forState:UIControlStateNormal];
+        [self.allButton setImage:[UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"] forState:UIControlStateNormal];
         [self.allButton btd_addActionBlockForTouchUpInside:^(__kindof UIButton * _Nonnull sender) {
             if (weakSelf.allButtonActionBlock) {
                 weakSelf.allButtonActionBlock();

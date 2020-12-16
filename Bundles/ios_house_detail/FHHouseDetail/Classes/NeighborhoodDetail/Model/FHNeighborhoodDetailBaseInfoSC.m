@@ -30,12 +30,12 @@
     NSMutableDictionary *params = @{}.mutableCopy;
     
     NSMutableDictionary *userInfo = @{}.mutableCopy;
-    userInfo[@"route"] = [@"/neighbor_info_list_page" btd_stringByURLEncode];
+    userInfo[@"route"] = @"/neighbor_info_list_page";
     
     FHNeighborhoodDetailBaseInfoSM *model = (FHNeighborhoodDetailBaseInfoSM *)self.sectionModel;
     
     NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
-    tracerDict[@"element_from"] = @"map";
+    tracerDict[@"element_from"] = @"neighborhood_info";
     tracerDict[@"enter_from"] = @"neighborhood_detail";
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
     
@@ -71,6 +71,10 @@
     return cell;
 }
 
+- (void)didSelectItemAtIndex:(NSInteger)index {
+    [self pushBaseInfo];
+}
+
 #pragma mark - IGListSupplementaryViewSource
 - (NSArray<NSString *> *)supportedElementKinds {
     return @[UICollectionElementKindSectionHeader];
@@ -84,6 +88,10 @@
     [titleView setupNeighborhoodDetailStyle];
     titleView.titleLabel.text = @"小区信息";
     // 设置下发标题
+    __weak typeof(self) weakSelf = self;
+    [titleView setMoreActionBlock:^{
+        [weakSelf pushBaseInfo];
+    }];
     return titleView;
 }
 

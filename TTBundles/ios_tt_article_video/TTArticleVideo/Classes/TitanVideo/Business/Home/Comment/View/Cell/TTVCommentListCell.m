@@ -37,6 +37,7 @@
 #import "UIColor+Theme.h"
 #import "ToastManager.h"
 #import "FHHouseUGCAPI.h"
+#import "FHUGCCommonAvatar.h"
 
 #define kTTCommentCellDigButtonHitTestInsets UIEdgeInsetsMake(-30, -30, -10, -30)
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
@@ -45,7 +46,7 @@
 
 @interface TTVCommentListCell() <TTUGCAttributedLabelDelegate>
 
-@property (nonatomic, strong) TTAsyncCornerImageView *avatarView;
+@property (nonatomic, strong) FHUGCCommonAvatar *avatarView;
 @property (nonatomic, strong) TTUserInfoView *nameView;
 @property (nonatomic, strong) TTDiggButton *digButton;
 @property (nonatomic, strong) TTAsyncLabel *userInfoLabel;         //用户信息(头条号+认证信息)
@@ -153,8 +154,10 @@
 #pragma mark - refresh view with layout
 
 - (void)refreshAvatarView {
-    [self.avatarView tt_setImageWithURLString:self.commentModel.userAvatarURL];
-    [self.avatarView showOrHideVerifyViewWithVerifyInfo:nil decoratorInfo:self.commentModel.userDecoration];
+    [self.avatarView setAvatarUrl:self.commentModel.userAvatarURL];
+    [self.avatarView setUserId: self.commentModel.userID];
+//    [self.avatarView setUserId:self.commentModel.userID];
+//    [self.avatarView showOrHideVerifyViewWithVerifyInfo:nil decoratorInfo:self.commentModel.userDecoration];
 }
 
 - (void)refreshNameView {
@@ -540,14 +543,15 @@
 }
 
 #pragma mark - getter & setter
-- (TTAsyncCornerImageView *)avatarView {
+- (FHUGCCommonAvatar *)avatarView {
     if (!_avatarView) {
-        _avatarView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake([TTVCommentListCellHelper cellHorizontalPadding], [TTVCommentListCellHelper cellVerticalPadding], [TTVCommentListCellHelper avatarSize], [TTVCommentListCellHelper avatarSize]) allowCorner:YES];
-        _avatarView.cornerRadius = [TTVCommentListCellHelper avatarSize] / 2;
-        _avatarView.placeholderName = @"big_defaulthead_head";
-        _avatarView.borderWidth = 0;
-        _avatarView.borderColor = [UIColor clearColor];
-        [_avatarView addTouchTarget:self action:@selector(avatarViewOnClick:)];
+        _avatarView = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake([TTVCommentListCellHelper cellHorizontalPadding], [TTVCommentListCellHelper cellVerticalPadding], [TTVCommentListCellHelper avatarSize], [TTVCommentListCellHelper avatarSize])];
+    
+        [_avatarView setPlaceholderImage: @"big_defaulthead_head"];
+        [_avatarView addGestureRecognizer:({
+            UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(avatarViewOnClick:)];
+            gesture;
+        })];
     }
     return _avatarView;
 }

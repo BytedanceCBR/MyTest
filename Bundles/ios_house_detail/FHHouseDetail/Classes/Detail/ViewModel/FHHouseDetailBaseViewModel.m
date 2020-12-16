@@ -835,12 +835,6 @@
     NSString *enterFrom = @"be_null";
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
         enterFrom = @"official_inspection";
-    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        enterFrom = @"happiness_eye";
-        FHDetailDataBaseExtraDetectiveModel *detective = (FHDetailDataBaseExtraDetectiveModel *)model;
-        if (detective.fromDetail) {
-            enterFrom = @"happiness_eye_detail";
-        }
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         enterFrom = @"transaction_remind";
     }
@@ -926,8 +920,6 @@
     NSString *reportUrl = nil;
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
         reportUrl = [(FHDetailDataBaseExtraOfficialModel *)model dialogs].reportUrl;
-    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        reportUrl = [(FHDetailDataBaseExtraDetectiveModel *)model dialogs].reportUrl;
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         reportUrl = [(FHRentDetailDataBaseExtraModel *)model securityInformation].dialogs.reportUrl;
     }
@@ -992,8 +984,6 @@
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
         source = @"official";
         agencyId = [(FHDetailDataBaseExtraOfficialModel *)model agency].agencyId;
-    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        source = @"detective";
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         source = @"safety_tips";
     }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]){

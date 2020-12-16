@@ -36,6 +36,7 @@
         }];
         
         self.arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
+        self.arrowsImg.contentMode = UIViewContentModeCenter;
         self.arrowsImg.hidden = YES;
         [self addSubview:self.arrowsImg];
         [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -75,6 +76,8 @@
         make.left.mas_equalTo(12);
         make.centerY.mas_equalTo(self);
     }];
+    self.subTitleLabel.textColor = [UIColor themeGray1];
+    self.arrowsImg.image = [UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"];
 }
 
 - (void)moreAction:(UITapGestureRecognizer *)tapGesture {

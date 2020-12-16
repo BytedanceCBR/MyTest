@@ -336,6 +336,8 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 //优化二手房详情页加载开关
 + (BOOL)isOldDetailLoadOptimization;
 
+//获取ugc用户v图标
++ (NSArray *)getUGCUserVWhiteList;
 - (BOOL)isColdStart;
 
 - (void)setColdStart;

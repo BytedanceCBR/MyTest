@@ -7,6 +7,8 @@
 
 #import "FHNeighborhoodDetailSurroundingHouseSM.h"
 #import "FHHouseCardUtils.h"
+#import "FHHouseSecondCardViewModel.h"
+#import "FHCommonDefines.h"
 
 @implementation FHNeighborhoodDetailSurroundingHouseSM
 
@@ -15,9 +17,14 @@
     for (FHSearchHouseDataItemsModel *item in data.items) {
         item.advantageDescription = nil;
         id obj = [FHHouseCardUtils getEntityFromModel:item];
-        if (obj) {
+        if (obj && [obj isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+            FHHouseSecondCardViewModel *model = (FHHouseSecondCardViewModel *)obj;
+            model.tagListMaxWidth = SCREEN_WIDTH - 21 * 2 - 90 - 8;
+            [model cutTagListWithFont:[UIFont themeFontRegular:10]];
+            [model setTitleMaxWidth:SCREEN_WIDTH - 30 * 2 - 84 - 8 + 18];
             [arrayM addObject:obj];
         }
+
     }
     self.model = data;
     self.items = arrayM.copy;

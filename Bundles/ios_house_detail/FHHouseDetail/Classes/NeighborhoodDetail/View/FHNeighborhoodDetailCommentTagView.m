@@ -52,7 +52,7 @@
 //    [self addSubview:_spLine];
     
     self.contentLabel = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
-    _contentLabel.text = self.model.content;
+    _contentLabel.text = [NSString stringWithFormat:@"%@(%@)",self.model.content,self.model.count];
     [self addSubview:_contentLabel];
 }
 
@@ -82,7 +82,7 @@
 //        make.height.mas_equalTo(17);
 //    }];
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-           make.left.mas_equalTo(self).offset(leftMargin);
+        make.centerX.mas_equalTo(self);
            make.centerY.mas_equalTo(self);
            make.height.mas_equalTo(17);
        }];
@@ -91,6 +91,7 @@
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
+    label.textAlignment = NSTextAlignmentCenter;
     label.textColor = textColor;
     return label;
 }
@@ -98,8 +99,9 @@
 + (CGFloat)getTagViewWidth:(FHNeighborhoodDetailCommentTagModel *)model {
 //    CGFloat width = leftMargin + rightMargin + 14 + 2 + 12;
 //    CGRect persentRect = [model.persent boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 17) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont themeFontMedium:12],NSFontAttributeName, nil] context:nil];
-    CGFloat width = leftMargin + rightMargin + 2 ;
-    CGRect contentRect = [model.content boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 17) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont themeFontRegular:15],NSFontAttributeName, nil] context:nil];
+    CGFloat width = leftMargin + rightMargin;
+    NSString *content = [NSString stringWithFormat:@"%@(%@)",model.content,model.count];
+    CGRect contentRect = [content boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 17) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIFont themeFontRegular:15],NSFontAttributeName, nil] context:nil];
 //    CGFloat persentWidth = ceil(persentRect.size.width);
     CGFloat contentWidth = ceil(contentRect.size.width);
 //    width += persentWidth;

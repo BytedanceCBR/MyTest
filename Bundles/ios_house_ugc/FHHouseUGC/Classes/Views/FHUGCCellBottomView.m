@@ -126,10 +126,10 @@
     self.likeBtn.top = 2;
     self.likeBtn.height = 24;
         
-    self.bottomSepView.left = 0;
+    self.bottomSepView.left = 20;
     self.bottomSepView.top = self.positionView.bottom + 20;
-    self.bottomSepView.height = 5;
-    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
+    self.bottomSepView.height = 1;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
 }
 
 - (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
