@@ -83,8 +83,7 @@
     [_rightBtn setTitle:@"查看全部" forState:UIControlStateNormal];
     [_rightBtn sizeToFit];
     [_rightBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, - _rightBtn.imageView.image.size.width, 0, _rightBtn.imageView.image.size.width)];
-    [_rightBtn setImageEdgeInsets:UIEdgeInsetsMake(0, _rightBtn.titleLabel.bounds.size.width, 0, -_rightBtn.titleLabel.bounds.size.width)];
-    [_rightBtn addTarget:self action:@selector(gotoCommentList) forControlEvents:UIControlEventTouchUpInside];
+    [_rightBtn setUserInteractionEnabled:NO];
     [self.contentView addSubview:_rightBtn];
 }
 
@@ -108,24 +107,6 @@
         make.right.mas_equalTo(self.contentView).offset(-12);
         make.height.mas_equalTo(25);
     }];
-}
-
-- (void)gotoCommentList {
-    FHNeighborhoodDetailCommentHeaderModel *cellModel = (FHNeighborhoodDetailCommentHeaderModel *)self.currentData;
-    if(!isEmptyString(cellModel.commentsListSchema)){
-        NSURL *url = [NSURL URLWithString:cellModel.commentsListSchema];
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"neighborhood_id"] = cellModel.neighborhoodId;
-        dict[@"title"] = cellModel.title;
-        NSMutableDictionary *tracerDict = @{}.mutableCopy;
-        tracerDict[UT_ORIGIN_FROM] = cellModel.detailTracerDic[@"origin_from"] ?: @"be_null";
-        tracerDict[UT_ENTER_FROM] = cellModel.detailTracerDic[@"page_type"] ?: @"be_null";
-        tracerDict[UT_LOG_PB] = cellModel.detailTracerDic[@"log_pb"] ?: @"be_null";
-        tracerDict[@"from_gid"] = cellModel.neighborhoodId;
-        dict[TRACER_KEY] = tracerDict;
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-    }
 }
 
 @end
