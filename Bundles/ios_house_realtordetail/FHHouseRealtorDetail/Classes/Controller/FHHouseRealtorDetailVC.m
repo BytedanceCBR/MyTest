@@ -36,7 +36,12 @@
     if (self) {
         self.tabName = paramObj.allParams[@"tab_name"];
         self.realtorDetailInfo = paramObj.allParams;
-        self.tracerDict[@"enter_from"] =  self.tracerDict[@"page_type"];
+        /**
+            外部传递了正确的 enter_from，但是未传 page_type 的情况下，会出现 null 的情况
+         */
+        if (self.tracerDict[@"page_type"]) {
+            self.tracerDict[@"enter_from"] = self.tracerDict[@"page_type"];
+        }
         self.tracerDict[@"page_type"] = [self pageType];
     }
     return self;

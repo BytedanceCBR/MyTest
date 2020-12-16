@@ -655,7 +655,7 @@
     NSString *enter_from = self.listController.tracerDict[@"enter_from"];
     tracerDict[UT_ENTER_FROM] = enter_from.length > 0 ? enter_from : @"be_null";
     NSString *element_from = self.listController.tracerDict[@"element_from"];
-    tracerDict[UT_ELEMENT_TYPE] = element_from.length > 0 ? element_from : @"be_null";
+    tracerDict[UT_ELEMENT_FROM] = element_from.length > 0 ? element_from : @"be_null";
     return tracerDict;
 }
 
