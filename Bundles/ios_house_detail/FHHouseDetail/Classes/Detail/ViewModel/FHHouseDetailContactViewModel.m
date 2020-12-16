@@ -550,10 +550,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         if ([SSCommonLogic isEnableVerifyFormAssociate]) {
             switch (self.houseType) {
                 case FHHouseTypeSecondHandHouse:
-                case FHHouseTypeNeighborhood:
                     title = @"询底价";
                     subtitle = @"提交后，我们将给您匹配专业的经纪人为您提供咨询服务。";
                     btnTitle = @"获取底价";
+                    break;
+                case FHHouseTypeNeighborhood:
+                    title = @"咨询经纪人";
+                    subtitle = @"提交后，我们将给您匹配专业的经纪人为您提供咨询服务。";
+                    btnTitle = @"立即咨询";
                     break;
                 case FHHouseTypeNewHouse:
                     title = @"询底价";
