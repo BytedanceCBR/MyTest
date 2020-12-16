@@ -1548,9 +1548,13 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(void)onConditionChanged:(NSString *)condition
 {
-    if ([self.conditionFilter isEqualToString:condition]) {
-        return;
-    }
+    /**
+     筛选器请求前会判断条件是否变化，如果不发请求的话会导致筛选器回填不正确，
+     并且没有跟安卓端对齐，因此去掉这个优化
+     */
+//    if ([self.conditionFilter isEqualToString:condition]) {
+//        return;
+//    }
     self.fromRecommend = NO;
 
     self.conditionFilter = condition;
