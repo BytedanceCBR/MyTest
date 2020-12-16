@@ -7,6 +7,7 @@
 
 #import "FHHomeEntranceItemCell.h"
 #import "FHConfigModel.h"
+#import "FHCommonDefines.h"
 #import <FHCommonUI/UIFont+House.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <TTBaseLib/TTDeviceHelper.h>
@@ -27,9 +28,8 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake((self.frame.size.width - NORMAL_ICON_WIDTH)/2, ITEM_PER_ROW, NORMAL_ICON_WIDTH, NORMAL_ICON_WIDTH)];
+        self.iconView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, (SCREEN_WIDTH - 30)/5, (SCREEN_WIDTH - 30)/5)];
         [self addSubview:self.iconView];
-//        [self.iconView setBackgroundColor:[UIColor redColor]];
         
         self.nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, frame.size.height - 20, frame.size.width, 20)];
         _nameLabel.textColor = [UIColor themeGray2];
@@ -46,7 +46,7 @@
     FHConfigDataOpDataItemsImageModel *imgModel = model.image.firstObject;
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:imgModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
     self.nameLabel.text = model.title;
-    [self.nameLabel sizeToFit];
+//    [self.nameLabel sizeToFit];
     self.nameLabel.centerX = self.width/2;
 }
 

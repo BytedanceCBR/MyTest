@@ -13,13 +13,14 @@
 #import "WDCommonLogic.h"
 #import "WDPersonModel.h"
 #import "WDUIHelper.h"
+#import "FHUGCCommonAvatar.h"
 
 #define kUserNameLabelFontSize 14
 #define kUserDescLabelFontSize 12
 
 @interface WDWendaListCellUserHeaderView ()
 
-@property (nonatomic, strong) ExploreAvatarView *cellAvatarView;
+@property (nonatomic, strong) FHUGCCommonAvatar *cellAvatarView;
 @property (nonatomic, strong) SSThemedButton *userNameButton;
 @property (nonatomic, strong) SSThemedLabel *userDescLabel;
 @property (nonatomic, strong) TTFollowThemeButton *followButton;
@@ -56,7 +57,9 @@
 }
 
 - (void)refreshUserInfoContent:(WDPersonModel *)user descInfo:(NSString *)descInfo followButtonHidden:(BOOL)hidden {
-    [self.cellAvatarView setImageWithURLString:user.avatarURLString];
+    [self.cellAvatarView setAvatarUrl:user.avatarURLString];
+    [self.cellAvatarView setUserId:user.userID];
+//    [self.cellAvatarView setImageWithURLString:user.avatarURLString];
 //    [self.cellAvatarView showOrHideVerifyViewWithVerifyInfo:user.userAuthInfo decoratorInfo:user.userDecoration];
     NSString *userName = user.name ?: @"佚名";
     [self.userNameButton setTitle:userName forState:UIControlStateNormal];
@@ -207,14 +210,15 @@
     self.userDescLabel.backgroundColor = [UIColor tt_themedColorForKey:kColorBackground4];
 }
 
-- (ExploreAvatarView *)cellAvatarView {
+- (FHUGCCommonAvatar *)cellAvatarView {
     if (!_cellAvatarView) {
-        _cellAvatarView = [[ExploreAvatarView alloc] initWithFrame:CGRectMake(kWDCellLeftPadding, [WDWendaListCellUserHeaderView userAvatarTopPadding], 36, 36)];
-        _cellAvatarView.enableRoundedCorner = YES;
-        _cellAvatarView.userInteractionEnabled = YES;
-        _cellAvatarView.placeholder = @"big_defaulthead_head";
-        
-        [_cellAvatarView addTouchTarget:self action:@selector(avatarButtonClick:)];
+        _cellAvatarView = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake(kWDCellLeftPadding, [WDWendaListCellUserHeaderView userAvatarTopPadding], 36, 36)];
+        [_cellAvatarView setPlaceholderImage: @"big_defaulthead_head"];
+        [_cellAvatarView addGestureRecognizer:({
+            UITapGestureRecognizer *gesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(avatarButtonClick:)];
+            gesture;
+        })];
+//        [_cellAvatarView addTouchTarget:self action:@selector(avatarButtonClick:)];
 //        [_cellAvatarView setupVerifyViewForLength:36 adaptationSizeBlock:nil];
         
         UIView *coverView = [[UIView alloc] initWithFrame:_cellAvatarView.bounds];
@@ -222,7 +226,7 @@
         coverView.layer.opacity = 0.05;
         coverView.layer.cornerRadius = coverView.width / 2.f;
         coverView.layer.masksToBounds = YES;
-        [_cellAvatarView insertSubview:coverView belowSubview:self.cellAvatarView.verifyView];
+        [_cellAvatarView insertSubview:coverView belowSubview:self.cellAvatarView.avatar];
     }
     return _cellAvatarView;
 }

@@ -10,6 +10,7 @@
 #import <TTAccountSDK/TTAccount.h>
 #import <TTAccountSDK/TTAccountUserEntity.h>
 #import "FHGeneralBizConfig.h"
+#import "SSCommonLogic.h"
 
 @implementation FHUserInfoManager
 
@@ -25,6 +26,9 @@
 }
 
 + (NSString *)getPhoneNumberIfExist {
+    if ([SSCommonLogic isEnableVerifyFormAssociate] && [TTAccount sharedAccount].user.mobile.length) {
+        return [TTAccount sharedAccount].user.mobile;
+    }
     YYCache *sendPhoneNumberCache = [[FHEnvContext sharedInstance].generalBizConfig sendPhoneNumberCache];
     id phoneCache = [sendPhoneNumberCache objectForKey:kFHPhoneNumberCacheKey];
     NSString *phoneNumber = @"";

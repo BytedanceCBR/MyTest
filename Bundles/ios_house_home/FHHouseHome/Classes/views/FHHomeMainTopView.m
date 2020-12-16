@@ -133,7 +133,7 @@ static const float kMapSearchBtnRightPading = 50;
         
         [_mapSearchLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.mapSearchBtn.mas_right).offset(5);
-            make.centerY.equalTo(self.mapSearchBtn).offset(0);
+            make.centerY.equalTo(self.mapSearchBtn).offset(1);
             make.width.mas_equalTo(40);
             //          make.height.mas_equalTo(24);
         }];
@@ -199,7 +199,7 @@ static const float kMapSearchBtnRightPading = 50;
     [_searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self).offset(-15);
         if (self.segmentControl) {
-            make.centerY.equalTo(self.segmentControl).offset(0);
+            make.centerY.equalTo(self.segmentControl).offset(1);
         }else
         {
             make.bottom.mas_equalTo(8);

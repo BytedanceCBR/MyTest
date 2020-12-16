@@ -27,6 +27,7 @@
 #import <Masonry/Masonry.h>
 #import <TTBaseLib/TTStringHelper.h>
 #import <TTBaseLib/TTBusinessManager+StringUtils.h>
+#import "FHUGCCommonAvatar.h"
 
 #define kPGCViewHeight (([TTDeviceHelper isPadDevice]) ? 84 : 66)
 #define kPGCAvatarSize                      (([TTDeviceHelper isPadDevice]) ? 44 : 36)
@@ -46,7 +47,7 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
 @interface TTVVideoDetailNatantPGCAuthorView ()
 
 @property (nonatomic, strong, nullable) TTAlphaThemedButton *backgroundView;
-@property (nonatomic, strong, nullable) TTAsyncCornerImageView *pgcAvatar;
+@property (nonatomic, strong, nullable) FHUGCCommonAvatar *pgcAvatar;
 @property (nonatomic, strong, nullable) TTIconLabel         *pgcName;
 @property (nonatomic, strong, nullable) TTIconLabel         *pgcFansLabel;
 @property (nonatomic, strong, nullable) TTFollowThemeButton *subscribeButton;
@@ -210,13 +211,9 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
         }
         CGFloat totalHeigth = [TTDeviceUIUtils tt_newPadding:kPGCViewHeightOnTop];
         
-        _pgcAvatar = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake([TTDeviceUIUtils tt_newPadding: kVideoDetailItemCommonEdgeMargin], [TTDeviceUIUtils tt_newPadding: (totalHeigth - avatarSize) / 2.f], avatarSize, avatarSize) allowCorner:YES];
-        _pgcAvatar.borderWidth = 0;
+        _pgcAvatar = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake([TTDeviceUIUtils tt_newPadding: kVideoDetailItemCommonEdgeMargin], [TTDeviceUIUtils tt_newPadding: (totalHeigth - avatarSize) / 2.f], avatarSize, avatarSize)];
         _pgcAvatar.userInteractionEnabled = NO;
-        _pgcAvatar.coverColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
-        _pgcAvatar.cornerRadius = avatarSize / 2;
-        _pgcAvatar.borderColor = [UIColor clearColor];
-        _pgcAvatar.placeholderName = @"big_defaulthead_head";
+        [_pgcAvatar setPlaceholderImage:@"big_defaulthead_head"];
 //        [_pgcAvatar setupVerifyViewForLength:kPGCAvatarSize adaptationSizeBlock:^CGSize(CGSize standardSize) {
 //            return [TTVerifyIconHelper tt_newSize:standardSize];
 //        }];
@@ -225,7 +222,7 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
         UIView *view = [[UIView alloc] initWithFrame:_pgcAvatar.bounds];
         view.layer.cornerRadius = view.width / 2.f;
         view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.05];
-        [_pgcAvatar insertSubview:view belowSubview:_pgcAvatar.verifyView];
+        [_pgcAvatar insertSubview:view belowSubview:_pgcAvatar.avatar];
         [self addSubview:_pgcAvatar];
     }
     
@@ -304,15 +301,17 @@ extern NSArray *tt_ttuisettingHelper_detailViewBackgroundColors(void);
     [self.pgcName removeAllIcons];
     NSString *avatarUrl = [self.viewModel.pgcModel.contentInfo ttgc_contentAvatarURL];
     NSString *userAuthInfo = [self.viewModel.pgcModel.contentInfo ttgc_userAuthInfo];
-    self.pgcAvatar.placeholderName = @"pgcloading_allshare.png";
-    [self.pgcAvatar tt_setImageWithURLString:avatarUrl];
+    NSString *userId= [self.viewModel.pgcModel.contentInfo ttgc_contentID];
+    [self.pgcAvatar setPlaceholderImage:@"pgcloading_allshare.png"] ;
+    [self.pgcAvatar setAvatarUrl:avatarUrl];
+    self.pgcAvatar.userId = userId;
     [self.pgcName refreshIconView];
     BOOL isVerified = [TTVerifyIconHelper isVerifiedOfVerifyInfo:userAuthInfo];
     if (isVerified) {
         self.pgcFansLabel.labelMaxWidth = self.pgcName.labelMaxWidth;
         [self.pgcName refreshIconView];
     }
-    [self.pgcAvatar showOrHideVerifyViewWithVerifyInfo:userAuthInfo decoratorInfo:self.viewModel.pgcModel.userDecoration sureQueryWithID:YES userID:self.viewModel.pgcModel.mediaUserID];
+//    [self.pgcAvatar showOrHideVerifyViewWithVerifyInfo:userAuthInfo decoratorInfo:self.viewModel.pgcModel.userDecoration sureQueryWithID:YES userID:self.viewModel.pgcModel.mediaUserID];
 }
 
 - (void)refreshSubscribeButtonTitle

@@ -75,6 +75,7 @@
 }
 
 - (void)processDetailData:(FHDetailNewModel *)model{
+    
     self.detailData = model;
     FHDetailContactModel *contactPhone = nil;
     
