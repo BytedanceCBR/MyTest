@@ -147,6 +147,7 @@
     // 用户信息
     self.userInfoView.frame = CGRectMake(0, topPadding, self.contentContainer.width, userInfoViewHeight);
     //设置userInfo
+    self.userInfoView.userInteractionEnabled = NO;
     self.userInfoView.userAuthLabel.text = self.cellModel.user.userAuthInfo;
     self.userInfoView.userName.font = [UIFont themeFontMedium:14];
     [self.userInfoView refreshWithData:self.cellModel];

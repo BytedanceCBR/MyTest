@@ -15,6 +15,7 @@
 #import "FHNeighborhoodDetailPostCell.h"
 #import "FHNeighborhoodDetailSpaceCell.h"
 #import "FHNeighborhoodDetailCommentTagsCell.h"
+#import "TTAccountManager.h"
 
 @interface FHNeighborhoodDetailCommentAndQuestionSC () <IGListSupplementaryViewSource, IGListDisplayDelegate>
 
@@ -83,7 +84,6 @@
 {
     FHNeighborhoodDetailCommentAndQuestionSM *model = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
     id cellModel = model.items[index];
-
     if([cellModel isKindOfClass:[FHNeighborhoodDetailCommentHeaderModel class]]){
         FHNeighborhoodDetailCommentHeaderCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailCommentHeaderCell class] withReuseIdentifier:@"FHNeighborhoodDetailCommentHeaderCell" forSectionController:self atIndex:index];
         [cell refreshWithData:cellModel];
@@ -95,11 +95,7 @@
     }else if([cellModel isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *feedCellModel = (FHFeedUGCCellModel *)cellModel;
         if (feedCellModel.cellType == FHUGCFeedListCellTypeUGC) {
-            __weak typeof(self) weakSelf = self;
             FHNeighborhoodDetailPostCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPostCell class] withReuseIdentifier:@"FHNeighborhoodDetailPostCell" forSectionController:self atIndex:index];
-            [cell setClickLinkBlock:^(FHFeedUGCCellModel * _Nonnull model, NSURL * _Nonnull url) {
-                [weakSelf gotoLinkUrl:model url:url];
-            }];
             [cell refreshWithData:cellModel];
             return cell;
         } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer || feedCellModel.cellType == FHUGCFeedListCellTypeQuestion) {
@@ -120,16 +116,138 @@
     return [super defaultCellAtIndex:index];
 }
 
+- (void)goCommentList:(FHNeighborhoodDetailCommentHeaderModel *)dataModel {
+    if(!isEmptyString(dataModel.commentsListSchema)){
+        NSURL *url = [NSURL URLWithString:dataModel.commentsListSchema];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"neighborhood_id"] = dataModel.neighborhoodId;
+        dict[@"title"] = dataModel.title;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[UT_ORIGIN_FROM] = dataModel.detailTracerDic[@"origin_from"] ?: @"be_null";
+        tracerDict[UT_ENTER_FROM] = dataModel.detailTracerDic[@"page_type"] ?: @"be_null";
+        tracerDict[UT_LOG_PB] = dataModel.detailTracerDic[@"log_pb"] ?: @"be_null";
+        tracerDict[@"from_gid"] = dataModel.neighborhoodId;
+        dict[TRACER_KEY] = tracerDict;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+}
 
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
+//    FHNeighborhoodDetailCommentAndQuestionSM *model = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
+//    id cellModel = model.items[index];
+//    if([cellModel isKindOfClass:[FHFeedUGCCellModel class]]){
+
+//    }
     FHNeighborhoodDetailCommentAndQuestionSM *model = (FHNeighborhoodDetailCommentAndQuestionSM *)self.sectionModel;
     id cellModel = model.items[index];
+    if([cellModel isKindOfClass:[FHNeighborhoodDetailCommentHeaderModel class]]){
+        FHNeighborhoodDetailCommentHeaderModel *dataModel = (FHNeighborhoodDetailCommentHeaderModel *)cellModel;
+        [self goCommentList:dataModel];
+    }
     if([cellModel isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *feedCellModel = (FHFeedUGCCellModel *)cellModel;
-        [self.detailJumpManager jumpToDetail:feedCellModel showComment:NO enterType:@"feed_content_blank"];
+        if (feedCellModel.cellType == FHUGCFeedListCellTypeUGC) {
+            id moreListModel = model.items[0];
+            if ([moreListModel isKindOfClass:[FHNeighborhoodDetailCommentHeaderModel class]]) {
+                FHNeighborhoodDetailCommentHeaderModel *dataModel = (FHNeighborhoodDetailCommentHeaderModel *)moreListModel;
+                [self goCommentList:dataModel];
+            };
+        } else if (feedCellModel.cellType == FHUGCFeedListCellTypeAnswer || feedCellModel.cellType == FHUGCFeedListCellTypeQuestion) {
+            for ( id cellModel in model.items) {
+                if([cellModel isKindOfClass:[FHNeighborhoodDetailQuestionHeaderModel class]]){
+                    FHNeighborhoodDetailQuestionHeaderModel *dataModel = (FHNeighborhoodDetailQuestionHeaderModel *)cellModel;
+                    [self questionHeaderModelAction:dataModel];
+                }
+            }
+        }
+    }
+    if([cellModel isKindOfClass:[FHNeighborhoodDetailCommentTagsModel class]]){
+        id moreListModel = model.items[0];
+        if ([moreListModel isKindOfClass:[FHNeighborhoodDetailCommentHeaderModel class]]) {
+            FHNeighborhoodDetailCommentHeaderModel *dataModel = (FHNeighborhoodDetailCommentHeaderModel *)moreListModel;
+            [self goCommentList:dataModel];
+        };
+    }
+    if([cellModel isKindOfClass:[FHNeighborhoodDetailQuestionHeaderModel class]]){
+        FHNeighborhoodDetailQuestionHeaderModel *dataModel = (FHNeighborhoodDetailQuestionHeaderModel *)cellModel;
+        [self questionHeaderModelAction:dataModel];
     }
 }
+
+- (void)questionHeaderModelAction:( FHNeighborhoodDetailQuestionHeaderModel *)dataModel {
+    if (!dataModel.isEmpty) {
+        [self goQuestionList:dataModel];
+    }else {
+        [self gotoWendaPublish:dataModel];
+    }
+    
+}
+
+- (void)goQuestionList:( FHNeighborhoodDetailQuestionHeaderModel *)dataModel {
+    if(!isEmptyString(dataModel.questionListSchema)){
+        NSURL *url = [NSURL URLWithString:dataModel.questionListSchema];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        dict[@"neighborhood_id"] = dataModel.neighborhoodId;
+        dict[@"title"] = dataModel.title;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[UT_ORIGIN_FROM] = dataModel.detailTracerDic[@"origin_from"] ?: @"be_null";
+        tracerDict[UT_ENTER_FROM] = dataModel.detailTracerDic[@"page_type"] ?: @"be_null";
+        tracerDict[UT_LOG_PB] = dataModel.detailTracerDic[@"log_pb"] ?: @"be_null";
+        tracerDict[@"from_gid"] = dataModel.neighborhoodId;
+        dict[TRACER_KEY] = tracerDict;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+}
+
+- (void)gotoWendaPublish:(FHNeighborhoodDetailQuestionHeaderModel *)dataModel {
+    if ([TTAccountManager isLogin]) {
+        [self gotoWendaVC:dataModel];
+    } else {
+        [self gotoLogin:dataModel];
+    }
+}
+
+- (void)gotoWendaVC:(FHNeighborhoodDetailQuestionHeaderModel *)dataModel {
+//    FHNeighborhoodDetailQuestionHeaderModel *cellModel = (FHNeighborhoodDetailQuestionHeaderModel *)self.currentData;
+    if(!isEmptyString(dataModel.questionWriteSchema)){
+        NSURLComponents *components = [[NSURLComponents alloc] initWithString:dataModel.questionWriteSchema];
+        NSMutableDictionary *dict = @{}.mutableCopy;
+        NSMutableDictionary *tracerDict = @{}.mutableCopy;
+        tracerDict[UT_ENTER_FROM] = dataModel.detailTracerDic[@"page_type"];
+        tracerDict[UT_LOG_PB] = dataModel.detailTracerDic[@"log_pb"] ?: @"be_null";
+        tracerDict[UT_ELEMENT_FROM] = @"neighborhood_question";
+        dict[TRACER_KEY] = tracerDict;
+        dict[@"neighborhood_id"] = dataModel.neighborhoodId;
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
+    }
+}
+
+- (void)gotoLogin:(FHNeighborhoodDetailQuestionHeaderModel *)dataModel {
+//    FHNeighborhoodDetailQuestionHeaderModel *cellModel = (FHNeighborhoodDetailQuestionHeaderModel *)self.currentData;
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    NSString *page_type = dataModel.detailTracerDic[@"page_type"] ?: @"be_null";
+    [params setObject:page_type forKey:@"enter_from"];
+    [params setObject:@"click_publisher" forKey:@"enter_type"];
+    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
+    [params setObject:@(YES) forKey:@"need_pop_vc"];
+    params[@"from_ugc"] = @(YES);
+    __weak typeof(self) wSelf = self;
+    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
+        if (type == TTAccountAlertCompletionEventTypeDone) {
+            // 登录成功
+            if ([TTAccountManager isLogin]) {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    [wSelf gotoWendaVC:dataModel];
+                });
+            }
+        }
+    }];
+}
+
 
 #pragma mark - IGListSupplementaryViewSource
 - (NSArray<NSString *> *)supportedElementKinds
