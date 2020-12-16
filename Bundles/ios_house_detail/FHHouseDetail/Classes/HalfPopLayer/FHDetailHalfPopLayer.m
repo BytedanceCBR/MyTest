@@ -18,7 +18,6 @@
 #import "FHDetailHalfPopInfoCell.h"
 #import "FHDetailHalfPopDealCell.h"
 #import "FHDetailHalfPopDealFooter.h"
-#import "FHDetailCheckHeader.h"
 #import <TTBaseLib/UIViewAdditions.h>
 #import <FHHouseBase/FHUserTracker.h>
 
@@ -226,24 +225,6 @@
     
 }
 
--(void)showDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)data trackInfo:(NSDictionary *)trackInfo
-{
-    self.data = data;
-    self.trackInfo = trackInfo;
-    self.enterDate = [NSDate date];
-//    [self addShowLog:@"happiness_show"];
-    
-    FHDetailHalfPopLogoHeader *header = [self header];
-    
-    [header updateWithTitle:data.dialogs.title tip:data.dialogs.subTitle imgUrl:data.dialogs.icon];
-    
-    [_footer showTip:data.dialogs.feedbackContent type:FHDetailHalfPopFooterTypeChoose positiveTitle:@"是" negativeTitle:@"否"];
-    
-    self.tableView.tableHeaderView = header;
-    
-    [self.tableView reloadData];
-}
-
 - (void)showDetectiveReasonInfoData:(FHDetailDataBaseExtraDetectiveReasonInfo *)data trackInfo:(NSDictionary *)trackInfo
 {
     self.data = data;
@@ -391,9 +372,6 @@
 {
     if ([self.data isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
         return 2;
-    }else if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        FHDetailDataBaseExtraDetectiveModel *detectiveModel = (FHDetailDataBaseExtraDetectiveModel *)self.data;
-        return detectiveModel.detectiveInfo.detectiveList.count;
     }else if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]){
         FHDetailDataBaseExtraDetectiveReasonInfo *reasonInfo = (FHDetailDataBaseExtraDetectiveReasonInfo *)self.data;
         return reasonInfo.reasonList.count;
@@ -424,15 +402,6 @@
             
             cell = ccell;
         }
-        
-    }else if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-     
-        FHDetailDataBaseExtraDetectiveModel *detectiveModel = (FHDetailDataBaseExtraDetectiveModel *)self.data;
-        FHDetailDataBaseExtraDetectiveDetectiveInfoDetectiveListModel * infoModel = detectiveModel.detectiveInfo.detectiveList[indexPath.row];
-        FHDetailHalfPopInfoCell *cicell = (FHDetailHalfPopInfoCell *)[tableView dequeueReusableCellWithIdentifier:CHECK_INFO_CELL];
-        [cicell updateWithModel:infoModel];
-        
-        cell = cicell;
         
     }else if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]){
         
@@ -466,9 +435,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]) {
-        return 30;
-    }else if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
+    if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
         return 20;
     }else if ([self.data isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         
@@ -480,15 +447,12 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]) {
-        return 25;
-    }
     return CGFLOAT_MIN;
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]] || [self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
+    if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]) {
         UIView *v = [[UIView alloc]init];
         v.backgroundColor = [UIColor whiteColor];
         return v;
@@ -502,14 +466,7 @@
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if ([self.data isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]) {
-        FHDetailCheckHeader *header = [[FHDetailCheckHeader alloc]init];
-        header.titleLabel.text = [(FHDetailDataBaseExtraDetectiveModel *)self.data detectiveInfo].title;
-        return header;
-    }
- //
     return nil;
-    
 }
 
 /*

@@ -96,23 +96,23 @@
     WeakSelf;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
-        __block CGFloat vHeight = 65;
+        __block CGFloat vHeight = 74;
         __block CGFloat marginTop = 0;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             StrongSelf;
-            if (obj.realtorScoreDescription.length > 0 && obj.realtorScoreDisplay.length > 0 && obj.realtorTags.count > 0) {
-                vHeight = 90;
+            if (obj.realtorScoreDisplay.length > 0 && obj.realtorTags.count > 0) {
+                vHeight = 86;
             }else {
-                vHeight = 65;
+                vHeight = 74;
             }
-            FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj topMargin:15];
+            FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj topMargin:12 frame:CGRectMake(0, marginTop, CGRectGetWidth(self.containerView.bounds), vHeight)];
             // 添加事件
             itemView.tag = idx;
-            itemView.licenseIcon.tag = idx;
+            itemView.licenseButton.tag = idx;
             itemView.callBtn.tag = idx;
             itemView.imBtn.tag = idx;
             [itemView addTarget:self action:@selector(cellClick:) forControlEvents:UIControlEventTouchUpInside];
-            [itemView.licenseIcon addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
+            [itemView.licenseButton addTarget:self action:@selector(licenseClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.callBtn addTarget:self action:@selector(phoneClick:) forControlEvents:UIControlEventTouchUpInside];
             [itemView.imBtn addTarget:self action:@selector(imclick:) forControlEvents:UIControlEventTouchUpInside];
             
@@ -124,30 +124,6 @@
             }];
             marginTop = marginTop +vHeight;
 
-            itemView.name.text = obj.realtorName;
-            itemView.agency.text = obj.agencyName;
-            /// 如果门店信息和从业资格都为空则不展示名字右侧的分割线
-            BOOL hideVSepLine = obj.agencyName.length == 0 && obj.certificate.length == 0;
-            itemView.vSepLine.hidden = hideVSepLine;
-            [itemView.avatorView updateAvatarWithModel:obj];
-            /// 北京商业化开城需求的新样式，这个优先级更高
-            BOOL showNewLicenseStyle = [self shouldShowNewLicenseStyle:obj];
-            if (showNewLicenseStyle) {
-                NSURL *iconURL = [NSURL URLWithString:obj.certification.iconUrl];
-                [itemView configForNewLicenseIconStyle:showNewLicenseStyle imageURL:iconURL];
-            } else {
-                BOOL isLicenceIconHidden = ![self shouldShowContact:obj];
-                [itemView configForLicenceIconWithHidden:isLicenceIconHidden];
-            }
-            if(obj.realtorEvaluate.length > 0) {
-                itemView.realtorEvaluate.text = obj.realtorEvaluate;
-            }
-            if(obj.realtorScoreDisplay.length > 0) {
-                  itemView.score.text = obj.realtorScoreDisplay;
-              }
-            if(obj.realtorScoreDescription.length > 0) {
-                  itemView.scoreDescription.text = obj.realtorScoreDescription;
-              }
             itemsCount += 1;
         }];
     }
@@ -357,9 +333,9 @@
             for (int i = 0; i<3; i++) {
                 FHDetailContactModel *showModel = (FHDetailContactModel*) model.recommendedRealtors[i];
                 if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
-                    showHeight = showHeight + 90;
+                    showHeight = showHeight + 86;
                 }else {
-                    showHeight = showHeight + 65;
+                    showHeight = showHeight + 74;
                 };
             }
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -371,9 +347,9 @@
             [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailContactModel *showModel = obj;
             if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
-                     showHeight = showHeight + 90;
+                     showHeight = showHeight + 86;
                  }else {
-                     showHeight = showHeight + 65;
+                     showHeight = showHeight + 74;
                  };
             }];
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -392,9 +368,9 @@
              FHDetailContactModel *showModel = obj;
          if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
              //二手房的经纪人一般会展示tag，新房顾问没有
-                  showHeight = showHeight + 90;
+                  showHeight = showHeight + 86;
               }else {
-                  showHeight = showHeight + 65;
+                  showHeight = showHeight + 74;
               };
          }];
          [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -424,9 +400,9 @@
     for (int m = 0; m <model.recommendedRealtors.count; m++) {
         FHDetailContactModel *showModel = model.recommendedRealtors[m];
         if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
-            showHeight = showHeight + 90;
+            showHeight = showHeight + 86;
         }else {
-            showHeight = showHeight + 65;
+            showHeight = showHeight + 74;
         };
         if (UIScreen.mainScreen.bounds.size.height - point.y > showHeight) {
             NSInteger showCount = model.isFold ? MIN(m, 2):MIN(model.recommendedRealtors.count, m);

@@ -522,19 +522,6 @@
     [self trackClickOptions:title];
 }
 
-- (void)bottomBannerViewDidShow {
-    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
-    NSMutableDictionary *param = [NSMutableDictionary new];
-    param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
-    param[UT_PAGE_TYPE] = tracerDict[UT_PAGE_TYPE] ? : UT_BE_NULL;
-    param[UT_ELEMENT_FROM] = tracerDict[UT_ELEMENT_FROM] ? : UT_BE_NULL;
-    param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM] ? : UT_BE_NULL;
-    param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID] ? : UT_BE_NULL;
-    param[UT_LOG_PB] = tracerDict[UT_LOG_PB] ? : UT_BE_NULL;
-    TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
-}
-
-
 //进入图片页面页
 - (void)goToPictureListFrom:(NSString *)from {
     [self enterPictureShowPictureWithIndex:NSUIntegerMax from:from];

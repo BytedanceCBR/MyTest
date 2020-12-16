@@ -483,7 +483,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         NSMutableDictionary *extraDic = @{@"realtor_position":@"phone_button",
                                           @"position":@"report_button",
                                           @"element_from":[self elementFrom],
-                                          @"picture_type": self.currentTypeName?:@"be_null"
+                                          @"picture_type": self.currentTypeName?:@"be_null",
+                                          @"enter_type": @"click_button"
                                           }.mutableCopy;
         NSString *vid = [self videoId];
         if ([vid length] > 0) {

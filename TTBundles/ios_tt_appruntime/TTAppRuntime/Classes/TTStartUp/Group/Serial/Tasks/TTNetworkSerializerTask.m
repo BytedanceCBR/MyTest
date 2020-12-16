@@ -224,15 +224,18 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     //        }
     //    };
     
+    [[TTAccount accountConf] setNeedTokenDomins:@[@"i.haoduofangs.com",@"dm.haoduofangs.com", @"dm-lq.haoduofangs.com", @"dm-hl.haoduofangs.com"]];
+    [[TTAccount accountConf] setAddtionalTokenDomins:@[@"i.haoduofangs.com",@"dm.haoduofangs.com", @"dm-lq.haoduofangs.com", @"dm-hl.haoduofangs.com"]];
+    
     //在[[TTNetworkManager shareInstance] start];之前加以下代码
     //通过TTNet 的 requestFilterBlock在header 中添加token
-    [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request){
+    [[TTNetworkManager shareInstance] setEnableReqFilter:YES];
+    [[TTNetworkManager shareInstance] addRequestFilterBlock:^(TTHttpRequest *request) {
         [TTAccount addTokenToRequest:request];
-        
         // 设置BOE请求头
         BOOL isBOE = [TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"BOE_OPEN_KEY"];
-        if(isBOE) {
-            [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request) {
+        if (isBOE) {
+            [[TTNetworkManager shareInstance] addRequestFilterBlock:^(TTHttpRequest *request) {
                 NSMutableDictionary *headers = [NSMutableDictionary dictionary];
                 if(request.allHTTPHeaderFields.count) {
                     [headers addEntriesFromDictionary:request.allHTTPHeaderFields];
@@ -240,12 +243,29 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
                 [headers setObject:@"prod" forKey:@"X-Tt-Env"];
                 [headers setObject:@"1" forKey:@"X-Use-Boe"];
                 request.allHTTPHeaderFields = headers;
-            };
+            }];
         }
-    };
+    }];
+//    [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request){
+//        [TTAccount addTokenToRequest:request];
+//
+//        // 设置BOE请求头
+//        BOOL isBOE = [TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"BOE_OPEN_KEY"];
+//        if(isBOE) {
+//            [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request) {
+//                NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+//                if(request.allHTTPHeaderFields.count) {
+//                    [headers addEntriesFromDictionary:request.allHTTPHeaderFields];
+//                }
+//                [headers setObject:@"prod" forKey:@"X-Tt-Env"];
+//                [headers setObject:@"1" forKey:@"X-Use-Boe"];
+//                request.allHTTPHeaderFields = headers;
+//            };
+//        }
+//    };
     
     //更新token及过期设置:过期判断取决于业务方业务，如果业务方没有踢人操作的话，只需要根据下面进行设置
-    [TTNetworkManager shareInstance].responseFilterBlock = ^(TTHttpRequest *request, TTHttpResponse *response, id data, NSError *responseError) {
+    [[TTNetworkManager shareInstance] addResponseFilterBlock:^(TTHttpRequest *request, TTHttpResponse *response, id data, NSError *responseError) {
         BOOL sessionExpired = NO;
         if ([data isKindOfClass:[NSData class]]) {
 //            if ([(NSData *)data length] > 300) {
@@ -268,8 +288,11 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
             [[TTMonitor shareManager] trackService:@"session_expired" status:1 extra:response.allHeaderFields];
         }
         [TTAccount setXTokenWithResponse:response responseError:responseError sessionHasExpired:sessionExpired];
-        //[BDAccountSessionXTTToken setXTokenWithResponse:response responseError:responseError sessionHasExpired:sessionExpired];
-    };
+    }];
+//    [TTNetworkManager shareInstance].responseFilterBlock = ^(TTHttpRequest *request, TTHttpResponse *response, id data, NSError *responseError) {
+//
+//        //[BDAccountSessionXTTToken setXTokenWithResponse:response responseError:responseError sessionHasExpired:sessionExpired];
+//    };
     
     if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
         //设置BOE环境和白名单 https://wiki.bytedance.net/pages/viewpage.action?pageId=336579929
