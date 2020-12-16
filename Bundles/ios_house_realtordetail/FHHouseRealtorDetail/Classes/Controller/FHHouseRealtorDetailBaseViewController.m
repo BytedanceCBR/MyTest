@@ -34,7 +34,6 @@
             _tableView.estimatedSectionFooterHeight = 0;
             _tableView.estimatedSectionHeaderHeight = 0;
         }
-        _tableView.estimatedRowHeight = UITableViewAutomaticDimension;
         _tableView.estimatedSectionFooterHeight = 0;
         _tableView.estimatedSectionHeaderHeight = 0;
         _tableView.scrollEnabled = NO;
