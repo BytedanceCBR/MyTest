@@ -231,11 +231,10 @@
     }
     
     NSMutableDictionary *tracer = self.detailTracerDict.mutableCopy;
+    tracer[UT_ELEMENT_FROM] = @"top_map";
+    tracer[UT_ENTER_FROM] = @"neighborhood_detail";
+    tracer[UT_ELEMENT_TYPE] = @"be_null";
     
-    [tracer setObject:@"map_detail" forKey:@"page_type"];
-    [tracer setValue:@"top_map" forKey:@"element_from"];
-    [tracer setObject:@"neighborhood_detail" forKey:@"enter_from"];
-    [tracer setObject:@"be_null" forKey:@"element_type"];
     [infoDict setValue:tracer forKey:@"tracer"];
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];

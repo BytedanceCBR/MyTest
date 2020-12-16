@@ -74,7 +74,7 @@ static MAMapView *kFHPageMapView = nil;
 @implementation FHDetailMapPageViewController
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
-    self = [super init];
+    self = [super initWithRouteParamObj:paramObj];
     if (self) {
         TTRouteUserInfo *userInfo = paramObj.userInfo;
         self.searchApi = [[AMapSearchAPI alloc] init];
@@ -136,7 +136,7 @@ static MAMapView *kFHPageMapView = nil;
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[UT_PAGE_TYPE] = @"map_detail";
     tracerDict[UT_ELEMENT_TYPE] = @"be_null";
-    [FHEnvContext recordEvent:tracerDict.copy andEventKey:@"enter_map"];
+    [FHUserTracker writeEvent:@"enter_map" params:tracerDict.copy];
     // Do any additional setup after loading the view.
 }
 

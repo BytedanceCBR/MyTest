@@ -49,6 +49,7 @@
     tracer[@"click_type"] = clickType ?: @"be_null";
     tracer[UT_ELEMENT_FROM] = @"map";
     tracer[UT_ENTER_FROM] = tracer[@"page_type"] ?: @"be_null";
+    tracer[UT_ELEMENT_TYPE] = @"be_null";
     [infoDict setValue:tracer forKey:@"tracer"];
 
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
