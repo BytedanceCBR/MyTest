@@ -152,14 +152,22 @@
     [self refreshBadgeNumber];
 }
 
-#pragma -- IMChatMessageUnreadCountObserver --
-- (void)onMessageUnreadCountChanged:(NSInteger)unreadCount {
+- (void)setUnreadChatMsgCount:(NSUInteger)unreadCount {
     if (unreadCount < 0) {
         return;
     }
     self.unreadChatMsgCount = unreadCount;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHChatMessageUnreadChangedNotification" object:nil];
     [self refreshBadgeNumber];
+}
+#pragma -- IMChatMessageUnreadCountObserver --
+- (void)onMessageUnreadCountChanged:(NSInteger)unreadCount {
+    // 不使用SDK发过来的未读数
+    // [self setUnreadChatMsgCount:unreadCount];
+    
+}
+- (void)clearAllMessageUnreadCount {
+    [self setUnreadChatMsgCount:0];
 }
 
 -(void)reduceSystemMessageTabBarBadgeNumber:(NSInteger)reduce {

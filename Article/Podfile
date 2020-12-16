@@ -3,7 +3,7 @@ gem 'bd_pod_extentions'
 
 require 'bd_pod_extentions'
 install! 'cocoapods', :warn_for_multiple_pod_sources => false,:deterministic_uuids => false
-
+bd_ignore_deprecated!
 showCode!
 
 # 用于开启Pods的源码与二进制快速转化服务
@@ -72,6 +72,7 @@ def fhPods
     pod 'ios_house_im' , :path => '../../../im/bugfix', :inhibit_warnings => false
 #   pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '0ca8e1cb59b482f7f257335b21ecdeab6198bd9c', :inhibit_warnings => false
 #   pod 'ios_house_im' ,'0.10.0.0-alpha.2', :inhibit_warnings => false
+
 
 end
 
