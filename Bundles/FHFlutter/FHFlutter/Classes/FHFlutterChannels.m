@@ -120,7 +120,7 @@
     if (tempNeighborhoodViewModel && tempAssociateViewModel) {
 
         NSMutableDictionary *extraDic = @{
-            @"realtor_position": @"detail_button",
+            @"position": @"button",
             @"enter_from": @"neighborhood_detail",
             @"element_from": @"average_price",
             @"page_type": @"average_price_detail",
