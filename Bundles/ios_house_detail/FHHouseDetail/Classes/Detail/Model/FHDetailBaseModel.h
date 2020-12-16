@@ -138,7 +138,6 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 @property (nonatomic, copy , nullable) NSString *reportButtonText;
 @property (nonatomic, assign) FHRealtorType realtorType;
 @property (nonatomic, assign) FHRealtorCellShowStyle realtorCellShow;
-@property (nonatomic, copy , nullable) NSString *realtorEvaluate;
 @property (nonatomic, strong , nullable) NSArray<FHRealtorTag> *realtorTags;
 
 @property (nonatomic, assign) BOOL unregistered; //是否是注册经济人
@@ -155,6 +154,9 @@ typedef NS_ENUM(NSUInteger, FHRealtorCellShowStyle) {
 
 //1.0.7 紧急需求：北京商业化开城
 @property (nonatomic, strong , nullable) FHContactCertificationModel *certification;
+
+//1.1.3 新增经纪人 小区/商圈 熟悉度
+@property (nonatomic, copy, nullable) NSString *neighborhoodScoreDisplay;
 @end
 
 

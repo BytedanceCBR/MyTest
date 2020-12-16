@@ -64,7 +64,6 @@
     self.articleCardView = [[FHLynxView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 42, 0)];
     self.articleCardView.lynxDelegate = self;
     [self.cardBac addSubview:self.articleCardView];
-
 }
 
 - (void)reloadDataWithDic:(NSDictionary *)dic {

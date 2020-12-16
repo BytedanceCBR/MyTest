@@ -20,6 +20,7 @@
 #import "NSDictionary+TTAdditions.h"
 #import "NSObject+FHTracker.h"
 #import <ByteDanceKit.h>
+#import "FHSuggestionDefines.h"
 
 @interface FHHomeSearchPanelView()
 @property(nonatomic, strong) UIImageView * bgView;
@@ -172,7 +173,7 @@
     NSMutableDictionary *infos = [NSMutableDictionary new];
     infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);
     infos[@"tracer"] = tracerParams;
-    infos[@"from_home"] = @(1);
+    infos[@"from_home"] = @(FHEnterSuggestionTypeHome);
     if (self.searchTitleIndex >= 0 && self.searchTitleIndex < self.rollDatas.count) {
         FHHomeRollDataDataModel *model = self.rollDatas[self.searchTitleIndex];
         if (model.detail.count > 0) {
