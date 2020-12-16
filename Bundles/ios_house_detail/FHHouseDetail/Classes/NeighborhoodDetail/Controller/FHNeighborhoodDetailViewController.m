@@ -109,7 +109,7 @@
 - (void)initMapping {
     
     NSArray *name = @[@"小区概况",
-                      @"小区信息",
+                      @"基础信息",
                       @"小区专家",
                       @"小区点评",
                       @"小区测评",
@@ -132,6 +132,30 @@
     
     self.names = name.copy;
     self.types = type.copy;
+}
+
+- (NSString *)nameToEn:(NSString *)name {
+    /**
+     {"neighborhood_summary":"小区概况","test_evaluate":"小区测评","basic_info":"基础信息","related":"周边配套","neighborhood_model":"小区户型","sale_house":"在售房源","evaluate":"小区点评","neighborhood_expert":"小区专家","related_neighborhood":"周边小区","related_house":"周边房源","search_related":"猜你喜欢","neighborhood_info":"小区信息"}
+     */
+    static NSDictionary *enDict = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSDictionary *enDict = @{
+            @"小区概况": @"neighborhood_summary",
+            @"基础信息": @"basic_info",
+            @"小区专家": @"neighborhood_expert",
+            @"小区点评": @"evaluate",
+            @"小区测评": @"test_evaluate",
+            @"周边配套": @"related",
+            @"小区户型": @"neighborhood_model",
+            @"周边小区": @"related_neighborhood",
+            @"周边房源": @"related_house",
+            @"猜你喜欢": @"search_related"
+        };
+    });
+
+    return [enDict btd_stringValueForKey:name default:@"be_null"];
 }
 //这个只会是一对一
 - (NSString *)getTabNameBySectionType:(FHNeighborhoodDetailSectionType)sectionType {
@@ -924,7 +948,7 @@
     
     NSMutableDictionary *tracerDic = self.tracerDict.mutableCopy;
     tracerDic[UT_ENTER_TYPE] = enterType;
-    tracerDic[@"tab_name"] = [self getTabNameBySectionType:sectionType];
+    tracerDic[@"tab_name"] = [self nameToEn:[self getTabNameBySectionType:sectionType]];
     tracerDic[UT_PAGE_TYPE] = [self pageTypeString];
     tracerDic[UT_ELEMENT_FROM] = @"be_null";
     tracerDic[UT_ELEMENT_TYPE] = @"top_navigation_bar";
