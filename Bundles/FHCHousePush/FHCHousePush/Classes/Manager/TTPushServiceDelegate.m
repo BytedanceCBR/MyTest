@@ -256,11 +256,15 @@ API_AVAILABLE(ios(10.0))
 - (void)bdug_handleRemoteNotification:(BDUGNotificationContent *)content withCompletionHandler:(void (^)(void))completionHandler
 {
     if (content.userInfo != nil) {
+        // push点击跳转进入应用时不展示开屏广告
         [TTAdSplashManager shareInstance].splashADShowType = TTAdSplashShowTypeHide;
     }
     // todo zjing badge & coldLaunch
     [SharedAppDelegate setIsColdLaunch:NO];
-    [UIApplication sharedApplication].applicationIconBadgeNumber = [[content.userInfo objectForKey:@"badge"] integerValue];
+    /**
+     修复push点击拉起app后清空通知中心列表问题
+     */
+//    [UIApplication sharedApplication].applicationIconBadgeNumber = [[content.userInfo objectForKey:@"badge"] integerValue];
 
     if (@available(iOS 10.0, *)) {
         if ([content.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {

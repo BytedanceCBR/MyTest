@@ -18,6 +18,7 @@
 #import "FHEnvContext.h"
 #import "HMSegmentedControl.h"
 #import "NSObject+FHTracker.h"
+#import "FHSuggestionDefines.h"
 
 #define BTN_WIDTH  24
 #define BG_LAYER_HEIGHT 100
@@ -278,7 +279,7 @@
         NSMutableDictionary *infos = [NSMutableDictionary new];
         infos[@"house_type"] = @(self.houseType);
         infos[@"tracer"] = tracerParams;
-        infos[@"from_home"] = @(1);
+        infos[@"from_home"] = @(FHEnterSuggestionTypeMapSearch);
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
         [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_search"] userInfo:userInfo];
     }

@@ -284,7 +284,8 @@
 #pragma mark - TTUIViewControllerTrackProtocol
 
 - (void)trackEndedByAppWillEnterBackground {
-    
+    ///进入后台时，首页和我的tab缺少stay_tab埋点
+    [self addStayCategoryLog:self.ttTrackStayTime];
 }
 
 - (void)trackStartedByAppWillEnterForground {

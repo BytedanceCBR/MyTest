@@ -67,10 +67,6 @@
         //登录相关埋点均使用的tracerDict
         NSDictionary *params = paramObj.allParams;
         self.needPopVC = YES;
-        if (params[@"enter_from"]) {
-            self.tracerModel.enterFrom = params[@"enter_from"];
-            self.tracerDict[@"enter_from"] = params[@"enter_from"];
-        }
         if (params[@"enter_type"]) {
             self.tracerModel.enterType = params[@"enter_type"];
             if (!self.tracerDict[@"enter_method"]) {
