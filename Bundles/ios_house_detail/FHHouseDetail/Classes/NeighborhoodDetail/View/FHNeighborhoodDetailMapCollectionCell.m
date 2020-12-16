@@ -42,7 +42,7 @@
 @implementation FHNeighborhoodDetailMapCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, width/16.0*9.0);
+    return CGSizeMake(width, ceil(width/16.0*9.0));
 }
 
 - (NSString *)elementType {
