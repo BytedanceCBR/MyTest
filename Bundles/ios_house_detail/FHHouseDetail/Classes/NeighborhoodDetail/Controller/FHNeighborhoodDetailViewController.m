@@ -632,7 +632,6 @@
     }
 
     if ([call.callState isEqualToString:CTCallStateDisconnected]) {
-        [self checkShowSocialAlert];
         self.isPhoneCalled = NO;
     } else if ([call.callState isEqualToString:CTCallStateConnected]) {
         //通话中
@@ -644,17 +643,6 @@
         self.isPhoneCalled = YES;
     } else {
         //doNothing
-    }
-}
-
-- (void)checkShowSocialAlert
-{
-    // 新房留资后弹窗
-    if (self.isPhoneCalled) {
-        self.isPhoneCalled = NO;
-        [self.viewModel.contactViewModel checkSocialPhoneCall];
-    } else {
-        self.viewModel.contactViewModel.socialContactConfig = nil;
     }
 }
 

@@ -1427,6 +1427,10 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)isEnableHouseDetailNativeReport;
 // 是否使用link chat页面
 + (BOOL)isEnableLinkChatPage;
+
+// 表单线索提交是有优化体验 form_associate_verify
++ (BOOL)isEnableVerifyFormAssociate;
+
 @end
 
 @interface SSCommonLogic (FHShare)

@@ -288,20 +288,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL showSkyEyeLogo;
 @end
 
-@interface FHDetailDataBaseExtraDetectiveModel : JSONModel
-
-@property (nonatomic, copy , nullable) NSString *content;
-@property (nonatomic, copy , nullable) NSString *baseTitle;
-@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDetectiveDetectiveInfoModel *detectiveInfo ;
-@property (nonatomic, copy , nullable) NSString *warnContent;
-@property (nonatomic, copy , nullable) NSString *icon;
-@property (nonatomic, copy , nullable) NSString *tips;
-@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDialogsModel *dialogs ;
-@property (nonatomic, assign) BOOL fromDetail;
-
-@end
-
-
 @interface FHDetailDataBaseExtraOfficialAgencyModel : JSONModel
 
 @property (nonatomic, copy , nullable) NSString *content;
@@ -371,7 +357,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailDataBaseExtraModel : JSONModel
 
-@property (nonatomic, strong , nullable) FHDetailDataBaseExtraDetectiveModel *detective;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraOfficialModel *official;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraBudgetModel *budget;
 @property (nonatomic, strong , nullable) FHDetailDataBaseExtraFloorInfoModel *floorInfo;
