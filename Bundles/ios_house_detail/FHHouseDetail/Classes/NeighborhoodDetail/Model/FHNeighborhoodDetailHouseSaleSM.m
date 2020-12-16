@@ -19,6 +19,8 @@
         id obj = [FHHouseCardUtils getEntityFromModel:item];
         if (obj && [obj isKindOfClass:[FHHouseSecondCardViewModel class]]) {
             FHHouseSecondCardViewModel *model = (FHHouseSecondCardViewModel *)obj;
+            model.tagListMaxWidth = SCREEN_WIDTH - 21 * 2 - 90 - 8;
+            [model cutTagListWithFont:[UIFont themeFontRegular:10]];
             [model setTitleMaxWidth:SCREEN_WIDTH - 30 * 2 - 84 - 8 + 18];
             [arrayM addObject:obj];
         }
