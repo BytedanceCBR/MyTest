@@ -9,7 +9,7 @@
 #import "FHHouseListAPI.h"
 #import "FHSuggestionListModel.h"
 #import "FHChildSuggestionListViewController.h"
-
+#import "FHSuggestionDefines.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

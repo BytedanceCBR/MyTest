@@ -153,22 +153,22 @@
     if (!isEmptyString(threadContent.text)) {
                 CGFloat lineHeight = ceil(16 * 1.4);
         
-             NSMutableAttributedString *userAttrStr = [[NSMutableAttributedString alloc]init];
-                if (model.user.name) {
-                    NSAttributedString *as = [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@说：",model.user.name]];
-                    [userAttrStr appendAttributedString:as];
-                    NSMutableDictionary *attributes = @{}.mutableCopy;
-                    [attributes setValue:[UIColor themeGray2] forKey:NSForegroundColorAttributeName];
-                    [attributes setValue:[UIFont themeFontSemibold:14] forKey:NSFontAttributeName];
-                    NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-                    paragraphStyle.minimumLineHeight = lineHeight;
-                    paragraphStyle.maximumLineHeight = lineHeight;
-                    paragraphStyle.lineSpacing = 2;
-                    paragraphStyle.firstLineHeadIndent = 20;
-                    paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
-                    [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
-                    [userAttrStr addAttributes:attributes range:NSMakeRange(0, userAttrStr.length)];
-                }
+//             NSMutableAttributedString *userAttrStr = [[NSMutableAttributedString alloc]init];
+//                if (model.user.name) {
+//                    NSAttributedString *as = [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@说：",model.user.name]];
+//                    [userAttrStr appendAttributedString:as];
+//                    NSMutableDictionary *attributes = @{}.mutableCopy;
+//                    [attributes setValue:[UIColor themeGray2] forKey:NSForegroundColorAttributeName];
+//                    [attributes setValue:[UIFont themeFontSemibold:14] forKey:NSFontAttributeName];
+//                    NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+//                    paragraphStyle.minimumLineHeight = lineHeight;
+//                    paragraphStyle.maximumLineHeight = lineHeight;
+//                    paragraphStyle.lineSpacing = 2;
+//                    paragraphStyle.firstLineHeadIndent = 20;
+//                    paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
+//                    [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
+//                    [userAttrStr addAttributes:attributes range:NSMakeRange(0, userAttrStr.length)];
+//                }
                 
                 NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:16 topAdjust:1.5];
                 if (attrStr) {
@@ -187,9 +187,9 @@
                     
                     [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
                     
-                    if (userAttrStr) {
-                        [mutableAttributedString insertAttributedString:userAttrStr atIndex:0];
-                    }
+//                    if (userAttrStr) {
+//                        [mutableAttributedString insertAttributedString:userAttrStr atIndex:0];
+//                    }
                     
                     model.contentAStr = mutableAttributedString;
                     
@@ -282,7 +282,10 @@
             CGFloat fontSize = 16.0f;
             UIFont *font = [UIFont themeFontRegular:fontSize];
             CGFloat lineHeight = ceil(fontSize * 1.4);
-
+            if (model.cellSubType == FHUGCFeedListCellSubTypeArticle) {
+                font = [UIFont themeFontSemibold:fontSize];
+                lineHeight = ceil(fontSize * 1.4);
+            }
             NSMutableAttributedString *mutableAttributedString = [attrStr mutableCopy];
             NSMutableDictionary *attributes = @{}.mutableCopy;
             [attributes setValue:[UIColor themeGray1] forKey:NSForegroundColorAttributeName];

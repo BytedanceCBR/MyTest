@@ -48,7 +48,8 @@ def fhPods
     pod 'FHFlutter' , :path => '../Bundles/FHFlutter'
 
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
-    pod 'ios_house_filter' , '1.0.3-rc.0', :inhibit_warnings => false
+#    pod 'ios_house_filter' , '1.0.3-rc.0', :inhibit_warnings => false
+    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '5a224775af42b8dc246f7d492d42da61ce26ae8f'
 
 
 #    pod 'FHCommonUI','0.9.0.4', :inhibit_warnings => false
@@ -68,9 +69,9 @@ def fhPods
 #    'DelegateForC'
 #    ]
     
-#    pod 'ios_house_im' , :path => '../../../im/bugfix', :inhibit_warnings => false
-#   pod 'ios_house_im' ,'0.9.0.20', :inhibit_warnings => false
-pod 'ios_house_im' ,'0.9.0.21', :inhibit_warnings => false
+#   pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
+    pod 'ios_house_im' ,'0.10.0.0-alpha.2', :inhibit_warnings => false
+#   pod 'ios_house_im' ,'0.10.0.0-alpha.1', :inhibit_warnings => false
 
 end
 
@@ -157,7 +158,7 @@ def appPods
     pod 'TTImagePicker', '7.5.5.12'
     pod 'TTImagePickerBase', '1.0.4'
   
-    pod_binary 'SecGuard' , '0.8.16.9'
+    pod_binary 'MetaSecML', '4.1.20'
     
     pod_binary 'IESGeckoKit', '0.4.0'
     pod_binary 'IESWebKit', '0.2.0-rc.3'
@@ -200,7 +201,7 @@ def appPods
     pod_binary 'TTNetworkDownloader','1.0.5'
     pod 'TransBridge-iOS','0.1.6'
 #    pod 'FCFlutterShell' , :path => '../Bundles/f_c_flutter_shell', :inhibit_warnings => false
-    pod_binary 'FCFlutterShell','1.1.3-alpha.5'
+    pod_binary 'FCFlutterShell','1.1.3-rc.1'
     
     
     pod 'BDUGSettingsInterface' , '1.1.0'
@@ -412,7 +413,7 @@ def appPods
 #    'Core',
 #    'Debug',
 #    ]
-    pod 'BDInstall', '1.5.0',:subspecs => [
+    pod 'BDInstall', '1.5.1',:subspecs => [
     	'Core',
     	'IDFA',
     	'URLConfig/China'
@@ -652,7 +653,7 @@ def testPods
     pod 'FHErrorHubManager', '1.0.15'
     pod 'BDiOSDebugBinary', '0.0.4'
     pod 'BDTracker/Debug', '2.5.2'
-    pod 'BDInstall/Debug', '1.5.0'
+    pod 'BDInstall/Debug', '1.5.1'
 end
 
 target 'NewsLiteInHouse' do
@@ -660,8 +661,6 @@ target 'NewsLiteInHouse' do
     fhPods
     appPods
     appDevelopPods
-    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
-
 end
 
 target 'f100InHouse' do
@@ -679,7 +678,6 @@ target 'f100' do
     fhPods
     appPods
     appDevelopPods
-    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
 end
 
 target 'serviceNofExtension' do

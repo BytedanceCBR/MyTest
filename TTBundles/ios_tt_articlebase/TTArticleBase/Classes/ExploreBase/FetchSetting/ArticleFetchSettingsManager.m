@@ -1715,7 +1715,7 @@ static NSString *const kMineTabSellIntroduceStorageKey = @"kMineTabSellIntroduce
     if (now - lastDate > interval) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [ArticleFetchSettingsManager shareInstance].from = @"active";
-            [ArticleFetchSettingsManager startFetchDefaultInfoIfNeed];
+            [ArticleFetchSettingsManager manualForceRefreshDefaultInfoIfNeed];
         });
     }
 }

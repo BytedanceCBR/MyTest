@@ -737,6 +737,16 @@ extern NSString *const BOE_OPEN_KEY ;
     //    }
     
     {
+        STTableViewCellItem *delayTTRouteServiceRegister = [[STTableViewCellItem alloc] initWithTitle:@"延迟TTRouteService" target:self action:nil];
+        delayTTRouteServiceRegister.detail = @"冷启动5秒后注册(需重启)";
+        delayTTRouteServiceRegister.switchStyle = YES;
+        delayTTRouteServiceRegister.switchAction = @selector(_delayTTRouteServiceRegister:);
+        delayTTRouteServiceRegister.checked = [[NSUserDefaults standardUserDefaults] boolForKey:@"kDelayTTRouteServiceRegister"];
+        STTableViewSectionItem *section17 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"push相关调试开关" items:@[delayTTRouteServiceRegister]];
+        [dataSource addObject:section17];
+    }
+    
+    {
         /// IM调试选项
         NSArray *items = [[FIMDebugManager shared].debugOptions btd_compactMap:^id _Nullable(FIMDebugOption * _Nonnull option) {
             STTableViewCellItem *item = nil;
@@ -772,6 +782,11 @@ extern NSString *const BOE_OPEN_KEY ;
     
     return dataSource;
 }
+
+-(void)_delayTTRouteServiceRegister:(UISwitch *)sw {
+    [[NSUserDefaults standardUserDefaults] setBool:sw.isOn forKey:@"kDelayTTRouteServiceRegister"];
+}
+
 -(void)makeACrash {
     NSArray * array = [NSArray array];
     NSLog(@"array=%@", array[3]);

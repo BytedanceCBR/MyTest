@@ -86,6 +86,9 @@ NS_ASSUME_NONNULL_BEGIN
 //请求个人主页  个人信息
 + (TTHttpTask *)requestHomePageInfoWithUserId:(NSString *)userId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
+//请求个人主页tab列表
++(TTHttpTask *)requestPersonalHomePageTabList:(NSDictionary *_Nullable)param completion:(void(^_Nullable)(id<FHBaseModelProtocol> model , NSError *error))completion;
+
 + (TTHttpTask *)requestHomePageFeedListWithUserId:(NSString *)userId offset:(NSInteger)offset count:(NSInteger)count completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
 
 + (TTHttpTask *)requestFocusListWithUserId:(NSString *)userId completion:(void (^ _Nullable)(id <FHBaseModelProtocol> model, NSError *error))completion;
@@ -134,6 +137,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 //1.0.1详情页增加rgc内容tab请求
 + (TTHttpTask *)requestTabListWithhouseId:(NSString *)houseId class:(Class)cls houseType:(NSString *)houseType completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
+
+//1.1.3请求v标用户白名单
++ (TTHttpTask *)requestUserVWhiteListClass:(Class)cls completion:(void (^ _Nullable)(id<FHBaseModelProtocol> model, NSError *error))completion;
 
 @end
 

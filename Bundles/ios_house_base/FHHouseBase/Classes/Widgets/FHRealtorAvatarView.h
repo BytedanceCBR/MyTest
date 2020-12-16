@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "FHUGCCommonAvatar.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -16,9 +16,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHRealtorAvatarView : UIView
 
-@property (nonatomic, strong) UIImageView *avatarImageView;
+@property (nonatomic, strong) FHUGCCommonAvatar *avatarImageView;
 @property (nonatomic, strong) UIImageView *identifyImageView;
 @property (nonatomic, copy) NSString *placeHoldName;
+@property (nonatomic, copy) NSString *userId;
 
 
 

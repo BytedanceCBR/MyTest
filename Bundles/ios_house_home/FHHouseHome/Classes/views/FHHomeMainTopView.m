@@ -24,6 +24,7 @@
 #import "FHUserTracker.h"
 #import "NSObject+FHTracker.h"
 #import <ByteDanceKit.h>
+#import "FHSuggestionDefines.h"
 
 static const float kSegementedOneWidth = 50;
 static const float kSegementedMainTopHeight = 44;
@@ -132,7 +133,7 @@ static const float kMapSearchBtnRightPading = 50;
         
         [_mapSearchLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.mapSearchBtn.mas_right).offset(5);
-            make.centerY.equalTo(self.mapSearchBtn).offset(0);
+            make.centerY.equalTo(self.mapSearchBtn).offset(1);
             make.width.mas_equalTo(40);
             //          make.height.mas_equalTo(24);
         }];
@@ -198,7 +199,7 @@ static const float kMapSearchBtnRightPading = 50;
     [_searchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.equalTo(self).offset(-15);
         if (self.segmentControl) {
-            make.centerY.equalTo(self.segmentControl).offset(0);
+            make.centerY.equalTo(self.segmentControl).offset(1);
         }else
         {
             make.bottom.mas_equalTo(8);
@@ -349,7 +350,7 @@ static const float kMapSearchBtnRightPading = 50;
     NSMutableDictionary *infos = [NSMutableDictionary new];
     infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);
     infos[@"tracer"] = tracerParams;
-    infos[@"from_home"] = @(1);
+    infos[@"from_home"] = @(FHEnterSuggestionTypeHome);
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
     [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:@"sslocal://house_search"] userInfo:userInfo];
 }

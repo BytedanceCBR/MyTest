@@ -76,8 +76,7 @@
     [_rightBtn setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_rightBtn setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     _rightBtn.imageView.contentMode = UIViewContentModeCenter;
-    [_rightBtn setImage:[UIImage imageNamed:@"neighborhood_detail_comment_right_arror"] forState:UIControlStateNormal];
-    [_rightBtn setImage:[UIImage imageNamed:@"neighborhood_detail_comment_right_arror"] forState:UIControlStateHighlighted];
+    [_rightBtn setImage:[UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"] forState:UIControlStateNormal];
     [_rightBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     _rightBtn.titleLabel.font = [UIFont themeFontRegular:14];
     [_rightBtn setTitle:@"查看全部" forState:UIControlStateNormal];

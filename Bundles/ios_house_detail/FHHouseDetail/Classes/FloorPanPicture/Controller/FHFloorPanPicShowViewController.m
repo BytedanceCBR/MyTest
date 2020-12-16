@@ -365,7 +365,8 @@
         NSMutableDictionary *extraDic = @{
             @"realtor_position": @"phone_button",
             @"position": @"report_button",
-            @"element_from": self.elementFrom ? : @"be_null"
+            @"element_from": self.elementFrom ? : @"be_null",
+            @"enter_type": @"click_button"
         }.mutableCopy;
 
 //        extraDic[@"from"] = @"app_newhouse_property_picture";

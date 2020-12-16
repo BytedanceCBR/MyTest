@@ -652,7 +652,7 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     [FHShortVideoTracerUtil goDetailWithModel:cell.cellModel eventIndex:self.initialItemIndex];
     [self.tracker flushStayPageTime];
     cell.cellModel.videoAction.playCount = [NSString stringWithFormat:@"%ld",[cell.cellModel.videoAction.playCount intValue]+ 1];
-    [self sendStayPageTracking];
+//    [self sendStayPageTracking];
 }
 
 - (void)sendVideoOverTracking
