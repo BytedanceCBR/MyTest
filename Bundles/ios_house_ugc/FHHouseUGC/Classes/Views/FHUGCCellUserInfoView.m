@@ -555,8 +555,7 @@
     }
 }
 
-- (void)showAlert:(NSString *)title cancelTitle:(NSString *)cancelTitle confirmTitle:(NSString *)confirmTitle cancelBlock:(void(^)())cancelBlock confirmBlock:(void(^)())confirmBlock {
-    __weak typeof(self) wself = self;
+- (void)showAlert:(NSString *)title cancelTitle:(NSString *)cancelTitle confirmTitle:(NSString *)confirmTitle cancelBlock:(void(^)(void))cancelBlock confirmBlock:(void(^)(void))confirmBlock {
     UIAlertController *alert = [UIAlertController alertControllerWithTitle:title
                                                                    message:nil
                                                             preferredStyle:UIAlertControllerStyleAlert];
@@ -651,7 +650,6 @@
 }
 
 - (void)setOperationTop:(BOOL)isTop operationCode:(NSString *)operationCode {
-    __weak typeof(self) wself = self;
     [FHHouseUGCAPI postOperation:self.cellModel.groupId cellType:self.cellModel.cellType socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
@@ -675,7 +673,6 @@
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCTopPostNotification object:nil userInfo:dic];
             
-            NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
             if(self.cellModel.isFromDetail){
                 if(isTop){
                     [[ToastManager manager] showToast:@"置顶成功"];
@@ -695,7 +692,6 @@
 }
 
 - (void)setOperationGood:(BOOL)isGood operationCode:(NSString *)operationCode {
-    __weak typeof(self) wself = self;
     [FHHouseUGCAPI postOperation:self.cellModel.groupId cellType:self.cellModel.cellType socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         
         if(model && [model.status integerValue] == 0 && [model isKindOfClass:[FHFeedOperationResultModel class]]){
@@ -719,7 +715,6 @@
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCGoodPostNotification object:nil userInfo:dic];
             
-            NSString *pageType = wself.cellModel.tracerDic[@"page_type"];
             if(self.cellModel.isFromDetail){
                 if(isGood){
                     [[ToastManager manager] showToast:@"加精成功"];

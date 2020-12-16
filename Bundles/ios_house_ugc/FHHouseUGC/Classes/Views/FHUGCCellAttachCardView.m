@@ -95,7 +95,7 @@
     self.iconView.top = (self.height - self.iconView.height)/2;
     
     self.titleLabel.left = self.iconView.right + 8;
-    self.titleLabel.width = self.width - 58 - 75 - 10.5 - 5;
+    self.titleLabel.width = self.width - 58 - 75 - 10 - 5;
     self.titleLabel.top = 9;
     self.titleLabel.height = 22;
     
@@ -144,11 +144,11 @@
             [_button setTitle:buttonTitle forState:UIControlStateNormal];
             [_button sizeToFit];
             
-            self.titleLabel.width = self.width - 58 - 15 - self.button.width - 10.5 - 5;
+            self.titleLabel.width = self.width - 58 - 15 - self.button.width - 10 - 5;
             self.descLabel.width = self.titleLabel.width;
             self.spLine.left = self.titleLabel.right + 5;
             self.button.height = self.height;
-            self.button.left = self.spLine.right + 9.5;
+            self.button.left = self.spLine.right + 10;
         }else{
             self.button.hidden = YES;
             self.spLine.hidden = YES;
