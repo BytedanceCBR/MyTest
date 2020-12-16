@@ -148,6 +148,7 @@
 		69F0CD392143A278FD9B2268 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		7623E3B12275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
 		7623E3B22275EAEE009AD3D4 /* TTVPlayerStyle.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7623E3AF2275EAED009AD3D4 /* TTVPlayerStyle.plist */; };
+		97C0565662A4B157017B8064 /* libPods-NewsLiteInHouse.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DF1494101960A7ABFD802FAE /* libPods-NewsLiteInHouse.a */; };
 		ACBF787C473BD50F37A42499 /* libPods-com.f100.client.FHNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A7EE899B83B71F6E5A068E09 /* libPods-com.f100.client.FHNotificationServiceExtension.a */; };
 		B373CE892174587A008F9905 /* area.plist in Resources */ = {isa = PBXBuildFile; fileRef = 01FA60521E9F5D7300CE6FD3 /* area.plist */; };
 		B373CE8A2174587A008F9905 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
@@ -503,6 +504,7 @@
 		D45F59FB2458039E00A14982 /* LynxLocalChannels */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LynxLocalChannels; sourceTree = "<group>"; };
 		D48E93C0233CF142005A42CD /* VRImageLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VRImageLoading.json; sourceTree = "<group>"; };
 		D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoResource.xcassets; sourceTree = "<group>"; };
+		DF1494101960A7ABFD802FAE /* libPods-NewsLiteInHouse.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NewsLiteInHouse.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E34D4345B7726A4914383123 /* Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-com.f100.client.FHNotificationServiceExtension/Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		E8F614528BFD84403C72AE68 /* libPods-serviceNofExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-serviceNofExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF3B84B5173BDC690017F4E7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };

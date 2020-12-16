@@ -718,4 +718,8 @@
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
+- (NSString *)fh_pageType {
+    return [self.viewModel pageType];
+}
+
 @end

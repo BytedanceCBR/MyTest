@@ -67,7 +67,7 @@ def fhPods
 #    ]
     
     pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
-#   pod 'ios_house_im' ,'0.9.0.21', :inhibit_warnings => false
+#   pod 'ios_house_im' ,'0.10.0.0-alpha.2', :inhibit_warnings => false
 
 end
 
@@ -153,7 +153,7 @@ def appPods
     pod 'TTImagePicker', '7.5.5.12'
     pod 'TTImagePickerBase', '1.0.4'
   
-    pod 'MetaSecML', '4.1.12'
+    pod_binary 'MetaSecML', '4.1.20'
     
     pod_binary 'IESGeckoKit', '0.4.0'
     pod_binary 'IESWebKit', '0.2.0-rc.3'
@@ -398,7 +398,7 @@ def appPods
 #    'Core',
 #    'Debug',
 #    ]
-    pod 'BDInstall', '1.5.0',:subspecs => [
+    pod 'BDInstall', '1.5.1',:subspecs => [
     	'Core',
     	'IDFA',
     	'URLConfig/China'
@@ -638,7 +638,7 @@ def testPods
     pod 'FHErrorHubManager', '1.0.15'
     pod 'BDiOSDebugBinary', '0.0.4'
     pod 'BDTracker/Debug', '2.5.2'
-    pod 'BDInstall/Debug', '1.5.0'
+    pod 'BDInstall/Debug', '1.5.1'
 end
 
 target 'NewsLiteInHouse' do

@@ -347,8 +347,16 @@
            sizeForViewModel:(id)viewModel
                     atIndex:(NSInteger)index {
     FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
+    
     CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
-    CGFloat height = 65;
+    CGFloat height = 74;
+    if (index < agentSM.recommendedRealtors.count) {
+        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
+        if (model.agencyDescription.length && model.realtorScoreDisplay.length) {
+            height = 86;
+        }
+    }
+
     if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
         height = 44;
     }
