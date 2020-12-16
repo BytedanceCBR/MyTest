@@ -10,6 +10,7 @@
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "TTDeviceHelper.h"
 #import "FHBlockTransformer.h"
+#import "UIDevice+BTDAdditions.h"
 
 @implementation UIImageView (fhUgcImage)
 
@@ -22,7 +23,24 @@
         imageData[@"image"] = image;
         imageData[@"from"] = @(from);
         
-        if([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen] || ([TTDeviceHelper is667Screen] && [TTDeviceHelper OSVersionNumber] < 13.0)){
+        if([UIDevice btd_is568Screen] || [UIDevice btd_is480Screen] || ([UIDevice btd_is667Screen] && [UIDevice btd_OSVersionNumber] < 13.0)){
+            [self performSelector:@selector(setImageWithData:) withObject:imageData afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+        }else{
+            [self setImageWithData:imageData];
+        }
+    }];
+}
+
+- (nullable BDWebImageRequest *)fh_setImageWithURLs:(nonnull NSArray *)imageURLs placeholder:(nullable UIImage *)placeholder {
+    [self.layer removeAnimationForKey:@"contents"];
+    WeakSelf;
+    return [self bd_setImageWithURLs:imageURLs placeholder:placeholder options:BDImageRequestSetDelaySetImage transformer:nil progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+        StrongSelf;
+        NSMutableDictionary *imageData = [NSMutableDictionary dictionary];
+        imageData[@"image"] = image;
+        imageData[@"from"] = @(from);
+        
+        if([UIDevice btd_is568Screen] || [UIDevice btd_is480Screen] || ([UIDevice btd_is667Screen] && [UIDevice btd_OSVersionNumber] < 13.0)){
             [self performSelector:@selector(setImageWithData:) withObject:imageData afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
         }else{
             [self setImageWithData:imageData];
@@ -43,7 +61,7 @@
         imageData[@"image"] = image;
         imageData[@"from"] = @(from);
         
-        if([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen] || ([TTDeviceHelper is667Screen] && [TTDeviceHelper OSVersionNumber] < 13.0)){
+        if([UIDevice btd_is568Screen] || [UIDevice btd_is480Screen] || ([UIDevice btd_is667Screen] && [UIDevice btd_OSVersionNumber] < 13.0)){
             [self performSelector:@selector(setImageWithData:) withObject:imageData afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
         }else{
             [self setImageWithData:imageData];
@@ -65,7 +83,7 @@
         imageData[@"image"] = image;
         imageData[@"from"] = @(from);
         
-        if([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen] || ([TTDeviceHelper is667Screen] && [TTDeviceHelper OSVersionNumber] < 13.0)){
+        if([UIDevice btd_is568Screen] || [UIDevice btd_is480Screen] || ([UIDevice btd_is667Screen] && [UIDevice btd_OSVersionNumber] < 13.0)){
             [self performSelector:@selector(setImageWithData:) withObject:imageData afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
         }else{
             [self setImageWithData:imageData];
@@ -90,28 +108,6 @@
     }
 }
 
-- (void)fh_setImageWithURLStringInTrafficSaveMode:(NSString *)URLString placeholder:(UIImage *)placeholder
-{
-    if ([ExploreCellHelper shouldDownloadImage]) {
-        [self fh_setImageWithURL:URLString placeholder:placeholder];
-    } else {
-        [self setImageFromCacheWithURLString:URLString atIndex:0 placeholder:placeholder];
-    }
-}
-
-- (void)setImageFromCacheWithURLString:(NSString *)URLString atIndex:(int)index placeholder:(UIImage *)placeholder
-{
-    NSString *url = URLString;
-    
-    [[SDWebImageAdapter sharedAdapter] diskImageExistsWithKey:url completion:^(BOOL isInCache) {
-        if (isInCache) {
-            [self fh_setImageWithURL:URLString placeholder:placeholder];
-        } else {
-            [self setImageFromCacheWithURLString:URLString atIndex:(index + 1) placeholder:placeholder];
-        }
-    }];
-}
-
 - (UIImage*)compressImage:(UIImage*)sourceImage toSize:(CGSize)size {
     //获取原图片的大小尺寸
     CGFloat scale = [UIScreen mainScreen].scale;
@@ -125,7 +121,7 @@
     }
     
     //开启图片上下文
-    UIGraphicsBeginImageContextWithOptions(size, NO, scale);
+    UIGraphicsBeginImageContextWithOptions(size, YES, scale);
     //根据目标图片的宽度计算目标图片的高度
     CGFloat targetWidth = size.width;
     CGFloat targetHeight = size.height;

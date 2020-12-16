@@ -74,17 +74,16 @@
     self.userIma = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     [_userIma setPlaceholderImage:@"fh_mine_avatar"];
     _userIma.contentMode = UIViewContentModeScaleAspectFill;
-    [self addSubview:self.userIma];
+    [self.contentView addSubview:self.userIma];
     
     self.username = [self LabelWithFont:[UIFont themeFontRegular:14] textColor:[UIColor themeGray1]];
     self.username.textAlignment = NSTextAlignmentLeft;
     self.username.userInteractionEnabled = YES;
-    [self addSubview:_username];
+    [self.contentView addSubview:_username];
     
     self.useride = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     self.useride.textAlignment = NSTextAlignmentLeft;
-    self.useride.userInteractionEnabled = YES;
-    [self addSubview:_useride];
+    [self.contentView addSubview:_useride];
     
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
     _contentLabel.numberOfLines = maxLines;
@@ -129,6 +128,8 @@
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
     label.textColor = textColor;
+    label.backgroundColor = [UIColor whiteColor];
+    label.layer.masksToBounds = YES;
     return label;
 }
 
@@ -145,23 +146,11 @@
     
     self.currentData = data;
     self.cellModel = cellModel;
+    [self updateConstraints:cellModel.layout];
     //设置userInfo
     [self updateUserInfoView:cellModel];
-    
     //设置底部
-    self.bottomView.cellModel = cellModel;
-    
-    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-    self.bottomView.position.text = cellModel.community.name;
-    [self.bottomView showPositionView:showCommunity];
-    
-    NSInteger commentCount = [cellModel.commentCount integerValue];
-    if(commentCount == 0){
-        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
-    }else{
-        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
-    }
-    [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
+    [self.bottomView refreshWithData:cellModel];
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
@@ -186,8 +175,6 @@
         self.multiImageView.hidden = YES;
         self.singleImageView.hidden = YES;
     }
-    
-    [self updateConstraints:cellModel.layout];
 }
 
 - (void)updateUserInfoView:(FHFeedUGCCellModel *)cellModel {

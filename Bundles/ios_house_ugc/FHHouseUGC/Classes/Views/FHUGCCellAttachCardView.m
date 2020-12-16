@@ -127,8 +127,7 @@
         
         [self.iconView setBd_isOpenDownsample:YES];
         if (cellModel.attachCardInfo.imageModel && cellModel.attachCardInfo.imageModel.url.length > 0) {
-            [self.iconView bd_setImageWithURL:[NSURL URLWithString:cellModel.attachCardInfo.imageModel.url]];
-//            [self.iconView fh_setImageWithURL:cellModel.attachCardInfo.imageModel.url placeholder:nil reSize:self.iconView.size];
+            [self.iconView fh_setImageWithURLs:@[cellModel.attachCardInfo.imageModel.url] placeholder:nil reSize:self.iconView.size];
         }else{
             [self.iconView setImage:nil];
         }
@@ -202,8 +201,8 @@
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
-//    label.backgroundColor = [UIColor themeGray7];
-//    label.layer.masksToBounds = YES;
+    label.backgroundColor = self.backgroundColor;
+    label.layer.masksToBounds = YES;
     label.textColor = textColor;
     return label;
 }
@@ -255,7 +254,6 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
-    __weak typeof(self) wSelf = self;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功
