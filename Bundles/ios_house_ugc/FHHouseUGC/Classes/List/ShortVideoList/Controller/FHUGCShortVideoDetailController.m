@@ -723,6 +723,7 @@ static const CGFloat kFloatingViewOriginY = 230;
             [[TTAudioSessionManager sharedInstance] setActive:NO];
         }
     });
+    [self dismissCommentListWithCancelType:@"push"];
 }
 
 //- (void)viewDidDisappear:(BOOL)animated
