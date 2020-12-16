@@ -9,6 +9,7 @@
 #import <TTRoute/TTRoute.h>
 #import "FHNavBarView.h"
 #import "FHErrorView.h"
+#import "FHTracerModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -39,7 +40,6 @@ extern NSString *const VCTITLE_KEY ;
  2、TRACER_KEY or "tracer":埋点数据
  */
 @protocol TTRouteInitializeProtocol;
-@class FHTracerModel;
 
 @interface FHBaseViewController : UIViewController <FHUITracerProtocol,TTRouteInitializeProtocol>
 

@@ -291,7 +291,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *userBackgroundColor;
 @property (nonatomic, copy , nullable) NSString *userBorderColor;
 @property (nonatomic, copy , nullable) NSString *userFontColor;
-
+@property (nonatomic , assign) BOOL fverifyShow;
 @end
 
 @interface FHFeedUGCContentRawDataModel: JSONModel

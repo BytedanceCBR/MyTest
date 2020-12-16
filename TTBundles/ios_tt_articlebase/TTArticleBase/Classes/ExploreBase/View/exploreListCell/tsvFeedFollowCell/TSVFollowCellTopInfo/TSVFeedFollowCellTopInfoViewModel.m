@@ -70,6 +70,11 @@
     return self.model.author.avatarURL;
 }
 
+- (NSString *)userId
+{
+    return self.model.author.userID;
+}
+
 - (BOOL)isFollowing
 {
     return self.model.author.isFollowing;

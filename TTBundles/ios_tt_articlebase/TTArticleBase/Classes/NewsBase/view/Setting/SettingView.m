@@ -98,6 +98,7 @@
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import "SSCommonLogic.h"
+#import "FHHousedetailModelManager.h"
 
 #define kCellHeight     43.f
 #define UMENG_SETTINGVIEW_EVENT_ID_STR @"more_tab"
@@ -650,6 +651,7 @@ TTEditUserProfileViewControllerDelegate
                 cell.detailTextLabel.text = NSLocalizedString(@"正在计算...", nil);
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     _fileSize = [ExploreLogicSetting cacheSizeWithTempVideoAudioFile];
+                    _fileSize += [[FHHousedetailModelManager sharedInstance] getSizeOfCache]/1024/1024;
                     [ExploreLogicSetting addUpCacheSizeWithImage:YES http:YES coreData:NO wendaDraft:YES shortVideo:YES completion:^(NSInteger totalSize) {
                         _fileSize += totalSize;
                         dispatch_async(dispatch_get_main_queue(), ^{
@@ -1926,9 +1928,8 @@ TTEditUserProfileViewControllerDelegate
 //    [shortVideoOwnPlayerCache clearAllCache];//自研播放器
     
 //    [[TTVOwnPlayerCacheWrapper sharedCache] clearAllCache];
-    
+    [[FHHousedetailModelManager sharedInstance] cleanCache];//清除二手房详情页缓存
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
-    
     [[SSSimpleCache sharedCache] clearCache];
     [TTWebImageManager clearDisk];
     id<TTAdManagerProtocol> adManagerInstance = [[TTServiceCenter sharedInstance] getServiceByProtocol:@protocol(TTAdManagerProtocol)];

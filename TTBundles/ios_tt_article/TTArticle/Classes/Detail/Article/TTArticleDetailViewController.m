@@ -292,7 +292,7 @@
     
     TLS_LOG(@"TTArticleDetailViewController viewDidLoad with groupID %lld, adID:%lld", self.detailModel.article.uniqueID, self.detailModel.adID.longLongValue);
     
-    [self p_setupMenuItems];
+//    [self p_setupMenuItems];
     if (_detailModel.adID.longLongValue > 0) {
         [[TTAdWebResPreloadManager sharedManager] startCaptureAdWebResRequest];
     }
@@ -458,8 +458,8 @@
 - (void)p_setupMenuItems {
     
     UIMenuItem *typosMenuItem = [[UIMenuItem alloc] initWithTitle:@"举报错别字" action:@selector(selectedTypos:)];
-    UIMenuItem *customMenuItem1 = [[UIMenuItem alloc] initWithTitle:@"搜索" action:@selector(searchSelectionText:)];
-    [[UIMenuController sharedMenuController] setMenuItems:[NSArray arrayWithObjects:typosMenuItem, customMenuItem1, nil]];
+//    UIMenuItem *customMenuItem1 = [[UIMenuItem alloc] initWithTitle:@"搜索" action:@selector(searchSelectionText:)];
+    [[UIMenuController sharedMenuController] setMenuItems:[NSArray arrayWithObjects:typosMenuItem, nil]];
     
     [self.detailView.detailWebView.webView tt_becomeFirstResponder];
 }

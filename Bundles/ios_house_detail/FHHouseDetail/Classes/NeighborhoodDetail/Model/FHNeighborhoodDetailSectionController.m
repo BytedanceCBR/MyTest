@@ -14,7 +14,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.inset = UIEdgeInsetsMake(0, 15, 12, 15);
+        self.inset = UIEdgeInsetsMake(0, 9, 12, 9);
     }
     return self;
 }
@@ -55,7 +55,7 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.inset = UIEdgeInsetsMake(0, 15, 12, 15);
+        self.inset = UIEdgeInsetsMake(0, 9, 12, 9);
     }
     return self;
 }

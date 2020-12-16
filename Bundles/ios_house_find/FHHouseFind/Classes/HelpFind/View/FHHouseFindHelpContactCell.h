@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)confirm;
 
-//- (void)sendVerifyCode;
+- (void)sendVerifyCode;
 @end
 
 @interface FHHouseFindHelpContactCell : UICollectionViewCell
@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) NSString *phoneNum;
 
 - (void)showFullPhoneNum:(BOOL)isShow;
+
+- (void)enableSendVerifyCodeBtn:(BOOL)enabled;
 
 @end
 

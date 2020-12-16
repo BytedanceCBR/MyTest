@@ -35,7 +35,6 @@
 @property(nonatomic, strong) FHMultiMediaVideoCell *firstVideoCell;
 @property(nonatomic, weak) FHMultiMediaVRImageCell *firstVRCell;
 @property(nonatomic, assign) CGFloat beginX;
-@property(nonatomic, strong) UIView *bottomBannerView;
 @property(nonatomic, strong) UIView *bottomGradientView;
 @end
 
@@ -75,8 +74,6 @@
     
     // 底部渐变层
     [self addSubview:self.bottomGradientView];
-    // 底部banner按钮
-    [self addSubview:self.bottomBannerView];
     
     // 底部右侧序号信息标签
     _infoLabel = [[UILabel alloc] init];
@@ -100,30 +97,6 @@
     _noDataImageView = [[UIImageView alloc] init];
     [self addSubview:_noDataImageView];
     _noDataImageView.hidden = YES;
-}
-
-- (UIView *)bottomBannerView {
-    if(!_bottomBannerView) {
-        
-        CGFloat aspect = 375.0 / 65;
-        CGFloat height = self.bounds.size.width / aspect;
-        CGRect frame = CGRectMake(0, self.bounds.size.height - height, self.bounds.size.width, height);
-
-        UIImageView *bannerImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_header_bottom_banner"]];
-        CGFloat bannerAspect = 336.0 / 30;
-        CGFloat bannerWidth = frame.size.width - 40;
-        CGFloat bannerHeight = bannerWidth / bannerAspect;
-        CGFloat originX = (frame.size.width - bannerWidth) / 2.0;
-        CGFloat originY = (frame.size.height - 6 - bannerHeight);
-        bannerImageView.frame = CGRectMake(originX, originY, bannerWidth, bannerHeight);
-        
-        _bottomBannerView = [[UIView alloc] initWithFrame:frame];
-        [_bottomBannerView addSubview:bannerImageView];
-        
-        // 初始时隐藏，数据更新时跟据flag决定是否显示
-        _bottomBannerView.hidden = YES;
-    }
-    return _bottomBannerView;
 }
 
 -(UIView *)bottomGradientView {
@@ -442,14 +415,6 @@
     self.medias = model.medias;
     [self.colletionView reloadData];
     
-    BOOL isShowBottomBannerView = model.isShowSkyEyeLogo;
-    self.bottomBannerView.hidden = !isShowBottomBannerView;
-    if(isShowBottomBannerView && [self.delegate respondsToSelector:@selector(bottomBannerViewDidShow)]) {
-        [self.delegate bottomBannerViewDidShow];
-    }
-    
-    CGFloat yOffset = self.bottomBannerView.hidden ? 0 : - 6 - 30 - 7;
-    
     if (_medias.count > 0) {
         self.infoLabel.text = [NSString stringWithFormat:@"%d/%ld",1,_medias.count];
         self.infoLabel.hidden = NO;
@@ -460,7 +425,7 @@
             [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
         [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self).offset(-10 + yOffset);
+            make.bottom.equalTo(self).offset(-10);
         }];
     }else{
         self.infoLabel.hidden = YES;
@@ -494,7 +459,7 @@
         
         [self.itemView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(itemViewWidth);
-            make.bottom.equalTo(self).offset(yOffset);
+            make.bottom.equalTo(self).offset(0);
         }];
     }else{
         self.itemView.hidden = YES;

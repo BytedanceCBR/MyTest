@@ -20,6 +20,7 @@
 #import "FHHouseUGCHeader.h"
 #import "FHUtils.h"
 #import "UIFont+House.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define kRecommendSocialGroupListNil @"kRecommendSocialGroupListNil"
 #define kHotTopicListNil @"kHotTopicListNil"
@@ -57,7 +58,9 @@
     self = [super init];
     if (self) {
         _showCommunity = YES;
-        _bottomLineHeight = 5;
+        _bottomLineHeight = 1.2;
+        _bottomLineLeftMargin = 20;
+        _bottomLineRightMargin = 20;
     }
     return self;
 }
@@ -279,6 +282,8 @@
             user.avatarUrl = model.userInfo.avatarUrl;
             user.userId = model.userInfo.userId;
             user.schema = model.userInfo.schema;
+            user.fverifyShow = model.userInfo.fverifyShow;
+            user.verifiedContent = model.userInfo.verifiedContent;
             cellModel.user = user;
             
             if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
@@ -363,6 +368,8 @@
         user.avatarUrl = model.rawData.content.user.avatarUrl;
         user.userId = model.rawData.content.user.userId;
         user.schema = model.rawData.content.user.userSchema;
+        user.fverifyShow = model.rawData.content.user.fverifyShow;
+        user.verifiedContent = model.rawData.content.user.verifiedContent;
         cellModel.user = user;
         
         cellModel.title = model.rawData.content.question.title;
@@ -439,8 +446,11 @@
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
         user.name = model.rawData.content.user.uname;
         user.avatarUrl = model.rawData.content.user.avatarUrl;
+        user.fverifyShow = model.rawData.content.user.fverifyShow;
         user.userId = model.rawData.content.user.userId;
         user.schema = model.rawData.content.user.userSchema;
+        user.verifiedContent = model.rawData.content.user.vIcon;
+        
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
@@ -499,6 +509,8 @@
         user.avatarUrl = model.rawData.commentBase.user.info.avatarUrl;
         user.userId = model.rawData.commentBase.user.info.userId;
         user.schema = model.rawData.commentBase.user.info.schema;
+        user.fverifyShow = model.rawData.content.user.fverifyShow;
+        user.verifiedContent = model.rawData.content.user.verifiedContent;
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
@@ -683,6 +695,8 @@
         user.avatarUrl = model.rawData.user.info.avatarUrl;
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
+        user.fverifyShow = model.rawData.content.user.fverifyShow;
+        user.verifiedContent = model.rawData.content.user.verifiedContent;
         cellModel.user = user;
         
         // 时间以及距离
@@ -749,6 +763,8 @@
         user.relationCount = [model.rawData.user.relationCount copy];
         user.userId = model.rawData.user.info.userId;
         user.schema = model.rawData.user.info.schema;
+        user.fverifyShow = model.rawData.content.user.fverifyShow;
+        user.verifiedContent = model.rawData.content.user.verifiedContent;
         cellModel.user = user;
         
         cellModel.diggCount = model.rawData.action.diggCount;
@@ -811,6 +827,8 @@
         cellModel.openUrl = model.rawData.schema;
         cellModel.logPb = model.logPb;
         FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
+        user.fverifyShow = model.rawData.content.user.fverifyShow;;
+        user.verifiedContent = model.rawData.content.user.verifiedContent;
         user.name = model.rawData.userName;
         user.avatarUrl = model.rawData.icon;
         cellModel.user = user;
@@ -924,6 +942,8 @@
         user.userBackgroundColor = model.user.userBackgroundColor;
         user.userBorderColor = model.user.userBorderColor;
         user.userFontColor = model.user.userFontColor;
+        user.fverifyShow = model.user.fverifyShow;
+        user.verifiedContent = model.user.verifiedContent;
     } else if(model.rawData.user) {
         user.name = model.rawData.user.name;
         user.avatarUrl = model.rawData.user.avatarUrl;
@@ -933,6 +953,8 @@
         user.userBackgroundColor = model.rawData.user.userBackgroundColor;
         user.userBorderColor = model.rawData.user.userBorderColor;
         user.userFontColor = model.rawData.user.userFontColor;
+        user.fverifyShow = model.rawData.user.fverifyShow;
+        user.verifiedContent = model.rawData.user.verifiedContent;
     }
 
     
@@ -1013,7 +1035,7 @@
         cellModel.largeImageList = model.rawData.largeImageList;
     }
     if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:cellModel.numberOfLines];
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 42) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:14]];
     }else {
         [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
     }
@@ -1079,16 +1101,22 @@
 + (NSAttributedString *)generateArticleDesc:(FHFeedContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     
-    if(!isEmptyString(model.readCount) && [model.readCount integerValue] != 0){
-        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
-        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
+//    if(!isEmptyString(model.readCount) && [model.readCount integerValue] != 0){
+//        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
+//        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
+//        [desc appendAttributedString:readAStr];
+//    }
+    if(!isEmptyString(model.userInfo.name) ){
+//        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
+        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:model.userInfo.name];
         [desc appendAttributedString:readAStr];
     }
+    
     
     if(!isEmptyString(model.commentCount)){
         NSString *comment = [NSString stringWithFormat:@"%@评论",[TTBusinessManager formatCommentCount:[model.commentCount longLongValue]]];
         if(desc.length > 0){
-            comment = [NSString stringWithFormat:@" %@",comment];
+            comment = [NSString stringWithFormat:@"   %@",comment];
         }
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:comment];
         [desc appendAttributedString:publishTimeAStr];
@@ -1100,7 +1128,7 @@
     
     if(![publishTime isEqualToString:@""]){
         if(desc.length > 0){
-            publishTime = [NSString stringWithFormat:@" %@",publishTime];
+            publishTime = [NSString stringWithFormat:@"   %@",publishTime];
         }
         NSAttributedString *publishTimeAStr = [[NSAttributedString alloc] initWithString:publishTime];
         [desc appendAttributedString:publishTimeAStr];
@@ -1132,7 +1160,7 @@
     }else{
         self.numberOfLines = self.imageList.count > 0 ? 3 : 5;
     }
-    [FHUGCCellHelper setRichContentWithModel:self width:width numberOfLines:self.numberOfLines];
+    [FHUGCCellHelper setRichContentWithModel:self width:width numberOfLines:self.numberOfLines font:[UIFont themeFontRegular:14]];
 }
 
 - (void)setCategoryId:(NSString *)categoryId {

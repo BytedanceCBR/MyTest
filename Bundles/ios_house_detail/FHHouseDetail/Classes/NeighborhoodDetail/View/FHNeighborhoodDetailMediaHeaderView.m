@@ -9,11 +9,11 @@
 #import "FHDetailHeaderTitleView.h"
 #import "FHVideoAndImageItemCorrectingView.h"
 #import "FHCommonDefines.h"
-#import <ByteDanceKit/NSString+BTDAdditions.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHNeighborhoodDetailMediaHeaderView ()
 
-@property (nonatomic, strong) UIView *bottomGradientView;
+//@property (nonatomic, strong) UIView *bottomGradientView;
 @property (nonatomic, strong) UILabel *infoLabel;
 @property (nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;   //图片户型的标签
 @property (nonatomic, strong) FHDetailNewMediaHeaderScrollView *scrollView;
@@ -50,8 +50,9 @@
     self.scrollView = [[FHDetailNewMediaHeaderScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [FHNeighborhoodDetailMediaHeaderView cellHeight])];
     self.scrollView.closeInfinite = NO;
     [self addSubview:self.scrollView];
-    [self addSubview:self.bottomGradientView];
+//    [self addSubview:self.bottomGradientView];
     self.itemView = [[FHVideoAndImageItemCorrectingView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 20)];
+    self.itemView.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
     self.itemView.hidden = YES;
 
     [self addSubview:self.itemView];
@@ -96,26 +97,27 @@
 - (void)initConstaints {
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self);
-        make.height.mas_equalTo([FHNeighborhoodDetailMediaHeaderView cellHeight]);
+        make.bottom.mas_equalTo(0);
+//        make.height.mas_equalTo([FHNeighborhoodDetailMediaHeaderView cellHeight]);
     }];
-    [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.scrollView);
-        make.bottom.equalTo(self.scrollView);
-        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
-    }];
+//    [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.left.right.equalTo(self.scrollView);
+//        make.bottom.equalTo(self.scrollView);
+//        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
+//    }];
 
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);//
-        make.width.mas_equalTo(self.scrollView.mas_width);
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-16);//
+        make.width.mas_equalTo(0);
         make.height.mas_equalTo(20);
     }];
     
     [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(44);
         make.height.mas_equalTo(22);
-        make.right.mas_equalTo(self.scrollView.mas_right).offset(-15);
-        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);
+        make.right.mas_equalTo(self.scrollView.mas_right).offset(-9);
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-16);
     }];
 
     [self layoutIfNeeded];
@@ -145,6 +147,13 @@
         self.itemView.hidden = NO;
         [self setNeedsLayout];
         [self layoutIfNeeded];
+        [self.itemView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(self.itemArray.count * 44);
+        }];
+        CGRect frame = self.itemView.frame;
+        frame.size.width = self.itemArray.count * 44;
+        self.itemView.frame = frame;
+        [self.itemView setNeedsLayout];
         self.itemView.titleArray = _itemArray;
         [self.itemView selectedItem:_itemArray[0]];
     } else {
@@ -153,27 +162,27 @@
     
 }
 
-- (UIView *)bottomGradientView {
-    if (!_bottomGradientView) {
-        CGFloat aspect = 375.0 / 22;
-        CGFloat width = SCREEN_WIDTH;
-
-        CGFloat height = round(width / aspect + 0.5);
-        CGRect frame = CGRectMake(0, 0, width, height);
-        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-        gradientLayer.frame = frame;
-        gradientLayer.colors = @[
-            (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
-            (__bridge id)[UIColor themeGray7].CGColor
-        ];
-        gradientLayer.startPoint = CGPointMake(0.5, 0);
-        gradientLayer.endPoint = CGPointMake(0.5, 0.9);
-
-        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
-        [_bottomGradientView.layer addSublayer:gradientLayer];
-    }
-    return _bottomGradientView;
-}
+//- (UIView *)bottomGradientView {
+//    if (!_bottomGradientView) {
+//        CGFloat aspect = 375.0 / 22;
+//        CGFloat width = SCREEN_WIDTH;
+//
+//        CGFloat height = round(width / aspect + 0.5);
+//        CGRect frame = CGRectMake(0, 0, width, height);
+//        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+//        gradientLayer.frame = frame;
+//        gradientLayer.colors = @[
+//            (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
+//            (__bridge id)[UIColor themeGray7].CGColor
+//        ];
+//        gradientLayer.startPoint = CGPointMake(0.5, 0);
+//        gradientLayer.endPoint = CGPointMake(0.5, 0.9);
+//
+//        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
+//        [_bottomGradientView.layer addSublayer:gradientLayer];
+//    }
+//    return _bottomGradientView;
+//}
 
 
 #pragma mark - operator

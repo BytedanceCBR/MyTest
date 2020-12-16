@@ -72,6 +72,7 @@
 
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (!viewModel) {
+        self.hidden = YES;
         return;
     }
     [super setViewModel:viewModel];
