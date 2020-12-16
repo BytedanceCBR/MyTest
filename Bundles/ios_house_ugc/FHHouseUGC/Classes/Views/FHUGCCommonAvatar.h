@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHUGCCommonAvatar : UIView
 @property (assign, nonatomic) BOOL showTag;
 @property (strong , nonatomic) UIImageView *avatar;
-@property (copy, nonatomic) NSString *userId;
+@property (strong, nonatomic) id userId;
 - (void)setAvatarUrl:(NSString *)avatarStr;
 
 - (void)setPlaceholderImage:(NSString *)imageName;

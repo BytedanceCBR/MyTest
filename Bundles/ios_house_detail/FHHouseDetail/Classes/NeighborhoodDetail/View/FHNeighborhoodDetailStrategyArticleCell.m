@@ -93,7 +93,7 @@
     //单图
     self.singleImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
     _singleImageView.hidden = YES;
-    _singleImageView.clipsToBounds = YES;
+    _singleImageView.clipsToBounds = YES; 
     _singleImageView.contentMode = UIViewContentModeScaleAspectFill;
     _singleImageView.backgroundColor = [UIColor themeGray6];
     _singleImageView.layer.borderColor = [[UIColor themeGray6] CGColor];

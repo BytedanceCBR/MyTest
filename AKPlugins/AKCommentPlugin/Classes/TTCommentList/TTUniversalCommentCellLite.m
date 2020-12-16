@@ -133,7 +133,8 @@
 
 - (void)refreshAvatarView {
     [self.avatarView setAvatarUrl:self.commentModel.userAvatarURL];
-    [self.avatarView setUserId:self.commentModel.userID];
+    [self.avatarView setUserId: self.commentModel.userID];
+   
 //    [self.avatarView tt_setImageWithURLString:self.commentModel.userAvatarURL];
 //
 //    [self.avatarView showOrHideVerifyViewWithVerifyInfo:self.commentModel.userAuthInfo decoratorInfo:self.commentModel.userDecoration];
