@@ -80,7 +80,7 @@
     self.userImaLayout.top =  self.userInfoViewLayout.bottom + 5;
     CGRect titleRect1 = [cellModel.user.name boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:0 attributes:@{NSFontAttributeName : [UIFont themeFontRegular:14]} context:nil];
     self.usernameLayout.width = ceil(titleRect1.size.width);
-    self.userideLayout.width = [UIScreen mainScreen].bounds.size.width - 30 - 40 - titleRect1.size.width;
+    self.userideLayout.width = [UIScreen mainScreen].bounds.size.width - 30 - 40 - self.usernameLayout.width;
     self.usernameLayout.top =  self.userImaLayout.top + 1;
     self.userideLayout.top =  self.userImaLayout.top + 1;
     self.userideLayout.left = self.usernameLayout.right + 4;

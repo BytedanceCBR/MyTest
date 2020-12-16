@@ -65,7 +65,7 @@
     _singleImageView.contentMode = UIViewContentModeScaleAspectFill;
     _singleImageView.backgroundColor = [UIColor themeGray6];
     _singleImageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _singleImageView.layer.borderWidth = 0.5;
+    _singleImageView.layer.borderWidth = [UIDevice btd_onePixel];
     _singleImageView.layer.masksToBounds = YES;
     _singleImageView.layer.cornerRadius = 4;
     [self.contentView addSubview:_singleImageView];
@@ -87,7 +87,7 @@
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-        imageView.layer.borderWidth = 0.5;
+        imageView.layer.borderWidth = [UIDevice btd_onePixel];
         imageView.layer.masksToBounds = YES;
         imageView.layer.cornerRadius = 4;
         imageView.hidden = YES;
