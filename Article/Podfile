@@ -200,7 +200,7 @@ def appPods
     pod_binary 'TTNetworkDownloader','1.0.5'
     pod 'TransBridge-iOS','0.1.6'
 #    pod 'FCFlutterShell' , :path => '../Bundles/f_c_flutter_shell', :inhibit_warnings => false
-    pod_binary 'FCFlutterShell','1.1.3-alpha.5'
+    pod_binary 'FCFlutterShell','1.1.3-rc.0'
     
     
     pod 'BDUGSettingsInterface' , '1.1.0'
