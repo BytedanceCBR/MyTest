@@ -787,9 +787,9 @@
                 NSMutableDictionary *metricDict = [NSMutableDictionary dictionary];
                 //单位 秒 -> 毫秒
                 if(!self.isCache){
-                    metricDict[@"total_duration"] = @(duration * 1000);
                     metricDict[@"tableView_duration"] = @(self.tableViewLoadTime * 1000);
                 }
+                metricDict[@"total_duration"] = @(duration * 1000);
                 metricDict[@"isCache"] = self.isCache ? @(100) : @(0);
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_house_detail_old" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
             }
