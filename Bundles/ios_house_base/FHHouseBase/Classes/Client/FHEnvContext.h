@@ -74,7 +74,8 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 @property(nonatomic, assign) BOOL isShowingSpringHang;
 //正在显示的画运营位ID
 @property(nonatomic, copy) NSString *currentShowHangId;
-
+//是否冷启动，拉config时传给服务端
+@property (nonatomic, assign) BOOL hadColdStart;
 
 + (instancetype)sharedInstance;
 /*
@@ -334,6 +335,10 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 +(BOOL)canShowLoginTip;
 //优化二手房详情页加载开关
 + (BOOL)isOldDetailLoadOptimization;
+
+- (BOOL)isColdStart;
+
+- (void)setColdStart;
 
 @end
 
