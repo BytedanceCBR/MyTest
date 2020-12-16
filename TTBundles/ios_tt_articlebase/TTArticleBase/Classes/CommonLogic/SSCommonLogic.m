@@ -32,7 +32,7 @@
 #import "TTVSettingsConfiguration.h"
 #import "TTSettingsManager.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
-#import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define kErrorDescriptionAPIKey @"description"
 
@@ -5545,6 +5545,12 @@ static NSString *const kFFeedRefreshStrategy = @"feed_refresh_settings";
         return isEnableLinkChatPage;
     }
     return NO;
+}
+// 表单线索提交是有优化体验 form_associate_verify
++ (BOOL)isEnableVerifyFormAssociate {
+    return YES;
+    NSDictionary *fhSettings = [self fhSettings];
+    return [fhSettings btd_boolValueForKey:@"f_form_associate_verify_enable" default:NO];
 }
 @end
 

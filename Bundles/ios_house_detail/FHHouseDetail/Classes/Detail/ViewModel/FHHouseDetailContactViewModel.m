@@ -67,6 +67,7 @@
 #import "FHNewHouseDetailViewController.h"
 #import "FHNeighborhoodDetailViewController.h"
 #import <FHShareManager.h>
+#import "SSCommonLogic.h"
 
 NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
@@ -516,8 +517,10 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     NSDictionary *associateInfoDict = self.contactPhone.enablePhone ? self.highlightedRealtorAssociateInfo.phoneInfo : self.highlightedRealtorAssociateInfo.reportFormInfo;
     extraDict[kFHAssociateInfo] = associateInfoDict?:@{};
     extraDict[@"position"] = @"button";
+    extraDict[@"enter_type"] = @"click_button";
     [self contactActionWithExtraDict:extraDict];
 }
+
 - (void)contactActionWithExtraDict:(NSDictionary *)extraDict
 {
     NSDictionary *associateInfoDict = nil;
@@ -536,7 +539,46 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         NSMutableDictionary *associateParamDict = @{}.mutableCopy;
         associateParamDict[kFHReportParams] = reportParamsDict;
         associateParamDict[kFHAssociateInfo] = associateInfoDict;
-        [self fillFormActionWithParams:associateParamDict];
+        
+        NSString *title = nil;
+        NSString *subtitle = nil;
+        NSString *btnTitle = nil;
+        if (self.houseType == FHHouseTypeNeighborhood) {
+            title = @"咨询经纪人";
+            btnTitle = @"提交";
+        }
+        if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+            switch (self.houseType) {
+                case FHHouseTypeSecondHandHouse:
+                    title = @"询底价";
+                    subtitle = @"提交后，我们将给您匹配专业的经纪人为您提供咨询服务。";
+                    btnTitle = @"获取底价";
+                    break;
+                case FHHouseTypeNeighborhood:
+                    title = @"咨询经纪人";
+                    subtitle = @"提交后，我们将给您匹配专业的经纪人为您提供咨询服务。";
+                    btnTitle = @"立即咨询";
+                    break;
+                case FHHouseTypeNewHouse:
+                    title = @"询底价";
+                    subtitle = @"提交后，我们将给您匹配专业的置业顾问为您提供咨询服务。";
+                    btnTitle = @"获取底价";
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        if (title.length) {
+            associateParamDict[@"title"] = title;
+        }
+        if (subtitle.length) {
+            associateParamDict[@"subtitle"] = subtitle;
+        }
+        if (btnTitle.length) {
+            associateParamDict[@"btn_title"] = btnTitle;
+        }
+        [self fillFormActionWithParams:associateParamDict.copy];
     }else {
         
         //        associatePhone.realtorType = self.contactPhone.realtorType;
@@ -640,17 +682,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     WeakSelf;
 //    NSDictionary *associateInfoDict = associatePhone.associateInfo;
     NSDictionary *reportParamsDict = associatePhone.reportParams;
-    // 圈子电话咨询数据备份
-    self.socialContactConfig = nil;
-    if (associatePhone.houseType == FHHouseTypeNewHouse) {
-        // 拨打电话 弹窗显示的话 本数据保留，否则 删除 nil
-        self.socialContactConfig = [[FHAssociatePhoneModel alloc]init];
-        
-        self.socialContactConfig.houseType = associatePhone.houseType;
-        self.socialContactConfig.houseId = associatePhone.houseId;
-        //        self.socialContactConfig.phone = self.contactPhone.phone;
-        self.socialContactConfig.realtorId = associatePhone.realtorId;
-    }
+
     NSString *realtorId = associatePhone.realtorId;
     [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
         
@@ -658,10 +690,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             FHHouseDetailViewController *vc = (FHHouseDetailViewController *)wself.phoneCallViewModel.belongsVC;
             vc.isPhoneCallShow = YES;
             vc.phoneCallRealtorId = realtorId;
-            
             vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
-        } else {
-            wself.socialContactConfig = nil;
         }
     }];
     FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:reportParamsDict error:nil];
@@ -694,11 +723,9 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     if (formParamsDict[@"toast"]) {
         toast = formParamsDict[@"toast"];
     }
-    FHAssociateFormReportModel *associateReport = [[FHAssociateFormReportModel alloc]init];
-    if (self.houseType == FHHouseTypeNeighborhood) {
-        associateReport.title = @"咨询经纪人";
-        associateReport.btnTitle = @"提交";
-    }
+    
+    FHAssociateFormReportModel *associateReport = [[FHAssociateFormReportModel alloc] init];
+
     if (title.length > 0) {
         associateReport.title = title;
     }
@@ -717,25 +744,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     associateReport.reportParams = reportParamsDict;
     associateReport.associateInfo = associateInfoDict;
     associateReport.chooseAgencyList = self.chooseAgencyList;
-    if (self.houseInfoBizTrace) {
-        associateReport.extraInfo = @{@"biz_trace":self.houseInfoBizTrace};
-    }
-    [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport];
     
-}
-
-// 新房 拨打电话后是否需要添加弹窗 留资入口
-- (void)checkSocialPhoneCall {
-    if (self.socialContactConfig) {
-        if (self.socialContactConfig.houseType == FHHouseTypeNewHouse && [self.belongsVC isKindOfClass:[FHHouseDetailViewController class]]) {
-            FHHouseDetailViewController *detailVC = (FHHouseDetailViewController *)self.belongsVC;
-            FHHouseNewDetailViewModel *viewModel = (FHHouseNewDetailViewModel *)detailVC.viewModel;
-            if ([viewModel needShowSocialInfoForm:self.socialContactConfig]) {
-                [viewModel showUgcSocialEntrance:nil];
-            }
-        }
-        self.socialContactConfig = nil;
-    }
+    NSMutableDictionary *extraInfo = @{}.mutableCopy;
+    extraInfo[@"biz_trace"] = self.houseInfoBizTrace.length ? self.houseInfoBizTrace : @"be_null";
+    extraInfo[@"origin_from"] = reportParamsDict[@"origin_from"] ?: @"be_null";
+    associateReport.extraInfo = extraInfo.copy;
+    
+    [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:associateReport completion:nil];
 }
 
 - (void)imAction {

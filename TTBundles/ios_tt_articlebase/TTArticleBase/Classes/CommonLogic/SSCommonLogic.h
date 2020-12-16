@@ -1429,6 +1429,8 @@ typedef NS_ENUM(NSInteger, SSCommentType)  {
 + (BOOL)isEnableLinkChatPage;
 /// 是否禁用监控push跳转失败
 + (BOOL)isDisableMonitorPushJumpError;
+// 表单线索提交是有优化体验 form_associate_verify
++ (BOOL)isEnableVerifyFormAssociate;
 @end
 
 @interface SSCommonLogic (FHShare)
