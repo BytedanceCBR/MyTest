@@ -395,9 +395,10 @@
     if (self.contactViewModel) {
 
         NSMutableDictionary *extraDic = @{
-            @"realtor_position":@"detail_button",
-            @"position":@"report_button",
-            @"element_from":@"building"
+            @"realtor_position": @"detail_button",
+            @"position": @"report_button",
+            @"element_from": @"building",
+            @"enter_type": @"click_button"
         }.mutableCopy;
         [extraDic addEntriesFromDictionary:self.tracerDict];
 //        extraDic[@"event_tracking_id"] = @"70832";

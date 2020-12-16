@@ -174,10 +174,6 @@
     }
     
     self.model.medias = itemArray;
-    if([self.baseViewModel.detailData isKindOfClass:[FHDetailOldModel class]]) {
-        FHDetailOldModel *detailOldModel = (FHDetailOldModel *)self.baseViewModel.detailData;
-        self.model.isShowSkyEyeLogo = detailOldModel.data.baseExtra.detective.detectiveInfo.showSkyEyeLogo;
-    }
 }
 
 -(void)showImagesWithCurrentIndex:(NSInteger)index
@@ -514,13 +510,13 @@
 
 //埋点
 - (void)enterPictureShowPictureWithIndex:(NSInteger)index {
-    NSMutableDictionary *dict = [self traceParamsForGallery:index];
+    NSDictionary *dict = [self traceParamsForGallery:index];
     TRACK_EVENT(@"picture_gallery", dict);
 }
 
 //埋点
 - (void)stayPictureShowPictureWithIndex:(NSInteger)index andTime:(NSInteger)stayTime {
-    NSMutableDictionary *dict = [self traceParamsForGallery:index];
+    NSMutableDictionary *dict = [self traceParamsForGallery:index].mutableCopy;
     dict[@"stay_time"] = [NSNumber numberWithInteger:stayTime * 1000];
     TRACK_EVENT(@"picture_gallery_stay", dict);
 }
@@ -552,19 +548,6 @@
 
 - (void)selectItem:(NSString *)title {
     [self trackClickOptions:title];
-}
-
-- (void)bottomBannerViewDidShow {
-    
-    NSMutableDictionary *tracerDict = self.baseViewModel.detailTracerDic.mutableCopy;
-    NSMutableDictionary *param = [NSMutableDictionary new];
-    param[UT_ELEMENT_TYPE] = @"happiness_eye_tip";
-    param[UT_PAGE_TYPE] = tracerDict[UT_PAGE_TYPE]?:UT_BE_NULL;
-    param[UT_ELEMENT_FROM] = tracerDict[UT_ELEMENT_FROM]?:UT_BE_NULL;
-    param[UT_ORIGIN_FROM] = tracerDict[UT_ORIGIN_FROM]?:UT_BE_NULL;
-    param[UT_ORIGIN_SEARCH_ID] = tracerDict[UT_ORIGIN_SEARCH_ID]?:UT_BE_NULL;
-    param[UT_LOG_PB] = tracerDict[UT_LOG_PB]?:UT_BE_NULL;    
-    TRACK_EVENT(UT_OF_ELEMENT_SHOW, param);
 }
 
 - (void)trackVRElementShow
