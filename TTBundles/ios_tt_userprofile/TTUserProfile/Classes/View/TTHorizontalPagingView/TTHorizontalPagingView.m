@@ -168,7 +168,6 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 
 - (void)scrollToIndex:(NSInteger)pageIndex withAnimation:(BOOL)animation {
     if(pageIndex >= self.section || pageIndex < 0 || self.section <= 0) return;
-    [self.currentContentView setContentOffset:self.currentContentView.contentOffset animated:NO];
     self.animation = animation;
     [self.horizontalCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:pageIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animation];
     if(!animation) {
