@@ -1584,6 +1584,7 @@ extern NSString *const INSTANT_DATA_KEY;
     }];
     [self scrollViewDidScroll:self.tableView];
     self.showFilter = YES;
+    self.tableView.scrollsToTop = NO;
 }
 
 -(void)onConditionPanelWillDisappear
@@ -1599,6 +1600,7 @@ extern NSString *const INSTANT_DATA_KEY;
         self.tableView.contentOffset = CGPointMake(0, -self.topView.height);
     }
     [self scrollViewDidScroll:self.tableView];
+    self.tableView.scrollsToTop = YES;
 }
 
 -(void)onConditionPanelClickedWithContent:(NSString *)content {
