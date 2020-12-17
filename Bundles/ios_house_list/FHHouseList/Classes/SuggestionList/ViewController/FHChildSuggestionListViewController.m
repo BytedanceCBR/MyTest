@@ -313,6 +313,7 @@
             self.isCanTrack = isCanTrack;
         }
         [self.viewModel clearSugTableView];
+        self.lastSearchWord = nil;
     }
     if (isCanTrack) {
         _textFieldText = text;
