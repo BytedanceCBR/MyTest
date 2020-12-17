@@ -11,6 +11,7 @@
 #import "FHClientModel.h"
 #import "FHSearchConfigModel.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import "FHMessageManager.h"
 
 //字符串是否为空
 #define kIsNSString(str) ([str isKindOfClass:[NSString class]])
@@ -46,7 +47,6 @@ static NSString *const kFHSwitchGetLightFinishedNotification = @"k_fh_get_light_
 
 static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 
-@class FHMessageManager;
 @class TTReachability;
 @class UNUserNotificationCenter;
 @class UNNotificationResponse;
