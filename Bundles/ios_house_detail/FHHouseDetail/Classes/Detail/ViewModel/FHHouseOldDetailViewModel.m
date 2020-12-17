@@ -63,6 +63,9 @@
 #import "FHOldDetailOwnerSellHouseCell.h"
 #import "SSCommonLogic.h"
 #import "BDABTestManager.h"
+#import "FHHousedetailModelManager.h"
+#import <FHHouseBase/FHSearchChannelTypes.h>
+#import "NSString+BTDAdditions.h"
 #import "FHHouseFillFormHelper.h"
 
 extern NSString *const kFHSubscribeHouseCacheKey;
@@ -140,45 +143,49 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     Class cls = [self cellClassForEntity:model];
     return NSStringFromClass(cls);
 }
-// 网络数据请求
+// 获得数据后通过cache或者网络请求
+- (void)afterLoadData:(FHDetailOldModel *)model isCachemodel:(BOOL)isCachemodel{
+    [self processDetailData:model];
+    self.detailController.hasValidateData = YES;
+    // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
+    [self.detailController.emptyView hideEmptyView];
+    self.bottomBar.hidden = NO;
+    [self handleBottomBarStatus:model.data.status];
+    NSString *neighborhoodId = model.data.neighborhoodInfo.id;
+    self.neighborhoodId = neighborhoodId;
+    // 周边数据请求
+    if(!isCachemodel){
+        [self requestRelatedData:neighborhoodId];
+    }
+    self.contactViewModel.imShareInfo = (FHDetailImShareInfoModel*)model.data.imShareInfo;
+}
+//处理网络请求错误
+- (void)requsetDataErrorWithModel:(FHDetailOldModel *)model Message:(NSString *)message{
+    self.detailController.isLoadingData = NO;
+    self.detailController.hasValidateData = NO;
+    self.bottomBar.hidden = YES;
+    [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+    [self addDetailRequestFailedLog:model.status.integerValue message:message];
+}
+
 - (void)startLoadData {
-    
-    // 详情页数据-Main
+   self.isCache = NO ;
+    NSString *key = [NSString stringWithFormat:@"%@+%@+%@",self.houseId,self.ridcode,self.realtorId];
+    FHDetailOldModel *cacheModel = [[FHHousedetailModelManager sharedInstance] getHouseDetailModelWith:key.copy];
+    if(cacheModel){
+        self.isCache = YES;
+        [self afterLoadData:cacheModel isCachemodel:YES];
+    }
     __weak typeof(self) wSelf = self;
     [FHHouseDetailAPI requestOldDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId bizTrace:self.detailController.bizTrace
-logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
+                                 logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
-                [wSelf processDetailData:model];
-                // 0 正常显示，1 二手房源正常下架（如已卖出等），-1 二手房非正常下架（如法律风险、假房源等）
-                wSelf.detailController.hasValidateData = YES;
-                [wSelf.detailController.emptyView hideEmptyView];
-                wSelf.bottomBar.hidden = NO;
-                [wSelf handleBottomBarStatus:model.data.status];
-                NSString *neighborhoodId = model.data.neighborhoodInfo.id;
-                wSelf.neighborhoodId = neighborhoodId;
-                // 周边数据请求
-                [wSelf requestRelatedData:neighborhoodId];
-                wSelf.contactViewModel.imShareInfo = model.data.imShareInfo;
-            } else {
-                wSelf.detailController.isLoadingData = NO;
-                wSelf.detailController.hasValidateData = NO;
-                wSelf.bottomBar.hidden = YES;
-
-                [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-                [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
+                [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:key.copy];
+                [wSelf afterLoadData:model isCachemodel:NO];
             }
         } else {
-            //            if (wSelf.detailController.instantData) {
-            //                SHOW_TOAST(@"请求失败");
-            //            }else{
-            wSelf.detailController.isLoadingData = NO;
-            wSelf.detailController.hasValidateData = NO;
-            wSelf.bottomBar.hidden = YES;
-            [wSelf.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
-            NSDictionary *userInfo = error.userInfo;
-            [wSelf addDetailRequestFailedLog:model.status.integerValue message:error.domain];
-            //            }
+            [wSelf requsetDataErrorWithModel:model Message:error.domain?:@"empty"];
         }
     }];
 }
@@ -188,7 +195,6 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     if (status == 1) {
         self.bottomStatusBar.hidden = NO;
         [self.navBar showRightItems:YES];
-        //        self.
         [self.bottomStatusBar mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(30);
         }];
@@ -230,7 +236,9 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         self.navBar.pageType = [self pageTypeString];
         [self.navBar configureVouchStyle];
     }
+    
     // 清空数据源
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     [self.items removeAllObjects];
     BOOL hasVideo = NO;
     BOOL hasVR = NO;
@@ -398,7 +406,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     // 添加属性列表
     if (model.data.baseInfo || model.data.certificate || model.data.baseExtra) {
         FHDetailPropertyListCorrectingModel *propertyModel = [[FHDetailPropertyListCorrectingModel alloc] init];
-        propertyModel.baseInfo = model.data.baseInfo;
+        propertyModel.baseInfo = (NSArray<FHHouseCoreInfoModel> *)model.data.baseInfo;
         propertyModel.certificate = model.data.certificate;
         propertyModel.houseModelType = FHHouseModelTypeCoreInfo;
         propertyModel.extraInfo = model.data.baseExtra;
@@ -783,23 +791,26 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     
     // --
     [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
-    
-
-    self.contactViewModel.contactPhone = contactPhone;
-    self.contactViewModel.shareInfo = model.data.shareInfo;
-    self.contactViewModel.subTitle = model.data.reportToast;
-    self.contactViewModel.toast = model.data.reportDoneToast;
-    self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
-    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
-    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
-    if (model.isInstantData) {
-        [self.tableView reloadData];
-    }else{
-        [self reloadData];
-    }
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.contactViewModel.contactPhone = contactPhone;
+            self.contactViewModel.shareInfo = model.data.shareInfo;
+            self.contactViewModel.subTitle = model.data.reportToast;
+            self.contactViewModel.toast = model.data.reportDoneToast;
+            self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
+            self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+            self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
+            if (model.isInstantData) {
+                [self.tableView reloadData];
+            }else{
+                [self reloadData];
+            }
+            [self.detailController updateLayout:model.isInstantData];
+        });
+    });
     self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
     [self.detailController updateLayout:model.isInstantData];
-    
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [[NSNotificationCenter defaultCenter] postNotificationName:@"TTAppStoreStarManagerShowNotice" object:nil userInfo:@{@"trigger":@"old_detail"}];
     });
@@ -847,6 +858,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 4) {
         self.detailController.isLoadingData = NO;
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;
         //  同小区房源
         if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
@@ -903,7 +915,10 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
         }
          self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];
         //
-        [self reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self reloadData];
+            });
+        });
     }
 }
 
@@ -911,7 +926,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 - (void)requestHouseInSameNeighborhoodSearch:(NSString *)neighborhoodId {
     NSString *houseId = self.houseId;
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:5 channel:CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
         wSelf.sameNeighborhoodHouseData = model.data;
         [wSelf processDetailRelatedData];
@@ -921,7 +936,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 // 周边小区
 - (void)requestRelatedNeighborhoodSearch:(NSString *)neighborhoodId {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId isShowNeighborhood:NO searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
         wSelf.relatedNeighborhoodData = model.data;
         [wSelf processDetailRelatedData];
@@ -931,7 +946,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
 // 周边房源
 - (void)requestRelatedHouseSearch {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestRelatedHouseSearch:self.houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestRelatedHouseSearch:self.houseId neighborhoodId:nil searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
         wSelf.relatedHouseData = model.data;
         [wSelf processDetailRelatedData];
@@ -1065,7 +1080,7 @@ logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _N
     return [(FHDetailOldModel *)self.detailData isInstantData];
 }
 
--(NSArray *)instantHouseImages
+-(NSArray<FHImageModel> *)instantHouseImages
 {
     id data = self.detailController.instantData;
     if ([data isKindOfClass:[FHSearchHouseDataItemsModel class]]) {

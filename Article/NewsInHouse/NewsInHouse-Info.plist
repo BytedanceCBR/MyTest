@@ -191,6 +191,10 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_dartobservatory._tcp</string>
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>方便您使用拍照功能上传头像，发送图片以及发帖</string>
 	<key>NSLocalNetworkUsageDescription</key>

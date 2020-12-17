@@ -11,9 +11,10 @@
 #import "TTBaseMacro.h"
 #import "UIViewAdditions.h"
 #import "UIImageView+fhUgcImage.h"
+#import "UIFont+House.h"
 
 #define maxLines 3
-#define bottomViewHeight 39
+#define bottomViewHeight 36
 #define guideViewHeight 27
 #define topMargin 15
 #define singleImageViewHeight 90
@@ -66,6 +67,7 @@
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
+    _contentLabel.font = [UIFont themeFontMedium:16];
     [self.contentView addSubview:_contentLabel];
     
     //单图

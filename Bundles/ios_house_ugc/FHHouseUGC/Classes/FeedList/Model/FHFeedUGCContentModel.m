@@ -163,6 +163,7 @@
     @"userBackgroundColor": @"user_background_color",
     @"userBorderColor": @"user_border_color",
     @"userFontColor": @"user_font_color",
+    @"fverifyShow":@"f_verify_show",
   };
   return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
      return dict[keyName]?:keyName;

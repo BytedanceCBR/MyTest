@@ -12,16 +12,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailPropertyInfoCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
 
-@property (nonatomic, copy) void (^foldButtonActionBlock)(void);
+@property (nonatomic, copy) void (^allButtonActionBlock)(void);
 
 @end
 
 @interface FHNeighborhoodDetailPropertyInfoModel : NSObject<IGListDiffable>
-@property (nonatomic, assign)   BOOL       isFold; // 折叠
-@property (nonatomic, copy , nullable) NSString *baseInfoFoldCount;
+//@property (nonatomic, assign)   BOOL       isFold; // 折叠
+//@property (nonatomic, copy , nullable) NSString *baseInfoFoldCount;
 @property (nonatomic, strong , nullable) NSArray<FHHouseBaseInfoModel> *baseInfo;
 
-- (instancetype)transformFoldStatus ;
+//- (instancetype)transformFoldStatus ;
 @end
 
 @interface FHNeighborhoodDetailPropertyItemView : UIView

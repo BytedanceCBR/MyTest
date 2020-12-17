@@ -12,13 +12,13 @@
 #import "TTRoute.h"
 #import "FHUserTracker.h"
 #import "UIViewAdditions.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define leftMargin 20
 #define rightMargin 20
 #define cellId @"cellId"
 
 #define headerViewHeight 44
-#define bottomSepViewHeight 5
 
 @interface FHUGCHotTopicCell()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -116,7 +116,7 @@
     self.seprateLine.top = self.headerView.bottom;
     self.seprateLine.left = 0;
     self.seprateLine.width = self.headerView.width;
-    self.seprateLine.height = 1;
+    self.seprateLine.height = 1.2;
 
 //    [self.seprateLine mas_updateConstraints:^(MASConstraintMaker *make) {
 //        make.top.mas_equalTo(self.headerView.mas_bottom);
@@ -135,9 +135,9 @@
 //        make.bottom.mas_equalTo(self.bottomSepView.mas_top).offset(-3);
 //    }];
     self.bottomSepView.top = self.collectionView.bottom + 3;
-    self.bottomSepView.left = 0;
-    self.bottomSepView.width = self.headerView.width;
-    self.bottomSepView.height = bottomSepViewHeight;
+    self.bottomSepView.left = 20;
+    self.bottomSepView.width = self.headerView.width - 40;
+    self.bottomSepView.height = 1.2;
 
 //    [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
 //        make.bottom.left.right.mas_equalTo(self.contentView);
@@ -177,7 +177,7 @@
 }
 
 + (CGFloat)heightForData:(id)data {
-    CGFloat height = headerViewHeight + 1 + 10 + bottomSepViewHeight + 3;
+    CGFloat height = headerViewHeight + 1 + 10 + 1.2 + 3;
     if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
         NSArray *dataList = model.hotTopicList;

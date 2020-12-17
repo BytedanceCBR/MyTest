@@ -6,12 +6,30 @@
 //
 
 #import "FHNeighborhoodDetailHouseSaleSM.h"
+#import "FHHouseCardUtils.h"
+#import "FHHouseSecondCardViewModel.h"
+#import "FHCommonDefines.h"
 
 @implementation FHNeighborhoodDetailHouseSaleSM
 
 -(void)updateWithDataModel:(FHDetailSameNeighborhoodHouseResponseDataModel *)model {
-    self.houseSaleCellModel = [[FHNeighborhoodDetailHouseSaleCellModel alloc] init];
-    self.houseSaleCellModel.neighborhoodSoldHouseData = model;
+    NSMutableArray *arrayM = [[NSMutableArray alloc] init];
+    for (FHSearchHouseDataItemsModel *item in model.items) {
+        item.advantageDescription = nil;
+        id obj = [FHHouseCardUtils getEntityFromModel:item];
+        if (obj && [obj isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+            FHHouseSecondCardViewModel *model = (FHHouseSecondCardViewModel *)obj;
+            model.tagListMaxWidth = SCREEN_WIDTH - 21 * 2 - 90 - 8;
+            [model cutTagListWithFont:[UIFont themeFontRegular:10]];
+            [model setTitleMaxWidth:SCREEN_WIDTH - 30 * 2 - 84 - 8 + 18];
+            [arrayM addObject:obj];
+        }
+
+    }
+    self.items = arrayM.copy;
+    self.moreTitle = [NSString stringWithFormat:@"查看在售%@套房源", model.total];
+    self.model = model;
+    self.total = [model.total integerValue];
 }
 
 @end

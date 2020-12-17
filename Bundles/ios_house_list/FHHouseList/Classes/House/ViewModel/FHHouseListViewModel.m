@@ -70,6 +70,7 @@
 #import "NSObject+FHTracker.h"
 #import "FHHouseListRentCell.h"
 #import "FHHouseNewComponentViewModel.h"
+#import "FHSuggestionDefines.h"
 #import "SSCommonLogic.h"
 
 extern NSString *const INSTANT_DATA_KEY;
@@ -1434,7 +1435,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [sugDelegateTable addObject:self];
     NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                            @"tracer": traceParam,
-                           @"from_home":@(3), // list
+                           @"from_home":@(FHEnterSuggestionTypeList), // list
                            @"sug_delegate":sugDelegateTable
                            };
     NSMutableDictionary *dictInfo = [NSMutableDictionary dictionaryWithDictionary:dict];

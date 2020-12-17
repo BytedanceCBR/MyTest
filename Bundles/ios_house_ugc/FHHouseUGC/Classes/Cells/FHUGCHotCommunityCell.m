@@ -13,13 +13,13 @@
 #import "FHUGCHotCommunityLayout.h"
 #import "FHCommunityList.h"
 #import "UIViewAdditions.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define leftMargin 20
 #define rightMargin 20
 #define cellId @"cellId"
 
 #define headerViewHeight 40
-#define bottomSepViewHeight 5
 
 @interface FHUGCHotCommunityCell()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -90,10 +90,10 @@
     self.collectionView.width = [UIScreen mainScreen].bounds.size.width;
     self.collectionView.height = 188;
     
-    self.bottomSepView.top = 223 - bottomSepViewHeight;
-    self.bottomSepView.left = 0;
-    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width;
-    self.bottomSepView.height = bottomSepViewHeight;
+    self.bottomSepView.top = 223 - 1.2;
+    self.bottomSepView.left = 20;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
+    self.bottomSepView.height = 1.2;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
