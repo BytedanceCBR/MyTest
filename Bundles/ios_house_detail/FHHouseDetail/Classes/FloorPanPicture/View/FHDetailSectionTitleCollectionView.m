@@ -14,6 +14,7 @@
 
 - (void)prepareForReuse {
     [super prepareForReuse];
+    self.moreActionBlock = nil;
     self.arrowsImg.hidden = YES;
     self.subTitleLabel.hidden = YES;
     [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -35,6 +36,7 @@
         }];
         
         self.arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
+        self.arrowsImg.contentMode = UIViewContentModeCenter;
         self.arrowsImg.hidden = YES;
         [self addSubview:self.arrowsImg];
         [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -65,8 +67,17 @@
     } else {
         self.subTitleLabel.hidden = YES;
     }
+}
 
-
+- (void)setupNeighborhoodDetailStyle {
+    self.titleLabel.font = [UIFont themeFontSemibold:16];
+    self.titleLabel.textColor = [UIColor themeGray1];
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(12);
+        make.centerY.mas_equalTo(self);
+    }];
+    self.subTitleLabel.textColor = [UIColor themeGray1];
+    self.arrowsImg.image = [UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"];
 }
 
 - (void)moreAction:(UITapGestureRecognizer *)tapGesture {

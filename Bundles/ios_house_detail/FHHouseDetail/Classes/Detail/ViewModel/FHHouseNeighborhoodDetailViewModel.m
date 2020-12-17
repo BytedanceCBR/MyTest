@@ -43,6 +43,7 @@
 #import "FHDetailSurroundingAreaCell.h"
 #import "TTAccountManager.h"
 #import "FHDetailNeighborhoodOwnerSellHouseCell.h"
+#import <FHHouseBase/FHSearchChannelTypes.h>
 
 @interface FHHouseNeighborhoodDetailViewModel ()
 
@@ -99,7 +100,7 @@
 - (void)startLoadData {    
     // 详情页数据-Main
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId logPB:self.listLogPB query:nil extraInfo:self.extraInfo completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId logPB:self.listLogPB query:nil extraInfo:self.extraInfo completion:^(FHDetailNeighborhoodModel * _Nullable model, NSData * _Nullable resultData, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
                 [wSelf processDetailData:model];
@@ -142,11 +143,6 @@
     }
 }
 
--(BOOL)currentIsInstantData
-{
-    return [(FHDetailNeighborhoodModel *)self.detailData isInstantData];
-}
-
 // 处理详情页数据
 - (void)processDetailData:(FHDetailNeighborhoodModel *)model {
     
@@ -162,7 +158,7 @@
         contactPhone = model.data.contact;
         contactPhone.unregistered = YES;
     }
-    contactPhone.isInstantData = model.isInstantData;
+    contactPhone.isInstantData = NO;
     contactPhone.isFormReport = !contactPhone.enablePhone;
     self.contactViewModel.contactPhone = contactPhone;
     self.contactViewModel.shareInfo = model.data.shareInfo;
@@ -350,13 +346,9 @@
     }
 
     self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
-    if (model.isInstantData) {
-        [self.tableView reloadData];
-    }else{
-        [self reloadData];
-    }
+    [self reloadData];
     
-    [self.detailController updateLayout:model.isInstantData];
+    [self.detailController updateLayout:NO];
 }
 //小区顶部i地图按钮点击事件
 - (void)mapImageClick {
@@ -389,16 +381,6 @@
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 3) {
         self.detailController.isLoadingData = NO;
-//        // 周边小区
-//        if (self.relatedNeighborhoodData && self.relatedNeighborhoodData.items.count > 0) {
-//            // 添加分割线--当存在某个数据的时候在顶部添加分割线
-//            FHDetailGrayLineModel *grayLine = [[FHDetailGrayLineModel alloc] init];
-//            [self.items addObject:grayLine];
-//            FHDetailRelatedNeighborhoodModel *infoModel = [[FHDetailRelatedNeighborhoodModel alloc] init];
-//            infoModel.relatedNeighborhoodData = self.relatedNeighborhoodData;
-//            infoModel.neighborhoodId = self.neighborhoodId;
-//            [self.items addObject:infoModel];
-//        }
         // 小区房源(二手房)
         if (self.sameNeighborhoodErshouHouseData.items.count>0){
             FHDetailNeighborhoodHouseSaleModel *infoModel = [[FHDetailNeighborhoodHouseSaleModel alloc] init];
@@ -460,7 +442,7 @@
 // 周边小区
 - (void)requestRelatedNeighborhoodSearch:(NSString *)neighborhoodId {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestRelatedNeighborhoodSearchByNeighborhoodId:neighborhoodId isShowNeighborhood:NO searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailRelatedNeighborhoodResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
         wSelf.relatedNeighborhoodData = model.data;
         [wSelf processDetailRelatedData];
@@ -471,7 +453,7 @@
 - (void)requestHouseInSameNeighborhoodSearchErShou:(NSString *)neighborhoodId {
     NSString *houseId = self.houseId;
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:5 completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestHouseInSameNeighborhoodSearchByNeighborhoodId:neighborhoodId houseId:houseId searchId:nil offset:@"0" query:nil count:5 channel:CHANNEL_ID_SAME_NEIGHBORHOOD_HOUSE completion:^(FHDetailSameNeighborhoodHouseResponseModel * _Nullable model, NSError * _Nullable error) {
         wSelf.requestRelatedCount += 1;
         wSelf.sameNeighborhoodErshouHouseData = model.data;
         [wSelf processDetailRelatedData];

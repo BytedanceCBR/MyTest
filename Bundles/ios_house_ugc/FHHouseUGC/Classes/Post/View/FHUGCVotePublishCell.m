@@ -482,37 +482,33 @@
         _optionTextField.clipsToBounds = YES;
         _optionTextField.tintColor = [UIColor themeRed1];
         _optionTextField.delegate = self;
-        [_optionTextField addTarget:self action:@selector(textFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     }
     return _optionTextField;
 }
 
-- (void)textFieldDidChange:(UITextField *)textField {
-    
-    [textField textFieldDidChangeLimitTextLength:OPTION_LENGTH_LIMIT];
-    
+- (void)textFieldDidChange:(NSNotification *)noti{
+    [self.optionTextField textFieldDidChangeLimitTextLength:OPTION_LENGTH_LIMIT];
     if([self.delegate respondsToSelector:@selector(optionCell:didInputText:)]) {
-        [self.delegate optionCell:self didInputText:textField.text];
+        [self.delegate optionCell:self didInputText:self.optionTextField.text];
     }
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
-        [self addSubview:self.deleteButton];
-        [self addSubview:self.optionTextField];
-        
+        [self.contentView addSubview:self.deleteButton];
+        [self.contentView addSubview:self.optionTextField];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldDidChange:) name:UITextFieldTextDidChangeNotification object:nil];
         [self.deleteButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_offset(40);
-            make.left.equalTo(self).offset(PADDING - 11);
+            make.left.equalTo(self.contentView).offset(PADDING - 11);
             make.centerY.equalTo(self.optionTextField);
         }];
-        
         [self.optionTextField mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(self.deleteButton.mas_right).offset(8);
-            make.top.equalTo(self).offset(24);
-            make.bottom.equalTo(self).offset(-16);
-            make.right.equalTo(self).offset(-PADDING);
+            make.top.equalTo(self.contentView).offset(24);
+            make.bottom.equalTo(self.contentView).offset(-16);
+            make.right.equalTo(self.contentView).offset(-PADDING);
         }];
     }
     return self;
@@ -533,5 +529,9 @@
     if([self.delegate respondsToSelector:@selector(optionCellDidBeginEditing:)]) {
         [self.delegate optionCellDidBeginEditing:self];
     }
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 @end

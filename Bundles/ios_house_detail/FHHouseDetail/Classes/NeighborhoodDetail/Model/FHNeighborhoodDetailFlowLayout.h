@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailFlowLayout : UICollectionViewFlowLayout
 @property (nonatomic, copy) NSArray<FHNeighborhoodDetailSectionModel *> *sectionModels;
+
+@property (nonatomic, assign) BOOL hasShowFloorpanInfo;
 @end
 
 NS_ASSUME_NONNULL_END

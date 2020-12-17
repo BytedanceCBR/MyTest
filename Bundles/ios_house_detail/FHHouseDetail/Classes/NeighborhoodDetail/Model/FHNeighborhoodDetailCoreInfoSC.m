@@ -9,13 +9,16 @@
 #import "FHNeighborhoodDetailCoreInfoSM.h"
 #import "FHNeighborhoodDetailHeaderTitleCollectionCell.h"
 #import "FHNeighborhoodDetailSubMessageCollectionCell.h"
-#import "FHNeighborhoodDetailPropertyInfoCollectionCell.h"
 #import "FHNeighborhoodDetailQuickEntryCollectionCell.h"
 #import <FHHouseBase/FHMonitor.h>
 #import "FHNeighborhoodDetailViewController.h"
-#import "NSArray+BTDAdditions.h"
+#import <TTRoute/TTRoute.h>
+#import <ByteDanceKit/ByteDanceKit.h>
+#import "FHSearchHouseModel.h"
+#import <Flutter/Flutter.h>
+#import "FHFlutterChannels.h"
 
-@interface FHNeighborhoodDetailCoreInfoSC () <IGListBindingSectionControllerDataSource>
+@interface FHNeighborhoodDetailCoreInfoSC ()
 
 @end
 
@@ -26,49 +29,60 @@
 {
     self = [super init];
     if (self) {
-        self.inset = UIEdgeInsetsMake(-20, 15, 12, 15);
-        self.dataSource = self;
+        self.inset = UIEdgeInsetsMake(12, 9, 12, 9);
     }
     return self;
 }
 
-//#pragma mark - DataSource
-//- (NSInteger)numberOfItems {
-//    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-//    return model.items.count;
-//}
-//
-//- (CGSize)sizeForItemAtIndex:(NSInteger)index {
-//    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
-//    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-//    if (model.items[index] == model.titleCellModel) {
-//        return [FHNeighborhoodDetailHeaderTitleCollectionCell cellSizeWithData:model.titleCellModel width:width];
-//    } else if (model.items[index] == model.subMessageModel) {
-//        return [FHNeighborhoodDetailSubMessageCollectionCell cellSizeWithData:model.subMessageModel width:width];
-//    } else if (model.items[index] == model.propertyInfoModel) {
-//        return [FHNeighborhoodDetailPropertyInfoCollectionCell cellSizeWithData:model.propertyInfoModel width:width];
-//    } else if (model.items[index] == model.quickEntryModel) {
-//        return [FHNeighborhoodDetailQuickEntryCollectionCell cellSizeWithData:model.quickEntryModel width:width];
-//    }
-//    return CGSizeZero;
-//}
-//- (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
-//    __weak typeof(self) weakSelf = self;
-//    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-//    if (model.items[index] == model.titleCellModel) {
-//        FHNeighborhoodDetailHeaderTitleCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailHeaderTitleCollectionCell class] withReuseIdentifier:NSStringFromClass([model.titleCellModel class]) forSectionController:self atIndex:index];
-//        [cell refreshWithData:model.titleCellModel];
-//        return cell;
-//    } else if (model.items[index] == model.subMessageModel) {
-//        FHNeighborhoodDetailSubMessageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSubMessageCollectionCell class] withReuseIdentifier:NSStringFromClass([model.subMessageModel class]) forSectionController:self atIndex:index];
-//        [cell refreshWithData:model.subMessageModel];
-//        return cell;
-//    } else if (model.items[index] == model.propertyInfoModel) {
+#pragma mark - DataSource
+- (NSInteger)numberOfItems {
+    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+    return model.items.count;
+}
+
+- (CGSize)sizeForItemAtIndex:(NSInteger)index {
+    CGFloat width = self.collectionContext.containerSize.width - 9 * 2;
+    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+    if (model.items[index] == model.titleCellModel) {
+        return [FHNeighborhoodDetailHeaderTitleCollectionCell cellSizeWithData:model.titleCellModel width:width];
+    } else if (model.items[index] == model.subMessageModel) {
+        return [FHNeighborhoodDetailSubMessageCollectionCell cellSizeWithData:model.subMessageModel width:width];
+    }
+    return CGSizeZero;
+}
+
+- (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
+    __weak typeof(self) weakSelf = self;
+    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+    if (model.items[index] == model.titleCellModel) {
+        FHNeighborhoodDetailHeaderTitleCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailHeaderTitleCollectionCell class] withReuseIdentifier:NSStringFromClass([model.titleCellModel class]) forSectionController:self atIndex:index];
+        [cell refreshWithData:model.titleCellModel];
+        cell.mapBtnClickBlock = ^{
+            [weakSelf gotoMapDetail:model.titleCellModel.titleStr];
+        };
+        return cell;
+    } else if (model.items[index] == model.subMessageModel) {
+        FHNeighborhoodDetailSubMessageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSubMessageCollectionCell class] withReuseIdentifier:NSStringFromClass([model.subMessageModel class]) forSectionController:self atIndex:index];
+        if(![model.subMessageModel.sold isEqualToString:@"暂无数据"]){
+            cell.clickSoldblock = ^{
+                [weakSelf addSoldClick:model.subMessageModel.soldUrl];
+            };
+        }
+        if(![model.subMessageModel.onSale isEqualToString:@"暂无数据"]){
+            cell.clickOnSaleblock = ^{
+                [weakSelf addOnSaleClick];
+            };
+        }
+        cell.clickAveragePriceblock = ^{
+            [weakSelf addAveragePriceClick];
+        };
+        [cell refreshWithData:model.subMessageModel];
+        return cell;
+    }
+//    else if (model.items[index] == model.propertyInfoModel) {
 //        FHNeighborhoodDetailPropertyInfoCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPropertyInfoCollectionCell class] withReuseIdentifier:NSStringFromClass([model.propertyInfoModel class]) forSectionController:self atIndex:index];
-//        __weak FHNeighborhoodDetailCoreInfoSM *weakModelSM = model;
 //        [cell setFoldButtonActionBlock:^{
-//            weakModelSM.isFold = !weakModelSM.isFold;
-//            [weakSelf.detailViewController refreshSectionModel:weakModelSM animated:YES];
+//            [weakSelf foldAction];
 //        }];
 //        [cell refreshWithData:model.propertyInfoModel];
 //
@@ -87,36 +101,122 @@
 //        return cell;
 //
 //    }
-//    return nil;
+    return [super defaultCellAtIndex:index];
+}
+
+//- (void)gotoPanoramaDetail {
+//    if (![TTReachability isNetworkConnected]) {
+//        [[ToastManager manager] showToast:@"网络异常"];
+//        return;
+//    }
+//    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+//    NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
+//    NSMutableDictionary *param = [NSMutableDictionary new];
+//    tracerDict[@"element_from"] = @"panorama";
+//    [tracerDict setObject:tracerDict[@"page_type"] forKey:@"enter_from"];
+//    param[TRACER_KEY] = tracerDict.copy;
+//
+//
+//    NSString *gaodeLat = model.quickEntryModel.gaodeLat;
+//    NSString *gaodeLon = model.quickEntryModel.gaodeLng;
+//    if (gaodeLat.length && gaodeLon.length) {
+//        param[@"gaodeLat"] = gaodeLat;
+//        param[@"gaodeLon"] = gaodeLon;
+//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
+//    }
 //}
 
-- (void)gotoPanoramaDetail {
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
-        return;
+- (void)addOnSaleClick {
+    FHDetailNeighborhoodModel *detailModel = (FHDetailNeighborhoodModel*)self.detailViewController.viewModel.detailData;
+    NSString *neighborhood_id = @"be_null";
+    if (detailModel && detailModel.data.neighborhoodInfo.id.length > 0) {
+        neighborhood_id = detailModel.data.neighborhoodInfo.id;
     }
-    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-    NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
-    NSMutableDictionary *param = [NSMutableDictionary new];
-    tracerDict[@"element_from"] = @"panorama";
-    [tracerDict setObject:tracerDict[@"page_type"] forKey:@"enter_from"];
-    param[TRACER_KEY] = tracerDict.copy;
+    NSMutableDictionary *tracerDic = [[self detailTracerDict] mutableCopy];
+    tracerDic[@"enter_type"] = @"click";
+    tracerDic[@"page_type"] = @"old_list";
+    tracerDic[@"log_pb"] = self.detailViewController.viewModel.listLogPB;
+    tracerDic[@"category_name"] = @"old_list";
+    tracerDic[@"element_from"] = @"sale_house";
+    tracerDic[@"enter_from"] = @"neighborhood_detail";
+    [tracerDic removeObjectForKey:@"card_type"];
+    NSMutableDictionary *userInfo = [NSMutableDictionary new];
+    userInfo[@"tracer"] = tracerDic;
+    userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+    userInfo[@"title"] = @"小区在售房源";// 默认值
+    if (neighborhood_id.length > 0) {
+        userInfo[@"neighborhood_id"] = neighborhood_id;
+    }
+    if (self.detailViewController.viewModel.houseId.length > 0) {
+        userInfo[@"house_id"] = self.detailViewController.viewModel.houseId;
+    }
+    userInfo[@"list_vc_type"] = @(5);
     
-
-    NSString *gaodeLat = model.quickEntryModel.gaodeLat;
-    NSString *gaodeLon = model.quickEntryModel.gaodeLng;
-    if (gaodeLat.length && gaodeLon.length) {
-        param[@"gaodeLat"] = gaodeLat;
-        param[@"gaodeLon"] = gaodeLon;
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
+    TTRouteUserInfo *userInf = [[TTRouteUserInfo alloc] initWithInfo:userInfo];
+    NSString * urlStr = [NSString stringWithFormat:@"snssdk1370://house_list_in_neighborhood"];
+    if (urlStr.length > 0) {
+        NSURL *url = [NSURL URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInf];
     }
+}
+
+- (void)addAveragePriceClick {
+    NSMutableDictionary *params = @{}.mutableCopy;
+    
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    userInfo[@"route"] = @"/neighbor_price_detail";
+    
+//    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+    //{"average_price_detail":"均价详情页"}
+    NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
+    tracerDict[@"element_from"] = @"average_price";
+    tracerDict[@"enter_from"] = @"neighborhood_detail";
+    params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
+    
+    if (self.detailViewController.viewModel.originDetailDict) {
+        NSMutableDictionary *dataInfo = [self.detailViewController.viewModel.originDetailDict btd_dictionaryValueForKey:@"data"].mutableCopy;
+        if (dataInfo.count) {
+            NSArray *keys = @[
+                @"base_info",
+                @"neighborhood_image",
+                @"total_sales",
+                @"recommended_realtors",
+                @"question",
+                @"comments",
+                @"sale_house_entrance",
+                @"album_info",
+                @"neighborhood_top_images",
+                @"neighborhood_sale_house_info",
+                @"neighborhood_top_images",
+                @"recommend_realtors_associate_info",
+                @"highlighted_realtor_associate_info",
+                @"neighborhood_detail_modules"
+            ];
+            for (NSString *key in keys) {
+                [dataInfo removeObjectForKey:key];
+            }
+            params[@"neighbor_info"] = [dataInfo btd_safeJsonStringEncoded];
+        }
+    } else if (self.detailViewController.viewModel.detailData) {
+        params[@"neighbor_info"] = [[self.detailViewController.viewModel.detailData.data toDictionary] btd_safeJsonStringEncoded];
+    }
+    
+    userInfo[@"params"] = [params btd_safeJsonStringEncoded];
+    
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
+    
+    [[FHFlutterChannels sharedInstance] updateTempNeighborhoodViewModel:self.detailViewController.viewModel];
+}
+
+- (void)addSoldClick:(NSString *)url {
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:url] userInfo:nil];
 }
 
 - (void)gotoMapDetail :(NSString *)quickEntryName {
     FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
     //地图页调用示例
-    double longitude = [model.quickEntryModel.gaodeLng floatValue];
-    double latitude = [model.quickEntryModel.gaodeLat floatValue];
+    double longitude = [model.titleCellModel.gaodeLng floatValue];
+    double latitude = [model.titleCellModel.gaodeLat floatValue];
     NSNumber *latitudeNum = @(latitude);
     NSNumber *longitudeNum = @(longitude);
     
@@ -125,18 +225,17 @@
     [infoDict setValue:selectCategory forKey:@"category"];
     [infoDict setValue:latitudeNum forKey:@"latitude"];
     [infoDict setValue:longitudeNum forKey:@"longitude"];
-    [infoDict setValue:model.quickEntryModel.mapCentertitle forKey:@"title"];
-    if (model.quickEntryModel.baiduPanoramaUrl.length) {
-        infoDict[@"baiduPanoramaUrl"] = model.quickEntryModel.baiduPanoramaUrl;
+    [infoDict setValue:model.titleCellModel.mapCentertitle forKey:@"title"];
+    if (model.titleCellModel.baiduPanoramaUrl.length) {
+        infoDict[@"baiduPanoramaUrl"] = model.titleCellModel.baiduPanoramaUrl;
     }
     
     NSMutableDictionary *tracer = self.detailTracerDict.mutableCopy;
+    tracer[UT_ELEMENT_FROM] = @"top_map";
+    tracer[UT_ENTER_FROM] = @"neighborhood_detail";
+    tracer[UT_ELEMENT_TYPE] = @"be_null";
     
-    
-    [tracer setValue:[self clickPositionFromQucikEntryName:quickEntryName] forKey:@"element_from"];
-    [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
     [infoDict setValue:tracer forKey:@"tracer"];
-    
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
 }
@@ -171,86 +270,27 @@
     return @"be_null";
 }
 
-- (void)foldAction {
-    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-    
-    if (model.propertyInfoModel && [model.propertyInfoModel isKindOfClass:[FHNeighborhoodDetailPropertyInfoModel class]]) {
-        
-        FHNeighborhoodDetailPropertyInfoModel *newInfoModel = [model.propertyInfoModel transformFoldStatus];
-        
-        NSMutableArray *newArray = [NSMutableArray arrayWithArray:model.items];
-        
-        
-        
-        [newArray btd_replaceObjectAtIndex:[newArray indexOfObject:model.propertyInfoModel] withObject:newInfoModel];
-        model.items = newArray.copy;
-        model.propertyInfoModel = newInfoModel;
-        
-        
-        [self updateAnimated:YES completion:^(BOOL updated) {
-
-        }];
-    }
-
-}
-
-
-- (nonnull UICollectionViewCell<IGListBindable> *)sectionController:(nonnull IGListBindingSectionController *)sectionController cellForViewModel:(nonnull id)viewModel atIndex:(NSInteger)index {
-    __weak typeof(self) weakSelf = self;
-    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-    if (model.items[index] == model.titleCellModel) {
-        FHNeighborhoodDetailHeaderTitleCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailHeaderTitleCollectionCell class] withReuseIdentifier:NSStringFromClass([model.titleCellModel class]) forSectionController:self atIndex:index];
-        [cell refreshWithData:model.titleCellModel];
-        return cell;
-    } else if (model.items[index] == model.subMessageModel) {
-        FHNeighborhoodDetailSubMessageCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailSubMessageCollectionCell class] withReuseIdentifier:NSStringFromClass([model.subMessageModel class]) forSectionController:self atIndex:index];
-        [cell refreshWithData:model.subMessageModel];
-        return cell;
-    } else if (model.items[index] == model.propertyInfoModel) {
-        FHNeighborhoodDetailPropertyInfoCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailPropertyInfoCollectionCell class] withReuseIdentifier:NSStringFromClass([model.propertyInfoModel class]) forSectionController:self atIndex:index];
-        [cell setFoldButtonActionBlock:^{
-            [weakSelf foldAction];
-        }];
-        [cell refreshWithData:model.propertyInfoModel];
-        
-        return cell;
-    } else if (model.items[index] == model.quickEntryModel) {
-        FHNeighborhoodDetailQuickEntryCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailQuickEntryCollectionCell class] withReuseIdentifier:NSStringFromClass([model.quickEntryModel class]) forSectionController:self atIndex:index];
-        [cell refreshWithData:model.quickEntryModel];
-        [cell setQuickEntryClickBlock:^(NSString * _Nonnull quickEntryName) {
-            [weakSelf addQuickEntryClick:quickEntryName];
-            if ([quickEntryName isEqualToString:@"街景"]) {
-                [self gotoPanoramaDetail];
-            } else {
-                [self gotoMapDetail:quickEntryName];
-            }
-        }];
-        return cell;
-        
-    }
-    return [super defaultCellAtIndex:index];
-}
-
-- (CGSize)sectionController:(nonnull IGListBindingSectionController *)sectionController sizeForViewModel:(nonnull id)viewModel atIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
-    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-    if (model.items[index] == model.titleCellModel) {
-        return [FHNeighborhoodDetailHeaderTitleCollectionCell cellSizeWithData:model.titleCellModel width:width];
-    } else if (model.items[index] == model.subMessageModel) {
-        return [FHNeighborhoodDetailSubMessageCollectionCell cellSizeWithData:model.subMessageModel width:width];
-    } else if (model.items[index] == model.propertyInfoModel) {
-        return [FHNeighborhoodDetailPropertyInfoCollectionCell cellSizeWithData:model.propertyInfoModel width:width];
-    } else if (model.items[index] == model.quickEntryModel) {
-        return [FHNeighborhoodDetailQuickEntryCollectionCell cellSizeWithData:model.quickEntryModel width:width];
-    }
-    return CGSizeZero;
-}
-
-- (nonnull NSArray<id<IGListDiffable>> *)sectionController:(nonnull IGListBindingSectionController *)sectionController viewModelsForObject:(nonnull id)object {
-    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
-    NSMutableArray *viewModels = [NSMutableArray array];
-    [viewModels addObjectsFromArray:model.items];
-    return viewModels.copy;
-}
+//- (void)foldAction {
+//    FHNeighborhoodDetailCoreInfoSM *model = (FHNeighborhoodDetailCoreInfoSM *)self.sectionModel;
+//
+//    if (model.propertyInfoModel && [model.propertyInfoModel isKindOfClass:[FHNeighborhoodDetailPropertyInfoModel class]]) {
+//
+//        FHNeighborhoodDetailPropertyInfoModel *newInfoModel = [model.propertyInfoModel transformFoldStatus];
+//
+//        NSMutableArray *newArray = [NSMutableArray arrayWithArray:model.items];
+//
+//
+//
+//        [newArray btd_replaceObjectAtIndex:[newArray indexOfObject:model.propertyInfoModel] withObject:newInfoModel];
+//        model.items = newArray.copy;
+//        model.propertyInfoModel = newInfoModel;
+//
+//
+//        [self updateAnimated:YES completion:^(BOOL updated) {
+//
+//        }];
+//    }
+//
+//}
 
 @end

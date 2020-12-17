@@ -33,6 +33,7 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "AWEVideoDetailTracker.h"
 #import <TTBaseLib/TTStringHelper.h>
+#import "FHUGCCommonAvatar.h"
 
 #define kTitleLabelFontSize     [TTDeviceUIUtils tt_newFontSize:14.f]
 #define kInfoLabelFontSize      [TTDeviceUIUtils tt_newFontSize:12.f]
@@ -57,7 +58,7 @@
 @property (nonatomic, strong) SSThemedLabel                 *infoLabel;
 @property (nonatomic, strong) TTFollowThemeButton           *followButton;
 @property (nonatomic, strong) TTAlphaThemedButton           *unInterestedButton;
-@property (nonatomic, strong) TTAsyncCornerImageView        *avatarImageView;
+@property (nonatomic, strong) FHUGCCommonAvatar        *avatarImageView;
 
 @end
 
@@ -114,9 +115,10 @@
     
     self.followButton.hidden = YES;
     self.unInterestedButton.hidden = YES;
-
-    [self.avatarImageView tt_setImageWithURLString:[self.viewModel imageURL]];
-    [self.avatarImageView showOrHideVerifyViewWithVerifyInfo:self.viewModel.model.author.userAuthInfo decoratorInfo:self.viewModel.model.author.userDecoration sureQueryWithID:YES userID:nil disableNightCover:NO];
+    [self.avatarImageView setAvatarUrl:[self.viewModel imageURL]];
+    [self.avatarImageView setUserId:[self.viewModel userId]];
+//    [self.avatarImageView tt_setImageWithURLString:[self.viewModel imageURL]];
+//    [self.avatarImageView showOrHideVerifyViewWithVerifyInfo:self.viewModel.model.author.userAuthInfo decoratorInfo:self.viewModel.model.author.userDecoration sureQueryWithID:YES userID:nil disableNightCover:NO];
 
     [self setNeedsLayout];
 }
@@ -202,9 +204,8 @@
 - (TTAsyncCornerImageView *)avatarImageView
 {
     if(!_avatarImageView){
-        _avatarImageView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(kAvatarLeftPadding, kAvatarTopPadding, kAvatarSize, kAvatarSize) allowCorner:YES];
-        _avatarImageView.cornerRadius = kAvatarSize / 2.f;
-        _avatarImageView.placeholderName = @"default_avatar";
+        _avatarImageView = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake(kAvatarLeftPadding, kAvatarTopPadding, kAvatarSize, kAvatarSize)];
+        [_avatarImageView setPlaceholderImage: @"default_avatar"];
 //        [_avatarImageView addTouchTarget:self action:@selector(tapAvatar:)];
 //        [_avatarImageView setupVerifyViewForLength:kAvatarSize adaptationSizeBlock:^CGSize(CGSize standardSize) {
 //            return [TTVerifyIconHelper tt_newSize:standardSize];

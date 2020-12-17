@@ -45,6 +45,8 @@ def fhPods
     pod 'FHWebView', :path => '../AKPlugins/FHWebView', :inhibit_warnings => false
     pod 'FHLynxKit' , :path => '../Bundles/ios_common_lynx', :inhibit_warnings => false
 
+    pod 'FHFlutter' , :path => '../Bundles/FHFlutter'
+
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
 #    pod 'ios_house_filter' , '1.0.3-rc.0', :inhibit_warnings => false
     pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '44be876bb60e8d65324803c4f087efe5790f4155'
@@ -148,6 +150,7 @@ def appDevelopPods
     pod 'TTPostBase', :path => '../AKPlugins/TTPostBase'
 
     
+    
 end
 
 def appPods
@@ -166,11 +169,11 @@ def appPods
     pod_binary 'TSVToolkit', '0.1.2'
     pod_binary 'lottie-ios', '2.1.5'
 
-    pod 'TTKitchen','3.0.1',:subspecs => [
+    pod_binary 'TTKitchen','3.5.5',:subspecs => [
     'Core',
     'SettingsSyncer'
     ]
-    pod 'TTKitchenExtension','1.0.14'
+    pod_binary 'TTKitchenExtension','1.0.14'
     
     pod_binary 'TTPerformanceHelper', '0.1.1', :subspecs => [
     'TTThreadSafeContainer',
@@ -191,6 +194,15 @@ def appPods
     'DataCollection',
     'AmapLocation'
     ]
+    
+    #Flutter相关库
+    pod_binary 'BDFlutterPluginManager','0.1.7'
+    pod_binary 'FlutterChannelTool','2.0.0'
+    pod_binary 'TTNetworkDownloader','1.0.5'
+    pod 'TransBridge-iOS','0.1.6'
+#    pod 'FCFlutterShell' , :path => '../Bundles/f_c_flutter_shell', :inhibit_warnings => false
+    pod_binary 'FCFlutterShell','1.1.3'
+    
     
     pod 'BDUGSettingsInterface' , '1.1.0'
     pod 'BDUGKit' , '1.3.3'
@@ -328,6 +340,7 @@ def appPods
     'TTNet',
     'HMDStart',
     'Mach',
+    'Dart',
     'Utility',
     'DeviceInfo',
     'HMDANR',
@@ -498,7 +511,7 @@ def appPods
 #    pod_binary 'BDAccountSessionSDK','0.1.11'
     pod_binary 'YYText' , '1.0.7'
     pod_source 'AMapLocation' , '2.6.4'
-    pod_source 'AMap3DMap' , '6.9.0'
+    pod_source 'AMap3DMap' , '7.7.0'
     pod_source 'AMapSearch'  , '7.6.0'
     pod_binary 'AMapFoundation' , '1.6.4'
     pod_binary 'OpenUDID', '0.1.0'

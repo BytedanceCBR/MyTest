@@ -38,8 +38,8 @@
 "main"                  = "FHHomeSchemaObject";
 
 //"profile"               = "ArticleMomentProfileViewController"; //旧版个人主页
-"profile"               = "FHPersonalHomePageController"; //新版个人主页
-"media_account"         = "FHPersonalHomePageController";
+"profile"               = "FHPersonalHomePageViewController"; //新版个人主页
+"media_account"         = "FHPersonalHomePageViewController";
 
 "invite_friend"         = "ArticleInviteFriendViewController";
 "address_list"          = "TTAddressListFriendViewController";
@@ -259,3 +259,5 @@
 
 //找好房页面
 "house_comfort_find" = "FHHouseComfortFindViewController";
+//flutter页面
+"flutter" = "FHFlutterViewController";
