@@ -279,21 +279,20 @@
 }
 
 - (void)reloadData {
-    NSInteger chatNumber = 0;
+    // 通知栏未读数计算
     NSInteger systemMessageNumber = 0;
-    BOOL hasChatRedPoint = NO;
-    for (IMConversation *conv in [[self combiner] conversationItems]) {
-        if (conv.mute) {
-            if (conv.unreadCount > 0) {
-                hasChatRedPoint = YES;
-            }
-        } else {
-            chatNumber += conv.unreadCount;
-        }
-    }
     for (FHUnreadMsgDataUnreadModel *item in [[self combiner] channelItems]) {
         systemMessageNumber += [item.unread integerValue];
     }
+    // 微聊未读数计算
+    RACTuple *unreadNumberTuple = [[IMManager shareInstance] unreadNumberTupleForConversations];
+    RACTupleUnpack(NSNumber *totalUnmuteUnreadNumber, NSNumber *totalMuteUnreadNumber) = unreadNumberTuple;
+    NSInteger chatNumber = totalUnmuteUnreadNumber.unsignedIntegerValue;
+    // 更新消息中心的数据源，用于底部未读数展示
+    [[FHEnvContext sharedInstance].messageManager setUnreadChatMsgCount:chatNumber];
+    BOOL hasChatRedPoint = (totalMuteUnreadNumber.unsignedIntegerValue > 0);
+    
+    // 更新顶部未读数标签
     if (self.viewController.updateRedPoint) {
         self.viewController.updateRedPoint(chatNumber, hasChatRedPoint, systemMessageNumber);
     }
