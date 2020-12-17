@@ -32,15 +32,11 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-<<<<<<< HEAD
         self.avatorView = [[FHRealtorAvatarView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-        [self addSubview:self.avatorView];
-=======
-        self.avatorView = [[FHRealtorAvatarView alloc] init];
         self.avatorView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
         self.avatorView.avatarImageView.layer.borderWidth = [UIDevice btd_onePixel];
         [self.contentView addSubview:self.avatorView];
->>>>>>> f_alpha
+
         [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.width.mas_equalTo(50);
             make.left.mas_equalTo(16);

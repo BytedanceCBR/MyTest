@@ -141,7 +141,7 @@
 }
 
 - (void)setupUI {
-    self.avatorView = [[FHRealtorAvatarView alloc] init];
+    self.avatorView = [[FHRealtorAvatarView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
     self.avatorView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
     self.avatorView.avatarImageView.layer.borderWidth = [UIDevice btd_onePixel];
     [self addSubview:self.avatorView];
@@ -342,30 +342,6 @@
     if (model.certificate.length > 0) {
         result = YES;
     }
-<<<<<<< HEAD
-}
-
-- (void)setupUI {
-    self.avatorView = [[FHRealtorAvatarView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-    [self addSubview:self.avatorView];
-    [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.width.mas_equalTo(50);
-        make.left.mas_equalTo(16);
-        make.top.mas_equalTo(self.topMargin);
-    }];
-    
-    self.name = [UILabel createLabel:@"" textColor:@"" fontSize:18];
-    self.name.textColor = [UIColor themeGray1];
-    self.name.font = [UIFont themeFontMedium:18];
-    self.name.textAlignment = NSTextAlignmentLeft;
-    [self addSubview:self.name];
-    [self.name mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.avatorView.mas_right).offset(14);
-        make.top.mas_equalTo(self.avatorView.mas_top).mas_offset(4);
-        make.height.mas_equalTo(22);
-    }];
-=======
->>>>>>> f_alpha
     
     self.licenseButton.hidden = YES;
     self.agencyBac.hidden = NO;
