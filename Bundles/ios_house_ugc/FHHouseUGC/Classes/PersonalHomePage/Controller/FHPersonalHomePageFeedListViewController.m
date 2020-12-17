@@ -13,7 +13,6 @@
 
 @interface FHPersonalHomePageFeedListViewController ()
 @property(nonatomic,strong) FHPersonalHomePageFeedListViewModel *viewModel;
-@property(nonatomic,assign) BOOL isFirstLoad;
 @end
 
 @implementation FHPersonalHomePageFeedListViewController
