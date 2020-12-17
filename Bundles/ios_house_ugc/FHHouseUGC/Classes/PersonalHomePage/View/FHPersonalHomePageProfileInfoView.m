@@ -115,7 +115,7 @@
     self.userNameLabel.text = model.name;
     
     CGFloat verifyHeight = 0;
-    if(isVerifyShow) {
+    if(isVerifyShow && !isEmptyString(model.verifiedContent)) {
         NSString *verifiedString = [NSString stringWithFormat:@" 认证：%@",model.verifiedContent];
         
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString  alloc] initWithString:verifiedString];
