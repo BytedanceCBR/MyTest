@@ -3,7 +3,8 @@ gem 'bd_pod_extentions'
 
 require 'bd_pod_extentions'
 install! 'cocoapods', :warn_for_multiple_pod_sources => false,:deterministic_uuids => false
-bd_ignore_deprecated!
+# bd_ignore_deprecated!
+useBusDownload!
 showCode!
 
 # 用于开启Pods的源码与二进制快速转化服务
