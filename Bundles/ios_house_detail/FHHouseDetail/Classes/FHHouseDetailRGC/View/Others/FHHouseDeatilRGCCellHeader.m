@@ -12,10 +12,10 @@
 #import "Masonry.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import <FHHouseBase/FHCommonDefines.h>
-#import <FHhousebase/FHRealtorAvatarView.h>
+#import "FHUGCAvatarView.h"
 
 @interface FHHouseDeatilRGCCellHeader ()
-@property (strong, nonatomic) FHRealtorAvatarView *avatarView;
+@property (strong, nonatomic) FHUGCAvatarView *avatarView;
 @property (weak, nonatomic) UILabel *nameLab;
 @property (weak, nonatomic) UIImageView *companyBac;
 @property (weak, nonatomic) UILabel *companyNameLab;
@@ -78,9 +78,9 @@
     }];
 }
 
-- (FHRealtorAvatarView *)avatarView {
+- (FHUGCAvatarView *)avatarView {
     if (!_avatarView) {
-        _avatarView = [[FHRealtorAvatarView alloc] init];
+        _avatarView = [[FHUGCAvatarView alloc] init];
         _avatarView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
         [_avatarView addGestureRecognizer:tapGesture];
