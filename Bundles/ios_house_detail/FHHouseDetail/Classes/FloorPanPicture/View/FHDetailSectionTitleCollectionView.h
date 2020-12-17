@@ -17,9 +17,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIImageView *arrowsImg;
 
-@property (nonatomic, copy) void (^moreActionBlock)(void);
+@property (nonatomic, copy, nullable) void (^moreActionBlock)(void);
 
 - (void)setSubTitleWithTitle:(NSString *)subTitle;
+
+- (void)setupNeighborhoodDetailStyle;
 @end
 
 NS_ASSUME_NONNULL_END

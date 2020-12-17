@@ -112,6 +112,38 @@ const CGFloat kStaticMapHWRatio  = 7.0f / 16.0f;
 
 @implementation FHDetailStaticMap
 
++ (NSString *)keyWordConver:(NSString *)category{
+    if([category isEqualToString:@"交通"]){
+        return @"公交地铁";
+    }else if([category isEqualToString:@"教育"]){
+        return @"学校";
+    }else if([category isEqualToString:@"医疗"]){
+        return @"医院";
+    }else if([category isEqualToString:@"生活"]){
+        return @"购物|银行";
+    }else if([category isEqualToString:@"休闲"]){
+        return @"电影院|咖啡厅|影剧院";
+    }else{
+        return @"公交地铁";
+    }
+}
+
++ (NSString *)keyWordConverReverse:(NSString *)category{
+    if([category isEqualToString:@"公交地铁"]){
+        return @"交通";
+    }else if([category isEqualToString:@"学校"]){
+        return @"教育";
+    }else if([category isEqualToString:@"医院"]){
+        return @"医疗";
+    }else if([category isEqualToString:@"购物|银行"]){
+        return @"生活";
+    }else if([category isEqualToString:@"电影院|咖啡厅|影剧院"]){
+        return @"休闲";
+    }else{
+        return @"交通";
+    }
+}
+
 + (instancetype)mapWithFrame:(CGRect)frame; {
     return [[FHDetailStaticMap alloc] initWithFrame:frame];
 }
@@ -198,6 +230,9 @@ const CGFloat kStaticMapHWRatio  = 7.0f / 16.0f;
 
 - (void)loadBackLayerImage {
     if (self.loaded) {
+        return;
+    }
+    if (!self.backLayerUrl.length) {
         return;
     }
     NSURL *URL = [NSURL URLWithString:self.backLayerUrl];

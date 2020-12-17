@@ -48,6 +48,7 @@
 #import "NSDictionary+BTDAdditions.h"
 #import "FHCommonParamHelper.h"
 #import "SSCommonLogic.h"
+#import <FHFlutter/FHFlutterManager.h>
 #import "FHHouseUGCAPI.h"
 #import "FHUGCUserVWhiteModel.h"
 
@@ -537,6 +538,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [FHIESGeckoManager configGeckoInfo];
         [FHIESGeckoManager configIESWebFalcon];
         [[FHLynxManager sharedInstance] initLynx];
+        
+        [FHFlutterManager registerFHFlutterPackageInfo];
     });
     
     [FHHouseUGCAPI requestUserVWhiteListClass:[FHUGCUserVWhiteModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
@@ -1048,6 +1051,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
         return YES;
     }
 }
+
++ (BOOL)isOldDetailLoadOptimization {
+    NSDictionary *Settings= [SSCommonLogic fhSettings].copy;
+    BOOL isOpen = [Settings btd_boolValueForKey:@"old_detail_load_optimization" default:NO];
+    return isOpen;
+}
+
 
 + (BOOL)isHomeNewDiscovery {
     return YES;

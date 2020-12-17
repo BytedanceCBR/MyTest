@@ -232,7 +232,7 @@
     
     if (!isEmptyString(threadContent.text)) {
         
-        NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:16 topAdjust:1.5];
+        NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:fontSize topAdjust:1.5];
         
         if (attrStr) {
             CGFloat lineHeight = ceil(fontSize * 1.4);
