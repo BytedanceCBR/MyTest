@@ -10,7 +10,7 @@
 
 #import "TTFlexManager.h"
 #import <UIKit/UIKit.h>
-#import "FLEXManager.h"
+#import "FLEXManager+Extensibility.h"
 #import "TTNavigationController.h"
 #import "TTUIResponderHelper.h"
 #import "NSObject+FBKVOController.h"

@@ -2092,7 +2092,7 @@ static SSDebugSubitems _suppertedSubitems = SSDebugSubitemAll;
 
 #if TARGET_OS_SIMULATOR
 #if INHOUSE
-#import <FLEX/FLEXManager.h>
+#import "FLEXManager+Extensibility.h"
 #import "ExploreCellHelper.h"
 
 #import "TTStringHelper.h"
@@ -2101,14 +2101,12 @@ static SSDebugSubitems _suppertedSubitems = SSDebugSubitemAll;
 +(void) load
 {
     void (^notiBlock)(void) = ^{
-        
         TTThemeMode mode = [[TTThemeManager sharedInstance_tt] currentThemeMode];
         mode = (mode == TTThemeModeDay) ? TTThemeModeNight : TTThemeModeDay;
         [[TTThemeManager sharedInstance_tt] switchThemeModeto:mode];
     };
     
     [[FLEXManager sharedManager] registerSimulatorShortcutWithKey:@"t" modifiers:0 action:notiBlock description:@"Post Themed Change Notification"];
-    
 }
 
 @end
