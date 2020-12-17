@@ -158,6 +158,7 @@
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     self.commentViewController.hasSelfShown = NO;
+    [self.commentWriteView dismissAnimated:YES];
 }
 
 - (void)viewDidLayoutSubviews {

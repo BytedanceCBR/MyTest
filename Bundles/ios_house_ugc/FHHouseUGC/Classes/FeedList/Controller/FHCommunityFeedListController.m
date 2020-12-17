@@ -25,6 +25,7 @@
 #import "ToastManager.h"
 #import "FHFeedCustomHeaderView.h"
 #import "UIDevice+BTDAdditions.h"
+#import "FHFirstPageManager.h"
 
 @interface FHCommunityFeedListController ()<SSImpressionProtocol>
 
@@ -61,6 +62,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:[self fh_pageType] withUrl:@"" withTabName:@"" withPriority:1];
+    [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
 }
 
 - (void)setTracerDict:(NSMutableDictionary *)tracerDict {
@@ -401,6 +404,10 @@
     TRACK_EVENT(@"stay_category", tracerDict);
     
     self.enterTabTimestamp = [[NSDate date]timeIntervalSince1970];
+}
+
+- (NSString *)fh_pageType {
+    return self.viewModel.categoryId;
 }
 
 @end

@@ -278,7 +278,8 @@
     [self.likeButton setTitle:[self showStringFromNumber:diggCount] forState:UIControlStateNormal];
     [self.likeButton setTitle:[self showStringFromNumber:diggCount] forState:UIControlStateSelected];
     [self.thumbView setAvatarUrl:model.userProfileImageUrl?:@""];
-    [self.thumbView setUserId:model.userId];
+    [self.thumbView setUserId: model.userId];
+   
 //    [self.thumbView tt_setImageWithURLString:(model.userProfileImageUrl?:@"")];
 
 //    [self.thumbView showOrHideVerifyViewWithVerifyInfo:self.commentModel.userAuthInfo decoratorInfo:self.commentModel.userDecoration sureQueryWithID:NO userID:nil disableNightCover:NO];

@@ -574,21 +574,6 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
             _noDataImageView.image = [UIImage imageNamed:@"default_image"];
         }
     }
-
-    
-//    BOOL isShowBottomBannerView = model.isShowSkyEyeLogo;
-//    self.bottomBannerView.hidden = !isShowBottomBannerView;
-//    if(isShowBottomBannerView && [self.delegate respondsToSelector:@selector(bottomBannerViewDidShow)]) {
-//        [self.delegate bottomBannerViewDidShow];
-//    }
-//    CGFloat topOffset = 82;
-//    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) {
-//        topOffset -= 40;
-//    }
-//    [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.bottom.equalTo(self);
-//        make.top.equalTo(self.colletionView.mas_bottom).offset(-topOffset);
-//    }];
     
     self.itemArray = [NSMutableArray array];
     self.itemIndexArray = [NSMutableArray array];

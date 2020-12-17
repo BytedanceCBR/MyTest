@@ -74,17 +74,24 @@ typedef NS_ENUM(NSUInteger, FHClueErrorType) {
                              imprId:(NSString*)imprId
                          extraInfo:(NSDictionary*)extra
                          completion:(void(^)(FHDetailVirtualNumResponseModel * _Nullable model , NSError * _Nullable error))completion;
+
+
+/// 撤回对表单线索的分发
+/// @param associateId 线索id
+/// @param completion 完成回调
++ (TTHttpTask *)revokeAssociateDistribution:(NSString *)associateId
+                                 completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
 // 详情页线索提交表单
-+ (TTHttpTask*)requestCallReportByHouseId:(NSString*)houseId
-       phone:(NSString*)phone
-        from:(NSString*)from
-    cluePage:(NSNumber*)cluePage
-clueEndpoint:(NSNumber*)clueEndpoint
-  targetType:(NSNumber *)targetType
-reportAssociate:(NSDictionary*)reportAssociate
-agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
-extraInfo:(NSDictionary*)extra
-completion:(void(^)(FHDetailResponseModel * _Nullable model , NSError * _Nullable error))completion;
++ (TTHttpTask *)requestCallReportByHouseId:(NSString *)houseId
+                                     phone:(NSString *)phone
+                                      from:(NSString *)from
+                                  cluePage:(NSNumber *)cluePage
+                              clueEndpoint:(NSNumber *)clueEndpoint
+                                targetType:(NSNumber *)targetType
+                           reportAssociate:(NSDictionary *)reportAssociate
+                                agencyList:(NSArray<FHFillFormAgencyListItemModel *> *)agencyList
+                                 extraInfo:(NSDictionary *)extra
+                                completion:(void(^)(FHDetailFillFormResponseModel * _Nullable model , NSError * _Nullable error))completion;
 
 // 房源关注
 + (TTHttpTask*)requestFollow:(NSString*)followId

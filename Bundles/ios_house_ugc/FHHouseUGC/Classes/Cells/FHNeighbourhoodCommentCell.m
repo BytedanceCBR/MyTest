@@ -191,6 +191,7 @@
 //    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     
     [self.userInfoView refreshWithData:self.cellModel];
+    self.userInfoView.essenceIcon.hidden = YES;
     
     self.userInfoView.moreBtn.hidden = YES;
     

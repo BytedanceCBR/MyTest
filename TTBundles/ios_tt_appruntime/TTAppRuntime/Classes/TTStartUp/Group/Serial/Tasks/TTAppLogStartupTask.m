@@ -36,6 +36,8 @@
 #import <TTKitchen/TTKitchen.h>
 #import <NSDictionary+BTDAdditions.h>
 #import <TTSettingsManager.h>
+#import <TTAccountSDK/TTAccount.h>
+#import <TTNetBusiness/TTNetworkUtilities.h>
 
 #if __has_include(<TTTracker/TTTracker.h>)
 #import <TTTracker/TTTracker.h>
@@ -161,7 +163,21 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
         customHeader[@"update_version_code"] = [TTSandBoxHelper buildVerion];
         return [customHeader copy];
     };
-    [BDTrackerSDK startWithConfig:config];
+    [BDTrackerSDK startWithConfig:config deviceDidRegisterBlock:^(NSString * _Nullable deviceID, NSString * _Nullable installID) {
+        if (deviceID) {
+            [[TTAccount accountConf] setAppRequiredParamsHandler:^NSDictionary * _Nonnull{
+                NSMutableDictionary *params = [NSMutableDictionary dictionary];
+                [params setValue:deviceID forKey:TTAccountDeviceIdKey];
+                [params setValue:installID forKey:TTAccountInstallIdKey];
+                [params setValue:@"1370" forKey:@"aid"];
+                return params;
+            }];
+            [[TTAccount accountConf] setNetworkParamsHandler:^NSDictionary * _Nonnull{
+               // 网络请求通参
+                return [TTNetworkUtilities commonURLParameters];
+            }];
+        }
+    }];
 }
 
 + (void)setupTTTracker {

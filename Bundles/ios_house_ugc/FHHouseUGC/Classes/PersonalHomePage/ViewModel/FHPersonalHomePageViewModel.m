@@ -2,323 +2,87 @@
 //  FHPersonalHomePageViewModel.m
 //  FHHouseUGC
 //
-//  Created by 谢思铭 on 2019/10/11.
+//  Created by bytedance on 2020/12/6.
 //
 
 #import "FHPersonalHomePageViewModel.h"
-#import "FHHouseListAPI.h"
-#import "FHUserTracker.h"
-#import "FHUGCBaseCell.h"
-#import "FHUGCReplyCell.h"
+#import "FHPersonalHomePageProfileInfoModel.h"
+#import "FHPersonalHomePageTabListModel.h"
+#import "FHPersonalHomePageManager.h"
+#import "TTReachability.h"
+#import "UIViewAdditions.h"
 #import "FHHouseUGCAPI.h"
-#import "FHTopicFeedListModel.h"
-#import "FHUGCTopicRefreshHeader.h"
-#import "FHRefreshCustomFooter.h"
-#import "FHFeedUGCCellModel.h"
-#import "TTStringHelper.h"
-#import "FHUGCBaseCell.h"
-#import "TTGroupModel.h"
-#import "ArticleImpressionHelper.h"
-#import "FHUGCConfig.h"
-#import "TTUGCDefine.h"
-#import "TSVShortVideoDetailExitManager.h"
-#import "HTSVideoPageParamHeader.h"
-#import "FHUGCSmallVideoCell.h"
-#import "AWEVideoConstants.h"
-#import "TTURLUtils.h"
-#import "FHUGCVideoCell.h"
-#import "TTVFeedPlayMovie.h"
-#import "TTVPlayVideo.h"
-#import "TTVFeedCellWillDisplayContext.h"
-#import "TTVFeedCellAction.h"
-#import "FHFeedListModel.h"
-#import "ToastManager.h"
-#import "TTAccountManager.h"
-#import "FHUGCFeedDetailJumpManager.h"
-#import "FHUGCFullScreenVideoCell.h"
+#import "FHCommonDefines.h"
+#import "FHPersonalHomePageManager.h"
 
-@interface FHPersonalHomePageViewModel ()<FHUGCBaseCellDelegate>
 
-@property (nonatomic, weak) FHPersonalHomePageController *detailController;
-@property (nonatomic, weak) TTHttpTask *httpTopHeaderTask;
-@property (nonatomic, weak) TTHttpTask *httpTopListTask;
-@property (nonatomic, assign) BOOL canScroll;
-@property (nonatomic, assign) NSInteger loadDataSuccessCount;
-@property (nonatomic, strong) NSMutableArray *dataList;// FeedList数据，目前只有一个tab
-@property (nonatomic, assign) BOOL firstLoadData;// 第一次加载数据成功
-@property (nonatomic, assign) NSInteger count;
-@property (nonatomic, assign) NSInteger feedOffset;
-@property (nonatomic, assign) BOOL hasMore;
-
-@property (nonatomic, strong) FHUGCBaseCell *currentCell;
-@property (nonatomic, strong) FHFeedUGCCellModel *currentCellModel;
-@property (nonatomic, assign) BOOL needRefreshCell;
-@property (nonatomic, strong) NSMutableDictionary *clientShowDict;
-
-@property (nonatomic, assign) NSInteger refer;
-@property (nonatomic, assign) BOOL isShowing;
-@property (nonatomic, copy) NSString *categoryName;
-@property (nonatomic, copy) NSString *tab_id;
-@property (nonatomic, copy) NSString *appExtraParams;
-@property (nonatomic, strong) FHErrorView *tableEmptyView;
-//只上报一次埋点
-@property (nonatomic, assign) BOOL reportedGoDetail;
-@property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
-
+@interface FHPersonalHomePageViewModel () <UIScrollViewDelegate>
+@property(nonatomic,weak) FHPersonalHomePageViewController *viewController;
+@property(nonatomic,strong) FHPersonalHomePageProfileInfoModel *profileInfoModel;
+@property(nonatomic,strong) FHPersonalHomePageTabListModel *tabListModel;
+@property(nonatomic,strong) dispatch_group_t personalHomePageGroup;
 @end
 
 @implementation FHPersonalHomePageViewModel
 
--(instancetype)initWithController:(FHPersonalHomePageController *)viewController
-{   self = [super init];
-    if (self) {
-        self.detailController = viewController;
-        self.ugcCellManager = [[FHUGCCellManager alloc] init];
-        self.canScroll = NO;
-        self.firstLoadData = YES;
-        self.hasMore = NO;
-        self.needRefreshCell = NO;
-        self.refer = 1;
-        self.isShowing = NO;
-        self.categoryName = @"forum_topic_thread";// 频道名称 服务端返回
-        self.tab_id = @"1643017137463326";// 服务端返回
-        self.count = 20;// 每次20条
-        self.feedOffset = 0;
-        self.dataList = [[NSMutableArray alloc] init];
-        self.hashTable = [NSHashTable weakObjectsHashTable];
-        self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
-        self.detailJumpManager.refer = self.refer;
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCGoTop" object:@"homePage"];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(acceptMsg:) name:@"kFHUGCLeaveTop" object:@"homePage"];
-        // 删帖成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
-        // 举报成功
-//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCReportPostNotification object:nil];
-        
-        self.tableEmptyView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 500)];
-        
-        // 编辑成功
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
+-(instancetype)initWithController:(FHPersonalHomePageViewController *)viewController {
+    if(self = [super init]) {
+        self.viewController = viewController;
+        self.viewController.scrollView.delegate = self;
+
+        self.personalHomePageGroup = dispatch_group_create();
     }
     return self;
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-// 编辑发送成功 - 更新数据
-- (void)postEditNoti:(NSNotification *)noti {
-    if (noti && noti.userInfo) {
-        NSDictionary *userInfo = noti.userInfo;
-        NSString *groupId = userInfo[@"group_id"];
-        if (groupId.length > 0) {
-            __block NSUInteger index = -1;
-            [self.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                if ([cellModel.groupId isEqualToString:groupId]) {
-                    index = idx;
-                }
-            }];
-            // 找到 要更新的数据
-            if (index >= 0 && index < self.dataList.count) {
-                NSString *thread_cell = userInfo[@"thread_cell"];
-                if (thread_cell && [thread_cell isKindOfClass:[NSString class]]) {
-                    FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:thread_cell];
-                    FHFeedUGCCellModel *lastCellModel = self.dataList[index];
-                    cellModel.isFromDetail = NO;
-                    cellModel.isStick = lastCellModel.isStick;
-                    cellModel.stickStyle = lastCellModel.stickStyle;
-                    cellModel.contentDecoration = lastCellModel.contentDecoration;
-                    if (cellModel) {
-                        self.dataList[index] = cellModel;
-                    }
-                    // 异步一下
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.currentTableView reloadData];
-                    });
-                }
-            }
-        }
-    }
-}
-
-
 - (void)startLoadData {
-    self.loadDataSuccessCount = 0;// 网络接口返回计数
-    self.feedOffset = 0;
-    [self loadHeaderData];
-}
-
-// 下拉刷新
-- (void)refreshLoadData {
-    self.feedOffset = 0;
-    [self loadFeedListData];
-}
-
-// 上拉刷新
-- (void)loadMoreData {
-    [self loadFeedListData];
-}
-
-// 请求顶部的header
-- (void)onlyLoadHeaderData {
-    if (self.httpTopHeaderTask) {
-        [self.httpTopHeaderTask cancel];
+    if ([TTReachability isNetworkConnected]) {
+        [self.viewController startLoading];
+        self.viewController.isLoadingData = YES;
+        [self requestProfileInfo];
+        [self requestFeedTabList];
+        
+        dispatch_group_notify(self.personalHomePageGroup, dispatch_get_main_queue(), ^{
+            [self.viewController endLoading];
+            [self.homePageManager updateProfileInfoWithModel:self.profileInfoModel tabListWithMdoel:self.tabListModel];
+        });
+    } else {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
-    
-    __weak typeof(self) wSelf = self;
-    self.httpTopListTask = [FHHouseUGCAPI requestHomePageInfoWithUserId:self.userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        if (!error && [model isKindOfClass:[FHPersonalHomePageModel class]]) {
-            if([model.message isEqualToString:@"success"] && [wSelf.headerModel.dErrno integerValue] == 0){
-                wSelf.headerModel = model;
-                [wSelf.detailController refreshHeaderData:NO];
-            }
-        }
+}
+
+- (void)requestProfileInfo {
+    dispatch_group_enter(self.personalHomePageGroup);
+    WeakSelf;
+    NSString *userId = self.homePageManager.userId;
+   [FHHouseUGCAPI requestHomePageInfoWithUserId:userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+       StrongSelf;
+       if(!error && [model isKindOfClass:[FHPersonalHomePageProfileInfoModel class]]) {
+           FHPersonalHomePageProfileInfoModel *profileInfoModel = (FHPersonalHomePageProfileInfoModel *) model;
+           if([profileInfoModel.message isEqualToString:@"success"] && [profileInfoModel.errorCode integerValue] == 0) {
+               self.profileInfoModel = profileInfoModel;
+           }
+       }
+       dispatch_group_leave(self.personalHomePageGroup);
     }];
 }
 
-// 请求顶部的header
-- (void)loadHeaderData {
-    if (self.httpTopHeaderTask) {
-        [self.httpTopHeaderTask cancel];
-    }
+- (void)requestFeedTabList {
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    params[@"channel_id"] = @"94349558589";
+    params[@"user_id"] = self.homePageManager.userId;
     
-    __weak typeof(self) wSelf = self;
-    self.httpTopListTask = [FHHouseUGCAPI requestHomePageInfoWithUserId:self.userId completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        wSelf.loadDataSuccessCount += 1;
-        if (error) {
-            wSelf.headerModel = nil;
-            // 强制endLoading
-            wSelf.loadDataSuccessCount += 1;
-        } else {
-            if ([model isKindOfClass:[FHPersonalHomePageModel class]] && [model.message isEqualToString:@"success"] && [wSelf.headerModel.dErrno integerValue] == 0) {
-                wSelf.headerModel = model;
-                if(wSelf.headerModel.data.logPb){
-                    wSelf.detailController.tracerDict[@"log_pb"] = wSelf.headerModel.data.logPb;
-                }
-                [wSelf.detailController refreshHeaderData:YES];
-                wSelf.detailController.mainScrollView.backgroundColor = [UIColor themeGray7];
-                
-                if([wSelf.headerModel.data.fHomepageAuth integerValue] == 0 || [[TTAccountManager userID] isEqualToString:wSelf.headerModel.data.userId]){
-                    // 加载列表数据
-                    [wSelf loadFeedListData];
-                }
-            } else {
-                if ([model isKindOfClass:[FHPersonalHomePageModel class]]){
-                    FHPersonalHomePageModel *homePageModel = (FHPersonalHomePageModel *)model;
-                    if(homePageModel.data.desc.length > 0){
-                        wSelf.headerModel = model;
-                    }else{
-                        wSelf.headerModel = nil;
-                    }
-                }else{
-                    wSelf.headerModel = nil;
-                }
-                // 强制endLoading
-                wSelf.loadDataSuccessCount += 1;
-            }
+    dispatch_group_enter(self.personalHomePageGroup);
+    WeakSelf;
+    [FHHouseUGCAPI requestPersonalHomePageTabList:params completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        StrongSelf;
+        if(!error && [model isKindOfClass:[FHPersonalHomePageTabListModel class]]) {
+            FHPersonalHomePageTabListModel *tabListModel = (FHPersonalHomePageTabListModel *) model;
+            self.tabListModel = tabListModel;
         }
-        [wSelf processLoadingState];
+        dispatch_group_leave(self.personalHomePageGroup);
     }];
-}
-
-// 请求FeedList
-- (void)loadFeedListData {
-    if (self.httpTopListTask) {
-        [self.httpTopListTask cancel];
-    }
-    self.detailController.isLoadingData = YES;
-    
-    __weak typeof(self) wSelf = self;
-    self.httpTopListTask = [FHHouseUGCAPI requestHomePageFeedListWithUserId:self.userId offset:self.feedOffset count:self.count completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        wSelf.loadDataSuccessCount += 1;
-
-        if (error) {
-            if (wSelf.feedOffset == 0) {
-                // 说明是第一次请求
-            } else {
-                // 上拉加载loadmore
-                [[ToastManager manager] showToast:@"网络异常"];
-                wSelf.currentTableView.mj_footer.hidden = NO;
-                [wSelf.currentTableView.mj_footer endRefreshing];
-                return;
-            }
-        } else {
-            FHFeedListModel *feedList = nil;
-            if ([model isKindOfClass:[FHFeedListModel class]]) {
-                feedList = (FHFeedListModel *)model;
-            }
-            
-            if(feedList){
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                    // 数据转模型 添加数据
-                    NSMutableArray *tempArray = [NSMutableArray new];
-                    [feedList.data enumerateObjectsUsingBlock:^(FHFeedListDataModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                        if ([obj isKindOfClass:[FHFeedListDataModel class]]) {
-                            FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:obj.content];
-                            if (cellModel) {
-                                [tempArray addObject:cellModel];
-                            }
-                        }
-                    }];
-                    
-                    if (wSelf.feedOffset == 0) {
-                        // 说明是第一次请求--之前的数据保留（去重）
-                        if (tempArray.count > 0) {
-                            // 有返回（下拉）
-                            [tempArray enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                                if (obj.groupId.length > 0) {
-                                    [wSelf removeDuplicaionModel:obj.groupId];
-                                }
-                            }];
-                        }
-                        // 再插入顶部
-                        if (wSelf.dataList.count > 0) {
-                            // JOKER: 头部插入时，旧数据的置顶全部取消，以新数据中的置顶贴子为准
-                            [wSelf.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel *  _Nonnull cellModel, NSUInteger idx, BOOL * _Nonnull stop) {
-                                cellModel.isStick = NO;
-                            }];
-                            // 头部插入新数据
-                            [tempArray addObjectsFromArray:self.dataList];
-                        }
-                        [wSelf.dataList removeAllObjects];
-                        if (tempArray.count > 0) {
-                            [wSelf.dataList addObjectsFromArray:tempArray];
-                        }
-                    } else {
-                        // 上拉加载loadmore
-                        if (tempArray.count > 0) {
-                            [wSelf.dataList enumerateObjectsUsingBlock:^(FHFeedUGCCellModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                                if (obj.groupId.length > 0) {
-                                    // 新数据去重
-                                    for (FHFeedUGCCellModel *itemModel in tempArray) {
-                                        if([obj.groupId isEqualToString:itemModel.groupId]){
-                                            [tempArray removeObject:itemModel];
-                                            break;
-                                        }
-                                    }
-                                }
-                            }];
-                            // 插入底部
-                            if (tempArray.count > 0) {
-                                [wSelf.dataList addObjectsFromArray:tempArray];
-                            }
-                        }
-                    }
-                    
-                    wSelf.feedOffset = [feedList.offset integerValue];// 时间序 服务端返回的是时间
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        wSelf.hasMore = feedList.hasMore;
-                        [wSelf processLoadingState];
-                    });
-                });
-            }else{
-                [wSelf processLoadingState];
-            }
-        }
-    }];
+<<<<<<< HEAD
 }
 
 - (void)removeDuplicaionModel:(NSString *)groupId {
@@ -796,126 +560,36 @@
         TRACK_EVENT(@"card_show", guideDict);
     }
 }
+=======
+>>>>>>> f_alpha
 
-- (void)trackCardShow:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
-    if(cellModel.attachCardInfo.extra && cellModel.attachCardInfo.extra.event.length > 0){
-        //是房源卡片
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ? cellModel.tracerDic[@"origin_from"] : @"be_null";
-        dict[@"page_type"] = [self pageType];
-        dict[@"enter_from"] = self.enter_from.length > 0 ? self.enter_from : @"be_null";
-        dict[@"group_id"] = cellModel.attachCardInfo.extra.groupId ?: @"be_null";
-        dict[@"from_gid"] = cellModel.attachCardInfo.extra.fromGid ?: @"be_null";
-        dict[@"group_source"] = cellModel.attachCardInfo.extra.groupSource ?: @"be_null";
-        dict[@"impr_id"] = cellModel.attachCardInfo.extra.imprId ?: @"be_null";
-        dict[@"house_type"] = cellModel.attachCardInfo.extra.houseType ?: @"be_null";
-        TRACK_EVENT(cellModel.attachCardInfo.extra.event ?: @"card_show", dict);
-    }else{
-        NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-        dict[@"origin_from"] = cellModel.tracerDic[@"origin_from"] ? cellModel.tracerDic[@"origin_from"] : @"be_null";
-        dict[@"page_type"] = [self pageType];
-        dict[@"enter_from"] = self.enter_from.length > 0 ? self.enter_from : @"be_null";
-        dict[@"from_gid"] = cellModel.groupId;
-        dict[@"group_source"] = @(5);
-        dict[@"impr_id"] = cellModel.tracerDic[@"log_pb"][@"impr_id"] ?: @"be_null";
-        dict[@"card_type"] = cellModel.attachCardInfo.cardType ?: @"be_null";
-        dict[@"card_id"] = cellModel.attachCardInfo.id ?: @"be_null";
-        TRACK_EVENT(@"card_show", dict);
-    }
 }
 
-- (void)trackElementShow:(NSInteger)rank {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"element_type"] = @"like_neighborhood";
-    dict[@"page_type"] = [self pageType];
-    dict[@"enter_from"] = self.enter_from.length > 0 ? self.enter_from : [self pageType];// 这个埋点是上个页面从哪来
-    dict[@"rank"] = @(rank);
-    
-    TRACK_EVENT(@"element_show", dict);
-}
+-(void)requestProfileInfoAfterChange {
+    if ([TTReachability isNetworkConnected]) {
+        [self.viewController startLoading];
+        self.viewController.isLoadingData = YES;
+        [self requestProfileInfo];
 
-- (NSMutableDictionary *)trackDict:(FHFeedUGCCellModel *)cellModel rank:(NSInteger)rank {
-    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
-    dict[@"enter_from"] = self.enter_from.length > 0 ? self.enter_from : [self pageType];// 这个埋点是上个页面从哪来
-    dict[@"page_type"] = [self pageType];
-    dict[@"log_pb"] = cellModel.logPb;
-    dict[@"rank"] = @(rank);
-    dict[@"category_name"] = self.categoryName;
-    dict[@"group_id"] = cellModel.groupId;
-    if(cellModel.logPb[@"impr_id"]){
-        dict[@"impr_id"] = cellModel.logPb[@"impr_id"];
-    }
-    if(cellModel.logPb[@"group_source"]){
-        dict[@"group_source"] = cellModel.logPb[@"group_source"];
-    }
-    if(cellModel.fromGid){
-        dict[@"from_gid"] = cellModel.fromGid;
-    }
-    if(cellModel.fromGroupSource){
-        dict[@"from_group_source"] = cellModel.fromGroupSource;
+        dispatch_group_notify(self.personalHomePageGroup, dispatch_get_main_queue(), ^{
+            [self.viewController endLoading];
+            [self.homePageManager updateProfileInfoWithModel:self.profileInfoModel];
+        });
+    } else {
+        [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
     
-    return dict;
 }
 
-- (NSString *)pageType {
-    return @"personal_homepage_detail";
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.homePageManager scrollViewScroll:scrollView];
 }
 
-- (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
-    NSMutableDictionary *dict = [cellModel.tracerDic mutableCopy];
-    TRACK_EVENT(@"click_comment", dict);
+-(BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
+    [self.homePageManager scrollsToTop];
+    return YES;
 }
 
-- (void)recordGroupWithCellModel:(FHFeedUGCCellModel *)cellModel status:(SSImpressionStatus)status {
-    NSString *uniqueID = cellModel.groupId.length > 0 ? cellModel.groupId : @"";
-    NSString *itemID = cellModel.groupId.length > 0 ? cellModel.groupId : @"";
-    /*impression统计相关*/
-    SSImpressionParams *params = [[SSImpressionParams alloc] init];
-    params.categoryID = self.categoryName;
-    params.refer = self.refer;
-    SSImpressionModelType modelType = [FHUGCCellManager impressModelTypeWithCellType:cellModel.cellType];
-    TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:uniqueID itemID:itemID impressionID:nil aggrType:[cellModel.aggrType integerValue]];
-    [ArticleImpressionHelper recordItemWithUniqueID:uniqueID modelType:modelType logPb:cellModel.logPb status:status params:params];
-}
 
-#pragma mark -- SSImpressionProtocol
-
-- (void)needRerecordImpressions {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.dataList.count == 0) {
-            return;
-        }
-        
-        SSImpressionParams *params = [[SSImpressionParams alloc] init];
-        params.refer = self.refer;
-        UITableView *tableView = self.currentTableView;
-        for (FHUGCBaseCell *cell in [tableView visibleCells]) {
-            if ([cell isKindOfClass:[FHUGCBaseCell class]]) {
-                id data = cell.currentData;
-                if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
-                    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-                    if (self.isShowing) {
-                        [self recordGroupWithCellModel:cellModel status:SSImpressionStatusRecording];
-                    }
-                    else {
-                        [self recordGroupWithCellModel:cellModel status:SSImpressionStatusSuspend];
-                    }
-                }
-            }
-        }
-    });
-    
-}
-
-#pragma mark - 埋点
-
-- (void)trackGoDetail:(NSString *)showType {
-    if(!self.reportedGoDetail){
-        self.reportedGoDetail = YES;
-        self.detailController.tracerDict[@"show_type"] = showType;
-        [self.detailController addGoDetailLog];
-    }
-}
 
 @end

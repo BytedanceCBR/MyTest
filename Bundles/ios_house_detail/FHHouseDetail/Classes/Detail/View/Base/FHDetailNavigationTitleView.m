@@ -15,7 +15,7 @@
 
 @interface FHDetailNavigationTitleView()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 
-@property (nonatomic, strong) UIView *indicatorView;
+//@property (nonatomic, strong) UIView *indicatorView;
 @property (nonatomic, copy) NSArray <NSNumber *>* preTitleSums;
 @property (nonatomic, assign) NSInteger titleIndex;
 @end
@@ -42,17 +42,17 @@
     self.preTitleSums = preTitleSums.copy;
 }
 
-- (UIView *)indicatorView {
-    if (!_indicatorView) {
-        _indicatorView = [[UIView alloc] init];
-        _indicatorView.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
-        _indicatorView.frame = CGRectMake(5, CGRectGetHeight(self.colletionView.frame) - 13, 20, 4);
-        _indicatorView.layer.masksToBounds = YES;
-        _indicatorView.layer.cornerRadius = 2.0;
-        [self.colletionView addSubview:_indicatorView];
-    }
-    return _indicatorView;
-}
+//- (UIView *)indicatorView {
+//    if (!_indicatorView) {
+//        _indicatorView = [[UIView alloc] init];
+//        _indicatorView.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
+//        _indicatorView.frame = CGRectMake(5, CGRectGetHeight(self.colletionView.frame) - 13, 20, 4);
+//        _indicatorView.layer.masksToBounds = YES;
+//        _indicatorView.layer.cornerRadius = 2.0;
+//        [self.colletionView addSubview:_indicatorView];
+//    }
+//    return _indicatorView;
+//}
 
 - (void)reloadData {
     [self.colletionView reloadData];
@@ -63,7 +63,7 @@
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     //    layout.estimatedItemSize = CGSizeMake(71, 22);
-    layout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 15);
+    layout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0.01f;
@@ -108,16 +108,16 @@
             if (indexPath) {
                 [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
             }
-            UICollectionViewLayoutAttributes *attributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
-            CGRect frame = attributes.frame;
-            
-            CGFloat bottomSpace = 9;
-
-            [self.colletionView bringSubviewToFront:self.indicatorView];
-            [UIView animateWithDuration:0.2 animations:^{
-                self.indicatorView.frame = CGRectMake(frame.origin.x + frame.size.width/2 - 10, CGRectGetHeight(self.colletionView.frame) - bottomSpace, 20, 4);
-            }];
-            
+//            UICollectionViewLayoutAttributes *attributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
+//            CGRect frame = attributes.frame;
+//
+//            CGFloat bottomSpace = 9;
+//
+//            [self.colletionView bringSubviewToFront:self.indicatorView];
+//            [UIView animateWithDuration:0.2 animations:^{
+//                self.indicatorView.frame = CGRectMake(frame.origin.x + frame.size.width/2 - 10, CGRectGetHeight(self.colletionView.frame) - bottomSpace, 20, 4);
+//            }];
+//
         }
     }
     _selectIndex = selectIndex; // 图片索引
@@ -164,12 +164,12 @@
     NSInteger row = indexPath.row;
     if (row >= 0 && row < self.titleNames.count) {
         NSString *title = self.titleNames[row];
-        CGSize size = CGSizeMake([title btd_widthWithFont:[UIFont themeFontRegular:16] height:22], CGRectGetHeight(collectionView.frame));
-        size.width += 13 * 2;
+        CGSize size = CGSizeMake([title btd_widthWithFont:[UIFont themeFontRegular:14] height:22], CGRectGetHeight(collectionView.frame));
+        size.width += 12 * 2;
         
         return size;
     }
-    CGSize retSize = CGSizeMake(71, 22);
+    CGSize retSize = CGSizeMake(72, 22);
     return retSize;
 }
 
@@ -188,13 +188,10 @@
     NSInteger titleIndex = self.titleIndex;
     titleIndex = self.selectIndex;
     
-    UIColor *selectColor = [UIColor whiteColor];
-    UIColor *normalColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.4];
-    UIFont *selectFont = [UIFont themeFontRegular:16];
-    UIFont *normalFont = [UIFont themeFontRegular:16];
-    normalColor = [UIColor themeGray1];
-    selectFont = [UIFont themeFontMedium:18];
-    selectColor = [UIColor themeGray1];
+    UIColor *selectColor = [UIColor themeOrange1];
+    UIColor *normalColor = [UIColor themeGray1];
+    UIFont *selectFont = [UIFont themeFontRegular:14];
+    UIFont *normalFont = [UIFont themeFontRegular:14];
     [cell.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(cell.contentView);
         make.centerX.mas_equalTo(cell.contentView);

@@ -44,6 +44,7 @@
         _identifyImageView.contentMode = UIViewContentModeScaleAspectFill;
         _identifyImageView.hidden = YES;
         [self addSubview:_identifyImageView];
+
         _identifyImageView.left = 0;
         _identifyImageView.width = self.width;
         _identifyImageView.height = 0;
@@ -78,7 +79,7 @@
                 if (image.size.height > 0 && image.size.width) {
                     ratio = image.size.height / image.size.width;
                 }
-                
+  
                 CGFloat height = ceil(self.identifyImageView.width * ratio);
                 self.identifyImageView.height = height;
                 self.identifyImageView.top = self.avatarImageView.height - height;

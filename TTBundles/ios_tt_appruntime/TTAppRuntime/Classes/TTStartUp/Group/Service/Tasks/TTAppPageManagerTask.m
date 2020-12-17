@@ -25,7 +25,17 @@ DEC_TASK("TTAppPageManagerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+10);
 //    [[TTRoute sharedRoute] setAppWindow:SharedAppDelegate.window];
     
     //实现TTRoute业务相关逻辑
-    [TTRouteService registerTTRouteService];
+    
+    BOOL isDebug = [[NSUserDefaults standardUserDefaults] boolForKey:@"kDelayTTRouteServiceRegister"];
+    if(isDebug) {
+        // 测试初始化滞后5秒的场景
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [TTRouteService registerTTRouteService];
+        });
+    }
+    else {
+        [TTRouteService registerTTRouteService];
+    }
 }
 
 @end

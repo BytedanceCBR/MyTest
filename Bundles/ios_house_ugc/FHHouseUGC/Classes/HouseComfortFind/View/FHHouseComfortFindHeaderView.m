@@ -44,31 +44,18 @@
 - (void)updateItems {
     FHConfigDataModel * dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
 
-    NSArray *itemsName = @[@"地图找房",@"房贷计算",@"查房价",@"城市行情",@"购房百科"];
-    NSMutableArray *items = [NSMutableArray array];
-    NSMutableDictionary *itemsDict = [NSMutableDictionary dictionary];
-    
     if ([dataModel isKindOfClass:[FHConfigDataModel class]]) {
-        for(FHConfigDataOpDataItemsModel *model in dataModel.opData.items){
-            if([itemsName containsObject:model.title]) {
-                itemsDict[model.title] = model;
-            }
+        NSArray *items = dataModel.houseFinderOpData.items;
+        if(items.count == 0) {
+            items = dataModel.houseOpData2.items;
         }
         
-        for(FHConfigDataOpDataItemsModel *model in dataModel.toolboxData.items){
-            if([itemsName containsObject:model.title]) {
-                itemsDict[model.title] = model;
-            }
-        }
-        
-        for(NSString *title in itemsName) {
-            FHConfigDataOpDataItemsModel *model = [itemsDict objectForKey:title];
-            if(model){
-                [items addObject:model];
-            }
+        if (items.count > 5) {
+            _items = [items subarrayWithRange:NSMakeRange(0,5)];
+        }else{
+            _items = items;
         }
     }
-    _items = items;
 }
 
 -(NSUInteger)itemsCount{
@@ -125,24 +112,19 @@
     params[@"origin_from"] = self.tracerDict[@"origin_from"] ?: @"be_null";
     params[@"enter_from"] = self.tracerDict[@"enter_from"] ?: @"be_null";;
     params[@"page_type"] = @"f_house_finder";
-    params[@"icon_name"] = [self getIconNameWithTitle:model.title];
+    params[@"icon_name"] = [self getIconNameWithTitle:model];
     [FHUserTracker writeEvent:@"click_icon" params:params];
 }
 
--(NSString *)getIconNameWithTitle:(NSString *)title {
-    if([title isEqualToString:@"购房百科"]) {
-        return @"new_user_guide";
-    } else if([title isEqualToString:@"地图找房"]) {
-        return @"mapfind";
-    } else if([title isEqualToString:@"查房价"]) {
-        return @"value_info";
-    } else if([title isEqualToString:@"城市行情"]) {
-        return @"city_market";
-    } else if([title isEqualToString:@"房贷计算"]) {
-        return @"debit_calculator";
-    } else {
-        return @"be_null";
+-(NSString *)getIconNameWithTitle:(FHConfigDataOpDataItemsModel *)model {
+    NSDictionary *logPb = model.logPb;
+    if([logPb isKindOfClass:[NSDictionary class]]) {
+        NSString *operationName = logPb[@"operation_name"];
+        if(!isEmptyString(operationName)){
+            return operationName;
+        }
     }
+    return @"be_null";
 }
 
 @end

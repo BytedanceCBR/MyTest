@@ -8,6 +8,7 @@
 #import "UIImage+FIconFont.h"
 #import <CoreText/CoreText.h>
 #import "UIColor+Theme.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @implementation UIImage (FIconFont)
 
@@ -162,6 +163,24 @@
         [path fill];
         image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
+        [[self fh_appImageGeneratorCache] setObject:image forKey:cacheKey];
+    }
+    return image;
+}
+
++ (UIImage *)fh_gradientImageWithColors:(NSArray *)colors startPoint:(CGPoint )startPoint endPoint:(CGPoint )endPoint size:(CGSize)size usedInClass:(NSString *)className {
+    NSString *cacheKey = [NSString stringWithFormat:@"name:%@,startPoint:%@,endPoint:%@,size:%@",className,NSStringFromCGPoint(startPoint),NSStringFromCGPoint(endPoint),NSStringFromCGSize(size)];
+    UIImage *image = [[self fh_appImageGeneratorCache] objectForKey:cacheKey];
+    if (!image) {
+        CGRect frame = CGRectMake(0, 0, size.width, size.height);
+        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+        gradientLayer.frame = frame;
+        gradientLayer.colors = colors;
+        gradientLayer.startPoint = startPoint;
+        gradientLayer.endPoint = endPoint;
+        UIView *gradientView = [[UIView alloc] initWithFrame:frame];
+        [gradientView.layer addSublayer:gradientLayer];
+        image = [gradientView btd_snapshotImage];
         [[self fh_appImageGeneratorCache] setObject:image forKey:cacheKey];
     }
     return image;
