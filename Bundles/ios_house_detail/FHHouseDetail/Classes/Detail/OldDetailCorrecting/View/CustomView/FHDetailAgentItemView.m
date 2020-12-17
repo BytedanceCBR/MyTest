@@ -12,6 +12,7 @@
 #import <FHCommonUI/UILabel+House.h>
 #import <BDWebImage/BDWebImage.h>
 #import <ByteDanceKit/ByteDanceKit.h>
+#import <FHHouseBase/FHHouseRealtorAvatarView.h>
 
 @implementation FHDetailAgentItemTagsViewCell
 
@@ -141,7 +142,7 @@
 }
 
 - (void)setupUI {
-    self.avatorView = [[FHRealtorAvatarView alloc] init];
+    self.avatorView = [[FHHouseRealtorAvatarView alloc] init];
     self.avatorView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
     self.avatorView.avatarImageView.layer.borderWidth = [UIDevice btd_onePixel];
     [self addSubview:self.avatorView];
