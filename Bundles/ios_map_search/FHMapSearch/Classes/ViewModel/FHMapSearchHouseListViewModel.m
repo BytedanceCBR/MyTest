@@ -49,8 +49,6 @@
 @property(nonatomic , assign) BOOL dismissing;
 @property(nonatomic , strong) FHMapSearchDataListModel *currentNeighbor;
 @property(nonatomic , strong) FHMapSearchBubbleModel *currentBubble;
-@property(nonatomic , assign) CGPoint panStartLocation;
-@property(nonatomic , assign) CGFloat panStartDockLocation;
 @property(nonatomic , strong) NSMutableDictionary *houseLogs;
 @property(nonatomic , strong) FHHouseListDataModel *currentHouseDataModel;
 @property(nonatomic , strong) FHSearchHouseDataModel *currentRentDataModel;
@@ -91,6 +89,7 @@
      [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kCellId];
      [_tableView registerClass:[FHMapSearchSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHMapSearchSecondCell class])];
     
+    [self setupPannableGesture];
 }
 
 -(void)setHeaderView:(FHHouseAreaHeaderView *)headerView
@@ -109,9 +108,6 @@
         [wself reloadingHouseData:nil];
     };
     
-    UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
-    [maskView addGestureRecognizer:gesture];
-    gesture.delegate = self;
     
 }
 
@@ -286,80 +282,6 @@
     [self addHouseListDurationLog];
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    if (!scrollView.scrollEnabled) {
-        //不是用户主动滑动
-        scrollView.contentOffset = CGPointZero;
-        return;
-    }
-    
-    CGFloat minTop =  [self.listController minTop];
-    if ([self.listController canMoveup]) {
-        [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
-        scrollView.contentOffset = CGPointZero;
-//        //PM 要求不能一下滑上去
-//        if (fabs(self.listController.view.top - [self.listController minTop]) < 0.2) {
-//            scrollView.scrollEnabled = NO;
-//            [self.headerView hideTopTip:YES];
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                scrollView.scrollEnabled = YES;
-//            });
-//        }
-    }else if (scrollView.contentOffset.y < 0){
-        [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
-        scrollView.contentOffset = CGPointZero;
-    }
-    
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    [self checkScrollMoveEffect:scrollView];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    if(@available(iOS 13.0 , *)){
-       
-    }else{
-        [self checkScrollMoveEffect:scrollView];
-    }
-}
-
--(void)checkScrollMoveEffect:(UIScrollView *)scrollview
-{
-    if (self.listController.view.top > self.listController.view.height*0.6) {
-        [self handleDismiss:0.3];
-    }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < [UIScreen mainScreen].bounds.size.height/3)){
-        //吸附都顶部
-        [self.headerView hideTopTip:YES];
-        [self.listController moveTop:0];
-    }else if((self.listController.view.top > [self.listController minTop]) ){//&& (self.listController.view.top < self.listController.view.height*0.7)
-        [self.headerView hideTopTip:NO];
-        [self.listController moveTop:[self.listController initialTop]];
-        self.listController.moveDock();
-    }else{
-        [self.headerView hideTopTip:NO];
-    }
-//    else if([self.listController canMoveup]){
-//        //当前停留在中间
-//        [self.headerView hideTopTip:NO];
-//        self.listController.moveDock();
-//        [self addHouseListDurationLog];
-//    }
-}
-
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
-{
-    if (scrollView.contentOffset.y < 1 && (self.listController.view.top > [self.listController minTop]) && velocity.y < -2.5) {
-        //quickly swipe done
-        [self handleDismiss:0.1];
-    }
-    if (scrollView.contentOffset.y > 50 && velocity.y < -2) {
-        *targetContentOffset =  CGPointMake(0, 0.5);
-    }
-}
 
 -(void)overwirteCondition:(NSString *)condition
 {
@@ -685,40 +607,6 @@
     [self addHouseListDurationLog];
 }
 
-#pragma mark - gesture recognizer
--(void)handleGesture:(UIPanGestureRecognizer *)pan
-{
-    CGPoint touchLocation =  [pan locationInView:[UIApplication sharedApplication].delegate.window];
-    switch (pan.state) {
-        case UIGestureRecognizerStateBegan:
-        {
-            self.panStartDockLocation = self.listController.view.top;
-            self.panStartLocation = touchLocation;
-        }
-            break;
-        case UIGestureRecognizerStateChanged:
-        {
-            CGFloat delta = (touchLocation.y - self.panStartLocation.y);
-            [self.listController moveTop:self.panStartDockLocation +(delta)];
-        }
-            break;
-        case UIGestureRecognizerStateEnded:
-        case UIGestureRecognizerStateFailed:
-        case UIGestureRecognizerStateCancelled:
-        {
-            [self checkScrollMoveEffect:self.tableView];
-        }
-            break;
-        default:
-            break;
-    }
-}
-
-//#pragma mark - gesture delegate
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-//{
-//    return YES;
-//}
 
 #pragma mark - log
 
@@ -881,6 +769,132 @@
     }else{
         TRACK_EVENT(@"mapfind_half_category", param);
     }
+}
+
+#pragma mark - 列表滑动交互
+- (void)setupPannableGesture {
+    UIPanGestureRecognizer *panGR = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    panGR.delegate = self;
+    [self.tableView addGestureRecognizer:panGR];
+    
+    self.listController.view.userInteractionEnabled = YES;
+    UIPanGestureRecognizer *panGR2 = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    [self.listController.view addGestureRecognizer:panGR2];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && otherGestureRecognizer.view == self.tableView);
+}
+
+static BOOL canPan = NO;
+- (void)handlePan:(UIPanGestureRecognizer *)gesture {
+    switch (gesture.state) {
+        case UIGestureRecognizerStateBegan: {
+            CGPoint velocity = [gesture velocityInView:self.listController.view];
+            canPan = [self canPanWithVelocity:velocity];
+            if (canPan) {
+                self.tableView.contentOffset = CGPointZero;
+            }
+            break;
+        }
+        case UIGestureRecognizerStateChanged: {
+            CGPoint velocity = [gesture velocityInView:self.listController.view];
+            canPan = [self canPanWithVelocity:velocity];
+            if (canPan) {
+                self.tableView.contentOffset = CGPointZero;
+            }
+            
+            if (!canPan) {
+                [gesture setTranslation:CGPointMake(0, 0) inView:gesture.view];
+                return;
+            }
+            
+            CGFloat minTop = [self.listController minTop];
+            CGFloat offsetY = [gesture translationInView: self.listController.view].y;
+            CGFloat listTop = self.listController.view.top + offsetY;
+            if (listTop < minTop) {
+                listTop = minTop;
+            }
+            self.listController.view.top = listTop;
+ 
+            [gesture setTranslation:CGPointMake(0, 0) inView:gesture.view];
+            break;
+        }
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateFailed:
+        case UIGestureRecognizerStateCancelled: {
+            if (!canPan) return;
+            CGPoint velocity = [gesture velocityInView:self.listController.view];
+            [self moveIfNeedWithVelocity:velocity];
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+- (BOOL)canPanWithVelocity:(CGPoint)velocity {
+    //列表页内容不满一屏
+    if (self.tableView.height >= self.tableView.contentSize.height) {
+        return YES;
+    }
+    
+    //列表不在最顶部
+    if (self.listController.view.top > [self.listController minTop]) {
+        return YES;
+    }
+    
+    //列表内容滚到顶部，向下拉
+    if (self.tableView.contentOffset.y <= 0 && velocity.y > 0) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (void)moveIfNeedWithVelocity:(CGPoint)velocity {
+    CGFloat currentH = self.listController.view.superview.height - self.listController.view.top;
+    CGFloat initH = self.listController.view.superview.height - [self.listController initialTop];
+    CGFloat maxH = self.listController.view.superview.height;
+    CGFloat minH = 0;
+    if (fabs(velocity.y) < 500) {
+        //慢速松手
+        if (currentH >= initH + (maxH - initH) / 2) {
+            [self moveToTop];
+        } else if (currentH < initH + (maxH - initH) / 2 && currentH >= minH + (initH - minH) / 2) {
+            [self moveToMiddle];
+        } else {
+            [self moveToBottom];
+        }
+    } else {
+        //快速松手
+        if (velocity.y > 0) {
+            if (currentH > initH) {
+                [self moveToMiddle];
+            } else {
+                [self moveToBottom];
+            }
+        } else {
+            if (currentH > initH) {
+                [self moveToTop];
+            } else {
+                [self moveToMiddle];
+            }
+        }
+    }
+}
+
+- (void)moveToMiddle {
+    [self.listController moveTop:[self.listController initialTop]];
+    self.listController.moveDock();
+}
+
+- (void)moveToTop {
+    [self.listController moveTop:0];
+}
+
+- (void)moveToBottom {
+    [self handleDismiss:0.3];
 }
 
 @end
