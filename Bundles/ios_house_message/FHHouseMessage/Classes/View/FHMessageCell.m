@@ -285,7 +285,9 @@
 
 - (void)updateWithChat:(IMConversation*)conversation {
     // debug: 内测包，并且调试开关打开时，才展示
-    self.indexLabel.hidden = !([TTSandBoxHelper isInHouseApp] && [[FIMDebugManager shared] isEnableForEntry:FIMDebugOptionEntrySwitchShowDebugInfo]);
+    if([TTSandBoxHelper isInHouseApp]) {
+        self.indexLabel.hidden = !([[FIMDebugManager shared] isEnableForEntry:FIMDebugOptionEntrySwitchShowDebugInfo]);
+    }
     // --
     
     IMConversation* conv = conversation;
