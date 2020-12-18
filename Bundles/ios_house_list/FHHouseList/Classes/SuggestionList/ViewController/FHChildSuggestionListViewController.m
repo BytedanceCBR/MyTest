@@ -220,9 +220,9 @@
         return;
     }
     _isCanTrack = isCanTrack;
-    if (isCanTrack && self.fatherVC.naviBar.searchInput.text.length == 0) {
-        [self.viewModel reloadHistoryTableView];
-    }
+//    if (isCanTrack && self.fatherVC.naviBar.searchInput.text.length == 0) {
+//        [self.viewModel reloadHistoryTableView];
+//    }
 }
 
 - (FHSuggectionTableView *)createTableView {
@@ -313,6 +313,7 @@
             self.isCanTrack = isCanTrack;
         }
         [self.viewModel clearSugTableView];
+        self.lastSearchWord = nil;
     }
     if (isCanTrack) {
         _textFieldText = text;

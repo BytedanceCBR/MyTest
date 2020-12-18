@@ -1,5 +1,5 @@
 //
-//  FHRealtorAvatarView.h
+//  FHUGCAvatarView.h
 //  Pods
 //
 //  Created by bytedance on 2020/8/11.
@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @class FHFeedUGCCellModel;
 @class TSVUserModel;
 
-@interface FHRealtorAvatarView : UIView
+@interface FHUGCAvatarView : UIView
 
 @property (nonatomic, strong) FHUGCCommonAvatar *avatarImageView;
 @property (nonatomic, strong) UIImageView *identifyImageView;
