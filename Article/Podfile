@@ -306,7 +306,7 @@ def appPods
     pod_binary 'ABRInterface', '0.6.1'
     pod_binary 'VCPreloadStrategy', '0.1.2', :subspecs => ['Interface']
     pod_binary 'MDLMediaDataLoader', '1.1.5.2'
-    pod_binary 'VCNVCloudNetwork', '3.0.2'
+    pod_binary 'VCNVCloudNetwork', '3.0.3'
     pod_binary 'lib_h_dec', '1.2.2.4-bugfix'
     pod_binary 'TTNetworkPredict', '0.1.6'
     pod_binary 'TTTopSignature', '0.0.5'
@@ -416,7 +416,7 @@ def appPods
       'AES'
     ]
     #-----iOS14 IDFA授权弹窗库-----
-    pod 'BDInstallPopup', '0.0.3',:subspecs => [
+    pod 'BDInstallPopup', '0.0.7',:subspecs => [
       'Core',
       'URLConfig/China'
     ]
