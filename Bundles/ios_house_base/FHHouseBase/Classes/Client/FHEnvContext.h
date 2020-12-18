@@ -74,8 +74,6 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 @property(nonatomic, assign) BOOL isShowingSpringHang;
 //正在显示的画运营位ID
 @property(nonatomic, copy) NSString *currentShowHangId;
-//是否冷启动，拉config时传给服务端
-@property (nonatomic, assign) BOOL hadColdStart;
 
 + (instancetype)sharedInstance;
 /*
@@ -338,9 +336,6 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 
 //获取ugc用户v图标
 + (NSArray *)getUGCUserVWhiteList;
-- (BOOL)isColdStart;
-
-- (void)setColdStart;
 
 @end
 
