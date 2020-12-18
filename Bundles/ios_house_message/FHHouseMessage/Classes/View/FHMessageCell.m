@@ -64,7 +64,7 @@
 }
 
 - (void)tapIndexLabelAction:(UITapGestureRecognizer *)tap {
-    [[FIMDebugManager shared] browserConversation:self.conv];
+    [FIMDebugManager browserConversation:self.conv];
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
