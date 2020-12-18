@@ -170,15 +170,14 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
 - (void)startLoadData {
    self.isCache = NO ;
-    NSString *key = [NSString stringWithFormat:@"%@+%@+%@",self.houseId,self.ridcode,self.realtorId];
+    NSString *key = [NSString stringWithFormat:@"houseType=%ld&houseID=%@",(long)self.houseType,self.houseId];
     FHDetailOldModel *cacheModel = [[FHHousedetailModelManager sharedInstance] getHouseDetailModelWith:key.copy];
     if(cacheModel){
         self.isCache = YES;
         [self afterLoadData:cacheModel isCachemodel:YES];
     }
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestOldDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId bizTrace:self.detailController.bizTrace
-                                 logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestOldDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId bizTrace:self.detailController.bizTrace logPB:self.listLogPB extraInfo:self.extraInfo completion:^(FHDetailOldModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
             if (model.data) {
                 [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:key.copy];
@@ -236,9 +235,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         self.navBar.pageType = [self pageTypeString];
         [self.navBar configureVouchStyle];
     }
-    
     // 清空数据源
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
     [self.items removeAllObjects];
     BOOL hasVideo = NO;
     BOOL hasVR = NO;
@@ -789,24 +786,20 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     
     // --
     [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
-        
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.contactViewModel.contactPhone = contactPhone;
-            self.contactViewModel.shareInfo = model.data.shareInfo;
-            self.contactViewModel.subTitle = model.data.reportToast;
-            self.contactViewModel.toast = model.data.reportDoneToast;
-            self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
-            self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
-            self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
-            if (model.isInstantData) {
-                [self.tableView reloadData];
-            }else{
-                [self reloadData];
-            }
-            [self.detailController updateLayout:model.isInstantData];
-        });
-    });
+    
+
+    self.contactViewModel.contactPhone = contactPhone;
+    self.contactViewModel.shareInfo = model.data.shareInfo;
+    self.contactViewModel.subTitle = model.data.reportToast;
+    self.contactViewModel.toast = model.data.reportDoneToast;
+    self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
+    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
+    if (model.isInstantData) {
+        [self.tableView reloadData];
+    }else{
+        [self reloadData];
+    }
     self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
     [self.detailController updateLayout:model.isInstantData];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -856,7 +849,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 - (void)processDetailRelatedData {
     if (self.requestRelatedCount >= 4) {
         self.detailController.isLoadingData = NO;
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         FHDetailOldModel * model = (FHDetailOldModel *)self.detailData;
         //  同小区房源
         if (self.sameNeighborhoodHouseData && self.sameNeighborhoodHouseData.items.count > 0) {
@@ -913,10 +905,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         }
          self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];
         //
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self reloadData];
-            });
-        });
+        [self reloadData];
     }
 }
 
