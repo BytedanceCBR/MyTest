@@ -177,8 +177,6 @@
 //                [FHEnvContext addTabUGCGuid];
             }else
             {
-                //收起tip
-                [self.homeViewController hideImmediately];
                 //                [self.homeViewController resetMaintableView];
                 [self updateCategoryViewSegmented:YES];
             }
@@ -218,8 +216,6 @@
     //上报stay埋点
     [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
     
-    //收起tip
-    [self.homeViewController hideImmediately];
     
     //设置当前房源类型
     FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -409,7 +405,6 @@
         if([dataModel isKindOfClass:[FHHomeHouseModel class]] && isSuccess)
         {
             FHHomeHouseModel *houseData = (FHHomeHouseModel *)dataModel;
-            [self.homeViewController showNotify:houseData.data.refreshTip];
             [self setUpTableScrollOffsetZero];
         }
         if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
@@ -702,7 +697,6 @@
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self.homeViewController hideImmediately];
     self.isResetingOffsetZero = NO;
     if (scrollView == self.homeViewController.scrollView) {
         self.isSelectIndex = NO;

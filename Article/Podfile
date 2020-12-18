@@ -53,8 +53,8 @@ def fhPods
 
 
 #    pod 'FHCommonUI','0.9.0.4', :inhibit_warnings => false
-#    pod 'FHCommonUI',:path => '/../../ios_common_ui/'
-    pod 'FHCommonUI','0.9.0.10'
+    pod 'FHCommonUI',:path => '../../ios_common_ui/'
+#    pod 'FHCommonUI','0.9.0.10'
 
     pod 'FHPopupViewCenter', '0.0.3-rc.3', :inhibit_warnings => false, :subspecs => [
     'Core',
@@ -296,8 +296,9 @@ def appPods
     pod_binary 'TTThemed','0.1.36'
 
     #-----头条UI组件库-----
-    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '1747684c1496869f05f057d419a17743c5ddde6c'
+#    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '1747684c1496869f05f057d419a17743c5ddde6c'
 #    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :com => 'fproject'
+    pod 'TTUIWidget', :path => '../../tt_pods_ui'
     
     pod 'Bytedancebase','1.4.0-rc.0', :subspecs => [
     'BDPlatformSDK',
