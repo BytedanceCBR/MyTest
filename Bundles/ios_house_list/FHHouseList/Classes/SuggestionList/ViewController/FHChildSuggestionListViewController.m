@@ -271,6 +271,7 @@
     
     _houseType = houseType;
     self.viewModel.houseType = self.houseType;
+    self.viewModel.hasShowKeyboard = !self.needShowKeyBoardWhenFirstEnter;
     // 清空埋点key
     [self.viewModel.guessYouWantShowTracerDic removeAllObjects];
     // 网络请求
