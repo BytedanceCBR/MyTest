@@ -429,19 +429,17 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:subscribeModel];
         
         __weak typeof(self) wSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ((FHDetailHouseSubscribeCorrectingCell *)subscribeModel.cell) {
-                ((FHDetailHouseSubscribeCorrectingCell *)subscribeModel.cell).subscribeBlock = ^(NSString * _Nonnull phoneNum) {
-                    [wSelf subscribeFormRequest:phoneNum subscribeModel:subscribeModel];
-                };
-                ((FHDetailHouseSubscribeCorrectingCell *)subscribeModel.cell).legalAnnouncementClickBlock = ^() {
-                    NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
-                    NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
-                    [[TTRoute sharedRoute]openURLByPushViewController:url];
-                };
-            }
-        });
+        __weak FHDetailHouseSubscribeCorrectingModel *weakSubscribeModel = subscribeModel;
+        subscribeModel.subscribeBlock = ^(NSString * _Nonnull phoneNum) {
+            [wSelf subscribeFormRequest:phoneNum subscribeModel:weakSubscribeModel];
+        };
+        subscribeModel.legalAnnouncementClickBlock = ^() {
+            NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
+            NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
+            [[TTRoute sharedRoute]openURLByPushViewController:url];
+        };
+
     }
     
     //生成IM卡片的schema用 个人认为server应该加接口

@@ -190,7 +190,7 @@
     }];
 
     [self.mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.topInfoView).mas_offset(-14);
+        make.centerY.mas_equalTo(self.topInfoView).mas_offset(-10);
         make.left.mas_equalTo(self.topInfoView).offset(15);
         make.height.mas_equalTo(22);
         make.right.mas_lessThanOrEqualTo(self.pricePerSqmLabel.mas_left).offset(-10);
