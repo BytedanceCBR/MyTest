@@ -192,6 +192,7 @@
     
     self.nameLabel.text = model.realtorName;
     self.agencyLabel.text = model.agencyName;
+    self.agencyBac.hidden = !model.agencyName.length;
     [self.avatorView updateAvatarWithModel:model];
     
     if (model.realtorScoreDisplay.length && model.realtorTags.count) {
@@ -258,7 +259,6 @@
     }
     
     self.licenseButton.hidden = YES;
-    self.agencyBac.hidden = NO;
     /// 北京商业化开城需求新增逻辑
     if (model.certification.openUrl.length) {
         self.licenseButton.hidden = NO;

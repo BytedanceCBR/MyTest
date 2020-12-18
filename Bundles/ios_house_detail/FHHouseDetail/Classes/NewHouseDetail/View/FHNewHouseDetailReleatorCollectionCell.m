@@ -173,6 +173,7 @@
     
     self.nameLabel.text = model.realtorName;
     self.agencyLabel.text = model.agencyName;
+    self.agencyBac.hidden = !model.agencyName.length;
     [self.avatorView updateAvatarWithModel:model];
     
     
