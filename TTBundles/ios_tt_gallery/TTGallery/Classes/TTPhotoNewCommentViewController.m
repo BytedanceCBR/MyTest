@@ -156,6 +156,7 @@
     if ([self.delegate respondsToSelector:@selector(ttPhotoNewCommentViewControllerDisappear:)]) {
         [self.delegate ttPhotoNewCommentViewControllerDisappear:self];
     }
+    [self.commentWriteView dismissAnimated:YES];
 }
 
 - (TTDetailNatantContainerView *)natantContainerView

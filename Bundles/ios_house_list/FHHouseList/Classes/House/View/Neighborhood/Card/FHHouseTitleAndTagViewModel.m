@@ -51,7 +51,6 @@
             }
             self.displayTitle = item.displayTitle;
         }
-        
         _tags = tags;
     }
     return self;

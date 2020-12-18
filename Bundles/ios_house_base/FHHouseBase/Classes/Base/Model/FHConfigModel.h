@@ -463,6 +463,7 @@ NS_ASSUME_NONNULL_BEGIN
 //@property (nonatomic, strong , nullable) FHSearchConfigModel *filter ;
 @property (nonatomic, strong , nullable) FHConfigDataOpDataModel *opData ;
 @property (nonatomic, strong , nullable) FHConfigDataOpDataModel *houseOpData2 ;
+@property (nonatomic, strong , nullable) FHConfigDataOpDataModel *houseFinderOpData;
 @property (nonatomic, strong , nullable) FHConfigDataRentOpDataModel *rentOpData ;
 @property (nonatomic, strong , nullable) FHConfigDataRentOpDataModel *courtOpData ;
 @property (nonatomic, strong , nullable) FHConfigDataMainPageBannerOpDataModel *mainPageBannerOpData ;

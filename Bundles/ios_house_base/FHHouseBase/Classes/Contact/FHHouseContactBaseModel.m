@@ -16,6 +16,94 @@
 }
 @end
 
+@implementation FHFormAssociateInfoControlInfoDialogModel
+
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"cancelBtnText": @"cancel_btn_text",
+    @"confirmBtnText": @"confirm_btn_text",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHFormAssociateInfoControlInfoModel
+
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"verifyType": @"verify_type",
+    @"associateTypes": @"associate_types",
+    @"submitType": @"submit_type",
+    @"showType": @"show_type",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHFormAssociateInfoControlModel
+
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"controlInfo": @"control_info",
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
+@implementation FHFormAssociateInfoModel
+
++ (JSONKeyMapper*)keyMapper
+{
+  NSDictionary *dict = @{
+    @"associateInfo": @"associate_info",
+    @"associateId": @"associate_id"
+  };
+  return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
+     return dict[keyName]?:keyName;
+  }];
+}
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+
+@end
+
+@implementation FHDetailFillFormResponseModel
+
++ (BOOL)propertyIsOptional:(NSString *)propertyName
+{
+    return YES;
+}
+
+@end
+
 @implementation FHDetailVirtualNumModel
 + (JSONKeyMapper*)keyMapper
 {

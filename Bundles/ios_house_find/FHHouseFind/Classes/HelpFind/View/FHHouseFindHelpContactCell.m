@@ -14,11 +14,15 @@
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <FHHouseBase/FHUserInfoManager.h>
 #import <FHHouseBase/NSObject+FHOptimize.h>
+#import "SSCommonLogic.h"
+#import <TTAccountSDK/TTAccount.h>
 
 @interface FHHouseFindHelpContactCell()
 
 @property(nonatomic, strong, readwrite) UITextField *phoneInput;
+@property(nonatomic, strong, readwrite) UITextField *varifyCodeInput;
 @property(nonatomic, strong) UIView *singleLine;
+@property(nonatomic, strong) UIView *singleLine2;
 @property(nonatomic, strong) UILabel *tipLabel;
 @property(nonatomic, strong) UILabel *announceLabel;
 
@@ -39,6 +43,13 @@
 {
     [self.contentView addSubview:self.phoneInput];
     [self.contentView addSubview:self.singleLine];
+    
+    [self.contentView addSubview:self.varifyCodeInput];
+    [self.contentView addSubview:self.sendVerifyCodeBtn];
+    [self.contentView addSubview:self.singleLine2];
+    [self.sendVerifyCodeBtn addTarget:self action:@selector(sendVerifyCode) forControlEvents:UIControlEventTouchUpInside];
+    self.sendVerifyCodeBtn.enabled = NO;
+    
     [self.contentView addSubview:self.tipLabel];
     [self.contentView addSubview:self.announceLabel];
     [self.phoneInput mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -55,12 +66,49 @@
         make.height.mas_equalTo(TTDeviceHelper.ssOnePixel);
     }];
     
-    [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.phoneInput);
-        make.top.mas_equalTo(self.singleLine.mas_bottom).mas_offset(20);
-//        make.bottom.mas_equalTo(-20);
-    }];
-
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        if (![TTAccount sharedAccount].isLogin) {
+            [self.varifyCodeInput mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.phoneInput.mas_bottom).offset(30);
+                make.left.mas_equalTo(self.phoneInput);
+                make.right.mas_equalTo(self.phoneInput);
+                make.height.mas_equalTo(30);
+            }];
+            
+            [self.singleLine2 mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.mas_equalTo(self.varifyCodeInput.mas_bottom);
+                make.left.mas_equalTo(self.phoneInput);
+                make.right.mas_equalTo(self.phoneInput);
+                make.height.mas_equalTo(1.0/UIScreen.mainScreen.scale);
+            }];
+            
+            [self.sendVerifyCodeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.mas_equalTo(self.phoneInput);
+                make.right.mas_equalTo(self.phoneInput);
+                make.height.mas_equalTo(30);
+            }];
+            
+            [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.right.mas_equalTo(self.phoneInput);
+                make.top.mas_equalTo(self.singleLine2.mas_bottom).mas_offset(20);
+        //        make.bottom.mas_equalTo(-20);
+            }];
+        } else {
+            self.phoneInput.userInteractionEnabled = NO;
+            
+            [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.right.mas_equalTo(self.phoneInput);
+                make.top.mas_equalTo(self.singleLine.mas_bottom).mas_offset(20);
+        //        make.bottom.mas_equalTo(-20);
+            }];
+        }
+    } else {
+        [self.tipLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.right.mas_equalTo(self.phoneInput);
+            make.top.mas_equalTo(self.singleLine.mas_bottom).mas_offset(20);
+    //        make.bottom.mas_equalTo(-20);
+        }];
+    }
     [self.announceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.tipLabel);
         make.top.mas_equalTo(self.tipLabel.mas_bottom);
@@ -73,6 +121,17 @@
     NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
     [[TTRoute sharedRoute]openURLByPushViewController:url];
+}
+
+- (void)sendVerifyCode {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(sendVerifyCode)]) {
+        [self.delegate sendVerifyCode];
+    }
+}
+
+- (void)enableSendVerifyCodeBtn:(BOOL)enabled
+{
+    self.sendVerifyCodeBtn.enabled = enabled;
 }
 
 - (void)showFullPhoneNum:(BOOL)isShow {
@@ -100,6 +159,33 @@
     return _phoneInput;
 }
 
+- (UITextField *)varifyCodeInput
+{
+    if (!_varifyCodeInput) {
+        _varifyCodeInput = [[UITextField alloc] init];
+        _varifyCodeInput.font = [UIFont themeFontRegular:14];
+        _varifyCodeInput.placeholder = @"请输入验证码";
+        _varifyCodeInput.attributedPlaceholder = [[NSAttributedString alloc] initWithString:@"请输入验证码" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3]}];
+        _varifyCodeInput.keyboardType = UIKeyboardTypePhonePad;
+        _varifyCodeInput.returnKeyType = UIReturnKeyGo;
+    }
+    return _varifyCodeInput;
+}
+
+- (UIButton *)sendVerifyCodeBtn
+{
+    if (!_sendVerifyCodeBtn) {
+        _sendVerifyCodeBtn = [[UIButton alloc] init];
+        _sendVerifyCodeBtn.titleLabel.font = [UIFont themeFontRegular:14];
+        [_sendVerifyCodeBtn setTitle:@"获取验证码" forState:UIControlStateNormal];
+        [_sendVerifyCodeBtn setTitle:@"获取验证码" forState:UIControlStateHighlighted];
+        [_sendVerifyCodeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+        [_sendVerifyCodeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateHighlighted];
+        [_sendVerifyCodeBtn setTitleColor:[UIColor themeGray3] forState:UIControlStateDisabled];
+    }
+    return _sendVerifyCodeBtn;
+}
+
 - (UIView *)singleLine
 {
     if (!_singleLine) {
@@ -107,6 +193,15 @@
         _singleLine.backgroundColor = [UIColor themeGray6];
     }
     return _singleLine;
+}
+
+- (UIView *)singleLine2
+{
+    if (!_singleLine2) {
+        _singleLine2 = [[UIView alloc] init];
+        _singleLine2.backgroundColor = [UIColor themeGray6];
+    }
+    return _singleLine2;
 }
 
 - (UILabel *)tipLabel

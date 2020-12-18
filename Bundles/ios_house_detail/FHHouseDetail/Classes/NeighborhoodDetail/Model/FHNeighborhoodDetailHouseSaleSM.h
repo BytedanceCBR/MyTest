@@ -6,13 +6,21 @@
 //
 
 #import "FHNeighborhoodDetailSectionModel.h"
-#import "FHNeighborhoodDetailHouseSaleCollectionCell.h"
+#import "FHDetailSameNeighborhoodHouseResponseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailHouseSaleSM : FHNeighborhoodDetailSectionModel
-@property(nonatomic,strong) FHNeighborhoodDetailHouseSaleCellModel *houseSaleCellModel;
+
+
+@property (nonatomic, copy) NSString *moreTitle;
+
+@property (nonatomic, assign) NSInteger total;
+
+@property (nonatomic, strong) FHDetailSameNeighborhoodHouseResponseDataModel *model;
+
 - (void)updateWithDataModel:(FHDetailSameNeighborhoodHouseResponseDataModel *)model;
+
 @end
 
 NS_ASSUME_NONNULL_END

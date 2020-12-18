@@ -27,6 +27,7 @@
 #import <TTBaseLib/TTBaseMacro.h>
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import "SSCommonLogic.h"
+#import <TTReachability.h>
 
 #define SSFetchSettingsManagerFetchedDefaultInfoKey @"SSFetchSettingsManagerFetchedDefaultInfoKey"
 
@@ -43,6 +44,10 @@ static SSFetchSettingsManager * manager;
 + (void)startFetchDefaultInfoIfNeed
 {
     [[self shareInstance] startFetchDefaultSettingsWithDefaultInfo:![self hasFetchedDefaultInfo]];
+}
+
++ (void)manualForceRefreshDefaultInfoIfNeed {
+    [[self shareInstance] startFetchDefaultSettingsWithDefaultInfo:![self hasFetchedDefaultInfo] forceRefresh:YES];
 }
 
 + (SSFetchSettingsManager *)shareInstance
@@ -74,6 +79,11 @@ static SSFetchSettingsManager * manager;
 
 - (void)startFetchDefaultSettingsWithDefaultInfo:(BOOL)defaultInfo forceRefresh:(BOOL)forceRefresh
 {
+    if(![TTReachability isNetworkConnected]) {
+        // 无网时不请求，也不重试
+        return;
+    }
+    
     static NSInteger requestTimes = 0;
     if (!forceRefresh && requestTimes++>2) {
         [[TTMonitor shareManager] trackService:@"fetch_settings_error" status:1 extra:nil];

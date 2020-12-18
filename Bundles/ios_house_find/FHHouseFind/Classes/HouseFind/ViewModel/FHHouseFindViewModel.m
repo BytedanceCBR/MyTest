@@ -22,6 +22,7 @@
 #import <TTReachability/TTReachability.h>
 #import <FHCommonUI/ToastManager.h>
 #import <FHHouseBase/FHUserTracker.h>
+#import "FHSuggestionDefines.h"
 
 #define MAIN_CELL_ID @"main_cell_id"
 #define HEADER_ID @"header_id"
@@ -692,7 +693,7 @@
         @{
           @"house_type":[@(ht) description],
           @"tracer":tracerParam,
-          @"from_home":@"2"
+          @"from_home":@(FHEnterSuggestionTypeFindTab)
           };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc]initWithInfo:param];
     NSURL *url = [NSURL URLWithString:@"sslocal://house_search"];

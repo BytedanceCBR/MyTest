@@ -93,14 +93,10 @@
 
     _callBtn = [[UIButton alloc] init];
     [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal_new"] forState:UIControlStateNormal];
-    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateSelected];
-    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateHighlighted];
     [self.realtorInfoContainerView addSubview:_callBtn];
 
     _imBtn = [[UIButton alloc] init];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
-    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateSelected];
-    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateHighlighted];
     [self.realtorInfoContainerView addSubview:_imBtn];
 
     _commentView = [[TTUGCAttributedLabel alloc] initWithFrame:CGRectZero];

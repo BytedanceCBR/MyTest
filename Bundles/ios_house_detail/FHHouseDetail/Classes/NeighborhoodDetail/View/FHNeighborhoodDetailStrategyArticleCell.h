@@ -9,9 +9,9 @@
 #import "FHDetailNeighborhoodModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
+typedef void(^lynxEndLoadBlock)(CGFloat cellHeight);
 @interface FHNeighborhoodDetailStrategyArticleCell : FHDetailBaseCollectionCell
-
+@property (copy, nonatomic)  lynxEndLoadBlock lynxEndLoadBlock;
 @end
 
 NS_ASSUME_NONNULL_END

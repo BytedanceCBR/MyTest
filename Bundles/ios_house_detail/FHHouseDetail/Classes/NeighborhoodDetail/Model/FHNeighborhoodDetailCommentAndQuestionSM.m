@@ -26,7 +26,7 @@
         if(!isEmptyString(model.data.comments.content.count)){
             NSInteger totalCount = [contentModel.count integerValue];
             if(totalCount > 0 && contentModel.data.count > 0){
-                _commentHeaderModel.title = [NSString stringWithFormat:@"%@（%li）",_commentHeaderModel.title,(long)totalCount];
+                _commentHeaderModel.title = [NSString stringWithFormat:@"%@(%li)",_commentHeaderModel.title,(long)totalCount];
             }
         }
         
@@ -39,7 +39,7 @@
         if(model.data.neighborhoodEvaluation.evaluationList.count > 0){
             //有评论时候
             FHNeighborhoodDetailSpaceModel *spaceModel = [[FHNeighborhoodDetailSpaceModel alloc] init];
-            spaceModel.height = 14;
+            spaceModel.height = 10;
             [itemArray addObject:spaceModel];
             //评论tag
             self.commentTagsModel = [[FHNeighborhoodDetailCommentTagsModel alloc] init];
@@ -50,6 +50,7 @@
                 FHNeighborhoodDetailCommentTagModel *tag = [[FHNeighborhoodDetailCommentTagModel alloc] init];
                 tag.persent = listModel.rate;
                 tag.content = listModel.title;
+                tag.count = listModel.count;
                 [tags addObject:tag];
             }
             _commentTagsModel.tags = tags;
@@ -88,7 +89,7 @@
         }
         
         FHNeighborhoodDetailSpaceModel *spaceModel1 = [[FHNeighborhoodDetailSpaceModel alloc] init];
-        spaceModel1.height = isHaveQuestion ? 16 : 20;
+        spaceModel1.height = isHaveQuestion ? 11 : 15;
         [itemArray addObject:spaceModel1];
     }
     
@@ -102,13 +103,13 @@
             if(!isEmptyString(model.data.question.content.count)){
                 NSInteger totalCount = [contentModel.count integerValue];
                 if(totalCount > 0 && contentModel.data.count > 0){
-                    _questionHeaderModel.title = [NSString stringWithFormat:@"%@（%li）",_questionHeaderModel.title,(long)totalCount];
+                    _questionHeaderModel.title = [NSString stringWithFormat:@"%@(%li)",_questionHeaderModel.title,(long)totalCount];
                 }
             }
             
             _questionHeaderModel.isEmpty = NO;
             _questionHeaderModel.hiddenTopLine = !isHaveComment;
-            _questionHeaderModel.topMargin = isHaveComment ? 14 : 18;
+            _questionHeaderModel.topMargin = isHaveComment ? 14 : 12;
             _questionHeaderModel.questionListSchema = model.data.question.content.questionListSchema;
             _questionHeaderModel.neighborhoodId = model.data.id;
             _questionHeaderModel.detailTracerDic = self.detailTracerDic;
@@ -143,14 +144,14 @@
             }
             
             FHNeighborhoodDetailSpaceModel *spaceModel = [[FHNeighborhoodDetailSpaceModel alloc] init];
-            spaceModel.height = 15;
+            spaceModel.height = 10;
             [itemArray addObject:spaceModel];
         }else{
             _questionHeaderModel.title = @"暂无问答";
             _questionHeaderModel.totalCount = 0;
             _questionHeaderModel.count = 0;
             _questionHeaderModel.hiddenTopLine = !isHaveComment;
-            _questionHeaderModel.topMargin = isHaveComment ? 14 : 18;
+            _questionHeaderModel.topMargin = isHaveComment ? 14 : 12;
             _questionHeaderModel.isEmpty = YES;
             _questionHeaderModel.questionWriteTitle = model.data.question.questionWrite.title;
             _questionHeaderModel.questionWriteSchema = model.data.question.questionWrite.schema;

@@ -37,13 +37,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *gaodeLat;
 @property (nonatomic, copy , nullable) NSString *imprId;
 @property (nonatomic, copy , nullable) NSString *groupId;
-@property (nonatomic, copy , nullable) NSString *displayBuiltYear;
+@property (nonatomic, copy , nullable) NSString *displayBuiltYear; //建造年代
+@property (nonatomic, copy, nullable) NSString *displayBuiltType; //建筑类型
 @property (nonatomic, strong , nullable) NSArray<FHDetailRelatedNeighborhoodResponseDataItemsImagesModel> *images;
 @property (nonatomic, copy , nullable) NSString *houseType;
 @property (nonatomic, copy , nullable) NSString *displayStatsInfo;
 @property (nonatomic, strong , nullable) FHDetailRelatedNeighborhoodResponseDataItemsBaseInfoMapModel *baseInfoMap ;  
 @property (nonatomic, copy , nullable) NSString *searchId;
 @property (nonatomic, copy , nullable) NSString *displaySubtitle;
+
 @end
 
 @interface FHDetailRelatedNeighborhoodResponseDataModel : JSONModel 

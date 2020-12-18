@@ -24,9 +24,9 @@
         self.clipsToBounds = YES;
         self.userInteractionEnabled = NO;
         
-        _avatarImageView = [[UIImageView alloc] init];
-        _avatarImageView.layer.masksToBounds = YES;
-        _avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
+        _avatarImageView = [[FHUGCCommonAvatar alloc] init];
+//        _avatarImageView.layer.masksToBounds = YES;
+//        _avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
         _placeHoldName = @"detail_default_avatar";
         [self addSubview:_avatarImageView];
         [self.avatarImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -42,24 +42,22 @@
         _identifyImageView.contentMode = UIViewContentModeScaleAspectFill;
         _identifyImageView.hidden = YES;
         [self addSubview:_identifyImageView];
-        [self.identifyImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.bottom.right.mas_equalTo(self);
-            make.height.mas_equalTo(0);
-        }];
     }
     return _identifyImageView;
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    self.avatarImageView.layer.cornerRadius = MIN(self.frame.size.width, self.frame.size.height)/2;
 }
 
 - (void)updateAvatarImageURL:(NSString *)url {
     if(url.length) {
-        [self.avatarImageView bd_setImageWithURL:[NSURL URLWithString:url] placeholder:[UIImage imageNamed:self.placeHoldName]];
+        [self.avatarImageView setAvatarUrl:url];
+        [self.avatarImageView setUserId:self.userId];
+//        [self.avatarImageView bd_setImageWithURL:[NSURL URLWithString:url] placeholder:[UIImage imageNamed:self.placeHoldName]];
     } else {
-        self.avatarImageView.image = [UIImage imageNamed:self.placeHoldName];
+        [self.avatarImageView setPlaceholderImage:self.placeHoldName];
+//        self.avatarImageView.image = [UIImage imageNamed:self.placeHoldName];
     }
 }
 
@@ -75,7 +73,8 @@
                 if (image.size.height > 0 && image.size.width) {
                     ratio = image.size.height / image.size.width;
                 }
-                [self.identifyImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+                [self.identifyImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+                    make.left.bottom.right.mas_equalTo(self);
                     make.height.mas_equalTo(self.avatarImageView.mas_width).multipliedBy(ratio);
                 }];
             }
@@ -86,6 +85,7 @@
 }
 
 - (void)updateAvatarWithModel:(FHDetailContactModel *)contactModel {
+    
     [self updateAvatarImageURL:contactModel.avatarUrl];
     [self updateIdentifyImageURL:contactModel.imageTag.imageUrl];
 
@@ -95,6 +95,9 @@
 }
 
 -(void)updateAvatarWithUGCCellModel:(FHFeedUGCCellModel *)cellModel {
+    if (!(cellModel.realtor.avatarTagUrl.length>0) ) {
+        self.userId = cellModel.user.userId;
+    }
     if(cellModel.realtor.avatarUrl.length) {
         [self updateAvatarImageURL:cellModel.realtor.avatarUrl];
     }else if(cellModel.user.avatarUrl.length) {
@@ -102,11 +105,14 @@
     }else{
          [self updateAvatarImageURL:nil];
     }
-    
+
     [self updateIdentifyImageURL:cellModel.realtor.avatarTagUrl];
 }
 
--(void)updateAvatarWithTSVUserModel:(FHFeedUGCCellModel *)userModel {
+- (void)updateAvatarWithTSVUserModel:(FHFeedUGCCellModel *)userModel {
+    if (!(userModel.realtor.avatarTagUrl.length> 0)) {
+        self.userId = userModel.user.userId;
+    }
     if(userModel.realtor.avatarUrl.length) {
         [self updateAvatarImageURL:userModel.realtor.avatarUrl];
     }else if(userModel.user.avatarUrl.length) {
@@ -114,6 +120,7 @@
     }else{
          [self updateAvatarImageURL:nil];
     }
+
     [self updateIdentifyImageURL:userModel.realtor.avatarTagUrl];
 }
 
