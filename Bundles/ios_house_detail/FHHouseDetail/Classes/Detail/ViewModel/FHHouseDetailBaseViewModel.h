@@ -56,6 +56,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ; //详情页点击显
 @property (nonatomic, strong) NSDictionary *extraInfo;
 @property (nonatomic, copy)   NSString* houseInfoBizTrace; // 房源详情下发通用bizTrace
 @property (nonatomic, strong)   NSString* houseInfoOriginBizTrace; // 房源详情原始bizTrace
+@property(nonatomic, assign) BOOL isCache;
 
 // 子类实现
 - (void)registerCellClasses;

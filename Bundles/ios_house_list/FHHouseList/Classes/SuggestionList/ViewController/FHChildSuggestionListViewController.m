@@ -35,13 +35,14 @@
 @property (nonatomic, weak)     UIViewController   *backListVC; // 需要返回到的页面
 
 @property (nonatomic, strong)   NSMutableDictionary       *homePageRollDic;// 传入搜索列表的轮播词-只用于搜索框展示和搜索用
-@property (nonatomic, assign)   BOOL       canSearchWithRollData; // 如果为YES，支持placeholder搜索
 @property (nonatomic, assign)   BOOL       hasDismissedVC;
 
 @property (nonatomic, assign)   BOOL isShowHistory;
 @property (nonatomic, copy)     NSString *textFieldText;
 
 @property (nonatomic, copy)     NSString *lastSearchWord;
+
+@property (nonatomic, assign)   NSInteger defaultHouseType;
 
 @end
 
@@ -69,6 +70,9 @@
             _viewModel.houseType = 2;// 默认二手房
         }
         _viewModel.fromPageType = self.fromSource;
+        
+        _defaultHouseType = _viewModel.houseType;
+        
         // 3、sug_delegate 代理
         /*
          NSHashTable *sugDelegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
@@ -161,7 +165,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.canSearchWithRollData = NO;
     self.hasDismissedVC = NO;
     [self setupUI];
     [self addDefaultEmptyViewFullScreen];
@@ -185,16 +188,6 @@
 - (void)setFatherVC:(FHSuggestionListViewController *)fatherVC
 {
     _fatherVC = fatherVC;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    if (self.homePageRollDic) {
-         NSString *text = self.homePageRollDic[@"text"];
-         if (text.length > 0) {
-             self.canSearchWithRollData = YES;
-         }
-     }
-    [super viewWillAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -227,9 +220,12 @@
         return;
     }
     _isCanTrack = isCanTrack;
-    if (isCanTrack && self.fatherVC.naviBar.searchInput.text.length == 0) {
-        [self.viewModel reloadHistoryTableView];
+    if (!self.historyIsSuccess) {
+        [self requestData];
     }
+//    if (isCanTrack && self.fatherVC.naviBar.searchInput.text.length == 0) {
+//        [self.viewModel reloadHistoryTableView];
+//    }
 }
 
 - (FHSuggectionTableView *)createTableView {
@@ -275,9 +271,7 @@
     if (_houseType == houseType) {
         return;
     }
-    if (self.canSearchWithRollData) {
-        self.canSearchWithRollData = NO;
-    }
+    
     _houseType = houseType;
     self.viewModel.houseType = self.houseType;
     // 清空埋点key
@@ -322,6 +316,7 @@
             self.isCanTrack = isCanTrack;
         }
         [self.viewModel clearSugTableView];
+        self.lastSearchWord = nil;
     }
     if (isCanTrack) {
         _textFieldText = text;
@@ -339,13 +334,15 @@
     
     NSString *userInputText = text;
     
-    // 如果外部传入搜索文本homePageRollData，直接当搜索内容进行搜索
-    NSString *rollText = self.homePageRollDic[@"text"];
-    if (self.canSearchWithRollData) {
-        if (userInputText.length <= 0 && rollText.length > 0) {
-            userInputText = rollText;
-        }
+    // 如果外部传入搜索文本homePageRollData并且当前tab是默认tab，直接当搜索内容进行搜索
+    if (userInputText.length == 0 && self.viewModel.houseType == self.defaultHouseType) {
+        userInputText = [self.homePageRollDic btd_stringValueForKey:@"text"];
     }
+    
+    if (userInputText == nil) {
+        userInputText = @"";
+    }
+    
     // 保存关键词搜索到历史记录
     /*
     NSString *tempStr = [userInputText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -394,15 +391,8 @@
     }
     if (self.suggestDelegate != NULL && ![openUrl containsString:@"webview"] && !isGoDetail) {
         // 1、suggestDelegate说明需要回传sug数据
-        // 2、如果是从租房大类页和二手房大类页向下个页面跳转，则需要移除搜索列表相关的页面
-        // 3、如果是从列表页和找房Tab列表页进入搜索，则还需pop到对应的列表页
-        NSMutableDictionary *tempInfos = [NSMutableDictionary dictionaryWithDictionary:infos];
-        if (self.backListVC == nil && (self.fromSource == FHEnterSuggestionTypeOldMain || self.fromSource == FHEnterSuggestionTypeRenting)) {
-            // 需要移除搜索列表相关页面
-            tempInfos[@"fh_needRemoveLastVC_key"] = @(YES);
-            tempInfos[@"fh_needRemoveedVCNamesString_key"] = @[@"FHSuggestionListViewController",@"FHSugSubscribeListViewController"];
-        }
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:tempInfos];
+        // 2、如果是从列表页和找房Tab列表页进入搜索，则还需pop到对应的列表页
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
         // 回传数据，外部pop 页面
         TTRouteObject *obj = [[TTRoute sharedRoute] routeObjWithOpenURL:[NSURL URLWithString:openUrl] userInfo:userInfo];
         if ([self.suggestDelegate respondsToSelector:@selector(suggestionSelected:)]) {
@@ -416,7 +406,7 @@
         // 不需要回传sug数据，以及自己控制页面跳转和移除逻辑
         NSMutableDictionary *tempInfos = [NSMutableDictionary dictionaryWithDictionary:infos];
         // 跳转页面之后需要移除当前页面，如果从home和找房tab叫起，则当用户跳转到列表页，则后台关闭此页面
-        if (self.fromSource == FHEnterSuggestionTypeHome || self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault || self.fromSource == FHEnterSuggestionTypeOldMain) {
+        if (self.fromSource == FHEnterSuggestionTypeFindTab || self.fromSource == FHEnterSuggestionTypeDefault || self.fromSource == FHEnterSuggestionTypeMapSearch) {
             UIViewController *topVC = self.navigationController.viewControllers.lastObject;
             if (![topVC isKindOfClass:[FHSugSubscribeListViewController class]]) {
                 tempInfos[@"fh_needRemoveLastVC_key"] = @(YES);
@@ -452,11 +442,12 @@
     BOOL hasText = text.length > 0;
     
     if (hasText) {
-         [self requestSuggestion:text];
         _suggestTableView.hidden = !hasText;
         _historyTableView.hidden = hasText;
+         [self requestSuggestion:text];
     }
     // 历史记录 + 猜你想搜
+    self.historyIsSuccess = YES;
     [self.viewModel clearHistoryTableView];
     self.viewModel.loadRequestTimes = 0;
     [self requestHistoryFromRemote];
@@ -512,9 +503,12 @@
         if (![self shouldReloadSuggestionWord:text]) {
             return;
         }
-        self.isLoadingData = YES;
         NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
         if (cityId) {
+            self.suggestTableView.hidden = YES;
+            self.emptyView.hidden = YES;
+            [self startLoading];
+            self.isLoadingData = YES;
             [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
         }
     }

@@ -86,19 +86,14 @@
         }
 
         if (!self.houseType) {
-            if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
-                self.houseType = FHHouseTypeNeighborhood;
-            }
-            
-            if ([paramObj.sourceURL.absoluteString containsString:@"old_house_detail"]) {
+            NSString *schema = paramObj.sourceURL.host;
+            if ([schema isEqualToString:@"old_house_detail"]) {
                 self.houseType = FHHouseTypeSecondHandHouse;
-            }
-            
-            if ([paramObj.sourceURL.absoluteString containsString:@"new_house_detail"]) {
+            } else if ([schema isEqualToString:@"neighborhood_detail"]) {
+                self.houseType = FHHouseTypeNeighborhood;
+            } else if ([schema isEqualToString:@"new_house_detail"]) {
                 self.houseType = FHHouseTypeNewHouse;
-            }
-            
-            if ([paramObj.sourceURL.absoluteString containsString:@"rent_detail"]) {
+            } else if ([schema isEqualToString:@"rent_detail"]) {
                 self.houseType = FHHouseTypeRentHouse;
             }
         }
@@ -119,15 +114,12 @@
                 self.houseId = paramObj.allParams[@"neighborhood_id"];
                 break;
             default:
-                if (!self.houseId) {
+                if (!self.houseId.length) {
                     self.houseId = paramObj.allParams[@"house_id"];
                 }
                 break;
         }
         
-        if ([paramObj.sourceURL.absoluteString containsString:@"neighborhood_detail"]) {
-            self.houseId = paramObj.allParams[@"neighborhood_id"];
-        }
         // 埋点数据处理
         [self processTracerData:paramObj.allParams];
         // 非埋点数据处理
@@ -468,7 +460,6 @@
         if (self.isPhoneCalled && self.isPhoneCallPickUp) {
             [self checkShowFeedbackView];
         }
-        [self checkShowSocialAlert];
         self.isPhoneCalled = NO;
     }else if ([call.callState isEqualToString:CTCallStateConnected]){
         //通话中
@@ -732,16 +723,6 @@
 }
 
 - (void)applicationDidBecomeActive {
-}
-
-- (void)checkShowSocialAlert {
-    // 新房留资后弹窗
-    if (self.isPhoneCalled) {
-        self.isPhoneCalled = NO;
-        [self.viewModel.contactViewModel checkSocialPhoneCall];
-    } else {
-        self.viewModel.contactViewModel.socialContactConfig = nil;
-    }
 }
 
 // 二手房反馈弹窗

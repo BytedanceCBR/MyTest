@@ -38,8 +38,8 @@
 "main"                  = "FHHomeSchemaObject";
 
 //"profile"               = "ArticleMomentProfileViewController"; //旧版个人主页
-"profile"               = "FHPersonalHomePageController"; //新版个人主页
-"media_account"         = "FHPersonalHomePageController";
+"profile"               = "FHPersonalHomePageViewController"; //新版个人主页
+"media_account"         = "FHPersonalHomePageViewController";
 
 "invite_friend"         = "ArticleInviteFriendViewController";
 "address_list"          = "TTAddressListFriendViewController";
@@ -111,6 +111,7 @@
 
 //map
 "fh_map_detail"        = "FHDetailMapPageViewController";
+"map_detail"        = "FHDetailMapPageViewController";
 "baidu_panorama_detail" = "FHBaiduPanoramaViewController";
 
 //floor
@@ -259,3 +260,5 @@
 
 //找好房页面
 "house_comfort_find" = "FHHouseComfortFindViewController";
+//flutter页面
+"flutter" = "FHFlutterViewController";

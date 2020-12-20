@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 //6. card_type=6 小区专家卡片
 //7. card_type=7 全真房源文本卡片（eg：以为您找到全网xxx家经纪公司的xxx套房源）
 //8. card_type=8 过滤文本卡片 （已为您过滤xxx套可疑房源）
-//9. card_type=9 猜你想找tip（没有找到相关房源，猜你想找下面这些？）
+//9. card_type=9 猜你想找tip（没有找到相关房源，猜你想找下面这些？）相关推荐文本
 //10. card_type=10猜你想找文本 （猜你想找）
 //11. card_type=11切换城市卡片 （你是不是想找“xxx”的房源？）
 //13. card_type=13 预约顾问

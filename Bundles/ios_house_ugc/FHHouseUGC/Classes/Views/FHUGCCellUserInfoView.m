@@ -27,6 +27,7 @@
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHEnvContext.h"
 
 
 @interface FHUGCCellUserInfoView()
@@ -80,9 +81,7 @@
 }
 
 - (void)initViews {
-    _avatarView = [[FHRealtorAvatarView alloc] init];
-    _avatarView.avatarImageView.layer.borderWidth = 1;
-    _avatarView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
+    _avatarView = [[FHUGCAvatarView alloc] init];
     _avatarView.placeHoldName = @"fh_mine_avatar";
     _avatarView.userInteractionEnabled = YES;
     [self addSubview:_avatarView];
@@ -97,6 +96,12 @@
     self.titleLabel.numberOfLines = 0;
     self.titleLabel.hidden = YES;
     [self addSubview:_titleLabel];
+    
+    _questionIcon = [[UIImageView alloc]init];
+    _questionIcon.contentMode = UIViewContentModeScaleAspectFit;
+    _questionIcon.image = [UIImage imageNamed:@"ugc_question_icon"];
+    [self addSubview:_questionIcon];
+    _questionIcon.hidden = YES;
     
     _userName.userInteractionEnabled = YES;
     UITapGestureRecognizer *tap1 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToPersonalHomePage)];
@@ -130,6 +135,10 @@
     [self addSubview:_editingLabel];
     self.editingLabel.hidden = YES;
     
+    self.essenceIcon = [[UIImageView alloc] init];
+    _essenceIcon.image = [UIImage imageNamed:@"fh_ugc_wenda_essence_small_new"];
+    _essenceIcon.hidden = YES;
+    [self addSubview:_essenceIcon];
     
     self.moreBtn = [[UIButton alloc] init];
     [_moreBtn setImage:[UIImage imageNamed:@"fh_ugc_icon_more"] forState:UIControlStateNormal];
@@ -138,12 +147,25 @@
     [self addSubview:_moreBtn];
 }
 
+- (void)showEssenceIcon {
+    if(self.cellModel.isStick && (self.cellModel.stickStyle == FHFeedContentStickStyleGood || self.cellModel.stickStyle == FHFeedContentStickStyleTopAndGood)){
+        self.essenceIcon.width = 24;
+        self.essenceIcon.height = 16;
+        self.essenceIcon.centerY = self.userName.centerY;
+        self.essenceIcon.right = self.userAuthLabel.right + 5;
+        self.essenceIcon.hidden = NO;
+    }else{
+        self.essenceIcon.hidden = YES;
+    }
+}
+
+
+
 - (void)initConstraints {
     self.avatarView.top = 0;
     self.avatarView.left = 20;
     self.avatarView.width = 40;
     self.avatarView.height = 40;
-    
     self.userName.top = 0;
     self.userName.left = self.avatarView.right + 10;
     self.userName.width = 100;
@@ -154,6 +176,10 @@
     self.titleLabel.width = 100;
     self.titleLabel.height = 50;
     
+    self.questionIcon.top = 5.4;
+    self.questionIcon.left =  20;
+    self.questionIcon.width = 18;
+    self.questionIcon.height = 18;
     
     self.moreBtn.top = 10;
     self.moreBtn.width = 20;
@@ -182,6 +208,13 @@
     self.editingLabel.height = 23;
 }
 
+- (void)updateFrameFromNeighborhoodDetail {
+    self.avatarView.left = 12;
+    self.userName.left = self.avatarView.right + 10;
+    self.descLabel.left = self.avatarView.right + 10;
+    self.userAuthLabel.left = self.userName.right + 4;
+}
+
 - (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
     //设置userInfo
     self.cellModel = cellModel;
@@ -189,7 +222,6 @@
     [self.avatarView updateAvatarWithUGCCellModel:cellModel];
 
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
-    
     [self updateUserAuth];
     [self updateDescLabel];
     [self updateEditState];
@@ -199,7 +231,8 @@
 - (void)setTitleModel:(FHFeedUGCCellModel *)cellModel {
     //设置userInfo
     self.cellModel = cellModel;
-    self.titleLabel.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
+    self.titleLabel.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    %@",cellModel.originItemModel.content] : @"";
+    self.questionIcon.hidden = NO;
     CGSize titleLabelSize = [self.titleLabel sizeThatFits:CGSizeMake(MAXFLOAT, 50)];
     self.titleLabel.width = titleLabelSize.width;
     CGFloat maxTitleLabelSizeWidth = self.width - 20 - 20 - 20 -5 ;

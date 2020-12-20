@@ -7,10 +7,13 @@
 
 #import "FHDetailBaseCell.h"
 #import "FHSearchHouseModel.h"
+#import "FHHouseNewComponentView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailRecommendCell : FHDetailBaseCollectionCell
+
+- (void)refreshWithData:(id)data withLast:(BOOL) isLast;
 
 @end
 

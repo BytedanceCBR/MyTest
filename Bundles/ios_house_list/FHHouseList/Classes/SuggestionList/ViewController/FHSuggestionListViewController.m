@@ -21,6 +21,41 @@
 #import "FHCommonDefines.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "FHSuggestionListViewController+FHTracker.h"
+#import "FHSuggestionDefines.h"
+
+@interface FHSuggestionListViewController(FHDragBack)
+
+- (void)fixDragBackConfict;
+
+@end
+
+@implementation FHSuggestionListViewController(FHDragBack)
+
+//处理侧滑返回手势和collectionView手势冲突
+- (void)fixDragBackConfict {
+    if ([self.navigationController isKindOfClass:TTNavigationController.class]) {
+        TTNavigationController *naviController = (TTNavigationController *)self.navigationController;
+        if (naviController.panRecognizer && naviController.panRecognizer.enabled) {
+            [self.collectionView.panGestureRecognizer requireGestureRecognizerToFail:naviController.panRecognizer];
+        }
+    }
+}
+
+//支持边缘侧滑返回
+- (NSInteger)ttDragBackLeftEdge {
+    return TTNavigationControllerDefaultSwapLeftEdge;
+}
+
+//边缘滑动时，往左滑动禁止返回
+- (BOOL)shouldEnableBackActionWhenPanRight:(id)panRightValue {
+    BOOL enableBackAction = NO;
+    if ([panRightValue respondsToSelector:@selector(boolValue)]) {
+        enableBackAction = [panRightValue boolValue];
+    }
+    return enableBackAction;
+}
+
+@end
 
 @interface FHSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -30,6 +65,9 @@
 @property (nonatomic, strong)   NSMutableDictionary       *homePageRollDic;
 @property (nonatomic, strong) UIView *topView;
 @property (nonatomic, strong) UIView *containerView;
+
+@property (nonatomic, assign) NSInteger defaultHouseType;
+@property (nonatomic, copy) NSString *defaultSearchPlaceholder;
 
 @end
 
@@ -76,7 +114,8 @@
             self.autoFillInputText = paramObj.allParams[@"search_history_text"];
         }
         
-//        ZWLog(@"%@", [paramObj.allParams[@"tracer"] btd_jsonStringEncoded]);
+        _defaultHouseType = _viewModel.houseType;
+        _defaultSearchPlaceholder = [self.homePageRollDic btd_stringValueForKey:@"text"];
     }
     return self;
 }
@@ -114,19 +153,28 @@
     [self trackPageShow];
 }
 
+- (void)refreshSearchPlaceHolderText {
+    if (self.houseType == self.defaultHouseType && self.defaultSearchPlaceholder.length > 0) {
+        [self.naviBar setSearchPlaceHolderText:self.defaultSearchPlaceholder];
+        return;
+    }
+    
+    [self.naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:self.houseType]];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if (self.homePageRollDic) {
-        NSString *text = self.homePageRollDic[@"text"];
-        if (text.length > 0) {
-            [self.naviBar setSearchPlaceHolderText:text];
-        }
-    }
+    [self refreshSearchPlaceHolderText];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     [self.naviBar resignFirstResponder];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self fixDragBackConfict];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -155,7 +203,7 @@
         make.height.mas_equalTo(54);
     }];
     [_naviBar.backBtn addTarget:self action:@selector(goBack) forControlEvents:UIControlEventTouchUpInside];
-    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:self.houseType]];
+    [self refreshSearchPlaceHolderText];
     _naviBar.searchInput.delegate = self;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFiledTextChangeNoti:) name:UITextFieldTextDidChangeNotification object:nil];
     
@@ -177,10 +225,10 @@
     self.collectionView = [[FHSuggestionCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
-    _collectionView.bounces = NO;
+    _collectionView.bounces = YES;
     _collectionView.scrollEnabled = YES;
     _collectionView.showsHorizontalScrollIndicator = NO;
-    _collectionView.backgroundColor = [UIColor themeGray7];
+    _collectionView.backgroundColor = [UIColor whiteColor];
     [self.containerView addSubview:_collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.bottom.mas_equalTo(0);
@@ -302,12 +350,12 @@
         return;
     }
     _houseType = houseType;
-    [_naviBar setSearchPlaceHolderText:[[FHHouseTypeManager sharedInstance] searchBarPlaceholderForType:houseType]];
+    [self refreshSearchPlaceHolderText];
     _segmentControl.selectedSegmentIndex = [self getSegmentControlIndex];
     self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
     [self.collectionView layoutIfNeeded];
     [self.viewModel updateSubVCTrackStatus];
-    [self.viewModel textFieldTextChange:self.naviBar.searchInput.text];
+    //[self.viewModel textFieldTextChange:self.naviBar.searchInput.text];
 }
 
 -(NSInteger)getSegmentControlIndex

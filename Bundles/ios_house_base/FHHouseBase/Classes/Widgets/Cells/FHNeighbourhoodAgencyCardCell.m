@@ -17,7 +17,7 @@
 #import <TTThemed/UIColor+TTThemeExtension.h>
 #import "UIImage+FIconFont.h"
 #import "TTAccountManager.h"
-#import <FHHouseBase/FHRealtorAvatarView.h>
+#import <FHHouseBase/FHHouseRealtorAvatarView.h>
 
 @interface FHNeighbourhoodAgencyCardCell ()
 
@@ -33,7 +33,7 @@
 
 @property(nonatomic, strong) UIView *bottomInfoView;
 @property(nonatomic, strong) UIView *lineView;
-@property(nonatomic, strong) FHRealtorAvatarView *avatarView;
+@property(nonatomic, strong) FHHouseRealtorAvatarView *avatarView;
 @property(nonatomic, strong) UIButton *licenceIcon;
 @property(nonatomic, strong) UIButton *callBtn;
 @property(nonatomic, strong) UIButton *imBtn;
@@ -125,7 +125,7 @@
     _lineView.backgroundColor = [UIColor themeGray7];
      [self.bottomInfoView addSubview:_lineView];
 
-    self.avatarView = [[FHRealtorAvatarView alloc] init];
+    self.avatarView = [[FHHouseRealtorAvatarView alloc] init];
     [self.bottomInfoView addSubview:self.avatarView];
 
     _licenceIcon = [[UIButton alloc] init];
@@ -136,14 +136,10 @@
 
     _callBtn = [[UIButton alloc] init];
     [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_normal_new"] forState:UIControlStateNormal];
-    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateSelected];
-    [_callBtn setImage:[UIImage imageNamed:@"detail_agent_call_press_new"] forState:UIControlStateHighlighted];
     [self.bottomInfoView addSubview:_callBtn];
 
     _imBtn = [[UIButton alloc] init];
     [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
-    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateSelected];
-    [_imBtn setImage:[UIImage imageNamed:@"detail_agent_message_press_new"] forState:UIControlStateHighlighted];
     [self.bottomInfoView addSubview:_imBtn];
 
     _name = [UILabel createLabel:@"" textColor:@"" fontSize:16];

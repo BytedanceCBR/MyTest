@@ -89,14 +89,14 @@
     [tracer setObject:tracer[@"page_type"] forKey:@"enter_from"];
     [infoDict setValue:tracer forKey:@"tracer"];
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://map_detail"] userInfo:info];
 }
 
 - (void)openNotifyAction {
     FHHouseDetailContactViewModel *contactViewModel = self.detailViewController.viewModel.contactViewModel;
     FHNewHouseDetailPriceNotifyCellModel *model = [(FHNewHouseDetailCoreInfoSM *)self.sectionModel priceNotifyCellModel];
     NSString *title = @"开盘通知";
-    NSString *subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机";
+    NSString *subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机。";
     NSString *btnTitle = @"提交";
     NSMutableDictionary *associateParamDict = @{}.mutableCopy;
     associateParamDict[kFHAssociateInfo] = model.openAssociateInfo.reportFormInfo;
@@ -116,7 +116,7 @@
     FHHouseDetailContactViewModel *contactViewModel = self.detailViewController.viewModel.contactViewModel;
     FHNewHouseDetailPriceNotifyCellModel *model = [(FHNewHouseDetailCoreInfoSM *)self.sectionModel priceNotifyCellModel];
     NSString *title = @"变价通知";
-    NSString *subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机";
+    NSString *subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机。";
     NSString *btnTitle = @"提交";
     NSMutableDictionary *associateParamDict = @{}.mutableCopy;
     associateParamDict[kFHAssociateInfo] = model.priceAssociateInfo.reportFormInfo;

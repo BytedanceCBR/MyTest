@@ -13,21 +13,18 @@
 - (void)updateDetailModel:(FHDetailNeighborhoodModel *)model {
     NSMutableArray *itemArray = [NSMutableArray array];
     FHDetailNeighborhoodDataStrategyModel *strategy = model.data.strategy;
-    if(strategy.articleList.count > 0){
-        self.title = strategy.title;
-        for (int i = 0; i < strategy.articleList.count;i++) {
-            FHDetailNeighborhoodDataStrategyArticleListModel *articleModel = strategy.articleList[i];
-            articleModel.hiddenBottomLine = (i == (strategy.articleList.count - 1));
-            if (articleModel) {
-                [itemArray addObject:articleModel];
-            }
-        }
-        
-        FHNeighborhoodDetailSpaceModel *spaceModel = [[FHNeighborhoodDetailSpaceModel alloc] init];
-        spaceModel.height = 5;
-        [itemArray addObject:spaceModel];
+    NSMutableDictionary *dataDic = [[NSMutableDictionary alloc]init];
+    if (strategy.article) {
+        [dataDic addEntriesFromDictionary:@{@"article":strategy.article}];
+    }
+    if (strategy.score) {
+        [dataDic  addEntriesFromDictionary:@{@"score":strategy.score}];
     }
     
+    if (strategy.compare) {
+        [dataDic addEntriesFromDictionary:@{@"compare":strategy.compare}];
+    }
+    [itemArray addObject:dataDic];
     self.items = [itemArray copy];
 }
 

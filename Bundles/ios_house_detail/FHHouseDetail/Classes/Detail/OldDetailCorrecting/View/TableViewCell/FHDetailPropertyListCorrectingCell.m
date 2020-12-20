@@ -21,6 +21,7 @@
 extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 @interface FHDetailPropertyListCorrectingCell()
 @property (nonatomic, weak) UIImageView *shadowImage;
+@property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) NSMutableArray *itemArray;
 @end
 @implementation FHDetailPropertyListCorrectingCell
@@ -69,15 +70,15 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         infoView = [[FHAgencyNameInfoView alloc] init];
         infoView.backgroundColor = [UIColor colorWithHexString:model.certificate.bgColor]?:[UIColor themeRed2];
         [infoView setAgencyNameInfo:model.certificate.labels];
-        [self.contentView addSubview:infoView];
+        [self.containerView addSubview:infoView];
         [self.itemArray addObject:infoView];
     }
     __block UIView *lastView = nil; // 最后一个视图
     NSInteger count = model.baseInfo.count;
+    __block CGFloat topOffset = model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll?18:0;// 高度
     if (count > 0) {
         NSMutableArray *singles = [NSMutableArray new];
         __block NSInteger doubleCount = 0;// 两列计数
-        __block CGFloat topOffset = model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll?18:0;// 高度
         __block CGFloat listRowHeight = 28;// 30
         __block CGFloat lastViewLeftOffset = 20;
         __block CGFloat lastTopOffset = 20;
@@ -92,38 +93,29 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                     v.valueLabel.font = [UIFont themeFontMedium:14];
                     v.valueLabel.textColor = [UIColor themeGray2];
-                    [self.contentView addSubview:v];
+                    [self.containerView addSubview:v];
                     [self.itemArray addObject:v];
-                    [v mas_makeConstraints:^(MASConstraintMaker *make) {
-                        make.top.mas_equalTo(topOffset);
-                        make.left.mas_equalTo(31);
-                        make.width.mas_equalTo(viewWidth);
-                        make.height.mas_equalTo(listRowHeight);
-                    }];
+                    v.frame = CGRectMake(31, topOffset,viewWidth, listRowHeight);
                     v.keyLabel.text = obj.attr;
                     v.valueLabel.text = obj.value;
                     lastView = v;
                     lastViewLeftOffset = 20;
                     lastTopOffset = topOffset;
+                    topOffset += listRowHeight;
                 } else {
                     // 第2列
+                    topOffset -= listRowHeight;
                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                     v.valueLabel.font = [UIFont themeFontMedium:14];
                     v.valueLabel.textColor = [UIColor themeGray2];
-                    [self.contentView addSubview:v];
+                    [self.containerView addSubview:v];
                     [self.itemArray addObject:v];
-                    [v mas_makeConstraints:^(MASConstraintMaker *make) {
-                        make.top.mas_equalTo(topOffset);
-                        make.left.mas_equalTo(31 + viewWidth);
-                        make.width.mas_equalTo(viewWidth);
-                        make.height.mas_equalTo(listRowHeight);
-                    }];
+                    v.frame = CGRectMake(31 + viewWidth, topOffset,viewWidth, listRowHeight);
                     v.keyLabel.text = obj.attr;
                     v.valueLabel.text = obj.value;
                     lastView = v;
                     lastViewLeftOffset = 20 + viewWidth;
                     lastTopOffset = topOffset;
-                    //
                     topOffset += listRowHeight;
                 }
                 doubleCount += 1;
@@ -132,200 +124,99 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         // 添加单列数据
         if (singles.count > 0) {
             // 重新计算topOffset
-            topOffset = (doubleCount / 2 + doubleCount % 2) * listRowHeight;
             [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                 v.valueLabel.font = [UIFont themeFontMedium:14];
                 v.valueLabel.textColor = [UIColor themeGray2];
-                [self.contentView addSubview:v];
-                  [self.itemArray addObject:v];
-                [v mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.top.mas_equalTo(topOffset);
-                    make.left.mas_equalTo(31);
-                    make.width.mas_equalTo(viewWidth * 2);
-                    make.height.mas_equalTo(listRowHeight);
-                }];
+                [self.containerView addSubview:v];
+                [self.itemArray addObject:v];
+                v.frame = CGRectMake(topOffset, 31, viewWidth*2, listRowHeight);
                 v.keyLabel.text = obj.attr;
                 v.valueLabel.text = obj.value;
                 lastView = v;
                 lastViewLeftOffset = 20;
                 lastTopOffset = topOffset;
-        
                 topOffset += listRowHeight;
             }];
         }
-//        // 父视图布局
-//        if (lastView) {
-//            CGFloat vWidTemp = viewWidth;
-//            if (lastViewLeftOffset < 30) {
-//                // 单行
-//                vWidTemp = viewWidth * 2;
-//            }
-//            [lastView mas_remakeConstraints:^(MASConstraintMaker *make) {
-//                make.top.mas_equalTo(lastTopOffset);
-//                make.left.mas_equalTo(lastViewLeftOffset);
-//                make.width.mas_equalTo(vWidTemp);
-//                make.height.mas_equalTo(listRowHeight);
-//                if (!infoView && !model.extraInfo) {
-//                    make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-20);
-//                }
-//            }];
-//        }
     }
-    
+    topOffset += 2;
     //extra info
     if (model.extraInfo) {
-        
         FHDetailExtarInfoCorrectingRowView *rowView = nil;
         if (model.extraInfo.neighborhoodInfo) {
             rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
             [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
             [rowView updateWithNeighborhoodInfoData:model.extraInfo.neighborhoodInfo];
-            [self.contentView addSubview:rowView];
-              [self.itemArray addObject:rowView];
-            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
-                if (lastView) {
-                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-                }else{
-                    make.top.mas_equalTo(10);
-                }
-                make.left.mas_equalTo(31);
-                make.right.mas_equalTo(-31);
-                make.height.mas_equalTo(20);
-            }];
+            [self.containerView addSubview:rowView];
+            [self.itemArray addObject:rowView];
+            rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
+            topOffset += 30;
             lastView = rowView;
         }
         if (model.extraInfo.budget) {
             rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
             [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
             [rowView updateWithBudgetData:model.extraInfo.budget];
-            [self.contentView addSubview:rowView];
+            [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
-            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
-                if (lastView) {
-                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-                }else{
-                    make.top.mas_equalTo(10);
-                }
-                make.left.mas_equalTo(31);
-                make.right.mas_equalTo(-31);
-                make.height.mas_equalTo(20);
-            }];
+            rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
+            topOffset += 30;
             lastView = rowView;
         }
         if (model.extraInfo.floorInfo) {
             rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
             [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
             [rowView updateWithFloorInfo:model.extraInfo.floorInfo];
-            [self.contentView addSubview:rowView];
+            [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
-            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
-                if (lastView) {
-                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-                }else{
-                    make.top.mas_equalTo(10);
-                }
-                make.left.mas_equalTo(31);
-                make.right.mas_equalTo(-31);
-                make.height.mas_equalTo(20);
-            }];
+            rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
+            topOffset += 30;
             lastView = rowView;
         }
         if (model.extraInfo.official) {
             rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
             [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
             [rowView updateWithOfficalData:model.extraInfo.official];
-            [self.contentView addSubview:rowView];
+            [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
-            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
-                if (lastView) {
-                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-                }else{
-                    make.top.mas_equalTo(10);
-                }
-                make.left.mas_equalTo(31);
-                make.right.mas_equalTo(-31);
-                make.height.mas_equalTo(20);
-            }];
+            rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
+            topOffset += 30;
             lastView = rowView;
         }
         
-        if (model.extraInfo.detective) {
-            rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
-            [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
-            [self.contentView addSubview:rowView];
-            [rowView updateWithDetectiveData:model.extraInfo.detective];
-            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
-                if (lastView) {
-                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-                }else{
-                    make.top.mas_equalTo(10);
-                }
-                make.left.mas_equalTo(31);
-                make.right.mas_equalTo(-31);
-                make.height.mas_equalTo(20);
-            }];
-            lastView = rowView;
-        }
         if (model.extraInfo.houseCertificationInfo) {
             rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
             [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
-            [self.contentView addSubview:rowView];
             [rowView updateWithHouseCertificationInfo:model.extraInfo.houseCertificationInfo];
-            [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
-                if (lastView) {
-                    make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-                }else{
-                    make.top.mas_equalTo(10);
-                }
-                make.left.mas_equalTo(31);
-                make.right.mas_equalTo(-31);
-                make.height.mas_equalTo(20);
-            }];
+            [self.containerView addSubview:rowView];
+            [self.itemArray addObject:rowView];
+            rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
+            topOffset += 30;
             lastView = rowView;
         }
     }
     
     if (model.rentExtraInfo.securityInformation) {
-        
         FHDetailExtarInfoCorrectingRowView *rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
         [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:rowView];
-        [self.itemArray addObject:rowView];
         [rowView updateWithSecurityInfo:model.rentExtraInfo.securityInformation];
-        [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
-            if (lastView) {
-                make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-            }else{
-                make.top.mas_equalTo(10);
-            }
-            make.left.mas_equalTo(31);
-            make.right.mas_equalTo(-31);
-            make.height.mas_equalTo(20);
-        }];
-        lastView = rowView;                
+        [self.containerView addSubview:rowView];
+        [self.itemArray addObject:rowView];
+        rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
+        topOffset += 30;
+        lastView = rowView;              
     }
     
     if (infoView) {
-        [infoView mas_makeConstraints:^(MASConstraintMaker *make) {
-            if (lastView) {
-                make.top.mas_equalTo(lastView.mas_bottom).offset(10);
-            }else{
-                make.top.mas_equalTo(10);
-            }
-            make.left.mas_equalTo(31);
-            make.right.mas_equalTo(self.contentView).offset(-31);
-            make.height.mas_equalTo(26);
-//            make.bottom.mas_equalTo(self.contentView.mas_bottom).offset(-20);
-        }];
-        lastView = infoView;
+        infoView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
     }
     
-    [lastView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.shadowImage.mas_bottom).offset(-40);
+    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(topOffset);
     }];
     
-    [self layoutIfNeeded];
+//    [self layoutIfNeeded];
 }
 
 - (NSArray *)elementTypeStringArray:(FHHouseType)houseType
@@ -340,9 +231,6 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         if (model.extraInfo.official) {
             [types addObject:@"official_inspection"];
         }
-//        if (model.extraInfo.detective) {
-//            [types addObject:@"happiness_eye"];
-//        }
         
         return types;
     }
@@ -370,6 +258,16 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         make.left.right.equalTo(self.contentView);
         make.top.equalTo(self.contentView).offset(-14);
         make.bottom.equalTo(self.contentView).offset(14);
+    }];
+    _containerView = [[UIView alloc] init];
+    _containerView.clipsToBounds = YES;
+    [self.contentView addSubview:_containerView];
+    [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.shadowImage).offset(14);
+        make.left.mas_equalTo(self.contentView);
+        make.right.mas_equalTo(self.contentView);
+        make.height.mas_equalTo(0);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-30);
     }];
 }
 
@@ -584,45 +482,6 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     self.indicatorLabel.hidden = YES;
         
-}
-
--(void)updateWithDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)detectiveModel
-{
-    self.data = detectiveModel;
-    _nameLabel.text = detectiveModel.baseTitle;
-    
-    NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
-    if (!IS_EMPTY_STRING(detectiveModel.content)) {
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:detectiveModel.content attributes:@{NSForegroundColorAttributeName:[UIColor themeGray2],NSFontAttributeName:[UIFont themeFontMedium:14]}];
-        [minfoAttrStr appendAttributedString:infoStr];
-    }
-
-    if (!IS_EMPTY_STRING(detectiveModel.warnContent)) {
-        NSAttributedString *warnStr = [[NSAttributedString alloc] initWithString:detectiveModel.warnContent attributes:@{NSForegroundColorAttributeName:[UIColor colorWithHexStr:@"#ff9629"],NSFontAttributeName:[UIFont themeFontMedium:14]}];
-        [minfoAttrStr appendAttributedString:warnStr];
-    }
-    
-    _infoLabel.attributedText = minfoAttrStr;
-    
-    _logoImageView.image = nil;
-    [_logoImageView bd_setImageWithURL:[NSURL URLWithString:detectiveModel.icon]];
-    
-    _indicatorLabel.text = detectiveModel.tips;
-    
-    [_indicatorLabel sizeToFit];
-    
-    CGSize size = _indicatorLabel.bounds.size;
-    _indicatorLabel.hidden = NO;
-    
-    [_indicatorLabel  mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.width.mas_equalTo(size.width);
-    }];
-    
-    [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-(31+size.width));
-        make.size.mas_equalTo(CGSizeMake(15, 15));
-    }];
-    
 }
 
 -(void)updateWithSecurityInfo:(FHRentDetailDataBaseExtraSecurityInformationModel *)securityInfo

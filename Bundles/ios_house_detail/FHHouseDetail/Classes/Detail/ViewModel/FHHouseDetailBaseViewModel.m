@@ -47,6 +47,7 @@
 @property(nonatomic, assign) NSTimeInterval startTime;
 @property(nonatomic, assign) NSTimeInterval tableViewLoadTime;
 
+
 @end
 
 @implementation FHHouseDetailBaseViewModel
@@ -71,6 +72,7 @@
     }
     return viewModel;
 }
+
 - (void)getfirstFps{
     self.canaddPageLoadLog = false;
     self.isRefreshData = false;
@@ -89,7 +91,6 @@
     if(self.canaddPageLoadLog && !self.tableViewLoadTime){
         self.tableViewLoadTime = delta;
         [self addPageLoadLog];
-//        NSLog(@"xzsumfps:%f",link.timestamp - _startTime);
         [_link removeFromRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
         _link = nil;
         self.canaddPageLoadLog = false;
@@ -105,7 +106,7 @@
     self = [super init];
     if (self) {
         if(houseType == FHHouseTypeSecondHandHouse){
-        [self getfirstFps];
+            [self getfirstFps];
         }
         _detailTracerDic = [NSMutableDictionary new];
         _items = [NSMutableArray new];
@@ -298,7 +299,6 @@
                 cell.backgroundColor = [UIColor clearColor];
             }
             if (cell) {
-                cell.frame = CGRectMake(0, 0, tableView.frame.size.width, cell.frame.size.height);
                 cell.baseViewModel = self;
                 [cell refreshWithData:data];
                 self.isRefreshData = true;
@@ -336,7 +336,11 @@
     if (cellHeight) {
         return [cellHeight floatValue];
     }
-    return UITableViewAutomaticDimension;
+    if(![FHEnvContext isOldDetailLoadOptimization]){
+        return UITableViewAutomaticDimension;
+    }else{
+        return 200;
+    }
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -344,6 +348,7 @@
         //当前是列表页带入的数据，不上报埋点
         return;
     }
+
     NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
     NSNumber *cellHeight = [NSNumber numberWithFloat:cell.frame.size.height];
     self.cellHeightCaches[tempKey] = cellHeight;
@@ -438,6 +443,9 @@
         return;
     }
     
+    if(self.questionBtn.hidden){
+        return ;
+    }
     self.floatIconAnimation = YES;
     FHDetailQuestionButton *questionBtn = self.questionBtn;
     CGFloat btnWidth = [questionBtn totalWidth];
@@ -781,13 +789,14 @@
                 //为了避免出现特别大的无效数据 App切换前后台的时候数据大的也不添加
                 NSMutableDictionary *metricDict = [NSMutableDictionary dictionary];
                 //单位 秒 -> 毫秒
-                metricDict[@"total_duration"] = @(duration * 1000);
-                metricDict[@"tableView_duration"] = @(self.tableViewLoadTime * 1000);
+                if(!self.isCache){
+                    metricDict[@"tableView_duration"] = @(self.tableViewLoadTime * 1000);
+                    metricDict[@"total_duration"] = @(duration * 1000);
+                }
+                metricDict[@"isCache"] = self.isCache ? @(100) : @(0);
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_house_detail_old" metric:metricDict.copy category:@{@"status":@(0)} extra:nil];
             }
         }
-        
-
     });
 }
 #pragma mark - poplayer
@@ -829,12 +838,6 @@
     NSString *enterFrom = @"be_null";
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
         enterFrom = @"official_inspection";
-    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        enterFrom = @"happiness_eye";
-        FHDetailDataBaseExtraDetectiveModel *detective = (FHDetailDataBaseExtraDetectiveModel *)model;
-        if (detective.fromDetail) {
-            enterFrom = @"happiness_eye_detail";
-        }
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         enterFrom = @"transaction_remind";
     }
@@ -920,8 +923,6 @@
     NSString *reportUrl = nil;
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
         reportUrl = [(FHDetailDataBaseExtraOfficialModel *)model dialogs].reportUrl;
-    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        reportUrl = [(FHDetailDataBaseExtraDetectiveModel *)model dialogs].reportUrl;
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         reportUrl = [(FHRentDetailDataBaseExtraModel *)model securityInformation].dialogs.reportUrl;
     }
@@ -986,8 +987,6 @@
     if ([model isKindOfClass:[FHDetailDataBaseExtraOfficialModel class]]) {
         source = @"official";
         agencyId = [(FHDetailDataBaseExtraOfficialModel *)model agency].agencyId;
-    }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveModel class]]){
-        source = @"detective";
     }else if ([model isKindOfClass:[FHRentDetailDataBaseExtraModel class]]){
         source = @"safety_tips";
     }else if ([model isKindOfClass:[FHDetailDataBaseExtraDetectiveReasonInfo class]]){

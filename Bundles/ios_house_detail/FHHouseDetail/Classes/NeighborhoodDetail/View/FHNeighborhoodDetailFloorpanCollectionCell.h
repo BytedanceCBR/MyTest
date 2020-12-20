@@ -22,7 +22,11 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 @interface FHNeighborhoodDetailFloorpanCellModel : NSObject
+
 @property (nonatomic,strong) FHDetailNeighborhoodSaleHouseInfoListModel *saleHouseInfoModel;
+
+@property (nonatomic, assign) CGFloat bottomMargin; //如果有在售房源为 5，否则为 10;
+
 @end
 
 NS_ASSUME_NONNULL_END

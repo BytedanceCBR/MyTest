@@ -12,17 +12,25 @@
 #import "ToastManager.h"
 #import <FHHouseBase/FHUserInfoManager.h>
 #import <FHHouseBase/NSObject+FHOptimize.h>
+#import "SSCommonLogic.h"
+#import "TTAccountLoginManager.h"
+#import <TTAccountSDK/TTAccount.h>
+#import <FHHouseBase/FHHouseFillFormHelper.h>
 
 @interface FHDetailHouseSubscribeCorrectingCell()<UITextFieldDelegate>
 
-@property(nonatomic, weak) UIButton *subscribeBtn;
-@property(nonatomic, weak) FHTextField *textField;
-@property(nonatomic, weak) UIImageView *bacIma;
-@property(nonatomic, weak) UIImageView *titleImage;
 @property (nonatomic, weak) UIImageView *shadowImage;
+@property(nonatomic, weak) UIImageView *bacIma;
+
+@property(nonatomic, weak) FHTextField *textField;
+@property(nonatomic, weak) UIImageView *titleImage;
 @property(nonatomic, assign) CGFloat offsetY;
 @property(nonatomic, strong) NSString *phoneNum;
 @property(nonatomic, weak) UILabel *legalAnnouncement;
+
+@property(nonatomic, weak) UIButton *subscribeBtn;
+
+@property(nonatomic, strong) UILabel *tipNameLabel;
 
 @end
 
@@ -65,7 +73,8 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
-    model.cell = self;
+    self.subscribeBlock = model.subscribeBlock;
+    self.legalAnnouncementClickBlock = model.legalAnnouncementClickBlock;
 }
 
 
@@ -98,6 +107,7 @@
     if (!_bacIma) {
         UIImageView *bacIma = [[UIImageView alloc]init];
         bacIma.image = [UIImage imageNamed:@"houseSubscribeBac"];
+        bacIma.userInteractionEnabled = YES;
         [self.contentView addSubview:bacIma];
         _bacIma = bacIma;
     }
@@ -113,25 +123,6 @@
         _titleImage = titleImage;
     }
     return  _titleImage;
-}
-
-- (UIButton *)subscribeBtn {
-    if (!_subscribeBtn) {
-        UIButton *subscribeBtn = [[UIButton alloc] init];
-        //        subscribeBtn.backgroundColor = [UIColor themeRed1];
-        [subscribeBtn setTitle:@"订阅动态" forState:UIControlStateNormal];
-        [subscribeBtn setTitleColor:[UIColor colorWithHexStr:@"#b5915c"] forState:UIControlStateNormal];
-        subscribeBtn.titleLabel.font = [UIFont themeFontSemibold:16];
-        subscribeBtn.layer.cornerRadius = 16;
-        subscribeBtn.layer.borderColor = [UIColor colorWithHexStr:@"#d7bd96"].CGColor;
-        subscribeBtn.layer.borderWidth = 0.5;
-        //        subscribeBtn.enabled = NO;
-        //        subscribeBtn.alpha = 0.6;
-        [subscribeBtn addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
-        [self.bacIma addSubview:subscribeBtn];
-        _subscribeBtn = subscribeBtn;
-    }
-    return _subscribeBtn;
 }
 
 - (FHTextField *)textField {
@@ -185,42 +176,102 @@
         make.top.mas_equalTo(self.contentView).mas_offset(-14);
         make.bottom.mas_equalTo(self.contentView).mas_offset(14);
     }];
-    [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).offset(15);
-        make.right.mas_equalTo(self.contentView).offset(-15);
-        make.top.mas_equalTo(self.shadowImage).offset(20);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
-    }];
     
-    [self.titleImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.bacIma).offset(30);
-        make.top.mas_equalTo(self.bacIma).offset(20);
-        make.size.mas_offset(CGSizeMake(117, 24));
-    }];
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        self.bacIma.image = [UIImage imageNamed:@"houseSubscribeBac_new"];
+        
+        [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.contentView).offset(15);
+            make.right.mas_equalTo(self.contentView).offset(-15);
+            make.top.mas_equalTo(self.shadowImage).offset(20);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+            make.height.mas_equalTo(60);
+        }];
+        
+        UIButton *subscribeBtn = [[UIButton alloc] init];
+        [subscribeBtn setTitle:@"立即订阅" forState:UIControlStateNormal];
+        [subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        subscribeBtn.titleLabel.font = [UIFont themeFontSemibold:14];
+        subscribeBtn.layer.cornerRadius = 16;
+        subscribeBtn.backgroundColor = [UIColor colorWithHexString:@"d4b382"];
+        [subscribeBtn addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
+        [self.bacIma addSubview:subscribeBtn];
+        self.subscribeBtn = subscribeBtn;
+        [self.subscribeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(self.bacIma);
+            make.right.mas_equalTo(self.bacIma).offset(-15);
+            make.width.mas_equalTo(86);
+            make.height.mas_equalTo(32);
+        }];
+        
+        self.tipNameLabel = [[UILabel alloc] init];
+        self.tipNameLabel.textAlignment = NSTextAlignmentLeft;
+        self.tipNameLabel.textColor = [UIColor colorWithHexString:@"a57d59"];
+        self.tipNameLabel.font = [UIFont themeFontSemibold:16];
+        self.tipNameLabel.text = @"订阅房源动态，掌握一手信息";
+        [self.bacIma addSubview:self.tipNameLabel];
+        [self.tipNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.bacIma).offset(15);
+            make.right.mas_equalTo(self.subscribeBtn.mas_left).offset(-15);
+            make.centerY.mas_equalTo(self.bacIma);
+            make.height.mas_equalTo(22);
+        }];
+    } else {
+        [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.contentView).offset(15);
+            make.right.mas_equalTo(self.contentView).offset(-15);
+            make.top.mas_equalTo(self.shadowImage).offset(20);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+        }];
+        
+        [self.titleImage mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self.bacIma).offset(30);
+            make.top.mas_equalTo(self.bacIma).offset(20);
+            make.size.mas_offset(CGSizeMake(117, 24));
+        }];
+        
+        UIButton *subscribeBtn = [[UIButton alloc] init];
+        [subscribeBtn setTitle:@"订阅动态" forState:UIControlStateNormal];
+        [subscribeBtn setTitleColor:[UIColor colorWithHexStr:@"#b5915c"] forState:UIControlStateNormal];
+        subscribeBtn.titleLabel.font = [UIFont themeFontSemibold:16];
+        subscribeBtn.layer.cornerRadius = 16;
+        subscribeBtn.layer.borderColor = [UIColor colorWithHexStr:@"#d7bd96"].CGColor;
+        subscribeBtn.layer.borderWidth = 0.5;
+        [subscribeBtn addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
+        [self.bacIma addSubview:subscribeBtn];
+        self.subscribeBtn = subscribeBtn;
+        [self.subscribeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.titleImage.mas_bottom).offset(16);
+            make.right.mas_equalTo(self.bacIma).offset(-16);
+            make.width.mas_equalTo(100);
+            make.height.mas_equalTo(32);
+        }];
+        [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(16);
+            make.top.mas_equalTo(self.titleImage.mas_bottom).offset(16);
+            make.right.mas_equalTo(self.subscribeBtn.mas_left).offset(-10);
+            make.height.mas_equalTo(32);
+        }];
+        [self.legalAnnouncement mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(12);
+            make.top.mas_equalTo(self.textField.mas_bottom).offset(16);
+            make.left.mas_equalTo(self.textField);
+            make.bottom.mas_equalTo(self.bacIma).offset(-20);
+        }];
+        
+    }
     
-    [self.subscribeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleImage.mas_bottom).offset(16);
-        make.right.mas_equalTo(self.bacIma).offset(-16);
-        make.width.mas_equalTo(100);
-        make.height.mas_equalTo(32);
-    }];
-    [self.textField mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(16);
-        make.top.mas_equalTo(self.titleImage.mas_bottom).offset(16);
-        make.right.mas_equalTo(self.subscribeBtn.mas_left).offset(-10);
-        make.height.mas_equalTo(32);
-    }];
-    [self.legalAnnouncement mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(12);
-        make.top.mas_equalTo(self.textField.mas_bottom).offset(16);
-        make.left.mas_equalTo(self.textField);
-        make.bottom.mas_equalTo(self.bacIma).offset(-20);
-    }];
+
 }
 
 - (void)setPhoneNumber {
-    self.phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
-    [self showFullPhoneNum:NO];
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        self.subscribeBtn.enabled = YES;
+        self.subscribeBtn.alpha = 1;
+    } else {
+        self.phoneNum = [FHUserInfoManager getPhoneNumberIfExist];
+        [self showFullPhoneNum:NO];
+    }
 }
 
 - (void)showFullPhoneNum:(BOOL)isShow {
@@ -249,6 +300,13 @@
 
 - (void)subscribe {
 
+    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+        if (self.subscribeBlock) {
+            self.subscribeBlock(nil);
+        }
+        return;
+        
+    }
     NSString *phoneNum = self.phoneNum;
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [FHUserInfoManager checkPureIntFormatted:phoneNum]) {
 

@@ -684,7 +684,9 @@ extern NSString *const kFHDetailFollowUpNotification;
 #pragma mark - 详情页跳转
 -(void)jump2HouseDetailPage:(FHHouseListBaseItemModel *)cellModel withRank:(NSInteger)rank {
     
-    NSMutableDictionary *traceParam = [self categoryLogDict];
+    NSMutableDictionary *traceParam = [[self categoryLogDict] mutableCopy];
+    //剔除category_name 后面页面用不到
+    [traceParam removeObjectForKey:UT_CATEGORY_NAME];
     traceParam[@"card_type"] = @"left_pic";
     traceParam[@"enter_from"] = [self categoryName];
     traceParam[@"log_pb"] = [cellModel logPb];
