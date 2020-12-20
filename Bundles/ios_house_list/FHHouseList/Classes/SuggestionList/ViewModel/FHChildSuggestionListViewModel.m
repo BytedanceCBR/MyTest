@@ -1169,6 +1169,7 @@
     if (self.sugHttpTask) {
         [self.sugHttpTask cancel];
     }
+    self.jumpHouseType = self.houseType;
     self.sugListData = NULL;
     self.othersugListData = NULL;
     [self reloadSugTableView];
