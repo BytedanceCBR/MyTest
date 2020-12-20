@@ -80,6 +80,7 @@
         // 1、house_type
         _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
         _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
+        _isNeedHouseTypeCache = [paramObj.allParams[@"isNeedHouseTypeCache"] boolValue];
         NSInteger hp = [paramObj.allParams[@"house_type"] integerValue];
         if (hp >= 1 && hp <= 4) {
             _viewModel.houseType = hp;
@@ -319,6 +320,9 @@
         if (self.houseType != oldHouseType) {
             [self trackTabIndexChange];
             [self notifyHouseTypeChanged:self.houseType];
+            if(self.isNeedHouseTypeCache){
+                [FHEnvContext setLastSearchSugHouseType:self.houseType];
+            }
         }
     }
 }

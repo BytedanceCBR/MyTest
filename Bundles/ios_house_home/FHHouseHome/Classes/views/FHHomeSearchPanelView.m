@@ -171,7 +171,8 @@
     tracerParams[UT_FROM_PAGE_TYPE] = self.fh_pageType ? : @"be_null";
             
     NSMutableDictionary *infos = [NSMutableDictionary new];
-    infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+    infos[@"house_type"] = @([FHEnvContext lastSearchSugHouseType]);
+    infos[@"isNeedHouseTypeCache"] = @(1);
     infos[@"tracer"] = tracerParams;
     infos[@"from_home"] = @(FHEnterSuggestionTypeHome);
     if (self.searchTitleIndex >= 0 && self.searchTitleIndex < self.rollDatas.count) {

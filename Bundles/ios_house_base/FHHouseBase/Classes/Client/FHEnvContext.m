@@ -1263,6 +1263,18 @@ static NSInteger kGetLightRequestRetryCount = 3;
     _hadColdStart = YES;
 }
 
++ (NSInteger)lastSearchSugHouseType {
+    id houseType = [FHUtils contentForKey:@"last_search_sug_house_type"];
+    if (houseType) {
+        return [houseType integerValue];
+    }
+    return 0;
+}
+
++ (void)setLastSearchSugHouseType:(NSInteger)houseType {
+    [FHUtils setContent:@(houseType) forKey:@"last_search_sug_house_type"];
+}
+
 @end
 
 // 升级TTRoute后需要验当前场景
