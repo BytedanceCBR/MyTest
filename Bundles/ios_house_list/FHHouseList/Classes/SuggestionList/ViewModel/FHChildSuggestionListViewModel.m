@@ -1374,7 +1374,6 @@
     self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
         [wself.listController endLoading];
         wself.listController.isLoadingData = NO;
-        wself.listController.suggestTableView.hidden = NO;
         if (model != NULL && error == NULL) {
             wself.jumpHouseType = model.data.jumpHouseType;// 构建数据源
             [wself.sugListData removeAllObjects];
@@ -1389,6 +1388,7 @@
                 [wself.othersugListData addObjectsFromArray:model.data.otherItems];
             }
             [wself.listController.emptyView hideEmptyView];
+            wself.listController.suggestTableView.hidden = NO;
             [wself reloadSugTableView];
             [wself.listController.fatherVC trackSuggestionWithWord:query houseType:houseType result:model];
             // 埋点 associate_word_show
