@@ -443,6 +443,9 @@
         return;
     }
     
+    if(self.questionBtn.hidden){
+        return ;
+    }
     self.floatIconAnimation = YES;
     FHDetailQuestionButton *questionBtn = self.questionBtn;
     CGFloat btnWidth = [questionBtn totalWidth];
