@@ -265,6 +265,13 @@ API_AVAILABLE(ios(10.0))
      修复push点击拉起app后清空通知中心列表问题
      */
 //    [UIApplication sharedApplication].applicationIconBadgeNumber = [[content.userInfo objectForKey:@"badge"] integerValue];
+    
+    /**
+     删除具有相同thread-id的push通知
+     */
+    NSDictionary *aps = [content.userInfo btd_objectForKey:@"aps" default:@{}];
+    NSString *threadID = [aps btd_objectForKey:@"thread-id" default:@""];
+    [self removeNotificationsInSameGroupByThreadID:threadID];
 
     if (@available(iOS 10.0, *)) {
         if ([content.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
@@ -401,6 +408,34 @@ API_AVAILABLE(ios(10.0))
         };
     }
     return _itemActionManager;
+}
+
+#pragma mark - Notification Group
+
+/**
+ 根据push的thread-id字段对系统通知中心的消息进行删除，如果没有
+ trhead-id字段的话不处理（默认情况点击一条push通知中心就会消失
+ 一条），主要应用于IM场景，每个会话对应一个thread-id
+ */
+- (void)removeNotificationsInSameGroupByThreadID:(NSString *)threadID {
+    if (@available(iOS 10,*)) {
+        if (!threadID || !threadID.length) {
+            return;
+        }
+        
+        if (threadID.length > 0) {
+            [[UNUserNotificationCenter currentNotificationCenter] getDeliveredNotificationsWithCompletionHandler:^(NSArray<UNNotification *> * _Nonnull notifications) {
+                NSMutableArray *deleteArray = [[NSMutableArray alloc] init];
+                [notifications enumerateObjectsUsingBlock:^(UNNotification * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    if ([obj.request.content.threadIdentifier isEqualToString:threadID]) {
+                        [deleteArray addObject:obj.request.identifier];
+                    }
+                }];
+                
+                [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:deleteArray];
+            }];
+        }
+    }
 }
 
 
