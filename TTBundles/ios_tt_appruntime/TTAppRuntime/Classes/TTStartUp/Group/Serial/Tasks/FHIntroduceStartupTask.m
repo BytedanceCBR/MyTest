@@ -14,10 +14,9 @@
 #import "FHIntroduceStartupTask.h"
 #import "TTLaunchDefine.h"
 #import "NewsBaseDelegate.h"
-#import "FHIntroduceManager.h"
 #import <FHHouseBase/FHEnvContext.h>
 
-DEC_TASK("FHIntroduceStartupTask",FHTaskTypeUI,TASK_PRIORITY_HIGH);
+//DEC_TASK("FHIntroduceStartupTask",FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 @implementation FHIntroduceStartupTask
 
@@ -27,17 +26,17 @@ DEC_TASK("FHIntroduceStartupTask",FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
     [super startWithApplication:application options:launchOptions];
-
-    BOOL fromAPNS = [[self class] isFromAPNSWithOptions:launchOptions];
-    //只显示一次
-    if([FHEnvContext isIntroduceOpen] && !fromAPNS && [[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]){
-    //只显示一次,push进来不显示
-        if([FHIntroduceManager sharedInstance].alreadyShow){
-            return;
-        }
-        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
-        [FHIntroduceManager sharedInstance].alreadyShow = YES;
-    }
+//
+//    BOOL fromAPNS = [[self class] isFromAPNSWithOptions:launchOptions];
+//    //只显示一次
+//    if([FHEnvContext isIntroduceOpen] && !fromAPNS && [[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]){
+//    //只显示一次,push进来不显示
+//        if([FHIntroduceManager sharedInstance].alreadyShow){
+//            return;
+//        }
+//        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
+//        [FHIntroduceManager sharedInstance].alreadyShow = YES;
+//    }
 }
 
 + (BOOL)isFromAPNSWithOptions:(NSDictionary *)launchOptions {

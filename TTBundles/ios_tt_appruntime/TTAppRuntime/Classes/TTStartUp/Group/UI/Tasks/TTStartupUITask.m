@@ -32,7 +32,6 @@
 #import "TTSandBoxHelper.h"
 #import "FHUtils.h"
 #import <FHHouseBase/FHPermissionAlertViewController.h>
-#import <FHHouseBase/FHIntroduceManager.h>
 #import <FHPopupViewCenter/FHPopupViewManager.h>
 
 

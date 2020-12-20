@@ -32,7 +32,6 @@
 #import "TTArticleTabBarController.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "FHMainApi.h"
-#import "FHIntroduceManager.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import <TTLocationManager/TTLocationManager.h>
@@ -103,10 +102,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
         }
         
         __block NSInteger retryGetLightCount = kGetLightRequestRetryCount;
-        
-        if(![FHIntroduceManager sharedInstance].isShowing){
-            [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
-        }
+
+        //114 删除用户引导页
+//        if(![FHIntroduceManager sharedInstance].isShowing){
+//            [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
+//        }
+        [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
+
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
             
@@ -163,9 +165,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
                     completion(NO);
                 }
                 [[ToastManager manager] dismissCustomLoading];
-                if(![FHIntroduceManager sharedInstance].isShowing){
-                    [[ToastManager manager] showToast:@"切换城市失败"];
-                }
+                //114 删除用户引导页
+//                if(![FHIntroduceManager sharedInstance].isShowing){
+//                    [[ToastManager manager] showToast:@"切换城市失败"];
+//                }
+                [[ToastManager manager] showToast:@"切换城市失败"];
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
                 
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:1 extra:paramsExtra];
@@ -1081,9 +1085,9 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return NewCardType;
 }
 
-+ (BOOL)isIntroduceOpen {
-    return YES;
-}
+//+ (BOOL)isIntroduceOpen {
+//    return YES;
+//}
 
 + (NSString *)defaultTabName {
     FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -1217,13 +1221,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
     
     [NewsBaseDelegate startRegisterRemoteNotification];
     
-    if([FHEnvContext isIntroduceOpen]){
-        if([FHIntroduceManager sharedInstance].alreadyShow){
-            return;
-        }
-        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
-        [FHIntroduceManager sharedInstance].alreadyShow = YES;
-    }
+//    if([FHEnvContext isIntroduceOpen]){
+//        if([FHIntroduceManager sharedInstance].alreadyShow){
+//            return;
+//        }
+//        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
+//        [FHIntroduceManager sharedInstance].alreadyShow = YES;
+//    }
     
 }
 

@@ -18,7 +18,6 @@
 #import "FHEnvContext.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
 #import "TTLaunchDefine.h"
-#import "FHIntroduceManager.h"
 #import <FHHouseBase/FHEnvContext.h>
 
 DEC_TASK_N(TTShowADTask,FHTaskTypeAD,TASK_PRIORITY_HIGH);
@@ -37,8 +36,11 @@ DEC_TASK_N(TTShowADTask,FHTaskTypeAD,TASK_PRIORITY_HIGH);
     //从推动进入或者schema调起进入均不展示广告
     BOOL fromAPNS = [[self class] isFromAPNSWithOptions:launchOptions];
     BOOL fromSchema = [[self class] isFromSchemaWithOptions:launchOptions];
-    BOOL isIntroduceShowing = [FHIntroduceManager sharedInstance].isShowing;
-    [[self class] settingSplashADShowType:fromAPNS || fromSchema || isIntroduceShowing];
+    //114 删除用户引导页
+//    BOOL isIntroduceShowing = [FHIntroduceManager sharedInstance].isShowing;
+//    [[self class] settingSplashADShowType:fromAPNS || fromSchema || isIntroduceShowing];
+    [[self class] settingSplashADShowType:fromAPNS || fromSchema];
+
     
     if ([[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
         //已经展示过隐私弹窗

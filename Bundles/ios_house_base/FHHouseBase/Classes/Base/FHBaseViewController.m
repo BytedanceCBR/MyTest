@@ -16,8 +16,6 @@
 #import "FHErrorView.h"
 #import "UIViewAdditions.h"
 #import "TTProjectLogicManager.h"
-#import "FHIntroduceManager.h"
-#import <FHIntroduceManager.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "UIImage+FIconFont.h"
@@ -157,7 +155,8 @@
     [super viewDidLoad];
     // push过来的页面默认状态栏是隐藏的
     UIApplication *application = [UIApplication sharedApplication];
-    if(application.statusBarHidden && ![FHIntroduceManager sharedInstance].isShowing){
+    //114 删除用户引导页  && ![FHIntroduceManager sharedInstance].isShowing
+    if(application.statusBarHidden){
         [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     }
     
