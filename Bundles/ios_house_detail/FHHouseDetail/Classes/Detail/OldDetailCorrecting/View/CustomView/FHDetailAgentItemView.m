@@ -331,7 +331,7 @@
                 scoreStringValue = [scoreStringValue stringByReplacingOccurrencesOfString:@"分" withString:@""];
             }
             
-            [scoreString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" + %@ 小区熟悉度",scoreStringValue] attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3], NSFontAttributeName: [UIFont themeFontRegular:12]}]];
+            [scoreString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" | %@ 小区熟悉度",scoreStringValue] attributes:@{NSForegroundColorAttributeName: [UIColor themeGray3], NSFontAttributeName: [UIFont themeFontRegular:12]}]];
         }
         self.scoreLabel.attributedText = scoreString.copy;
     } else {
