@@ -190,16 +190,23 @@
         lineIndex += 1;
         return data01;
     }];
+    CGFloat yFixedValueMax;
+    CGFloat yFixedValueMin;
     if (shouldUseTenThousandUnit) {
-//        CGFloat padding = (maxValue - minValue) / 10000 / 16;
-        chartView.lineChart.yFixedValueMax = maxValue / 10000;
-        chartView.lineChart.yFixedValueMin = minValue / 10000;
+        yFixedValueMax = maxValue / 10000;
+        yFixedValueMin = minValue / 10000;
     } else {
-//        CGFloat padding = (maxValue - minValue) / 16;
-        chartView.lineChart.yFixedValueMax = maxValue;
-        chartView.lineChart.yFixedValueMin = minValue;
+        yFixedValueMax = maxValue;
+        yFixedValueMin = minValue;
     }
+    CGFloat deltaValue = (yFixedValueMax - yFixedValueMin) * 3;
+    yFixedValueMax += deltaValue;
+    yFixedValueMin -= deltaValue;
 //    chartView.lineChart.yFixedValueMin = 0;
+    
+    chartView.lineChart.yFixedValueMax = yFixedValueMax;
+    chartView.lineChart.yFixedValueMin = yFixedValueMin;
+
     chartView.lineChart.chartData = lineDatas;
     [chartView.lineChart strokeChart];
 
