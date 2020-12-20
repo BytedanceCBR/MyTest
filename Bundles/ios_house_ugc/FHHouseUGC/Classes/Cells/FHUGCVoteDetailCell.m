@@ -383,7 +383,7 @@
                 height += 1;
             }
         } else {
-            height += (24 + 25);
+            height += bottomViewHeight;
         }
         
         return height;
