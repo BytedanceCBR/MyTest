@@ -22,6 +22,8 @@
 #import "NSObject+YYModel.h"
 #import "FHUserTracker.h"
 #import "FHRealtorSecondCell.h"
+#import <ios_house_im/IMManager.h>
+#import <Masonry.h>
 
 @interface FHHouseRealtorShopVM ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
@@ -91,10 +93,27 @@
 //                [self requestData:YES first:YES];
                 //                [wSelf updateUIWithData];
                 //                    [wSelf processDetailData:model];
+                
+                // TODO: JOKER 判断经纪人是否被关黑
+                BOOL isBlackmailRealtor = YES;
+                [self.detailController showBottomBar:!isBlackmailRealtor];
+                [self.detailController.blackmailReatorBottomBar show:isBlackmailRealtor WithHint:@"因平台管制，经纪人暂无法为您提供服务，可以选择其他经纪人" btnAction:^{
+                    [IMManager jumpToRealtorListPageWithParams:@{}];
+                }];
+                
+                [self.detailController.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.top.left.right.mas_equalTo(self.detailController.view);
+                    if(self.detailController.blackmailReatorBottomBar.hidden == NO) {
+                        make.bottom.equalTo(self.detailController.blackmailReatorBottomBar.mas_top);
+                    } else {
+                        make.bottom.equalTo(self.detailController.bottomBar.mas_top);
+                    }
+                }];
             }
         }
     }];
 }
+
 
 - (void)loadDataForShop:(FHHouseRealtorShopDetailModel *)model {
     if (model.data.realtor) {

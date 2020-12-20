@@ -41,6 +41,8 @@
 #import "TTURLUtils.h"
 #import "NSObject+YYModel.h"
 #import "NSDictionary+BTDAdditions.h"
+#import <ios_house_im/IMManager.h>
+
 #define kSegmentViewHeight 44
 @interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate,TTHorizontalPagingSegmentViewDelegate>
 
@@ -175,7 +177,13 @@
             [self.viewController showRealtorLeaveHeader];
             return;
         }
-        [self.viewController showBottomBar:YES];
+        // TODO: JOKER 判断经纪人是否被关黑
+        BOOL isBlackmailRealtor = YES;
+        [self.viewController showBottomBar:!isBlackmailRealtor];
+        [self.viewController.blackmailReatorBottomBar show:isBlackmailRealtor WithHint:@"因平台管制，经纪人暂无法为您提供服务，可以选择其他经纪人" btnAction:^{
+            [IMManager jumpToRealtorListPageWithParams:@{}];
+        }];
+        
         //初始化segment
         self.ugcTabList = model.data.ugcTabList.mutableCopy;
         FHHouseRealtorDetailRgcTabModel *models =  [[FHHouseRealtorDetailRgcTabModel alloc]init];
@@ -248,10 +256,11 @@
     [self.viewController.view insertSubview:self.pagingView atIndex:0];
     [self.pagingView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.right.left.equalTo(self.viewController.view);
-        if (@available(iOS 11.0, *)) {
-            make.bottom.mas_equalTo(self.viewController.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom -64);
-        }else {
-            make.bottom.mas_equalTo(-64);
+        if(self.viewController.blackmailReatorBottomBar.hidden == NO) {
+            make.bottom.equalTo(self.viewController.blackmailReatorBottomBar.mas_top);
+        }
+        else {
+            make.bottom.equalTo(self.viewController.bottomBar.mas_top);
         }
     }];
 }
