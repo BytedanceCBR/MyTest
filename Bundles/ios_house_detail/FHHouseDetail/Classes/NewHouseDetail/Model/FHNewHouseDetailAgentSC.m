@@ -226,6 +226,7 @@
         titleView.titleLabel.text = @"优选顾问";
     }
     [titleView setSubTitleWithTitle:agentSM.recommendedRealtorsSubTitle];
+    [titleView.arrowsImg setHidden:NO];
 
     return titleView;
 }

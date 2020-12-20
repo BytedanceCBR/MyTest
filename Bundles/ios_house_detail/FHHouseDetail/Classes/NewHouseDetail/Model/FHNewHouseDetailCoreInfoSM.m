@@ -18,6 +18,7 @@
     houseTitleModel.advantage = model.data.topBanner.advantage;
     houseTitleModel.businessTag = model.data.topBanner.businessTag;
     houseTitleModel.titleStr = model.data.coreInfo.name;
+    houseTitleModel.aliasName = model.data.coreInfo.aliasName;
     houseTitleModel.tags = model.data.tags;
     self.titleCellModel = houseTitleModel;
     [items addObject:self.titleCellModel];

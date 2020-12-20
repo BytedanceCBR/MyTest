@@ -123,7 +123,7 @@
                
         self.agencyDescriptionBac = [[UIImageView alloc] init];
 //        self.agencyDescriptionBac.backgroundColor = [UIColor colorWithHexString:@"#fefaf4"];
-        self.agencyDescriptionBac.image = [UIImage fh_gradientImageWithColors:@[(id)[UIColor colorWithHexString:@"eef4fe"].CGColor, (id)[UIColor colorWithHexString:@"eff4fc"].CGColor, (id)[UIColor colorWithHexString:@"f5f7fc"].CGColor] startPoint:CGPointMake(0, 0.5) endPoint:CGPointMake(1, 0.5) size:CGSizeMake(100, 18) usedInClass:NSStringFromClass([self class])];
+        self.agencyDescriptionBac.image = [UIImage fh_gradientImageWithColors:@[(id)[UIColor colorWithHexString:@"#eef4fe"].CGColor, (id)[UIColor colorWithHexString:@"#f5f7fc"].CGColor, (id)[UIColor colorWithHexString:@"#f5f7fc"].CGColor] startPoint:CGPointMake(0, 0.5) endPoint:CGPointMake(1, 0.5) size:CGSizeMake(100, 18) usedInClass:NSStringFromClass([self class])];
         self.agencyDescriptionBac.layer.cornerRadius = 2.0;
         self.agencyDescriptionBac.layer.masksToBounds = YES;
         [self.contentView addSubview:self.agencyDescriptionBac];
@@ -137,7 +137,7 @@
         self.agencyDescriptionLabel = [[UILabel alloc] init];
         self.agencyDescriptionLabel.font = [UIFont themeFontRegular:10];
         self.agencyDescriptionLabel.backgroundColor = [UIColor clearColor];
-        self.agencyDescriptionLabel.textColor = [UIColor themeBlack];
+        self.agencyDescriptionLabel.textColor = [UIColor colorWithHexString:@"#7286b5"];
         self.agencyDescriptionLabel.textAlignment = NSTextAlignmentCenter;
         [self.agencyDescriptionLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
         [self.agencyDescriptionBac addSubview:self.agencyDescriptionLabel];
