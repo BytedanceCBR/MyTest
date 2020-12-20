@@ -226,7 +226,6 @@
     [self updateDescLabel];
     [self updateEditState];
     [self updateFrame];
-    [self showEssenceIcon];
 }
 
 - (void)setTitleModel:(FHFeedUGCCellModel *)cellModel {
