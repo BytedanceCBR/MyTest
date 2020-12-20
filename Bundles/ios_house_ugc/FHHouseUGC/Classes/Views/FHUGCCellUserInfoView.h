@@ -40,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setTitleModel:(FHFeedUGCCellModel *)cellModel;
 
 - (void)updateFrameFromNeighborhoodDetail;
+
+- (void)showEssenceIcon;
 @end
 
 NS_ASSUME_NONNULL_END
