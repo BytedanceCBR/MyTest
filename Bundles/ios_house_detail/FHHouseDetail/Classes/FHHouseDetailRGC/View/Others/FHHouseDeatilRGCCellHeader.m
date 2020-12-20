@@ -12,10 +12,10 @@
 #import "Masonry.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import <FHHouseBase/FHCommonDefines.h>
-#import <FHhousebase/FHRealtorAvatarView.h>
+#import "FHUGCAvatarView.h"
 
 @interface FHHouseDeatilRGCCellHeader ()
-@property (strong, nonatomic) FHRealtorAvatarView *avatarView;
+@property (strong, nonatomic) FHUGCAvatarView *avatarView;
 @property (weak, nonatomic) UILabel *nameLab;
 @property (weak, nonatomic) UIImageView *companyBac;
 @property (weak, nonatomic) UILabel *companyNameLab;
@@ -61,14 +61,14 @@
         make.height.width.mas_offset(20);
     }];
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.mas_right).offset(-8);
+        make.right.equalTo(self.mas_right).offset(-16);
         make.centerY.equalTo(self.avatarView);
-        make.size.mas_equalTo(CGSizeMake(30, 30));
+        make.size.mas_equalTo(CGSizeMake(36, 36));
     }];
     [self.iMBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.phoneBtn.mas_left).offset(-30);
+        make.right.equalTo(self.phoneBtn.mas_left).offset(-16);
         make.centerY.equalTo(self.avatarView);
-        make.size.mas_equalTo(CGSizeMake(30, 30));
+        make.size.mas_equalTo(CGSizeMake(36, 36));
     }];
     
     [self.infoLab mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -78,9 +78,9 @@
     }];
 }
 
-- (FHRealtorAvatarView *)avatarView {
+- (FHUGCAvatarView *)avatarView {
     if (!_avatarView) {
-        _avatarView = [[FHRealtorAvatarView alloc] init];
+        _avatarView = [[FHUGCAvatarView alloc] init];
         _avatarView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
         [_avatarView addGestureRecognizer:tapGesture];
@@ -139,7 +139,11 @@
     if (!_iMBtn) {
         UIButton *iMBtn = [[UIButton alloc]init];
         [iMBtn addTarget:self action:@selector(imAction:) forControlEvents:UIControlEventTouchDown];
-        [iMBtn setBackgroundImage:[UIImage imageNamed:@"detail_agent_message_normal_new"] forState:UIControlStateNormal];
+        iMBtn.imageView.contentMode = UIViewContentModeCenter;
+        [iMBtn setImage:[UIImage imageNamed:@"detail_agent_im_icon"] forState:UIControlStateNormal];
+        iMBtn.backgroundColor = [UIColor colorWithHexString:@"fff6ee"];
+        iMBtn.layer.masksToBounds = YES;
+        iMBtn.layer.cornerRadius = 18;
         [self addSubview:iMBtn];
         _iMBtn = iMBtn;
     }
@@ -150,7 +154,11 @@
     if (!_phoneBtn) {
         UIButton *phoneBtn = [[UIButton alloc]init];
         [phoneBtn addTarget:self action:@selector(phoneAction:) forControlEvents:UIControlEventTouchDown];
-        [phoneBtn setBackgroundImage:[UIImage imageNamed:@"detail_agent_call_normal_new"] forState:UIControlStateNormal];
+        phoneBtn.imageView.contentMode = UIViewContentModeCenter;
+        [phoneBtn setImage:[UIImage imageNamed:@"detail_agent_phone_icon"] forState:UIControlStateNormal];
+        phoneBtn.backgroundColor = [UIColor colorWithHexString:@"fff6ee"];
+        phoneBtn.layer.masksToBounds = YES;
+        phoneBtn.layer.cornerRadius = 18;
         [self addSubview:phoneBtn];
         _phoneBtn = phoneBtn;
     }
