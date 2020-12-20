@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-- (void)showTrackingServicePopup;
+- (void)showTrackingServicePopupInHomePage:(BOOL)isInHomePage;
 
 @end
 

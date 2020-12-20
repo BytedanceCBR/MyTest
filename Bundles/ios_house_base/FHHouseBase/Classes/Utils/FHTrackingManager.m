@@ -13,7 +13,7 @@
 
 @interface FHTrackingManager ()
 
-@property (nonatomic, assign) BOOL hasShown;
+@property (nonatomic, assign) BOOL hasTriedInHomePage;  ///是否已经在首页尝试过弹窗
 
 @end
 
@@ -40,7 +40,8 @@
 /**
  iOS 14 IDFA授权弹窗
  */
-- (void)showTrackingServicePopup {
+- (void)showTrackingServicePopupInHomePage:(BOOL)isInHomePage {
+    self.hasTriedInHomePage = isInHomePage;
     NSString *deviceID = BDTrackerProtocol.deviceID;
     NSString *installID = BDTrackerProtocol.installID;
     if (!deviceID || !installID || !deviceID.length || !installID.length) {
@@ -61,7 +62,6 @@
         return deviceID;
     };
     [[BDInstallPopup sharedInstance] popupIfNeedWithConfig:config completion:nil];
-    self.hasShown = YES;
 }
 
 - (void)registerNotification {
@@ -73,13 +73,14 @@
 
 - (void)deviceDidregistered:(NSNotification *)notification {
     /**
-     这个通知是异步的，如果已经弹出过一次弹窗了就不要重复展示了
+     这个通知是异步的，如果已经尝试在首页弹出过还能运行到这里，说明在
+     首页没能弹出成功（可能是因为did没准备好），那么在这里再次尝试弹窗
      */
-    if (self.hasShown) {
+    if (self.hasTriedInHomePage) {
         return;
     }
     
-    [self showTrackingServicePopup];
+    [self showTrackingServicePopupInHomePage:NO];
 }
 
 @end

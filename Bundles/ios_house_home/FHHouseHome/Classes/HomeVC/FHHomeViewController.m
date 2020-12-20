@@ -556,7 +556,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 #pragma mark - IDFA授权弹窗
 
 - (void)showTrackingAuthenticationPopup {
-    [[FHTrackingManager sharedInstance] showTrackingServicePopup];
+    [[FHTrackingManager sharedInstance] showTrackingServicePopupInHomePage:YES];
 }
 
 @end
