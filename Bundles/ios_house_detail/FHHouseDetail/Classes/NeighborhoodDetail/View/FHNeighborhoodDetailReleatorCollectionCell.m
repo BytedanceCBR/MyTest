@@ -159,7 +159,7 @@
         [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.nameLabel.mas_left);
             make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(28);
-            make.right.mas_lessThanOrEqualTo(-10);
+            make.right.mas_equalTo(-10);
             make.height.mas_equalTo(18);
         }];
        
@@ -206,7 +206,7 @@
         [self.tagsView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.nameLabel.mas_left);
             make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(28);
-            make.right.mas_lessThanOrEqualTo(-10);
+            make.right.mas_equalTo(-10);
             make.height.mas_equalTo(18);
         }];
 
@@ -222,7 +222,7 @@
             [self.tagsView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self.nameLabel.mas_left);
                 make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(8);
-                make.right.mas_lessThanOrEqualTo(-10);
+                make.right.mas_equalTo(-10);
                 make.height.mas_equalTo(18);
             }];
         }
@@ -335,10 +335,6 @@
 }
 
 #pragma mark - UICollectionViewDataSource
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
-}
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     FHDetailContactModel *model = (FHDetailContactModel *)self.currentData;
