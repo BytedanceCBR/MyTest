@@ -150,15 +150,19 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
         }
         
         if(model){
-            NSArray *resultArr = [self convertModel:feedListModel.data];
-            if(isHead){
-                [self.dataList removeAllObjects];
-                [self.dataList addObjectsFromArray:resultArr];
-            }else{
-                [self.dataList addObjectsFromArray:resultArr];
-            }
-            self.tableView.hasMore = feedListModel.hasMore;
-            [self reloadTableViewDataWithHasMore:feedListModel.hasMore];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                NSArray *resultArr = [self convertModel:feedListModel.data isHead:isHead];
+                if(isHead){
+                    [self.dataList removeAllObjects];
+                    [self.dataList addObjectsFromArray:resultArr];
+                }else{
+                    [self.dataList addObjectsFromArray:resultArr];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.tableView.hasMore = feedListModel.hasMore;
+                    [self reloadTableViewDataWithHasMore:feedListModel.hasMore];
+                });
+            });
         }
     }];
 }
@@ -223,7 +227,7 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
 
 #pragma mark UGC
 
-- (NSArray *)convertModel:(NSArray *)feedList {
+- (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead  {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
@@ -232,11 +236,29 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
         cellModel.enterFrom = [self.viewController categoryName];
         cellModel.tracerDic = self.homePageManager.tracerDict;
         
-        if (cellModel) {
-            [resultArray addObject:cellModel];
+        if(cellModel){
+            if(isHead){
+                [resultArray addObject:cellModel];
+                //去重逻辑
+                [self removeDuplicaionModel:cellModel.groupId];
+            }else{
+                NSInteger index = [self getCellIndex:cellModel];
+                if(index < 0){
+                    [resultArray addObject:cellModel];
+                }
+            }
         }
     }
     return resultArray;
+}
+
+- (void)removeDuplicaionModel:(NSString *)groupId {
+    for (FHFeedUGCCellModel *itemModel in self.dataList) {
+        if([groupId isEqualToString:itemModel.groupId]){
+            [self.dataList removeObject:itemModel];
+            break;
+        }
+    }
 }
 
 
