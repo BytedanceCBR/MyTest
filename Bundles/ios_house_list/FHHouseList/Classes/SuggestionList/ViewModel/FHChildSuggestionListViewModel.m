@@ -1204,7 +1204,9 @@
 
 - (void)reloadHistoryTableView {
     if (self.loadRequestTimes >= 3) {
-        self.listController.hasValidateData = YES;
+        [self.listController endLoading];
+        self.listController.isLoadingData = NO;
+        //self.listController.hasValidateData = YES;
         
         if (self.historyData.count > 0) {
             self.historyView.historyItems = self.historyData;
@@ -1288,6 +1290,7 @@
         } else {
             wself.historyView.historyItems = nil;
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                wself.listController.historyIsSuccess = NO;
                 wself.listController.isLoadingData = NO;
                 [wself.listController endLoading];
                 [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -1327,6 +1330,7 @@
         } else {
             wself.subscribeView.subscribeItems = NULL;
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                wself.listController.historyIsSuccess = NO;
                 wself.listController.isLoadingData = NO;
                 [wself.listController endLoading];
                 [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -1350,6 +1354,7 @@
             [strongSelf reloadHistoryTableView];
         }  else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                wself.listController.historyIsSuccess = NO;
                 wself.listController.isLoadingData = NO;
                 [wself.listController endLoading];
                 [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -1367,6 +1372,9 @@
     self.associatedCount += 1;
     __weak typeof(self) wself = self;
     self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+        [wself.listController endLoading];
+        wself.listController.isLoadingData = NO;
+        wself.listController.suggestTableView.hidden = NO;
         if (model != NULL && error == NULL) {
             wself.jumpHouseType = model.data.jumpHouseType;// 构建数据源
             [wself.sugListData removeAllObjects];
@@ -1387,8 +1395,7 @@
             [wself associateWordShow];
         } else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
-                wself.listController.isLoadingData = NO;
-                [wself.listController endLoading];
+                wself.listController.emptyView.hidden = NO;
                 [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
         }
