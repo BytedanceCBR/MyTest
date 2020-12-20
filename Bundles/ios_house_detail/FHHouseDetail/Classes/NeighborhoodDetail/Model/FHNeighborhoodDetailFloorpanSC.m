@@ -66,7 +66,7 @@
     FHNeighborhoodDetailRecommendTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailRecommendTitleView class] atIndex:index];
     titleView.titleLabel.font = [UIFont themeFontSemibold:16];
     titleView.titleLabel.textColor = [UIColor themeGray1];
-    titleView.titleLabel.text = @"小区户型";
+    titleView.titleLabel.text = @"小区在售户型";
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
     return titleView;
