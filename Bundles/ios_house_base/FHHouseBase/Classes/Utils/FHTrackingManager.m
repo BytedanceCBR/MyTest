@@ -51,7 +51,7 @@
     BDInstallPopupConfig *config = [BDInstallPopupConfig new];
     config.confirmBtnText = @"确认";
     config.cancelBtnText = @"取消";
-    config.title = @"权限申请";
+    config.title = @"优化信息服务";
     config.appID = 1370;
     config.appName = @"幸福里";
     config.service = [BDInstallPopupURLChina class];
@@ -76,7 +76,7 @@
      这个通知是异步的，如果已经尝试在首页弹出过还能运行到这里，说明在
      首页没能弹出成功（可能是因为did没准备好），那么在这里再次尝试弹窗
      */
-    if (self.hasTriedInHomePage) {
+    if (!self.hasTriedInHomePage) {
         return;
     }
     
