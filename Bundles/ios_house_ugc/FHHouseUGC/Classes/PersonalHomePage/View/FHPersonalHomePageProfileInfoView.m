@@ -54,7 +54,7 @@
 }
 
 - (void)initView {
-    self.shadowView = [[FHPersonalHomePageProfileInfoImageView alloc] initWithFrame:CGRectZero];
+    self.shadowView = [[UIImageView alloc] initWithFrame:CGRectZero];
     [self addSubview:self.shadowView];
     
     self.backView = [[FHPersonalHomePageProfileInfoBackView alloc] initWithFrame:CGRectZero];
@@ -63,7 +63,7 @@
     
     self.iconView = [[UIImageView alloc] initWithFrame:CGRectZero];
     self.iconView.layer.cornerRadius = 40;
-    self.iconView.layer.borderColor = [UIColor themeWhite].CGColor;
+    self.iconView.layer.borderColor = [UIColor themeGray7].CGColor;
     self.iconView.layer.borderWidth = 2;
     self.iconView.layer.masksToBounds = YES;
     self.iconView.userInteractionEnabled = YES;
@@ -108,7 +108,7 @@
     CGFloat backViewHeight = 90 - 8 + 15;
     
     self.shadowView.frame = CGRectMake(0,0, SCREEN_WIDTH, 130 + self.homePageManager.safeArea);
-    [self.shadowView updateWithUrl:model.avatarUrl];
+    self.shadowView.image = [UIImage imageNamed:[NSString stringWithFormat:@"fh_ugc_personal_page_backview"]];
     self.iconView.frame = CGRectMake(20, 74 + self.homePageManager.safeArea, 80, 80);
     [self.iconView bd_setImageWithURL:[NSURL URLWithString:model.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     self.bigAvatarUrl = model.bigAvatarUrl;
@@ -203,41 +203,3 @@
 }
 
 @end
-
-
-
-@interface FHPersonalHomePageProfileInfoImageView ();
-@property(nonatomic,strong) UIImageView *imageView;
-@property(nonatomic,strong) UIVisualEffectView *effectView;
-@property(nonatomic,strong) UIView *blackView;
-@end
-
-@implementation FHPersonalHomePageProfileInfoImageView
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        _imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, - 0.2 * SCREEN_WIDTH, SCREEN_WIDTH, SCREEN_WIDTH)];
-        [self addSubview:_imageView];
-        
-        _blackView = [[UIView alloc] initWithFrame:frame];
-        _blackView.backgroundColor = [UIColor themeBlack];
-        _blackView.alpha = 0.08;
-        [self addSubview:_blackView];
-        
-        _effectView = [[UIVisualEffectView alloc] initWithEffect:[UIBlurEffect effectWithStyle:UIBlurEffectStyleLight]];
-        _effectView.alpha = 1;
-        [self addSubview:_effectView];
-        [self bringSubviewToFront:_effectView];
-        self.layer.masksToBounds = YES;
-    }
-    return self;
-}
-
--(void)updateWithUrl:(NSString *)url {
-    [self.imageView bd_setImageWithURL:[NSURL URLWithString:url] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
-    self.blackView.frame = self.frame;
-    self.effectView.frame = self.frame;
-}
-@end
-
