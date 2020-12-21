@@ -203,7 +203,7 @@ static const char fh_renderFlow_key;
     
     NSMutableDictionary *categoryDict = [NSMutableDictionary new];
     categoryDict[@"house_type"] = @(itemRenderFlow.houseType);
-    categoryDict[@"request_type"] = @(itemRenderFlow.requestType);
+    categoryDict[@"request_type"] = @(1);
     categoryDict[@"op_version"] = @(2);
     categoryDict[@"preload_type"] = @([FHHomeItemRequestManager preloadType]);
 #if DEBUG

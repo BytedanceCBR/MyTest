@@ -145,7 +145,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     [self registerCells];
     
-    self.renderFlow.requestType = FHHomeRequestTypeNormal;
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES isInit:YES];
     
     self.tableView.scrollsToTop = NO;
@@ -365,7 +364,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     if (self.showRequestErrorView) {
         [self showPlaceHolderCells];
-        self.renderFlow.requestType = FHHomeRequestTypeAutoRetryWhenShowing;
         [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
         if (self.panelVM) {
             [self.panelVM fetchSearchPanelRollData];
@@ -549,7 +547,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     }
 
     
-    if (isFirst) {
+    if (isInit) {
         [self.renderFlow traceSendRequest];
     }
     
@@ -587,7 +585,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
     }
     
-    if (isFirst) {
+    if (isInit) {
         [self.renderFlow traceSendRequest];
     }
     
@@ -1018,7 +1016,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                     if (weakSelf.panelVM) {
                         [weakSelf.panelVM fetchSearchPanelRollData];
                     }
-                    weakSelf.renderFlow.requestType = FHHomeRequestTypeClickRetryWhenRequestNoData;
                     [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                 };
             }else
@@ -1037,7 +1034,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                             if (weakSelf.panelVM) {
                                 [weakSelf.panelVM fetchSearchPanelRollData];
                             }
-                            weakSelf.renderFlow.requestType = FHHomeRequestTypeClickRetryWhenRequestNoData;
                             [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                         }
                     }
@@ -1065,7 +1061,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 if (weakSelf.panelVM) {
                     [weakSelf.panelVM fetchSearchPanelRollData];
                 }
-                weakSelf.renderFlow.requestType = FHHomeRequestTypeClickRetryWhenDislikeNoData;
+   
                 [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
             };
             
