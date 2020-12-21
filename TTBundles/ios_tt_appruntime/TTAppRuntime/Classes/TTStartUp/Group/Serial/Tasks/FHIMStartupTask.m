@@ -33,6 +33,7 @@
 #import "FHHousePhoneCallUtils.h"
 #import "FHDetailBaseModel.h"
 #import "FIMDebugManager.h"
+#import "FIMDebugManager+Accelerometer.h"
 #import <TTUIWidget/TTNavigationController.h>
 #import "TTDialogDirector.h"
 #import "TTWeakPushAlertView.h"

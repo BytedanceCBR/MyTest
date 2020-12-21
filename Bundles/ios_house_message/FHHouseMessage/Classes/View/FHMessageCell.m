@@ -21,8 +21,9 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import "ByteDanceKit.h"
 #import "IMManager.h"
-#import "FIMDebugManager.h"
 #import "FHMessageCellTagsView.h"
+#import "FIMDebugManager+Utils.h"
+#import "TTSandBoxHelper.h"
 
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
@@ -55,6 +56,11 @@
         _indexLabel.font = [UIFont themeFontMedium:14];
         _indexLabel.text = @"0/0";
         _indexLabel.backgroundColor = [UIColor themeBlack];
+        _indexLabel.hidden = YES;
+        _indexLabel.userInteractionEnabled = YES;
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapIndexLabelAction:)];
+        [_indexLabel addGestureRecognizer:tap];
     }
     return _indexLabel;
 }
@@ -98,6 +104,9 @@
         _iconCoverView.hidden = YES;
     }
     return _iconCoverView;
+}
+- (void)tapIndexLabelAction:(UITapGestureRecognizer *)tap {
+    [FIMDebugManager browserConversation:self.conv];
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -232,10 +241,11 @@
     }];
     self.editView.hidden = YES;
     
-    if([[FIMDebugManager shared] isEnableForEntry:FIMDebugOptionEntrySwitchShowDebugInfo]) {
+    // 内测包受调试开关控制展示
+    if([TTSandBoxHelper isInHouseApp]) {
         [self.contentView addSubview:self.indexLabel];
         [self.indexLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.equalTo(self.contentView);
+            make.centerY.equalTo(self.backView);
             make.left.equalTo(self.contentView);
         }];
     }
@@ -316,6 +326,12 @@
 }
 
 - (void)updateWithChat:(IMConversation*)conversation {
+    // debug: 内测包，并且调试开关打开时，才展示
+    if([TTSandBoxHelper isInHouseApp]) {
+        self.indexLabel.hidden = !([[FIMDebugManager shared] isEnableForEntry:FIMDebugOptionEntrySwitchShowDebugInfo]);
+    }
+    // --
+    
     IMConversation* conv = conversation;
     self.conv = conversation;
     if (conv.mute) {
