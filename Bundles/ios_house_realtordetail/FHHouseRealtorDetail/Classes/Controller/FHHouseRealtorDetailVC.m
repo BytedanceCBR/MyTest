@@ -194,6 +194,7 @@
     if(!_blackmailReatorBottomBar) {
         _blackmailReatorBottomBar = [[FHBlackmailRealtorBottomBar alloc] init];
         _blackmailReatorBottomBar.hidden = YES;
+        _blackmailReatorBottomBar.backgroundColor = [UIColor themeWhite];
     }
     return _blackmailReatorBottomBar;
 }
