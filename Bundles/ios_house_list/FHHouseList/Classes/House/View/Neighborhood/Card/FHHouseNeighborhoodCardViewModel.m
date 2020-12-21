@@ -11,9 +11,14 @@
 #import "TTRoute.h"
 #import "FHHouseTitleAndTagViewModel.h"
 #import "FHCommonDefines.h"
+#import "FHHouseCardStatusManager.h"
 
 @interface FHHouseNeighborhoodCardViewModel()
+
 @property (nonatomic, assign) BOOL showed;
+
+@property (nonatomic, copy) NSString *houseId;
+
 @end
 
 @implementation FHHouseNeighborhoodCardViewModel
@@ -24,6 +29,7 @@
         _model = model;
         _titleAndTag = [[FHHouseTitleAndTagViewModel alloc] initWithModel:model];
         _titleAndTag.maxWidth = SCREEN_WIDTH - 30 * 2 - 84 - 8;
+        self.houseId = model.id;
     }
     return self;
 }
@@ -46,6 +52,14 @@
 
 - (NSString *)price {
     return self.model.displayPrice;
+}
+
+- (CGFloat)opacity {
+    CGFloat opacity = 1;
+    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:self.houseId withHouseType:FHHouseTypeSecondHandHouse]) {
+        opacity = FHHouseCardReadOpacity;
+    }
+    return opacity;
 }
 
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath {
@@ -75,6 +89,7 @@
 }
 
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath {
+    [[FHHouseCardStatusManager sharedInstance] readHouseId:self.houseId withHouseType:FHHouseTypeSecondHandHouse];
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ENTER_FROM] = self.fh_trackModel.pageType ? : @"be_null";
     traceParam[UT_ELEMENT_FROM] = @"be_null";
@@ -93,6 +108,9 @@
             @"biz_trace": [self.model bizTrace] ? : @"be_null"
         }];
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    }
+    if (self.opacityDidChange) {
+        self.opacityDidChange();
     }
 }
 
