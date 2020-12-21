@@ -78,7 +78,7 @@ extern NSString *const kFHToastCountKey;
 //    }
     [self addInformShowLogWithAssociateReport:associateReport];
     __weak typeof(self)wself = self;
-    FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc]initWithTitle:title subtitle:subtitle btnTitle:btnTitle];
+    FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:title subtitle:subtitle btnTitle:btnTitle isSellHouse:NO];
     alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
         [wself fillFormRequestWithAssociateReport:associateReport phone:phoneNum alertView:alert completion:completion];
