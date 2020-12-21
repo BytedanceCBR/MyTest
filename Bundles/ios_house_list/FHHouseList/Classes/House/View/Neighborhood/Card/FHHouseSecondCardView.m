@@ -165,6 +165,7 @@
     self.subTitleLabel.layer.opacity = opacity;
     [self.titleAndTagView refreshOpacity:opacity];
     self.tagLabel.layer.opacity = opacity;
+    [self.recommendView refreshOpacity:opacity];
 }
 
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {

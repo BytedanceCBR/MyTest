@@ -70,6 +70,12 @@
     }];
 }
 
+- (void)refreshOpacity:(CGFloat)opacity {
+    if (!self.hidden) {
+        self.recommendLabel.layer.opacity = opacity;
+    }
+}
+
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (!viewModel) {
         self.hidden = YES;
