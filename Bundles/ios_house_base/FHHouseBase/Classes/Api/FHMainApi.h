@@ -174,6 +174,8 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
 
 +(void)addUserOpenVCDurationLog:(NSString *)vcKey resultType:(FHNetworkMonitorType)type duration:(CGFloat)duration;
 
++(void)addUserOpenVCDurationLog:(NSString *)vcKey resultType:(FHNetworkMonitorType)type duration:(CGFloat)duration context:(NSDictionary *)context;
+
 
 /// 举报房源表单提交
 /// @param params 请求参数

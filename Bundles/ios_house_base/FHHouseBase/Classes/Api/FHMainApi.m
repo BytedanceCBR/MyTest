@@ -23,6 +23,7 @@
 #import "FHErrorHubManagerUtil.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "FHHomeRenderFlow.h"
+#import "FHUserTracker.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -606,7 +607,11 @@
     
 }
 
-+(void)addUserOpenVCDurationLog:(NSString *)vcKey resultType:(FHNetworkMonitorType)type duration:(CGFloat)duration{
++(void)addUserOpenVCDurationLog:(NSString *)vcKey resultType:(FHNetworkMonitorType)type duration:(CGFloat)duration {
+    [self addUserOpenVCDurationLog:vcKey resultType:type duration:duration context:nil];
+}
+
++(void)addUserOpenVCDurationLog:(NSString *)vcKey resultType:(FHNetworkMonitorType)type duration:(CGFloat)duration context:(NSDictionary *)context {
     NSString *key = vcKey.copy;
     NSMutableDictionary *extra = [NSMutableDictionary new];
     extra[@"requestStatus"] = @(type);
@@ -623,7 +628,21 @@
     }else{
         cat[@"status"] = @"0";
     }
+    
+    if (context) {
+        [cat addEntriesFromDictionary:context];
+    }
     [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
+
+#if DEBUG
+    if ([vcKey isEqualToString:@"pss_homepage"]) {
+        NSMutableDictionary *logParams = [NSMutableDictionary dictionary];
+        [logParams addEntriesFromDictionary:metricDict];
+        [logParams addEntriesFromDictionary:cat];
+        [logParams addEntriesFromDictionary:extra];
+        TRACK_EVENT(@"zzw_pss_homepage", logParams);
+    }
+#endif
 }
 
 

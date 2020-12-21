@@ -51,7 +51,7 @@ typedef NS_ENUM(NSInteger, FHHomeRequestType) {
 
 - (void)traceReloadData;
 
-- (void)submit;
+- (void)submitWithError:(NSError *)error;
 
 @end
 

@@ -2,35 +2,31 @@
 //  FHHomeItemRequestHelper.h
 //  FHHouseHome
 //
-//  Created by bytedance on 2020/11/27.
+//  Created by bytedance on 2020/12/21.
 //
 
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FHHomeHouseModel;
-typedef void(^FHHomeRecommendRequestCompletionBlock)(FHHomeHouseModel *model, NSError *error);
+typedef NS_ENUM(NSInteger, FHHomeItemPreloadState) {
+    FHHomeItemPreloadStateNone,
+    FHHomeItemPreloadStateFetching,
+    FHHomeItemPreloadStateDone
+};
 
+@class FHHomeHouseModel;
+typedef void(^FHHomeItemRequestCompletionBlock)(FHHomeHouseModel *model, NSError *error);
 @interface FHHomeItemRequestHelper : NSObject
 @property (nonatomic, assign, readonly) NSInteger houseType;
 
-- (void)initRequestRecommend:(NSDictionary *)contextParams completion:(FHHomeRecommendRequestCompletionBlock)completion;
+- (instancetype)initWithHouseType:(NSInteger)houseType;
 
-- (void)requestRecommend:(NSDictionary *)contextParams completion:(FHHomeRecommendRequestCompletionBlock)completion;
+- (void)preloadIfNeed;
 
-@end
+- (void)initRequestRecommend:(NSDictionary *)contextParams completion:(FHHomeItemRequestCompletionBlock)completion;
 
-
-@interface FHHomeItemRequestManager : NSObject
-
-+ (FHHomeItemRequestHelper *)getItemRequestHelperWithHouseType:(NSInteger)houseType;
-
-+ (BOOL)preloadEnabled;
-
-+ (void)preloadIfNeed;
-
-+ (NSDictionary *)commonRequestParams:(NSInteger)houseType;
+- (void)requestRecommend:(NSDictionary *)contextParams completion:(FHHomeItemRequestCompletionBlock)completion;
 
 @end
 

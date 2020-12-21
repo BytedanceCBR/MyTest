@@ -54,7 +54,7 @@ static const char fh_requestFlow_key;
 
 @protocol FHHomeItemRenderFlowDelegate <NSObject>
 
-- (void)itemRenderFlowWillSumbit:(FHHomeItemRenderFlow *)itemRenderFlow;
+- (void)itemRenderFlowWillSumbit:(FHHomeItemRenderFlow *)itemRenderFlow error:(NSError *)error;
 
 @end
 
@@ -100,9 +100,9 @@ static const char fh_requestFlow_key;
     self.endTs = [[NSDate date] timeIntervalSince1970] * 1000;
 }
 
-- (void)submit {
-    if ([self.delegate respondsToSelector:@selector(itemRenderFlowWillSumbit:)]) {
-        [self.delegate itemRenderFlowWillSumbit:self];
+- (void)submitWithError:(NSError *)error {
+    if ([self.delegate respondsToSelector:@selector(itemRenderFlowWillSumbit:error:)]) {
+        [self.delegate itemRenderFlowWillSumbit:self error:error];
     }
 }
 
@@ -125,6 +125,7 @@ static const char fh_renderFlow_key;
 #import <Heimdallr/HMDTTMonitor.h>
 #import "NSDictionary+BTDAdditions.h"
 #import "FHUserTracker.h"
+#import "FHHomeItemRequestManager.h"
 
 @interface FHHomeRenderFlow()<FHHomeItemRenderFlowDelegate>
 @property (nonatomic, assign) long homeMainInitTs;
@@ -170,14 +171,11 @@ static const char fh_renderFlow_key;
     return itemRenderFlow;
 }
 
-- (void)submitWithItemRenderFlow:(FHHomeItemRenderFlow *)itemRenderFlow {
+- (void)submitWithItemRenderFlow:(FHHomeItemRenderFlow *)itemRenderFlow error:(NSError *)error {
     if (self.submited) return;
     self.submited = YES;
-    
-    /*
-     * 起始点: [FHHomeMainViewController viewDidLoad]
-     * 结束点: house_type == 2 && [FHHomeItemViewController reloadData]
-     */
+    if (error) return;
+
 
     long business_request_duration = itemRenderFlow.receiveResponseTs - itemRenderFlow.sendRequestTs;
     long network_request_duration = itemRenderFlow.requestFlow.receiveResponseTs - itemRenderFlow.requestFlow.sendRequestTs;
@@ -207,6 +205,7 @@ static const char fh_renderFlow_key;
     categoryDict[@"house_type"] = @(itemRenderFlow.houseType);
     categoryDict[@"request_type"] = @(itemRenderFlow.requestType);
     categoryDict[@"op_version"] = @(2);
+    categoryDict[@"preload_type"] = @([FHHomeItemRequestManager preloadType]);
 #if DEBUG
     categoryDict[@"is_debug"] = @(1);
 #endif
@@ -214,21 +213,16 @@ static const char fh_renderFlow_key;
     [[HMDTTMonitor defaultManager] hmdTrackService:@"pss_homepage_v2" metric:metricDict category:categoryDict extra:nil];
 
 #if DEBUG
-    NSString *metricString = [metricDict btd_safeJsonStringEncoded];
-    NSString *categoryString = [categoryDict btd_safeJsonStringEncoded];
-
-    NSLog(@"pss_homepage_op %@ %@", categoryString, metricString);
-#endif
-    
     NSMutableDictionary *logParams = [NSMutableDictionary dictionary];
     [logParams addEntriesFromDictionary:metricDict];
     [logParams addEntriesFromDictionary:categoryDict];
     TRACK_EVENT(@"zzw_pss_homepage_v2", logParams);
+#endif
 }
 
 #pragma mark - FHHomeItemRenderFlowDelegate
-- (void)itemRenderFlowWillSumbit:(FHHomeItemRenderFlow *)itemRenderFlow {
-    [self submitWithItemRenderFlow:itemRenderFlow];
+- (void)itemRenderFlowWillSumbit:(FHHomeItemRenderFlow *)itemRenderFlow error:(NSError *)error {
+    [self submitWithItemRenderFlow:itemRenderFlow error:error];
 }
 
 @end

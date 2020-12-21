@@ -32,7 +32,7 @@
 #import "FHAppUpdateView.h"
 #import <FHHouseBase/FHUserTracker.h>
 #import "FHHomeRenderFlow.h"
-#import "FHHomeItemRequestHelper.h"
+#import "FHHomeItemRequestManager.h"
 
 static NSString * const kFUGCPrefixStr = @"fugc";
 
@@ -59,7 +59,9 @@ static NSString * const kFUGCPrefixStr = @"fugc";
             [self checkLocalTestUpgradeVersionAlert];
         });
     
-        [FHHomeItemRequestManager preloadIfNeed];
+        if ([FHHomeItemRequestManager preloadType] == FHHomepagePreloadTypeHomeMain) {
+            [FHHomeItemRequestManager preloadIfNeed];
+        }
         [[FHHomeRenderFlow sharedInstance] traceHomeMainInit];
     }
     return self;
