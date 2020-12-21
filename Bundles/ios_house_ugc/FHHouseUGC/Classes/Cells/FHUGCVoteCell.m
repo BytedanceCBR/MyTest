@@ -7,9 +7,6 @@
 
 #import "FHUGCVoteCell.h"
 #import "FHUGCProgressView.h"
-//#import "TTRoute.h"
-
-#define bottomSepViewHeight 5
 
 @interface FHUGCVoteCell()
 
@@ -199,7 +196,7 @@
 
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.left.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(bottomSepViewHeight);
+        make.height.mas_equalTo(1.2);
     }];
 }
 
@@ -243,7 +240,7 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = 158 + cellModel.vote.contentHeight;
+        CGFloat height = 154 + cellModel.vote.contentHeight;
         return height;
     }
     return 180;

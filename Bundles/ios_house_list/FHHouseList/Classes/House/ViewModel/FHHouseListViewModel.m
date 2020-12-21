@@ -72,6 +72,8 @@
 #import "FHHouseTableView.h"
 #import "FHHouseNewComponentViewModel.h"
 #import "FHHouseCardCellViewModelProtocol.h"
+#import "FHSuggestionDefines.h"
+#import "SSCommonLogic.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -1483,7 +1485,7 @@ extern NSString *const INSTANT_DATA_KEY;
     [sugDelegateTable addObject:self];
     NSDictionary *dict = @{@"house_type":@(self.houseType) ,
                            @"tracer": traceParam,
-                           @"from_home":@(3), // list
+                           @"from_home":@(FHEnterSuggestionTypeList), // list
                            @"sug_delegate":sugDelegateTable
                            };
     NSMutableDictionary *dictInfo = [NSMutableDictionary dictionaryWithDictionary:dict];
@@ -2501,19 +2503,21 @@ extern NSString *const INSTANT_DATA_KEY;
                                  @"enter_from":@"search"};
         [FHUserTracker writeEvent:@"city_switch_show" params:params];
     }else if ([cellModel isKindOfClass:[FHHouseReserveAdviserModel class]]) {
-        FHHouseReserveAdviserModel *cm = (FHHouseReserveAdviserModel *)cellModel;
-        tracerDict[@"page_type"] = [self pageTypeString];
-        tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
-        tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
-        if(self.houseType == FHHouseTypeNeighborhood){
-            tracerDict[@"element_type"] = @"neighborhood_expert_card";
-        }else{
-            tracerDict[@"element_type"] = @"area_expert_card";
+        if (![SSCommonLogic isEnableVerifyFormAssociate]) {
+            FHHouseReserveAdviserModel *cm = (FHHouseReserveAdviserModel *)cellModel;
+            tracerDict[@"page_type"] = [self pageTypeString];
+            tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
+            tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
+            if(self.houseType == FHHouseTypeNeighborhood){
+                tracerDict[@"element_type"] = @"neighborhood_expert_card";
+            }else{
+                tracerDict[@"element_type"] = @"area_expert_card";
+            }
+            tracerDict[@"origin_from"] = originFrom;
+            tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
+            tracerDict[@"log_pb"] = cm.logPb ? : @"be_null";
+            [FHUserTracker writeEvent:@"inform_show" params:tracerDict];
         }
-        tracerDict[@"origin_from"] = originFrom;
-        tracerDict[@"origin_search_id"] = self.originSearchId ? : @"be_null";
-        tracerDict[@"log_pb"] = cm.logPb ? : @"be_null";
-        [FHUserTracker writeEvent:@"inform_show" params:tracerDict];
     }else if ([cellModel isKindOfClass:[FHSearchFindHouseHelperModel class]]) {
         NSDictionary *params = @{@"origin_from":originFrom,
                                  @"event_type":@"house_app2c_v2",

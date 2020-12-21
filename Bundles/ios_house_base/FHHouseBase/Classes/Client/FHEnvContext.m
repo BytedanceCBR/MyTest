@@ -48,6 +48,9 @@
 #import "NSDictionary+BTDAdditions.h"
 #import "FHCommonParamHelper.h"
 #import "SSCommonLogic.h"
+#import <FHFlutter/FHFlutterManager.h>
+#import "FHHouseUGCAPI.h"
+#import "FHUGCUserVWhiteModel.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -402,7 +405,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 + (void)showFindTabRedDotsLimitCount {
     NSString *stringKey = [FHUtils stringFromNSDateDay:[NSDate date]];
-    
     if (stringKey) {
         NSNumber *countNum = [FHUtils contentForKey:stringKey];
         if (!countNum || [countNum isKindOfClass:[NSNumber class]]) {
@@ -536,7 +538,18 @@ static NSInteger kGetLightRequestRetryCount = 3;
         [FHIESGeckoManager configGeckoInfo];
         [FHIESGeckoManager configIESWebFalcon];
         [[FHLynxManager sharedInstance] initLynx];
+        
+        [FHFlutterManager registerFHFlutterPackageInfo];
     });
+    
+    [FHHouseUGCAPI requestUserVWhiteListClass:[FHUGCUserVWhiteModel class] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        FHUGCUserVWhiteModel *dataModel = (FHUGCUserVWhiteModel *)model;
+        if (dataModel) {
+            [FHEnvContext setUGCUserVWhiteList:dataModel.data];
+        }
+    }];
+    
+    
 }
 
 - (void)acceptConfigDictionary:(NSDictionary *)configDict
@@ -737,7 +750,26 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 
+//获取当前个性化推荐设置
++ (NSArray *)getUGCUserVWhiteList
+{
+    NSDictionary *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"f_ugc_uservwhite_list"];
+    NSArray *uservwhiteList = [data objectForKey:@"uid_list"];
+    BOOL needFilter = [data objectForKey:@"need_filter"];
+    if (needFilter && uservwhiteList.count >0) {
+        return uservwhiteList;
+    }else {
+        return @[];
+    }
+}
 
+//获取当前个性化推荐设置
++ (void)setUGCUserVWhiteList:(NSDictionary *)data
+{
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"f_ugc_uservwhite_list"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+}
 + (BOOL)isUGCAdUser
 {
     NSString *localMark = [FHUtils contentForKey:kFHUGCPromotionUser];
@@ -1019,6 +1051,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
         return YES;
     }
 }
+
++ (BOOL)isOldDetailLoadOptimization {
+    NSDictionary *Settings= [SSCommonLogic fhSettings].copy;
+    BOOL isOpen = [Settings btd_boolValueForKey:@"old_detail_load_optimization" default:NO];
+    return isOpen;
+}
+
 
 + (BOOL)isHomeNewDiscovery {
     return YES;

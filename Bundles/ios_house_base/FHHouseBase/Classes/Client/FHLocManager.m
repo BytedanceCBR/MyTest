@@ -272,7 +272,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
 
 - (void)checkUserLocationStatus
 {
-    if (![self isHaveLocationAuthorization]) {
+    if (CLLocationManager.authorizationStatus == kCLAuthorizationStatusDenied) {
         [self showLocationGuideAlert];
     }
 }

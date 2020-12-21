@@ -13,15 +13,6 @@
 #import "FHSuggestionSearchBar.h"
 #import "FHSuggestionCollectionView.h"
 
-typedef enum : NSUInteger {
-    FHEnterSuggestionTypeDefault       =   0,// H5
-    FHEnterSuggestionTypeHome       =   1,// 首页
-    FHEnterSuggestionTypeFindTab       =   2,// 找房Tab
-    FHEnterSuggestionTypeList       =   3, // 列表页
-    FHEnterSuggestionTypeRenting       =   4,// 租房大类页
-    FHEnterSuggestionTypeOldMain       =   5,// 二手房大类页
-} FHEnterSuggestionType;
-
 #define kFHSuggestionKeyboardWillHideNotification @"FHSuggestionKeyboardWillHideNotification"
 #define kFHSuggestionHouseTypeDidChanged @"FHSuggestionHouseTypeDidChanged"
 

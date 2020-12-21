@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param size 尺寸大小
 + (UIImage *)fh_roundRectMaskImageWithCornerRadius:(CGFloat)cornerRadius color:(UIColor *)color size:(CGSize)size;
 
++ (UIImage *)fh_gradientImageWithColors:(NSArray *)colors startPoint:(CGPoint )startPoint endPoint:(CGPoint )endPoint size:(CGSize)size usedInClass:(NSString *)className;
+
 @end
 
 NS_ASSUME_NONNULL_END

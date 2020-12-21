@@ -207,6 +207,9 @@
 
 //这里接收TTLynxViewClient抛上来的sizeChange事件
 - (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
+    if ([self.lynxDelegate respondsToSelector:@selector(viewDidChangeIntrinsicContentSize:)]) {
+        [self.lynxDelegate viewDidChangeIntrinsicContentSize:view.frame.size];
+    }
 }
 
 - (NSURL*)shouldRedirectImageUrl:(NSURL*)url {
@@ -268,5 +271,4 @@
     // Drawing code
 }
 */
-
 @end

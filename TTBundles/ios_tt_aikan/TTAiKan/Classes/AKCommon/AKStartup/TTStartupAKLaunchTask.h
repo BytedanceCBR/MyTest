@@ -8,5 +8,5 @@
 #import "TTStartupTask.h"
 
 @interface TTStartupAKLaunchTask : TTStartupTask
-
 @end
+

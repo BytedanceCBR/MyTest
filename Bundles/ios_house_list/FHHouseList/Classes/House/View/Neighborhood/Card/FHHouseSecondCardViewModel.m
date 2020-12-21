@@ -81,6 +81,36 @@
     return self;
 }
 
+- (void)cutTagListWithFont:(UIFont *)font {
+    if ([self.tagList count] != 1) {
+        return;
+    }
+    FHHouseTagsModel *element = [self.tagList[0] copy];
+    CGSize textSize =  [element.content sizeWithFont:font constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
+    NSString *resultString;
+    if (textSize.width > self.tagListMaxWidth) {
+        NSString *preString;
+        NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
+        for (int i = 0; i < paramsArrary.count; i ++) {
+            NSString *tagStr = paramsArrary[i];
+            if (preString.length > 0) {
+                preString = [NSString stringWithFormat:@"%@ · %@",preString, tagStr];
+            } else {
+                preString = tagStr;
+            }
+            CGSize tagSize =  [preString sizeWithFont: font constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
+            if (tagSize.width > self.tagListMaxWidth) {
+                break;
+            }
+            resultString = preString;
+        }
+    } else {
+        resultString = element.content;
+    }
+    element.content = resultString;
+    self.tagList = @[element];
+}
+
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
@@ -127,6 +157,12 @@
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
         [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+    }
+}
+
+- (void)setTitleMaxWidth:(CGFloat)maxWidth{
+    if (_titleAndTag) {
+        _titleAndTag.maxWidth = maxWidth;
     }
 }
 

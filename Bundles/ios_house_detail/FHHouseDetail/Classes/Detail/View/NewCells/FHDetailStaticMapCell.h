@@ -21,6 +21,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) UIImageView *arrowView;
 @end
 
+@interface FHDetailStaticMapNeighborhoodPOIAnnotationView : FHStaticMapAnnotationView
+@property(nonatomic, strong) UIImageView *imageView;
+@property(nonatomic, strong) UILabel *titleLabel;
+@end
+
 @interface FHDetailStaticMapCellModel : FHDetailBaseModel
 
 @property(nonatomic, weak, nullable) UITableView *tableView;

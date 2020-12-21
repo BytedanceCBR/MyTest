@@ -132,8 +132,13 @@
             default:
                 break;
         }
+    } else if ([model isKindOfClass:[FHHouseListBaseItemModel class]]) {
+        FHHouseListBaseItemModel *itemModel = (FHHouseListBaseItemModel *)model;
+        return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
+    } else if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        return [[FHHouseSecondCardViewModel alloc] initWithModel:model];
     }
-
+    
     return nil;
 }
 
@@ -166,7 +171,6 @@
                 }
             }
         }
-        
     }
     
     return nil;

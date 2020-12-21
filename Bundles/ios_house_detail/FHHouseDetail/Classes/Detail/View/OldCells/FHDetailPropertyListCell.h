@@ -36,8 +36,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)updateWithOfficalData:(FHDetailDataBaseExtraOfficialModel *)officialModel;
 
--(void)updateWithDetectiveData:(FHDetailDataBaseExtraDetectiveModel *)detectiveModel;
-
 -(void)updateWithSecurityInfo:(FHRentDetailDataBaseExtraSecurityInformationModel *)securityInfo;
 
 -(void)updateWithBudgetData:(FHDetailDataBaseExtraBudgetModel *)budgetmodel;

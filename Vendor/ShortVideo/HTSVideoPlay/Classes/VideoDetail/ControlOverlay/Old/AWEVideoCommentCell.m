@@ -33,7 +33,7 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "ToastManager.h"
 #import "FHHouseUGCAPI.h"
-
+#import "FHUGCCommonAvatar.h"
 #define kTTCommentContentLabelQuotedCommentUserURLString @"com.bytedance.kTTCommentContentLabelQuotedCommentUserURLString"
 
 @interface AWEVideoCommentCell () <UIGestureRecognizerDelegate, UIActionSheetDelegate, UIAlertViewDelegate,TTUGCAttributedLabelDelegate>
@@ -42,7 +42,7 @@
 @property (nonatomic, strong) NSNumber *videoId;
 @property (nonatomic, strong) NSNumber *authorId;
 
-@property (nonatomic, strong) TTAsyncCornerImageView *thumbView;
+@property (nonatomic, strong) FHUGCCommonAvatar *thumbView;
 @property (nonatomic, strong) UILabel *userLabel;
 @property (nonatomic, strong) TTUGCAttributedLabel *commentLabel;
 @property (nonatomic, strong) UILabel *timeLabel;
@@ -90,10 +90,9 @@
         self.backgroundColor = [UIColor clearColor];
         self.contentView.backgroundColor = [UIColor clearColor];
         
-        self.thumbView = [[TTAsyncCornerImageView alloc] initWithFrame:CGRectMake(0, 0, 36, 36) allowCorner:YES];
-        self.thumbView.placeholderName = @"hts_vp_head_icon";
-        self.thumbView.cornerRadius = 18;
-        self.thumbView.borderWidth = 0;
+        self.thumbView = [[FHUGCCommonAvatar alloc] initWithFrame:CGRectMake(0, 0, 36, 36) ];
+        [self.thumbView setPlaceholderImage:@"hts_vp_head_icon"];
+       
         self.thumbView.userInteractionEnabled = YES;
         
         [self addSubview:self.thumbView];
@@ -278,10 +277,12 @@
     NSNumber *diggCount = @(model.diggCount.unsignedIntegerValue);
     [self.likeButton setTitle:[self showStringFromNumber:diggCount] forState:UIControlStateNormal];
     [self.likeButton setTitle:[self showStringFromNumber:diggCount] forState:UIControlStateSelected];
-    
-    [self.thumbView tt_setImageWithURLString:(model.userProfileImageUrl?:@"")];
+    [self.thumbView setAvatarUrl:model.userProfileImageUrl?:@""];
+    [self.thumbView setUserId: model.userId];
+   
+//    [self.thumbView tt_setImageWithURLString:(model.userProfileImageUrl?:@"")];
 
-    [self.thumbView showOrHideVerifyViewWithVerifyInfo:self.commentModel.userAuthInfo decoratorInfo:self.commentModel.userDecoration sureQueryWithID:NO userID:nil disableNightCover:NO];
+//    [self.thumbView showOrHideVerifyViewWithVerifyInfo:self.commentModel.userAuthInfo decoratorInfo:self.commentModel.userDecoration sureQueryWithID:NO userID:nil disableNightCover:NO];
     [self refreshDebugGidLabelWithCommentModel:model];
     [self setNeedsLayout];
 }

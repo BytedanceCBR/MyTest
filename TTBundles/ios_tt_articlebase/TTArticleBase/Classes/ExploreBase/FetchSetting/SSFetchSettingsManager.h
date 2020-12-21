@@ -18,6 +18,9 @@
 //获取默认设置，每个应用仅获取一次。
 + (void)startFetchDefaultInfoIfNeed;
 
+// 手动强制刷新设置
++ (void)manualForceRefreshDefaultInfoIfNeed;
+
 
 //protected method, don`t invoke
 - (void)dealDefaultSettingsResult:(NSDictionary *)dSettings;

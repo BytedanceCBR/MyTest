@@ -24,6 +24,7 @@
 #import "TTCommentDetailReplyWriteManager.h"
 #import "TTCommentDefines.h"
 #import "FHBubbleTipManager.h"
+#import "FHUserTracker.h"
 
 #define PUBLISHBUTTON_WIDTH [TTDeviceUIUtils tt_newPadding:35.f]
 #define PUBLISHBUTTON_HEIGHT [TTDeviceUIUtils tt_newPadding:22.5f]
