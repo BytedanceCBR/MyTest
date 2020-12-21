@@ -15,6 +15,7 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import "HMDTTMonitor.h"
 #import "FHDetailBaseModel.h"
+#import <ios_house_im/IMManager.h>
 
 typedef enum : NSUInteger {
     FHPhoneCallTypeSuccessVirtual = 0,
@@ -148,7 +149,18 @@ typedef enum : NSUInteger {
                 [self addDetailCallExceptionLog:FHPhoneCallTypeSuccessReal extraDict:nil errorCode:0 message:nil];
             }
             [self addClickCallWith:associatePhoneModel isVirtual:isVirtual];
-            [self callPhone:urlStr];
+            
+            // TODO: JOKER 判断经纪人是否被关黑
+            BOOL isBlackmail = YES;
+            if(isBlackmail) {
+                [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:@"因平台管控，经纪人无法为您提供服务，可以选择其它经纪人。" leftTitle:@"其它经纪人" leftAction:^{
+                    [IMManager jumpToRealtorListPageWithParams:@{}];
+                } rightTitle:@"知道了" rightAction:nil];
+            }
+            else {
+                [self callPhone:urlStr];
+            }
+            
             if (completionBlock) {
                 completionBlock(YES,nil,model.data);
             }
