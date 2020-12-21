@@ -131,7 +131,7 @@
             make.left.mas_equalTo(self.nameLabel.mas_left);
             make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left);
             make.height.mas_equalTo(18);
-            make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(28);
+            make.top.mas_equalTo(self.scoreLabel.mas_bottom).mas_offset(28);
         }];
         
         self.agencyDescriptionLabel = [[UILabel alloc] init];
@@ -176,12 +176,11 @@
     self.agencyBac.hidden = !model.agencyName.length;
     [self.avatorView updateAvatarWithModel:model];
     
-    
     if (model.agencyDescription.length && model.realtorScoreDisplay.length) {
         //3行全有
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
-            make.top.mas_equalTo(12);
+            make.top.mas_equalTo(self.avatorView).mas_offset(-6);
             make.height.mas_equalTo(16);
         }];
         
@@ -227,7 +226,6 @@
         self.agencyDescriptionBac.hidden = YES;
     }
     self.agencyDescriptionLabel.text = model.agencyDescription;
-    
     if (model.realtorScoreDisplay.length > 0) {
         self.scoreLabel.hidden = NO;
         
@@ -239,7 +237,7 @@
         [scoreString appendAttributedString:[[NSAttributedString alloc] initWithString:@" 服务分" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:12]}]];
         self.scoreLabel.attributedText = scoreString.copy;
     } else {
-        self.scoreLabel.hidden = YES;
+        self.scoreLabel.hidden = NO;
     }
     
     [self setNeedsLayout];

@@ -32,7 +32,7 @@
         [self addSubview:self.titleLabel];
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
-            make.centerY.mas_equalTo(self).offset(2);
+            make.top.mas_equalTo(self).offset(20);
         }];
         
         self.arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
@@ -40,7 +40,7 @@
         self.arrowsImg.hidden = YES;
         [self addSubview:self.arrowsImg];
         [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self).offset(-12);
+            make.right.mas_equalTo(self).offset(-16);
             make.height.width.mas_equalTo(20);
             make.centerY.mas_equalTo(self.titleLabel);
         }];
@@ -68,6 +68,39 @@
         self.subTitleLabel.hidden = YES;
     }
 }
+
+-(UIView *)getTagViewWithName:(NSInteger)idx{
+    UIView *tagView = [[UIView alloc ]init];
+    UILabel *tagLab = [[UILabel alloc] initWithFrame:CGRectMake(16, 0, 48, 17)];
+    tagLab.font = [UIFont themeFontRegular:12];
+    tagLab.textColor = [UIColor colorWithHexString:@"#aeadad"];
+    tagLab.text = [[self getTagName] objectAtIndex:idx];
+    UIImageView *imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[[self getTagViewName] objectAtIndex:idx]]];
+    imgView.frame = CGRectMake(0,0,16,16);
+    [tagView addSubview:tagLab];
+    [tagView addSubview:imgView];
+    [self addSubview:tagView];
+    return tagView;
+}
+
+-(NSArray *)getTagName{
+    return @[@"免费带看",@"专属服务",@"详情解读",@"户型分析"];
+}
+
+-(NSArray *)getTagViewName{
+    return @[@"releatortag1",@"releatortag2",@"releatortag3",@"releatortag4"];
+}
+
+- (void)setSubTagView{
+    CGFloat width = (self.bounds.size.width - 32 - 16)/4;
+    [[self getTagName] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [[self getTagViewWithName:idx] mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(width*idx + 16);
+            make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
+        }];
+    }];
+}
+
 
 - (void)setupNeighborhoodDetailStyle {
     self.titleLabel.font = [UIFont themeFontSemibold:16];

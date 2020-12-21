@@ -226,6 +226,7 @@
         titleView.titleLabel.text = @"优选顾问";
     }
     [titleView setSubTitleWithTitle:agentSM.recommendedRealtorsSubTitle];
+    [titleView setSubTagView];
     [titleView.arrowsImg setHidden:NO];
 
     return titleView;
@@ -234,7 +235,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 87);
     }
     return CGSizeZero;
 }
@@ -359,7 +360,7 @@
     }
 
     if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
-        height = 44;
+        height = 16;
     }
     return CGSizeMake(width, height);
 }

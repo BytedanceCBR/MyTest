@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setSubTitleWithTitle:(NSString *)subTitle;
 
 - (void)setupNeighborhoodDetailStyle;
+
+- (void)setSubTagView;
 @end
 
 NS_ASSUME_NONNULL_END
