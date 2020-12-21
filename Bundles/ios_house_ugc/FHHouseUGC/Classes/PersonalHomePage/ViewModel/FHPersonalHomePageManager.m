@@ -69,6 +69,15 @@
             }
         }
      }];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for(FHPersonalHomePageFeedListViewController *feedVC in self.feedListVCArray) {
+            if([feedVC isKindOfClass:[FHPersonalHomePageFeedListViewController class]]) {
+                if(!feedVC.isFirstLoad) {
+                    [feedVC startLoadData];
+                }
+            }
+        }
+    });
 }
 
 -(void)updateProfileInfoWithModel:(FHPersonalHomePageProfileInfoModel *)profileInfoModel tabListWithMdoel:(FHPersonalHomePageTabListModel *)tabListModel {
