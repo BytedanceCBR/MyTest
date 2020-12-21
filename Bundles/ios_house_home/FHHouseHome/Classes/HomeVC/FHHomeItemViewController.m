@@ -871,6 +871,13 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if (indexPath.row == 0) {
             topMargin = 5;
         }
+        if (self.showPlaceHolder) {
+            if (self.houseType == FHHouseTypeRentHouse) {
+                return 88;
+            }else {
+                return 124;
+            }
+        }
         if (self.houseType == FHHouseTypeNewHouse) {
             if (indexPath.row < self.houseDataItemsModel.count) {
                 FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)self.houseDataItemsModel[indexPath.row];
@@ -878,9 +885,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             }
         }
         
-        if (self.showPlaceHolder && self.houseType == FHHouseTypeNewHouse) {
-            return 118;
-        }
         if (self.houseType == FHHouseTypeSecondHandHouse) {
             if (indexPath.row < self.houseDataItemsModel.count) {
                FHHomeHouseDataItemsModel *model = self.houseDataItemsModel[indexPath.row];
@@ -1010,7 +1014,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         }
         
         if (self.showPlaceHolder) {
-            if (self.houseType == FHHouseTypeNewHouse) {
+            if (self.houseType == FHHouseTypeRentHouse) {
                 FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
                 return cell;
             }

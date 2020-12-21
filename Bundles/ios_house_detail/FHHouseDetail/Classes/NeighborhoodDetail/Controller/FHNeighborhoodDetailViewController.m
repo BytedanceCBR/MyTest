@@ -60,6 +60,7 @@
 #import "FHNeighborhoodDetailSurroundingNeighborSC.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import <TTAccountSDK/TTAccount.h>
+#import "FHDetailPlaceHolderView.h"
 
 @interface FHNeighborhoodDetailViewController ()<UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
 @property (nonatomic, assign) FHHouseType houseType; // 房源类型
@@ -99,6 +100,7 @@
 
 @property (nonatomic, strong) NSArray<NSString *> * names;
 @property (nonatomic, strong) NSArray<NSNumber *> * types;
+@property (strong, nonatomic) FHDetailPlaceHolderView *placeHolderView;
 
 //是否显示
 @property (nonatomic, assign) BOOL isViewDidDisapper;
@@ -205,6 +207,11 @@
 - (void)dealloc
 {
     _callCenter = nil;
+}
+
+- (void)hiddenPlaceHolder {
+    self.placeHolderView.hidden = YES;
+    [self.placeHolderView removeFromSuperview];
 }
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
@@ -451,6 +458,12 @@
         make.left.right.bottom.mas_equalTo(self.view);
     }];
     
+    self.placeHolderView = [[FHDetailPlaceHolderView alloc]init];
+    [self.view addSubview:self.placeHolderView];
+    
+    [_placeHolderView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
     [self.view bringSubviewToFront:_navBar];
     
     
@@ -475,10 +488,12 @@
 - (void)formattDataSource {
     [self updateTitleNames];
     self.detailFlowLayout.sectionModels = self.viewModel.sectionModels.copy;
+    __weak typeof(self) weakSelf = self;
     [self.listAdapter performUpdatesAnimated:NO
                                       completion:^(BOOL finished) {
-
+        [weakSelf hiddenPlaceHolder];
                                       }];
+
     //            [weakSelf.listAdapter reloadDataWithCompletion:^(BOOL finished) {
     //            }];
 
@@ -627,7 +642,7 @@
 {
     if ([TTReachability isNetworkConnected]) {
         //        if (!self.instantData) {
-        [self startLoading];
+//        [self startLoading];
         //        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];

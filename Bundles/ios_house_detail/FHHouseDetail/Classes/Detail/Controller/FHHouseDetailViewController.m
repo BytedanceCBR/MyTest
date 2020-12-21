@@ -30,6 +30,7 @@
 #import <TTSettingsManager/TTSettingsManager.h>
 #import <FHHouseBase/FHRelevantDurationTracker.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import "FHDetailPlaceHolderView.h"
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -61,6 +62,8 @@
 @property (nonatomic, assign) BOOL isPhoneCalled;// 新房UGC留资使用
 @property (nonatomic, assign) CGPoint lastContentOffset;
 @property (nonatomic, strong) NSDictionary *extraInfo;
+
+@property (strong, nonatomic) FHDetailPlaceHolderView *placeHolderView;
 
 @property (nonatomic) double initTimeInterval;
 @end
@@ -176,6 +179,10 @@
     });
 }
 
+- (void)hiddenPlaceHolder {
+    self.placeHolderView.hidden = YES;
+    [self.placeHolderView removeFromSuperview];
+}
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.viewModel.contactViewModel refreshMessageDot];
@@ -277,7 +284,7 @@
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
 //        if (!self.instantData) {
-            [self startLoading];
+//            [self startLoading];
 //        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
@@ -408,7 +415,11 @@
         make.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.bottomBar.mas_top).offset(-30);
     }];
-    
+    self.placeHolderView = [[FHDetailPlaceHolderView alloc]init];
+    [self.view addSubview:self.placeHolderView];
+    [_placeHolderView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
     [self.view bringSubviewToFront:_navBar];
 }
 

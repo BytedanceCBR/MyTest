@@ -1287,9 +1287,6 @@ extern NSString *const INSTANT_DATA_KEY;
             self.tableView.contentOffset = CGPointMake(0, 0);
         }
         
-        if (self.isRefresh && self.viewModelDelegate && (itemArray.count > 0 || recommendItemArray.count > 0) && !hideRefreshTip) {
-            [self.viewModelDelegate showNotify:refreshTip inViewModel:self];
-        }
         if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
             [self.maskView showEmptyWithType:FHEmptyMaskViewTypeNoDataForCondition];
         } else {
@@ -1755,7 +1752,7 @@ extern NSString *const INSTANT_DATA_KEY;
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (_showPlaceHolder) {
-        if (self.houseType == FHHouseTypeNewHouse) {
+        if (self.houseType == FHHouseTypeRentHouse) {
             FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
             return cell;
         }
@@ -1765,7 +1762,7 @@ extern NSString *const INSTANT_DATA_KEY;
             return cell;
         }else{
             FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListPlaceholderCellId];
-            cell.topOffset = 20;
+            cell.topOffset = 15;
             return cell;
         }
     }
@@ -1957,13 +1954,13 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat height = 88;
+    CGFloat height = 124;
     if(self.commute){
         height = 105;
     }
     if (_showPlaceHolder) {
-        if (self.houseType == FHHouseTypeNewHouse) {
-            return 118;
+        if (self.houseType == FHHouseTypeRentHouse) {
+            return 88;
         }
         return height;
     }
@@ -2822,7 +2819,7 @@ extern NSString *const INSTANT_DATA_KEY;
     if (self.showPlaceHolder) {
         NSInteger count = 10;
         NSArray *placeholderViewModels = @[];
-        if (self.houseType == FHHouseTypeNewHouse) {
+        if (self.houseType == FHHouseTypeRentHouse) {
             placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle1 count:count];
         } else {
             if (self.commute){

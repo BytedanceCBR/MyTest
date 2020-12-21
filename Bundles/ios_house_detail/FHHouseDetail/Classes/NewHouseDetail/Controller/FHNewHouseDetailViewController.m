@@ -40,6 +40,7 @@
 #import "FHDetailNavigationTitleView.h"
 #import <FHHouseBase/FHEventShowProtocol.h>
 #import <FHHouseBase/NSObject+FHOptimize.h>
+#import "FHDetailPlaceHolderView.h"
 
 
 @interface FHNewHouseDetailViewController () <UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
@@ -74,6 +75,7 @@
 @property (nonatomic, assign) BOOL segmentViewChangedFlag;
 //是否显示
 @property (nonatomic, assign) BOOL isViewDidDisapper;
+@property (strong, nonatomic) FHDetailPlaceHolderView *placeHolderView;
 
 @end
 
@@ -148,6 +150,11 @@
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf updateStatusBar:weakSelf.collectionView.contentOffset];
     });
+}
+
+- (void)hiddenPlaceHolder {
+    self.placeHolderView.hidden = YES;
+    [self.placeHolderView removeFromSuperview];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -275,6 +282,12 @@
         make.bottom.mas_equalTo(self.bottomBar.mas_top).offset(-30);
     }];
 
+    self.placeHolderView = [[FHDetailPlaceHolderView alloc]init];
+    [self.view addSubview:self.placeHolderView];
+    [_placeHolderView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
+    
     [self.view bringSubviewToFront:_navBar];
     
     self.segmentTitleView = [[FHDetailNavigationTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navBar.frame), CGRectGetWidth(self.view.bounds), 42)];
@@ -356,6 +369,7 @@
         self.isLoadingData = NO;
         self.hasValidateData = NO;
         self.bottomBar.hidden = YES;
+        [self hiddenPlaceHolder];
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
     } else {
         self.hasValidateData = YES;
@@ -416,11 +430,13 @@
     if (self.segmentTitleView.selectIndex == 0) {
         self.segmentTitleView.selectIndex = 0;
     }
-    
+    __weak typeof(self)weakSelf = self;
     self.detailFlowLayout.sectionModels = sectionModels;
     [self.listAdapter performUpdatesAnimated:NO
                                       completion:^(BOOL finished) {
+        [weakSelf hiddenPlaceHolder];
     }];
+
 }
 
 
@@ -576,7 +592,7 @@
 {
     if ([TTReachability isNetworkConnected]) {
         //        if (!self.instantData) {
-        [self startLoading];
+//        [self startLoading];
         //        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];

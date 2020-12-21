@@ -109,11 +109,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
         }
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
-            
             NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
-            
             [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
-            
             if (isSuccess) {
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 FHConfigDataModel *configModel = model.data;

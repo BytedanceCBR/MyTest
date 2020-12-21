@@ -143,6 +143,7 @@
 - (void)reloadData {
 //    CGRect frame = self.tableView.frame;
     [self.tableView reloadData];
+   
     //防止滑动卡顿，测试前关闭
     
 //    if (!self.scretchingWhenLoading) {

@@ -12,7 +12,6 @@
 #define HOR_MARGIN 20
 
 @interface FHPlaceHolderCell ()
-
 @property(nonatomic , strong) UIImageView *placeHolderImageView;
 
 @property(nonatomic , strong) UIView *view1;

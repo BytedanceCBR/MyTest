@@ -1704,8 +1704,12 @@ extern NSString *const INSTANT_DATA_KEY;
 {
 //    UITableViewCell *cell = nil;
     if (_showPlaceHolder) {
+        if (self.houseType == FHHouseTypeRentHouse) {
+            FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+            return cell;
+        }
         FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kPlaceCellId];
-        cell.topOffset = 20;
+        cell.topOffset = 15;
         return cell;
     }else{
         BOOL isLastCell = NO;
@@ -1828,7 +1832,12 @@ extern NSString *const INSTANT_DATA_KEY;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (_showPlaceHolder) {
-        return 88;
+        if (self.houseType == FHHouseTypeRentHouse) {
+            return 88;
+        }else {
+            return 124;
+        }
+
     }
     BOOL isFirstCell = NO;
     BOOL isLastCell = NO;
@@ -2844,8 +2853,14 @@ extern NSString *const INSTANT_DATA_KEY;
 #pragma mark - FHHouseTableViewDataSource
 - (NSArray<NSArray<id<FHHouseNewComponentViewModelProtocol>> *> *)fhHouse_dataList {
     if (self.showPlaceHolder) {
-        NSArray *placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle2 count:10];
-        return @[placeholderViewModels];
+        if (self.houseType == FHHouseTypeRentHouse) {
+            NSArray *placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle1 count:10];
+            return @[placeholderViewModels];
+        }else {
+            NSArray *placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle2 count:10];
+            return @[placeholderViewModels];
+        }
+
     }
     
     return @[self.houseList.count ? self.houseList : @[],
