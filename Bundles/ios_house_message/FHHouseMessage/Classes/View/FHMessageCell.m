@@ -30,6 +30,7 @@
 
 @property(nonatomic, strong) UIView *backView;
 @property(nonatomic, strong) UIImageView *iconView;
+@property(nonatomic, strong) UIImageView *iconCoverView;// 关黑经纪人提示视图
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *scoreLabel;
 @property(nonatomic, strong) FHMessageCellTagsView *tagsView;
@@ -66,6 +67,39 @@
     return _tagsView;
 }
 
+- (UIImageView *)iconCoverView {
+    if(!_iconCoverView) {
+        _iconCoverView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"chat_business_icon_c"]];
+        _iconCoverView.layer.masksToBounds = YES;
+        _iconCoverView.layer.cornerRadius = 25;
+        _iconCoverView.contentMode = UIViewContentModeScaleAspectFill;
+        
+        UIView *backgroundView = [UIView new];
+        backgroundView.backgroundColor = [[UIColor colorWithHexStr:@"#B2B2B2"] colorWithAlphaComponent:0.6];
+        [_iconCoverView addSubview:backgroundView];
+        [backgroundView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.equalTo(self.iconCoverView);
+        }];
+        
+        UILabel *textLabel = [UILabel new];
+        textLabel.font = [UIFont themeFontMedium:10];
+        textLabel.textColor = [UIColor themeWhite];
+        textLabel.text = @"暂无法服务";
+        textLabel.textAlignment = NSTextAlignmentCenter;
+        textLabel.numberOfLines = 2;
+        [_iconCoverView addSubview:textLabel];
+        [textLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.equalTo(self.iconCoverView);
+            make.centerY.equalTo(self.iconCoverView).offset(1);
+            make.width.mas_equalTo(30);
+            make.height.mas_equalTo(28);
+        }];
+        
+        _iconCoverView.hidden = YES;
+    }
+    return _iconCoverView;
+}
+
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         _maxOffset = -88;
@@ -100,6 +134,11 @@
         make.left.mas_equalTo(16);
         make.centerY.mas_equalTo(self.backView.mas_centerY);
         make.width.height.mas_equalTo(50);
+    }];
+    
+    [self.iconView addSubview:self.iconCoverView];
+    [self.iconCoverView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.iconView);
     }];
     
     self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:16] textColor:[UIColor themeGray1]];
@@ -272,6 +311,7 @@
     self.scoreLabel.hidden = YES;
     // 消除tags
     [self.tagsView updateWithTags:nil];
+    self.iconCoverView.hidden = YES;
     self.muteImageView.hidden = YES;
 }
 
@@ -367,25 +407,24 @@
             self.scoreLabel.text = @"";
         }
         
+        // 配置标签
         NSMutableArray *tags = [NSMutableArray array];
         // 经纪公司tag
         if (!isEmptyString(conv.companyName)) {
             FHMessageCellTagModel *companyTag = [[FHMessageCellTagModel alloc] initWithName:conv.companyName];
             [tags addObject:companyTag];
         }
+        [self.tagsView updateWithTags:tags.copy];
+        
         
         // TODO: JOKER 添加关黑tag
         BOOL isBlackmail = YES;
-        if(isBlackmail) {
-            FHMessageCellTagModel *blackmailTag = [[FHMessageCellTagModel alloc] initWithName:@"平台封杀"];
-            [tags addObject:blackmailTag];
-        }
-        
-        [self.tagsView updateWithTags:tags.copy];
+        self.iconCoverView.hidden = !isBlackmail;
         
     } else {
         self.scoreLabel.hidden = YES;
         [self.tagsView updateWithTags:nil];
+        self.iconCoverView.hidden = YES;
     }
 
     [self displaySendState:lastMsg isMute:conv.mute];
