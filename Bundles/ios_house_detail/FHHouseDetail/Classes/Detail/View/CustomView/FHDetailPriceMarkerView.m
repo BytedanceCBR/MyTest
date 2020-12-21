@@ -11,9 +11,11 @@
 #import "UIColor+Theme.h"
 #import <Masonry/Masonry.h>
 #import "UIView+House.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHDetailPriceMarkerView ()
 @property(nonatomic, assign) double unitPerSquare;
+@property (nonatomic, weak) UIView *contentView;
 
 @end
 
@@ -31,14 +33,29 @@
 
 - (void)setupUI
 {
-    [self addSubview:self.titleLabel];
-    [self addSubview:self.firstLabel];
-    [self addSubview:self.secondLabel];
-    [self addSubview:self.thirdLabel];
+    UIView *contentView = [[UIView alloc] init];
+    [self addSubview:contentView];
+    self.contentView = contentView;
+    [self.contentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
+    }];
+    
+    [self.contentView addSubview:self.titleLabel];
+    [self.contentView addSubview:self.firstLabel];
+    [self.contentView addSubview:self.secondLabel];
+    [self.contentView addSubview:self.thirdLabel];
 
-    self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.6];
-    self.layer.cornerRadius = 4;
-    self.layer.masksToBounds = YES;
+    self.contentView.backgroundColor = [UIColor colorWithWhite:1 alpha:1];
+    self.contentView.layer.cornerRadius = 10;
+    self.contentView.layer.borderColor = [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
+    self.contentView.layer.borderWidth = [UIDevice btd_onePixel];
+    self.contentView.layer.masksToBounds = YES;
+    
+    self.backgroundColor = [UIColor clearColor];
+    self.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.layer.shadowOffset = CGSizeMake(0, 16);
+    self.layer.shadowRadius = 16;
+    self.layer.shadowOpacity = 0.15;
     
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(10);
@@ -68,7 +85,7 @@
     self.firstLabel.width = self.width - 20;
     self.secondLabel.width = self.width - 20;
     self.thirdLabel.width = self.width - 20;
-    self.height = self.thirdLabel.bottom + 20;
+    self.height = self.thirdLabel.bottom + 10;
 }
 
 - (void)refreshContent:(FHDetailPriceMarkerData *)markData
@@ -144,7 +161,7 @@
         _titleLabel = [[UILabel alloc]init];
         _titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _titleLabel.font = [UIFont themeFontRegular:14];
-        _titleLabel.textColor = [UIColor whiteColor];
+        _titleLabel.textColor = [UIColor themeGray1];
     }
     return _titleLabel;
 }
@@ -155,7 +172,7 @@
         _firstLabel = [[UILabel alloc]init];
         _firstLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _firstLabel.font = [UIFont themeFontRegular:12];
-        _firstLabel.textColor = [UIColor whiteColor];
+        _firstLabel.textColor = [UIColor themeGray1];
     }
     return _firstLabel;
 }
@@ -166,7 +183,7 @@
         _secondLabel = [[UILabel alloc]init];
         _secondLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _secondLabel.font = [UIFont themeFontRegular:12];
-        _secondLabel.textColor = [UIColor whiteColor];
+        _secondLabel.textColor = [UIColor themeGray1];
     }
     return _secondLabel;
 }
@@ -177,7 +194,7 @@
         _thirdLabel = [[UILabel alloc]init];
         _thirdLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _thirdLabel.font = [UIFont themeFontRegular:12];
-        _thirdLabel.textColor = [UIColor whiteColor];
+        _thirdLabel.textColor = [UIColor themeGray1];
     }
     return _thirdLabel;
 }

@@ -99,7 +99,7 @@
         FHCityMarketTrendChatViewInfoItem* it = each;
         LineLabelItem* itemView = [[LineLabelItem alloc] init];
         itemView.nameLabel.text = it.name;
-        itemView.dotIconView.backgroundColor = [UIColor colorWithHexString:it.color];
+        itemView.dotIconView.backgroundColor = [UIColor themeOrange4];
         return itemView;
     }];
     [_itemViews enumerateObjectsUsingBlock:^(LineLabelItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -292,14 +292,14 @@
         obj.pointLabelColor = [UIColor blackColor];
     }];
     self.lineChart.showCoordinateAxis = YES;// 坐标轴的线
-    self.lineChart.yLabelColor = [UIColor themeGray3];
+    self.lineChart.yLabelColor = [UIColor themeGray2];
     self.lineChart.yLabelFormat = @"%.2f";
     self.lineChart.yLabelFont = [UIFont themeFontRegular:12];
     self.lineChart.yLabelHeight = 17;
     self.lineChart.showGenYLabels = YES; // 竖轴的label值
-    self.lineChart.xLabelColor = [UIColor themeGray3];
+    self.lineChart.xLabelColor = [UIColor themeGray2];
     self.lineChart.xLabelFont = [UIFont themeFontRegular:12];
-    self.lineChart.yHighlightedColor = [UIColor themeRed1];
+    self.lineChart.yHighlightedColor = [UIColor themeOrange4];
     self.lineChart.axisColor = [UIColor themeGray6]; // x轴和y轴
     [self.lineChart setXLabels:@[@"", @"", @"", @"", @"", @""]];
     [self addSubview:_lineChart];
