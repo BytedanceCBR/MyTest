@@ -157,6 +157,16 @@
     }
 }
 
+- (void)refreshOpacityWithData:(id)viewModel {
+    if (![viewModel isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+        return;
+    }
+    CGFloat opacity = ((FHHouseSecondCardViewModel *)viewModel).opacity;
+    self.subTitleLabel.layer.opacity = opacity;
+    [self.titleAndTagView refreshOpacity:opacity];
+    self.tagLabel.layer.opacity = opacity;
+}
+
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
     FHHouseSecondCardViewModel *secondViewModel = (FHHouseSecondCardViewModel *)self.viewModel;

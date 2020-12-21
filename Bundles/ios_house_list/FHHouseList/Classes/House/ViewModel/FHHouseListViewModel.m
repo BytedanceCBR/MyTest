@@ -2041,7 +2041,9 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if ([tableView fhHouseCard_didClickCell:cell atIndexPath:indexPath]) return;
+    if ([tableView fhHouseCard_didClickCell:cell atIndexPath:indexPath]) {
+        return;
+    }
     
     if (self.searchType == FHHouseListSearchTypeNeighborhoodDeal) {
         

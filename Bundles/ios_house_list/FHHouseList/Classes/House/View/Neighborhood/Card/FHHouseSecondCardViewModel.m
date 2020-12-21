@@ -22,6 +22,7 @@
 #import "FHHouseBridgeManager.h"
 #import "FHHouseNeighborAgencyViewModel.h"
 #import "FHHouseReserveAdviserViewModel.h"
+#import "FHHouseCardStatusManager.h"
 
 @interface FHHouseSecondCardViewModel()
 
@@ -36,6 +37,8 @@
 @property (nonatomic, strong) NSArray<FHHouseTagsModel *> *tagList;
 
 @property (nonatomic, assign) BOOL hasVr;
+
+@property (nonatomic, copy) NSString *houseId;
 
 @end
 
@@ -57,6 +60,7 @@
             self.subtitle = item.displaySubtitle;
             self.tagList = item.tags;
             self.hasVr = item.vrInfo.hasVr;
+            self.houseId = item.id;
         } else if ([model isKindOfClass:[FHHouseListBaseItemModel class]]) {
             FHHouseListBaseItemModel *item = (FHHouseListBaseItemModel *)model;
             _recommendViewModel = [[FHHouseRecommendViewModel alloc] initWithModel:item.advantageDescription];
@@ -66,6 +70,7 @@
             self.subtitle = item.displaySubtitle;
             self.tagList = item.tags;
             self.hasVr = item.vrInfo.hasVr;
+            self.houseId = item.id;
         } else if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
             FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)model;
             _recommendViewModel = [[FHHouseRecommendViewModel alloc] initWithModel:item.advantageDescription];
@@ -75,6 +80,7 @@
             self.subtitle = item.displaySubtitle;
             self.tagList = item.tags;
             self.hasVr = item.vrInfo.hasVr;
+            self.houseId = item.hid;
         }
 
     }
@@ -111,8 +117,18 @@
     self.tagList = @[element];
 }
 
+
+- (CGFloat)opacity {
+    CGFloat opacity = 1;
+    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:self.houseId withHouseType:FHHouseTypeSecondHandHouse]) {
+        opacity = FHHouseCardReadOpacity;
+    }
+    return opacity;
+}
+
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        [[FHHouseCardStatusManager sharedInstance] readHouseId:self.houseId withHouseType:FHHouseTypeSecondHandHouse];
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
         NSNumber *houseTypeNum = [self.context btd_numberValueForKey:@"house_type"];
         NSString *urlStr = nil;
@@ -157,6 +173,9 @@
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
         [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+        if (self.opacityDidChange) {
+            self.opacityDidChange();
+        }
     }
 }
 
