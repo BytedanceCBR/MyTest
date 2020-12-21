@@ -90,15 +90,13 @@
         UILabel *textLabel = [UILabel new];
         textLabel.font = [UIFont themeFontMedium:10];
         textLabel.textColor = [UIColor themeWhite];
-        textLabel.text = @"暂无法服务";
+        textLabel.text = @"暂无法\n服务";
         textLabel.textAlignment = NSTextAlignmentCenter;
         textLabel.numberOfLines = 2;
         [_iconCoverView addSubview:textLabel];
         [textLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerX.equalTo(self.iconCoverView);
             make.centerY.equalTo(self.iconCoverView).offset(1);
-            make.width.mas_equalTo(30);
-            make.height.mas_equalTo(28);
         }];
         
         _iconCoverView.hidden = YES;
