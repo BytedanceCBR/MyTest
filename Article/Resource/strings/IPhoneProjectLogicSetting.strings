@@ -113,6 +113,7 @@
 
 //map
 "fh_map_detail"        = "FHDetailMapPageViewController";
+"map_detail"        = "FHDetailMapPageViewController";
 "baidu_panorama_detail" = "FHBaiduPanoramaViewController";
 
 //floor
