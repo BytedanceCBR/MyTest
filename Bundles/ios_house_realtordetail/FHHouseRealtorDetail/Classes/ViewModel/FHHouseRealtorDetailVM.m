@@ -446,16 +446,16 @@
     if ((delta + navBarH) >self.pagingView.headerViewHeight || (delta + navBarH) == self.pagingView.headerViewHeight) {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
             *titleScrollViewColorKey  = @"Background4";
-            *norColorKey = @"grey3"; //
-            *selColorKey = @"grey1";//grey1
+            *norColorKey = @"grey3";
+            *selColorKey = @"red4";
             *titleFont = [UIFont themeFontRegular:16];
             *selectedTitleFont = [UIFont themeFontSemibold:16];
         }];
     }else {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
             *titleScrollViewColorKey  = @"Background21";
-            *norColorKey = @"grey3"; //
-            *selColorKey = @"grey1";//grey1
+            *norColorKey = @"grey3";
+            *selColorKey = @"red4";
             *titleFont = [UIFont themeFontRegular:16];
             *selectedTitleFont = [UIFont themeFontSemibold:16];
         }];

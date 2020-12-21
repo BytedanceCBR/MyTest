@@ -205,11 +205,11 @@
 - (void)setUpSegmentedControl {
     _segmentedControl = [FHSegmentControl new];
     _segmentedControl.sectionTitles = @[@"交通", @"教育", @"医疗", @"生活"];
-    _segmentedControl.selectionIndicatorSize = CGSizeMake(12, 3);
-    _segmentedControl.selectionIndicatorCornerRadius = 1.5;
-    _segmentedControl.selectionIndicatorColor = [UIColor themeGray1];
+//    _segmentedControl.selectionIndicatorSize = CGSizeMake(12, 3);
+//    _segmentedControl.selectionIndicatorCornerRadius = 1.5;
+//    _segmentedControl.selectionIndicatorColor = [UIColor themeGray1];
     NSDictionary *attributeNormal = @{NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor themeGray3]};
-    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontMedium:16], NSForegroundColorAttributeName: [UIColor themeGray1]};
+    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontMedium:16], NSForegroundColorAttributeName: [UIColor themeRed4]};
     _segmentedControl.backgroundColor = [UIColor whiteColor];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
