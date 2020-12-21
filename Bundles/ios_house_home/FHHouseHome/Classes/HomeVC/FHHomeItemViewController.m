@@ -1360,8 +1360,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 }
 
 #pragma mark - 预加载优化
-- (void)requestDataForRefreshV2:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst isInit:(BOOL)isInit
-{
+- (void)requestDataForRefreshV2:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst isInit:(BOOL)isInit {
     self.currentPullType = pullType;
     
     if (isFirst) {
