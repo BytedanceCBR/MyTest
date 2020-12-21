@@ -22,6 +22,7 @@
 #import "ByteDanceKit.h"
 #import "IMManager.h"
 #import "FIMDebugManager.h"
+#import "FHMessageCellTagsView.h"
 
 #define CURRENT_CALENDAR [NSCalendar currentCalendar]
 
@@ -31,7 +32,7 @@
 @property(nonatomic, strong) UIImageView *iconView;
 @property(nonatomic, strong) UILabel *titleLabel;
 @property(nonatomic, strong) UILabel *scoreLabel;
-@property(nonatomic, strong) FHShadowLabel *companyLabel;
+@property(nonatomic, strong) FHMessageCellTagsView *tagsView;
 @property(nonatomic, strong) UILabel *subTitleLabel;
 @property(nonatomic, strong) UILabel *timeLabel;
 @property(nonatomic, strong) UIImageView *msgStateView;
@@ -55,6 +56,14 @@
         _indexLabel.backgroundColor = [UIColor themeBlack];
     }
     return _indexLabel;
+}
+
+- (FHMessageCellTagsView *)tagsView {
+    if(!_tagsView) {
+        _tagsView = [FHMessageCellTagsView new];
+        _tagsView.isPassthrough = YES; // 点击事件透传到父视图
+    }
+    return _tagsView;
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -116,23 +125,16 @@
         make.centerY.mas_equalTo(self.titleLabel.mas_centerY);
         make.height.mas_equalTo(17);
     }];
-    
-    self.companyLabel = [[FHShadowLabel alloc] initWithEdgeInsets:UIEdgeInsetsMake(3, 4, 3, 4)];
-    [self.backView addSubview:self.companyLabel];
-    self.companyLabel.font = [UIFont themeFontRegular:10];
-    self.companyLabel.textColor = [UIColor themeGray2];
-    self.companyLabel.textAlignment = NSTextAlignmentCenter;
-    self.companyLabel.layer.backgroundColor = [UIColor themeGray7].CGColor;
-    self.companyLabel.layer.cornerRadius = 8;
-    self.companyLabel.hidden = YES;
-    [self.companyLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
-    [self.companyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_equalTo(16);
-        make.left.mas_equalTo(self.scoreLabel.mas_right).offset(4);
+        
+    // 标签视图
+    [self.backView addSubview:self.tagsView];
+    [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.scoreLabel.mas_right).offset(4);
+        make.right.equalTo(self.timeLabel.mas_left).offset(-4);
+        make.height.mas_offset(16);
         make.centerY.mas_equalTo(self.scoreLabel.mas_centerY);
-        make.width.mas_lessThanOrEqualTo(118);
-        make.right.mas_lessThanOrEqualTo(self.timeLabel.mas_left).offset(-4);
     }];
+    //---
     
     self.subTitleLabel = [self LabelWithFont:[UIFont themeFontRegular:12] textColor:[UIColor themeGray3]];
     [self.backView addSubview:_subTitleLabel];
@@ -268,7 +270,8 @@
         [self updateLayoutForMsgState:ChatMsgStateSuccess isMute:NO];
     }
     self.scoreLabel.hidden = YES;
-    self.companyLabel.hidden = YES;
+    // 消除tags
+    [self.tagsView updateWithTags:nil];
     self.muteImageView.hidden = YES;
 }
 
@@ -363,15 +366,26 @@
             self.scoreLabel.hidden = YES;
             self.scoreLabel.text = @"";
         }
+        
+        NSMutableArray *tags = [NSMutableArray array];
+        // 经纪公司tag
         if (!isEmptyString(conv.companyName)) {
-            self.companyLabel.hidden = NO;
-            self.companyLabel.text = conv.companyName;
-        } else {
-            self.companyLabel.hidden = YES;
+            FHMessageCellTagModel *companyTag = [[FHMessageCellTagModel alloc] initWithName:conv.companyName];
+            [tags addObject:companyTag];
         }
+        
+        // TODO: JOKER 添加关黑tag
+        BOOL isBlackmail = YES;
+        if(isBlackmail) {
+            FHMessageCellTagModel *blackmailTag = [[FHMessageCellTagModel alloc] initWithName:@"平台封杀"];
+            [tags addObject:blackmailTag];
+        }
+        
+        [self.tagsView updateWithTags:tags.copy];
+        
     } else {
         self.scoreLabel.hidden = YES;
-        self.companyLabel.hidden = YES;
+        [self.tagsView updateWithTags:nil];
     }
 
     [self displaySendState:lastMsg isMute:conv.mute];
