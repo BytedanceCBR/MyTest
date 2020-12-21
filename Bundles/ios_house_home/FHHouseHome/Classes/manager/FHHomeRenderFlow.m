@@ -100,6 +100,10 @@ static const char fh_requestFlow_key;
     self.endTs = [[NSDate date] timeIntervalSince1970] * 1000;
 }
 
+- (void)submit {
+    [self submitWithError:nil];
+}
+
 - (void)submitWithError:(NSError *)error {
     if ([self.delegate respondsToSelector:@selector(itemRenderFlowWillSumbit:error:)]) {
         [self.delegate itemRenderFlowWillSumbit:self error:error];
