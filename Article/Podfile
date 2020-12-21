@@ -72,7 +72,7 @@ def fhPods
     
 #   pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
 #   pod 'ios_house_im' ,'0.10.0.0-alpha.3', :inhibit_warnings => false
-    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'ea011929841c5eb873bf2941c631e712d27ecf2d', :inhibit_warnings => false
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '86ce2e374ff637309d7767332cbef233ff6d2473', :inhibit_warnings => false
 
 end
 
