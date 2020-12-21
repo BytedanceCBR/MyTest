@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) UIImageView *arrowsImg;
 
+@property (nonatomic, strong) UIView *tagViews;
+
 @property (nonatomic, copy, nullable) void (^moreActionBlock)(void);
 
 - (void)setSubTitleWithTitle:(NSString *)subTitle;

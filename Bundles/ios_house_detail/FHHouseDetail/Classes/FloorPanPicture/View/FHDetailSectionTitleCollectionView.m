@@ -17,6 +17,7 @@
     self.moreActionBlock = nil;
     self.arrowsImg.hidden = YES;
     self.subTitleLabel.hidden = YES;
+    self.tagViews.hidden = YES;
     [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.centerY.mas_equalTo(self).offset(2);
@@ -55,6 +56,9 @@
             make.centerY.mas_equalTo(self.titleLabel);
         }];
         
+        [self.tagViews mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self);
+        }];
         [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moreAction:)]];
     }
     return self;
@@ -80,7 +84,18 @@
     [tagView addSubview:tagLab];
     [tagView addSubview:imgView];
     [self addSubview:tagView];
+    [self.tagViews addSubview:tagView];
     return tagView;
+}
+
+- (UIView *)tagViews{
+    if(!_tagViews){
+        UIView *tagViews = [[UIView alloc]init];
+        [self addSubview: tagViews];
+        _tagViews = tagViews;
+        _tagViews.hidden = YES;
+    }
+    return _tagViews;
 }
 
 -(NSArray *)getTagName{
@@ -92,13 +107,18 @@
 }
 
 - (void)setSubTagView{
-    CGFloat width = (self.bounds.size.width - 32 - 16)/4;
-    [[self getTagName] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [[self getTagViewWithName:idx] mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(width*idx + 16);
-            make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
+    if(_tagViews && _tagViews.subviews.count){
+        self.tagViews.hidden = NO;
+    }else{
+        CGFloat width = (self.bounds.size.width - 32 - 16)/4;
+        [[self getTagName] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [[self getTagViewWithName:idx] mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(width*idx + 16);
+                make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
+            }];
         }];
-    }];
+        self.tagViews.hidden = NO;
+    }
 }
 
 
