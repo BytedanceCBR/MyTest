@@ -158,6 +158,18 @@
     }];
 }
 
+- (void)refreshOpacityWithData:(id)viewModel {
+    if (![viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
+        return;
+    }
+    CGFloat opacity = ((FHHouseNewCardViewModel *)viewModel).opacity;
+    self.subTitleLabel.layer.opacity = opacity;
+    self.mainTitleLabel.layer.opacity = opacity;
+    self.tagLabel.layer.opacity = opacity;
+    [self.recommendView refreshOpacity:opacity];
+    self.propertyTagLabel.layer.opacity = opacity;
+}
+
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
     FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;

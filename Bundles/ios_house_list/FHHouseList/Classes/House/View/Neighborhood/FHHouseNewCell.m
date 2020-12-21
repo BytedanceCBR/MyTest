@@ -51,6 +51,12 @@
     [super setViewModel:viewModel];
     if ([viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
         self.cardView.viewModel = viewModel;
+        [self.cardView refreshOpacityWithData:viewModel];
+        FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;
+        __weak typeof(self) wSelf = self;
+        newViewModel.opacityDidChange = ^{
+            [wSelf.cardView refreshOpacityWithData:wSelf.viewModel];
+        };
         [self.cardView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo([FHHouseNewCardView calculateViewHeight:viewModel]);
         }];
