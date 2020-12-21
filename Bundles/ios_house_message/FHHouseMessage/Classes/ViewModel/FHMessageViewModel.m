@@ -26,6 +26,7 @@
 #import "TTAccountManager.h"
 #import "FHMessageNotificationTipsManager.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import <ios_house_im/IMManager.h>
 
 #define kCellId @"FHMessageCell_id"
 
@@ -273,8 +274,22 @@
             
         } else {
             IMConversation *conv = item;
-            [self openConversation:conv];
+            [self processJumpToConversation:conv];
         }
+    }
+}
+
+- (void)processJumpToConversation:(IMConversation *)conv {
+    // TODO: JOKER 判断经纪人是否被关黑
+    BOOL isBlackmail = YES;
+    if(isBlackmail) {
+        [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:@"因平台管控，经纪人无法为您提供服务，可以选择其它经纪人。" leftTitle:@"其它经纪人" leftAction:^{
+            [IMManager jumpToRealtorListPageWithParams:@{}];
+        } rightTitle:@"继续联系" rightAction:^{
+            [self openConversation:conv];
+        }];
+    } else {
+        [self openConversation:conv];
     }
 }
 
