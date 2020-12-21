@@ -81,7 +81,7 @@
 }
 
 - (void)initViews {
-    _avatarView = [[FHRealtorAvatarView alloc] init];
+    _avatarView = [[FHUGCAvatarView alloc] init];
     _avatarView.placeHoldName = @"fh_mine_avatar";
     _avatarView.userInteractionEnabled = YES;
     [self addSubview:_avatarView];
@@ -226,7 +226,6 @@
     [self updateDescLabel];
     [self updateEditState];
     [self updateFrame];
-    [self showEssenceIcon];
 }
 
 - (void)setTitleModel:(FHFeedUGCCellModel *)cellModel {
