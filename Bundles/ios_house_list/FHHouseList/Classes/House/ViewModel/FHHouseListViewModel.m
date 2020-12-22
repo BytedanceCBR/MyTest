@@ -74,6 +74,7 @@
 #import "FHHouseCardCellViewModelProtocol.h"
 #import "FHSuggestionDefines.h"
 #import "SSCommonLogic.h"
+#import "FHHouseCardStatusManager.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -2065,7 +2066,13 @@ extern NSString *const INSTANT_DATA_KEY;
             cellModel = self.sugesstHouseList[indexPath.row];
         }
     }
-    
+    if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
+        [[FHHouseCardStatusManager sharedInstance] readHouseId:model.id withHouseType:[model.houseType integerValue]];
+    }
+    if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)]) {
+        [((<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData:cellModel];
+    }
     if([cellModel isKindOfClass:[FHHouseReserveAdviserModel class]] || [cellModel isKindOfClass:[FHHouseNeighborAgencyModel class]]){
         return;
     }

@@ -56,7 +56,7 @@
 
 - (CGFloat)opacity {
     CGFloat opacity = 1;
-    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:self.houseId withHouseType:FHHouseTypeSecondHandHouse]) {
+    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:self.houseId withHouseType:FHHouseTypeNeighborhood]) {
         opacity = FHHouseCardReadOpacity;
     }
     return opacity;

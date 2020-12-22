@@ -9,6 +9,7 @@
 #import "FHSingleImageInfoCellModel.h"
 #import "FHCommonDefines.h"
 #import <UIDevice+BTDAdditions.h>
+#import "FHHouseCardStatusManager.h"
 
 @interface FHHouseListRentCell()
 
@@ -62,6 +63,21 @@
         make.right.mas_lessThanOrEqualTo(self.priceLabel.mas_left).offset(-2);
     }];
     self.distanceLabel.hidden = YES;
+}
+
+- (void)refreshOpacityWithData:(id)data {
+    if (![data isKindOfClass:[FHSearchHouseItemModel class]]) {
+        return;
+    }
+    FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+    CGFloat opacity = 1;
+    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:FHHouseTypeRentHouse]) {
+        opacity = FHHouseCardReadOpacity;
+    }
+    self.mainTitleLabel.layer.opacity = opacity;
+    self.subTitleLabel.layer.opacity = opacity;
+    self.tagLabel.layer.opacity = opacity;
+    self.distanceLabel.layer.opacity = opacity;
 }
 
 - (void)refreshWithData:(id)data {

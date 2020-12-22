@@ -33,7 +33,7 @@
 }
 
 - (void)readHouseId:(NSString *)houseId withHouseType:(NSInteger)houseType {
-    if (!houseId || [houseId isEqualToString:@""]) {
+    if (!houseId || [houseId isEqualToString:@""] || houseType > 4 || houseType < 1) {
         return;
     }
     NSString *Id = [NSString stringWithFormat:@"%ld%@", houseType, houseId];

@@ -6,10 +6,11 @@
 //
 
 #import "FHHouseBaseUsuallyCell.h"
+#import "FHHouseCardStatusManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseListRentCell : FHHouseBaseUsuallyCell
+@interface FHHouseListRentCell : FHHouseBaseUsuallyCell<FHHouseCardReadStateProtocol>
 
 @end
 
