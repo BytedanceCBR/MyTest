@@ -8,6 +8,7 @@
 #import "FHPostLayout.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHUGCCellMultiImageView.h"
+#import "FHUGCCellHelper.h"
 
 #define topMargin 20
 #define leftMargin 20
@@ -27,37 +28,37 @@
 - (void)commonInit {
     self.userInfoViewLayout = [FHLayoutItem layoutWithTop:topMargin
                                                      left:0
-                                                    width:[UIScreen mainScreen].bounds.size.width
+                                                    width:screenWidth
                                                    height:userInfoViewHeight];
     
     self.contentLabelLayout = [FHLayoutItem layoutWithTop:self.userInfoViewLayout.bottom + 10
                                                      left:leftMargin
-                                                    width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin
+                                                    width:screenWidth - leftMargin - rightMargin
                                                    height:0];
     
     self.multiImageViewLayout = [FHLayoutItem layoutWithTop:self.userInfoViewLayout.bottom + 10
                                                      left:leftMargin
-                                                    width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin
-                                                   height:[FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin]];
+                                                    width:screenWidth - leftMargin - rightMargin
+                                                   height:[FHUGCCellMultiImageView viewHeightForCount:3 width:screenWidth - leftMargin - rightMargin]];
     
     self.singleImageViewLayout = [FHLayoutItem layoutWithTop:self.userInfoViewLayout.bottom + 10
                                                      left:leftMargin
-                                                    width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin
-                                                   height:[FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin]];
+                                                    width:screenWidth - leftMargin - rightMargin
+                                                   height:[FHUGCCellMultiImageView viewHeightForCount:1 width:screenWidth - leftMargin - rightMargin]];
     
     self.bottomViewLayout = [FHLayoutItem layoutWithTop:self.multiImageViewLayout.bottom + 10
                                                      left:0
-                                                    width:[UIScreen mainScreen].bounds.size.width
+                                                    width:screenWidth
                                                    height:bottomViewHeight];
     
     self.originViewLayout = [FHLayoutItem layoutWithTop:self.multiImageViewLayout.bottom + 10
                                                      left:leftMargin
-                                                    width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin
+                                                    width:screenWidth - leftMargin - rightMargin
                                                    height:originViewHeight];
     
     self.attachCardViewLayout = [FHLayoutItem layoutWithTop:self.multiImageViewLayout.bottom + 10
                                                      left:leftMargin
-                                                    width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin
+                                                    width:screenWidth - leftMargin - rightMargin
                                                    height:attachCardViewHeight];
 }
 
@@ -67,6 +68,16 @@
     }
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    if([cellModel.cellLayoutStyle isEqualToString:@"10001"]){
+        //小区点评
+        self.contentLabelLayout.width = screenWidth - 42;
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:self.contentLabelLayout.width numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:14]];
+    }else{
+        //feed中的帖子
+        self.contentLabelLayout.width = screenWidth - leftMargin - rightMargin;
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:self.contentLabelLayout.width numberOfLines:cellModel.numberOfLines];
+    }
     
     if(isEmptyString(cellModel.content)){
         self.contentLabelLayout.height = 0;

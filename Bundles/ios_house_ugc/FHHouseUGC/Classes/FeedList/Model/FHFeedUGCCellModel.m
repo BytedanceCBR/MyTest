@@ -226,7 +226,7 @@
         logPbDic = [FHUtils dictionaryWithJsonString:logPb];
     }
     cellModel.logPb = logPbDic;
-    
+    cellModel.cellLayoutStyle = model.cellCtrls.cellLayoutStyle;
     cellModel.aggrType = model.aggrType;
     cellModel.needLinkSpan = YES;
     cellModel.behotTime = model.behotTime;
@@ -882,6 +882,7 @@
     cellModel.cellSubType = FHUGCFeedListCellSubTypePost;
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
+    cellModel.cellLayoutStyle = model.cellCtrls.cellLayoutStyle;
     
     if(model.attachCardInfo && model.attachCardInfo.title.length > 0){
         cellModel.attachCardInfo = model.attachCardInfo;
@@ -1062,12 +1063,7 @@
     } else if(model.rawData.largeImageList.count > 0) {
         cellModel.largeImageList = model.rawData.largeImageList;
     }
-    if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 42) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:14]];
-    }else {
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
-    }
-
+    
     //计算layout
     Class layout = [FHUGCCellManager cellLayoutClassFromCellViewType:cellModel.cellSubType];
     if(layout){

@@ -279,14 +279,14 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, assign ) BOOL userRepin;
 @property (nonatomic, copy, nullable) NSString *videoSourceIcon;
+//标记同一个celltype的其他可能的样式
+@property (nonatomic, copy , nullable) NSString *cellLayoutStyle;
 @property (nonatomic, strong, nullable) FHBaseLayout *layout;
 
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(id)content;
-
-+ (FHFeedUGCCellModel *)modelFromFeedWithDict:(NSDictionary *)content;
 
 + (FHFeedUGCCellModel *)modelFromFeedUGCContent:(FHFeedUGCContentModel *)model;
 
