@@ -649,6 +649,7 @@
     } else {
         //无网就显示蒙层
         //        if (!self.instantData) {
+        [self hiddenPlaceHolder];
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         //        }
     }

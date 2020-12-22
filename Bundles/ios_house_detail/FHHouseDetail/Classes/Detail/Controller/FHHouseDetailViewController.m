@@ -289,6 +289,7 @@
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
+        [self hiddenPlaceHolder];
         //无网就显示蒙层
 //        if (!self.instantData) {
             [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];

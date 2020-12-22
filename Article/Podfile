@@ -299,7 +299,7 @@ def appPods
     pod_binary 'TTThemed','0.1.36'
 
     #-----头条UI组件库-----
-    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => 'a4ea01ce124636f859f4e52ce2be15dac557437e'
+    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '60b172e62fd74fec3ff52c8f95ea94e89cadfced'
 #    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :com => 'fproject'
 #    pod 'TTUIWidget', :path => '../../tt_pods_ui'
     
