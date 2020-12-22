@@ -1956,7 +1956,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     CGFloat height = 124;
     if(self.commute){
-        height = 105;
+        height = 88;
     }
     if (_showPlaceHolder) {
         if (self.houseType == FHHouseTypeRentHouse) {

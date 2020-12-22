@@ -2178,15 +2178,15 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     self.showMode = FHMapSearchShowModeHalfHouseList;
     [self.tipView removeTip];
     
-    //move annotationview to center
-    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);
-    CGPoint annotationViewPoint = [self.mapView convertCoordinate:center toPointToView:self.mapView];
-    CGPoint destCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/4);
-    CGPoint currentCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/2);
-    CGPoint toMovePoint = CGPointMake(annotationViewPoint.x - destCenterPoint.x + currentCenterPoint.x, annotationViewPoint.y - destCenterPoint.y + currentCenterPoint.y);
-    toMovePoint.y -= 18;//annotationview height/2
-    CLLocationCoordinate2D destCenter = [self.mapView convertPoint:toMovePoint toCoordinateFromView:self.mapView];
-    [self.mapView setCenterCoordinate:destCenter animated:YES];
+//    //move annotationview to center
+//    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(model.centerLatitude.floatValue, model.centerLongitude.floatValue);
+//    CGPoint annotationViewPoint = [self.mapView convertCoordinate:center toPointToView:self.mapView];
+//    CGPoint destCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/4);
+//    CGPoint currentCenterPoint = CGPointMake(self.mapView.width/2, self.mapView.height/2);
+//    CGPoint toMovePoint = CGPointMake(annotationViewPoint.x - destCenterPoint.x + currentCenterPoint.x, annotationViewPoint.y - destCenterPoint.y + currentCenterPoint.y);
+//    toMovePoint.y -= 18;//annotationview height/2
+//    CLLocationCoordinate2D destCenter = [self.mapView convertPoint:toMovePoint toCoordinateFromView:self.mapView];
+//    [self.mapView setCenterCoordinate:destCenter animated:YES];
     
     FHMapSearchBubbleModel *houseListBubble = [self bubleFromOpenUrl:model.houseListOpenUrl];
     houseListBubble.lastShowMode = self.lastShowMode;

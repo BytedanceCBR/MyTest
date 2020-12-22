@@ -35,11 +35,3 @@
 
 @end
 
-@implementation FHHousePlaceholderStyle3Cell
-
-+ (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
-    if (![viewModel isKindOfClass:FHHousePlaceholderStyle3ViewModel.class]) return 0.0f;
-    return 105;
-}
-
-@end

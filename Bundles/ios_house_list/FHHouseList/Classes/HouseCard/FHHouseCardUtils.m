@@ -47,7 +47,6 @@
         return @{
             NSStringFromClass(FHHousePlaceholderStyle1ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle1Cell.class),
             NSStringFromClass(FHHousePlaceholderStyle2ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle2Cell.class),
-            NSStringFromClass(FHHousePlaceholderStyle3ViewModel.class): NSStringFromClass(FHHousePlaceholderStyle3Cell.class),
             NSStringFromClass(FHHouseSecondCardViewModel.class): NSStringFromClass(FHHouseSecondCell.class),
             NSStringFromClass(FHHouseNewCardViewModel.class): NSStringFromClass(FHHouseNewCell.class),
             NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHHouseNeighborhoodCell.class),
@@ -186,9 +185,6 @@
                 break;
             case FHHousePlaceholderStyle2:
                 viewModel = [[FHHousePlaceholderStyle2ViewModel alloc] init];
-                break;
-            case FHHousePlaceholderStyle3:
-                viewModel = [[FHHousePlaceholderStyle3ViewModel alloc] init];
                 break;
             default:
                 break;

@@ -9,7 +9,7 @@
 #import "Masonry.h"
 #import "UIColor+Theme.h"
 
-#define HOR_MARGIN 20
+#define HOR_MARGIN 15
 
 @interface FHPlaceHolderCell ()
 @property(nonatomic , strong) UIImageView *placeHolderImageView;
@@ -17,7 +17,6 @@
 @property(nonatomic , strong) UIView *view1;
 @property(nonatomic , strong) UIView *view2;
 @property(nonatomic , strong) UIView *view3;
-@property(nonatomic , strong) UIView *view4;
 
 @end
 
@@ -34,7 +33,7 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
-        UIImage *image = [UIImage imageNamed:@"house_cell_placeholder"];
+        UIImage *image = [UIImage imageNamed:@"house_cell_placeholder_rent"];
         _placeHolderImageView = [[UIImageView alloc] initWithImage:image];
         
         [self.contentView addSubview:_placeHolderImageView];
@@ -42,18 +41,17 @@
         [self.contentView addSubview:self.view1];
         [self.contentView addSubview:self.view2];
         [self.contentView addSubview:self.view3];
-        [self.contentView addSubview:self.view4];
 
         [_placeHolderImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(HOR_MARGIN);
-            make.width.mas_equalTo(114);
-            make.height.mas_equalTo(85);
-            make.top.mas_equalTo(20);
+            make.width.mas_equalTo(85);
+            make.height.mas_equalTo(64);
+            make.top.mas_equalTo(12);
 //            make.bottom.mas_equalTo(self.contentView);
         }];
         
         [self.view1 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.placeHolderImageView.mas_right).mas_offset(10);
+            make.left.mas_equalTo(self.placeHolderImageView.mas_right).mas_offset(13);
             make.right.mas_equalTo(-HOR_MARGIN);
             make.top.mas_equalTo(self.placeHolderImageView);
             make.height.mas_equalTo(@14);
@@ -61,25 +59,17 @@
         
         [self.view2 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.view1);
-            make.right.mas_equalTo(-20 - 44);
+            make.right.mas_equalTo(self.view1.mas_centerX).mas_offset(10);
             make.top.mas_equalTo(self.view1.mas_bottom).mas_offset(10);
-            make.height.mas_equalTo(@8);
+            make.height.mas_equalTo(@14);
         }];
         
         [self.view3 mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.view1);
             make.right.mas_equalTo(self.view2.mas_centerX).mas_offset(10);
-            make.top.mas_equalTo(self.view2.mas_bottom).mas_offset(15);
-            make.height.mas_equalTo(@15);
+            make.top.mas_equalTo(self.view2.mas_bottom).mas_offset(10);
+            make.height.mas_equalTo(@14);
         }];
-        
-        [self.view4 mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.view1);
-            make.right.mas_equalTo(-20 - 65);
-            make.bottom.mas_equalTo(self.placeHolderImageView.mas_bottom);
-            make.height.mas_equalTo(@10);
-        }];
-
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -118,16 +108,6 @@
     }
     return _view3;
 }
-
--(UIView *)view4 {
-    
-    if (!_view4) {
-        _view4 = [[UIView alloc]init];
-        _view4.backgroundColor = [UIColor themeGray7];
-    }
-    return _view4;
-}
-
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];

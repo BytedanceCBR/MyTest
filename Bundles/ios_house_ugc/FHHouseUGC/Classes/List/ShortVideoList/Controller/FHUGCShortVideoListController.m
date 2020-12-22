@@ -199,6 +199,7 @@
 }
 
 - (void)startLoadData {
+    [self.emptyView hideEmptyView];
     if ([TTReachability isNetworkConnected]) {
         [_viewModel requestData:YES first:YES];
     } else {
