@@ -200,6 +200,9 @@
     CGFloat deltaValue = (yFixedValueMax - yFixedValueMin) * 3;
     yFixedValueMax += deltaValue;
     yFixedValueMin -= deltaValue;
+    if (yFixedValueMin < 0) {
+        yFixedValueMin = 0;
+    }
 //    chartView.lineChart.yFixedValueMin = 0;
     
     chartView.lineChart.yFixedValueMax = yFixedValueMax;
