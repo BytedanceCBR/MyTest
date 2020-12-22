@@ -100,6 +100,7 @@
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
     _contentLabel.delegate = self;
+    _contentLabel.font = [UIFont themeFontRegular:14];
     [self.contentView addSubview:_contentLabel];
     
     
