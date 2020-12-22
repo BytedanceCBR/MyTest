@@ -298,7 +298,7 @@
     _collectionView.pagingEnabled = YES;
     _collectionView.bounces = YES;
     _collectionView.showsHorizontalScrollIndicator = NO;
-    _collectionView.backgroundColor = [UIColor themeGray7];
+    _collectionView.backgroundColor = [UIColor themeWhite];
     [self.containerView addSubview:_collectionView];
 
     [self.collectionView mas_remakeConstraints:^(MASConstraintMaker *make) {

@@ -189,6 +189,9 @@
             [self.listController scrollToIndex:index];
         }
     } else {
+        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (self.listController.segmentControl.sectionTitles.count - 1)){
+            return;
+        }
         //加载数据
         CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
         [self.listController.segmentControl setScrollValue:value isDirectionLeft:diff < 0];
