@@ -127,6 +127,9 @@
         self.viewController.segmentControl.selectedSegmentIndex = index;
         self.viewController.houseType = [self.viewController.houseTypeArray[index] integerValue];
     } else {
+        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (self.viewController.segmentControl.sectionTitles.count - 1)){
+            return;
+        }
         //移动tab下面光标
         CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
         [self.viewController.segmentControl setScrollValue:value isDirectionLeft:diff < 0];
