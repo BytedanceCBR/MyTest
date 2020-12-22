@@ -14,8 +14,6 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "FHMessageViewController.h"
 #import "FHConversationDataCombiner.h"
-#import "ChatRootViewController.h"
-#import "IMManager.h"
 #import "IMChatStateObserver.h"
 #import "TTURLUtils.h"
 #import <libextobjc/extobjc.h>
@@ -274,23 +272,31 @@
             
         } else {
             IMConversation *conv = item;
-            [self processJumpToConversation:conv];
+            if(conv.type == IMConversationType1to1Chat) {
+                [self processJumpToConversation:conv];
+            } else {
+                [self openConversation:conv];
+            }
         }
     }
 }
 
 - (void)processJumpToConversation:(IMConversation *)conv {
     // TODO: JOKER 判断经纪人是否被关黑
-    BOOL isBlackmail = YES;
-    if(isBlackmail) {
-        [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:@"因平台管控，经纪人无法为您提供服务，可以选择其它经纪人。" leftTitle:@"其它经纪人" leftAction:^{
-            [IMManager jumpToRealtorListPageWithParams:@{}];
-        } rightTitle:@"继续联系" rightAction:^{
+    [conv getTargetUserInfoWithCompletion:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
+        BOOL isPunish = [userInfo.punishStatus boolValue];
+        NSString *tips = userInfo.punishTips;
+        BOOL isBlackmail = (isPunish && tips.length > 0);
+        if(isBlackmail) {
+            [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:tips leftTitle:@"其它经纪人" leftAction:^{
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:userInfo.redirect]];
+            } rightTitle:@"继续联系" rightAction:^{
+                [self openConversation:conv];
+            }];
+        } else {
             [self openConversation:conv];
-        }];
-    } else {
-        [self openConversation:conv];
-    }
+        }
+    }];
 }
 
 - (void)reloadData {

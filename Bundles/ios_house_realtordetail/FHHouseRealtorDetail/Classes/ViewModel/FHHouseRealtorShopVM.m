@@ -77,14 +77,13 @@
         [self updateNavBarWithAlpha:1];
         return;
     }
-    NSMutableDictionary *parmas= [NSMutableDictionary new];
-    [parmas setValue:self.realtorInfo[@"realtor_id"]?:@"" forKey:@"realtor_id"];
+    NSMutableDictionary *params= [NSMutableDictionary new];
+    params[@"realtor_id"] = self.realtorInfo[@"realtor_id"];
     // 详情页数据-Main
-    __weak typeof(self) wSelf = self;
-    [FHMainApi requestRealtorShop:parmas completion:^(FHHouseRealtorShopDetailModel * _Nonnull model, NSError * _Nonnull error) {
+    [FHMainApi requestRealtorShop:params completion:^(FHHouseRealtorShopDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
-                 [self configTableView];
+                [self configTableView];
                 self.data = model.data;
                 [self requestData:YES first:YES];
                 [self loadDataForShop:model];
@@ -95,10 +94,12 @@
                 //                    [wSelf processDetailData:model];
                 
                 // TODO: JOKER 判断经纪人是否被关黑
-                BOOL isBlackmailRealtor = YES;
+                NSString *tips = [self.data.realtor btd_stringValueForKey:@"punish_tips"];
+                BOOL isPunish = [[self.data.realtor btd_numberValueForKey:@"punish_status" default:@(0)] boolValue];
+                BOOL isBlackmailRealtor = isPunish && tips.length > 0;
                 [self.detailController showBottomBar:!isBlackmailRealtor];
-                [self.detailController.blackmailReatorBottomBar show:isBlackmailRealtor WithHint:@"因平台管制，经纪人暂无法为您提供服务，可以选择其他经纪人" btnAction:^{
-                    [IMManager jumpToRealtorListPageWithParams:@{}];
+                [self.detailController.blackmailReatorBottomBar show:isBlackmailRealtor WithHint:tips btnAction:^{
+                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:self.data.redirect]];
                 }];
                 
                 [self.detailController.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {

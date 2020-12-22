@@ -432,7 +432,7 @@
         
         
         // TODO: JOKER 添加关黑tag
-        BOOL isBlackmail = YES;
+        BOOL isBlackmail = conv.isRealtorBlackmailed;
         self.iconCoverView.hidden = !isBlackmail;
         
     } else {

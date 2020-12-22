@@ -73,6 +73,7 @@
             @"chatOpenUrl": @"chat_open_url",
             @"realtorShop": @"realtor_shop",
             @"ugcTabList": @"ugc_tab_list",
+            @"redirect": @"redirect",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
@@ -162,7 +163,8 @@
             @"topNeighborhood": @"top_neighborhood",
             @"chatOpenUrl": @"chat_open_url",
             @"houseImage": @"house_image",
-            @"houseCount": @"house_count"
+            @"houseCount": @"house_count",
+            @"redirect": @"redirect",
     };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

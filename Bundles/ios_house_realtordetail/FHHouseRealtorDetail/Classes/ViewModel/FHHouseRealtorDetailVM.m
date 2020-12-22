@@ -100,23 +100,22 @@
         [self updateNavBarWithAlpha:1];
         return;
     }
-    NSMutableDictionary *parmas= [NSMutableDictionary new];
-    [parmas setValue:realtorId forKey:@"realtor_id"];
+    NSMutableDictionary *params= [NSMutableDictionary new];
+    params[@"realtor_id"] = realtorId;
     // 详情页数据-Main
-    __weak typeof(self) wSelf = self;
-    [FHMainApi requestRealtorHomePage:parmas completion:^(FHHouseRealtorDetailModel * _Nonnull model, NSError * _Nonnull error) {
+    [FHMainApi requestRealtorHomePage:params completion:^(FHHouseRealtorDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
-                wSelf.viewController.emptyView.hidden = YES;
+                self.viewController.emptyView.hidden = YES;
                 //                [wSelf updateUIWithData];
-                [wSelf processDetailData:model];
+                [self processDetailData:model];
             }else {
-                [wSelf addGoDetailLog];
-                [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [self addGoDetailLog];
+                [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             }
         }else {
-            [wSelf addGoDetailLog];
-            [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [self addGoDetailLog];
+            [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
@@ -178,10 +177,12 @@
             return;
         }
         // TODO: JOKER 判断经纪人是否被关黑
-        BOOL isBlackmailRealtor = YES;
+        NSString *tips = [self.data.realtor btd_stringValueForKey:@"punish_tips"];
+        BOOL isPunish = [[self.data.realtor btd_numberValueForKey:@"punish_status" default:@(0)] boolValue];
+        BOOL isBlackmailRealtor = isPunish && tips.length > 0;
         [self.viewController showBottomBar:!isBlackmailRealtor];
-        [self.viewController.blackmailReatorBottomBar show:isBlackmailRealtor WithHint:@"因平台管制，经纪人暂无法为您提供服务，可以选择其他经纪人" btnAction:^{
-            [IMManager jumpToRealtorListPageWithParams:@{}];
+        [self.viewController.blackmailReatorBottomBar show:isBlackmailRealtor WithHint:tips btnAction:^{
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:self.data.redirect]];
         }];
         
         //初始化segment

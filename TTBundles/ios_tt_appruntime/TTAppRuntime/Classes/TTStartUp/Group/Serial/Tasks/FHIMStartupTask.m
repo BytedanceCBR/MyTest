@@ -213,23 +213,14 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                         [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_IMPRID extra:monitorParams];
                     }
                     
-                    // TODO: JOKER 判断经纪人是否被关黑
-                    BOOL isBlackmail = YES;
-                    if(isBlackmail) {
-                        [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:@"因平台管控，经纪人无法为您提供服务，可以选择其它经纪人。" leftTitle:@"其它经纪人" leftAction:^{
-                            [IMManager jumpToRealtorListPageWithParams:@{}];
-                        } rightTitle:@"知道了" rightAction:nil];
-                    }
-                    else {
-                        NSString *phoneUrl = [NSString stringWithFormat:@"tel://%@", phone];
-                        NSURL *url = [NSURL URLWithString:phoneUrl];
-                        if ([[UIApplication sharedApplication]canOpenURL:url]) {
-                            if (@available(iOS 10.0, *)) {
-                                [[UIApplication sharedApplication]openURL:url options:@{} completionHandler:nil];
-                            } else {
-                                // Fallback on earlier versions
-                                [[UIApplication sharedApplication]openURL:url];
-                            }
+                    NSString *phoneUrl = [NSString stringWithFormat:@"tel://%@", phone];
+                    NSURL *url = [NSURL URLWithString:phoneUrl];
+                    if ([[UIApplication sharedApplication]canOpenURL:url]) {
+                        if (@available(iOS 10.0, *)) {
+                            [[UIApplication sharedApplication]openURL:url options:@{} completionHandler:nil];
+                        } else {
+                            // Fallback on earlier versions
+                            [[UIApplication sharedApplication]openURL:url];
                         }
                     }
                 } else {
