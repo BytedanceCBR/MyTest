@@ -771,10 +771,10 @@
         }
     } else if (scrollView == self.homeViewController.scrollView) {
         self.superScrollEnable = NO;
-        CGFloat contentWidth = (KFHScreenWidth * [FHEnvContext sharedInstance].generalBizConfig.configCache.houseTypeList.count) - KFHScreenWidth;
-        if (scrollView.contentOffset.x >= contentWidth) {
-            scrollView.contentOffset = CGPointMake(contentWidth, 0);
-        }
+//        CGFloat contentWidth = (KFHScreenWidth * [FHEnvContext sharedInstance].generalBizConfig.configCache.houseTypeList.count) - KFHScreenWidth;
+//        if (scrollView.contentOffset.x >= contentWidth) {
+//            scrollView.contentOffset = CGPointMake(contentWidth, 0);
+//        }
         
         NSInteger scrollIndex = (NSInteger)((scrollView.contentOffset.x + KFHScreenWidth/2)/KFHScreenWidth);
         if (!self.isSelectIndex) {

@@ -296,7 +296,7 @@
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
-    _collectionView.bounces = NO;
+    _collectionView.bounces = YES;
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor themeGray7];
     [self.containerView addSubview:_collectionView];
