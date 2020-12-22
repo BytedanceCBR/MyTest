@@ -110,7 +110,11 @@
     [view refreshContent:markData];
     //calculate markerview position
     CGFloat padding = 10;
-    if (selectPoint.x + view.width + padding > self.chartView.width) {
+    CGFloat popWidth = view.width;
+    if (popWidth < 100) {
+        popWidth = 100;
+    }
+    if (selectPoint.x + popWidth + padding > self.chartView.width) {
         view.right = selectPoint.x - padding;
     }else{
         view.left = selectPoint.x + padding;

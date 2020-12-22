@@ -12,14 +12,11 @@
 #import "UIButton+TTAdditions.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 
-
 @interface FHVideoAndImageItemCorrectingView ()
 
 @property(nonatomic, strong) NSMutableArray *btnArray;
 //每行显示多少个，自动根据宽度计算
 @property(nonatomic, assign) NSInteger row;
-@property(nonatomic, strong) NSMutableArray *itemBacViewArr;
-@property(nonatomic, strong) NSArray *titleTypeArr;
 @property(nonatomic, strong) UIView *bgView;
 
 @end
@@ -36,13 +33,11 @@
         _itemHeight = 20.0f;
         _itemPadding = 0.0f;
         //有vr时多个视图间距
-        _bgViewPadding = 20.0f;
         _topMargin = 0;
         _leftMargin = 5.0f;
         _bgColor = [[UIColor whiteColor] colorWithAlphaComponent:0.7];
         _textColor = [UIColor themeGray1];
         _selectedBgColor = [UIColor colorWithHexStr:@"#ff9629"];
-        _itemBacViewArr = [[NSMutableArray alloc]init];
         _selectedTextColor = [UIColor whiteColor];
         _font = [UIFont themeFontRegular:12];
     }
@@ -64,14 +59,7 @@
 
 - (void)setTitleArray:(NSArray *)titleArray {
     _titleArray = titleArray;
-    NSMutableArray *otherTypeArr = [_titleArray mutableCopy];
-//    BOOL hasvr = [_titleArray containsObject:@"VR"];
-//    if (hasvr) {
-//        [otherTypeArr removeObject: @"VR"];
-//        _titleTypeArr = [NSArray arrayWithObjects:@[@"VR"],otherTypeArr, nil];
-//    }else {
-    _titleTypeArr =  [NSArray arrayWithObjects:otherTypeArr, nil];
-//    }
+    
     [self calculateRow];
     if(self.row > 0){
         [self initViews];
@@ -88,69 +76,55 @@
         [self.bgView removeFromSuperview];
         self.bgView = nil;
     }
-    
-    for (UIView  *itemBacView in self.itemBacViewArr) {
-        [itemBacView removeFromSuperview];
-    }
-    [self.itemBacViewArr removeAllObjects];
+
     for (UIButton *btn in self.btnArray) {
         [btn removeFromSuperview];
     }
     [self.btnArray removeAllObjects];
     
+    NSArray *titleArray = self.titleArray.copy;
+    
     self.bgView = [[UIView alloc] init];
-    _bgView.layer.cornerRadius = self.itemHeight/2;
-    _bgView.layer.masksToBounds = YES;
-    [self addSubview:_bgView];
+    self.bgView.layer.cornerRadius = self.itemHeight/2;
+    self.bgView.layer.masksToBounds = YES;
+    self.bgView.backgroundColor = self.bgColor;
+    self.bgView.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
+    [self addSubview:self.bgView];
     [self.bgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(self);
-        make.top.mas_equalTo(self);
-        make.width.mas_equalTo(self.itemWidth * self.titleArray.count + (self.titleTypeArr.count-1)* self.bgViewPadding);
+        make.centerX.mas_equalTo(self);
+        make.centerY.mas_equalTo(self);
+        make.width.mas_equalTo(self.itemWidth * titleArray.count);
         make.height.mas_equalTo(self);
     }];
     
-    [_titleTypeArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSArray *itemArr = (NSArray *)obj;
-        UIView *itemBacView  =[[UIView alloc]init];
-        itemBacView.backgroundColor = self.bgColor;
-        itemBacView.layer.cornerRadius = self.itemHeight/2;
-        itemBacView.layer.masksToBounds = YES;
-        [self.bgView addSubview:itemBacView];
-        [self.itemBacViewArr addObject:itemBacView];
-        [itemBacView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.bgView).offset(idx *(self.itemWidth + self.bgViewPadding));
-            make.width.mas_offset(itemArr.count *self.itemWidth);
-            make.top.equalTo(self.bgView);
+    UIView *lastView = self.bgView;
+    for (NSInteger i = 0; i < titleArray.count; i++) {
+        UIButton *button = [self buttonWithTitle:titleArray[i]];
+        CGFloat left = 0;
+        CGFloat right = 0;
+        if (i == 0) {
+            left = -20;
+        }
+        if (i == titleArray.count - 1) {
+            right = -20;
+        }
+        button.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-20, left, -20, right);
+        [self.bgView addSubview:button];
+        [button mas_makeConstraints:^(MASConstraintMaker *make) {
+            if(i%self.row == 0){
+                make.left.equalTo(self.bgView);
+            }else{
+                make.left.mas_equalTo(lastView.mas_right).offset(self.itemPadding);
+            }
+            make.centerY.equalTo(self.bgView);
+            make.width.mas_equalTo(self.itemWidth);
             make.height.mas_equalTo(self.itemHeight);
         }];
-        UIView *lastView = self;
-        for (NSInteger i = 0; i < itemArr.count; i++) {
-            UIButton *button = [self buttonWithTitle:itemArr[i]];
-            CGFloat left = 0;
-            CGFloat right = 0;
-            if (i == 0) {
-                left = -20;
-            }
-            if (i == itemArr.count - 1) {
-                right = -20;
-            }
-            button.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-20, left, -20, right);
-            [itemBacView addSubview:button];
-            [button mas_makeConstraints:^(MASConstraintMaker *make) {
-                if(i%self.row == 0){
-                    make.left.equalTo(itemBacView);
-                }else{
-                    make.left.mas_equalTo(lastView.mas_right).offset(self.itemPadding);
-                }
-                make.top.equalTo(self);
-                make.width.mas_equalTo(self.itemWidth);
-                make.height.mas_equalTo(self.itemHeight);
-            }];
-            [self.btnArray addObject:button];
-            lastView = button;
-        }
-        self.viewHeight = CGRectGetMaxY(lastView.frame);
-    }];
+        [self.btnArray addObject:button];
+        lastView = button;
+    }
+    self.viewHeight = CGRectGetMaxY(lastView.frame);
+    
     [self layoutIfNeeded];
 }
 

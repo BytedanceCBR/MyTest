@@ -50,7 +50,7 @@
     _nameLabel.textColor = [UIColor themeGray1];
     [self addSubview:_nameLabel];
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(_dotIconView.mas_left).mas_offset(10);
+        make.left.mas_equalTo(_dotIconView.mas_right).mas_offset(8);
         make.top.bottom.mas_equalTo(self);
         make.height.mas_equalTo(18);
         make.right.mas_equalTo(self);
