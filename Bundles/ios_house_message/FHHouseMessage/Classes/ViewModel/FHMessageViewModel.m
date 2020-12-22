@@ -304,7 +304,7 @@
     RACTupleUnpack(NSNumber *totalUnmuteUnreadNumber, NSNumber *totalMuteUnreadNumber) = unreadNumberTuple;
     NSInteger chatNumber = totalUnmuteUnreadNumber.unsignedIntegerValue;
     // 更新消息中心的数据源，用于底部未读数展示
-    [[FHEnvContext sharedInstance].messageManager setUnreadChatMsgCount:chatNumber];
+    [[FHEnvContext sharedInstance].messageManager writeUnreadChatMsgCount:chatNumber];
     BOOL hasChatRedPoint = (totalMuteUnreadNumber.unsignedIntegerValue > 0);
     
     // 更新顶部未读数标签
