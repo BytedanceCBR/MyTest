@@ -128,6 +128,12 @@
         self.viewController.houseType = [self.viewController.houseTypeArray[index] integerValue];
     } else {
         if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (self.viewController.segmentControl.sectionTitles.count - 1)){
+            self.viewController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
+            if (scrollView.contentOffset.x < 0) {
+                _oldX = 0;
+            } else {
+                _oldX = [UIScreen mainScreen].bounds.size.width * (self.viewController.segmentControl.sectionTitles.count - 1);
+            }
             return;
         }
         //移动tab下面光标
