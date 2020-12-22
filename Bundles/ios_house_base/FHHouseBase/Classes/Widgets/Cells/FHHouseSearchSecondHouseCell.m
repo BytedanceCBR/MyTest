@@ -299,6 +299,20 @@
         make.left.right.bottom.mas_equalTo(0);
     }];
     
+    [self.bottomView addSubview:self.bottomIconImageView];
+    [self.bottomIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(-4);
+        make.left.mas_equalTo(0);
+        make.height.width.mas_equalTo(20);
+    }];
+    
+    [self.bottomView addSubview:self.bottomRecommendLabel];
+    [self.bottomRecommendLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(20);
+        make.bottom.mas_equalTo(-9);
+        make.height.mas_equalTo(10);
+        make.right.mas_equalTo(0);
+    }];
 }
 
 - (void)resumeVRIcon
@@ -477,7 +491,7 @@
     [attrStr addAttributes:@{NSFontAttributeName:[UIFont themeFontSemibold:16], NSParagraphStyleAttributeName:style} range:[displayTitle  rangeOfString:displayTitle]];
     self.mainTitleLabel.attributedText = attrStr;
     [self.mainTitleView insertSubview:self.mainTitleLabel atIndex:0];
-    [self.mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(0);
         make.height.mas_equalTo(height);
     }];
@@ -517,30 +531,11 @@
                 make.height.mas_equalTo(1);
             }];
         }
-        CGFloat left = 0;
         if ([url length] > 0) {
-            left += 20;
-            if (!_bottomIconImageView) {
-                [self.bottomView addSubview:self.bottomIconImageView];
-                [self.bottomIconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.bottom.mas_equalTo(-4);
-                    make.left.mas_equalTo(0);
-                    make.height.width.mas_equalTo(20);
-                }];
-            }
             [self.bottomIconImageView bd_setImageWithURL:[NSURL URLWithString:url]];
             self.bottomIconImageView.hidden = NO;
         }
         if ([text length] > 0) {
-            if (!_bottomRecommendLabel) {
-                [self.bottomView addSubview:self.bottomRecommendLabel];
-                [self.bottomRecommendLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.left.mas_equalTo(left);
-                    make.bottom.mas_equalTo(-9);
-                    make.height.mas_equalTo(10);
-                    make.right.mas_equalTo(0);
-                }];
-            }
             self.bottomRecommendLabel.text = text;
         }
     } else {
@@ -677,7 +672,7 @@
 - (UILabel *)mainTitleLabel {
     if (!_mainTitleLabel) {
         _mainTitleLabel = [[UILabel alloc] init];
-        _mainTitleLabel.numberOfLines = 0;
+        _mainTitleLabel.numberOfLines = 2;
     }
     return _mainTitleLabel;
 }

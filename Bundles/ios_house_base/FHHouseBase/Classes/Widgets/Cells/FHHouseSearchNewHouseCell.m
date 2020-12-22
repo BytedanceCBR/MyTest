@@ -248,6 +248,7 @@
     self.subTitleLabel.layer.opacity = opacity;
     self.tagLabel.layer.opacity = opacity;
     self.bottomRecommendLabel.layer.opacity = opacity;
+    self.propertyTagLabel.layer.opacity = opacity;
 }
 
 - (void)refreshWithData:(id)data {

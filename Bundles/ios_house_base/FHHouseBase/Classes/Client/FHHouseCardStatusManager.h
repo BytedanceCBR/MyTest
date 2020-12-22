@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "FHHouseType.h"
 
-const float FHHouseCardReadOpacity = 0.6;
+const float FHHouseCardReadOpacity = 0.5;
 
 NS_ASSUME_NONNULL_BEGIN
 
