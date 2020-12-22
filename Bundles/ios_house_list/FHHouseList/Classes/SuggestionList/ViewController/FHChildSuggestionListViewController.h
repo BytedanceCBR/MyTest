@@ -40,7 +40,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)   FHSuggectionTableView       *suggestTableView;
 @property (nonatomic, weak)     FHSuggestionListViewController *fatherVC;
 @property (nonatomic, assign)   BOOL isCanTrack;
+<<<<<<< HEAD
 @property (nonatomic, assign)   BOOL needShowKeyBoardWhenFirstEnter;
+=======
+@property (nonatomic, assign) BOOL historyIsSuccess;
+>>>>>>> f_alpha
 
 - (void)requestDeleteHistory;
 

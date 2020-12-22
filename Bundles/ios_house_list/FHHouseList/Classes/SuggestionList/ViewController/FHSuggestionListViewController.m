@@ -361,7 +361,7 @@
     self.viewModel.currentTabIndex = _segmentControl.selectedSegmentIndex;
     [self.collectionView layoutIfNeeded];
     [self.viewModel updateSubVCTrackStatus];
-    [self.viewModel textFieldTextChange:self.naviBar.searchInput.text];
+    //[self.viewModel textFieldTextChange:self.naviBar.searchInput.text];
 }
 
 -(NSInteger)getSegmentControlIndex

@@ -1255,14 +1255,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     [self.stashModel addUNRemoteNOtification:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
 }
 
-- (BOOL)isColdStart {
-    return !_hadColdStart;
-}
-
-- (void)setColdStart {
-    _hadColdStart = YES;
-}
-
 + (NSInteger)lastSearchSugHouseType {
     id houseType = [FHUtils contentForKey:@"last_search_sug_house_type"];
     if (houseType) {

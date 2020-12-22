@@ -9,12 +9,12 @@
 #import "FHFeedUGCCellModel.h"
 #import "TTAsyncCornerImageView.h"
 #import "TTUGCAsyncLabel.h"
-#import <FHHouseBase/FHRealtorAvatarView.h>
+#import "FHUGCAvatarView.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCCellUserInfoView : UIView
 
-@property(nonatomic ,strong) FHRealtorAvatarView *avatarView;
+@property(nonatomic ,strong) FHUGCAvatarView *avatarView;
 @property(nonatomic ,strong) UIImageView *questionIcon;
 @property(nonatomic ,strong) UILabel *userName;
 @property(nonatomic ,strong) UILabel *userAuthLabel;
@@ -40,6 +40,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setTitleModel:(FHFeedUGCCellModel *)cellModel;
 
 - (void)updateFrameFromNeighborhoodDetail;
+
+- (void)showEssenceIcon;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -30,15 +30,17 @@
 @property(nonatomic , strong) UILabel *tipLabel;
 @property(nonatomic , copy) NSString *originPhoneNumber;
 
+@property (nonatomic, assign) BOOL isSellHouse;
 @end
 
 
 @implementation FHDetailNoticeAlertView
 
-- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle
+- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle isSellHouse:(BOOL)isSellHouse
 {
     self = [self initWithFrame:[UIScreen mainScreen].bounds];
     if (self) {
+        self.isSellHouse = isSellHouse;
         [self setupUI];
         self.titleLabel.text = title;
         self.subtitleLabel.text = subtitle;
@@ -97,7 +99,7 @@
     self.bgView.userInteractionEnabled = YES;
     [self.bgView addGestureRecognizer:tap];
     
-    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+    if ([SSCommonLogic isEnableVerifyFormAssociate] && !self.isSellHouse) {
         UIImageView *bgImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"form_fill_associate_bg"]];
         bgImageView.contentMode = UIViewContentModeTopRight;
         [self.contentView addSubview:bgImageView];

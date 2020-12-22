@@ -68,6 +68,7 @@
         cell.lynxEndLoadBlock = ^(CGFloat cellHeight) {
             model.cellHeight = cellHeight;
         };
+        cell.tracerDic = model.detailTracerDic;
         [cell refreshWithData:cellModel];
         return cell;
     }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){

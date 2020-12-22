@@ -220,9 +220,12 @@
         return;
     }
     _isCanTrack = isCanTrack;
-    if (isCanTrack && self.fatherVC.naviBar.searchInput.text.length == 0) {
-        [self.viewModel reloadHistoryTableView];
+    if (!self.historyIsSuccess) {
+        [self requestData];
     }
+//    if (isCanTrack && self.fatherVC.naviBar.searchInput.text.length == 0) {
+//        [self.viewModel reloadHistoryTableView];
+//    }
 }
 
 - (FHSuggectionTableView *)createTableView {
@@ -314,6 +317,7 @@
             self.isCanTrack = isCanTrack;
         }
         [self.viewModel clearSugTableView];
+        self.lastSearchWord = nil;
     }
     if (isCanTrack) {
         _textFieldText = text;
@@ -439,11 +443,12 @@
     BOOL hasText = text.length > 0;
     
     if (hasText) {
-         [self requestSuggestion:text];
         _suggestTableView.hidden = !hasText;
         _historyTableView.hidden = hasText;
+         [self requestSuggestion:text];
     }
     // 历史记录 + 猜你想搜
+    self.historyIsSuccess = YES;
     [self.viewModel clearHistoryTableView];
     self.viewModel.loadRequestTimes = 0;
     [self requestHistoryFromRemote];
@@ -499,9 +504,12 @@
         if (![self shouldReloadSuggestionWord:text]) {
             return;
         }
-        self.isLoadingData = YES;
         NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
         if (cityId) {
+            self.suggestTableView.hidden = YES;
+            self.emptyView.hidden = YES;
+            [self startLoading];
+            self.isLoadingData = YES;
             [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
         }
     }
