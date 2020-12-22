@@ -1093,8 +1093,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
         if (settings && [settings isKindOfClass:[NSDictionary class]]) {
             isHouseListComponentEnable = [settings btd_boolValueForKey:@"f_houselist_component_enabled"];
         }
-        
-        [FHUserTracker writeEvent:@"f_houselist_component_enabled" params:@{@"open":@(isHouseListComponentEnable)}];
     });
     return isHouseListComponentEnable;
 }

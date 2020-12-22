@@ -154,6 +154,8 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.ttNeedIgnoreZoomAnimation = YES;
     
+    [FHUserTracker writeEvent:@"f_houselist_component_enabled" params:@{@"open":@([FHEnvContext isHouseListComponentEnable])}];
+    
     [self initNavbar];
     _topContainerView = [[UIView alloc]init];
     _topContainerView.clipsToBounds = YES;

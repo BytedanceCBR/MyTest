@@ -27,7 +27,6 @@
     if (self) {
         [self setDelegate:self];
         [self setDataSource:self];
-        [FHUserTracker writeEvent:@"f_houselist_use_list_component" params:nil];
     }
     return self;
 }
