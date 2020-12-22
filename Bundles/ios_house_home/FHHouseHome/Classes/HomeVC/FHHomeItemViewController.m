@@ -42,6 +42,7 @@
 #import "NSArray+BTDAdditions.h"
 #import "FHHomeRentCell.h"
 #import "FHHomeRenderFlow.h"
+#import "FHHouseCardStatusManager.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -1162,6 +1163,10 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 {
     if (!self.showPlaceHolder && indexPath.section == 1) {
         [self jumpToDetailPage:indexPath];
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)]) {
+            [((id<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData: self.houseDataItemsModel[indexPath.row]];
+        }
         if(self.houseDataItemsModel.count > indexPath.row){
             FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
             if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse && [theModel.cardType integerValue] != kFHHomeAgentCardType) {
@@ -1189,6 +1194,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if ([theModel.cardType integerValue] == kFHHomeAgentCardType) {
             return;
         }
+        [[FHHouseCardStatusManager sharedInstance] readHouseId:theModel.id withHouseType:[theModel.houseType integerValue]];
         
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = [self pageTypeString];

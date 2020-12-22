@@ -231,7 +231,27 @@
     }];
 }
 
+- (void)refreshOpacityWithData:(id)data {
+    CGFloat opacity = 1;
+    if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+        if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
+            opacity = FHHouseCardReadOpacity;
+        }
+    } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
+        if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
+            opacity = FHHouseCardReadOpacity;
+        }
+    }
+    self.mainTitleLabel.layer.opacity = opacity;
+    self.subTitleLabel.layer.opacity = opacity;
+    self.tagLabel.layer.opacity = opacity;
+    self.bottomRecommendLabel.layer.opacity = opacity;
+}
+
 - (void)refreshWithData:(id)data {
+    [self refreshOpacityWithData:data];
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
         FHImageModel *imageModel = model.images.firstObject;

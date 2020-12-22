@@ -71,7 +71,7 @@
     }
     FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
     CGFloat opacity = 1;
-    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:FHHouseTypeRentHouse]) {
+    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
         opacity = FHHouseCardReadOpacity;
     }
     self.mainTitleLabel.layer.opacity = opacity;
@@ -84,6 +84,7 @@
     if (![data isKindOfClass:[FHSearchHouseItemModel class]]) {
         return;
     }
+    [self refreshOpacityWithData:data];
     FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
     NSAttributedString *attributeString = nil;
     if (model.reasonTags.count > 0) {

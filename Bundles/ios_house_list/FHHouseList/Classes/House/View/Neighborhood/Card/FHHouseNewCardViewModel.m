@@ -99,7 +99,7 @@
 
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
-        [[FHHouseCardStatusManager sharedInstance] readHouseId:self.houseId withHouseType:FHHouseTypeSecondHandHouse];
+        [[FHHouseCardStatusManager sharedInstance] readHouseId:self.houseId withHouseType:FHHouseTypeNewHouse];
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
         NSString *urlStr = nil;
         NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];

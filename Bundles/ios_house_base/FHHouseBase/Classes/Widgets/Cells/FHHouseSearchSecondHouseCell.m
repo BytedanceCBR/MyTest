@@ -39,6 +39,7 @@
 @property (nonatomic, strong) UIView *rightInfoView;
 
 @property (nonatomic, strong) UIView *mainTitleView;
+@property (nonatomic, strong) UILabel *mainTitleLabel;
 @property (nonatomic, strong) UILabel *subTitleLabel;
 @property (nonatomic, strong) UIView *tagContainerView;
 @property (nonatomic, strong) YYLabel *tagLabel;
@@ -307,8 +308,28 @@
     }
 }
 
+- (void)refreshOpacityWithData:(id)data {
+    CGFloat opacity = 1;
+    if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+        if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
+            opacity = FHHouseCardReadOpacity;
+        }
+    } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
+        if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
+            opacity = FHHouseCardReadOpacity;
+        }
+    }
+    self.mainTitleLabel.layer.opacity = opacity;
+    self.subTitleLabel.layer.opacity = opacity;
+    self.tagLabel.layer.opacity = opacity;
+    self.bottomRecommendLabel.layer.opacity = opacity;
+}
+
 - (void)refreshWithData:(id)data {
     self.model = data;
+    [self refreshOpacityWithData:data];
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
         [self updateMainTitleView:model];
@@ -374,7 +395,6 @@
         make.height.mas_equalTo(height);
     }];
     CGFloat left = 0;
-    UILabel *mainTitleLabel = [[UILabel alloc] init];
     NSArray *titleTags = [[NSArray alloc] init];
     NSString *displayTitle = @"";
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
@@ -455,10 +475,9 @@
     style.firstLineHeadIndent = left;
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:displayTitle];
     [attrStr addAttributes:@{NSFontAttributeName:[UIFont themeFontSemibold:16], NSParagraphStyleAttributeName:style} range:[displayTitle  rangeOfString:displayTitle]];
-    mainTitleLabel.attributedText = attrStr;
-    mainTitleLabel.numberOfLines = 0;
-    [self.mainTitleView insertSubview:mainTitleLabel atIndex:0];
-    [mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.mainTitleLabel.attributedText = attrStr;
+    [self.mainTitleView insertSubview:self.mainTitleLabel atIndex:0];
+    [self.mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.right.mas_equalTo(0);
         make.height.mas_equalTo(height);
     }];
@@ -655,6 +674,14 @@
     return _closeBtn;
 }
 
+- (UILabel *)mainTitleLabel {
+    if (!_mainTitleLabel) {
+        _mainTitleLabel = [[UILabel alloc] init];
+        _mainTitleLabel.numberOfLines = 0;
+    }
+    return _mainTitleLabel;
+}
+    
 - (void)dislike {
     if(self.delegate && [self.delegate respondsToSelector:@selector(canDislikeClick)]){
         BOOL canDislike = [self.delegate canDislikeClick];

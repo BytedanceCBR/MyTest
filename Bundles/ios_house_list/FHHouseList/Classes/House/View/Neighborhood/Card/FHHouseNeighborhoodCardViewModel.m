@@ -89,7 +89,7 @@
 }
 
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath {
-    [[FHHouseCardStatusManager sharedInstance] readHouseId:self.houseId withHouseType:FHHouseTypeSecondHandHouse];
+    [[FHHouseCardStatusManager sharedInstance] readHouseId:self.houseId withHouseType:FHHouseTypeNeighborhood];
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     traceParam[UT_ENTER_FROM] = self.fh_trackModel.pageType ? : @"be_null";
     traceParam[UT_ELEMENT_FROM] = @"be_null";

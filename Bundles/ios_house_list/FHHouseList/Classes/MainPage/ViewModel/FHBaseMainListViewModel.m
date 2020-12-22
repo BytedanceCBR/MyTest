@@ -88,6 +88,7 @@
 #import "FHHouseCardUtils.h"
 #import "FHHouseCardCellViewModelProtocol.h"
 #import "FHSuggestionDefines.h"
+#import "FHHouseCardStatusManager.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -1956,7 +1957,14 @@ extern NSString *const INSTANT_DATA_KEY;
     if([cellModel isKindOfClass:[FHHouseReserveAdviserModel class]] || [cellModel isKindOfClass:[FHHouseNeighborAgencyModel class]]){
         return;
     }
-    
+    if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
+        [[FHHouseCardStatusManager sharedInstance] readHouseId:model.id withHouseType:[model.houseType integerValue]];
+    }
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)]) {
+        [((id<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData:cellModel];
+    }
     [self showHouseDetail:cellModel atIndexPath:indexPath];
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;

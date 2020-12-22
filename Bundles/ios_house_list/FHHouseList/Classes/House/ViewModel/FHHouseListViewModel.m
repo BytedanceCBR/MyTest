@@ -2071,7 +2071,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [[FHHouseCardStatusManager sharedInstance] readHouseId:model.id withHouseType:[model.houseType integerValue]];
     }
     if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)]) {
-        [((<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData:cellModel];
+        [((id<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData:cellModel];
     }
     if([cellModel isKindOfClass:[FHHouseReserveAdviserModel class]] || [cellModel isKindOfClass:[FHHouseNeighborAgencyModel class]]){
         return;
