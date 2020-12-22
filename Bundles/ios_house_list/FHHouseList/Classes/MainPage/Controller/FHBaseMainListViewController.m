@@ -23,6 +23,7 @@
 #import "FHHouseListErrorView.h"
 #import "FHEnvContext.h"
 #import "FHHouseTableView.h"
+#import "FHHouseCardUtils.h"
 
 #define TOP_HOR_PADDING 3
 
@@ -154,7 +155,7 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.ttNeedIgnoreZoomAnimation = YES;
     
-    [FHUserTracker writeEvent:@"f_houselist_component_enabled" params:@{@"open":@([FHEnvContext isHouseListComponentEnable])}];
+    [FHHouseCardUtils trackUseListComponentIfNeed];
     
     [self initNavbar];
     _topContainerView = [[UIView alloc]init];
