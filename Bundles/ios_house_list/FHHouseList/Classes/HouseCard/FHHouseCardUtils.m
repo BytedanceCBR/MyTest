@@ -203,3 +203,34 @@
 }
 
 @end
+
+@implementation FHHouseCardUtils(Detail)
+
++ (id)getDetailEntityFromModel:(id)model {
+    if ([model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)model;
+        switch ([itemModel.houseType integerValue]) {//有些接口数据没有返回cardType, 这里用houseType保险点
+            case FHSearchCardTypeNeighborhood: {
+                if (itemModel.cellStyles == 10) {
+                    return [[FHHouseNeighborhoodCardViewModel alloc] initWithModel:itemModel];
+                }
+                break;
+            }
+            case FHSearchCardTypeSecondHouse:
+                return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
+            case FHSearchCardTypeNewHouse:
+                return [[FHHouseNewCardViewModel alloc] initWithModel:itemModel];
+            default:
+                break;
+        }
+    } else if ([model isKindOfClass:[FHHouseListBaseItemModel class]]) {
+        FHHouseListBaseItemModel *itemModel = (FHHouseListBaseItemModel *)model;
+        return [[FHHouseSecondCardViewModel alloc] initWithModel:itemModel];
+    } else if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+        return [[FHHouseSecondCardViewModel alloc] initWithModel:model];
+    }
+    
+    return nil;
+}
+
+@end

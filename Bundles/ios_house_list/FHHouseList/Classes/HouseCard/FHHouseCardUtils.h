@@ -28,4 +28,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@interface FHHouseCardUtils(Detail)
+
++ (id)getDetailEntityFromModel:(id)model;
+
+@end
+
 NS_ASSUME_NONNULL_END
