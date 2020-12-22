@@ -778,9 +778,9 @@
         cellModel.imageList = model.rawData.firstFrameImageList;
         cellModel.largeImageList = model.rawData.detailCoverImageModel;
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:3];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:3 font:[UIFont themeFontRegular:14]];
         }else {
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         }
     } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideoList){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeSmallVideoList;
