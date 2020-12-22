@@ -79,8 +79,7 @@
     __weak typeof(self) wself = self;
     [self getNewNumberWithCompletion:^(NSInteger number,id obj ,NSError * _Nonnull error) {
         if(!error){
-            wself.unreadSystemMsgCount = number;
-            [self refreshBadgeNumber];
+            [wself writeUnreadSystemMsgCount:number];
         }
     }];
 }
@@ -168,11 +167,7 @@
 }
 
 -(void)reduceSystemMessageTabBarBadgeNumber:(NSInteger)reduce {
-    self.unreadSystemMsgCount = self.unreadSystemMsgCount - reduce;
-    if (self.unreadSystemMsgCount < 0) {
-        self.unreadSystemMsgCount = 0;
-    }
-    [self refreshBadgeNumber];
+    [self writeUnreadSystemMsgCount:MAX(0, self.unreadSystemMsgCount - reduce)];
 }
 
 @end
