@@ -11,6 +11,7 @@
 #import "FHClientModel.h"
 #import "FHSearchConfigModel.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import "FHMessageManager.h"
 
 //字符串是否为空
 #define kIsNSString(str) ([str isKindOfClass:[NSString class]])
@@ -46,7 +47,6 @@ static NSString *const kFHSwitchGetLightFinishedNotification = @"k_fh_get_light_
 
 static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 
-@class FHMessageManager;
 @class TTReachability;
 @class UNUserNotificationCenter;
 @class UNNotificationResponse;
@@ -74,8 +74,6 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 @property(nonatomic, assign) BOOL isShowingSpringHang;
 //正在显示的画运营位ID
 @property(nonatomic, copy) NSString *currentShowHangId;
-//是否冷启动，拉config时传给服务端
-@property (nonatomic, assign) BOOL hadColdStart;
 
 + (instancetype)sharedInstance;
 /*
@@ -338,9 +336,6 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 
 //获取ugc用户v图标
 + (NSArray *)getUGCUserVWhiteList;
-- (BOOL)isColdStart;
-
-- (void)setColdStart;
 
 @end
 
