@@ -22,6 +22,7 @@
 #import "NSDictionary+BTDAdditions.h"
 #import "FHSuggestionListViewController+FHTracker.h"
 #import "FHSuggestionDefines.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHSuggestionListViewController(FHDragBack)
 
@@ -187,7 +188,7 @@
     self.topView = [[UIView alloc] init];
     self.topView.backgroundColor = [UIColor themeGray8];
     [self.view addSubview:_topView];
-    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    BOOL isIphoneX = [UIDevice btd_isIPhoneXSeries];
     CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20) + 54;
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(0);
@@ -199,7 +200,7 @@
     [self.naviBar setSearchPlaceHolderText:@"二手房/租房/小区"];
     [self.topView addSubview:_naviBar];
     [self.naviBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(_segmentControl.mas_bottom).offset(6);
+        make.top.mas_equalTo(self.segmentControl.mas_bottom).offset(6);
         make.left.right.mas_equalTo(0);
         make.height.mas_equalTo(54);
     }];
@@ -212,7 +213,7 @@
     [self.view addSubview:_containerView];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(0);
-        make.top.mas_equalTo(_topView.mas_bottom);
+        make.top.mas_equalTo(self.topView.mas_bottom);
     }];
     
     //1.初始化layout
@@ -279,7 +280,7 @@
     NSInteger count = _segmentControl.sectionTitles.count;
     float tabMargin = ([UIScreen mainScreen].bounds.size.width - (count - 1) * 32 - count * 36 - 18) / 2;
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_topView);
+        make.centerX.equalTo(self.topView);
         make.height.mas_equalTo(44);
         make.bottom.mas_equalTo(-60);
         make.left.mas_equalTo(tabMargin);
@@ -309,6 +310,7 @@
     WeakSelf;
     self.segmentControl.indexChangeBlock = ^(NSInteger index) {
         StrongSelf;
+        [self.view endEditing:YES];
         [self scrollToIndex:index];
     };
 }
@@ -372,8 +374,8 @@
     return 0;
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [self.view endEditing:YES];
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self.view endEditing:YES];
 }
 
 - (NSArray *)houseTypeSectionByConfig:(FHConfigDataModel *)config {
