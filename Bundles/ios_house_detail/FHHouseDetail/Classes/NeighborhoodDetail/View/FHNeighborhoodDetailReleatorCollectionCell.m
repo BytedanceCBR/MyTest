@@ -6,13 +6,13 @@
 //
 
 #import "FHNeighborhoodDetailReleatorCollectionCell.h"
-#import <FHHouseBase/FHRealtorAvatarView.h>
+#import <FHHouseBase/FHHouseRealtorAvatarView.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "FHDetailAgentItemView.h"
 #import <BDWebImage/BDWebImage.h>
 
 @interface FHNeighborhoodDetailReleatorCollectionCell ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
-@property (nonatomic, strong) FHRealtorAvatarView *avatorView;
+@property (nonatomic, strong) FHHouseRealtorAvatarView *avatorView;
 
 @property (nonatomic, strong) UIButton *callBtn;
 @property (nonatomic, strong) UIButton *imBtn;
@@ -46,7 +46,7 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.avatorView = [[FHRealtorAvatarView alloc] init];
+        self.avatorView = [[FHHouseRealtorAvatarView alloc] init];
         self.avatorView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
         self.avatorView.avatarImageView.layer.borderWidth = [UIDevice btd_onePixel];
         [self.contentView addSubview:self.avatorView];
@@ -159,7 +159,7 @@
         [self.tagsView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.nameLabel.mas_left);
             make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(28);
-            make.right.mas_lessThanOrEqualTo(-10);
+            make.right.mas_equalTo(-10);
             make.height.mas_equalTo(18);
         }];
        
@@ -192,6 +192,7 @@
     
     self.nameLabel.text = model.realtorName;
     self.agencyLabel.text = model.agencyName;
+    self.agencyBac.hidden = !model.agencyName.length;
     [self.avatorView updateAvatarWithModel:model];
     
     if (model.realtorScoreDisplay.length && model.realtorTags.count) {
@@ -205,7 +206,7 @@
         [self.tagsView mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.nameLabel.mas_left);
             make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(28);
-            make.right.mas_lessThanOrEqualTo(-10);
+            make.right.mas_equalTo(-10);
             make.height.mas_equalTo(18);
         }];
 
@@ -221,7 +222,7 @@
             [self.tagsView mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(self.nameLabel.mas_left);
                 make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(8);
-                make.right.mas_lessThanOrEqualTo(-10);
+                make.right.mas_equalTo(-10);
                 make.height.mas_equalTo(18);
             }];
         }
@@ -258,7 +259,6 @@
     }
     
     self.licenseButton.hidden = YES;
-    self.agencyBac.hidden = NO;
     /// 北京商业化开城需求新增逻辑
     if (model.certification.openUrl.length) {
         self.licenseButton.hidden = NO;
@@ -335,10 +335,6 @@
 }
 
 #pragma mark - UICollectionViewDataSource
-
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    return 1;
-}
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     FHDetailContactModel *model = (FHDetailContactModel *)self.currentData;

@@ -24,6 +24,7 @@
 #import "NSDictionary+BTDAdditions.h"
 #import "FHHomeRenderFlow.h"
 #import "FHUtils.h"
+#import "FHFirstPageManager.h"
 
 #define GET @"GET"
 #define POST @"POST"
@@ -67,9 +68,10 @@
     if ([gCityName isKindOfClass:[NSString class]]){
         requestParam[@"city_name"] = gCityName;
     }
-    if ([[FHEnvContext sharedInstance] isColdStart] && [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue]) {
+    //特殊场景用该冷启方法，不可通用
+    if ([[FHFirstPageManager sharedInstance] isColdStart] && [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue]) {
         [requestParam setValue:@(1) forKey:@"app_cold_start"];
-        [[FHEnvContext sharedInstance] setColdStart];
+        [[FHFirstPageManager sharedInstance] setColdStart];
     } else {
         [requestParam setValue:@(0) forKey:@"app_cold_start"];
     }

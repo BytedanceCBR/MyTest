@@ -336,7 +336,7 @@
     [infoDict setValue:tracer forKey:@"tracer"];
     
     TTRouteUserInfo *info = [[TTRouteUserInfo alloc] initWithInfo:infoDict];
-    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://fh_map_detail"] userInfo:info];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://map_detail"] userInfo:info];
 }
 
 - (void)baiduPanoButtonAction {

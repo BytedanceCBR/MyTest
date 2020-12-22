@@ -180,7 +180,7 @@
     
     self.headerView.top = cellModel.isInRealtorEvaluationList?18:topMargin;
     self.headerView.left = 0;
-    self.headerView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.headerView.width = [UIScreen mainScreen].bounds.size.width - 15 * 2;
     self.headerView.height = userInfoViewHeight;
     
     self.contentLabel.top = self.userInfoView.bottom + 7;
