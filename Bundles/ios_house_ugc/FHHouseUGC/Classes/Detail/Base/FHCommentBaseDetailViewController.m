@@ -408,6 +408,12 @@
     return CGRectMake(0, 0, [TTUIResponderHelper splitViewFrameForView:self.view].size.width, visableHeight);
 }
 
+- (void)writeButtonClickLog {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.tracerDict];
+    dict[@"click_position"] = @"detail_comment";
+    TRACK_EVENT(@"click_comment", dict);
+}
+
 #pragma mark - Toolbar actions
 
 - (void)toolBarButtonClicked:(id)sender
@@ -431,6 +437,7 @@
         }
         [self clickCommentFieldTracer];
         [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
+        [self writeButtonClickLog];
     }
     else if (sender == _toolbarView.digButton) {
         // 点赞
