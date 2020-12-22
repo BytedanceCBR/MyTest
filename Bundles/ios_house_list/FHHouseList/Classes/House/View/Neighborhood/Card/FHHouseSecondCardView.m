@@ -161,11 +161,12 @@
     if (![viewModel isKindOfClass:[FHHouseSecondCardViewModel class]]) {
         return;
     }
-    CGFloat opacity = ((FHHouseSecondCardViewModel *)viewModel).opacity;
+    FHHouseSecondCardViewModel *secondViewModel = (FHHouseSecondCardViewModel *)viewModel;
+    CGFloat opacity = secondViewModel.opacity;
     self.subTitleLabel.layer.opacity = opacity;
     [self.titleAndTagView refreshOpacity:opacity];
-    self.tagLabel.layer.opacity = opacity;
     [self.recommendView refreshOpacity:opacity];
+    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:secondViewModel.tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:self.frame.size.width - 90 - self.leftMargin - self.rightMargin - 8 withOpacity:secondViewModel.opacity];
 }
 
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
@@ -178,7 +179,7 @@
         make.height.mas_equalTo(titleHeight);
     }];
     self.subTitleLabel.text = secondViewModel.subtitle;
-    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:secondViewModel.tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:self.frame.size.width - 90 - self.leftMargin - self.rightMargin - 8];
+    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:secondViewModel.tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:self.frame.size.width - 90 - self.leftMargin - self.rightMargin - 8 withOpacity:secondViewModel.opacity];
     self.priceLabel.text = secondViewModel.price;
     CGFloat width = [self.priceLabel btd_widthWithHeight:22];
     [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {

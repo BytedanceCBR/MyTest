@@ -162,10 +162,11 @@
     if (![viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
         return;
     }
-    CGFloat opacity = ((FHHouseNewCardViewModel *)viewModel).opacity;
+    FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;
+    CGFloat opacity = newViewModel.opacity;
     self.subTitleLabel.layer.opacity = opacity;
     self.mainTitleLabel.layer.opacity = opacity;
-    self.tagLabel.layer.opacity = opacity;
+    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:newViewModel.tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152 withOpacity:opacity];
     [self.recommendView refreshOpacity:opacity];
     self.propertyTagLabel.layer.opacity = opacity;
 }

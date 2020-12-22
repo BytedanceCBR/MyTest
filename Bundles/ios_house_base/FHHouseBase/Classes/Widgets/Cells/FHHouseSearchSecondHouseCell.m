@@ -324,26 +324,28 @@
 
 - (void)refreshOpacityWithData:(id)data {
     CGFloat opacity = 1;
+    NSAttributedString *attributeString;
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
         if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
             opacity = FHHouseCardReadOpacity;
         }
+        attributeString = [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152 withOpacity:opacity];
     } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
         FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
         if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
             opacity = FHHouseCardReadOpacity;
         }
+        attributeString = [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152 withOpacity:opacity];
     }
     self.mainTitleLabel.layer.opacity = opacity;
     self.subTitleLabel.layer.opacity = opacity;
-    self.tagLabel.layer.opacity = opacity;
+    self.tagLabel.attributedText = attributeString;
     self.bottomRecommendLabel.layer.opacity = opacity;
 }
 
 - (void)refreshWithData:(id)data {
     self.model = data;
-    [self refreshOpacityWithData:data];
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
         [self updateMainTitleView:model];
@@ -373,6 +375,7 @@
             self.closeBtn.hidden = YES;
         }
     }
+    [self refreshOpacityWithData:data];
 }
 
 - (void)updateVrInfo:(BOOL)hasVr {
@@ -498,7 +501,7 @@
 }
 
 - (void)updateTagContainerView:(NSArray<FHHouseTagsModel *> *)tagList {
-    NSAttributedString *attributeString =  [FHSingleImageInfoCellModel tagsStringWithTagList:tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152];
+    NSAttributedString *attributeString = [FHSingleImageInfoCellModel tagsStringWithTagList:tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152];
     self.tagLabel.attributedText = attributeString;
 }
 
