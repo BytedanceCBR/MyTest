@@ -82,7 +82,6 @@
 }
 
 - (void)initView {
-    self.ttDragBackLeftEdge = dragBackEdge;
     [self initScrollView];
 
     self.profileInfoView = [[FHPersonalHomePageProfileInfoView alloc] initWithFrame:CGRectZero];

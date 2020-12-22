@@ -119,9 +119,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         self.photoViewPools = [[NSMutableSet alloc] initWithCapacity:5];
         self.videoViewPools = [[NSMutableSet alloc] initWithCapacity:3];
         self.vrViewPools = [[NSMutableSet alloc] initWithCapacity:3];
-        
-        self.ttDisableDragBack = YES;
-        
+                
         _isRotating = NO;
         
         _whiteMaskViewEnable = YES;
