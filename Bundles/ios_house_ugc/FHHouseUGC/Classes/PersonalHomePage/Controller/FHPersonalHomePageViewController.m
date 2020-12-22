@@ -36,10 +36,15 @@
 @implementation FHPersonalHomePageView
 
 -(UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    if(point.x <= dragBackEdge) {
-        return self;
+    UIView *view = [super hitTest:point withEvent:event];
+    if([view isKindOfClass:[FHHotAreaButton class]]) {
+        return view;
     } else {
-        return [super hitTest:point withEvent:event];
+        if(point.x <= dragBackEdge) {
+            return self;
+        } else {
+            return view;
+        }
     }
 }
 
@@ -121,7 +126,6 @@
     self.customNavBarView.title.alpha = 0;
     self.customNavBarView.bgView.alpha = 0;
     self.customNavBarView.seperatorLine.alpha = 0;
-    self.customNavBarView.leftBtn.hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [self.view addSubview:self.customNavBarView];
     [self.customNavBarView mas_makeConstraints:^(MASConstraintMaker *maker) {
         if (@available(iOS 13.0 , *)) {

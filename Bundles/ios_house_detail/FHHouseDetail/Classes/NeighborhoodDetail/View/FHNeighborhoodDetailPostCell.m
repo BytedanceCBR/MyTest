@@ -153,6 +153,7 @@
     [self.userInfoView refreshWithData:self.cellModel];
     [self.userInfoView updateFrameFromNeighborhoodDetail];
     self.userInfoView.moreBtn.hidden = YES;
+    [self.userInfoView showEssenceIcon];
     
     // 文本内容标签
     self.contentLabel.frame = CGRectMake(leftPadding, self.userInfoView.bottom + elementMargin, self.contentContainer.width - leftPadding - rightPadding, 0);

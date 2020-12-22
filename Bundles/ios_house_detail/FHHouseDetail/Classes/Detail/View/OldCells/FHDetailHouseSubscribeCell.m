@@ -48,7 +48,8 @@
     }
     self.currentData = data;
     FHDetailHouseSubscribeModel *model = (FHDetailHouseSubscribeModel *)data;
-    model.cell = self;
+    self.subscribeBlock = model.subscribeBlock;
+    self.legalAnnouncementClickBlock = model.legalAnnouncementClickBlock;
 }
 
 

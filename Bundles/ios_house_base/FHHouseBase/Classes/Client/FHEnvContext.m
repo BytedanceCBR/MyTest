@@ -1259,14 +1259,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     [self.stashModel addUNRemoteNOtification:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
 }
 
-- (BOOL)isColdStart {
-    return !_hadColdStart;
-}
-
-- (void)setColdStart {
-    _hadColdStart = YES;
-}
-
 @end
 
 // 升级TTRoute后需要验当前场景

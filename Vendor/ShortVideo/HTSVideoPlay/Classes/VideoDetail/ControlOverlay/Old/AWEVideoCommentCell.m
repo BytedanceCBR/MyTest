@@ -120,7 +120,7 @@
         self.commentLabel.textColor = [UIColor tt_themedColorForKey:kColorText1];
         [self addSubview:self.commentLabel];
         [self.commentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.userLabel.mas_bottom).offset(10);
+            make.top.equalTo(self.userLabel.mas_bottom).offset(4);
             make.left.equalTo(@60);
             make.right.equalTo(self.mas_right).offset(-15);
         }];

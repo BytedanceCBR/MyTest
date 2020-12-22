@@ -16,7 +16,7 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import "FHUIAdaptation.h"
 #import "FHUtils.h"
-#import <FHHouseBase/FHRealtorAvatarView.h>
+#import <FHHouseBase/FHHouseRealtorAvatarView.h>
 #import "UIButton+BDWebImage.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 
@@ -27,7 +27,7 @@ CGFloat const FHBottomBarLeftViewNameLabelLeftMargin = 8;
 @interface FHOldDetailBottomBarView ()
 
 @property(nonatomic , strong) UIControl *leftView;
-@property(nonatomic , strong) FHRealtorAvatarView *avatarView;
+@property(nonatomic , strong) FHHouseRealtorAvatarView *avatarView;
 //@property(nonatomic , strong) UIImageView *identifyView;
 @property(nonatomic , strong) UILabel *nameLabel;
 @property(nonatomic , strong) UILabel *agencyLabel;
@@ -324,10 +324,10 @@ CGFloat const FHBottomBarLeftViewNameLabelLeftMargin = 8;
     return _leftView;
 }
 
-- (FHRealtorAvatarView *)avatarView
+- (FHHouseRealtorAvatarView *)avatarView
 {
     if (!_avatarView) {
-        _avatarView = [[FHRealtorAvatarView alloc]init];
+        _avatarView = [[FHHouseRealtorAvatarView alloc]init];
     }
     return _avatarView;
 }
