@@ -16,6 +16,7 @@
 #import "FHUGCCellHelper.h"
 #import "UIViewAdditions.h"
 #import "UIImageView+fhUgcImage.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define itemPadding 4
 #define kMaxCount 9
@@ -57,7 +58,7 @@
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-        imageView.layer.borderWidth = 0.5;
+        imageView.layer.borderWidth = [UIDevice btd_onePixel];
         imageView.layer.masksToBounds = YES;
         imageView.layer.cornerRadius = 4;
         imageView.hidden = YES;
