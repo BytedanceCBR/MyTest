@@ -263,19 +263,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:subscribeModel];
         
         __weak typeof(self) wSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ((FHDetailHouseSubscribeCell *)subscribeModel.cell) {
-                ((FHDetailHouseSubscribeCell *)subscribeModel.cell).subscribeBlock = ^(NSString * _Nonnull phoneNum) {
-                    [wSelf subscribeFormRequest:phoneNum subscribeModel:subscribeModel];
-                };
-                ((FHDetailHouseSubscribeCell *)subscribeModel.cell).legalAnnouncementClickBlock = ^() {
-                    NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
-                    NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-                    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
-                    [[TTRoute sharedRoute]openURLByPushViewController:url];
-                };
-            }
-        });
+        __weak FHDetailHouseSubscribeModel *weakSubscribeModel = subscribeModel;
+        subscribeModel.subscribeBlock = ^(NSString * _Nonnull phoneNum) {
+            [wSelf subscribeFormRequest:phoneNum subscribeModel:weakSubscribeModel];
+        };
+        subscribeModel.legalAnnouncementClickBlock = ^() {
+            NSString *privateUrlStr = [NSString stringWithFormat:@"%@/f100/client/user_privacy&title=个人信息保护声明&hide_more=1",[FHURLSettings baseURL]];
+            NSString *urlStr = [privateUrlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"fschema://webview?url=%@",urlStr]];
+            [[TTRoute sharedRoute]openURLByPushViewController:url];
+        };
     }
     // 房源概况
     if (model.data.houseOverview.list.count > 0) {
@@ -480,7 +477,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     NSString *houseId = self.houseId;
 //    NSString *from = @"app_renthouse_subscription";\\
     
-    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil extraInfo:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {
+    [FHMainApi requestCallReportByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil reportAssociate:subscribeModel.associateInfo.reportFormInfo agencyList:nil extraInfo:nil completion:^(FHDetailFillFormResponseModel * _Nullable model, NSError * _Nullable error) {
 
 
 //    [FHMainApi requestSendPhoneNumbserByHouseId:houseId phone:phoneNum from:nil cluePage:nil clueEndpoint:nil targetType:nil agencyList:nil completion:^(FHDetailResponseModel * _Nullable model, NSError * _Nullable error) {

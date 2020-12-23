@@ -160,7 +160,7 @@ extern NSString *const kFHToastCountKey;
     __weak typeof(self) wself = self;
     //图表数据
     [self.viewController startLoading];
-    [FHHouseDetailAPI requestNeighborhoodDetail:self.viewController.infoModel.neighborhoodId ridcode:nil realtorId:nil logPB:nil query:nil extraInfo:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNeighborhoodDetail:self.viewController.infoModel.neighborhoodId ridcode:nil realtorId:nil logPB:nil query:nil extraInfo:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSData * _Nullable resultData, NSError * _Nullable error) {
         [wself.viewController endLoading];
         if (model && !error) {
             wself.view.hidden = NO;
@@ -244,14 +244,6 @@ extern NSString *const kFHToastCountKey;
     tracer[@"group_id"] = self.viewController.model.data.estimateId;
     tracer[@"origin_from"] = tracerDict[@"origin_from"] ? tracerDict[@"origin_from"] : @"be_null";
     tracer[@"origin_search_id"] = tracerDict[@"origin_search_id"] ? tracerDict[@"origin_search_id"] : @"be_null";
-    NSMutableDictionary *dict = @{}.mutableCopy;
-    NSArray *selectAgencyList = [alertView selectAgencyList] ? : self.neighborhoodDetailModel.data.chooseAgencyList;
-    for (FHFillFormAgencyListItemModel *item in selectAgencyList) {
-        if (item.agencyId.length > 0) {
-            [dict setValue:[NSNumber numberWithInt:item.checked] forKey:item.agencyId];
-        }
-    }
-    tracer[@"agency_list"] = dict.count > 0 ? dict : @"be_null";
     TRACK_EVENT(@"click_confirmation", tracer);
 }
 
@@ -389,31 +381,7 @@ extern NSString *const kFHToastCountKey;
     if (phoneNum.length > 0) {
         subtitle = [NSString stringWithFormat:@"%@\n已为您填写上次提交时使用的手机号",subtitle];
     }
-    FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"我要卖房" subtitle:subtitle btnTitle:@"提交"];
-    if (_neighborhoodDetailModel.data.chooseAgencyList.count > 0) {
-        NSInteger selectCount = 0;
-        for (FHFillFormAgencyListItemModel *item in _neighborhoodDetailModel.data.chooseAgencyList) {
-            if (![item isKindOfClass:[FHFillFormAgencyListItemModel class]]) {
-                continue;
-            }
-            if (item.checked) {
-                selectCount += 1;
-            }
-        }
-        [alertView updateAgencyTitle:[NSString stringWithFormat:@"%ld",selectCount]];
-        alertView.agencyClickBlock = ^(FHDetailNoticeAlertView *alert){
-            
-            [alert endEditing:YES];
-            NSMutableDictionary *info = @{}.mutableCopy;
-            info[@"choose_agency_list"] = [alert selectAgencyList] ? : wself.neighborhoodDetailModel.data.chooseAgencyList;
-            NSHashTable *delegateTable = [NSHashTable hashTableWithOptions:NSPointerFunctionsWeakMemory];
-            [delegateTable addObject:alert];
-            info[@"delegate"] = delegateTable;
-            TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc]initWithInfo:info];
-            NSURL *url = [NSURL URLWithString:@"fschema://house_agency_list"];
-            [[TTRoute sharedRoute]openURLByPushViewController:url userInfo:userInfo];
-        };
-    }
+    FHDetailNoticeAlertView *alertView = [[FHDetailNoticeAlertView alloc] initWithTitle:@"我要卖房" subtitle:subtitle btnTitle:@"提交" isSellHouse:YES];
     alertView.phoneNum = phoneNum;
     alertView.confirmClickBlock = ^(NSString *phoneNum,FHDetailNoticeAlertView *alert){
         [wself addClickConfirmationLogWithAlertView:alert];
@@ -437,19 +405,6 @@ extern NSString *const kFHToastCountKey;
     }
     
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    NSArray *selectAgencyList = [alertView selectAgencyList] ? : self.neighborhoodDetailModel.data.chooseAgencyList;
-    if (selectAgencyList.count > 0) {
-        NSMutableArray *array = @[].mutableCopy;
-        for (FHFillFormAgencyListItemModel *item in selectAgencyList) {
-            NSMutableDictionary *dict = @{}.mutableCopy;
-            dict[@"agency_id"] = item.agencyId;
-            dict[@"checked"] = [NSNumber numberWithInt:item.checked];
-            if (dict.count > 0) {
-                [array addObject:dict];
-            }
-        }
-        params[@"choose_agency_list"] = array;
-    }
     [FHPriceValuationAPI requestSubmitPhoneWithEstimateId:self.viewController.model.data.estimateId houseType:2 phone:phoneNum params:params completion:^(BOOL success, NSError * _Nonnull error) {
         if(success && !error){
             [wself.alertView dismiss];

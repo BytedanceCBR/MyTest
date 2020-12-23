@@ -11,6 +11,7 @@
 #import "FHUGCCellHelper.h"
 #import "UIImageView+BDWebImage.h"
 #import "UIViewAdditions.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define iconWidth 120
 #define iconHeight 90
@@ -56,7 +57,7 @@
     [self.contentView addSubview:_bottomSepView];
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.left.bottom.equalTo(self.contentView);
-        make.height.mas_offset(5);
+        make.height.mas_offset(1.2);
     }];
 }
 
@@ -103,7 +104,7 @@
         CGFloat height;
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         // avatar 百科右侧图片
-        height  =  (cellModel.avatar.length > 0 ? iconHeight:cellModel.contentHeight) + 40 + sidesMargin *2 + 10;
+        height  =  (cellModel.avatar.length > 0 ? iconHeight:cellModel.contentHeight) + 40 + sidesMargin *2 + 6;
         return height;
     }
     return 100;

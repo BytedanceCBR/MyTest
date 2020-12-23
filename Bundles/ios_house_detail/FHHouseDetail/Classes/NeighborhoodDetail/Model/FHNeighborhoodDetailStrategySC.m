@@ -15,7 +15,7 @@
 #import "FHNeighborhoodDetailStrategyArticleCell.h"
 #import "FHNeighborhoodDetailSpaceCell.h"
 
-@interface FHNeighborhoodDetailStrategySC () <IGListSupplementaryViewSource, IGListDisplayDelegate>
+@interface FHNeighborhoodDetailStrategySC () < IGListDisplayDelegate>
 
 @property (nonatomic, assign) BOOL canElementShow;
 
@@ -26,8 +26,7 @@
 - (instancetype)init
 {
     if (self = [super init]) {
-        self.inset = UIEdgeInsetsMake(0, 15, 12, 15);
-        self.supplementaryViewSource = self;
+//        self.supplementaryViewSource = self;
         self.displayDelegate = self;
         _canElementShow = YES;
     }
@@ -42,12 +41,16 @@
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index
 {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width - 9 * 2;
     FHNeighborhoodDetailStrategySM *model = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
     id cellModel = model.items[index];
     CGSize size = CGSizeZero;
-    if([cellModel isKindOfClass:[FHDetailNeighborhoodDataStrategyArticleListModel class]]){
-        size = [FHNeighborhoodDetailStrategyArticleCell cellSizeWithData:cellModel width:width];
+    if([cellModel isKindOfClass:[NSDictionary class]]){
+        if (model.cellHeight) {
+            size = CGSizeMake(width, model.cellHeight);
+        }else {
+            size = [FHNeighborhoodDetailStrategyArticleCell cellSizeWithData:cellModel width:width];
+        }
     }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){
         size = [FHNeighborhoodDetailSpaceCell cellSizeWithData:cellModel width:width];
     }
@@ -60,8 +63,12 @@
     FHNeighborhoodDetailStrategySM *model = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
     id cellModel = model.items[index];
 
-    if([cellModel isKindOfClass:[FHDetailNeighborhoodDataStrategyArticleListModel class]]){
+    if([cellModel isKindOfClass:[NSDictionary class]]){
         FHNeighborhoodDetailStrategyArticleCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNeighborhoodDetailStrategyArticleCell class] withReuseIdentifier:@"FHNeighborhoodDetailStrategyArticleCell" forSectionController:self atIndex:index];
+        cell.lynxEndLoadBlock = ^(CGFloat cellHeight) {
+            model.cellHeight = cellHeight;
+        };
+        cell.tracerDic = model.detailTracerDic;
         [cell refreshWithData:cellModel];
         return cell;
     }else if([cellModel isKindOfClass:[FHNeighborhoodDetailSpaceModel class]]){
@@ -112,36 +119,6 @@
     }
 }
 
-#pragma mark - IGListSupplementaryViewSource
-- (NSArray<NSString *> *)supportedElementKinds
-{
-    return @[ UICollectionElementKindSectionHeader ];
-}
-
-- (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
-                                                                 atIndex:(NSInteger)index
-{
-    FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:18];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
-    FHNeighborhoodDetailStrategySM *sectionModel = (FHNeighborhoodDetailStrategySM *)self.sectionModel;
-    titleView.titleLabel.text = sectionModel.title;
-    [titleView.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.top.mas_equalTo(titleView).offset(20);
-    }];
-    
-    return titleView;
-}
-
-- (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
-                                 atIndex:(NSInteger)index
-{
-    if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 45);
-    }
-    return CGSizeZero;
-}
 
 #pragma mark - IGListDisplayDelegate
 

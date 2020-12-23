@@ -361,6 +361,7 @@
             self.scoreLabel.text = conv.realtorScore;
         } else {
             self.scoreLabel.hidden = YES;
+            self.scoreLabel.text = @"";
         }
         if (!isEmptyString(conv.companyName)) {
             self.companyLabel.hidden = NO;

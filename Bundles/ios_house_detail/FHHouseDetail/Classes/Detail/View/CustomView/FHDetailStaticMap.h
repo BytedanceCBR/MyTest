@@ -36,6 +36,9 @@ extern const CGFloat kStaticMapHWRatio;
 - (void)removeAllAnnotations;
 
 - (FHStaticMapAnnotationView *)dequeueReusableAnnotationViewWithIdentifier:(NSString *)identifier;
+
++ (NSString *)keyWordConver:(NSString *)category;
++ (NSString *)keyWordConverReverse:(NSString *)category;
 @end
 
 @protocol FHStaticMapDelegate <NSObject>

@@ -12,11 +12,6 @@
 // 是否允许同时支持多个手势，默认是不支持多个手势
 // 返回yes表示支持多个手势
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    if (gestureRecognizer.view == self) {
-        if (self.contentOffset.x <= 0 && gestureRecognizer.state != UIGestureRecognizerStatePossible) {
-            return YES;
-        }
-    }
     return NO;
 }
 

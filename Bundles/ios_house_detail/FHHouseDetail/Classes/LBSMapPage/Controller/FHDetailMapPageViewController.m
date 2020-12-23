@@ -56,7 +56,6 @@ static MAMapView *kFHPageMapView = nil;
 @property (nonatomic, assign) CLLocationCoordinate2D centerPoint;
 @property (nonatomic, strong) AMapSearchAPI *searchApi;
 @property (nonatomic, strong) NSMutableArray <FHMyMAAnnotation *> *poiAnnotations;
-@property (nonatomic, strong) NSMutableDictionary *traceDict;
 @property (nonatomic , strong) FHMyMAAnnotation *pointCenterAnnotation;
 @property (nonatomic , strong) MACircle *locationCircle;
 @property (nonatomic , strong) NSString *titleStr;
@@ -75,14 +74,13 @@ static MAMapView *kFHPageMapView = nil;
 @implementation FHDetailMapPageViewController
 
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj {
-    self = [super init];
+    self = [super initWithRouteParamObj:paramObj];
     if (self) {
         TTRouteUserInfo *userInfo = paramObj.userInfo;
         self.searchApi = [[AMapSearchAPI alloc] init];
         self.searchApi.delegate = self;
         self.selectedIndex = 0;
         self.ttTrackStayEnable = YES;
-        _traceDict =[NSMutableDictionary dictionaryWithDictionary:paramObj.allParams[@"tracer"]];
         
         if ([paramObj.allParams objectForKey:@"latitude"] && [paramObj.allParams objectForKey:@"longitude"]) {
             CGFloat latitatue = [[paramObj.allParams objectForKey:@"latitude"] doubleValue];
@@ -91,12 +89,11 @@ static MAMapView *kFHPageMapView = nil;
             self.centerPoint = CLLocationCoordinate2DMake(latitatue, longitude);
         }
         
-        if ([[userInfo.allInfo objectForKey:@"category"] isKindOfClass:[NSString class]]) {
-            self.searchCategory = [userInfo.allInfo objectForKey:@"category"];
-        }
-        
-        if ([[userInfo.allInfo objectForKey:@"title"] isKindOfClass:[NSString class]]) {
-            self.titleStr = [userInfo.allInfo objectForKey:@"title"];
+        self.searchCategory = [paramObj.allParams btd_stringValueForKey:@"category"];
+
+        self.titleStr = [paramObj.allParams btd_stringValueForKey:@"title"];
+        if (!self.titleStr.length) {
+            self.titleStr = [paramObj.allParams btd_stringValueForKey:@"target_name"];
         }
         
         if (paramObj.allParams[@"baiduPanoramaUrl"]) {
@@ -135,12 +132,10 @@ static MAMapView *kFHPageMapView = nil;
     
     [self setUpBottomBarView];
     
-    [_traceDict removeObjectForKey:@"page_type"];
-    [_traceDict removeObjectForKey:@"card_type"];
-    [_traceDict removeObjectForKey:@"rank"];
-    [_traceDict setObject:@"map_detail" forKey:@"page_type"];
-
-    [FHEnvContext recordEvent:_traceDict andEventKey:@"enter_map"];
+    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
+    tracerDict[UT_PAGE_TYPE] = @"map_detail";
+    tracerDict[UT_ELEMENT_TYPE] = @"be_null";
+    [FHUserTracker writeEvent:@"enter_map" params:tracerDict.copy];
     // Do any additional setup after loading the view.
 }
 
@@ -159,11 +154,11 @@ static MAMapView *kFHPageMapView = nil;
     
     NSArray *facilities = @[@"traffic", @"education", @"hospital", @"life", @"entertainment"];
     if (index >= 0 && index < facilities.count) {
-        NSMutableDictionary *tracerDict = self.traceDict.mutableCopy;
+        NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
         [tracerDict removeObjectForKey:@"element_from"];
         [tracerDict setValue:@"map_detail" forKey:@"page_type"];
-        if ([self.traceDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
-            tracerDict[@"group_id"] = self.traceDict[@"log_pb"][@"group_id"];
+        if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+            tracerDict[@"group_id"] = self.tracerDict[@"log_pb"][@"group_id"];
         }
         // click_facilities
 //        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
@@ -181,8 +176,8 @@ static MAMapView *kFHPageMapView = nil;
 //        NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
 //        tracerDic[@"element_type"] = [self elementTypeString:self.baseViewModel.houseType];
         tracerDict[@"click_position"] = name;
-        if ([self.traceDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
-            tracerDict[@"group_id"] = self.traceDict[@"log_pb"][@"group_id"];
+        if ([self.tracerDict[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+            tracerDict[@"group_id"] = self.tracerDict[@"log_pb"][@"group_id"];
         }
         [FHUserTracker writeEvent:@"click_map" params:tracerDict];
 }
@@ -198,8 +193,7 @@ static MAMapView *kFHPageMapView = nil;
     if (duration == 0) {//当前页面没有在展示过
         return;
     }
-    NSMutableDictionary *params = @{}.mutableCopy;
-    [params addEntriesFromDictionary:self.traceDict];
+    NSMutableDictionary *params = self.tracerDict.mutableCopy;
     params[@"stay_time"] = [NSNumber numberWithInteger:duration];
     [FHEnvContext recordEvent:params andEventKey:@"stay_map"];
 }
@@ -565,7 +559,7 @@ static MAMapView *kFHPageMapView = nil;
     }
     
     AMapPOIAroundSearchRequest *requestPoi = [AMapPOIAroundSearchRequest new];
-    requestPoi.keywords = [FHOldDetailStaticMapCell keyWordConver:categoryName];
+    requestPoi.keywords = [FHDetailStaticMap keyWordConver:categoryName];
     requestPoi.location = [AMapGeoPoint locationWithLatitude:self.centerPoint.latitude longitude:self.centerPoint.longitude];
     requestPoi.requireExtension = YES;
     requestPoi.requireSubPOIs = YES;
@@ -605,15 +599,15 @@ static MAMapView *kFHPageMapView = nil;
         kFHPageMapView = [[MAMapView alloc] initWithFrame:mapFrame];// 不会同时出两个页面
 
         //设置地图style
-        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style.data" ofType:nil];
-        NSData *data = [NSData dataWithContentsOfFile:stylePath];
-        NSString *extraPath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style_extra.data" ofType:nil];
-        NSData *extraData = [NSData dataWithContentsOfFile:extraPath];
-        MAMapCustomStyleOptions *options = [MAMapCustomStyleOptions new];
-        options.styleData = data;
-        options.styleExtraData = extraData;
-        [kFHPageMapView setCustomMapStyleOptions:options];
-        [kFHPageMapView setCustomMapStyleEnabled:YES];
+//        NSString *stylePath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style.data" ofType:nil];
+//        NSData *data = [NSData dataWithContentsOfFile:stylePath];
+//        NSString *extraPath = [[NSBundle mainBundle] pathForResource:@"gaode_house_detail_style_extra.data" ofType:nil];
+//        NSData *extraData = [NSData dataWithContentsOfFile:extraPath];
+//        MAMapCustomStyleOptions *options = [MAMapCustomStyleOptions new];
+//        options.styleData = data;
+//        options.styleExtraData = extraData;
+//        [kFHPageMapView setCustomMapStyleOptions:options];
+//        [kFHPageMapView setCustomMapStyleEnabled:YES];
 
         kFHPageMapView.zoomLevel  = 15.5;
         [kFHPageMapView setCenterCoordinate:self.centerPoint];
@@ -790,7 +784,7 @@ static MAMapView *kFHPageMapView = nil;
         [self.mapView setCenterCoordinate:self.centerPoint];
         return;
     }
-    NSString *keyWords =[FHOldDetailStaticMapCell keyWordConverReverse:searchReqeust.keywords];
+    NSString *keyWords =[FHDetailStaticMap keyWordConverReverse:searchReqeust.keywords];
     if (keyWords.length <= 0) {
         [[ToastManager manager] showToast:@"暂无相关信息"];
         [self.mapView setCenterCoordinate:self.centerPoint];
@@ -878,7 +872,7 @@ static MAMapView *kFHPageMapView = nil;
     }
 
     if (CLLocationCoordinate2DIsValid(self.centerPoint)) {
-        NSMutableDictionary *tracerDict = self.traceDict.mutableCopy;
+        NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
         tracerDict[@"element_from"] = @"map";
         NSMutableDictionary *param = [NSMutableDictionary new];
         param[TRACER_KEY] = tracerDict.copy;
