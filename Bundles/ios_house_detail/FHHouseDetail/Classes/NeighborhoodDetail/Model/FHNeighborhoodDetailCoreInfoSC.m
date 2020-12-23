@@ -17,6 +17,7 @@
 #import "FHSearchHouseModel.h"
 #import <Flutter/Flutter.h>
 #import "FHFlutterChannels.h"
+#import <FHHouseBase/JSONModel+FHOriginDictData.h>
 
 @interface FHNeighborhoodDetailCoreInfoSC ()
 
@@ -173,8 +174,8 @@
     tracerDict[@"enter_from"] = @"neighborhood_detail";
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
     
-    if (self.detailViewController.viewModel.originDetailDict) {
-        NSMutableDictionary *dataInfo = [self.detailViewController.viewModel.originDetailDict btd_dictionaryValueForKey:@"data"].mutableCopy;
+    if (self.detailViewController.viewModel.detailData.fhOriginDictData) {
+        NSMutableDictionary *dataInfo = [self.detailViewController.viewModel.detailData.fhOriginDictData btd_dictionaryValueForKey:@"data"].mutableCopy;
         if (dataInfo.count) {
             NSArray *keys = @[
                 @"base_info",

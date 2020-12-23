@@ -115,7 +115,7 @@ typedef NS_ENUM(NSInteger , FHNetworkMonitorType) {
  * @param: param 参数
  * @completion: 完成回调
  */
-+(TTHttpTask *_Nullable)getStringRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable resultDict ,NSData *_Nullable resultData, NSError *_Nullable error))completion;
++(TTHttpTask *_Nullable)getRequestWithOriginData:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable resultDict, NSError *_Nullable error))completion;
 
 /*
  * 基础POST 方法 请求的参数作为json放置于body里面
