@@ -236,9 +236,9 @@
 }
 
 - (void)requestData:(BOOL) userPull refreshFeed:(BOOL) refreshFeed showEmptyIfFailed:(BOOL) showEmptyIfFailed showToast:(BOOL) showToast{
-    if(self.isFirstEnter){
-        [self.viewController tt_startUpdate];
-    }
+//    if(self.isFirstEnter){
+//        [self.viewController tt_startUpdate];
+//    }
     
     if (![TTReachability isNetworkConnected]) {
         [self onNetworError:showEmptyIfFailed showToast:showToast];
@@ -260,7 +260,7 @@
     [FHHouseUGCAPI requestCommunityDetail:self.viewController.communityId tabName:self.viewController.tabName class:FHUGCScialGroupModel.class completion:^(id <FHBaseModelProtocol> model, NSError *error) {
         StrongSelf;
         
-        [_viewController tt_endUpdataData];
+//        [_viewController tt_endUpdataData];
         if(userPull){
             [self endRefreshing];
         }
@@ -1295,7 +1295,7 @@
             }
         }
         [self addClickOptionsLog:position];
-        [self.pagingView scrollToIndex:toIndex withAnimation:YES];
+        [self.pagingView scrollToIndex:toIndex withAnimation:NO];
     }
 }
 
