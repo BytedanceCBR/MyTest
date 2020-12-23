@@ -160,7 +160,7 @@ extern NSString *const kFHToastCountKey;
     __weak typeof(self) wself = self;
     //图表数据
     [self.viewController startLoading];
-    [FHHouseDetailAPI requestNeighborhoodDetail:self.viewController.infoModel.neighborhoodId ridcode:nil realtorId:nil logPB:nil query:nil extraInfo:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSData * _Nullable resultData, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNeighborhoodDetail:self.viewController.infoModel.neighborhoodId ridcode:nil realtorId:nil logPB:nil query:nil extraInfo:nil completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
         [wself.viewController endLoading];
         if (model && !error) {
             wself.view.hidden = NO;

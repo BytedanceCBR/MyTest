@@ -49,7 +49,7 @@ completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable err
                                   logPB:(NSDictionary *)logPB
                                   query:(NSString*)query
                               extraInfo:(NSDictionary *)extraInfo
-                             completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSData * _Nullable resultData, NSError * _Nullable error))completion;
+                             completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error))completion;
 
 // 租房详情页请求
 +(TTHttpTask*)requestRentDetail:(NSString*)rentCode
