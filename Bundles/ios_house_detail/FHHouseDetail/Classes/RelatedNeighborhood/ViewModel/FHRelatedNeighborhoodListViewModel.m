@@ -22,11 +22,13 @@
 #import "FHDetailRelatedNeighborhoodResponseModel.h"
 #import <FHCommonUI/FHErrorView.h>
 #import <TTReachability/TTReachability.h>
+#import "FHHouseNeighborhoodCardViewModel.h"
+#import "UITableView+FHHouseCard.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
 
-@interface FHRelatedNeighborhoodListViewModel ()
+@interface FHRelatedNeighborhoodListViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic , strong) NSMutableArray *houseList;
 @property (nonatomic , copy) NSString *searchId;
@@ -51,7 +53,7 @@
     _maskView = maskView;
     _maskView.retryBlock = ^{
         wself.isRefresh = YES;
-        [wself requestRelatedNeighborhoodSearch:wself.neighborhoodId searchId:wself.searchId offset:@(1)];
+        [wself requestRelatedNeighborhoodSearch:wself.neighborhoodId searchId:wself.searchId offset:@"1"];
     };
 }
 
@@ -74,6 +76,7 @@
 {
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    _tableView.backgroundColor = [UIColor themeGray7];
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         wself.isRefresh = NO;
@@ -81,8 +84,8 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     _refreshFooter.hidden = YES;
-    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
     [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
+    [self.tableView fhHouseCard_registerCellStyles];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -135,13 +138,12 @@
             self.maskView.hidden = YES;
             // 转换模型类型
             [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-                FHSingleImageInfoCellModel *cellModel = [[FHSingleImageInfoCellModel alloc]init];
                 if ([obj isKindOfClass:[FHDetailRelatedNeighborhoodResponseDataItemsModel class]]) {
                     FHHouseNeighborDataItemsModel *model = [self neighborDataByRelatedModel:obj];
-                    cellModel.neighborModel = model;
-                }
-                if (cellModel) {
-                    [self.houseList addObject:cellModel];
+                    FHHouseNeighborhoodCardViewModel *viewModel = [[FHHouseNeighborhoodCardViewModel alloc] initWithModel:model];
+                    if (viewModel) {
+                        [self.houseList addObject:viewModel];
+                    }
                 }
             }];
             [self.tableView reloadData];
@@ -195,36 +197,35 @@
     if (indexPath.row >= self.houseList.count) {
         return;
     }
-    FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-    if (cellModel) {
-        NSString *origin_from = self.listController.tracerDict[@"origin_from"];
-        NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
-        NSString *page_type = self.listController.tracerDict[@"category_name"];
-        NSString *urlStr = NULL;
-        FHHouseNeighborDataItemsModel *theModel = cellModel.neighborModel;
-        if (theModel) {
-            urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
-        }
-        if (urlStr.length > 0) {
-            FHSearchHouseDataItemsModel *theModel = cellModel.secondModel;
-            NSMutableDictionary *traceParam = @{}.mutableCopy;
-            traceParam[@"card_type"] = @"left_pic";
-            traceParam[@"enter_from"] = page_type ? : @"be_null";
-            traceParam[@"element_from"] = @"be_null";
-            traceParam[@"log_pb"] = [cellModel logPb];
-            traceParam[@"origin_from"] = origin_from ? : @"be_null";
-            traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
-            traceParam[@"search_id"] = self.searchId;
-            traceParam[@"rank"] = @(indexPath.row);
-            
-            NSDictionary *dict = @{@"house_type":@(FHHouseTypeNeighborhood) ,
-                                   @"tracer": traceParam
-                                   };
-            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-            
-            NSURL *url = [NSURL URLWithString:urlStr];
-            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
-        }
+    FHHouseNeighborhoodCardViewModel *viewModel = self.houseList[indexPath.row];
+    if (!viewModel || ![viewModel.model isKindOfClass:[FHHouseNeighborDataItemsModel class]]) {
+        return;
+    }
+    FHHouseNeighborDataItemsModel *theModel = (FHHouseNeighborDataItemsModel *)viewModel.model;
+    
+    NSString *origin_from = self.listController.tracerDict[@"origin_from"];
+    NSString *origin_search_id = self.listController.tracerDict[@"origin_search_id"];
+    NSString *page_type = self.listController.tracerDict[@"category_name"];
+    NSString *urlStr = NULL;
+    if (theModel) {
+        urlStr = [NSString stringWithFormat:@"sslocal://neighborhood_detail?neighborhood_id=%@",theModel.id];
+    }
+    if (urlStr.length > 0) {
+        NSMutableDictionary *traceParam = @{}.mutableCopy;
+        traceParam[@"card_type"] = @"left_pic";
+        traceParam[@"enter_from"] = page_type ? : @"be_null";
+        traceParam[@"element_from"] = @"be_null";
+        traceParam[@"log_pb"] = [theModel logPb];
+        traceParam[@"origin_from"] = origin_from ? : @"be_null";
+        traceParam[@"origin_search_id"] = origin_search_id ? : @"be_null";
+        traceParam[@"search_id"] = self.searchId;
+        traceParam[@"rank"] = @(indexPath.row);
+        NSDictionary *dict = @{@"house_type":@(FHHouseTypeNeighborhood) ,
+                                @"tracer": traceParam
+                                };
+        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+        NSURL *url = [NSURL URLWithString:urlStr];
+        [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
     }
 }
 
@@ -248,13 +249,12 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.listController.hasValidateData == YES) {
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:kSingleImageCellId];
-        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-        id model = _houseList[indexPath.row];
-        FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
-        [cell refreshTopMargin: 20];
-        [cell updateWithHouseCellModel:cellModel];
-        return cell;
+        if (indexPath.row < self.houseList.count) {
+            id model = self.houseList[indexPath.row];
+            UITableViewCell *cell = [tableView fhHouseCard_cellForEntity:model atIndexPath:indexPath];
+            if (cell) return cell;
+            return cell;
+        }
     } else {
         // PlaceholderCell
         FHPlaceHolderCell *cell = (FHPlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
@@ -279,6 +279,12 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.listController.hasValidateData) {
+        
+        if (indexPath.row < self.houseList.count) {
+            id data = self.houseList[indexPath.row];
+            CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath];
+            if (cellHeight > -0.001f) return cellHeight;
+        }
         
         BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         return isLastCell ? 126 : 106;
@@ -312,12 +318,12 @@
     if (!self.listController.hasValidateData) {
         return;
     }
-    FHSingleImageInfoCellModel * cellModel = self.houseList[indexPath.row];
+    FHHouseNeighborhoodCardViewModel *viewModel = self.houseList[indexPath.row];
     
-    if (!cellModel) {
+    if (!viewModel || ![viewModel.model isKindOfClass:[FHHouseNeighborDataItemsModel class]]) {
         return;
     }
-    
+    FHHouseNeighborDataItemsModel *cellModel = (FHHouseNeighborDataItemsModel *)viewModel.model;
     NSString *groupId = cellModel.groupId;
     NSString *imprId = cellModel.imprId;
     NSDictionary *logPb = cellModel.logPb;
@@ -327,7 +333,7 @@
     NSString *page_type = self.listController.tracerDict[@"category_name"];
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
-    tracerDict[@"house_type"] = @"neighborhood" ? : @"be_null";
+    tracerDict[@"house_type"] = @"neighborhood";
     tracerDict[@"card_type"] = @"left_pic";
     tracerDict[@"page_type"] = page_type ? : @"be_null";
     tracerDict[@"element_type"] = @"be_null";

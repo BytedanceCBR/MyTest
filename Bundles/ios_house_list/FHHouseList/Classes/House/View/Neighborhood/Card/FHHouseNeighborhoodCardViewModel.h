@@ -24,9 +24,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) FHHouseTitleAndTagViewModel *titleAndTag;
 
-@property (nonatomic, strong) FHSearchHouseItemModel *model;
+@property (nonatomic, strong) id model;
 
-- (instancetype)initWithModel:(FHSearchHouseItemModel *)model;
+- (instancetype)initWithModel:(id)model;
 
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath;
 
