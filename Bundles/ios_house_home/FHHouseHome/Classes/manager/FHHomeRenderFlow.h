@@ -11,14 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSInteger, FHHomeRequestType) {
-    FHHomeRequestTypeUnknow,
-    FHHomeRequestTypeNormal,
-    FHHomeRequestTypeClickRetryWhenRequestNoData,
-    FHHomeRequestTypeClickRetryWhenDislikeNoData,
-    FHHomeRequestTypeAutoRetryWhenShowing,
-};
-
 @interface FHHomeRequestFlow : NSObject
 
 - (void)traceSendRequest;
@@ -37,8 +29,6 @@ typedef NS_ENUM(NSInteger, FHHomeRequestType) {
 
 @interface FHHomeItemRenderFlow : NSObject
 
-@property (nonatomic, assign) FHHomeRequestType requestType;
-
 - (instancetype)initWithHouseType:(NSInteger)houseType;
 
 - (void)traceInit;
@@ -52,6 +42,8 @@ typedef NS_ENUM(NSInteger, FHHomeRequestType) {
 - (void)traceReloadData;
 
 - (void)submit;
+
+- (void)submitWithError:(NSError *)error;
 
 @end
 
