@@ -38,6 +38,7 @@
 #import "TTDialogDirector.h"
 #import "TTWeakPushAlertView.h"
 #import "FHUserTracker.h"
+#import <TTRoute.h>
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -290,7 +291,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     [[HMDTTMonitor defaultManager]hmdTrackService:@"clue_call_error_rate" metric:nil category:categoryDict extra:extraDict];
 }
 
-- (void)submitRealtorEvaluation:(NSString *)content scoreCount:(NSInteger)scoreCount scoreTags:(NSArray<NSString *> *)scoreTags traceParams:(NSDictionary *)traceParams
+- (void)submitRealtorEvaluation:(NSString *)content scoreCount:(NSInteger)scoreCount scoreTags:(NSArray<NSString *> *)scoreTags traceParams:(NSDictionary *)traceParams completion:(nullable RealtorEvaluationCallback)completion
 {
     NSString *realtorId = traceParams[@"realtor_id"];
     NSString *targetId = traceParams[@"target_id"];
@@ -298,11 +299,27 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     NSInteger evaluationType = [traceParams btd_integerValueForKey:@"evaluation_type"];
     NSString *element_from = [traceParams btd_stringValueForKey:@"element_from"];
 
-    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:scoreCount tags:scoreTags from:element_from completion:^(bool succss, NSError *_Nullable error) {
-        if (succss) {
-            [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
+    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:scoreCount tags:scoreTags from:element_from completion:^(bool success, NSError *_Nullable error, NSDictionary *jsonObj) {
+        if (success) {
+            id data = [jsonObj btd_objectForKey:@"data" default:nil];
+            BOOL isBlackmailed = NO;
+            if(data && [data isKindOfClass:NSDictionary.class]) {
+                isBlackmailed = [[data btd_objectForKey:@"punish_status" default:@0] boolValue];
+            }
+            if(isBlackmailed) {
+                NSString *punishTips = [data btd_stringValueForKey:@"punish_tips"];
+                NSString *redirect = [data btd_stringValueForKey:@"redirect"];
+                [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:punishTips leftTitle:@"其它经纪人" leftAction:^{
+                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:redirect]];
+                } rightTitle:@"知道了" rightAction:nil];
+            } else {
+                [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
+            }
         } else {
             [[ToastManager manager] showToast:@"提交失败"];
+        }
+        if(completion) {
+            completion(success, error, jsonObj);
         }
     }];
 }
