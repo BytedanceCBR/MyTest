@@ -253,7 +253,6 @@
             id model = self.houseList[indexPath.row];
             UITableViewCell *cell = [tableView fhHouseCard_cellForEntity:model atIndexPath:indexPath];
             if (cell) return cell;
-            return cell;
         }
     } else {
         // PlaceholderCell

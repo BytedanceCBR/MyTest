@@ -63,6 +63,8 @@
         CGFloat topMargin = 0;
         if ([secondViewModel.model isKindOfClass:[FHSearchHouseItemModel class]]) {
             topMargin = ((FHSearchHouseItemModel *)secondViewModel.model).topMargin;
+        } else {
+            topMargin = secondViewModel.topMargin;
         }
         return [FHHouseSecondCardView calculateViewHeight:viewModel] + 5 + topMargin;
     }

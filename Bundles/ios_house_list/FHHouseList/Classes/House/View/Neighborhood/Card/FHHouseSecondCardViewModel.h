@@ -37,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign, readonly) BOOL isFirst;
 
+@property (nonatomic, assign) CGFloat topMargin;
+
 @property (nonatomic, assign) CGFloat tagListMaxWidth;
 
 - (instancetype)initWithModel:(id)model;
