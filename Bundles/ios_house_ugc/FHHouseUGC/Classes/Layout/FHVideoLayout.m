@@ -7,6 +7,7 @@
 
 #import "FHVideoLayout.h"
 #import "FHFeedUGCCellModel.h"
+#import "FHUGCCellHelper.h"
 
 #define topMargin 20
 #define leftMargin 20
@@ -47,6 +48,8 @@
     }
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    [FHUGCCellHelper setRichContentWithModel:cellModel width:self.contentLabelLayout.width numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:16]];
     //内容
     if(isEmptyString(cellModel.content)){
         self.contentLabelLayout.height = 0;

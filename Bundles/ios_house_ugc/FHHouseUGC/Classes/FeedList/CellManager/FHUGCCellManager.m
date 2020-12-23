@@ -161,10 +161,13 @@
     return [FHUGCPostCell class];
 }
 
-+ (Class)cellLayoutClassFromCellViewType:(FHUGCFeedListCellSubType)cellType {
++ (Class)cellLayoutClassFromCellViewType:(FHUGCFeedListCellSubType)cellType cellModel:(FHFeedUGCCellModel *)cellModel {
     //这里这样写是为了以后一个key可能对应不同cell的变化
     switch (cellType) {
         case FHUGCFeedListCellSubTypePost:
+            if([cellModel.cellLayoutStyle isEqualToString:@"10001"]){
+                return nil;
+            }
             return [FHPostLayout class];
             
         case FHUGCFeedListCellSubTypeArticle:
@@ -186,6 +189,9 @@
             return [FHVideoLayout class];
 
         case FHUGCFeedListCellSubTypeUGCSmallVideo:
+            if([cellModel.cellLayoutStyle isEqualToString:@"10001"]){
+                return nil;
+            }
             return [FHSmallVideoLayout class];
 //
 //        case FHUGCFeedListCellSubTypeUGCVoteDetail:

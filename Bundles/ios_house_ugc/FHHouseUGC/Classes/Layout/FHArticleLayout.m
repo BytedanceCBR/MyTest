@@ -7,6 +7,7 @@
 
 #import "FHArticleLayout.h"
 #import "FHFeedUGCCellModel.h"
+#import "FHUGCCellHelper.h"
 
 #define topMargin 15
 #define leftMargin 20
@@ -75,6 +76,13 @@
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     
+    if(cellModel.imageList.count == 1){
+        self.contentLabelLayout.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 120 - 15;
+    }else{
+        self.contentLabelLayout.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    }
+    [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:self.contentLabelLayout.width];
+    
     if(isEmptyString(cellModel.title)){
         self.contentLabelLayout.height = 0;
         self.imageViewContainerLayout.top = self.contentLabelLayout.bottom + 10;
@@ -85,14 +93,11 @@
     //图片
     NSArray *imageList = cellModel.imageList;
     if(imageList.count > 1){
-        self.contentLabelLayout.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
         self.bottomViewLayout.top = self.imageViewContainerLayout.bottom + 10;
     }else if(imageList.count == 1){
-        self.contentLabelLayout.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 120 - 15;
         self.singleImageViewLayout.left = self.contentLabelLayout.right + 15;
         self.bottomViewLayout.top = self.singleImageViewLayout.bottom + 10;
     }else{
-        self.contentLabelLayout.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
         self.bottomViewLayout.top = self.contentLabelLayout.bottom + 10;
     }
     

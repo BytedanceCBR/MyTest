@@ -8,6 +8,7 @@
 #import "FHAnswerLayout.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHUGCCellMultiImageView.h"
+#import "FHUGCCellHelper.h"
 
 #define topMargin 20
 #define leftMargin 20
@@ -67,14 +68,16 @@
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     
+    [FHUGCCellHelper setRichContentImageWithModel:cellModel width:self.contentLabelLayout.width numberOfLines:cellModel.numberOfLines];
+    
     //设置userInfo
-    NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    %@",cellModel.originItemModel.content] : @"";
+    NSString *titleStr = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"    %@",cellModel.originItemModel.content] : @"";
     CGRect titleRect = [titleStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:0 attributes:@{NSFontAttributeName : [UIFont themeFontMedium:16]} context:nil];
     CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
     if(titleRect.size.width > maxTitleLabelSizeWidth){
         self.userInfoViewLayout.height = 50;
     }else {
-         self.userInfoViewLayout.height = 30;
+        self.userInfoViewLayout.height = 30;
     }
     
     self.userImaLayout.top =  self.userInfoViewLayout.bottom + 5;

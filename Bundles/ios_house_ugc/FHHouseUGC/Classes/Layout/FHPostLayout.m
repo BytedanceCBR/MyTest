@@ -69,13 +69,7 @@
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     
-    if([cellModel.cellLayoutStyle isEqualToString:@"10001"]){
-        //小区点评
-        self.contentLabelLayout.width = screenWidth - 42;
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:self.contentLabelLayout.width numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:14]];
-    }else{
-        //feed中的帖子
-        self.contentLabelLayout.width = screenWidth - leftMargin - rightMargin;
+    if(![cellModel.cellLayoutStyle isEqualToString:@"10001"]){
         [FHUGCCellHelper setRichContentWithModel:cellModel width:self.contentLabelLayout.width numberOfLines:cellModel.numberOfLines];
     }
     

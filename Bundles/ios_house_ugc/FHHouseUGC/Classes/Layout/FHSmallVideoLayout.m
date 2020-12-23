@@ -7,6 +7,7 @@
 
 #import "FHSmallVideoLayout.h"
 #import "FHFeedUGCCellModel.h"
+#import "FHUGCCellHelper.h"
 
 #define topMargin 20
 #define leftMargin 20
@@ -73,6 +74,9 @@
     }
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    if(![cellModel.cellLayoutStyle isEqualToString:@"10001"]){
+        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
+    }
     //图片
     if (cellModel.imageList.count > 0) {
         FHFeedContentImageListModel *imageModel = [cellModel.imageList firstObject];

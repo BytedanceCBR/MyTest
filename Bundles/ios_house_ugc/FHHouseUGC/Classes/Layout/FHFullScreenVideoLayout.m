@@ -8,6 +8,7 @@
 #import "FHFullScreenVideoLayout.h"
 #import "FHFeedUGCCellModel.h"
 #import "FHHouseUGCHeader.h"
+#import "FHUGCCellHelper.h"
 
 #define topMargin 15
 #define leftMargin 15
@@ -67,6 +68,8 @@
     }
     
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    
+    [FHUGCCellHelper setRichContentWithModel:cellModel width:self.contentLabelLayout.width numberOfLines:cellModel.numberOfLines font:[UIFont themeFontMedium:16]];
     
     NSString *userName = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
     CGRect userNameRect = [userName boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 18) options:0 attributes:@{NSFontAttributeName : [UIFont themeFontRegular:12]} context:nil];

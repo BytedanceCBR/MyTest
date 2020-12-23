@@ -19,6 +19,7 @@
 #import "FHHouseUGCHeader.h"
 #import "UIScrollView+Refresh.h"
 #import "FHUGCCellManager.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHUGCVideoListController ()<SSImpressionProtocol>
 
@@ -36,9 +37,8 @@
         self.currentVideo.cellSubType = FHUGCFeedListCellSubTypeFullVideo;
         self.currentVideo.isVideoJumpDetail = YES;
         self.currentVideo.numberOfLines = 2;
-        [FHUGCCellHelper setRichContentWithModel:self.currentVideo width:(screenWidth - 30) numberOfLines:self.currentVideo.numberOfLines font:[UIFont themeFontMedium:16]];
         //计算layout
-        Class layout = [FHUGCCellManager cellLayoutClassFromCellViewType:self.currentVideo.cellSubType];
+        Class layout = [FHUGCCellManager cellLayoutClassFromCellViewType:self.currentVideo.cellSubType cellModel:self.currentVideo];
         if(layout){
             self.currentVideo.layout = [[layout alloc] init];
             [self.currentVideo.layout updateLayoutWithData:self.currentVideo];
@@ -141,7 +141,7 @@
             _tableView.estimatedSectionHeaderHeight = 0;
         }
         
-        if ([TTDeviceHelper isIPhoneXSeries]) {
+        if ([UIDevice btd_isIPhoneXSeries]) {
             _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
         }
         

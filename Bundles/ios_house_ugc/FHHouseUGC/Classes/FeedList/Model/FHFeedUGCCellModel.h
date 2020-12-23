@@ -294,10 +294,6 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 
 + (FHFeedUGCCellModel *)modelFromFake;
 
-+ (FHFeedUGCCellModel *)modelFromFake2;
-
-+ (FHFeedUGCCellModel *)modelFromFake3:(BOOL)isList;
-
 + (FHFeedUGCCellModel *)copyFromModel:(FHFeedUGCCellModel *)oldCellModel;
 
 @end
