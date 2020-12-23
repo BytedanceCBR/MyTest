@@ -190,6 +190,12 @@
         }
     } else {
         if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (self.listController.segmentControl.sectionTitles.count - 1)){
+            self.listController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
+            if (scrollView.contentOffset.x < 0) {
+                _oldX = 0;
+            } else {
+                _oldX = [UIScreen mainScreen].bounds.size.width * (self.listController.segmentControl.sectionTitles.count - 1);
+            }
             return;
         }
         //加载数据
