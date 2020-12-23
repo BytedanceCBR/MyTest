@@ -462,6 +462,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _filterView = [[FHMapSearchFilterView alloc]initWithFrame:self.viewController.view.bounds];
         __weak typeof(self) wself = self;
         _filterView.confirmWithQueryBlock = ^(NSString * _Nonnull query) {
+            [wself.mapView removeAnnotations:wself.mapView.annotations];
             [wself changeFilter:query];
         };
         
