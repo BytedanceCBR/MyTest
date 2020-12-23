@@ -501,7 +501,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 //请求推荐刷新数据，包括上拉和下拉
 - (void)requestDataForRefresh:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst isInit:(BOOL)isInit
 {
-    if ([FHHomeItemRequestManager preloadType] != FHHomepagePreloadTypeNone) {
+    if ([FHHomeItemRequestManager preloadType] != FHHomepagePreloadTypeNone && [FHHomeItemRequestManager preloadType] != FHHomepagePreloadTypeDefault) {
         [self requestDataForRefreshV2:pullType andIsFirst:isFirst isInit:isInit];
         return;
     }
@@ -629,7 +629,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         }
         
         if (isFirst && self.houseType == FHHouseTypeSecondHandHouse) {
-            [FHMainApi addUserOpenVCDurationLog:@"pss_homepage" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
+            [FHMainApi addUserOpenVCDurationLog:@"pss_homepage" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime context:@{@"is_init": @(isInit), @"preload_type":@([FHHomeItemRequestManager preloadType])}];
         }
         
         if (self.isOriginRequest || [FHEnvContext sharedInstance].isRefreshFromCitySwitch || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {

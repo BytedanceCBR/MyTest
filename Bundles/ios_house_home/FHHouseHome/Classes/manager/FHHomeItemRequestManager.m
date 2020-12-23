@@ -51,7 +51,7 @@
 }
 
 + (FHHomepagePreloadType)preloadType {
-    static FHHomepagePreloadType preloadType = FHHomepagePreloadTypeNone;
+    static FHHomepagePreloadType preloadType = FHHomepagePreloadTypeDefault;
     static dispatch_once_t preloadTypeOnceToken;
     dispatch_once(&preloadTypeOnceToken, ^{
         NSDictionary *settings = [SSCommonLogic fhSettings];
@@ -73,7 +73,11 @@
                     }
                     break;
                 }
+                case 10:
+                    preloadType = FHHomepagePreloadTypeNone;
+                    break;
                 default:
+                    preloadType = FHHomepagePreloadTypeDefault;
                     break;
             }
         }
