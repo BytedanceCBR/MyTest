@@ -133,6 +133,7 @@
     self.arrowsImg.image = [UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"];
 }
 
+
 - (void)moreAction:(UITapGestureRecognizer *)tapGesture {
     if (self.moreActionBlock) {
         self.moreActionBlock();

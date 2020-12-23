@@ -16,6 +16,8 @@
 #import "FHHouseDetailContactViewModel.h"
 #import "FHAssociatePhoneModel.h"
 #import "FHHousePhoneCallUtils.h"
+#import "NSDictionary+BTDAdditions.h"
+#import "NSArray+BTDAdditions.h"
 
 @interface FHNewHouseDetailAgentSC ()<IGListSupplementaryViewSource,IGListDisplayDelegate,IGListBindingSectionControllerDataSource>
 
@@ -206,6 +208,44 @@
 //            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
 }
 
+- (void)pushMoreReleator{
+    NSMutableDictionary *params = @{}.mutableCopy;
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    userInfo[@"route"] = @"/recommended_realtors_list";
+    
+    
+    NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
+    tracerDict[@"event_type"] = @"house_app2c_v2";
+    tracerDict[@"element_from"] = @"new_detail_related";
+    tracerDict[@"enter_from"] = @"new_detail";
+    tracerDict[@"page_type"] =  @"realtor_list";
+    tracerDict[@"element_type"] =  @"realtor_list";
+    
+    [tracerDict removeObjectsForKeys:@[@"card_type",@"rank",@"log_pb"]];
+    NSMutableDictionary *DataInfo = @{}.mutableCopy;
+    DataInfo[@"house_type"] = @(FHHouseTypeNewHouse);
+    DataInfo[@"group_id"] = [self.sectionModel.detailModel.data.logPb btd_stringValueForKey:@"group_id"];
+    DataInfo[@"log_pb"] = self.sectionModel.detailModel.data.logPb;
+//    DataInfo[@"biz_trace"] = self.sectionModel.detailModel.data.recommendedRealtors;
+    DataInfo[@"recommended_realtors_title"] = self.sectionModel.detailModel.data.recommendedRealtorsTitle;
+    __block NSMutableArray *recommendedRealtors = [[NSMutableArray alloc] init];
+    [self.sectionModel.detailModel.data.recommendedRealtors  enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [recommendedRealtors addObject:[obj toDictionary]];
+    }];
+    DataInfo[@"recommended_realtors"] = [recommendedRealtors  btd_jsonStringEncoded];
+    DataInfo[@"recommended_realtors_associate_info"] = [self.sectionModel.detailModel.data.recommendRealtorsAssociateInfo toDictionary];
+    
+    
+    params[@"recommended_realtors_info"] = [DataInfo btd_jsonStringEncoded];
+    params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
+    
+    
+    userInfo[@"params"] = [params btd_jsonStringEncoded];
+    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
+    
+    
+}
+
 #pragma mark - IGListSupplementaryViewSource
 - (NSArray<NSString *> *)supportedElementKinds {
     return @[UICollectionElementKindSectionHeader];
@@ -228,7 +268,10 @@
     [titleView setSubTitleWithTitle:agentSM.recommendedRealtorsSubTitle];
     [titleView setSubTagView];
     [titleView.arrowsImg setHidden:NO];
-
+    __weak typeof(self) weakSelf = self;
+    [titleView setMoreActionBlock:^{
+        [weakSelf pushMoreReleator];
+    }];
     return titleView;
 }
 
@@ -252,7 +295,7 @@
                cell:(UICollectionViewCell *)cell
             atIndex:(NSInteger)index {
     if ([cell isKindOfClass:[FHNewHouseDetailReleatorCollectionCell class]]) {
-        NSString *cahceKey = [NSString stringWithFormat:@"%@_%d",NSStringFromClass([self class]), index];
+        NSString *cahceKey = [NSString stringWithFormat:@"%@_%ld",NSStringFromClass([self class]), (long)index];
         if (self.elementShowCaches[cahceKey]) {
             return;
         }
@@ -260,20 +303,18 @@
         FHNewHouseDetailAgentSM *sectionModel = (FHNewHouseDetailAgentSM *)self.sectionModel;
         FHDetailContactModel *contact = sectionModel.recommendedRealtors[index];
         NSMutableDictionary *tracerDic = self.detailTracerDict.mutableCopy;
-        tracerDic[@"element_type"] = @"new_detail_related";
+        tracerDic[@"element_type"] = @"realtor_list";
         tracerDic[@"realtor_id"] = contact.realtorId ?: @"be_null";
         tracerDic[@"realtor_rank"] = @(index);
-        tracerDic[@"realtor_position"] = @"detail_related";
-        tracerDic[@"realtor_logpb"] = contact.realtorLogpb;
-        tracerDic[@"biz_trace"] = contact.bizTrace;
-        [tracerDic setValue:contact.enablePhone ? @"1" : @"0" forKey:@"phone_show"];
-        if (![@"" isEqualToString:contact.imOpenUrl] && contact.imOpenUrl != nil) {
-            [tracerDic setValue:@"1" forKey:@"im_show"];
-        } else {
-            [tracerDic setValue:@"0" forKey:@"im_show"];
-        }
-        // 移除字段
-        [tracerDic removeObjectsForKeys:@[@"card_type",@"element_from",@"search_id"]];
+        tracerDic[@"realtor_logpb"] = contact.realtorLogpb ?: @"be_null";
+        tracerDic[@"enter_from"] = @"new_detail";
+        tracerDic[@"page_type"] = @"realtor_list";
+        tracerDic[@"element_from"] = @"new_detail_related";
+        tracerDic[@"search_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"search_id"] ?: @"be_null";
+        tracerDic[@"impr_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"impr_id"] ?: @"be_null";
+        tracerDic[@"group_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"group_id"] ?: @"be_null";
+        
+        [tracerDic removeObjectsForKeys:@[@"card_type",@"rank",@"origin_search_id",@"app_house_tags",@"log_pb"]];
         [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
     }
     
