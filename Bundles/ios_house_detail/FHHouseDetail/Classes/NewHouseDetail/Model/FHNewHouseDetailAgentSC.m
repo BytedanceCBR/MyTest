@@ -18,6 +18,7 @@
 #import "FHHousePhoneCallUtils.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "NSArray+BTDAdditions.h"
+#import "JSONModel+FHOriginDictData.h"
 
 @interface FHNewHouseDetailAgentSC ()<IGListSupplementaryViewSource,IGListDisplayDelegate,IGListBindingSectionControllerDataSource>
 
@@ -220,23 +221,31 @@
     tracerDict[@"enter_from"] = @"new_detail";
     tracerDict[@"page_type"] =  @"realtor_list";
     tracerDict[@"element_type"] =  @"realtor_list";
-    
     [tracerDict removeObjectsForKeys:@[@"card_type",@"rank",@"log_pb"]];
+    
+    
     NSMutableDictionary *DataInfo = @{}.mutableCopy;
     DataInfo[@"house_type"] = @(FHHouseTypeNewHouse);
-    DataInfo[@"group_id"] = [self.sectionModel.detailModel.data.logPb btd_stringValueForKey:@"group_id"];
-    DataInfo[@"log_pb"] = self.sectionModel.detailModel.data.logPb;
+    DataInfo[@"group_id"] = self.detailViewController.viewModel.houseId;
+//    [self.sectionModel.detailModel.data.logPb btd_stringValueForKey:@"group_id"];
 //    DataInfo[@"biz_trace"] = self.sectionModel.detailModel.data.recommendedRealtors;
     DataInfo[@"recommended_realtors_title"] = self.sectionModel.detailModel.data.recommendedRealtorsTitle;
-    __block NSMutableArray *recommendedRealtors = [[NSMutableArray alloc] init];
-    [self.sectionModel.detailModel.data.recommendedRealtors  enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        [recommendedRealtors addObject:[obj toDictionary]];
-    }];
-    DataInfo[@"recommended_realtors"] = [recommendedRealtors  btd_jsonStringEncoded];
-    DataInfo[@"recommended_realtors_associate_info"] = [self.sectionModel.detailModel.data.recommendRealtorsAssociateInfo toDictionary];
-    
+    if(self.sectionModel.detailModel.fhOriginDictData){
+        NSDictionary *dataInfo = self.sectionModel.detailModel.fhOriginDictData;
+        if(self.sectionModel.detailModel.data.recommendedRealtors){
+            DataInfo[@"recommended_realtors"] = dataInfo[@"data"][@"recommended_realtors"] ;
+        }
+        if(self.sectionModel.detailModel.data.recommendRealtorsAssociateInfo){
+            DataInfo[@"recommended_realtors_associate_info"] = dataInfo[@"data"][@"recommend_realtors_associate_info"];
+        }
+        if(self.sectionModel.detailModel.data.logPb){
+            DataInfo[@"log_pb"] = dataInfo[@"data"][@"log_pb"];
+        }
+
+    }
     
     params[@"recommended_realtors_info"] = [DataInfo btd_jsonStringEncoded];
+    NSString *tep = [DataInfo btd_jsonStringEncoded];
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
     
     
@@ -269,9 +278,13 @@
     [titleView setSubTagView];
     [titleView.arrowsImg setHidden:NO];
     __weak typeof(self) weakSelf = self;
-    [titleView setMoreActionBlock:^{
-        [weakSelf pushMoreReleator];
-    }];
+    if(self.sectionModel.detailModel.data.recommendedRealtors.count > 3){
+        [titleView setMoreActionBlock:^{
+            [weakSelf pushMoreReleator];
+        }];
+    }else {
+        [titleView.arrowsImg setHidden:YES];
+    }
     return titleView;
 }
 
