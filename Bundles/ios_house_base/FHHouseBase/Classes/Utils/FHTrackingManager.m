@@ -6,6 +6,7 @@
 //
 
 #import "FHTrackingManager.h"
+#import "UIColor+Theme.h"
 #import <BDInstall/BDInstall.h>
 #import <BDInstallPopup/BDInstallPopup.h>
 #import <BDInstallPopup/BDInstallPopupURLChina.h>
@@ -49,6 +50,8 @@
     }
     
     BDInstallPopupConfig *config = [BDInstallPopupConfig new];
+    config.confirmBtnColor = [UIColor themeOrange1];
+    config.useCoverView = NO;
     config.confirmBtnText = @"确认";
     config.cancelBtnText = @"取消";
     config.title = @"优化信息服务";
