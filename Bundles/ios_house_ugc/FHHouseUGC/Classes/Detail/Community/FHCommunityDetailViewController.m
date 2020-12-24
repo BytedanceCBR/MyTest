@@ -213,8 +213,8 @@
 - (void)initSegmentView {
     self.segmentView = [[FHCommunityDetailSegmentView alloc] init];
     [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
-        *norColorKey = @"grey3"; //grey3
-        *selColorKey = @"red4";//grey1
+        *norColorKey = @"grey1"; //grey1
+        *selColorKey = @"red4";//red4
         *titleFont = [UIFont themeFontRegular:16];
         *selectedTitleFont = [UIFont themeFontSemibold:16];
     }];

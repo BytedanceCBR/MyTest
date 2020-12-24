@@ -229,7 +229,7 @@
     if (tabListArr.count == 1) {
         self.placeHolderCellHeight = CGFLOAT_MIN;
     }else {
-         self.placeHolderCellHeight = 15;
+         self.placeHolderCellHeight = CGFLOAT_MIN;
     }
     
     if(tabListArr && tabListArr.count > 0) {
