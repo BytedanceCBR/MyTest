@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHHouseCardCellViewModelProtocol;
-@protocol FHHouseTableViewDataSource <NSObject>
+@protocol FHHouseTableViewDataSource <UIScrollViewDelegate>
 
 - (NSArray<NSArray<id<FHHouseCardCellViewModelProtocol>> *> *)fhHouse_dataList;
 

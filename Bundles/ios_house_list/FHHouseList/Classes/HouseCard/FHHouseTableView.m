@@ -204,4 +204,54 @@
 
 ///其他delegate按需扩展
 
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(scrollViewDidScroll:)]) {
+        [self.fhHouse_dataSource scrollViewDidScroll:scrollView];
+    }
+}
+
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(scrollViewDidZoom:)]) {
+        [self.fhHouse_dataSource scrollViewDidZoom:scrollView];
+    }
+}
+
+// called on start of dragging (may require some time and or distance to move)
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(scrollViewWillBeginDragging:)]) {
+        [self.fhHouse_dataSource scrollViewWillBeginDragging:scrollView];
+    }
+}
+// called on finger up if the user dragged. velocity is in points/millisecond. targetContentOffset may be changed to adjust where the scroll view comes to rest
+- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(scrollViewWillEndDragging:withVelocity:targetContentOffset:)]) {
+        [self.fhHouse_dataSource scrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
+    }
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(scrollViewDidEndDragging:willDecelerate:)]) {
+        [self.fhHouse_dataSource scrollViewDidEndDragging:scrollView willDecelerate:decelerate];
+    }
+}
+
+- (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(scrollViewWillBeginDecelerating:)]) {
+        [self.fhHouse_dataSource scrollViewWillBeginDecelerating:scrollView];
+    }
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(scrollViewDidEndDecelerating:)]) {
+        [self.fhHouse_dataSource scrollViewDidEndDecelerating:scrollView];
+    }
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(scrollViewDidEndScrollingAnimation:)]) {
+        [self.fhHouse_dataSource scrollViewDidEndScrollingAnimation:scrollView];
+    }
+}
+
 @end
