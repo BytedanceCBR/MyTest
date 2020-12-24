@@ -277,6 +277,8 @@
     NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
     if ([vwhiteList containsObject:cellModel.user.userId]) {
         self.useride.text = cellModel.user.verifiedContent;
+    } else {
+        self.useride.text = @"";
     }
 
     [self.userIma setAvatarUrl:cellModel.user.avatarUrl];
