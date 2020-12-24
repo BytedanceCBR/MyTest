@@ -67,6 +67,7 @@
         _houseLogs = [NSMutableDictionary new];
         self.listController = viewController;
         self.tableView = tableView;
+        self.tableView.bounces = NO;
         
         [self configTableView];
         
@@ -792,6 +793,7 @@ static BOOL canPan = NO;
         case UIGestureRecognizerStateBegan: {
             CGPoint velocity = [gesture velocityInView:self.listController.view];
             canPan = [self canPanWithVelocity:velocity];
+            self.tableView.scrollEnabled = !canPan;
             if (canPan) {
                 self.tableView.contentOffset = CGPointZero;
             }
@@ -800,6 +802,7 @@ static BOOL canPan = NO;
         case UIGestureRecognizerStateChanged: {
             CGPoint velocity = [gesture velocityInView:self.listController.view];
             canPan = [self canPanWithVelocity:velocity];
+            self.tableView.scrollEnabled = !canPan;
             if (canPan) {
                 self.tableView.contentOffset = CGPointZero;
             }
@@ -888,12 +891,20 @@ static BOOL canPan = NO;
 }
 
 - (void)moveToMiddle {
-    [self.listController moveTop:[self.listController initialTop]];
+    __weak typeof(self) wself = self;
+    [self.listController moveTop:[self.listController initialTop] completion:^(BOOL finished) {
+        __strong typeof(wself) self = wself;
+        self.tableView.scrollEnabled = NO;
+    }];
     self.listController.moveDock();
 }
 
 - (void)moveToTop {
-    [self.listController moveTop:0];
+    __weak typeof(self) wself = self;
+    [self.listController moveTop:0 completion:^(BOOL finished) {
+        __strong typeof(wself) self = wself;
+        self.tableView.scrollEnabled = YES;//(self.tableView.height < self.tableView.contentSize.height);
+    }];
 }
 
 - (void)moveToBottom {

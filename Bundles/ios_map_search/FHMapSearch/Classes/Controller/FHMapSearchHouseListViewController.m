@@ -166,8 +166,13 @@
     return (self.view.top - 0.01) > [self minTop];
 }
 
--(void)moveTop:(CGFloat)top
-{
+- (void)moveTop:(CGFloat)top {
+    [self moveTop:top completion:^(BOOL finished) {
+        
+    }];
+}
+
+- (void)moveTop:(CGFloat)top completion:(void (^ __nullable)(BOOL finished))completion {
     CGFloat minTop = [self minTop];
     top = MAX(minTop, top);
     if (((top + 0.1) < self.view.top) && (top == minTop) ) {
@@ -179,6 +184,10 @@
     
     [UIView animateWithDuration:0.2 animations:^{
         self.view.top = top;
+    } completion:^(BOOL finished) {
+        if (completion) {
+            completion(finished);
+        }
     }];
     
     if (self.movingBlock) {
