@@ -20,6 +20,7 @@
 #import "FHFeedListModel.h"
 #import "ToastManager.h"
 #import "FHUserTracker.h"
+#import "TTAccountManager.h"
 #import "FHCommonDefines.h"
 #import "FHUGCConfig.h"
 #import "FHUtils.h"
@@ -150,15 +151,19 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
         }
         
         if(model){
-            NSArray *resultArr = [self convertModel:feedListModel.data];
-            if(isHead){
-                [self.dataList removeAllObjects];
-                [self.dataList addObjectsFromArray:resultArr];
-            }else{
-                [self.dataList addObjectsFromArray:resultArr];
-            }
-            self.tableView.hasMore = feedListModel.hasMore;
-            [self reloadTableViewDataWithHasMore:feedListModel.hasMore];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                NSArray *resultArr = [self convertModel:feedListModel.data isHead:isHead];
+                if(isHead){
+                    [self.dataList removeAllObjects];
+                    [self.dataList addObjectsFromArray:resultArr];
+                }else{
+                    [self.dataList addObjectsFromArray:resultArr];
+                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.tableView.hasMore = feedListModel.hasMore;
+                    [self reloadTableViewDataWithHasMore:feedListModel.hasMore];
+                });
+            });
         }
     }];
 }
@@ -200,7 +205,7 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
         self.refreshFooter.hidden = YES;
         [self setupEmptyView];
         FHPersonalHomePageFeedListErrorItemModel *item = [[FHPersonalHomePageFeedListErrorItemModel alloc] init];
-        item.feedType = FHPersonalHomePageFeedListTypeError;
+        item.feedType = FHPersonalHomePageFeedListTypeNoFeed;
         [self.dataList addObject:item];
     }
     [self.tableView reloadData];
@@ -223,7 +228,7 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
 
 #pragma mark UGC
 
-- (NSArray *)convertModel:(NSArray *)feedList {
+- (NSArray *)convertModel:(NSArray *)feedList isHead:(BOOL)isHead  {
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     for (FHFeedListDataModel *itemModel in feedList) {
         FHFeedUGCCellModel *cellModel = [FHFeedUGCCellModel modelFromFeed:itemModel.content];
@@ -232,11 +237,29 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
         cellModel.enterFrom = [self.viewController categoryName];
         cellModel.tracerDic = self.homePageManager.tracerDict;
         
-        if (cellModel) {
-            [resultArray addObject:cellModel];
+        if(cellModel){
+            if(isHead){
+                [resultArray addObject:cellModel];
+                //去重逻辑
+                [self removeDuplicaionModel:cellModel.groupId];
+            }else{
+                NSInteger index = [self getCellIndex:cellModel];
+                if(index < 0){
+                    [resultArray addObject:cellModel];
+                }
+            }
         }
     }
     return resultArray;
+}
+
+- (void)removeDuplicaionModel:(NSString *)groupId {
+    for (FHFeedUGCCellModel *itemModel in self.dataList) {
+        if([groupId isEqualToString:itemModel.groupId]){
+            [self.dataList removeObject:itemModel];
+            break;
+        }
+    }
 }
 
 
@@ -251,8 +274,36 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
 }
 
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
-    // PM要求点富文本链接也进入详情页
-    [self lookAllLinkClicked:cellModel cell:nil];
+    NSMutableDictionary *dict = @{}.mutableCopy;
+    // 埋点
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    
+    dict[TRACER_KEY] = traceParam;
+    
+    if (url) {
+        BOOL isOpen = YES;
+        if ([url.absoluteString containsString:@"concern"]) {
+            // 话题
+            traceParam[@"enter_from"] = @"personal_homepage_detail";
+            traceParam[@"enter_type"] = @"click";
+            traceParam[@"rank"] = cellModel.tracerDic[@"rank"];
+            traceParam[@"log_pb"] = cellModel.logPb;
+        }
+        else if([url.absoluteString containsString:@"profile"]) {
+            // JOKER:
+        }
+        else if([url.absoluteString containsString:@"webview"]) {
+            
+        }
+        else {
+            isOpen = NO;
+        }
+        
+        if(isOpen) {
+            TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
+            [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+    }
 }
 
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
@@ -323,7 +374,8 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
             if(item.feedType == FHPersonalHomePageFeedListTypeError) {
                 [self.emptyView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
             } else if(item.feedType == FHPersonalHomePageFeedListTypeNoFeed){
-                [self.emptyView showEmptyWithTip:@"你还没有发布任何内容，快去发布吧" errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
+                NSString *emptyTip = [[TTAccountManager userID] isEqualToString:self.homePageManager.userId] ? @"你还没有发布任何内容，快去发布吧" :@"TA没有留下任何足迹，去其他地方看看吧！";
+                [self.emptyView showEmptyWithTip:emptyTip errorImageName:@"fh_ugc_home_page_no_auth" showRetry:NO];
             }
             UIView *selectedBackgroundView = [[UIView alloc] initWithFrame:self.tableView.frame];
             selectedBackgroundView.backgroundColor = [UIColor themeWhite];

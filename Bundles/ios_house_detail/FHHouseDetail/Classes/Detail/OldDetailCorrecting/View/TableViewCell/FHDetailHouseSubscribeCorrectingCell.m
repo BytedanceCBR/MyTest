@@ -73,7 +73,8 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
-    model.cell = self;
+    self.subscribeBlock = model.subscribeBlock;
+    self.legalAnnouncementClickBlock = model.legalAnnouncementClickBlock;
 }
 
 
