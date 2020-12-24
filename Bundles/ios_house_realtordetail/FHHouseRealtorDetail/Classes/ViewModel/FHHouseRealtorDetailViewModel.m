@@ -78,6 +78,7 @@
     
     if (![TTReachability isNetworkConnected]) {
         [self showErrorViewNoNetWork];
+        self.tableView.scrollEnabled = YES;
         return;
     }
     

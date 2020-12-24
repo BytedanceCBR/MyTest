@@ -81,6 +81,13 @@
         [self.requestTask cancel];
         self.detailController.isLoadingData = NO;
     }
+    
+    if (![TTReachability isNetworkConnected]) {
+        [self showErrorViewNoNetWork];
+        self.tableView.scrollEnabled = YES;
+        return;
+    }
+
     if(self.detailController.isLoadingData){
         return;
     }
@@ -136,6 +143,16 @@
         }
         [self reloadTableViewData];
     }];
+}
+
+- (void)showErrorViewNoNetWork {
+    [self.errorView showEmptyWithTip:@"网络异常" errorImageName:kFHErrorMaskNoNetWorkImageName showRetry:YES];
+    UIView *tableFooterView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, self.detailController.errorViewHeight)];
+      tableFooterView.backgroundColor = [UIColor clearColor];
+    [tableFooterView addSubview:self.errorView];
+    self.tableView.tableFooterView = tableFooterView;
+    self.refreshFooter.hidden = YES;
+    [self.tableView reloadData];
 }
 
 - (CGFloat)getVisibleHeight:(NSInteger)maxCount {
@@ -255,8 +272,12 @@
 
 - (FHErrorView *)errorView {
     if(!_errorView){
+        __weak typeof(self)ws = self;
         _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(10, 0, [UIScreen mainScreen].bounds.size.width, 500)];
         _errorView.backgroundColor = [UIColor colorWithHexStr:@"f8f8f8"];
+        _errorView.retryBlock = ^{
+            [ws requestData:YES first:YES];
+        };
     }
     return _errorView;
 }
