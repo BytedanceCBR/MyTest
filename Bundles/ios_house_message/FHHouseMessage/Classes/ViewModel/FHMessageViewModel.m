@@ -325,7 +325,7 @@
                 // 点击埋点
                 NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
                 clickParam[@"popup_name"] = @"black_popup";
-                clickParam[UT_CLICK_POSITION] = @"know";
+                clickParam[UT_CLICK_POSITION] = @"continue_contact";
                 clickParam[UT_PAGE_TYPE] = @"message_weiliao";
                 clickParam[UT_ELEMENT_TYPE] = @"black_popup";
                 clickParam[UT_ENTER_FROM] = enterFrom;
