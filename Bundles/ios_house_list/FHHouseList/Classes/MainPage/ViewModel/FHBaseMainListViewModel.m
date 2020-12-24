@@ -107,7 +107,7 @@
 
 extern NSString *const INSTANT_DATA_KEY;
 
-@interface FHBaseMainListViewModel(FHHouseTableView)<FHHouseTableViewDataSource, FHHouseNewComponentViewModelDelegate>
+@interface FHBaseMainListViewModel(FHHouseTableView)<FHHouseTableViewDataSource, FHHouseTableViewDelegate, FHHouseNewComponentViewModelDelegate>
 
 - (NSObject *)getEntityFromModel:(id)model;
 
@@ -156,6 +156,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
         if ([FHEnvContext isHouseListComponentEnable]) {
             [(FHHouseTableView *)self.tableView setFhHouse_dataSource:self];
+            [(FHHouseTableView *)self.tableView setFhHouse_delegate:self];
             [(FHHouseTableView *)self.tableView registerCellStyles];
         } else {
             self.tableView.delegate = self;

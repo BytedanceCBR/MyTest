@@ -80,7 +80,7 @@ extern NSString *const INSTANT_DATA_KEY;
 #define NO_HOUSE_CELL_ID @"no_house_cell"
 
 
-@interface FHHouseListViewModel(FHHouseTableView)<FHHouseTableViewDataSource, FHHouseNewComponentViewModelDelegate>
+@interface FHHouseListViewModel(FHHouseTableView)<FHHouseTableViewDataSource, FHHouseTableViewDelegate, FHHouseNewComponentViewModelDelegate>
 
 - (NSObject *)getEntityFromModel:(id)model;
 
@@ -414,6 +414,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     if ([FHEnvContext isHouseListComponentEnable]) {
         [(FHHouseTableView *)self.tableView setFhHouse_dataSource:self];
+        [(FHHouseTableView *)self.tableView setFhHouse_delegate:self];
         [(FHHouseTableView *)self.tableView registerCellStyles];
     } else {
         self.tableView.delegate = self;
