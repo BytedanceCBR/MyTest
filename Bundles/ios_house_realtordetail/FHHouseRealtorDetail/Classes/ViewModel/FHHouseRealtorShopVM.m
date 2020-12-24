@@ -89,16 +89,23 @@
                 [self loadDataForShop:model];
                 [self prossHeaderData:model];
                 [self updateNavBarWithAlpha:0];
-//                [self requestData:YES first:YES];
-                //                [wSelf updateUIWithData];
-                //                    [wSelf processDetailData:model];
                 
-                // TODO: JOKER 判断经纪人是否被关黑
                 NSString *tips = [self.data.realtor btd_stringValueForKey:@"punish_tips"];
                 BOOL isPunish = [[self.data.realtor btd_numberValueForKey:@"punish_status" default:@(0)] boolValue];
                 BOOL isBlackmailRealtor = isPunish && tips.length > 0;
                 [self.detailController showBottomBar:!isBlackmailRealtor];
                 [self.detailController.blackmailReatorBottomBar show:isBlackmailRealtor WithHint:tips btnAction:^{
+                    
+                    // TODO: JOKER 判断经纪人是否被关黑 点击埋点
+                    NSMutableDictionary *clickParams = [NSMutableDictionary dictionary];
+                    clickParams[UT_ORIGIN_FROM] = self.detailController.tracerDict[UT_ORIGIN_FROM];
+                    clickParams[UT_ENTER_FROM] = self.detailController.tracerDict[UT_ENTER_FROM];
+                    clickParams[UT_PAGE_TYPE] = self.detailController.tracerDict[UT_PAGE_TYPE];
+                    clickParams[UT_ELEMENT_TYPE] = self.detailController.tracerDict[UT_ENTER_FROM];
+                    clickParams[UT_CLICK_POSITION] = self.detailController.tracerDict[UT_ENTER_FROM];
+                    TRACK_EVENT(@"click_options",clickParams);
+                    //---
+                    
                     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:self.data.redirect]];
                 }];
                 

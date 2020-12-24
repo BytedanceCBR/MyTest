@@ -532,12 +532,13 @@ extern NSString *const BOE_OPEN_KEY ;
         item71.checked = [self _shouldAllowHttps];
         item71.switchAction = @selector(_httpsSettingActionFired:);
         
-        STTableViewCellItem *item72 = [[STTableViewCellItem alloc] initWithTitle:@"BOE开关" target:self action:@selector(switchBOEAction)];
-        item72.switchStyle = YES;
-        item72.checked = [self.class isBOEOn];
-        item72.switchAction = @selector(switchBOE:);
+        STTableViewCellItem *boeEnvSwitch = [[STTableViewCellItem alloc] initWithTitle:@"BOE开关" target:self action:@selector(switchBOEAction)];
+        boeEnvSwitch.detail = @"切换后重启生效";
+        boeEnvSwitch.switchStyle = YES;
+        boeEnvSwitch.checked = [self.class isBOEOn];
+        boeEnvSwitch.switchAction = @selector(switchBOE:);
         
-        STTableViewSectionItem *section7 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"网络 开关" items:@[item71,item72]];
+        STTableViewSectionItem *section7 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"网络 开关" items:@[item71,boeEnvSwitch]];
         
         [dataSource addObject:section7];
     }
@@ -2040,8 +2041,7 @@ extern NSString *const BOE_OPEN_KEY ;
 }
 
 -(void)switchBOEAction {
-    [self switchBOE:nil];
-    [self.tableView reloadData];
+    // 添加泳道输入逻辑
 }
 
 -(void)switchBOE:(UISwitch *)sw
