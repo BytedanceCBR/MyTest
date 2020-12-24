@@ -50,6 +50,7 @@
 #import <FHFlutter/FHFlutterManager.h>
 #import "FHHouseUGCAPI.h"
 #import "FHUGCUserVWhiteModel.h"
+#import <BDUGLocationKit/BDUGLocationManager.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -515,9 +516,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
         //开始定位
         [self startLocation];
         
-        //检测是否需要打开城市列表
-        [self check2CityList];
-        
     }else{
                 
         [self showPermssionPage];
@@ -587,10 +585,19 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if (![self hasConfirmPermssionProtocol]) {
         return;
     }
-    
     [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
     
-    [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:YES];
+    [[BDUGLocationManager sharedManager] requestWhenInUseAuthorizationWithCompletion:^(BOOL isGranted) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:YES];
+            if (isGranted) {
+                
+            } else {
+                //检测是否需要打开城市列表
+                [self check2CityList];
+            }
+        });
+    }];
 }
 
 - (void)check2CityList {
@@ -1216,8 +1223,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
     self.stashModel = nil;
     
     [self startLocation];
-    [self check2CityList];
-    
     
     [NewsBaseDelegate startRegisterRemoteNotification];
     
