@@ -89,12 +89,11 @@ static MAMapView *kFHPageMapView = nil;
             self.centerPoint = CLLocationCoordinate2DMake(latitatue, longitude);
         }
         
-        if ([[userInfo.allInfo objectForKey:@"category"] isKindOfClass:[NSString class]]) {
-            self.searchCategory = [userInfo.allInfo objectForKey:@"category"];
-        }
-        
-        if ([[userInfo.allInfo objectForKey:@"title"] isKindOfClass:[NSString class]]) {
-            self.titleStr = [userInfo.allInfo objectForKey:@"title"];
+        self.searchCategory = [paramObj.allParams btd_stringValueForKey:@"category"];
+
+        self.titleStr = [paramObj.allParams btd_stringValueForKey:@"title"];
+        if (!self.titleStr.length) {
+            self.titleStr = [paramObj.allParams btd_stringValueForKey:@"target_name"];
         }
         
         if (paramObj.allParams[@"baiduPanoramaUrl"]) {

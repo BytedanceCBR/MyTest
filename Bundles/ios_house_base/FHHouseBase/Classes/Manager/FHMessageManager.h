@@ -12,16 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMessageManager : NSObject
 
 - (void)startSyncMessage;
-
 - (void)stopSyncMessage;
-
--(void)reduceSystemMessageTabBarBadgeNumber:(NSInteger)reduce;
-
--(NSInteger)getTotalUnreadMessageCount;
-
--(void)setUnreadSystemMsgCount:(NSUInteger)count;
-
--(void)refreshBadgeNumber;
+- (void)reduceSystemMessageTabBarBadgeNumber:(NSInteger)reduce;
+- (NSInteger)getTotalUnreadMessageCount;
+- (void)setUnreadSystemMsgCount:(NSUInteger)count;
+- (void)setUnreadChatMsgCount:(NSUInteger)unreadCount;
+- (void)refreshBadgeNumber;
 
 - (NSInteger)systemMsgUnreadNumber;
 - (NSInteger)ugcMsgUnreadNumber;

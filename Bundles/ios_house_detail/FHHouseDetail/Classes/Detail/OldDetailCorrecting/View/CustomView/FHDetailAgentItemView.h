@@ -6,13 +6,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <FHHouseBase/FHRealtorAvatarView.h>
 #import "FHDetailBaseModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHHouseRealtorAvatarView;
+
 @interface FHDetailAgentItemView : UIControl
 
-@property (nonatomic, strong)   FHRealtorAvatarView *avatorView;
+@property (nonatomic, strong)   FHHouseRealtorAvatarView *avatorView;
 
 @property (nonatomic, strong)   UILabel     *nameLabel;
 @property (nonatomic, strong)   UIButton    *callBtn;
