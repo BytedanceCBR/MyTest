@@ -458,7 +458,7 @@ static NSString * const kFUGCPrefixStr = @"fugc";
 //    NSString * baseUrl = [CommonURLSetting baseURL];
     //    NSString * baseUrl = @"https://i.snssdk.com";
     self.appUpdateHelper = [[TTAppUpdateHelper alloc] initWithInstallID:iidValue deviceID:didValue channel:channelValue aid:@"1370" delegate:self];
-//    [self.appUpdateHelper startCheckVersion];
+    [self.appUpdateHelper startCheckVersion];
 //#if DEBUG
 //    self.appUpdateHelper.maxAppStorePopTimes = 100;
 //    self.appUpdateHelper.maxTestFlightPopTimes = 100;

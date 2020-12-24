@@ -288,9 +288,51 @@
         NSString *tips = userInfo.punishTips;
         BOOL isBlackmail = (isPunish && tips.length > 0);
         if(isBlackmail) {
+        
+            NSString *enterFrom = self.viewController.fatherVC.tracerDict[UT_ENTER_FROM];
+            NSString *originFrom = self.viewController.fatherVC.tracerDict[UT_ORIGIN_FROM];
+            if(self.viewController.fatherVC.tracerDict.allKeys.count == 0) {
+                enterFrom = @"message_list";
+                originFrom = @"message_list";
+            }
+            
+            // 展现埋点
+            NSMutableDictionary *showParams = [NSMutableDictionary dictionary];
+            showParams[@"popup_name"] = @"black_popup";
+            showParams[UT_PAGE_TYPE] = @"message_weiliao";;
+            showParams[UT_ELEMENT_TYPE] = @"black_popup";
+            showParams[UT_ENTER_FROM] = enterFrom;
+            showParams[UT_ORIGIN_FROM] = originFrom;
+            TRACK_EVENT(@"popup_show", showParams);
+            // ---
+            
             [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:tips leftTitle:@"其它经纪人" leftAction:^{
+                
+                // 点击埋点
+                NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
+                clickParam[@"popup_name"] = @"black_popup";
+                clickParam[UT_CLICK_POSITION] = @"other_realtor";
+                clickParam[UT_PAGE_TYPE] = @"message_weiliao";
+                clickParam[UT_ELEMENT_TYPE] = @"black_popup";
+                clickParam[UT_ENTER_FROM] = enterFrom;
+                clickParam[UT_ORIGIN_FROM] = originFrom;
+                TRACK_EVENT(@"popup_click", clickParam);
+                //---
+                
                 [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:userInfo.redirect]];
             } rightTitle:@"继续联系" rightAction:^{
+                
+                // 点击埋点
+                NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
+                clickParam[@"popup_name"] = @"black_popup";
+                clickParam[UT_CLICK_POSITION] = @"know";
+                clickParam[UT_PAGE_TYPE] = @"message_weiliao";
+                clickParam[UT_ELEMENT_TYPE] = @"black_popup";
+                clickParam[UT_ENTER_FROM] = enterFrom;
+                clickParam[UT_ORIGIN_FROM] = originFrom;
+                TRACK_EVENT(@"popup_click", clickParam);
+                //---
+                
                 [self openConversation:conv];
             }];
         } else {

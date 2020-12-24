@@ -307,11 +307,43 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                 isBlackmailed = [[data btd_objectForKey:@"punish_status" default:@0] boolValue];
             }
             if(isBlackmailed) {
+                
+                // 展现埋点
+                NSMutableDictionary *showParams = [NSMutableDictionary dictionary];
+                showParams[@"popup_name"] = @"black_popup";
+                showParams[UT_PAGE_TYPE] = traceParams[UT_PAGE_TYPE];
+                showParams[UT_ELEMENT_TYPE] = @"black_popup";
+                showParams[UT_ENTER_FROM] = traceParams[UT_ENTER_FROM];
+                showParams[UT_ORIGIN_FROM] = traceParams[UT_ORIGIN_FROM];
+                TRACK_EVENT(@"popup_show", showParams);
+                // ---
+                
                 NSString *punishTips = [data btd_stringValueForKey:@"punish_tips"];
                 NSString *redirect = [data btd_stringValueForKey:@"redirect"];
                 [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:punishTips leftTitle:@"其它经纪人" leftAction:^{
+                    // 点击埋点
+                    NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
+                    clickParam[@"popup_name"] = @"black_popup";
+                    clickParam[UT_CLICK_POSITION] = @"other_realtor";
+                    clickParam[UT_PAGE_TYPE] = traceParams[UT_PAGE_TYPE];
+                    clickParam[UT_ELEMENT_TYPE] = @"black_popup";
+                    clickParam[UT_ENTER_FROM] = traceParams[UT_ENTER_FROM];
+                    clickParam[UT_ORIGIN_FROM] = traceParams[UT_ORIGIN_FROM];
+                    TRACK_EVENT(@"popup_click", clickParam);
+                    //---
                     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:redirect]];
-                } rightTitle:@"知道了" rightAction:nil];
+                } rightTitle:@"知道了" rightAction:^{
+                    // 点击埋点
+                    NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
+                    clickParam[@"popup_name"] = @"black_popup";
+                    clickParam[UT_CLICK_POSITION] = @"know";
+                    clickParam[UT_PAGE_TYPE] = traceParams[UT_PAGE_TYPE];
+                    clickParam[UT_ELEMENT_TYPE] = @"black_popup";
+                    clickParam[UT_ENTER_FROM] = traceParams[UT_ENTER_FROM];
+                    clickParam[UT_ORIGIN_FROM] = traceParams[UT_ORIGIN_FROM];
+                    TRACK_EVENT(@"popup_click", clickParam);
+                    //---
+                }];
             } else {
                 [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
             }

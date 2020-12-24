@@ -182,13 +182,13 @@
         BOOL isBlackmailRealtor = isPunish && tips.length > 0;
         [self.viewController showBottomBar:!isBlackmailRealtor];
         [self.viewController.blackmailReatorBottomBar show:isBlackmailRealtor WithHint:tips btnAction:^{
-            // TODO: JOKER 判断经纪人是否被关黑 点击埋点
+            // TODO: JOKER 点击埋点
             NSMutableDictionary *clickParams = [NSMutableDictionary dictionary];
-            clickParams[UT_ORIGIN_FROM] = self.viewController.tracerDict[UT_ORIGIN_FROM];
-            clickParams[UT_ENTER_FROM] = self.viewController.tracerDict[UT_ENTER_FROM];
-            clickParams[UT_PAGE_TYPE] = self.viewController.tracerDict[UT_PAGE_TYPE];
-            clickParams[UT_ELEMENT_TYPE] = self.viewController.tracerDict[UT_ENTER_FROM];
-            clickParams[UT_CLICK_POSITION] = self.viewController.tracerDict[UT_ENTER_FROM];
+            clickParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM];
+            clickParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+            clickParams[UT_PAGE_TYPE] = self.tracerDict[UT_PAGE_TYPE];
+            clickParams[UT_ELEMENT_TYPE] = @"find_other_realtor";
+            clickParams[UT_CLICK_POSITION] = @"find_other_realtor";
             TRACK_EVENT(@"click_options",clickParams);
             //---
             
