@@ -816,6 +816,9 @@ static BOOL canPan = NO;
                 listTop = minTop;
             }
             self.listController.view.top = listTop;
+            if (self.listController.movingBlock) {
+                self.listController.movingBlock(self.listController.view.top);
+            }
  
             [gesture setTranslation:CGPointMake(0, 0) inView:gesture.view];
             break;

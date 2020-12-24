@@ -741,6 +741,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
         };
         _houseListViewController.movingBlock = ^(CGFloat top) {
+            wself.sideBar.alpha = 0.0f;
 //            [wself changeNavbarAlpha:NO];
         };
         _houseListViewController.showHouseDetailBlock = ^(FHHouseListBaseItemModel * _Nonnull model , NSInteger rank , FHMapSearchBubbleModel *fromBubble) {
@@ -2194,7 +2195,6 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     [self.viewController.view bringSubviewToFront:self.houseListViewController.view];
     [self.houseListViewController showNeighborHouses:model bubble:houseListBubble];
-    self.sideBar.alpha = 0.0f;
     
     if (![TTReachability isNetworkConnected]) {
         //当前不联网,判断更新筛选器选项
