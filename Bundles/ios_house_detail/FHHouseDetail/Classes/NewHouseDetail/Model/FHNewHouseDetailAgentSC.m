@@ -214,7 +214,7 @@
     NSMutableDictionary *userInfo = @{}.mutableCopy;
     userInfo[@"route"] = @"/recommended_realtors_list";
     
-    
+
     NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
     tracerDict[@"event_type"] = @"house_app2c_v2";
     tracerDict[@"element_from"] = @"new_detail_related";
@@ -222,13 +222,13 @@
     tracerDict[@"page_type"] =  @"realtor_list";
     tracerDict[@"element_type"] =  @"realtor_list";
     [tracerDict removeObjectsForKeys:@[@"card_type",@"rank",@"log_pb"]];
-    
-    
+
+
     NSMutableDictionary *DataInfo = @{}.mutableCopy;
     DataInfo[@"house_type"] = @(FHHouseTypeNewHouse);
     DataInfo[@"group_id"] = self.detailViewController.viewModel.houseId;
 //    [self.sectionModel.detailModel.data.logPb btd_stringValueForKey:@"group_id"];
-//    DataInfo[@"biz_trace"] = self.sectionModel.detailModel.data.recommendedRealtors;
+    DataInfo[@"biz_trace"] = @"be_null";
     DataInfo[@"recommended_realtors_title"] = self.sectionModel.detailModel.data.recommendedRealtorsTitle;
     if(self.sectionModel.detailModel.fhOriginDictData){
         NSDictionary *dataInfo = self.sectionModel.detailModel.fhOriginDictData;
@@ -243,12 +243,12 @@
         }
 
     }
-    
+
     params[@"recommended_realtors_info"] = [DataInfo btd_jsonStringEncoded];
     NSString *tep = [DataInfo btd_jsonStringEncoded];
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
-    
-    
+
+
     userInfo[@"params"] = [params btd_jsonStringEncoded];
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://flutter"]] userInfo:TTRouteUserInfoWithDict(userInfo)];
     
