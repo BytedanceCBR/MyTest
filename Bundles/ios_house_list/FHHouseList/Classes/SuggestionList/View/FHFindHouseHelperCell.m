@@ -40,8 +40,6 @@
     _containerView = [[UIView alloc] init];
     _containerView.backgroundColor = [UIColor themeWhite];
     _containerView.layer.cornerRadius = 10;
-    _containerView.layer.borderWidth = 0.5;
-    _containerView.layer.borderColor = [UIColor themeGray6].CGColor;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(0);
@@ -106,7 +104,8 @@
     if (!data || ![data isKindOfClass:[FHSuggestionResponseItemModel class]]) {
         return;
     }
-    
+    _containerView.layer.borderWidth = 0.5;
+    _containerView.layer.borderColor = [UIColor themeGray6].CGColor;
     FHSuggestionResponseItemModel *model = (FHSuggestionResponseItemModel *)data;
     
     _titleLabel.text = model.title ?: @"";

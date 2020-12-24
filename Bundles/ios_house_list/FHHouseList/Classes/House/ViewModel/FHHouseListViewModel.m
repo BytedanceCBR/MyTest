@@ -1830,7 +1830,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }
 
         FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-        if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
+        if (self.houseType != FHHouseTypeRentHouse) {
             cell.backgroundColor = [UIColor themeGray7];
         }
         if ([cell isKindOfClass:[FHFindHouseHelperCell class]]) {
@@ -1862,6 +1862,8 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         if([cell isKindOfClass:[FHHouseListRedirectTipCell class]]){
             [((FHHouseListRedirectTipCell *)cell) updateHeightByIsFirst:isFirstCell];
+            [((FHHouseListRedirectTipCell *)cell) refreshWithHouseType:self.houseType];
+            
         }
         if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
             FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;

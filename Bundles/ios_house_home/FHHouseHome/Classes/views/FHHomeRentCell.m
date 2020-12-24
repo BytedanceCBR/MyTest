@@ -46,13 +46,6 @@
         make.top.mas_equalTo(12);
         make.left.mas_equalTo(26);
     }];
-    self.houseMainImageBackView.backgroundColor = [UIColor whiteColor];
-    [self.houseMainImageBackView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.mainImageView).offset(3);
-        make.left.mas_equalTo(self.mainImageView).offset(3);
-        make.right.mas_equalTo(self.mainImageView).offset(-3);
-        make.bottom.mas_equalTo(self.mainImageView).offset(-3);
-    }];
     [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-40);
     }];

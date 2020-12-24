@@ -6,7 +6,6 @@
 //
 
 #import "FHHouseListRedirectTipCell.h"
-#import <FHHouseBase/FHShadowView.h>
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <Masonry/Masonry.h>
@@ -16,7 +15,6 @@
 @interface FHHouseListRedirectTipCell ()
 
 @property(nonatomic, strong) UIView *containerView;
-@property(nonatomic, strong) FHShadowView *shadowView;
 @property(nonatomic,strong)UILabel *leftLabel;
 @property(nonatomic,strong)UIButton *rightBtn;
 
@@ -33,26 +31,14 @@
     return self;
 }
 
-- (FHShadowView *)shadowView
-{
-    if (!_shadowView) {
-        _shadowView = [[FHShadowView alloc] initWithFrame:CGRectZero];
-        [_shadowView setCornerRadius:10];
-        [_shadowView setShadowColor:[UIColor whiteColor]];
-        [_shadowView setShadowOffset:CGSizeMake(0, 2)];
-    }
-    return _shadowView;
-}
-
 - (UIView *)containerView
 {
     if (!_containerView) {
         _containerView = [[UIView alloc] init];
+        _containerView.backgroundColor = [UIColor whiteColor];
         CALayer *layer = _containerView.layer;
         layer.cornerRadius = 10;
         layer.masksToBounds = YES;
-        layer.borderColor =  [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
-        layer.borderWidth = 0.5f;
     }
     return _containerView;
 }
@@ -70,8 +56,6 @@
 - (void)setupUI
 {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    [self.contentView addSubview:self.shadowView];
     [self.contentView addSubview:self.containerView];
   
     [self.containerView addSubview:self.leftLabel];
@@ -82,9 +66,6 @@
         make.right.mas_equalTo(-15);
         make.top.mas_equalTo(5);
         make.bottom.mas_equalTo(-5);
-    }];
-    [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.containerView);
     }];
     [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.containerView);
@@ -99,6 +80,13 @@
     }];
     [self.rightBtn setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [self.rightBtn addTarget:self action:@selector(rightBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)refreshWithHouseType:(FHHouseType)houseType {
+    if (houseType == FHHouseTypeRentHouse) {
+        self.containerView.layer.borderColor =  [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
+        self.containerView.layer.borderWidth = 0.5f;
+    }
 }
 
 - (void)refreshWithData:(id)data

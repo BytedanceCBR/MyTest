@@ -13,12 +13,10 @@
 #import "FHEnvContext.h"
 #import "ToastManager.h"
 #import "NSDictionary+TTAdditions.h"
-#import <FHHouseBase/FHShadowView.h>
 
 @interface FHSuggestionSubscribCell()
 
 @property(nonatomic, strong) UIView *containerView;
-@property(nonatomic, strong) FHShadowView *shadowView;
 
 @property (nonatomic, strong)FHSugSubscribeDataDataSubscribeInfoModel *currentModel;
 @end
@@ -44,18 +42,11 @@
 }
 - (void)setupUI {
     
-    _shadowView = [[FHShadowView alloc] initWithFrame:CGRectZero];
-    [_shadowView setCornerRadius:10];
-    [_shadowView setShadowColor:[UIColor whiteColor]];
-    [_shadowView setShadowOffset:CGSizeMake(0, 2)];
-    [self.contentView addSubview:_shadowView];
-    
     _containerView = [[UIView alloc] init];
+    _containerView.backgroundColor = [UIColor whiteColor];
     CALayer *layer = _containerView.layer;
     layer.cornerRadius = 10;
     layer.masksToBounds = YES;
-    layer.borderColor =  [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
-    layer.borderWidth = 0.5f;
     [self.contentView addSubview:_containerView];
 
     _titleLabel = [[UILabel alloc] init];
@@ -108,10 +99,6 @@
         make.right.mas_equalTo(self).mas_offset(-15);
         make.top.mas_equalTo(self).offset(5);
         make.bottom.mas_equalTo(self).offset(-5);
-    }];
-    
-    [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.containerView);
     }];
     
     [_subscribeBtn mas_makeConstraints:^(MASConstraintMaker *make) {

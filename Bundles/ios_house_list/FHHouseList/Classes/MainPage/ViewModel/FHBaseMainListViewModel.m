@@ -1736,7 +1736,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         if (identifier.length > 0) {
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-            if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
+            if (self.houseType != FHHouseTypeRentHouse) {
                 cell.backgroundColor = [UIColor themeGray7];
             }
             

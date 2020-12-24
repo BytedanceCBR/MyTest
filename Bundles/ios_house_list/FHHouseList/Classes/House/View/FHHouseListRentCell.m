@@ -49,13 +49,6 @@
     [self.mainImageView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(12);
     }];
-    self.houseMainImageBackView.backgroundColor = [UIColor whiteColor];
-    [self.houseMainImageBackView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.mainImageView).offset(3);
-        make.left.mas_equalTo(self.mainImageView).offset(3);
-        make.right.mas_equalTo(self.mainImageView).offset(-3);
-        make.bottom.mas_equalTo(self.mainImageView).offset(-3);
-    }];
     [self.contentView addSubview:self.distanceLabel];
     [self.distanceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainTitleLabel);
