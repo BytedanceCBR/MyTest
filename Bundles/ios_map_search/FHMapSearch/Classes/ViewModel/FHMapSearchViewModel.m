@@ -705,6 +705,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         };
         _houseListViewController.didSwipeDownDismiss = ^(FHMapSearchBubbleModel *fromBubble){
             if (wself) {
+                wself.sideBar.alpha = 1.0f;
                 [wself changeNavbarAppear:YES];
                 if (wself.lastShowMode == FHMapSearchShowModeDrawLine) {
                     wself.showMode = FHMapSearchShowModeDrawLine;                    
@@ -2193,6 +2194,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
     
     [self.viewController.view bringSubviewToFront:self.houseListViewController.view];
     [self.houseListViewController showNeighborHouses:model bubble:houseListBubble];
+    self.sideBar.alpha = 0.0f;
     
     if (![TTReachability isNetworkConnected]) {
         //当前不联网,判断更新筛选器选项
