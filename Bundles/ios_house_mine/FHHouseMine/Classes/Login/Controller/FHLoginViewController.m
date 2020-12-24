@@ -32,7 +32,6 @@
 @property (nonatomic, assign)   BOOL       present;
 @property (nonatomic, assign)   BOOL       isFromMineTab;
 @property (nonatomic, weak) UITextField *textField;
-@property (nonatomic, assign) BOOL isDisableDragBack;
 @property (nonatomic, assign) BOOL isShowLoginHintToast;
 @end
 
@@ -99,7 +98,6 @@
         if(params[@"is_show_login_hint_toast"]) {
             self.isShowLoginHintToast = [params[@"is_show_login_hint_toast"] boolValue];
         }
-        self.isDisableDragBack = [params tta_boolForKey:@"ttDisableDragBack"];
     }
     return self;
 }
@@ -110,8 +108,6 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initNavbar];
     [self initViewModel];
-
-    self.ttDisableDragBack = self.isDisableDragBack;
 }
 
 - (void)viewWillAppear:(BOOL)animated {

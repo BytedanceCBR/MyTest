@@ -855,6 +855,10 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
     }
 }
 
+- (void)webView:(WKWebView *)webView didCommitNavigation:(null_unspecified WKNavigation *)navigation {
+    
+}
+
 - (void)webviewDidLayoutSubviews:(nullable id)webview {
     [self.ysWebView handleLayoutSubviews];
 }

@@ -145,7 +145,6 @@
     [values.trendLines enumerateObjectsUsingBlock:^(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         return [array addObjectsFromArray:obj.values];
     }];
-    __block NSUInteger lineIndex = 0;
     BOOL shouldUseTenThousandUnit = [self shouldUseTenThousandunit:array];
 
     __block CGFloat maxValue = CGFLOAT_MIN;
@@ -162,17 +161,17 @@
     }
     NSArray* lineDatas = [values.trendLines rx_mapWithBlock:^id(FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* each) {
         PNLineChartData *data01 = [PNLineChartData new];
-        UIColor* color = [UIColor colorWithHexString:each.color];
+        UIColor* color = [UIColor themeOrange4];
         data01.color = color;
         data01.alpha = 1;
 //        data01.highlightedImage = [[self class] dotImageByColor:color];
-        data01.highlightedImg = [self highlightImgNameByIndex:lineIndex];
+        data01.highlightedImg = @"city_market_trend_circle_icon";
         data01.showPointLabel = NO; // 是否显示坐标点的值
         data01.itemCount = [each.values count];
         data01.inflexionPointColor = color;
         data01.inflexionPointStyle = PNLineChartPointStyleCircle;
         data01.lineWidth = 1;
-        data01.inflexionPointWidth = 4; // inflexionPoint 圆圈圈
+        data01.inflexionPointWidth = 5; // inflexionPoint 圆圈圈
         data01.pointLabelFormat = @"%.2f";
         data01.getData = ^PNLineChartDataItem *(NSUInteger index) {
             id theNumber = each.values[index];
@@ -187,19 +186,28 @@
             }
             return [PNLineChartDataItem empty];
         };
-        lineIndex += 1;
         return data01;
     }];
+    CGFloat yFixedValueMax;
+    CGFloat yFixedValueMin;
     if (shouldUseTenThousandUnit) {
-//        CGFloat padding = (maxValue - minValue) / 10000 / 16;
-        chartView.lineChart.yFixedValueMax = maxValue / 10000;
-        chartView.lineChart.yFixedValueMin = minValue / 10000;
+        yFixedValueMax = maxValue / 10000;
+        yFixedValueMin = minValue / 10000;
     } else {
-//        CGFloat padding = (maxValue - minValue) / 16;
-        chartView.lineChart.yFixedValueMax = maxValue;
-        chartView.lineChart.yFixedValueMin = minValue;
+        yFixedValueMax = maxValue;
+        yFixedValueMin = minValue;
+    }
+    CGFloat deltaValue = (yFixedValueMax - yFixedValueMin) * 3;
+    yFixedValueMax += deltaValue;
+    yFixedValueMin -= deltaValue;
+    if (yFixedValueMin < 0) {
+        yFixedValueMin = 0;
     }
 //    chartView.lineChart.yFixedValueMin = 0;
+    
+    chartView.lineChart.yFixedValueMax = yFixedValueMax;
+    chartView.lineChart.yFixedValueMin = yFixedValueMin;
+
     chartView.lineChart.chartData = lineDatas;
     [chartView.lineChart strokeChart];
 
@@ -213,24 +221,6 @@
     return [values rx_detectWithBlock:^BOOL(NSNumber* each) {
         return [each doubleValue] > 10000;
     }];
-}
-
-- (NSString *)highlightImgNameByIndex:(NSInteger)index
-{
-    switch (index) {
-        case 0:
-            return @"detail_circle_dark";
-            break;
-        case 1:
-            return @"detail_circle_red";
-            break;
-        case 2:
-            return @"detail_circle_gray";
-            break;
-        default:
-            return @"detail_circle_gray";
-            break;
-    }
 }
 
 - (UIColor *)lineColorByIndex:(NSInteger)index

@@ -284,7 +284,7 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 /*
 判断开启首次安装用户引导，默认YES
  */
-+ (BOOL)isIntroduceOpen;
+//+ (BOOL)isIntroduceOpen;
 /*
  第一次启动和切城市默认跳转的tab
  

@@ -149,7 +149,6 @@ NSString * const FHAMapComplexCode = @"120300";
         _lastStatusBarStyle = [[UIApplication sharedApplication] statusBarStyle];
         self.isResetStatusBar = NO;
         
-        self.ttDisableDragBack = NO;
         if (paramObj.allParams[@"gaodeLat"]) {
             self.gaodeLat = [paramObj.allParams btd_doubleValueForKey:@"gaodeLat"];
         }

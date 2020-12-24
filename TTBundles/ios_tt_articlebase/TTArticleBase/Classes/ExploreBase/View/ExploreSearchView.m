@@ -776,7 +776,8 @@
         UIViewController * controller = [TTUIResponderHelper topViewControllerFor: self];
         if (controller.navigationController.viewControllers.count > 1) {
             if ([TTCustomAnimationManager sharedManager].pushSearchVCWithCustomAnimation) {
-                [((TTNavigationController *)controller.navigationController) popViewControllerByTransitioningAnimationAnimated:self.animatedWhenDismiss];
+                [((TTNavigationController *)controller.navigationController) popViewControllerAnimated:self.animatedWhenDismiss];
+//                [((TTNavigationController *)controller.navigationController) popViewControllerByTransitioningAnimationAnimated:self.animatedWhenDismiss];
                 [TTCustomAnimationManager sharedManager].pushSearchVCWithCustomAnimation = NO;
             }
             else{

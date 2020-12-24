@@ -20,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-@interface FHDetailExtarInfoCorrectingRowView : UIControl
+@interface FHDetailExtarInfoCorrectingRowView : UIView
 
 @property (nonatomic, strong)   UILabel       *nameLabel;
 @property (nonatomic, strong)   UILabel       *infoLabel;

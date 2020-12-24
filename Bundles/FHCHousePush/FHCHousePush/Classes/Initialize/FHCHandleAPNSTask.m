@@ -34,7 +34,6 @@
 #import <TTAppRuntime/TTProjectLogicManager.h>
 #import "TTLaunchDefine.h"
 #import "HMDTTMonitor.h"
-#import "FHIntroduceManager.h"
 #import <FHHouseBase/FHEnvContext.h>
 #import <BDALog/BDAgileLog.h>
 #import "TTAccount+Multicast.h"
@@ -290,7 +289,8 @@ static NSString * const kTTArticleDeviceToken = @"ArticleDeviceToken";
         //        } else {
         //            [[self class] setRemoteNotificationDict:dict];
         //        }
-        if (![[TTAdSplashMediator shareInstance] isAdShowing] && ![FHIntroduceManager sharedInstance].isShowing) {
+        //114 删除用户引导页  && ![FHIntroduceManager sharedInstance].isShowing
+        if (![[TTAdSplashMediator shareInstance] isAdShowing]) {
 //#undef NSLog
 //            NSLog(@"add by zjing for test---notification:%@",userInfo);
             
