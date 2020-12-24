@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(void)showErrorView;
 
++ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst;
+
 @end
 
 NS_ASSUME_NONNULL_END

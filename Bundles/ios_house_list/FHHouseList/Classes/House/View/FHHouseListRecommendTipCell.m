@@ -72,8 +72,8 @@
         }
         self.noDataTipLabel.attributedText = attrText;
         [self.noDataTipLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.contentView).offset(20);
             make.centerX.mas_equalTo(self.contentView);
+            make.bottom.mas_equalTo(-15);
             make.height.mas_equalTo(20);
             make.width.mas_equalTo([model.text btd_widthWithFont:[UIFont themeFontRegular:14] height:20]);
         }];
@@ -83,7 +83,14 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 60;
+    return 50;
+}
+
++ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst {
+    if (isFirst) {
+        return 55;
+    }
+    return 50;
 }
 
 - (void)initConstraints {

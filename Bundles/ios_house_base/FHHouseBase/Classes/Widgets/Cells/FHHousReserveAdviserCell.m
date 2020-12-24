@@ -167,7 +167,7 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(15);
         make.right.mas_equalTo(self.contentView).mas_offset(-15);
-        make.top.mas_equalTo(self.contentView).offset(5);
+        make.height.mas_equalTo(126);
         make.bottom.mas_equalTo(self.contentView).offset(-5);
     }];
 
@@ -403,8 +403,14 @@
             return 126;
         }
     }
-    
     return 211;
+}
+
++ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst {
+    if (isFirst) {
+        return 141;
+    }
+    return 136;
 }
 
 - (void)subscribe {

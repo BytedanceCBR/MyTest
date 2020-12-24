@@ -19,6 +19,8 @@
 
 @property (nonatomic, copy) NSString *houseId;
 
+@property (nonatomic, assign) CGFloat topMargin;
+
 @end
 
 @implementation FHHouseNeighborhoodCardViewModel
@@ -111,6 +113,14 @@
     }
     if (self.opacityDidChange) {
         self.opacityDidChange();
+    }
+}
+
+- (void)adjustIfNeedWithPreviousViewModel:(id<FHHouseCardCellViewModelProtocol>)viewModel {
+    if (viewModel) {
+        self.topMargin = 0;
+    } else {
+        self.topMargin = 5;
     }
 }
 

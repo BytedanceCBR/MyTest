@@ -64,7 +64,7 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
-        make.top.mas_equalTo(5);
+        make.height.mas_equalTo(60);
         make.bottom.mas_equalTo(-5);
     }];
     [self.leftLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -120,6 +120,13 @@
 + (CGFloat)heightForData:(id)data
 {
     return 80;
+}
+
++ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst {
+    if (isFirst) {
+        return 75;
+    }
+    return 70;
 }
 
 - (void)rightBtnDidClick:(UIButton *)btn

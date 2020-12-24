@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateHeightByIsFirst:(BOOL)isFirst;
 
++ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst;
+
 - (void)refreshWithHouseType:(FHHouseType)houseType;
 
 @end

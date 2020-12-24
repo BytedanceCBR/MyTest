@@ -1015,7 +1015,10 @@ extern NSString *const INSTANT_DATA_KEY;
             
             NSObject *entity = [FHHouseCardUtils getEntityFromModel:theItemModel];
             if (entity) {
-                
+                if ([entity conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)] && [entity respondsToSelector:@selector(adjustIfNeedWithPreviousViewModel:)]) {
+                    NSObject<FHHouseCardCellViewModelProtocol> *viewModel = (NSObject<FHHouseCardCellViewModelProtocol> *)entity;
+                    [viewModel adjustIfNeedWithPreviousViewModel:lastObj];
+                }
                 FHTracerModel *tracerModel = [[FHTracerModel alloc] init];
                 tracerModel.originSearchId = self.originSearchId;
                 tracerModel.searchId = self.searchId;
@@ -1821,6 +1824,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 };
             }
             [cell refreshWithData:data];
+            if([cell isKindOfClass:[FHHouseListRedirectTipCell class]]){
+                [((FHHouseListRedirectTipCell *)cell) refreshWithHouseType:self.houseType];
+            }
             if (self.houseList.count == 1 && self.sugesstHouseList.count == 0 && [self.houseList[0] isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
                     self.tableView.scrollEnabled = NO;
                     self.tableView.backgroundColor = [UIColor whiteColor];
@@ -1855,15 +1861,14 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         [cell refreshWithData:data];
         if([cell isKindOfClass:[FHNeighbourhoodAgencyCardCell class]]){
-            [((FHNeighbourhoodAgencyCardCell *)cell) updateHeightByIsFirst:isFirstCell];
+            //[((FHNeighbourhoodAgencyCardCell *)cell) updateHeightByIsFirst:isFirstCell];
         }
         if([cell isKindOfClass:[FHHousReserveAdviserCell class]]){
-            [((FHHousReserveAdviserCell *)cell) updateHeightByIsFirst:isFirstCell];
+            //[((FHHousReserveAdviserCell *)cell) updateHeightByIsFirst:isFirstCell];
         }
         if([cell isKindOfClass:[FHHouseListRedirectTipCell class]]){
-            [((FHHouseListRedirectTipCell *)cell) updateHeightByIsFirst:isFirstCell];
+            //[((FHHouseListRedirectTipCell *)cell) updateHeightByIsFirst:isFirstCell];
             [((FHHouseListRedirectTipCell *)cell) refreshWithHouseType:self.houseType];
-            
         }
         if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
             FHSearchGuessYouWantTipsModel *model = (FHSearchGuessYouWantTipsModel *)data;
@@ -1897,7 +1902,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }else if ([cell isKindOfClass:[FHSuggestionSubscribCell class]]) {
             FHSuggestionSubscribCell *subscribeCell = (FHSuggestionSubscribCell *)cell;
-            [subscribeCell updateHeightByIsFirst: isFirstCell];
+            //[subscribeCell updateHeightByIsFirst: isFirstCell];
             subscribeCell.addSubscribeAction = ^(NSString * _Nonnull subscribeText) {
                 [wself requestAddSubScribe:subscribeText];
             };
@@ -2010,9 +2015,9 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
             FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
             item.isLastCell = isLastCell;
-            if ((item.houseType.integerValue == FHHouseTypeRentHouse || item.houseType.integerValue == FHHouseTypeNeighborhood) && isFirstCell) {
+            if (item.houseType.integerValue == FHHouseTypeRentHouse && isFirstCell) {
                 item.topMargin = 10;
-            }else {
+            } else {
                 item.topMargin = 0;
             }
             if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
@@ -2023,6 +2028,9 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
             }
             data = item;
+        }
+        if ([[cellClass class]respondsToSelector:@selector(heightForData:withIsFirst:)]) {
+            return [[cellClass class] heightForData:data withIsFirst:isFirstCell];
         }
         if ([[cellClass class]respondsToSelector:@selector(heightForData:)]) {
             return [[cellClass class] heightForData:data];

@@ -42,8 +42,8 @@
     _containerView.layer.cornerRadius = 10;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(0);
-        make.bottom.mas_equalTo(-20);
+        make.bottom.mas_equalTo(-5);
+        make.height.mas_equalTo(73);
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
     }];
@@ -117,6 +117,13 @@
 
 + (CGFloat)heightForData:(id)data {
     return 93;
+}
+
++ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst {
+    if (isFirst) {
+        return 88;
+    }
+    return 83;
 }
 
 #pragma mark - Action

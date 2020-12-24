@@ -35,6 +35,8 @@ typedef void (^FHHouseCardOpacityDidChange)(void);
 
 @property (nonatomic, assign, readonly) CGFloat opacity;
 
+@property (nonatomic, assign, readonly) CGFloat topMargin;
+
 - (instancetype)initWithModel:(FHSearchHouseItemModel *)model;
 
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath;

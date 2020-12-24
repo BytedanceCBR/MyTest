@@ -166,7 +166,7 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).mas_offset(15);
         make.right.mas_equalTo(self).mas_offset(-15);
-        make.top.mas_equalTo(self).offset(5);
+        make.height.mas_equalTo(165);
         make.bottom.mas_equalTo(self).offset(-5);
     }];
 
@@ -337,6 +337,13 @@
 + (CGFloat)heightForData:(id)data
 {
     return 169;// + 10;
+}
+
++ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst {
+    if (isFirst) {
+        return 180;
+    }
+    return 175;
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel *)contact {

@@ -28,6 +28,8 @@ static NSString * const kFHSuggestionSubscribeNotificationKey = @"kFHSuggestionS
 
 - (void)updateHeightByIsFirst:(BOOL)isFirst;
 
++ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst;
+
 @end
 
 NS_ASSUME_NONNULL_END
