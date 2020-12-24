@@ -7,6 +7,7 @@
 
 #import "FHHouseRealtorDetailHouseVC.h"
 #import "FHHouseRealtorDetailHouseViewModel.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
 @interface FHHouseRealtorDetailHouseVC ()
 @property (strong, nonatomic) FHHouseRealtorDetailHouseViewModel *viewModel;
 @end
@@ -15,6 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.ttContentInset = UIEdgeInsetsMake(self.headerViewHeight, 0, 0, 0);
     [self createModel];
 }
 

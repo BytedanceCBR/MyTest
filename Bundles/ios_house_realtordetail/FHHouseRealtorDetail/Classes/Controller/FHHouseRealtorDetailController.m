@@ -6,6 +6,7 @@
 //
 
 #import "FHHouseRealtorDetailController.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
 #import <FHHouseBase/FHBaseTableView.h>
 #import "FHHouseRealtorDetailViewModel.h"
 #import "Masonry.h"
@@ -18,6 +19,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.ttContentInset = UIEdgeInsetsMake(self.headerViewHeight, 0, 0, 0);
     [self createModel];
 }
 

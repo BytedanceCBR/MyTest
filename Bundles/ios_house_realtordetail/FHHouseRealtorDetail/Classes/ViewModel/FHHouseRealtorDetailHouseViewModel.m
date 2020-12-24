@@ -18,6 +18,7 @@
 #import "FHHouseBaseItemCell.h"
 #import "FHHouseRealtorDetailPlaceCell.h"
 #import "FHRealtorSecondCell.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
 
 @interface FHHouseRealtorDetailHouseViewModel ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
@@ -289,6 +290,13 @@
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
             [[TTRoute sharedRoute] openURLByPushViewController:jumpUrl userInfo:userInfo];
         }
+    }
+}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView.contentOffset.y<0) {
+        self.detailController.ttContentInset = UIEdgeInsetsMake( fabs(scrollView.contentOffset.y) , 0, 0, 0);
+    }else {
+        self.detailController.ttContentInset = UIEdgeInsetsMake( 0, 0, 0, 0);
     }
 }
 

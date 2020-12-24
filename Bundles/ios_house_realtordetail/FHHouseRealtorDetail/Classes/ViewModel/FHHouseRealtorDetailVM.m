@@ -41,6 +41,7 @@
 #import "TTURLUtils.h"
 #import "NSObject+YYModel.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
 #define kSegmentViewHeight 44
 @interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate,TTHorizontalPagingSegmentViewDelegate>
 
@@ -50,6 +51,7 @@
 @property (nonatomic, strong) FHHouseRealtorDetailDataModel *data;
 @property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
 @property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
+@property(nonatomic, assign) CGFloat headerViewHeight;
 @property (nonatomic, strong) NSMutableArray *subVCs;
 @property (nonatomic, strong) NSMutableArray *segmentTitles;
 @property (nonatomic, copy) NSString *currentSegmentType;
@@ -171,6 +173,7 @@
         }
         
         self.viewController.headerView.height = self.viewController.headerView.viewHeight;
+        self.headerViewHeight = self.viewController.headerView.viewHeight;
         if (realtorLeave) {
             [self.viewController showRealtorLeaveHeader];
             return;
@@ -259,6 +262,7 @@
 - (void)createFeedListController:(NSString *)tabName requestName:(NSString *)name {
     if (![tabName isEqualToString:@"房源"]) {
         FHHouseRealtorDetailController *realtorDetailController =  [[FHHouseRealtorDetailController alloc]init];
+        realtorDetailController.headerViewHeight = self.headerViewHeight;
         realtorDetailController.realtorInfo = self.realtorInfo;
         realtorDetailController.tracerDict = self.tracerDict;
         realtorDetailController.placeHolderCellHeight = self.placeHolderCellHeight;
@@ -272,6 +276,7 @@
         [self.subVCs addObject:realtorDetailController];
     }else {
         FHHouseRealtorDetailHouseVC *realtorDetailController =  [[FHHouseRealtorDetailHouseVC alloc]init];
+        realtorDetailController.headerViewHeight = self.headerViewHeight;
         realtorDetailController.realtorInfo = self.realtorInfo;
         realtorDetailController.tracerDict = self.tracerDict;
         realtorDetailController.tabName = name;

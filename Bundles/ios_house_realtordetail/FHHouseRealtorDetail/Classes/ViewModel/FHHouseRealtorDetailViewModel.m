@@ -23,6 +23,7 @@
 #import "ToastManager.h"
 #import "FHHouseBaseItemCell.h"
 #import "FHHouseRealtorDetailPlaceCell.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
 #import "FHUtils.h"
 
 @interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
@@ -210,7 +211,11 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
+    if (scrollView.contentOffset.y<0) {
+        self.detailController.ttContentInset = UIEdgeInsetsMake( fabs(scrollView.contentOffset.y) , 0, 0, 0);
+    }else {
+        self.detailController.ttContentInset = UIEdgeInsetsMake( 0, 0, 0, 0);
+    }
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
