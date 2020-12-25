@@ -111,7 +111,7 @@
             NSDictionary *params = [self checkInvalidJsonString:argumentsDict[@"params"]];
             NSDictionary *reportParams = [self checkInvalidJsonString:argumentsDict[@"report_params"]];
             
-            FHClueAssociateInfoModel *associateInfo = [[FHClueAssociateInfoModel alloc] initWithDictionary:[params btd_dictionaryValueForKey:@"associate_info"] error:nil];
+            FHClueAssociateInfoModel *associateInfo = [[FHClueAssociateInfoModel alloc] initWithDictionary:[self checkInvalidJsonString:[params btd_stringValueForKey:@"associate_info"]] error:nil];
             
             FHAssociatePhoneModel *associatePhone = [[FHAssociatePhoneModel alloc] init];
             associatePhone.reportParams = reportParams.copy;
@@ -172,7 +172,7 @@
             NSDictionary *params = [self checkInvalidJsonString:argumentsDict[@"params"]];
             NSDictionary *reportParams = [self checkInvalidJsonString:argumentsDict[@"report_params"]];
             
-            FHClueAssociateInfoModel *associateInfo = [[FHClueAssociateInfoModel alloc] initWithDictionary:[params btd_dictionaryValueForKey:@"associate_info"] error:nil];
+            FHClueAssociateInfoModel *associateInfo = [[FHClueAssociateInfoModel alloc] initWithDictionary:[self checkInvalidJsonString:[params btd_stringValueForKey:@"associate_info"]] error:nil];
             
             FHAssociateFormReportModel *formReportModel = [[FHAssociateFormReportModel alloc] init];
             formReportModel.associateInfo = associateInfo.reportFormInfo;
@@ -223,7 +223,7 @@
             NSDictionary *params = [self checkInvalidJsonString:argumentsDict[@"params"]];
             NSDictionary *reportParams = [self checkInvalidJsonString:argumentsDict[@"report_params"]];
             
-            FHClueAssociateInfoModel *associateInfo = [[FHClueAssociateInfoModel alloc] initWithDictionary:[params btd_dictionaryValueForKey:@"associate_info"] error:nil];
+            FHClueAssociateInfoModel *associateInfo = [[FHClueAssociateInfoModel alloc] initWithDictionary:[self checkInvalidJsonString:[params btd_stringValueForKey:@"associate_info"]] error:nil];
             
             // IM 透传数据模型
             FHAssociateIMModel *associateIMModel = [[FHAssociateIMModel alloc] init];
@@ -236,9 +236,10 @@
             // IM 相关埋点上报参数
             FHAssociateReportParams *reportModel = [[FHAssociateReportParams alloc] init];
             reportModel.enterFrom = [reportParams btd_stringValueForKey:@"enter_from" default:@"be_null"];
-            reportModel.elementFrom = [reportParams btd_stringValueForKey:@"element_from" default:@"be_null"];;
-            reportModel.logPb = [reportParams btd_dictionaryValueForKey:@"log_pb"];
-            reportModel.originFrom = [reportParams btd_stringValueForKey:@"origin_from" default:@"be_null"];;
+            reportModel.elementFrom = [reportParams btd_stringValueForKey:@"element_from" default:@"be_null"];
+            reportModel.elementType = [reportParams btd_stringValueForKey:@"element_type" default:@"be_null"];
+            reportModel.logPb = [self checkInvalidJsonString:[reportParams btd_stringValueForKey:@"log_pb"]];
+            reportModel.originFrom = [reportParams btd_stringValueForKey:@"origin_from" default:@"be_null"];
             reportModel.rank = [reportParams btd_stringValueForKey:@"rank" default:@"be_null"];
             reportModel.originSearchId = [reportParams btd_stringValueForKey:@"origin_search_id" default:@"be_null"];
             reportModel.searchId = [reportParams btd_stringValueForKey:@"search_id" default:@"be_null"];
@@ -246,7 +247,7 @@
             reportModel.realtorId = [params btd_stringValueForKey:@"realtor_id" default:@"be_null"];
             reportModel.realtorRank = @(0);
             reportModel.conversationId = @"be_null";
-//            reportModel.realtorLogpb = contactPhone.realtorLogpb;
+            reportModel.realtorLogpb = [self checkInvalidJsonString:[reportParams btd_stringValueForKey:@"realtor_logpb"]];
 //            reportModel.realtorPosition = @"house_model";
 //            reportModel.sourceFrom = @"house_model";
 //            reportModel.extra = @{@"house_model_rank":@(index)};
