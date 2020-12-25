@@ -5,7 +5,7 @@
 //  Created by xubinbin on 2020/11/27.
 //
 
-#import "FHHouseNewComponentViewModel.h"
+#import "FHHouseNewComponentViewModel+HouseCard.h"
 #import "FHSearchHouseModel.h"
 #import "FHHouseListBaseItemModel.h"
 
