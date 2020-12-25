@@ -214,9 +214,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         }
         self.houseTypeName = title;
         
-        if (self.configModel.houseType == FHHouseTypeSecondHandHouse) {
+        //此处 如果从新房切二手 不会重新load 所以 此处不加判断了
+//        if (self.configModel.houseType == FHHouseTypeSecondHandHouse) {
             self.subwayData = [self loadSubwayData];
-        }
+//        }
         
         
         [self configGeoFenceManager];
@@ -270,7 +271,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
 //    if (self.mapView.zoomLevel > 16){
 //        [self doClear];
 //    }
-
+    [self tryUpdateSideBar];
     [self addClickTabLog];
     
     [self.mapView removeAnnotations:(NSArray <MAAnnotation>*)self.oldHouseAnnotions];
