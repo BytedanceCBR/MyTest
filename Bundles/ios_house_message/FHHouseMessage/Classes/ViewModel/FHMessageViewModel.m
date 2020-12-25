@@ -318,8 +318,8 @@
                 clickParam[UT_ORIGIN_FROM] = originFrom;
                 TRACK_EVENT(@"popup_click", clickParam);
                 //---
+                [[IMManager shareInstance] jumpRealtorListH5PageWithUrl:userInfo.redirect reportParam:clickParam];
                 
-                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:userInfo.redirect]];
             } rightTitle:@"继续联系" rightAction:^{
                 
                 // 点击埋点

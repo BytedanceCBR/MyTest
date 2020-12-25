@@ -339,7 +339,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     clickParam[UT_ORIGIN_FROM] = traceParams[UT_ORIGIN_FROM];
                     TRACK_EVENT(@"popup_click", clickParam);
                     //---
-                    [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:redirect]];
+                    [[IMManager shareInstance] jumpRealtorListH5PageWithUrl:redirect reportParam:clickParam];
                 } rightTitle:@"知道了" rightAction:^{
                     // 点击埋点
                     NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
