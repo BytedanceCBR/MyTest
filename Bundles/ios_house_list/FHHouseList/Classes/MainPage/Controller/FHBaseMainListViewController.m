@@ -21,6 +21,9 @@
 #import "FHMainListTableView.h"
 #import "FHHouseNewTopContainer.h"
 #import "FHHouseListErrorView.h"
+#import "FHEnvContext.h"
+#import "FHHouseTableView.h"
+#import "FHHouseCardUtils.h"
 
 #define TOP_HOR_PADDING 3
 
@@ -82,7 +85,12 @@
 -(UITableView *)tableView
 {
     if (!_tableView) {
-        _tableView = [[FHMainListTableView alloc] init];
+        if ([FHEnvContext isHouseListComponentEnable]) {
+            _tableView = [[FHHouseTableView alloc] init];
+        } else {
+            _tableView = [[FHMainListTableView alloc] init];
+        }
+        
         if (@available(iOS 11.0 , *)) {
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
             UIEdgeInsets inset = UIEdgeInsetsZero;
@@ -146,6 +154,8 @@
     // Do any additional setup after loading the view.
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.ttNeedIgnoreZoomAnimation = YES;
+    
+    [FHHouseCardUtils trackUseListComponentIfNeed];
     
     [self initNavbar];
     _topContainerView = [[UIView alloc]init];
@@ -320,11 +330,18 @@
     
     [self.viewModel addStayLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
+    
+    if ([FHEnvContext isHouseListComponentEnable]) {
+        [(FHHouseTableView *)self.tableView handleAppDidEnterBackground];
+    }
 }
 
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    if ([FHEnvContext isHouseListComponentEnable]) {
+        [(FHHouseTableView *)self.tableView handleAppWillEnterForground];
+    }
     
     if (self.houseType == FHHouseTypeSecondHandHouse) {
         NSArray *tableCells = [self.tableView visibleCells];

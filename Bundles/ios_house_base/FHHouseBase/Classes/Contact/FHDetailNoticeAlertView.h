@@ -19,7 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^revokeAssociateDistributionBlock)(void);
 @property (nonatomic, copy) void (^secondConfirmBlock)(void);
 
-- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle;
+- (instancetype)initWithTitle:(NSString *)title subtitle:(NSString *)subtitle btnTitle:(NSString *)btnTitle isSellHouse:(BOOL )isSellHouse;
 
 - (void)showFrom:(UIView *)parentView;
 - (void)dismiss;

@@ -74,6 +74,10 @@
     NSMutableDictionary *dics = [dic mutableCopy];
     CGFloat height = ceil(([UIScreen mainScreen].bounds.size.width - 42)*(140.0f/332.0f));
     [dics setObject:@{@"display_height":@(height),@"display_width":@([UIScreen mainScreen].bounds.size.width - 42)}  forKey:@"common_params"];
+    NSMutableDictionary *traceParam = @{}.mutableCopy;
+    traceParam[@"origin_from"] = self.tracerDic[@"origin_from"] ?: @"be_null";
+    traceParam[@"enter_from"] = self.tracerDic[@"page_type"] ?: @"be_null";
+    [dics setObject:traceParam forKey:@"report_params"];
     if (dics && self.articleCardView) {
         [self.articleCardView updateData:dics];
     }

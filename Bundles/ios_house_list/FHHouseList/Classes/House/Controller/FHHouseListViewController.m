@@ -29,6 +29,8 @@
 #import "TTNavigationController.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "FHHouseListErrorView.h"
+#import "FHHouseTableView.h"
+#import "FHHouseCardUtils.h"
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
@@ -561,6 +563,7 @@
     [super viewDidLoad];
     self.ttNeedIgnoreZoomAnimation = YES;
     
+    [FHHouseCardUtils trackUseListComponentIfNeed];
     
     [self initNavbar];
     
@@ -710,11 +713,19 @@
     
     [self.viewModel addStayCategoryLog:self.ttTrackStayTime];
     [self tt_resetStayTime];
+    
+    if ([FHEnvContext isHouseListComponentEnable]) {
+        [(FHHouseTableView *)self.tableView handleAppDidEnterBackground];
+    }
 }
 
 - (void)trackStartedByAppWillEnterForground {
     [self tt_resetStayTime];
     self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
+    
+    if ([FHEnvContext isHouseListComponentEnable]) {
+        [(FHHouseTableView *)self.tableView handleAppWillEnterForground];
+    }
     
     if (self.houseType == FHHouseTypeSecondHandHouse || self.houseType == FHHouseTypeNewHouse) {
         NSArray *tableCells = [self.tableView visibleCells];
@@ -729,14 +740,18 @@
             }];
         }
     }
+
 }
 
 #pragma mark - lazy load
 
 -(UITableView *)tableView {
     if (!_tableView) {
-        
-        _tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds];
+        if ([FHEnvContext isHouseListComponentEnable]) {
+            _tableView = [[FHHouseTableView alloc] initWithFrame:self.view.bounds];
+        } else {
+            _tableView = [[FHBaseTableView alloc] initWithFrame:self.view.bounds];
+        }
         if (@available(iOS 11.0, *)) {
             
             _tableView.estimatedRowHeight = 0;

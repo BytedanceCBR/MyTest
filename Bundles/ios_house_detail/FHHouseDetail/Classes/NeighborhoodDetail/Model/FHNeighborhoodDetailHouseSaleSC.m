@@ -123,7 +123,7 @@
     FHNeighborhoodDetailRecommendTitleView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHNeighborhoodDetailRecommendTitleView class] atIndex:index];
     titleView.titleLabel.font = [UIFont themeFontSemibold:16];
     titleView.titleLabel.textColor = [UIColor themeGray1];
-    titleView.titleLabel.text = @"小区在售房源";
+    titleView.titleLabel.text = @"在售房源";
     return titleView;
 }
 
@@ -157,7 +157,7 @@
         NSMutableDictionary *userInfo = [NSMutableDictionary new];
         userInfo[@"tracer"] = tracerDic;
         userInfo[@"house_type"] = @(FHHouseTypeSecondHandHouse);
-        userInfo[@"title"] = @"小区在售房源";// 默认值
+        userInfo[@"title"] = @"在售房源";// 默认值
 //        if (detailModel.data.neighborhoodInfo.name.length > 0) {
 //            userInfo[@"title"] = detailModel.data.neighborhoodInfo.name;
 //        }

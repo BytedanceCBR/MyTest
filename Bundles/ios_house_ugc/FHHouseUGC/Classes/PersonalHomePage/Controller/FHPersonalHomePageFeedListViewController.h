@@ -16,7 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic,strong) UITableView *tableView;
 @property(nonatomic,copy) NSString *tabName;
 @property(nonatomic,assign) NSInteger index;
+@property(nonatomic,assign) BOOL isFirstLoad;
 - (void)firstLoadData;
+- (void)startLoadData;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -23,7 +23,7 @@
     static id manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        manager = [[self alloc] init];
+        manager = [[FHHousedetailModelManager alloc] init];
     });
     
     return manager;
@@ -33,17 +33,11 @@
 {
     self = [super init];
     if (self) {
-    }
-    return self;
-}
-
-- (YYCache *)houseDtailManagerCache{
-    if(! _houseDtailManagerCache){
         _houseDtailManagerCache = [[YYCache alloc] initWithName:@"old_house_detail_cache"];
         [_houseDtailManagerCache.memoryCache setAgeLimit:604800];
         [_houseDtailManagerCache.diskCache setAgeLimit:604800];
     }
-    return  _houseDtailManagerCache;
+    return self;
 }
 
 - (void)saveHouseDetailModel:(id)model With:(NSString *)key{

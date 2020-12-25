@@ -6,12 +6,12 @@
 //
 
 #import "FHNewHouseDetailReleatorCollectionCell.h"
-#import <FHHouseBase/FHRealtorAvatarView.h>
+#import <FHHouseBase/FHHouseRealtorAvatarView.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHNewHouseDetailReleatorCollectionCell ()
 
-@property (nonatomic, strong) FHRealtorAvatarView *avatorView;
+@property (nonatomic, strong) FHHouseRealtorAvatarView *avatorView;
 
 @property (nonatomic, strong) UIButton *callBtn;
 @property (nonatomic, strong) UIButton *imBtn;
@@ -32,7 +32,7 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        self.avatorView = [[FHRealtorAvatarView alloc] init];
+        self.avatorView = [[FHHouseRealtorAvatarView alloc] init];
         self.avatorView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
         self.avatorView.avatarImageView.layer.borderWidth = [UIDevice btd_onePixel];
         [self.contentView addSubview:self.avatorView];
@@ -173,6 +173,7 @@
     
     self.nameLabel.text = model.realtorName;
     self.agencyLabel.text = model.agencyName;
+    self.agencyBac.hidden = !model.agencyName.length;
     [self.avatorView updateAvatarWithModel:model];
     
     
