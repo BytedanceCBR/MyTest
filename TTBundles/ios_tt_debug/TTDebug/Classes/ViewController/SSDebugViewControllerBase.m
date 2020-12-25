@@ -424,10 +424,6 @@
     }
     return index;
 }
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self.view endEditing:YES];
-}
 @end
 
 #endif

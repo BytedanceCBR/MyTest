@@ -100,6 +100,7 @@
 #import "FIMDebugManager.h"
 #import <TTTracker/TTTracker.h>
 #import <FlutterPackagesDebugViewController.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
@@ -108,7 +109,7 @@ extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
 extern NSDictionary *ttvs_videoMidInsertADDict(void);
 extern NSInteger ttvs_getVideoMidInsertADReqStartTime(void);
 extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
-extern NSString *const BOE_OPEN_KEY ;
+extern NSString *const BOE_OPEN_KEY;
 
 @interface SSDebugViewController () {
     
@@ -533,7 +534,7 @@ extern NSString *const BOE_OPEN_KEY ;
         item71.switchAction = @selector(_httpsSettingActionFired:);
         
         STTableViewCellItem *boeEnvSwitch = [[STTableViewCellItem alloc] initWithTitle:@"BOE开关" target:self action:@selector(switchBOEAction)];
-        boeEnvSwitch.detail = @"切换后重启生效";
+        boeEnvSwitch.detail = [NSString stringWithFormat:@"当前环境: %@",[FHEnvContext sharedInstance].boeChannelName];
         boeEnvSwitch.switchStyle = YES;
         boeEnvSwitch.checked = [self.class isBOEOn];
         boeEnvSwitch.switchAction = @selector(switchBOE:);
@@ -2041,7 +2042,24 @@ extern NSString *const BOE_OPEN_KEY ;
 }
 
 -(void)switchBOEAction {
-    // 添加泳道输入逻辑
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请输入BOE泳道名称" message:@"确定后需要重启生效" preferredStyle:UIAlertControllerStyleAlert];
+    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.keyboardType = UIKeyboardTypeASCIICapable;
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *channelName = [alertVC.textFields.firstObject.text btd_trimmed];
+        if(channelName.length > 0) {
+            [[NSUserDefaults standardUserDefaults] setObject:channelName forKey:@"FH_BOE_CHANNEL_NAME_KEY"];
+            if(![self.class isBOEOn]) {
+                [self switchBOE:nil];
+            }
+        }
+    }];
+    [alertVC addAction:cancel];
+    [alertVC addAction:confirm];
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:alertVC animated:YES completion:nil];
 }
 
 -(void)switchBOE:(UISwitch *)sw
@@ -2049,6 +2067,7 @@ extern NSString *const BOE_OPEN_KEY ;
     BOOL isOn = [self.class isBOEOn];
     [[NSUserDefaults standardUserDefaults] setBool:!isOn forKey:BOE_OPEN_KEY];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    [self.tableView reloadData];
 }
 
 +(BOOL)isBOEOn
