@@ -1256,24 +1256,15 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (NSInteger)lastSearchSugHouseType {
-    NSString *cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    id dic = [FHUtils contentForKey:@"last_search_sug_house_type"];
-    if (dic && [dic isKindOfClass:[NSDictionary class]] && cityId) {
-        NSDictionary *houseTypeDic = (NSDictionary *)dic;
-        return [houseTypeDic[cityId] integerValue];
+    id houseType = [FHUtils contentForKey:@"last_search_sug_house_type"];
+    if (houseType) {
+        return [houseType integerValue];
     }
     return 0;
 }
 
 + (void)setLastSearchSugHouseType:(NSInteger)houseType {
-    NSString *cityId = [FHEnvContext getCurrentSelectCityIdFromLocal];
-    id dic = [FHUtils contentForKey:@"last_search_sug_house_type"];
-    NSMutableDictionary *mDic = [NSMutableDictionary dictionary];
-    if([dic isKindOfClass:[NSDictionary class]] && cityId){
-        [mDic addEntriesFromDictionary:dic];
-    }
-    mDic[cityId] = @(houseType);
-    [FHUtils setContent:[mDic copy] forKey:@"last_search_sug_house_type"];
+    [FHUtils setContent:@(houseType) forKey:@"last_search_sug_house_type"];
 }
 
 @end
