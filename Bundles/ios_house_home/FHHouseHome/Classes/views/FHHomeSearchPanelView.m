@@ -170,12 +170,14 @@
     tracerParams[UT_ORIGIN_FROM] = self.fh_originFrom ? : @"maintab_search";
     tracerParams[UT_FROM_PAGE_TYPE] = self.fh_pageType ? : @"be_null";
             
+    FHHouseType houseType = [FHEnvContext lastSearchSugHouseType];
     NSMutableDictionary *infos = [NSMutableDictionary new];
-    infos[@"house_type"] = @([FHEnvContext lastSearchSugHouseType]);
+    infos[@"house_type"] = @(houseType);
     infos[@"isNeedHouseTypeCache"] = @(1);
     infos[@"tracer"] = tracerParams;
     infos[@"from_home"] = @(FHEnterSuggestionTypeHome);
-    if (self.searchTitleIndex >= 0 && self.searchTitleIndex < self.rollDatas.count) {
+    
+    if (self.searchTitleIndex >= 0 && self.searchTitleIndex < self.rollDatas.count && houseType == FHHouseTypeSecondHandHouse) {
         FHHomeRollDataDataModel *model = self.rollDatas[self.searchTitleIndex];
         if (model.detail.count > 0) {
             FHHomeRollDataDataDetailModel *detailModel = model.detail[0];
