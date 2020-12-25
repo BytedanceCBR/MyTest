@@ -406,7 +406,9 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 {
     NSInteger currentIndex = scrollView.contentOffset.x / self.width;
     [self didSwitchIndex:self.lastPageIndex to:currentIndex];
-    [self.segmentView scrollToIndex:currentIndex];
+    if(self.segmentView.selectedIndex != currentIndex){
+        [self.segmentView scrollToIndex:currentIndex];
+    }
     [self advanceLoadData];
     [self adjustContentViewOffsetWithScrollView:self.currentContentView];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0)), dispatch_get_main_queue(), ^{
