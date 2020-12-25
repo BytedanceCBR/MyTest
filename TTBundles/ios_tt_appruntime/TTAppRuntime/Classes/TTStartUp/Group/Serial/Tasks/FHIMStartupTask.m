@@ -225,7 +225,13 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                         }
                     }
                 } else {
-                    [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
+                    NSString *message = nil;
+                    if ([obj isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary *jsonObj = (NSDictionary *)obj;
+                        message = [jsonObj btd_stringValueForKey:@"message"];
+                    }
+                    [[ToastManager manager] showToast:message?:@"网络异常，请稍后重试!"];
+                    
                     [monitorParams setValue:error forKey:@"server_error"];
                     [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_SERVER_ERROR extra:monitorParams];
                     
@@ -301,13 +307,15 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
     [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:scoreCount tags:scoreTags from:element_from completion:^(bool success, NSError *_Nullable error, NSDictionary *jsonObj) {
         if (success) {
+            [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
+        }
+        else {
             id data = [jsonObj btd_objectForKey:@"data" default:nil];
             BOOL isBlackmailed = NO;
             if(data && [data isKindOfClass:NSDictionary.class]) {
                 isBlackmailed = [[data btd_objectForKey:@"punish_status" default:@0] boolValue];
             }
             if(isBlackmailed) {
-                
                 // 展现埋点
                 NSMutableDictionary *showParams = [NSMutableDictionary dictionary];
                 showParams[@"popup_name"] = @"black_popup";
@@ -344,12 +352,12 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     TRACK_EVENT(@"popup_click", clickParam);
                     //---
                 }];
-            } else {
-                [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
             }
-        } else {
-            [[ToastManager manager] showToast:@"提交失败"];
+            else {
+                [[ToastManager manager] showToast:@"提交失败"];
+            }
         }
+        
         if(completion) {
             completion(success, error, jsonObj);
         }
