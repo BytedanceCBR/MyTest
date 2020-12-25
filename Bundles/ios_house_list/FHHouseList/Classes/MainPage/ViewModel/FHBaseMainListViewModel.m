@@ -1710,7 +1710,6 @@ extern NSString *const INSTANT_DATA_KEY;
         return cell;
     }else{
         BOOL isLastCell = NO;
-        BOOL isFirstCell = NO;
         
         NSString *identifier = @"";
         id data = nil;
@@ -1723,7 +1722,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 data = self.sugesstHouseList[indexPath.row];
             }
         }
-        isFirstCell = (indexPath.row == 0);
         if (data) {
             identifier = [self cellIdentifierForEntity:data];
         }
@@ -1759,13 +1757,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 helperCell.cellTapAction = ^(NSString *url){
                     [wself jump2HouseFindPageWithUrl:url];
                 };
-            }
-            if ([cell isKindOfClass:[FHHouseSearchSecondHouseCell class]]) {
-                FHHouseSearchSecondHouseCell *secondCell = (FHHouseSearchSecondHouseCell *)cell;
-                [secondCell updateHeightByIsFirst:isFirstCell];
-            } else if ([cell isKindOfClass:[FHHouseSearchNewHouseCell class]]) {
-                FHHouseSearchNewHouseCell *newCell = (FHHouseSearchNewHouseCell *)cell;
-                [newCell updateHeightByIsFirst:isFirstCell];
             }
             if ([cell isKindOfClass:[FHDynamicLynxCell class]]) {
                 FHDynamicLynxCellModel *cellModel = data;
@@ -1823,7 +1814,15 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return CGFLOAT_MIN;
+    if (section == 0 && !_showPlaceHolder) {
+        return FHHouseListInsetTop;
+    } else {
+        return CGFLOAT_MIN;
+    }
+}
+
+- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    return [[UIView alloc] init];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1831,7 +1830,6 @@ extern NSString *const INSTANT_DATA_KEY;
     if (_showPlaceHolder) {
         return 88;
     }
-    BOOL isFirstCell = NO;
     BOOL isLastCell = NO;
     id data = nil;
     if (indexPath.section == 0) {
@@ -1840,18 +1838,12 @@ extern NSString *const INSTANT_DATA_KEY;
             if (indexPath.row == self.houseList.count - 1) {
                 isLastCell = YES;
             }
-            if (indexPath.row == 0) {
-                isFirstCell = YES;
-            }
         }
     } else {
         if (indexPath.row < self.sugesstHouseList.count) {
             data = self.sugesstHouseList[indexPath.row];
             if (indexPath.row == self.sugesstHouseList.count - 1) {
                 isLastCell = YES;
-            }
-            if (indexPath.row == 0) {
-                isFirstCell = YES;
             }
         }
     }
@@ -1860,18 +1852,6 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
             FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
             item.isLastCell = isLastCell;
-            if ((item.houseType.integerValue == FHHouseTypeRentHouse || item.houseType.integerValue == FHHouseTypeNeighborhood) && isFirstCell) {
-                item.topMargin = 10;
-            }else {
-                item.topMargin = 0;
-            }
-            if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
-                if (isFirstCell) {
-                    item.topMargin = 5;
-                } else {
-                    item.topMargin = 0;
-                }
-            }
             data = item;
         }
         if ([[cellClass class]respondsToSelector:@selector(heightForData:)]) {
