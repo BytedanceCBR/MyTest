@@ -69,13 +69,12 @@
 
 - (void)setTopOffset:(CGFloat)topOffset {
     _topOffset = topOffset;
-    
-    _placeHolderImageView.top = topOffset;
-    _view1.top = topOffset;
+    _bacView.top = topOffset;
+    _placeHolderImageView.top = topOffset + 10;
+    _view1.top = topOffset + 10;
     _view2.top = _view1.bottom + 7;
     _view3.top = _view2.bottom + 7;
     _view4.top = _view3.bottom + 7;
-    
 }
 
 -(UIView *)bacView {

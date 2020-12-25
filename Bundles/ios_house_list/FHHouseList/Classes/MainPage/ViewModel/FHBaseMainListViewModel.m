@@ -1709,7 +1709,7 @@ extern NSString *const INSTANT_DATA_KEY;
             return cell;
         }
         FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kPlaceCellId];
-        cell.topOffset = 15;
+        cell.topOffset = indexPath.row == 0 ? 10 :5;
         return cell;
     }else{
         BOOL isLastCell = NO;
@@ -1835,7 +1835,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if (self.houseType == FHHouseTypeRentHouse) {
             return 88;
         }else {
-            return 124;
+            return indexPath.row == 0?129:124;
         }
 
     }
