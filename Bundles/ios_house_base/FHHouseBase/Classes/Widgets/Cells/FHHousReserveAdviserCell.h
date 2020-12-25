@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^textFieldDidEnd)(void);
 
 - (void)bindData:(FHHouseReserveAdviserModel *)model traceParams:(NSDictionary *)params;
-
-//- (void)updateHeightByIsFirst:(BOOL)isFirst;
     
 @end
 

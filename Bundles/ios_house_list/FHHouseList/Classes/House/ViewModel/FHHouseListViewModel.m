@@ -1774,21 +1774,14 @@ extern NSString *const INSTANT_DATA_KEY;
             return cell;
         }
     }
-    BOOL isLastCell = NO;
-    BOOL isFirstCell = NO;
-    if (indexPath.row == 0) {
-        isFirstCell = YES;
-    }
 
     NSString *identifier = @"";
     id data = nil;
     if (indexPath.section == 0) {
         data = self.houseList[indexPath.row];
     } else {
-        isLastCell = (indexPath.row == self.sugesstHouseList.count - 1);
         if (indexPath.row < self.sugesstHouseList.count) {
             data = self.sugesstHouseList[indexPath.row];
-            
         }
     }
     if (data) {
@@ -1846,13 +1839,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 [wself jump2HouseFindPageWithUrl:url];
             };
         }
-//        if ([cell isKindOfClass:[FHHouseSearchSecondHouseCell class]]) {
-//            FHHouseSearchSecondHouseCell *secondCell = (FHHouseSearchSecondHouseCell *)cell;
-//            [secondCell updateHeightByIsFirst:isFirstCell];
-//        } else if ([cell isKindOfClass:[FHHouseSearchNewHouseCell class]]) {
-//            FHHouseSearchNewHouseCell *newCell = (FHHouseSearchNewHouseCell *)cell;
-//            [newCell updateHeightByIsFirst:isFirstCell];
-//        }
         if ([cell isKindOfClass:[FHDynamicLynxCell class]]) {
             FHDynamicLynxCellModel *cellModel = data;
             if (cellModel && [cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
@@ -1861,10 +1847,6 @@ extern NSString *const INSTANT_DATA_KEY;
             }
         }
         [cell refreshWithData:data];
-        if([cell isKindOfClass:[FHNeighbourhoodAgencyCardCell class]]){
-        }
-        if([cell isKindOfClass:[FHHousReserveAdviserCell class]]){
-        }
         if([cell isKindOfClass:[FHHouseListRedirectTipCell class]]){
             [((FHHouseListRedirectTipCell *)cell) refreshWithHouseType:self.houseType];
         }
