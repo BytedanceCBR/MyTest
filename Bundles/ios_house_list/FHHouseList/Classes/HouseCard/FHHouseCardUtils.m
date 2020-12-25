@@ -38,6 +38,8 @@
 #import "FHHouseNewCardViewModel.h"
 #import "FHHouseNoResultViewModel.h"
 #import "FHHouseNoResultCell.h"
+#import "FHUserTracker.h"
+#import <Heimdallr/HMDTTMonitor.h>
 
 @implementation FHHouseCardUtils
 
@@ -200,6 +202,12 @@
     }
     
     return dataList;
+}
+
++ (void)trackUseListComponentIfNeed {
+    NSDictionary *params = @{@"open":@([FHEnvContext isHouseListComponentEnable])};
+    [FHUserTracker writeEvent:@"f_houselist_component_enabled" params:params];
+    [[HMDTTMonitor defaultManager] hmdTrackService:@"f_houselist_component_enabled" metric:params category:nil extra:nil];
 }
 
 @end

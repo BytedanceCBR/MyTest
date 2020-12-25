@@ -30,6 +30,7 @@
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "FHHouseListErrorView.h"
 #import "FHHouseTableView.h"
+#import "FHHouseCardUtils.h"
 
 #define kFilterBarHeight 44
 #define COMMUTE_TOP_MARGIN 6
@@ -562,6 +563,7 @@
     [super viewDidLoad];
     self.ttNeedIgnoreZoomAnimation = YES;
     
+    [FHHouseCardUtils trackUseListComponentIfNeed];
     
     [self initNavbar];
     

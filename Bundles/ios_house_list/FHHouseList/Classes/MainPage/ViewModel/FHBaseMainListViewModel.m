@@ -108,7 +108,7 @@
 
 extern NSString *const INSTANT_DATA_KEY;
 
-@interface FHBaseMainListViewModel(FHHouseTableView)<FHHouseTableViewDataSource, FHHouseNewComponentViewModelDelegate>
+@interface FHBaseMainListViewModel(FHHouseTableView)<FHHouseTableViewDataSource, FHHouseTableViewDelegate, FHHouseNewComponentViewModelDelegate>
 
 - (NSObject *)getEntityFromModel:(id)model;
 
@@ -157,6 +157,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
         if ([FHEnvContext isHouseListComponentEnable]) {
             [(FHHouseTableView *)self.tableView setFhHouse_dataSource:self];
+            [(FHHouseTableView *)self.tableView setFhHouse_delegate:self];
             [(FHHouseTableView *)self.tableView registerCellStyles];
         } else {
             self.tableView.delegate = self;
@@ -909,15 +910,28 @@ extern NSString *const INSTANT_DATA_KEY;
 //            }
         }];
         
+        if ([FHEnvContext isHouseListComponentEnable]) {
+            lastObj = nil;
+        }
+        
         [recommendItems enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[wself class] searchItemModelByDict:itemDict];
                 if ([FHEnvContext isHouseListComponentEnable]) {
+                    if (lastObj == nil && self.sugesstHouseList.count > 0) {
+                        lastObj = [self.sugesstHouseList lastObject];
+                    }
+                    
                     NSObject *entity = [self getEntityFromModel:theItemModel];
                     if (entity) {
                         entity.fh_trackModel.searchId = self.recommendSearchId;
                         entity.fh_trackModel.elementType = @"search_related";
+                        if ([entity conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)] && [entity respondsToSelector:@selector(adjustIfNeedWithPreviousViewModel:)]) {
+                            NSObject<FHHouseCardCellViewModelProtocol> *viewModel = (NSObject<FHHouseCardCellViewModelProtocol> *)entity;
+                            [viewModel adjustIfNeedWithPreviousViewModel:lastObj];
+                        }
                         [self.sugesstHouseList addObject:entity];
+                        lastObj = entity;
                     }
                     
                     return;

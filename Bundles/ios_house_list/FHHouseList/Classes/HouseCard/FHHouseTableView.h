@@ -19,10 +19,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+@protocol FHHouseTableViewDelegate <UIScrollViewDelegate>
+
+@end
+
 
 @interface FHHouseTableView : FHBaseTableView
 
 @property (nonatomic, weak) id<FHHouseTableViewDataSource> fhHouse_dataSource;
+
+@property (nonatomic, weak) id<FHHouseTableViewDelegate> fhHouse_delegate;
 
 - (void)registerCellStyles;
 
