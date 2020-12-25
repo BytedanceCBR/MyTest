@@ -11,6 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseRealtorDetailHouseViewModel : NSObject
 @property (assign, nonatomic) BOOL isRequest;
+@property (nonatomic, assign) CGFloat showHeaderViewHeight;
 - (instancetype)initWithController:(FHHouseRealtorDetailHouseVC *)viewController tableView:(UITableView *)tableView realtorInfo:(NSDictionary *)realtorInfo tracerDic:(NSDictionary *)tracerDic;
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst;

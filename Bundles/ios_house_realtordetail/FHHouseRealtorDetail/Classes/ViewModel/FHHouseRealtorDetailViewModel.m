@@ -92,7 +92,9 @@
     }
     self.detailController.isLoadingData = YES;
         if (isFirst) {
-            [self.detailController startLoading];
+            if (fabs(self.showHeaderViewHeight)  < [UIScreen mainScreen].bounds.size.height *0.75) {
+                [self.detailController startLoading];
+            }
         }
     
     NSString *refreshType = @"be_null";
@@ -212,6 +214,7 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    _showHeaderViewHeight = scrollView.contentOffset.y;
     if (scrollView.contentOffset.y<0) {
         self.detailController.ttContentInset = UIEdgeInsetsMake( fabs(scrollView.contentOffset.y) , 0, 0, 0);
     }else {

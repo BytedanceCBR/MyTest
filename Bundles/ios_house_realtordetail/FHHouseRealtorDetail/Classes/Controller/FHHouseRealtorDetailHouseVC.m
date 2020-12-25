@@ -16,7 +16,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.ttContentInset = UIEdgeInsetsMake(self.headerViewHeight, 0, 0, 0);
+    self.ttContentInset = UIEdgeInsetsMake(self.showHeaderViewHeight, 0, 0, 0);
     [self createModel];
 }
 
@@ -33,5 +33,6 @@
     NSMutableDictionary *dic = self.realtorInfo.mutableCopy;
     [dic setObject:self.tabName forKey:@"tab_name"];
     _viewModel = [[FHHouseRealtorDetailHouseViewModel alloc]initWithController:self tableView:self.tableView realtorInfo:dic tracerDic:self.tracerDict];
+    _viewModel.showHeaderViewHeight = self.showHeaderViewHeight;
 }
 @end
