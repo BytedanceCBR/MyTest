@@ -125,9 +125,14 @@
     }
     self.view.hidden = NO;
     
+    CGFloat top = floor(self.view.superview.height/2 - 12);
     [UIView animateWithDuration:0.3 animations:^{
-        self.view.top =  floor(self.view.superview.height/2 - 12);
+        self.view.top =  top;
     }];
+    
+    if (self.movingBlock) {
+        self.movingBlock(top);
+    }
 
     [self.viewModel updateWithHouseData:nil neighbor:neighbor bubble:bubble];
 }
