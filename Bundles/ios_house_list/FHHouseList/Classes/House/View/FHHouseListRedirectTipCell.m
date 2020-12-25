@@ -37,6 +37,8 @@
         _containerView = [[UIView alloc] init];
         _containerView.backgroundColor = [UIColor whiteColor];
         CALayer *layer = _containerView.layer;
+        layer.borderColor = [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
+        layer.borderWidth = 0.5f;
         layer.cornerRadius = 10;
         layer.masksToBounds = YES;
     }
