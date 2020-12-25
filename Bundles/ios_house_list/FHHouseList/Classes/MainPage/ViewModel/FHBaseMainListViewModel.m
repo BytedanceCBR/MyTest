@@ -89,6 +89,7 @@
 #import "FHHouseCardCellViewModelProtocol.h"
 #import "FHSuggestionDefines.h"
 #import "FHHouseCardStatusManager.h"
+#import "FHBaseMainInsetHeaderView.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -122,6 +123,8 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
 
+@property (nonatomic, strong) FHBaseMainInsetHeaderViewModel *insetHeaderViewModel;
+
 @end
 
 
@@ -149,6 +152,8 @@ extern NSString *const INSTANT_DATA_KEY;
         _currentRecommendHouseDataModel = nil;
         _houseDataModel = nil;
         _startMonitorTime = [[NSDate date] timeIntervalSince1970];
+        
+        _insetHeaderViewModel = [[FHBaseMainInsetHeaderViewModel alloc] init];
 
         self.tableView = tableView;
         self.houseType = houseType;
@@ -2857,6 +2862,18 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (NSDictionary<NSString *, NSString *> *)fhHouse_supportCellStyles {
     return [FHHouseCardUtils supportCellStyleMap];
+}
+
+- (NSArray<id<FHHouseNewComponentViewModelProtocol>> *)fhHouse_headerList {
+    if (self.showPlaceHolder) {
+        return @[];
+    }
+    
+    return @[_insetHeaderViewModel];
+}
+
+- (NSDictionary<NSString *,NSString *> *)fhHouse_supportHeaderStyles {
+    return @{@"FHBaseMainInsetHeaderViewModel": @"FHBaseMainInsetHeaderView"};
 }
 
 #pragma mark - FHHouseReserveAdviserViewModelDelegate

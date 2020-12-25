@@ -1082,7 +1082,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
 }
 
 + (BOOL)isHouseListComponentEnable {
-    return YES;
     static BOOL isHouseListComponentEnable = NO;
     static dispatch_once_t isHouseListComponentEnableOnceToken;
     dispatch_once(&isHouseListComponentEnableOnceToken, ^{
