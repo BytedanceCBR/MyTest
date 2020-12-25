@@ -1424,7 +1424,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 //    [self.inputBar becomeActive];
     
     [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:commentModel.id.stringValue];
-    [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:indexPath.row eventPosition:@"feed_comment"];
+    [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:indexPath.row eventPosition:@"comment_reply"];
     [self.commentWriteView setTextViewPlaceholder:[NSString stringWithFormat:@"@%@：", commentModel.userName]];
 }
 
