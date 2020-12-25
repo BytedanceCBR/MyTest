@@ -213,6 +213,7 @@
 {
     self.detailFlowLayout = [[FHNewHouseDetailFlowLayout alloc] init];
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.detailFlowLayout];
+    self.collectionView.bounces = NO;
     self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     UITapGestureRecognizer *tapGesturRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
     tapGesturRecognizer.cancelsTouchesInView = NO;
