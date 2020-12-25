@@ -217,37 +217,27 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     [[TTNetworkManager shareInstance] setEnableReqFilter:YES];
     [[TTNetworkManager shareInstance] addRequestFilterBlock:^(TTHttpRequest *request) {
         [TTAccount addTokenToRequest:request];
+        
+        // TODO: JOKER 写死PPE环境：
+        BOOL isPPE = YES;
         // 设置BOE请求头
         BOOL isBOE = [TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"BOE_OPEN_KEY"];
+
+        NSMutableDictionary *headers = [NSMutableDictionary dictionary];
         if (isBOE) {
-            [[TTNetworkManager shareInstance] addRequestFilterBlock:^(TTHttpRequest *request) {
-                NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-                if(request.allHTTPHeaderFields.count) {
-                    [headers addEntriesFromDictionary:request.allHTTPHeaderFields];
-                }
-                [headers setObject:@"prod" forKey:@"X-Tt-Env"];
-                [headers setObject:@"1" forKey:@"X-Use-Boe"];
-                request.allHTTPHeaderFields = headers;
-            }];
+            headers[@"x-use-boe"] = @"1";
+            headers[@"x-tt-env"] = @"prod";
+        } else if(isPPE) {
+            headers[@"x-use-ppe"] = @"1";
+            headers[@"x-tt-env"] = @"ppe_657767";
+        }
+        if(headers.count > 0) {
+            if(request.allHTTPHeaderFields.count > 0) {
+                [headers addEntriesFromDictionary:request.allHTTPHeaderFields];
+            }
+            request.allHTTPHeaderFields = headers;
         }
     }];
-//    [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request){
-//        [TTAccount addTokenToRequest:request];
-//
-//        // 设置BOE请求头
-//        BOOL isBOE = [TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"BOE_OPEN_KEY"];
-//        if(isBOE) {
-//            [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request) {
-//                NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-//                if(request.allHTTPHeaderFields.count) {
-//                    [headers addEntriesFromDictionary:request.allHTTPHeaderFields];
-//                }
-//                [headers setObject:@"prod" forKey:@"X-Tt-Env"];
-//                [headers setObject:@"1" forKey:@"X-Use-Boe"];
-//                request.allHTTPHeaderFields = headers;
-//            };
-//        }
-//    };
     
     //更新token及过期设置:过期判断取决于业务方业务，如果业务方没有踢人操作的话，只需要根据下面进行设置
     [[TTNetworkManager shareInstance] addResponseFilterBlock:^(TTHttpRequest *request, TTHttpResponse *response, id data, NSError *responseError) {
