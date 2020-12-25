@@ -37,7 +37,7 @@
     BOOL isLastCell = NO;
     if([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
-        isLastCell = model.isLastCell;
+        //isLastCell = model.isLastCell;
         CGFloat reasonHeight = [model showRecommendReason] ? [self recommendReasonHeight] : 0;
         return (isLastCell ? 108 : 88) + reasonHeight;
     }

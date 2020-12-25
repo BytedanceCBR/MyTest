@@ -31,15 +31,6 @@
     return self;
 }
 
-- (void)updateHeightByIsFirst:(BOOL)isFirst {
-    CGFloat top = 5;
-    if (isFirst) {
-        top = 10;
-    }
-    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(top);
-    }];
-}
 - (void)setupUI {
     
     _containerView = [[UIView alloc] init];
@@ -177,15 +168,7 @@
     [self refreshUI:data];
 }
 
-+ (CGFloat)heightForData:(id)data
-{
-    return 127;
-}
-
-+ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst {
-    if (isFirst) {
-        return 122;
-    }
++ (CGFloat)heightForData:(id)data {
     return 117;
 }
 

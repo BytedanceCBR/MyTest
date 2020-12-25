@@ -14,9 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)bindData:(FHHouseNeighborAgencyModel *)model traceParams:(NSMutableDictionary *)params;
 
-- (void)updateHeightByIsFirst:(BOOL)isFirst;
-
-+ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst;
+//- (void)updateHeightByIsFirst:(BOOL)isFirst;
 
 @end
 

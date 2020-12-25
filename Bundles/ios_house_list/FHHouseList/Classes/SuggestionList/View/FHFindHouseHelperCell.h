@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateWithData:(id)data;
 
-+ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst;
-
 @end
 
 NS_ASSUME_NONNULL_END

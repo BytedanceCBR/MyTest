@@ -56,15 +56,11 @@
     if ([viewModel isKindOfClass:[FHHouseNeighborhoodCardViewModel class]]) {
         self.cardView.viewModel = (FHHouseNeighborhoodCardViewModel *)viewModel;
         [self.cardView refreshOpacityWithData:viewModel];
-        [self.cardView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(5 + ((FHHouseNeighborhoodCardViewModel *)viewModel).topMargin);
-        }];
         FHHouseNeighborhoodCardViewModel *neighborhoodViewModel = (FHHouseNeighborhoodCardViewModel *)viewModel;
         __weak typeof(self) wSelf = self;
         neighborhoodViewModel.opacityDidChange = ^{
             [wSelf.cardView refreshOpacityWithData:wSelf.viewModel];
         };
-        
     }
 }
 
@@ -72,7 +68,7 @@
     if ([viewModel isKindOfClass:[FHHouseNeighborhoodCardViewModel class]]) {
         CGFloat height = [FHHouseNeighborhoodCardView calculateViewHeight:(FHHouseNeighborhoodCardViewModel *)viewModel];
         if (height > 0.01) {
-            return height + 10 + ((FHHouseNeighborhoodCardViewModel *)viewModel).topMargin;
+            return height + 10;
         }
     }
     

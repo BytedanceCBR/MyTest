@@ -59,15 +59,15 @@
     return self;
 }
 
-- (void)updateHeightByIsFirst:(BOOL)isFirst {
-    CGFloat top = 5;
-    if (isFirst) {
-        top = 10;
-    }
-    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self).offset(top);
-    }];
-}
+//- (void)updateHeightByIsFirst:(BOOL)isFirst {
+//    CGFloat top = 5;
+//    if (isFirst) {
+//        top = 10;
+//    }
+//    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(self).offset(top);
+//    }];
+//}
 
 - (void)initUI {
 
@@ -336,13 +336,6 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 169;// + 10;
-}
-
-+ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst {
-    if (isFirst) {
-        return 180;
-    }
     return 175;
 }
 

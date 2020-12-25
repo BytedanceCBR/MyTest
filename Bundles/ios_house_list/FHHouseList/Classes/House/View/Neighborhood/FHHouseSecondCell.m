@@ -44,6 +44,7 @@
         make.right.mas_equalTo(-15);
         make.bottom.mas_equalTo(-5);
         make.height.mas_equalTo(0);
+        make.top.mas_equalTo(5);
     }];
 }
 
@@ -57,9 +58,6 @@
         secondViewModel.opacityDidChange = ^{
             [wSelf.cardView refreshOpacityWithData:wSelf.viewModel];
         };
-        [self.cardView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo([FHHouseSecondCardView calculateViewHeight:viewModel]);
-        }];
     }
 }
 
@@ -69,12 +67,7 @@
 
 + (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if ([viewModel isKindOfClass:[FHHouseSecondCardViewModel class]]) {
-        FHHouseSecondCardViewModel *secondViewModel = (FHHouseSecondCardViewModel *)viewModel;
-        CGFloat topMargin = 0;
-        if ([secondViewModel.model isKindOfClass:[FHSearchHouseItemModel class]]) {
-            topMargin = ((FHSearchHouseItemModel *)secondViewModel.model).topMargin;
-        }
-        return [FHHouseSecondCardView calculateViewHeight:viewModel] + 5 + topMargin;
+        return [FHHouseSecondCardView calculateViewHeight:viewModel] + 10;
     }
     return 0.0f;
 }

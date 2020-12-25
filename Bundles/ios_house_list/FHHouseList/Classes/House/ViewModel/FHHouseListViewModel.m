@@ -196,6 +196,7 @@ extern NSString *const INSTANT_DATA_KEY;
         self.isFirstLoad = YES;
         self.isFirstHavetip = YES;
         self.tableView = tableView;
+        //tableView.contentInset = UIEdgeInsetsMake(5, 0, 0, 0);
         self.isShowSubscribeCell = NO;
         //prehousetype表示从sug页面所在的housetype
         //jumphousetype表示sug页面网络请求期待跳向的housetype,该housetype不一定开通
@@ -1845,13 +1846,13 @@ extern NSString *const INSTANT_DATA_KEY;
                 [wself jump2HouseFindPageWithUrl:url];
             };
         }
-        if ([cell isKindOfClass:[FHHouseSearchSecondHouseCell class]]) {
-            FHHouseSearchSecondHouseCell *secondCell = (FHHouseSearchSecondHouseCell *)cell;
-            [secondCell updateHeightByIsFirst:isFirstCell];
-        } else if ([cell isKindOfClass:[FHHouseSearchNewHouseCell class]]) {
-            FHHouseSearchNewHouseCell *newCell = (FHHouseSearchNewHouseCell *)cell;
-            [newCell updateHeightByIsFirst:isFirstCell];
-        }
+//        if ([cell isKindOfClass:[FHHouseSearchSecondHouseCell class]]) {
+//            FHHouseSearchSecondHouseCell *secondCell = (FHHouseSearchSecondHouseCell *)cell;
+//            [secondCell updateHeightByIsFirst:isFirstCell];
+//        } else if ([cell isKindOfClass:[FHHouseSearchNewHouseCell class]]) {
+//            FHHouseSearchNewHouseCell *newCell = (FHHouseSearchNewHouseCell *)cell;
+//            [newCell updateHeightByIsFirst:isFirstCell];
+//        }
         if ([cell isKindOfClass:[FHDynamicLynxCell class]]) {
             FHDynamicLynxCellModel *cellModel = data;
             if (cellModel && [cellModel isKindOfClass:[FHDynamicLynxCellModel class]]) {
@@ -1861,13 +1862,10 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         [cell refreshWithData:data];
         if([cell isKindOfClass:[FHNeighbourhoodAgencyCardCell class]]){
-            //[((FHNeighbourhoodAgencyCardCell *)cell) updateHeightByIsFirst:isFirstCell];
         }
         if([cell isKindOfClass:[FHHousReserveAdviserCell class]]){
-            //[((FHHousReserveAdviserCell *)cell) updateHeightByIsFirst:isFirstCell];
         }
         if([cell isKindOfClass:[FHHouseListRedirectTipCell class]]){
-            //[((FHHouseListRedirectTipCell *)cell) updateHeightByIsFirst:isFirstCell];
             [((FHHouseListRedirectTipCell *)cell) refreshWithHouseType:self.houseType];
         }
         if([cell isKindOfClass:[FHHouseListRecommendTipCell class]] && [data isKindOfClass:[FHSearchGuessYouWantTipsModel class]]){
@@ -1975,33 +1973,14 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         return height;
     }
-    BOOL isFirstCell = NO;
-    BOOL isLastCell = NO;
-    CGFloat normalHeight = height;
-    
-    if (self.isCommute && indexPath.row == 0) {
-        normalHeight -= 10;//通勤找房第一个缩小间距
-    }
     id data = nil;
     if (indexPath.section == 0) {
         if (indexPath.row < self.houseList.count) {
             data = self.houseList[indexPath.row];
-            if (indexPath.row == self.houseList.count - 1) {
-                isLastCell = YES;
-            }
-            if (indexPath.row == 0) {
-                isFirstCell = YES;
-            }
         }
     } else {
         if (indexPath.row < self.sugesstHouseList.count) {
             data = self.sugesstHouseList[indexPath.row];
-            if (indexPath.row == self.sugesstHouseList.count - 1) {
-                isLastCell = YES;
-            }
-            if (indexPath.row == 0) {
-                isFirstCell = YES;
-            }
         }
     }
     if (data) {
@@ -2010,28 +1989,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath];
         if (cellHeight > -0.001f) return cellHeight;
-        
         id cellClass = [self cellClassForEntity:data];
-        if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
-            FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
-            item.isLastCell = isLastCell;
-            if (item.houseType.integerValue == FHHouseTypeRentHouse && isFirstCell) {
-                item.topMargin = 10;
-            } else {
-                item.topMargin = 0;
-            }
-            if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
-                if (isFirstCell) {
-                    item.topMargin = 5;
-                } else {
-                    item.topMargin = 0;
-                }
-            }
-            data = item;
-        }
-        if ([[cellClass class]respondsToSelector:@selector(heightForData:withIsFirst:)]) {
-            return [[cellClass class] heightForData:data withIsFirst:isFirstCell];
-        }
         if ([[cellClass class]respondsToSelector:@selector(heightForData:)]) {
             return [[cellClass class] heightForData:data];
         }

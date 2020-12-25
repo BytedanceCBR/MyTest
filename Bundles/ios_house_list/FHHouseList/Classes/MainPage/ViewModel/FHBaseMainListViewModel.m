@@ -1874,9 +1874,6 @@ extern NSString *const INSTANT_DATA_KEY;
             }
             data = item;
         }
-        if ([[cellClass class]respondsToSelector:@selector(heightForData:withIsFirst:)]) {
-            return [[cellClass class] heightForData:data withIsFirst:isFirstCell];
-        }
         if ([[cellClass class]respondsToSelector:@selector(heightForData:)]) {
             return [[cellClass class] heightForData:data];
         }

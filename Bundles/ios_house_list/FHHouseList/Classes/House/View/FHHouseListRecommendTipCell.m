@@ -81,17 +81,10 @@
     }
 }
 
-+ (CGFloat)heightForData:(id)data
-{
++ (CGFloat)heightForData:(id)data {
     return 50;
 }
 
-+ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst {
-    if (isFirst) {
-        return 55;
-    }
-    return 50;
-}
 
 - (void)initConstraints {
     [self.leftLine mas_makeConstraints:^(MASConstraintMaker *make) {

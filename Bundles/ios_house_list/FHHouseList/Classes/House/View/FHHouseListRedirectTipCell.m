@@ -43,15 +43,15 @@
     return _containerView;
 }
 
-- (void)updateHeightByIsFirst:(BOOL)isFirst {
-    CGFloat top = 5;
-    if (isFirst) {
-        top = 10;
-    }
-    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(top);
-    }];
-}
+//- (void)updateHeightByIsFirst:(BOOL)isFirst {
+//    CGFloat top = 5;
+//    if (isFirst) {
+//        top = 10;
+//    }
+//    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(top);
+//    }];
+//}
 
 - (void)setupUI
 {
@@ -117,15 +117,7 @@
     self.leftLabel.right = self.rightBtn.left - 5;
 }
 
-+ (CGFloat)heightForData:(id)data
-{
-    return 80;
-}
-
-+ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst {
-    if (isFirst) {
-        return 75;
-    }
++ (CGFloat)heightForData:(id)data {
     return 70;
 }
 

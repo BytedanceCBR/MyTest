@@ -116,13 +116,6 @@
 }
 
 + (CGFloat)heightForData:(id)data {
-    return 93;
-}
-
-+ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst {
-    if (isFirst) {
-        return 88;
-    }
     return 83;
 }
 

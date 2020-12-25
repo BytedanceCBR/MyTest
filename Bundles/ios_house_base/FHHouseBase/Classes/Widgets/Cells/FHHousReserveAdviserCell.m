@@ -70,15 +70,15 @@
     return self;
 }
 
-- (void)updateHeightByIsFirst:(BOOL)isFirst {
-    CGFloat top = 5;
-    if (isFirst) {
-        top = 10;
-    }
-    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(top);
-    }];
-}
+//- (void)updateHeightByIsFirst:(BOOL)isFirst {
+//    CGFloat top = 5;
+//    if (isFirst) {
+//        top = 10;
+//    }
+//    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(top);
+//    }];
+//}
 
 - (void)initUI {
 
@@ -400,17 +400,10 @@
     if ([data isKindOfClass:[FHHouseReserveAdviserModel class]]) {
         FHHouseReserveAdviserModel *model = (FHHouseReserveAdviserModel *)data;
         if ([SSCommonLogic isEnableVerifyFormAssociate] || model.isSubcribed) {
-            return 126;
+            return 136;
         }
     }
     return 211;
-}
-
-+ (CGFloat)heightForData:(id)data withIsFirst:(BOOL)isFirst {
-    if (isFirst) {
-        return 141;
-    }
-    return 136;
 }
 
 - (void)subscribe {
