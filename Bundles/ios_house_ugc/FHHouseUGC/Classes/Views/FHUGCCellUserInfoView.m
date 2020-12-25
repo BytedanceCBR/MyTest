@@ -152,7 +152,11 @@
         self.essenceIcon.width = 24;
         self.essenceIcon.height = 16;
         self.essenceIcon.centerY = self.userName.centerY;
-        self.essenceIcon.right = self.userAuthLabel.right + 5;
+        if (self.userAuthLabel.hidden == YES) {
+            self.essenceIcon.left = self.userName.right + 5;
+        }else {
+            self.essenceIcon.left = self.userAuthLabel.right + 5;
+        }
         self.essenceIcon.hidden = NO;
     }else{
         self.essenceIcon.hidden = YES;
