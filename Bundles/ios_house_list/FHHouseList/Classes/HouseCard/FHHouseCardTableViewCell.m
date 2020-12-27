@@ -7,6 +7,7 @@
 
 #import "FHHouseCardTableViewCell.h"
 #import "FHHouseNewComponentViewModel.h"
+#import "FHHouseCardCellViewModelProtocol.h"
 
 @interface FHHouseCardTableViewCell()<FHHouseNewComponentViewModelObserver>
 
@@ -26,11 +27,48 @@
 }
 
 - (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
+        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
+        if ([cardViewModel respondsToSelector:@selector(showCardAtIndexPath:)]) {
+            [cardViewModel showCardAtIndexPath:indexPath];
+        }
+    }
+}
+
+- (void)cellDidEndShowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
+        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
+        if ([cardViewModel respondsToSelector:@selector(hideCardAtIndexPath:)]) {
+            [cardViewModel hideCardAtIndexPath:indexPath];
+        }
+    }
 }
 
 - (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
-    
+    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
+        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
+        if ([cardViewModel respondsToSelector:@selector(clickCardAtIndexPath:)]) {
+            [cardViewModel clickCardAtIndexPath:indexPath];
+        }
+    }
+}
+
+- (void)cellWillEnterForground {
+    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
+        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
+        if ([cardViewModel respondsToSelector:@selector(cardWillEnterForground)]) {
+            [cardViewModel cardWillEnterForground];
+        }
+    }
+}
+
+- (void)cellDidEnterBackground {
+    if ([self.viewModel conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)]) {
+        id<FHHouseCardCellViewModelProtocol> cardViewModel = (id<FHHouseCardCellViewModelProtocol>)self.viewModel;
+        if ([cardViewModel respondsToSelector:@selector(cardDidEnterBackground)]) {
+            [cardViewModel cardDidEnterBackground];
+        }
+    }
 }
 
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
