@@ -49,7 +49,7 @@ def fhPods
 
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
 #    pod 'ios_house_filter' , '1.0.3-rc.0', :inhibit_warnings => false
-    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '3c0c1636a838f38c1fede55152ed95de825ea1d8'
+    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '40f52bf961496b48dc3995f564dc38dd2a6a2fc9'
 #    pod 'ios_house_filter' , :path => '../../ios_house_filter'
 
 
