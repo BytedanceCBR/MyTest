@@ -19,6 +19,7 @@
 #import "FHUserTracker.h"
 #import "FHMainApi.h"
 #import <TTBaseLib/TTSandBoxHelper.h>
+#import <BDUGLocationKit/BDUGLocationManager.h>
 
 #define OUT_HOR_MARGIN     38
 #define IN_HOR_MARGIN      20
@@ -234,9 +235,16 @@
 -(void)confirmAction:(id)sender
 {
     [self addConfirmLog:YES];
-    
-    [self removeFromSuperview];
-    [[FHEnvContext sharedInstance] userConfirmedPermssionProtocol];
+    [UIView animateWithDuration:0.2 animations:^{
+        self.containerView.alpha = 0;
+    }];
+    __weak typeof(self) weakSelf = self;
+    [[BDUGLocationManager sharedManager] requestWhenInUseAuthorizationWithCompletion:^(BOOL isGranted) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf removeFromSuperview];
+            [[FHEnvContext sharedInstance] userConfirmedPermssionProtocol];
+        });
+    }];
     
 }
 
