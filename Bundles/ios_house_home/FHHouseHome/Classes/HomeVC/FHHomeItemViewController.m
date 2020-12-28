@@ -42,6 +42,7 @@
 #import "NSArray+BTDAdditions.h"
 #import "FHHomeRentCell.h"
 #import "FHHomeRenderFlow.h"
+#import "FHHomeItemRequestManager.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
@@ -144,8 +145,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     [self registerCells];
     
-    self.renderFlow.requestType = FHHomeRequestTypeNormal;
-    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
+    [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES isInit:YES];
     
     self.tableView.scrollsToTop = NO;
     
@@ -364,7 +364,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     if (self.showRequestErrorView) {
         [self showPlaceHolderCells];
-        self.renderFlow.requestType = FHHomeRequestTypeAutoRetryWhenShowing;
         [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
         if (self.panelVM) {
             [self.panelVM fetchSearchPanelRollData];
@@ -495,9 +494,18 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 }
 
 #pragma mark 网络请求
+- (void)requestDataForRefresh:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst {
+    [self requestDataForRefresh:pullType andIsFirst:isFirst isInit:NO];
+}
+
 //请求推荐刷新数据，包括上拉和下拉
-- (void)requestDataForRefresh:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst
+- (void)requestDataForRefresh:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst isInit:(BOOL)isInit
 {
+    if ([FHHomeItemRequestManager preloadType] != FHHomepagePreloadTypeNone && [FHHomeItemRequestManager preloadType] != FHHomepagePreloadTypeDefault) {
+        [self requestDataForRefreshV2:pullType andIsFirst:isFirst isInit:isInit];
+        return;
+    }
+    
     self.currentPullType = pullType;
     
     if (isFirst) {
@@ -621,7 +629,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         }
         
         if (isFirst && self.houseType == FHHouseTypeSecondHandHouse) {
-            [FHMainApi addUserOpenVCDurationLog:@"pss_homepage" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
+            [FHMainApi addUserOpenVCDurationLog:@"pss_homepage" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime context:@{@"is_init": @(isInit), @"preload_type":@([FHHomeItemRequestManager preloadType])}];
         }
         
         if (self.isOriginRequest || [FHEnvContext sharedInstance].isRefreshFromCitySwitch || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
@@ -955,7 +963,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                     if (weakSelf.panelVM) {
                         [weakSelf.panelVM fetchSearchPanelRollData];
                     }
-                    weakSelf.renderFlow.requestType = FHHomeRequestTypeClickRetryWhenRequestNoData;
                     [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                 };
             }else
@@ -974,7 +981,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                             if (weakSelf.panelVM) {
                                 [weakSelf.panelVM fetchSearchPanelRollData];
                             }
-                            weakSelf.renderFlow.requestType = FHHomeRequestTypeClickRetryWhenRequestNoData;
                             [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
                         }
                     }
@@ -1002,7 +1008,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
                 if (weakSelf.panelVM) {
                     [weakSelf.panelVM fetchSearchPanelRollData];
                 }
-                weakSelf.renderFlow.requestType = FHHomeRequestTypeClickRetryWhenDislikeNoData;
+   
                 [weakSelf requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES];
             };
             
@@ -1353,5 +1359,147 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     return @(indexPath.row);
 }
 
+#pragma mark - 预加载优化
+- (void)requestDataForRefreshV2:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst isInit:(BOOL)isInit {
+    self.currentPullType = pullType;
+    
+    if (isFirst) {
+        [self showPlaceHolderCells];
+    }
+    
+    if (pullType == FHHomePullTriggerTypePullDown) {
+        self.traceRecordDict = [NSMutableDictionary new];
+    }
+    
+    NSMutableDictionary *requestDictonary = [NSMutableDictionary new];
+    NSInteger offsetValue = self.lastOffset;
+
+    if (isFirst || pullType == FHHomePullTriggerTypePullDown) {
+        [requestDictonary setValue:@(0) forKey:@"offset"];
+    }else
+    {
+        if(self.currentSearchId)
+        {
+            [requestDictonary setValue:self.currentSearchId forKey:@"search_id"];
+        }
+        
+        [requestDictonary setValue:@(offsetValue) forKey:@"offset"];
+    }
+    
+    if (isInit) {
+        [self.renderFlow traceSendRequest];
+    }
+    
+    WeakSelf;
+    void (^completionBlock)(FHHomeHouseModel *, NSError *) = ^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
+        StrongSelf;
+        [self handleRequestWithPullType:pullType andIsFirst:isFirst isInit:isInit model:model error:error];
+    };
+    
+    if (isInit) {
+        [FHHomeItemRequestManager initRequestRecommendWithHouseType:self.houseType contextParams :requestDictonary completion:completionBlock];
+    } else {
+        [FHHomeItemRequestManager requestRecommendWithHouseType:self.houseType contextParams:requestDictonary completion:completionBlock];
+    }
+}
+
+- (void)handleRequestWithPullType:(FHHomePullTriggerType)pullType andIsFirst:(BOOL)isFirst isInit:(BOOL)isInit model:(FHHomeHouseModel *)model error:(NSError *)error {
+    if (isInit) {
+        if (model) {
+            [self.renderFlow traceReceiveResponse:model.requestFlow];
+        } else {
+            [self.renderFlow submitWithError:error];
+        }
+    }
+    [self.tableView finishPullUpWithSuccess:YES];
+    
+    //判断下拉刷新
+    if (pullType == FHHomePullTriggerTypePullDown) {
+        //请求无错误,无错误
+        if (model.data.items.count == 0 && !error) {
+            [self checkCityStatus];
+            if (self.requestCallBack) {
+                self.requestCallBack(pullType, self.houseType, NO, nil);
+            }
+            return;
+        }
+        
+        if ((error && [error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) || !model || error) {
+            [self reloadCityEnbaleAndNoHouseData:NO];
+            if (self.requestCallBack) {
+                self.requestCallBack(pullType, self.houseType, NO, nil);
+            }
+            return ;
+        }
+    }else
+    {
+        if (error) {
+            if ([error.userInfo[@"NSLocalizedDescription"] isKindOfClass:[NSString class]] && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                [[ToastManager manager] showToast:@"网络异常"];
+            }
+            [self updateTableViewWithMoreData:YES];
+            return;
+        }
+    }
+    
+    self.isRetryedPullDownRefresh = NO;
+    
+    if (pullType == FHHomePullTriggerTypePullDown) {
+        self.originSearchId = model.data.searchId;
+        self.houseDataItemsModel = [NSMutableArray arrayWithArray:model.data.items];
+        self.lastOffset = model.data.items.count;
+        
+        [self.houseDataItemsModel enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            if(((FHHomeHouseDataItemsModel *)(obj)).idx){
+                [self.cahceHouseRankidsDict setValue:@(idx) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+            }
+        }];
+        
+        [self.cacheSimilarIdsDict removeAllObjects];
+        [self.cacheClickIds removeAllObjects];
+    }else
+    {
+        if (model.data.items && self.houseDataItemsModel && model.data.items.count != 0) {
+            
+            [model.data.items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                if(((FHHomeHouseDataItemsModel *)(obj)).idx){
+                    [self.cahceHouseRankidsDict setValue:@(idx + self.houseDataItemsModel.count - self.cacheSimilarIdsDict.allKeys.count) forKey:((FHHomeHouseDataItemsModel *)(obj)).idx];
+                }
+            }];
+            
+            [self.houseDataItemsModel addObjectsFromArray:model.data.items];
+            self.lastOffset += model.data.items.count;
+        }
+    }
+    self.currentSearchId = model.data.searchId;
+    
+    [self reloadHomeTableHouseSection];
+    
+    self.tableView.hasMore = model.data.hasMore;
+    [self updateTableViewWithMoreData:model.data.hasMore];
+    
+    if (isInit) {
+        [self.renderFlow traceReloadData];
+        [self.renderFlow submitWithError:nil];
+    }
+    
+    if (isFirst && self.houseType == FHHouseTypeSecondHandHouse) {
+        [FHMainApi addUserOpenVCDurationLog:@"pss_homepage" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime context:@{@"is_init": @(isInit), @"preload_type":@([FHHomeItemRequestManager preloadType])}];
+    }
+    
+    if (self.isOriginRequest || [FHEnvContext sharedInstance].isRefreshFromCitySwitch || [FHEnvContext sharedInstance].isRefreshFromAlertCitySwitch) {
+        [self sendTraceEvent:FHHomeCategoryTraceTypeEnter];
+    }else
+    {
+        [self sendTraceEvent:FHHomeCategoryTraceTypeRefresh];
+    }
+    
+    
+    if (self.requestCallBack) {
+        self.requestCallBack(pullType, self.houseType, YES, model);
+    }
+    
+    self.isOriginRequest = NO;
+}
 @end
 

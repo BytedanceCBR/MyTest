@@ -151,6 +151,12 @@
     }];
 }
 
+- (void)resumeVRIcon {
+    if (_vrLoadingView && !self.vrLoadingView.hidden) {
+        [self.vrLoadingView play];
+    }
+}
+
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
     FHHouseSecondCardViewModel *secondViewModel = (FHHouseSecondCardViewModel *)self.viewModel;
@@ -180,7 +186,7 @@
     if (![viewModel isKindOfClass:FHHouseSecondCardViewModel.class]) return 0.0f;
     FHHouseSecondCardViewModel *secondViewModel = (FHHouseSecondCardViewModel *)viewModel;
     CGFloat titleHeight = [FHHouseTitleAndTagView viewHeightWithViewModel:secondViewModel.titleAndTag];
-    return titleHeight + 92 + secondViewModel.recommendViewModel.showSecondHouseHeight;
+    return ceilf(titleHeight + 92 + secondViewModel.recommendViewModel.showSecondHouseHeight);
 }
 
 @end

@@ -5,7 +5,8 @@
 //  Created by bytedance on 2020/11/9.
 //
 
-#import "FHHouseNewComponentViewModel.h"
+#import "FHHouseNewComponentViewModel+HouseCard.h"
+#import "FHHouseCardCellViewModelProtocol.h"
 #import "FHSearchHouseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN

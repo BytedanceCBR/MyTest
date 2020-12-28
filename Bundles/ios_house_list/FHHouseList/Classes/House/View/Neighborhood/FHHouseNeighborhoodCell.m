@@ -51,22 +51,6 @@
     return _cardView;
 }
 
-- (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    [super cellWillShowAtIndexPath:indexPath];
-    if ([self.viewModel isKindOfClass:[FHHouseNeighborhoodCardViewModel class]]) {
-        FHHouseNeighborhoodCardViewModel *cardViewModel = (FHHouseNeighborhoodCardViewModel *)self.viewModel;
-        [cardViewModel showCardAtIndexPath:indexPath];
-    }
-}
-
-- (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
-    [super cellDidClickAtIndexPath:indexPath];
-    if ([self.viewModel isKindOfClass:[FHHouseNeighborhoodCardViewModel class]]) {
-        FHHouseNeighborhoodCardViewModel *cardViewModel = (FHHouseNeighborhoodCardViewModel *)self.viewModel;
-        [cardViewModel clickCardAtIndexPath:indexPath];
-    }
-}
-
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
     if ([viewModel isKindOfClass:[FHHouseNeighborhoodCardViewModel class]]) {

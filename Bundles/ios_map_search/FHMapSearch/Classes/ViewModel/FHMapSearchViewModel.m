@@ -705,6 +705,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         };
         _houseListViewController.didSwipeDownDismiss = ^(FHMapSearchBubbleModel *fromBubble){
             if (wself) {
+                wself.sideBar.alpha = 1.0f;
                 [wself changeNavbarAppear:YES];
                 if (wself.lastShowMode == FHMapSearchShowModeDrawLine) {
                     wself.showMode = FHMapSearchShowModeDrawLine;                    
@@ -740,6 +741,7 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
         };
         _houseListViewController.movingBlock = ^(CGFloat top) {
+            wself.sideBar.alpha = 0.0f;
 //            [wself changeNavbarAlpha:NO];
         };
         _houseListViewController.showHouseDetailBlock = ^(FHHouseListBaseItemModel * _Nonnull model , NSInteger rank , FHMapSearchBubbleModel *fromBubble) {
