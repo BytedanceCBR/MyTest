@@ -98,7 +98,6 @@
         // 下拉刷新
         [self.collectionView tt_addDefaultPullDownRefreshWithHandler:^{
             wself.isRefreshingTip = NO;
-            [wself.viewController hideImmediately];
             [wself requestData:YES first:NO];
         }];
     }
@@ -239,16 +238,11 @@
                     
                     [wself.collectionView reloadData];
 
-                    NSString *refreshTip = feedListModel.tips.displayInfo;
-                    if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-                        wself.isRefreshingTip = YES;
-                        [wself.viewController showNotify:refreshTip completion:^{
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                wself.isRefreshingTip = NO;
-                            });
-                        }];
-                        [wself.collectionView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-                    }
+//                    NSString *refreshTip = feedListModel.tips.displayInfo;
+//                    if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
+//                        wself.isRefreshingTip = YES;
+//                        [wself.collectionView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
+//                    }
                     
                     if(!self.viewController.alreadyReportPageMonitor && [self.categoryId isEqualToString:@"f_news_recommend"]){
                         [FHMainApi addUserOpenVCDurationLog:@"pss_discovery_recommend" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - self.viewController.startMonitorTime];
@@ -381,11 +375,6 @@
 #pragma UISCrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if(scrollView == self.collectionView){
-        if (scrollView.isDragging) {
-            [self.viewController.notifyBarView performSelector:@selector(hideIfNeeds) withObject:nil];
-        }
-    }
 }
 
 #pragma mark - 埋点

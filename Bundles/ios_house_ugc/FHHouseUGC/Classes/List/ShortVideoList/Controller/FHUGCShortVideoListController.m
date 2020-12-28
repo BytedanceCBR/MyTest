@@ -132,7 +132,6 @@
 
 - (void)initView {
     [self initCollectionView];
-    [self initNotifyBarView];
     if(self.showErrorView){
         [self addDefaultEmptyViewFullScreen];
     }
@@ -166,10 +165,6 @@
     [self.collectionView reloadData];
 }
 
-- (void)initNotifyBarView {
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 32)];
-    [self.view addSubview:self.notifyBarView];
-}
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
@@ -244,34 +239,6 @@
     [self startLoadData];
 }
 
-#pragma mark - show notify
-
-- (void)showNotify:(NSString *)message {
-    [self showNotify:message completion:nil];
-}
-
-- (void)showNotify:(NSString *)message completion:(void(^)(void))completion {
-    if(!self.alreadySetContentInset){
-        self.originContentInset = self.collectionView.contentInset;
-        self.alreadySetContentInset = YES;
-    }
-    UIEdgeInsets inset = self.collectionView.contentInset;
-    inset.top = self.notifyBarView.height;
-    self.collectionView.contentInset = inset;
-    self.collectionView.contentOffset = CGPointMake(0, -inset.top);
-    self.notifyCompletionBlock = completion;
-    WeakSelf;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
-        if(!isImmediately) {
-            [wself hideIfNeeds];
-        } else {
-            if(wself.notifyCompletionBlock) {
-                wself.notifyCompletionBlock();
-            }
-        }
-    }];
-}
-
 - (void)hideIfNeeds {
     [UIView animateWithDuration:0.3 animations:^{
         self.collectionView.contentInset = self.originContentInset;
@@ -285,9 +252,6 @@
     }];
 }
 
-- (void)hideImmediately {
-    [self.notifyBarView hideImmediately];
-}
 
 - (NSArray *)dataList {
     return self.viewModel.dataList;

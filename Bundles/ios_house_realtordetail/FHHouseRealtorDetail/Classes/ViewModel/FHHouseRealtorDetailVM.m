@@ -100,6 +100,7 @@
         [self updateNavBarWithAlpha:1];
         return;
     }
+    [self.viewController startLoading];
     NSMutableDictionary *parmas= [NSMutableDictionary new];
     [parmas setValue:realtorId forKey:@"realtor_id"];
     // 详情页数据-Main
@@ -159,6 +160,7 @@
             [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
         }
         [self.viewController.headerView reloadDataWithDic:dic];
+        [self.viewController endLoading];
         if ([model.data.realtor.allKeys containsObject:@"is_preferred_realtor"]) {
             BOOL isHightScore = [model.data.realtor btd_boolValueForKey:@"is_preferred_realtor"];
             if (isHightScore) {

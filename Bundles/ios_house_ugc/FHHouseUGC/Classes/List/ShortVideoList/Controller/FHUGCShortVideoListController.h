@@ -8,7 +8,6 @@
 #import "FHBaseViewController.h"
 #import "FHHouseUGCHeader.h"
 #import <CoreLocation/CoreLocation.h>
-#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "SSImpressionManager.h"
 #import "ArticleImpressionHelper.h"
 #import "FHHouseUGCAPI.h"
@@ -18,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHUGCShortVideoListController : FHBaseViewController
 
-@property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property(nonatomic, strong) NSArray *dataList;
 //内容分类
 @property(nonatomic, strong) NSString *category;
@@ -39,8 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL alreadyReportPageMonitor;
 @property(nonatomic, strong) FHUGCShortVideoFlowLayout *flowLayout;
 
-- (void)showNotify:(NSString *)message ;
-- (void)showNotify:(NSString *)message completion:(nullable void(^)(void))completion;
 //下拉刷新数据
 - (void)startLoadData;
 //下拉刷新数据,不清之前的数据

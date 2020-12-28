@@ -15,7 +15,6 @@
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
 #import "ToastManager.h"
-#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "UIScrollView+Refresh.h"
 #import "MJRefresh.h"
 #import "FHRefreshCustomFooter.h"
@@ -48,7 +47,6 @@
 @property (nonatomic, assign) FHHouseType previousHouseType;
 @property (nonatomic, assign) FHHomePullTriggerType currentPullType;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
-@property (nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property (nonatomic, strong) TTHttpTask * requestOriginTask;
 @property (nonatomic, strong) TTHttpTask * requestRefreshTask;
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;

@@ -277,7 +277,6 @@
         return;
     }
     self.dismissing = YES;
-    self.tableView.scrollEnabled = false;
     if (self.listController.willSwipeDownDismiss) {
         self.listController.willSwipeDownDismiss(duration,self.currentBubble);
     }
@@ -287,7 +286,6 @@
         if (self.listController.didSwipeDownDismiss) {
             self.listController.didSwipeDownDismiss(self.currentBubble);
         }
-        self.tableView.scrollEnabled = true;
         self.dismissing = NO;
     }];
     [self.tableView.mj_footer resetNoMoreData];
@@ -424,9 +422,6 @@
     if (self.searchId) {
         param[@"search_id"] = self.searchId;
     }
-    if (showLoading) {
-        self.tableView.scrollEnabled = NO;
-    }
     
     if (query.length == 0) {
         query = self.configModel.conditionQuery;
@@ -507,7 +502,6 @@
                 [wself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
             wself.tableView.mj_footer.hidden = NO;
-            wself.tableView.scrollEnabled = YES;
         
             if (wself.houseList.count < 10 && !houseModel.hasMore) {
                 wself.tableView.mj_footer.hidden = YES;
@@ -568,9 +562,6 @@
         param[@"search_id"] = self.searchId;
     }
 
-    if (showLoading) {
-        self.tableView.scrollEnabled = NO;
-    }
 
     if (query.length == 0) {
         query = self.configModel.conditionQuery;
@@ -633,7 +624,6 @@
                 [wself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
             wself.tableView.mj_footer.hidden = NO;
-            wself.tableView.scrollEnabled = YES;
             
             
             if (wself.houseList.count < 10 && !houseModel.hasMore) {

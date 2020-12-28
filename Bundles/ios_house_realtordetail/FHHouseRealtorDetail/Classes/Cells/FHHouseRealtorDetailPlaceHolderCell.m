@@ -24,9 +24,9 @@
 - (void)initUI {
     [self.placeHolderImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.contentView).offset(15);
-        make.top.equalTo(self.contentView).offset(10);
+        make.top.equalTo(self.contentView).offset(0);
         make.right.equalTo(self.contentView).offset(-15);
-        make.bottom.equalTo(self.contentView);
+        make.bottom.equalTo(self.contentView).offset(-10);
     }];
 }
 
