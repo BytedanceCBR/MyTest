@@ -2064,7 +2064,9 @@ extern NSString *const PPE_OPEN_KEY;
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
     }];
+    @weakify(alertVC);
     UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确认开启" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        @strongify(alertVC);
         NSString *channelName = [alertVC.textFields.firstObject.text btd_trimmed];
         if(channelName.length > 0) {
             NSString *oldChannelName = [[NSUserDefaults standardUserDefaults] stringForKey:@"FH_BOE_CHANNEL_NAME_KEY"];
@@ -2096,7 +2098,9 @@ extern NSString *const PPE_OPEN_KEY;
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
     }];
+    @weakify(alertVC);
     UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确认开启" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        @strongify(alertVC);
         NSString *channelName = [alertVC.textFields.firstObject.text btd_trimmed];
         if(channelName.length > 0) {
             NSString *oldChannelName = [[NSUserDefaults standardUserDefaults] stringForKey:@"FH_PPE_CHANNEL_NAME_KEY"];
