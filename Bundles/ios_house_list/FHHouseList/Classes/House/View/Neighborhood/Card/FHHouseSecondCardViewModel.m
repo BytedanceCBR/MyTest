@@ -23,6 +23,7 @@
 #import "FHHouseNeighborAgencyViewModel.h"
 #import "FHHouseReserveAdviserViewModel.h"
 #import "FHHouseCardStatusManager.h"
+#import "NSString+BTDAdditions.h"
 
 @interface FHHouseSecondCardViewModel()
 
@@ -92,9 +93,9 @@
         return;
     }
     FHHouseTagsModel *element = [self.tagList[0] copy];
-    CGSize textSize =  [element.content sizeWithFont:font constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
+    CGFloat width = [element.content btd_widthWithFont:font height:14];
     NSString *resultString;
-    if (textSize.width > self.tagListMaxWidth) {
+    if (width > self.tagListMaxWidth) {
         NSString *preString;
         NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
         for (int i = 0; i < paramsArrary.count; i ++) {
@@ -104,8 +105,8 @@
             } else {
                 preString = tagStr;
             }
-            CGSize tagSize =  [preString sizeWithFont: font constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
-            if (tagSize.width > self.tagListMaxWidth) {
+            width =  [preString btd_widthWithFont:font height:14];
+            if (width > self.tagListMaxWidth) {
                 break;
             }
             resultString = preString;
