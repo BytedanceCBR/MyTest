@@ -177,7 +177,7 @@
     infos[@"tracer"] = tracerParams;
     infos[@"from_home"] = @(FHEnterSuggestionTypeHome);
     
-    if (self.searchTitleIndex >= 0 && self.searchTitleIndex < self.rollDatas.count && houseType == FHHouseTypeSecondHandHouse) {
+    if (self.searchTitleIndex >= 0 && self.searchTitleIndex < self.rollDatas.count) {
         FHHomeRollDataDataModel *model = self.rollDatas[self.searchTitleIndex];
         if (model.detail.count > 0) {
             FHHomeRollDataDataDetailModel *detailModel = model.detail[0];

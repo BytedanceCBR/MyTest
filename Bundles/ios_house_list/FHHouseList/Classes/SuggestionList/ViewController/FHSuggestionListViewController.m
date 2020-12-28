@@ -69,6 +69,7 @@
 
 @property (nonatomic, assign) NSInteger defaultHouseType;
 @property (nonatomic, copy) NSString *defaultSearchPlaceholder;
+@property (nonatomic, strong) NSArray *segmentTitles;
 
 @end
 
@@ -80,10 +81,16 @@
         self.paramObj = paramObj;
         // 1、house_type
         _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
+        
+        _houseTypeArray = [[NSMutableArray alloc] init];
+        _segmentTitles = [self getSegmentTitles];
+        
         _viewModel = [[FHSuggestionListViewModel alloc] initWithController:self];
         _isNeedHouseTypeCache = [paramObj.allParams[@"isNeedHouseTypeCache"] boolValue];
         NSInteger hp = [paramObj.allParams[@"house_type"] integerValue];
-        if (hp >= 1 && hp <= 4) {
+        //针对不同城市显示的tab不同的逻辑，如果传的type改城市不显示，则设为默认值
+        BOOL isHaveTab = [_houseTypeArray containsObject:@(hp)];
+        if (hp >= 1 && hp <= 4 && isHaveTab) {
             _viewModel.houseType = hp;
         } else {
             _viewModel.houseType = 2;// 默认二手房
@@ -140,7 +147,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.houseTypeArray = [NSMutableArray new];
     [self setupUI];
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
     if (self.autoFillInputText) {
@@ -156,7 +162,8 @@
 }
 
 - (void)refreshSearchPlaceHolderText {
-    if (self.houseType == self.defaultHouseType && self.defaultSearchPlaceholder.length > 0) {
+    //目前只有二手房支持这个
+    if (self.houseType == self.defaultHouseType && self.defaultSearchPlaceholder.length > 0 && self.houseType == FHHouseTypeSecondHandHouse) {
         [self.naviBar setSearchPlaceHolderText:self.defaultSearchPlaceholder];
         return;
     }
@@ -256,7 +263,7 @@
 }                                      
 
 - (void)setupSegmentedControl {
-    _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:[self getSegmentTitles]];
+    _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:self.segmentTitles];
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
                                           NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
