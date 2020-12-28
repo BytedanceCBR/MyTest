@@ -298,8 +298,8 @@ static const CGFloat kFloatingViewOriginY = 230;
         self.dataFetchManager.currentIndex= 0;
         self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
         self.dataFetchManager.categoryId = @"f_house_smallvideo_flow";
-        if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
-            self.extraDic = paramObj.allParams[@"extraDic"];
+        if(paramObj.allParams[@"tracer"] && [paramObj.allParams[@"tracer"] isKindOfClass:[NSDictionary class]]){
+            self.extraDic = paramObj.allParams[@"tracer"];
             self.dataFetchManager.tracerDic = self.extraDic;
           }
         self.dataFetchManager.groupID = self.groupID;

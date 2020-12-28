@@ -23,8 +23,8 @@
 #import "ToastManager.h"
 #import "FHHouseBaseItemCell.h"
 #import "FHHouseRealtorDetailPlaceCell.h"
-#import "UIViewController+Refresh_ErrorHandler.h"
 #import "FHUtils.h"
+#import "FHHouseRealtorDetailPlaceHolderCell.h"
 
 @interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic , weak) UITableView *tableView;
@@ -32,6 +32,7 @@
 @property(nonatomic, strong) FHErrorView *errorView;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property (nonatomic , strong) FHUGCCellManager *cellManager;
+@property(nonatomic , assign) BOOL showPlaceHolder;
 @property(nonatomic, weak)TTHttpTask *requestTask;
 @property(nonatomic, strong)FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
@@ -53,6 +54,7 @@
         self.tracerDic = tracerDic;
         self.detailController = viewController;
         self.tableView = tableView;
+        self.showPlaceHolder = YES;
         self.realtorInfo = realtorInfo;
         [self configTableView];
         self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
@@ -77,12 +79,12 @@
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     
     if (![TTReachability isNetworkConnected]) {
+        self.showPlaceHolder = NO;
+        [self.tableView reloadData];
         [self showErrorViewNoNetWork];
         self.tableView.scrollEnabled = YES;
         return;
     }
-    
-    
     if (self.requestTask) {
         [self.requestTask cancel];
         self.detailController.isLoadingData = NO;
@@ -91,12 +93,6 @@
         return;
     }
     self.detailController.isLoadingData = YES;
-        if (isFirst) {
-            if (fabs(self.showHeaderViewHeight)  < [UIScreen mainScreen].bounds.size.height *0.75) {
-                [self.detailController startLoading];
-            }
-        }
-    
     NSString *refreshType = @"be_null";
     __weak typeof(self) wself = self;
     NSInteger listCount = self.dataList.count;
@@ -132,12 +128,12 @@
     self.categoryId = @"f_realtor_profile";
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead isFirst:isFirst listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.detailController.isLoadingData = NO;
-        [wself.detailController endLoading];
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         wself.feedListModel = feedListModel;
         
         if (error) {
             //TODO: show handle error
+            self.showPlaceHolder = NO;
             [self reloadTableViewData];
             if(isFirst){
                 if(error.code != -999){
@@ -151,6 +147,7 @@
             return;
         }
         if(model){
+            self.showPlaceHolder = NO;
             NSArray *resultArr = [self convertModel:feedListModel.data];
             if(isHead && feedListModel.hasMore){
                 [wself.dataList removeAllObjects];
@@ -167,7 +164,11 @@
                 [wself.detailController.emptyView hideEmptyView];
             }
             [self reloadTableViewData];
+        }else {
+            self.showPlaceHolder = NO;
+            [self reloadTableViewData];
         }
+        
     }];
 }
 - (NSArray *)convertModel:(NSArray *)feedList{
@@ -205,6 +206,7 @@
     _tableView.dataSource = self;
     [self registerCellClasses];
     [self.tableView registerClass:[FHHouseRealtorDetailPlaceCell class] forCellReuseIdentifier:@"FHHouseRealtorDetailPlaceCell"];
+    [self.tableView registerClass:[FHHouseRealtorDetailPlaceHolderCell class] forCellReuseIdentifier:@"FHHouseRealtorDetailPlaceHolderCell"];
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         [wself requestData:NO first:NO];
@@ -214,12 +216,7 @@
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    _showHeaderViewHeight = scrollView.contentOffset.y;
-    if (scrollView.contentOffset.y<0) {
-        self.detailController.ttContentInset = UIEdgeInsetsMake( fabs(scrollView.contentOffset.y) , 0, 0, 0);
-    }else {
-        self.detailController.ttContentInset = UIEdgeInsetsMake( 0, 0, 0, 0);
-    }
+
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -249,18 +246,23 @@
 #pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.dataList.count>0?self.dataList.count+1:self.dataList.count;
+    if (self.showPlaceHolder) {
+        return 10;
+    }
+    return self.dataList.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-        NSString *identifier = @"FHHouseRealtorDetailPlaceCell";
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    
+    if (self.showPlaceHolder) {
+        NSString *identifier = @"FHHouseRealtorDetailPlaceHolderCell";
+        FHHouseRealtorDetailPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
         return cell;
-    }else {
-        if(indexPath.row < self.dataList.count + 1){
-            FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row -1];
+    }
+    
+        if(indexPath.row < self.dataList.count){
+            FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
             NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
             FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
             if (cell == nil) {
@@ -269,36 +271,31 @@
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
             }
             cell.delegate = self;
-            cellModel.tracerDic = [self trackDict:cellModel rank:(indexPath.row -1)];
-            if(indexPath.row < self.dataList.count +1){
+            cellModel.tracerDic = [self trackDict:cellModel rank:(indexPath.row)];
+            if(indexPath.row < self.dataList.count){
                 [cell refreshWithData:cellModel];
             }
             return cell;
         }
-    }
     
     return [[FHUGCBaseCell alloc] init];
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-        return;
-    }
-    if(indexPath.row < self.dataList.count + 1){
-        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row -1];
-        [self trackFeedClientShow:cellModel rank:(indexPath.row - 1)];
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
+        [self trackFeedClientShow:cellModel rank:(indexPath.row)];
     }
 }
 
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-        return self.detailController.placeHolderCellHeight;
+    if (self.showPlaceHolder) {
+        return 355;
     }
-    
-    if(indexPath.row < self.dataList.count + 1){
-        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row -1];
+    if(indexPath.row < self.dataList.count){
+        FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
         Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
         if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
             return [cellClass heightForData:cellModel];
@@ -349,6 +346,8 @@
         _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 500)];
         _errorView.backgroundColor = [UIColor colorWithHexStr:@"f8f8f8"];
         _errorView.retryBlock = ^{
+            ws.showPlaceHolder = YES;
+            [ws.tableView reloadData];
             [ws requestData:YES first:YES];
         };
     }
@@ -356,10 +355,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-        return;
-    }
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row - 1];
+    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
     self.currentCellModel = cellModel;
     self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
     self.detailJumpManager.currentCell = self.currentCell;

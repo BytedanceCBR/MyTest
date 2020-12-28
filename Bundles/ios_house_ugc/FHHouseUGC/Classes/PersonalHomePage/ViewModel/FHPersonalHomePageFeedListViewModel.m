@@ -24,6 +24,7 @@
 #import "FHCommonDefines.h"
 #import "FHUGCConfig.h"
 #import "FHUtils.h"
+#import "FHHouseRealtorDetailPlaceHolderCell.h"
         
 
 typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
@@ -44,6 +45,7 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
 @property(nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
 @property(nonatomic,weak) UITableView *tableView;
 @property (nonatomic,strong) FHUGCCellManager *cellManager;
+@property(nonatomic , assign) BOOL showPlaceHolder;
 @property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 @property(nonatomic, weak) TTHttpTask *requestTask;
 @property(nonatomic, strong) FHFeedListModel *feedListModel;
@@ -58,6 +60,7 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
     if(self = [super init]) {
         _viewController = viewController;
         _tableView = tableView;
+        self.showPlaceHolder = YES;
         _dataList = [NSMutableArray array];
         _detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
         _detailJumpManager.refer = 1;
@@ -74,6 +77,7 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
     self.cellManager = [[FHUGCCellManager alloc] init];
     [self.cellManager registerAllCell:self.tableView];
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"error_cell"];
+    [self.tableView registerClass:[FHHouseRealtorDetailPlaceHolderCell class] forCellReuseIdentifier:@"FHHouseRealtorDetailPlaceHolderCell"];
 
     WeakSelf;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
@@ -82,6 +86,7 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
     }];
     self.emptyView.retryBlock = ^{
         StrongSelf;
+        self.showPlaceHolder = YES;
         [self.dataList removeAllObjects];
         [self.tableView reloadData];
         [self.viewController retryLoadData];
@@ -95,6 +100,8 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
     
     if (![TTReachability isNetworkConnected] && isFirst) {
+        self.showPlaceHolder = NO;
+        [self.tableView reloadData];
         [self showErrorViewNoNetWork];
         return;
     }
@@ -110,7 +117,6 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
     self.viewController.isLoadingData = YES;
     
     if (isFirst) {
-        [self.homePageManager.viewController startLoading];
     }
     
     NSInteger listCount = self.dataList.count;
@@ -137,11 +143,12 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
     self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead isFirst:isFirst listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         StrongSelf;
         self.viewController.isLoadingData = NO;
-        [self.homePageManager.viewController endLoading];
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         self.feedListModel = feedListModel;
 
         if (error) {
+            self.showPlaceHolder = NO;
+            [self.tableView reloadData];
             if(isFirst){
                 [self showErrorViewNoNetWork];
             }else{
@@ -151,6 +158,7 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
         }
         
         if(model){
+            self.showPlaceHolder = NO;
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
                 NSArray *resultArr = [self convertModel:feedListModel.data isHead:isHead];
                 if(isHead){
@@ -164,6 +172,9 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
                     [self reloadTableViewDataWithHasMore:feedListModel.hasMore];
                 });
             });
+        }else {
+            self.showPlaceHolder = NO;
+            [self reloadTableViewDataWithHasMore:feedListModel.hasMore];
         }
     }];
 }
@@ -358,10 +369,21 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (self.showPlaceHolder) {
+        return 10;
+    }
     return self.dataList.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.showPlaceHolder) {
+        NSString *identifier = @"FHHouseRealtorDetailPlaceHolderCell";
+        FHHouseRealtorDetailPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        cell.placeHolderImageName = @"personal_page_place";
+        [cell setPersolanPage];
+        [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
+        return cell;
+    }
     NSInteger index = indexPath.row;
     if(index >= 0 && index < self.dataList.count) {
         id model = self.dataList[index];
@@ -400,7 +422,10 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
     return [[FHUGCBaseCell alloc] init];
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.showPlaceHolder) {
+        return 282;
+    }
     NSInteger index = indexPath.row;
     if(index >= 0 && index < self.dataList.count) {
         id model = self.dataList[index];

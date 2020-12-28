@@ -262,7 +262,6 @@
 - (void)createFeedListController:(NSString *)tabName requestName:(NSString *)name {
     if (![tabName isEqualToString:@"房源"]) {
         FHHouseRealtorDetailController *realtorDetailController =  [[FHHouseRealtorDetailController alloc]init];
-        realtorDetailController.showHeaderViewHeight = self.headerViewHeight;
         realtorDetailController.realtorInfo = self.realtorInfo;
         realtorDetailController.tracerDict = self.tracerDict;
         realtorDetailController.placeHolderCellHeight = self.placeHolderCellHeight;
@@ -276,7 +275,6 @@
         [self.subVCs addObject:realtorDetailController];
     }else {
         FHHouseRealtorDetailHouseVC *realtorDetailController =  [[FHHouseRealtorDetailHouseVC alloc]init];
-        realtorDetailController.showHeaderViewHeight = self.headerViewHeight;
         realtorDetailController.realtorInfo = self.realtorInfo;
         realtorDetailController.tracerDict = self.tracerDict;
         realtorDetailController.tabName = name;

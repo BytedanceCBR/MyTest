@@ -280,7 +280,7 @@
             LynxTemplateData *tem = [[LynxTemplateData alloc]initWithJson:lynxData];
             [self.realtorInfoView loadTemplate:templateData withURL:@"local" initData:tem];
         }
-        self.viewHeight = ceil([self.realtorInfoView intrinsicContentSize].height + self.navHeight + 56);
+        self.viewHeight = ceil([self.realtorInfoView intrinsicContentSize].height + self.navHeight + ([_channel isEqualToString:@"lynx_realtor_detail_header"] ?32:50));
     }
 }
 @end

@@ -18,7 +18,7 @@
 #import "FHHouseBaseItemCell.h"
 #import "FHHouseRealtorDetailPlaceCell.h"
 #import "FHRealtorSecondCell.h"
-#import "UIViewController+Refresh_ErrorHandler.h"
+#import "FHHomePlaceHolderCell.h"
 
 @interface FHHouseRealtorDetailHouseViewModel ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
@@ -29,6 +29,7 @@
 @property(nonatomic , weak) FHHouseRealtorDetailHouseVC *detailController;
 @property(nonatomic, strong) FHErrorView *errorView;
 @property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic , assign) BOOL showPlaceHolder;
 @property (nonatomic, assign) NSInteger lastOffset;
 @property (nonatomic, strong) NSString *currentSearchId;
 @property (nonatomic, assign) BOOL hasMore;
@@ -49,6 +50,7 @@
         //        self.houseType = houseType;
         self.tracerDic = tracerDic;
         self.detailController = viewController;
+        self.showPlaceHolder = YES;
         self.tableView = tableView;
         self.realtorInfo = realtorInfo;
         //        self.tableView.backgroundColor = [UIColor themeGray7];
@@ -74,6 +76,7 @@
     [self.tableView registerClass:[FHHouseRealtorDetailPlaceCell class] forCellReuseIdentifier:@"FHHouseRealtorDetailPlaceCell"];
     [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
     [self.tableView registerClass:[FHRealtorSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHRealtorSecondCell class])];
+    [self.tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:@"FHHomePlaceHolderCell"];
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -84,6 +87,8 @@
     
     if (![TTReachability isNetworkConnected]) {
         [self showErrorViewNoNetWork];
+        self.showPlaceHolder = NO;
+        [self.tableView reloadData];
         self.tableView.scrollEnabled = YES;
         return;
     }
@@ -92,12 +97,6 @@
         return;
     }
     self.detailController.isLoadingData = YES;
-    
-    if(isFirst){
-        if (fabs(self.showHeaderViewHeight)  < [UIScreen mainScreen].bounds.size.height *0.75) {
-            [self.detailController startLoading];
-        }
-    }
     __weak typeof(self) wself = self;
     NSMutableDictionary *requestDictonary = [NSMutableDictionary new];
     [requestDictonary setValue:[FHEnvContext getCurrentSelectCityIdFromLocal] forKey:@"city_id"];
@@ -119,7 +118,6 @@
     self.requestTask = nil;
     self.requestTask = [FHMainApi requestRealtorHomeRecommend:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         wself.detailController.isLoadingData = NO;
-        [wself.detailController endLoading];
         if (error) {
             //TODO: show handle error
             if(isFirst){
@@ -130,6 +128,7 @@
                 [[ToastManager manager] showToast:@"网络异常"];
                 [wself updateTableViewWithMoreData:YES];
             }
+            self.showPlaceHolder = NO;
             [self reloadTableViewData];
             return;
         }
@@ -143,6 +142,7 @@
                 self.lastOffset += model.data.items.count;
             }
         }
+        self.showPlaceHolder = NO;
         [self reloadTableViewData];
     }];
 }
@@ -217,34 +217,36 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    
-    return self.dataList.count>0?self.dataList.count+1:self.dataList.count;
+    if (self.showPlaceHolder) {
+        return 10;
+    }
+    return self.dataList.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0) {
-        return self.detailController.placeHolderCellHeight;
+    if (self.showPlaceHolder) {
+        return 124;
     }else {
-      return 86;
+        return 86;
     }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row == 0) {
-                //to do 房源cell
-        NSString *identifier = @"FHHouseRealtorDetailPlaceCell";
-        FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-       [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
+    
+    if (self.showPlaceHolder) {
+        NSString *identifier = @"FHHomePlaceHolderCell";
+        FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
         return cell;
-    }else {
+    }
         if ([FHEnvContext isDisplayNewCardType]) {
             NSString *identifier = NSStringFromClass([FHRealtorSecondCell class]);
             FHHouseBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-            if (indexPath.row < self.dataList.count + 1) {
-                JSONModel *model = self.dataList[indexPath.row - 1];
+            if (indexPath.row < self.dataList.count) {
+                JSONModel *model = self.dataList[indexPath.row];
                 [cell refreshWithData:model];
-                [cell refreshIndexCorner:(indexPath.row == 1) andLast:(indexPath.row == self.dataList.count)];
+                [cell refreshIndexCorner:(indexPath.row == 0) andLast:(indexPath.row == self.dataList.count)];
             }
             return cell;
         }
@@ -252,16 +254,15 @@
         NSString *identifier = @"FHHomeSmallImageItemCell";
         FHHouseBaseItemCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         cell.delegate = self;
-        if (indexPath.row < self.dataList.count +1) {
-            JSONModel *model = self.dataList[indexPath.row -1];
+        if (indexPath.row < self.dataList.count) {
+            JSONModel *model = self.dataList[indexPath.row];
             [cell refreshTopMargin:([UIDevice btd_isIPhoneXSeries]) ? 4 : 0];
             [cell updateHomeSmallImageHouseCellModel:model andType:FHHouseTypeSecondHandHouse];
             [cell hiddenCloseBtn];
         }
-        [cell refreshIndexCorner:(indexPath.row == 1) withLast:(indexPath.row == (self.dataList.count))];
+        [cell refreshIndexCorner:(indexPath.row == 0) withLast:(indexPath.row == (self.dataList.count))];
         [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
         return cell;
-    }
 }
 
 - (NSMutableArray *)dataList {
@@ -286,12 +287,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row >0) {
-            NSIndexPath *index = [NSIndexPath indexPathForRow:indexPath.row -1 inSection:indexPath.section];
-        if (self.dataList.count + 1>indexPath.row) {
-            [self jumpToDetailPage:index];
-        }
-    }
+    NSIndexPath *index = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section];
+    [self jumpToDetailPage:index];
 }
 #pragma mark - 详情页跳转
 -(void)jumpToDetailPage:(NSIndexPath *)indexPath {
@@ -316,12 +313,7 @@
     }
 }
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    _showHeaderViewHeight = scrollView.contentOffset.y;
-    if (scrollView.contentOffset.y<0) {
-        self.detailController.ttContentInset = UIEdgeInsetsMake( fabs(scrollView.contentOffset.y) , 0, 0, 0);
-    }else {
-        self.detailController.ttContentInset = UIEdgeInsetsMake( 0, 0, 0, 0);
-    }
+
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
