@@ -8,9 +8,9 @@
 #import "FHRelatedNeighborhoodListViewController.h"
 #import "FHRelatedNeighborhoodListViewModel.h"
 #import <TTUIWidget/UIViewController+Track.h>
-#import <TTBaseLib/TTDeviceHelper.h>
 #import <TTReachability/TTReachability.h>
 #import <FHHouseBase/FHBaseTableView.h>
+#import "UIDevice+BTDAdditions.h"
 
 @interface FHRelatedNeighborhoodListViewController ()
 
@@ -74,7 +74,7 @@
     _tableView.estimatedRowHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
-    if ([TTDeviceHelper isIPhoneXDevice]) {
+    if ([UIDevice btd_isIPhoneXSeries]) {
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
 }
