@@ -12,6 +12,7 @@
 #import <TTRexxar/TTRJSBForwarding.h>
 #import "TTNetworkManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import "WKWebView+FHCommitURL.h"
 
 NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
 @interface TTJSBAuthManager()
@@ -73,6 +74,12 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
 
 
 - (BOOL)engine:(id<TTRexxarEngine>)engine isAuthorizedJSB:(TTRJSBCommand *)command domain:(NSString *)domain {
+    if ([engine isKindOfClass:[WKWebView class]]) {
+        NSString *host = [(WKWebView *)engine fh_commitURL].host;
+        if (host.length) {
+            return [self isInnerDomain:host];
+        }
+    }
     if ([self isInnerDomain:domain]) {
         return YES;
     }
