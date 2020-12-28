@@ -109,6 +109,8 @@
 
     [view refreshContent:markData];
     //calculate markerview position
+    [view setNeedsLayout];
+    [view layoutIfNeeded];
     CGFloat padding = 10;
     CGFloat popWidth = view.width;
     if (popWidth < 100) {

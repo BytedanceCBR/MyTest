@@ -76,10 +76,11 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
 - (BOOL)engine:(id<TTRexxarEngine>)engine isAuthorizedJSB:(TTRJSBCommand *)command domain:(NSString *)domain {
     if ([engine isKindOfClass:[WKWebView class]]) {
         NSString *host = [(WKWebView *)engine fh_commitURL].host;
-        if (host.length) {
-            return [self isInnerDomain:host];
+        if (host.length && [self isInnerDomain:host]) {
+            return YES;
         }
     }
+    
     if ([self isInnerDomain:domain]) {
         return YES;
     }
@@ -110,6 +111,13 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
 }
 
 - (BOOL)engine:(id<TTRexxarEngine>)engine isAuthorizedEvent:(NSString *)eventName domain:(NSString *)domain {
+    if ([engine isKindOfClass:[WKWebView class]]) {
+        NSString *host = [(WKWebView *)engine fh_commitURL].host;
+        if (host.length && [self isInnerDomain:host]) {
+            return YES;
+        }
+    }
+    
     if ([self isInnerDomain:domain]) {
         return YES;
     }
@@ -132,6 +140,13 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
 }
 
 - (BOOL)engine:(id<TTRexxarEngine>)engine isAuthorizedMeta:(NSString *)meta domain:(NSString *)domain {
+    if ([engine isKindOfClass:[WKWebView class]]) {
+        NSString *host = [(WKWebView *)engine fh_commitURL].host;
+        if (host.length && [self isInnerDomain:host]) {
+            return YES;
+        }
+    }
+    
     if ([self isInnerDomain:domain]) {
         return YES;
     }

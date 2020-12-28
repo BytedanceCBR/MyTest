@@ -191,9 +191,13 @@
     CGFloat yFixedValueMax;
     CGFloat yFixedValueMin;
     if (shouldUseTenThousandUnit) {
+        chartView.lineChart.yLabelFormat = @"%.2f";
+        
         yFixedValueMax = maxValue / 10000;
         yFixedValueMin = minValue / 10000;
     } else {
+        chartView.lineChart.yLabelFormat = @"%.0f";
+        
         yFixedValueMax = maxValue;
         yFixedValueMin = minValue;
     }
