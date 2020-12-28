@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseListRentCell : FHHouseBaseUsuallyCell<FHHouseCardReadStateProtocol>
 
+@property (nonatomic, strong) id model;
+
 @end
 
 NS_ASSUME_NONNULL_END

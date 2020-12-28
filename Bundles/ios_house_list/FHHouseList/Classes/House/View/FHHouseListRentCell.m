@@ -77,6 +77,7 @@
     if (![data isKindOfClass:[FHSearchHouseItemModel class]]) {
         return;
     }
+    self.model = data;
     [self refreshOpacityWithData:data];
     FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
     NSAttributedString *attributeString = nil;
