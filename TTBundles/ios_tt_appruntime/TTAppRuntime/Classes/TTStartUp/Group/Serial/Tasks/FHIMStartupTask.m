@@ -244,7 +244,9 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                         NSDictionary *jsonObj = (NSDictionary *)obj;
                         message = [jsonObj btd_stringValueForKey:@"message"];
                     }
-                    [[ToastManager manager] showToast:message?:@"网络异常，请稍后重试!"];
+                    NSString *toastContent = message?:@"网络异常，请稍后重试!";
+                    CGFloat duration = MAX(1,toastContent.length * 0.1);
+                    [[ToastManager manager] showToast:toastContent duration:duration style:FHToastViewStyleDefault position:FHToastViewPositionCenter verticalOffset:0];
                     
                     [monitorParams setValue:error forKey:@"server_error"];
                     [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_SERVER_ERROR extra:monitorParams];

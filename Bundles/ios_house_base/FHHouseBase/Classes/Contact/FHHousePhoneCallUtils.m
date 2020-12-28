@@ -157,7 +157,9 @@ typedef enum : NSUInteger {
             return;
         }
         if(![model.status isEqualToString:@"0"]){
-            [[ToastManager manager] showToast:model.message];
+            NSString *toastContent = model.message;
+            CGFloat duration = MAX(1,toastContent.length * 0.1);
+            [[ToastManager manager] showToast:toastContent duration:duration style:FHToastViewStyleDefault position:FHToastViewPositionCenter verticalOffset:0];
         }
         else{
             [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
