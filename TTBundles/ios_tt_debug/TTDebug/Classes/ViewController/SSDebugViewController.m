@@ -110,6 +110,7 @@ extern NSDictionary *ttvs_videoMidInsertADDict(void);
 extern NSInteger ttvs_getVideoMidInsertADReqStartTime(void);
 extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
 extern NSString *const BOE_OPEN_KEY;
+extern NSString *const PPE_OPEN_KEY;
 
 @interface SSDebugViewController () {
     
@@ -534,12 +535,26 @@ extern NSString *const BOE_OPEN_KEY;
         item71.switchAction = @selector(_httpsSettingActionFired:);
         
         STTableViewCellItem *boeEnvSwitch = [[STTableViewCellItem alloc] initWithTitle:@"BOE开关" target:self action:@selector(switchBOEAction)];
-        boeEnvSwitch.detail = [NSString stringWithFormat:@"当前环境: %@",[FHEnvContext sharedInstance].boeChannelName];
+        NSString *boeChannelName = [FHEnvContext sharedInstance].boeChannelName;
+        if(boeChannelName.length <= 0) {
+            boeChannelName = @"未设置";
+        }
+        boeEnvSwitch.detail = [NSString stringWithFormat:@"当前泳道环境: %@",boeChannelName];
         boeEnvSwitch.switchStyle = YES;
         boeEnvSwitch.checked = [self.class isBOEOn];
         boeEnvSwitch.switchAction = @selector(switchBOE:);
         
-        STTableViewSectionItem *section7 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"网络 开关" items:@[item71,boeEnvSwitch]];
+        STTableViewCellItem *ppeEnvSwitch = [[STTableViewCellItem alloc] initWithTitle:@"PPE开关" target:self action:@selector(switchPPEAction)];
+        NSString *ppeChannelName = [FHEnvContext sharedInstance].ppeChannelName;
+        if(ppeChannelName.length <= 0) {
+            ppeChannelName = @"未设置";
+        }
+        ppeEnvSwitch.detail = [NSString stringWithFormat:@"当前泳道环境: %@",ppeChannelName];
+        ppeEnvSwitch.switchStyle = YES;
+        ppeEnvSwitch.checked = [self.class isPPEOn];
+        ppeEnvSwitch.switchAction = @selector(switchPPE:);
+        
+        STTableViewSectionItem *section7 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"网络 开关" items:@[item71,boeEnvSwitch,ppeEnvSwitch]];
         
         [dataSource addObject:section7];
     }
@@ -833,6 +848,7 @@ extern NSString *const BOE_OPEN_KEY;
     // Do any additional setup after loading the view.
     self.navigationItem.title = @"高级调试";
     self.statusBarStyle = SSViewControllerStatsBarDayWhiteNightBlackStyle;
+    self.disableKeyboardNotificationHandling = YES;
     
     self.dataSource = [self _constructDataSource];
     
@@ -2042,18 +2058,25 @@ extern NSString *const BOE_OPEN_KEY;
 }
 
 -(void)switchBOEAction {
-    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请输入BOE泳道名称" message:@"确定后需要重启生效" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请输入BOE泳道名称" message:@"确认后请重启应用" preferredStyle:UIAlertControllerStyleAlert];
     [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         textField.keyboardType = UIKeyboardTypeASCIICapable;
     }];
     UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
     }];
-    UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确认开启" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSString *channelName = [alertVC.textFields.firstObject.text btd_trimmed];
         if(channelName.length > 0) {
-            [[NSUserDefaults standardUserDefaults] setObject:channelName forKey:@"FH_BOE_CHANNEL_NAME_KEY"];
-            if(![self.class isBOEOn]) {
-                [self switchBOE:nil];
+            NSString *oldChannelName = [[NSUserDefaults standardUserDefaults] stringForKey:@"FH_BOE_CHANNEL_NAME_KEY"];
+            if(![oldChannelName isEqualToString:channelName]) {
+                [[NSUserDefaults standardUserDefaults] setObject:channelName forKey:@"FH_BOE_CHANNEL_NAME_KEY"];
+                if(![self.class isBOEOn]) {
+                    [self switchBOE:nil];
+                }
+                if([self.class isPPEOn]) {
+                    [self switchPPE:nil];
+                }
+                [self reconstrucDataSource];
             }
         }
     }];
@@ -2062,14 +2085,63 @@ extern NSString *const BOE_OPEN_KEY;
     [[TTUIResponderHelper visibleTopViewController] presentViewController:alertVC animated:YES completion:nil];
 }
 
--(void)switchBOE:(UISwitch *)sw
-{
+#pragma mark - PPE 环境配置
++(BOOL)isPPEOn {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:PPE_OPEN_KEY];
+}
+- (void)switchPPEAction {
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请输入PPE泳道名称" message:@"确认后请重启应用" preferredStyle:UIAlertControllerStyleAlert];
+    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.keyboardType = UIKeyboardTypeASCIICapable;
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确认开启" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *channelName = [alertVC.textFields.firstObject.text btd_trimmed];
+        if(channelName.length > 0) {
+            NSString *oldChannelName = [[NSUserDefaults standardUserDefaults] stringForKey:@"FH_PPE_CHANNEL_NAME_KEY"];
+            if(![oldChannelName isEqualToString:channelName]) {
+                [[NSUserDefaults standardUserDefaults] setObject:channelName forKey:@"FH_PPE_CHANNEL_NAME_KEY"];
+                if(![self.class isPPEOn]) {
+                    [self switchPPE:nil];
+                }
+                if([self.class isBOEOn]) {
+                    [self switchBOE:nil];
+                }
+                [self reconstrucDataSource];
+            }
+        }
+    }];
+    [alertVC addAction:cancel];
+    [alertVC addAction:confirm];
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:alertVC animated:YES completion:nil];
+}
+- (void)switchPPE:(UISwitch *)sw {
+    BOOL isOn = [self.class isPPEOn];
+    [[NSUserDefaults standardUserDefaults] setBool:!isOn forKey:PPE_OPEN_KEY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    if(sw && [self.class isBOEOn]) {
+        [self switchBOE:nil];
+        [self reconstrucDataSource];
+    }
+}
+
+- (void)reconstrucDataSource {
+    self.dataSource = [self _constructDataSource];
+    [self.tableView reloadData];
+}
+#pragma mark - BOE 配置
+-(void)switchBOE:(UISwitch *)sw {
     BOOL isOn = [self.class isBOEOn];
     [[NSUserDefaults standardUserDefaults] setBool:!isOn forKey:BOE_OPEN_KEY];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    [self.tableView reloadData];
+    
+    if(sw && [self.class isPPEOn]) {
+        [self switchPPE:nil];
+        [self reconstrucDataSource];
+    }
 }
-
 +(BOOL)isBOEOn
 {
     return [[NSUserDefaults standardUserDefaults]boolForKey:BOE_OPEN_KEY];
@@ -2135,3 +2207,4 @@ static SSDebugSubitems _suppertedSubitems = SSDebugSubitemAll;
 #endif
 
 NSString *const BOE_OPEN_KEY = @"BOE_OPEN_KEY";
+NSString *const PPE_OPEN_KEY = @"PPE_OPEN_KEY";

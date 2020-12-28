@@ -86,10 +86,24 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 
 - (BOOL)isBOE {
-    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"BOE_OPEN_KEY"]) {
         return YES;
     }
     return NO;
+}
+
+- (BOOL)isPPE {
+    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"PPE_OPEN_KEY"]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (NSString *)ppeChannelName {
+    return [FHEnvContext sharedInstance].ppeChannelName;
+}
+- (NSString *)boeChannelName {
+    return [FHEnvContext sharedInstance].boeChannelName;
 }
 
 - (NSString *)appId {

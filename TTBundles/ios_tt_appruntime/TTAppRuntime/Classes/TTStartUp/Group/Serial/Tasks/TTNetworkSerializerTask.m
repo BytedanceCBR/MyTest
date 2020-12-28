@@ -218,18 +218,18 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
     [[TTNetworkManager shareInstance] addRequestFilterBlock:^(TTHttpRequest *request) {
         [TTAccount addTokenToRequest:request];
         
-        // TODO: JOKER 写死PPE环境：
-        BOOL isPPE = YES;
+        // 设置PPE请求头
+        BOOL isPPE = [TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"PPE_OPEN_KEY"];
         // 设置BOE请求头
         BOOL isBOE = [TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"BOE_OPEN_KEY"];
 
         NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-        if (isBOE) {
+        if (isBOE && [FHEnvContext sharedInstance].boeChannelName.length > 0) {
             headers[@"x-use-boe"] = @"1";
-            headers[@"x-tt-env"] = @"prod";
-        } else if(isPPE) {
+            headers[@"x-tt-env"] = [FHEnvContext sharedInstance].boeChannelName;
+        } else if(isPPE && [FHEnvContext sharedInstance].ppeChannelName.length > 0) {
             headers[@"x-use-ppe"] = @"1";
-            headers[@"x-tt-env"] = @"ppe_657767";
+            headers[@"x-tt-env"] = [FHEnvContext sharedInstance].ppeChannelName;
         }
         if(headers.count > 0) {
             if(request.allHTTPHeaderFields.count > 0) {
