@@ -163,7 +163,7 @@
 
 - (void)refreshSearchPlaceHolderText {
     //目前只有二手房支持这个
-    if (self.houseType == self.defaultHouseType && self.defaultSearchPlaceholder.length > 0 && self.houseType == FHHouseTypeSecondHandHouse) {
+    if (self.defaultSearchPlaceholder.length > 0 && self.houseType == FHHouseTypeSecondHandHouse) {
         [self.naviBar setSearchPlaceHolderText:self.defaultSearchPlaceholder];
         return;
     }
