@@ -264,7 +264,9 @@
         
         // 关黑经纪人不展示联系方式
         BOOL isRealtorBlackmailed = [cellModel.realtor.realtorPunishStatus boolValue];
-        cellModel.isHiddenConnectBtn = isRealtorBlackmailed;
+        if(isRealtorBlackmailed) {
+            cellModel.isHiddenConnectBtn = YES;
+        }
         
         switch (cellModel.cellType) {
             case FHUGCFeedListCellTypeUGC:

@@ -374,7 +374,9 @@
         FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
         // 经纪人被关黑不显示联系相关按钮
         BOOL isRealtorBlackmailed = [model.realtor.realtorPunishStatus boolValue];
-        model.isHiddenConnectBtn = isRealtorBlackmailed;
+        if(isRealtorBlackmailed) {
+            model.isHiddenConnectBtn = YES;
+        }
         
         model.realtorIndex = m;
         model.isShowLineView = m < _contentModel.data.count -1;
