@@ -188,25 +188,25 @@
         };
         return data01;
     }];
-    CGFloat yFixedValueMax;
-    CGFloat yFixedValueMin;
-    if (shouldUseTenThousandUnit) {
-        chartView.lineChart.yLabelFormat = @"%.2f";
-        
-        yFixedValueMax = maxValue / 10000;
-        yFixedValueMin = minValue / 10000;
-    } else {
-        chartView.lineChart.yLabelFormat = @"%.0f";
-        
-        yFixedValueMax = maxValue;
-        yFixedValueMin = minValue;
-    }
+    CGFloat yFixedValueMax = maxValue;
+    CGFloat yFixedValueMin = minValue;
     CGFloat deltaValue = (yFixedValueMax - yFixedValueMin) * 3;
     yFixedValueMax += deltaValue;
     yFixedValueMin -= deltaValue;
     if (yFixedValueMin < 0) {
         yFixedValueMin = 0;
     }
+    if (yFixedValueMax > 10000) {
+        shouldUseTenThousandUnit = YES;
+    }
+    if (shouldUseTenThousandUnit) {
+        chartView.lineChart.yLabelFormat = @"%.2f";
+        yFixedValueMax = yFixedValueMax / 10000;
+        yFixedValueMin = yFixedValueMin / 10000;
+    } else {
+        chartView.lineChart.yLabelFormat = @"%.0f";
+    }
+
 //    chartView.lineChart.yFixedValueMin = 0;
     
     chartView.lineChart.yFixedValueMax = yFixedValueMax;
