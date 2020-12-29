@@ -63,7 +63,7 @@
     NSArray *tableCells = [self visibleCells];
     if (tableCells) {
         [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)]) {
+            if ([obj conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)] && [obj respondsToSelector:@selector(cellWillEnterForground)]) {
                 [(UITableViewCell<FHHouseCardTableViewCellProtocol> *)obj cellWillEnterForground];
             }
         }];
@@ -74,7 +74,7 @@
     NSArray *tableCells = [self visibleCells];
     if (tableCells) {
         [tableCells enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            if ([obj conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)]) {
+            if ([obj conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)] && [obj respondsToSelector:@selector(cellDidEnterBackground)]) {
                 [(UITableViewCell<FHHouseCardTableViewCellProtocol> *)obj cellDidEnterBackground];
             }
         }];
