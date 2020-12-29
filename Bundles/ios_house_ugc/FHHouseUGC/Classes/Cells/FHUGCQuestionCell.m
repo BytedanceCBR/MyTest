@@ -56,13 +56,8 @@
 - (void)initViews {
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
-
     
     self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectZero];
-    __weak typeof(self) wself = self;
-    _bottomView.deleteCellBlock = ^{
-        [wself deleteCell];
-    };
     [self.contentView addSubview:_bottomView];
 }
 

@@ -417,7 +417,7 @@
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:2];
     [parameters setValue:adid forKey:SSViewControllerBaseConditionADIDKey];
     [parameters setValue:logExtra forKey:@"log_extra"];
-    ssOpenWebView([TTStringHelper URLWithURLString:article.articleURL], nil, topController.navigationController, !!(adid), parameters);
+    ssOpenWebView([NSURL btd_URLWithString:article.articleURL], nil, topController.navigationController, !!(adid), parameters);
 }
 
 - (void)openVideoDetailWithItem:(TTVFeedListItem *)item context:(TTVFeedCellSelectContext *)context {
@@ -446,7 +446,7 @@
     [statParams setValue:item_id forKey:@"item_id"];
     [statParams setValue:@(aggrType) forKey:@"aggr_type"];
     [statParams setValue:item.originData.logPbDic forKey:@"log_pb"];
-    [statParams setValue:[article.rawAdDataString tt_JSONValue] forKey:@"raw_ad_data"];
+    [statParams setValue:[article.rawAdDataString btd_jsonValueDecoded] forKey:@"raw_ad_data"];
     [statParams setValue:logExtra forKey:@"log_extra"];
     [statParams setValue:item.originData forKey:@"video_feed"];
     [statParams setValue:context.feedListViewController forKey:@"video_feedListViewController"];
@@ -459,7 +459,7 @@
     if(context.enterFrom){
         tracerDic[@"enter_from"] = context.enterFrom;
     }
-    NSString *reportParams = [tracerDic tt_JSONRepresentation];
+    NSString *reportParams = [tracerDic btd_jsonStringEncoded];
     if(reportParams){
         [statParams setValue:reportParams forKey:@"report_params"];
     }
@@ -497,7 +497,7 @@
         }
         
         if (detailURL) {
-            [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:detailURL] userInfo:TTRouteUserInfoWithDict(statParams)];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:detailURL] userInfo:TTRouteUserInfoWithDict(statParams)];
         }
     }
 }
@@ -511,7 +511,7 @@
     [applinkParams setValue:logExtra forKey:@"log_extra"];
     
     if (!canOpenURL && !isEmptyString(openUrl)) {
-        NSURL *url = [TTStringHelper URLWithURLString:openUrl];
+        NSURL *url = [NSURL btd_URLWithString:openUrl];
         
         if ([[UIApplication sharedApplication] canOpenURL:url]) {
             canOpenURL = YES;

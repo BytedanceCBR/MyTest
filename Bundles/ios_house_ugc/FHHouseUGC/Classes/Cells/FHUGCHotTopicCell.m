@@ -180,7 +180,6 @@
     CGFloat height = headerViewHeight + 1 + 10 + 1 + 3;
     if ([data isKindOfClass:[FHFeedUGCCellModel class]]) {
         FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
-        NSArray *dataList = model.hotTopicList;
         NSInteger row = ceil(model.hotTopicList.count / 2.0);
         height += (46 * row);
     }
@@ -204,7 +203,6 @@
 
 - (void)trackClickMore {
     if([self.currentData isKindOfClass:[FHFeedUGCCellModel class]]) {
-        FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)self.currentData;
         NSMutableDictionary *tracerDict = [NSMutableDictionary new];
         tracerDict[@"element_type"] = @"hot_topic";
         tracerDict[@"rank"] = self.cellModel.tracerDic[@"rank"] ?: @"be_null";
@@ -243,7 +241,6 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
-    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
     if(indexPath.row < self.dataList.count){
         FHFeedContentRawDataHotTopicListModel *model = self.dataList[indexPath.row];
         NSMutableDictionary *dict = @{}.mutableCopy;
@@ -283,7 +280,6 @@
         self.clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
     NSString *forumId = model.forumId;
     if(forumId){
         if (self.clientShowDict[forumId]) {

@@ -26,8 +26,8 @@
 
 @interface FHUGCCellBottomView ()
 
-@property (nonatomic, copy)  NSString *saveDiggGroupId;
-@property (nonatomic, assign)   FHDetailDiggType       diggType;
+@property(nonatomic, copy) NSString *saveDiggGroupId;
+@property(nonatomic, assign) FHDetailDiggType diggType;
 
 @end
 
@@ -54,7 +54,6 @@
 }
 
 - (void)initViews {
-    
     self.positionView = [[UIView alloc] init];
     _positionView.backgroundColor = [UIColor themeOrange2];
     _positionView.layer.masksToBounds= YES;
@@ -221,8 +220,6 @@
        self.commentBtn.left = self.width - 20 - self.likeBtn.width - 20 - self.commentBtn.width;
         self.likeBtn.left = self.commentBtn.right + 20;
     }
-    
-    
 }
 
 - (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg {

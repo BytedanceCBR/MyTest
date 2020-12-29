@@ -19,8 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong) UIView *positionView;
  
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
-@property(nonatomic, copy) void(^deleteCellBlock)(void);
-@property(nonatomic, copy) void(^goQuestionBlock)(void);
 
 - (void)showPositionView:(BOOL)isShow;
 

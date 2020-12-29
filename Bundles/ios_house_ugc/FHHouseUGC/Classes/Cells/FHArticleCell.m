@@ -75,10 +75,6 @@
     [self.contentView addSubview:_imageViewContainer];
     
     self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
-    __weak typeof(self) wself = self;
-    _bottomView.deleteCellBlock = ^{
-        [wself deleteCell];
-    };
     [self.contentView addSubview:_bottomView];
     
     for (NSInteger i = 0; i < 3; i++) {
