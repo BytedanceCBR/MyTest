@@ -114,10 +114,12 @@
             }else {
                 [wSelf addGoDetailLog];
                 [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [self.viewController endLoading];
             }
         }else {
             [wSelf addGoDetailLog];
             [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [self.viewController endLoading];
         }
     }];
 }
