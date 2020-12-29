@@ -157,14 +157,6 @@
                 refreshTip = @"暂无新内容";
             }
             [wself.tableView reloadData];
-            if (isHead && refreshTip.length >0 && !wself.isRefreshingTip){
-                wself.isRefreshingTip = YES;
-                [wself.listController showNotify:refreshTip completion:^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        wself.isRefreshingTip = NO;
-                    });
-                }];
-            }
         }
     }];
 }
@@ -182,8 +174,6 @@
     self.refreshFooter.hidden = YES;
     // 下拉刷新
     [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
-        wself.isRefreshingTip = NO;
-        [wself.listController hideImmediately];
         [wself requestData:YES first:NO];
     }];
 }
