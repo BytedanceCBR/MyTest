@@ -290,7 +290,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 87);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 74);
     }
     return CGSizeZero;
 }
@@ -411,9 +411,11 @@
             height = 86;
         }
     }
-
+    if(index == agentSM.recommendedRealtors.count - 1){
+        height += 10;
+    }
     if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
-        height = 16;
+        height = 10;
     }
     return CGSizeMake(width, height);
 }
