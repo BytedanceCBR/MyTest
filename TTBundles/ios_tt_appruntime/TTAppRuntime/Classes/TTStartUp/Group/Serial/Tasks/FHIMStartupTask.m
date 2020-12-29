@@ -344,7 +344,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                 
                 NSString *punishTips = [data btd_stringValueForKey:@"punish_tips"];
                 NSString *redirect = [data btd_stringValueForKey:@"redirect"];
-                [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:punishTips leftTitle:@"其它经纪人" leftAction:^{
+                [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:punishTips leftTitle:@"其他经纪人" leftAction:^{
                     // 点击埋点
                     NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
                     clickParam[@"popup_name"] = @"black_popup";

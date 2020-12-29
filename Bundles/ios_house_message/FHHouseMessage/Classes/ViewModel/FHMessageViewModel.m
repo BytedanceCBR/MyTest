@@ -306,7 +306,7 @@
             TRACK_EVENT(@"popup_show", showParams);
             // ---
             
-            [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:tips leftTitle:@"其它经纪人" leftAction:^{
+            [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:tips leftTitle:@"其他经纪人" leftAction:^{
                 
                 // 点击埋点
                 NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
