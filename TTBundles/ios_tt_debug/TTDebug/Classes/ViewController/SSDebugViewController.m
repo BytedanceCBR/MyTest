@@ -539,7 +539,7 @@ extern NSString *const PPE_OPEN_KEY;
         if(boeChannelName.length <= 0) {
             boeChannelName = @"未设置";
         }
-        boeEnvSwitch.detail = [NSString stringWithFormat:@"当前泳道环境: %@",boeChannelName];
+        boeEnvSwitch.detail = [NSString stringWithFormat:@"当前泳道环境(点击修改): %@",boeChannelName];
         boeEnvSwitch.switchStyle = YES;
         boeEnvSwitch.checked = [self.class isBOEOn];
         boeEnvSwitch.switchAction = @selector(switchBOE:);
@@ -549,7 +549,7 @@ extern NSString *const PPE_OPEN_KEY;
         if(ppeChannelName.length <= 0) {
             ppeChannelName = @"未设置";
         }
-        ppeEnvSwitch.detail = [NSString stringWithFormat:@"当前泳道环境: %@",ppeChannelName];
+        ppeEnvSwitch.detail = [NSString stringWithFormat:@"当前泳道环境(点击修改): %@",ppeChannelName];
         ppeEnvSwitch.switchStyle = YES;
         ppeEnvSwitch.checked = [self.class isPPEOn];
         ppeEnvSwitch.switchAction = @selector(switchPPE:);
