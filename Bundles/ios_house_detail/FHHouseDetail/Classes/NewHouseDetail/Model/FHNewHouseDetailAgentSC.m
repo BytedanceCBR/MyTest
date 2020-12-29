@@ -245,7 +245,6 @@
     }
 
     params[@"recommended_realtors_info"] = [DataInfo btd_jsonStringEncoded];
-    NSString *tep = [DataInfo btd_jsonStringEncoded];
     params[@"report_params"] = [tracerDict btd_jsonStringEncoded];
 
 
