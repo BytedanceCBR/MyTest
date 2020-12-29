@@ -18,7 +18,6 @@
 #import "UILabel+House.h"
 #import "FHUGCFollowButton.h"
 #import "FHUGCFollowHelper.h"
-#import "FHUGCGuideView.h"
 #import "FHUGCGuideHelper.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"

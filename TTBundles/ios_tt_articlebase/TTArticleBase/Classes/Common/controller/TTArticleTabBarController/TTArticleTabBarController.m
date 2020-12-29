@@ -92,7 +92,6 @@
 #import "Log.h"
 
 #import "FHUGCGuideHelper.h"
-#import "FHUGCGuideView.h"
 #import "FHUGCConfig.h"
 #import "FHUnreadMsgModel.h"
 #import "UIViewController+TTMovieUtil.h"
@@ -152,9 +151,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //@property (nonatomic, strong) LOTAnimationView *animationView1;
 
 @property (nonatomic, assign) BOOL isClickTab;
-
-//@property(nonatomic, strong) FHUGCGuideView *guideView;
-@property(nonatomic, assign) BOOL isAlreadyShowedGuideView;
 
 @end
 
@@ -269,30 +265,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 //        }
 //    }];
 }
-
-//- (void)addUgcGuide {
-//    if([FHUGCGuideHelper shouldShowSecondTabGuide] && !self.isAlreadyShowedGuideView && [FHEnvContext isUGCOpen]){
-//        self.isAlreadyShowedGuideView = YES;
-//        [self.guideView show:self.view dismissDelayTime:5.0f completion:nil];
-//    }
-//}
-
-//- (FHUGCGuideView *)guideView {
-//    CGFloat width = 163.0f;
-//    CGFloat height = 40.0f;
-//    CGFloat x ;
-//     YYCache *epidemicSituationCache = [[FHEnvContext sharedInstance].generalBizConfig epidemicSituationCache];
-//    FHConfigCenterTabModel *cacheTab = [epidemicSituationCache objectForKey:@"tab_cache"];
-//    if(!_guideView){
-//        if (cacheTab.enable && cacheTab.openUrl.length>0 && [epidemicSituationCache objectForKey:@"esituationNormalImage"] && [epidemicSituationCache objectForKey:@"esituationHighlightImage"] &&cacheTab.isShow == YES) {
-//                x = self.view.frame.size.width * 3/10 - width/2;
-//        }else {
-//            x = self.view.frame.size.width * 9/24 - width/2;
-//        }
-//            _guideView = [[FHUGCGuideView alloc] initWithFrame:CGRectMake(x, self.view.frame.size.height - self.tabbarHeight - height + 3, width, height) andType:FHUGCGuideViewTypeSecondTab];
-//    }
-//    return _guideView;
-//}
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];

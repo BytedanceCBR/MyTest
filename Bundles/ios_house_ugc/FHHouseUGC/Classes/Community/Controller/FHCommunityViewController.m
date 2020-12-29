@@ -16,7 +16,6 @@
 #import "FHWDAnswerPictureTextViewController.h"
 #import "FHEnvContext.h"
 #import "FHUGCGuideHelper.h"
-#import "FHUGCGuideView.h"
 #import "TTForumPostThreadStatusViewModel.h"
 #import "FHEnvContext.h"
 #import "FHMessageNotificationTipsManager.h"
