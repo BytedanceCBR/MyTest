@@ -57,6 +57,10 @@
     }
 }
 
+- (void)cellWillEnterForground {
+    [self.cardView resumeVRIcon];
+}
+
 + (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if ([viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
         FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;
@@ -67,22 +71,6 @@
         return [FHHouseNewCardView calculateViewHeight:viewModel] + 5 + topMargin;
     }
     return 0.0f;
-}
-
-- (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    [super cellWillShowAtIndexPath:indexPath];
-    if ([self.viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
-        FHHouseNewCardViewModel *cardViewModel = (FHHouseNewCardViewModel *)self.viewModel;
-        [cardViewModel showCardAtIndexPath:indexPath];
-    }
-}
-
-- (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
-    [super cellDidClickAtIndexPath:indexPath];
-    if ([self.viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
-        FHHouseNewCardViewModel *cardViewModel = (FHHouseNewCardViewModel *)self.viewModel;
-        [cardViewModel clickCardAtIndexPath:indexPath];
-    }
 }
 
 @end
