@@ -1,0 +1,1566 @@
+﻿{
+    "data": {
+        "hot_city_list": [
+            {
+                "name": "重庆",
+                "city_id": 2059,
+                "icon_url": ""
+            },
+            {
+                "name": "上海",
+                "city_id": 499,
+                "icon_url": ""
+            },
+            {
+                "name": "成都",
+                "city_id": 1083,
+                "icon_url": ""
+            },
+            {
+                "name": "苏州",
+                "city_id": 2925,
+                "icon_url": ""
+            },
+            {
+                "name": "南京",
+                "city_id": 1363,
+                "icon_url": ""
+            },
+            {
+                "name": "杭州",
+                "city_id": 1853,
+                "icon_url": ""
+            },
+            {
+                "name": "无锡",
+                "city_id": 4911,
+                "icon_url": ""
+            },
+            {
+                "name": "广州",
+                "city_id": 3300,
+                "icon_url": ""
+            }
+        ],
+        "entry_info": [
+            {
+                "name": "二手房",
+                "icon_url": "",
+                "entry_id": 1,
+                "url": ""
+            },
+            {
+                "name": "小区",
+                "icon_url": "",
+                "entry_id": 4,
+                "url": ""
+            },
+            {
+                "name": "资讯",
+                "icon_url": "",
+                "entry_id": 5,
+                "url": ""
+            }
+        ],
+        "op_data": {
+            "op_style": 3,
+            "icon_row_num": 5,
+            "items": [
+                {
+                    "id": "0",
+                    "title": "二手房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a5e0001af7e87e1c0e6",
+                            "url": "http://p.pstatp.com/origin/33a5e0001af7e87e1c0e6",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a5e0001af7e87e1c0e6"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "fschema://second_house_main",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "old"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "old"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "10",
+                    "title": "新房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a4c0000f4502126e0dd",
+                            "url": "http://p.pstatp.com/origin/33a4c0000f4502126e0dd",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a4c0000f4502126e0dd"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://new_house_main",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "new"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "new"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "35",
+                    "title": "找小区",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a270002ad320b531d2a",
+                            "url": "http://p.pstatp.com/origin/33a270002ad320b531d2a",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a270002ad320b531d2a"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_list?house_type=4",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "search_neighborhood"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "search_neighborhood"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "31",
+                    "title": "VR看房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a3f0000da2128dd79b3",
+                            "url": "http://p.pstatp.com/origin/33a3f0000da2128dd79b3",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a3f0000da2128dd79b3"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_list?house_type=2&tags[]=9999999984",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "vr_watch"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "vr_watch"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "4",
+                    "title": "新上房源",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a3600032499e62bdc4e",
+                            "url": "http://p.pstatp.com/origin/33a3600032499e62bdc4e",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a3600032499e62bdc4e"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_list?house_type=2&tags[]=9999999999",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "xinshangfangyaun"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "xinshangfangyaun"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "1",
+                    "title": "南北通透",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a6f0000da2e88a09172",
+                            "url": "http://p.pstatp.com/origin/33a6f0000da2e88a09172",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a6f0000da2e88a09172"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_list?house_type=2&tags[]=1092",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "nanbeitongtou"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "nanbeitongtou"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "6",
+                    "title": "地图找房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a0f00025834813e9a9d",
+                            "url": "http://p.pstatp.com/origin/33a0f00025834813e9a9d",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a0f00025834813e9a9d"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://mapfind_house?center_latitude=39.904989&center_longitude=116.405285&house_type=2&resize_level=10&house_type_list=[2,1]",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "findmap_icon"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "findmap_icon"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "9",
+                    "title": "帮我找房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a5b0001e989505e0f68",
+                            "url": "http://p.pstatp.com/origin/33a5b0001e989505e0f68",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a5b0001e989505e0f68"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_find",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "find_icon"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "find_icon"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "8",
+                    "title": "房贷计算",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a5b0001e98b7da81ea6",
+                            "url": "http://p.pstatp.com/origin/33a5b0001e98b7da81ea6",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a5b0001e98b7da81ea6"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "fschema://webview?url=https%3A%2F%2Fm.haoduofangs.com%2Ff100%2Finner%2Fcalculator%3Fcity_id%3D122&title=%E6%88%BF%E8%B4%B7%E8%AE%A1%E7%AE%97%E5%99%A8&hide_more=false&back_button_icon=true",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "debit_calculator"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "debit_calculator"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "7",
+                    "title": "查房价",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a3f0000da865e05d0a9",
+                            "url": "http://p.pstatp.com/origin/33a3f0000da865e05d0a9",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a3f0000da865e05d0a9"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://price_valuation",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "sale_value"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "sale_value"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "25",
+                    "title": "购房百科",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a270002ad498cf82f62",
+                            "url": "http://p.pstatp.com/origin/33a270002ad498cf82f62",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a270002ad498cf82f62"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_encyclopedia",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "new_user_guide"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "new_user_guide"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "23",
+                    "title": "城市行情",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a18000346d515941fd2",
+                            "url": "http://p.pstatp.com/origin/33a18000346d515941fd2",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a18000346d515941fd2"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://city_market_trend",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "abtest_version": "2019799,2209865,682425,2054036,1300602,1663056,2243430,2204738,1390172,2019768,1363955,1600659,2280096,2278196,2202050,2113016,1459455,2072643,2213248,2020477,2299110",
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "city_market_icon"
+                    },
+                    "report_params": {
+                        "element_from": "maintab_icon",
+                        "enter_from": "maintab",
+                        "origin_from": "city_market_icon"
+                    },
+                    "closeable": false
+                }
+            ]
+        },
+        "toolbox_data": {
+            "op_style": 1,
+            "icon_row_num": 5,
+            "items": [
+                {
+                    "id": "7",
+                    "title": "查房价",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a3f0000da865e05d0a9",
+                            "url": "http://p.pstatp.com/origin/33a3f0000da865e05d0a9",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a3f0000da865e05d0a9"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://price_valuation",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "sale_value",
+                        "origin_from": "sale_value"
+                    },
+                    "report_params": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "sale_value",
+                        "origin_from": "sale_value"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "9",
+                    "title": "帮我找房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a5b0001e989505e0f68",
+                            "url": "http://p.pstatp.com/origin/33a5b0001e989505e0f68",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a5b0001e989505e0f68"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_find",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "find_icon",
+                        "origin_from": "find_icon"
+                    },
+                    "report_params": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "find_icon",
+                        "origin_from": "find_icon"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "8",
+                    "title": "房贷计算",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a5b0001e98b7da81ea6",
+                            "url": "http://p.pstatp.com/origin/33a5b0001e98b7da81ea6",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a5b0001e98b7da81ea6"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "fschema://webview?url=https%3A%2F%2Fm.haoduofangs.com%2Ff100%2Finner%2Fcalculator%3Fcity_id%3D122&title=%E6%88%BF%E8%B4%B7%E8%AE%A1%E7%AE%97%E5%99%A8&hide_more=false&back_button_icon=true",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "debit_calculator",
+                        "origin_from": "debit_calculator"
+                    },
+                    "report_params": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "debit_calculator",
+                        "origin_from": "debit_calculator"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "6",
+                    "title": "地图找房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a0f00025834813e9a9d",
+                            "url": "http://p.pstatp.com/origin/33a0f00025834813e9a9d",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a0f00025834813e9a9d"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://mapfind_house?center_latitude=39.904989&center_longitude=116.405285&house_type=2&resize_level=10&house_type_list=[2,1]",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "findmap_icon",
+                        "origin_from": "findmap_icon"
+                    },
+                    "report_params": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "findmap_icon",
+                        "origin_from": "findmap_icon"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "25",
+                    "title": "购房百科",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a270002ad498cf82f62",
+                            "url": "http://p.pstatp.com/origin/33a270002ad498cf82f62",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a270002ad498cf82f62"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_encyclopedia",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "new_user_guide",
+                        "origin_from": "new_user_guide"
+                    },
+                    "report_params": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "new_user_guide",
+                        "origin_from": "new_user_guide"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "23",
+                    "title": "城市行情",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a18000346d515941fd2",
+                            "url": "http://p.pstatp.com/origin/33a18000346d515941fd2",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/33a18000346d515941fd2"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://city_market_trend",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "city_market_icon",
+                        "origin_from": "city_market_icon"
+                    },
+                    "report_params": {
+                        "element_from": "tools_box_icon",
+                        "enter_from": "tools_box",
+                        "operation_name": "city_market_icon",
+                        "origin_from": "city_market_icon"
+                    },
+                    "closeable": false
+                }
+            ]
+        },
+        "rent_op_data": {
+            "op_style": 1,
+            "icon_row_num": 0,
+            "items": [
+                {
+                    "id": "11",
+                    "title": "整租",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "2e5520003aa42d4d7be9c",
+                            "url": "http://p.pstatp.com/origin/2e5520003aa42d4d7be9c",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/2e5520003aa42d4d7be9c"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "fschema://house_list?house_type=3&rental_type[]=1",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "origin_from": "renting_fully"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "12",
+                    "title": "合租",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "2e2f5000bfad174dfbef9",
+                            "url": "http://p.pstatp.com/origin/2e2f5000bfad174dfbef9",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/2e2f5000bfad174dfbef9"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "fschema://house_list?house_type=3&rental_type[]=2",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "origin_from": "renting_joint"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "12",
+                    "title": "公寓",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "2e54b000f12a13df24f39",
+                            "url": "http://p.pstatp.com/origin/2e54b000f12a13df24f39",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/2e54b000f12a13df24f39"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "fschema://house_list?house_type=3&rental_contract_type[]=2",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "origin_from": "renting_apartment"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "12",
+                    "title": "地图找房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "2e2f900127ffa608b7679",
+                            "url": "http://p.pstatp.com/origin/2e2f900127ffa608b7679",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/2e2f900127ffa608b7679"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://mapfind_rent?center_latitude=39.904989&center_longitude=116.405285&resize_level=10",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "origin_from": "renting_mapfind"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "12",
+                    "title": "新上房源",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "2e55100010d966547bbbe",
+                            "url": "http://p.pstatp.com/origin/2e55100010d966547bbbe",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/2e55100010d966547bbbe"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "fschema://house_list?house_type=3&tags[]=9999999999",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "origin_from": "xinshangfangyuan"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                }
+            ]
+        },
+        "house_op_data": {
+            "op_style": 1,
+            "icon_row_num": 0,
+            "items": []
+        },
+        "court_op_data": {
+            "op_style": 1,
+            "icon_row_num": 5,
+            "items": [
+                {
+                    "id": "34",
+                    "title": "最近开盘",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a1d000164bf7134475e",
+                            "url": "https://p.pstatp.com/origin/33a1d000164bf7134475e",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "https://p.pstatp.com/origin/33a1d000164bf7134475e"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_list?house_type=1&construction_opendate[]=6",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "icon_name": "recently_opened"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "15",
+                    "title": "在售楼盘",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a4800021fe3fa27de64",
+                            "url": "https://p.pstatp.com/origin/33a4800021fe3fa27de64",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "https://p.pstatp.com/origin/33a4800021fe3fa27de64"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_list?house_type=1&sale_status[]=2",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "icon_name": "sale_houses"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "10",
+                    "title": "全部楼盘",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "33a1a000222901c3c25d3",
+                            "url": "https://p.pstatp.com/origin/33a1a000222901c3c25d3",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "https://p.pstatp.com/origin/33a1a000222901c3c25d3"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_list?house_type=1",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "icon_name": "all_houses"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "9",
+                    "title": "帮我找房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "2e54d00010e066eeb3876",
+                            "url": "https://p.pstatp.com/origin/2e54d00010e066eeb3876",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "https://p.pstatp.com/origin/2e54d00010e066eeb3876"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_find",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "icon_name": "driving_find_house"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "6",
+                    "title": "地图找房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "3301e000dde065a435fc1",
+                            "url": "https://p.pstatp.com/origin/3301e000dde065a435fc1",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "https://p.pstatp.com/origin/3301e000dde065a435fc1"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://mapfind_house?center_latitude=39.904989&center_longitude=116.405285&house_type=1&resize_level=10&house_type_list=[2,1]",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "icon_name": "mapfind"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                }
+            ]
+        },
+        "banners": [
+            {
+                "id": 1,
+                "image": {
+                    "uri": "9fd4000c0ae91f70eb86",
+                    "url": "https://p3.pstatp.com/origin/aadd0005a7015a9f529c",
+                    "width": 140,
+                    "height": 180,
+                    "url_list": [
+                        "https://p3.pstatp.com/origin/aadd0005a7015a9f529c"
+                    ],
+                    "image_type": 0
+                },
+                "url": "fschema://webview?url=https%3A%2F%2Fm.quduzixun.com%2Ff100%2Ffeedback.html&title=%E5%86%85%E6%B5%8B%E5%8F%8D%E9%A6%88%E9%80%81%E5%A5%BD%E7%A4%BC&hide_more=true&bounce_disable=1"
+            }
+        ],
+        "current_city_id": 122,
+        "current_city_name": "北京",
+        "user_phone": "",
+        "house_type_list": [
+            2,
+            1
+        ],
+        "review_info": {
+            "is_f_login": false
+        },
+        "map_search": {
+            "center_latitude": "39.904989",
+            "center_longitude": "116.405285",
+            "resize_level": 11
+        },
+        "city_stats": null,
+        "city_switch": {
+            "enable": false
+        },
+        "city_availability": {
+            "enable": true,
+            "icon_image": {
+                "uri": "2e57000075a0debd530f6",
+                "url": "http://p1.pstatp.com/origin/2e57000075a0debd530f6",
+                "width": 108,
+                "height": 52,
+                "url_list": [
+                    "http://p1.pstatp.com/origin/2e57000075a0debd530f6"
+                ],
+                "image_type": 0
+            },
+            "background_color": "#ffffff"
+        },
+        "diff_code": "96b330e8664ba0cb62855aee83936b56",
+        "image_cdn_domains": [
+            "p3.pstatp.com"
+        ],
+        "web_id": "2726426817865928",
+        "main_page_banner": {
+            "op_style": 0,
+            "icon_row_num": 0,
+            "items": [
+                {
+                    "id": "12",
+                    "title": "6898642576758374413",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "e2fa17a2c3464865e538e723917839c6",
+                            "url": "https://p9.pstatp.com/origin/f100-image/e2fa17a2c3464865e538e723917839c6",
+                            "width": 1035,
+                            "height": 240,
+                            "url_list": [
+                                "https://p9.pstatp.com/origin/f100-image/e2fa17a2c3464865e538e723917839c6"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_find",
+                    "background_color": "#undefined",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "banner",
+                        "enter_from": "maintab",
+                        "origin_from": "maintab"
+                    },
+                    "report_params": {
+                        "element_from": "banner",
+                        "enter_from": "maintab",
+                        "origin_from": "maintab"
+                    },
+                    "closeable": false
+                },
+                {
+                    "id": "12",
+                    "title": "6901226915999268877",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "acb6a6a6f423dad1e8dfab87fb420180",
+                            "url": "https://p9.pstatp.com/origin/f100-image/acb6a6a6f423dad1e8dfab87fb420180",
+                            "width": 1035,
+                            "height": 240,
+                            "url_list": [
+                                "https://p9.pstatp.com/origin/f100-image/acb6a6a6f423dad1e8dfab87fb420180"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://webview?url=https%3A%2F%2Fm.haoduofangs.com%2Ff100%2Factivity%2Fclient%2Flive_list%3Freport_params%3D%257B%2522element_from%2522%253A%2522banner%2522%252C%2522enter_from%2522%253A%2522maintab%2522%252C%2522origin_from%2522%253A%2522maintab%2522%257D&title=%E7%9B%B4%E6%92%AD%E5%B9%BF%E5%9C%BA&hide_more=true&back_button_icon=true&share_enable=true",
+                    "background_color": "#undefined",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "banner",
+                        "enter_from": "maintab",
+                        "origin_from": "maintab"
+                    },
+                    "report_params": {
+                        "element_from": "banner",
+                        "enter_from": "maintab",
+                        "origin_from": "maintab"
+                    },
+                    "closeable": false
+                }
+            ]
+        },
+        "rent_banner": {
+            "op_style": 0,
+            "icon_row_num": 0,
+            "items": []
+        },
+        "entrance_switch": {
+            "is_price_valuation_show_house_trend": false
+        },
+        "house_type_default": -1,
+        "jump_2_ad_recommend": "",
+        "op_data_2_list": [
+            {
+                "op_data_2_type": 2,
+                "op_data_list": {
+                    "op_style": 1,
+                    "icon_row_num": 0,
+                    "items": [
+                        {
+                            "id": "16",
+                            "title": "55988",
+                            "description": "城市行情",
+                            "add_description": "元/平",
+                            "tag_image": [
+                                {
+                                    "uri": "2e551000852f1f096fd9e",
+                                    "url": "http://p.pstatp.com/origin/2e551000852f1f096fd9e",
+                                    "width": 0,
+                                    "height": 0,
+                                    "url_list": [
+                                        "http://p.pstatp.com/origin/2e551000852f1f096fd9e"
+                                    ],
+                                    "image_type": 0
+                                }
+                            ],
+                            "image": [
+                                {
+                                    "uri": "2e56a000324c22228b264",
+                                    "url": "http://p.pstatp.com/origin/2e56a000324c22228b264",
+                                    "width": 140,
+                                    "height": 180,
+                                    "url_list": [
+                                        "http://p.pstatp.com/origin/2e56a000324c22228b264"
+                                    ],
+                                    "image_type": 0
+                                }
+                            ],
+                            "open_url": "sslocal://city_market_trend",
+                            "background_color": "",
+                            "text_color": "",
+                            "log_pb": {
+                                "element_from": "city_market",
+                                "operation_name": "city_market",
+                                "origin_from": "city_market"
+                            },
+                            "report_params": null,
+                            "closeable": false
+                        },
+                        {
+                            "id": "16",
+                            "title": "好房推荐",
+                            "description": "优选踩盘",
+                            "add_description": "",
+                            "tag_image": null,
+                            "image": [
+                                {
+                                    "uri": "afe0192e2d110bb4f85c1dc7b79ec20f",
+                                    "url": "https://p9.pstatp.com/origin/f100-image/afe0192e2d110bb4f85c1dc7b79ec20f",
+                                    "width": 237,
+                                    "height": 210,
+                                    "url_list": [
+                                        "https://p9.pstatp.com/origin/f100-image/afe0192e2d110bb4f85c1dc7b79ec20f"
+                                    ],
+                                    "image_type": 0
+                                }
+                            ],
+                            "open_url": "sslocal://house_comfort_find?enter_from=maintab&origin_from=f_house_finder_operation&element_from=f_house_finder_operation",
+                            "background_color": "",
+                            "text_color": "",
+                            "log_pb": {
+                                "enter_from": "maintab",
+                                "operation_name": "6906003382067003405",
+                                "origin_from": "maintab"
+                            },
+                            "report_params": {
+                                "enter_from": "maintab",
+                                "operation_name": "6906003382067003405",
+                                "origin_from": "maintab"
+                            },
+                            "closeable": false
+                        },
+                        {
+                            "id": "16",
+                            "title": "新上房源",
+                            "description": "先睹为快",
+                            "add_description": "",
+                            "tag_image": null,
+                            "image": [
+                                {
+                                    "uri": "2e54f0003dfa3306c997d",
+                                    "url": "http://p.pstatp.com/origin/2e54f0003dfa3306c997d",
+                                    "width": 140,
+                                    "height": 180,
+                                    "url_list": [
+                                        "http://p.pstatp.com/origin/2e54f0003dfa3306c997d"
+                                    ],
+                                    "image_type": 0
+                                }
+                            ],
+                            "open_url": "sslocal://house_list?house_type=2&tags[]=9999999999",
+                            "background_color": "",
+                            "text_color": "",
+                            "log_pb": {
+                                "element_from": "newshelves_operation",
+                                "operation_name": "newshelves",
+                                "origin_from": "newshelves_operation"
+                            },
+                            "report_params": null,
+                            "closeable": false
+                        },
+                        {
+                            "id": "16",
+                            "title": "临近学校",
+                            "description": "上学便捷",
+                            "add_description": "",
+                            "tag_image": null,
+                            "image": [
+                                {
+                                    "uri": "2e54f0003df99ca15d756",
+                                    "url": "http://p.pstatp.com/origin/2e54f0003df99ca15d756",
+                                    "width": 140,
+                                    "height": 180,
+                                    "url_list": [
+                                        "http://p.pstatp.com/origin/2e54f0003df99ca15d756"
+                                    ],
+                                    "image_type": 0
+                                }
+                            ],
+                            "open_url": "sslocal://house_list?house_type=2&s_from=school_icon",
+                            "background_color": "",
+                            "text_color": "",
+                            "log_pb": {
+                                "element_from": "school_operation",
+                                "operation_name": "school",
+                                "origin_from": "school_operation"
+                            },
+                            "report_params": null,
+                            "closeable": false
+                        }
+                    ]
+                }
+            },
+            {
+                "op_data_2_type": 1,
+                "op_data_list": {
+                    "op_style": 1,
+                    "icon_row_num": 0,
+                    "items": null
+                }
+            }
+        ],
+        "article_banner": null,
+        "article_op_data": null,
+        "ugc_city_switch": true,
+        "tab_config": [
+            {
+                "key": "tab_community",
+                "name": "看点"
+            }
+        ],
+        "ugc_category_config": {
+            "nearby_list": "",
+            "my_join_list": ""
+        },
+        "house_op_data_2": {
+            "op_style": 1,
+            "icon_row_num": 5,
+            "items": [
+                {
+                    "id": "6",
+                    "title": "地图找房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "2e2f900127ffa608b7679",
+                            "url": "http://p.pstatp.com/origin/2e2f900127ffa608b7679",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/2e2f900127ffa608b7679"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://mapfind_house?center_latitude=39.904989&center_longitude=116.405285&house_type=2&resize_level=10&house_type_list=[2,1]",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "old_kind_list_icon",
+                        "operation_name": "mapfind",
+                        "origin_from": "old_kind_list"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "35",
+                    "title": "找小区",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "2e2f50009619879fd9444",
+                            "url": "http://p.pstatp.com/origin/2e2f50009619879fd9444",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/2e2f50009619879fd9444"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "fschema://house_list?house_type=4",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "old_kind_list_icon",
+                        "operation_name": "search_neighborhood",
+                        "origin_from": "old_kind_list"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "7",
+                    "title": "查房价",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "2e570000009e2d93ccda1",
+                            "url": "http://p.pstatp.com/origin/2e570000009e2d93ccda1",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/2e570000009e2d93ccda1"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://price_valuation",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "old_kind_list_icon",
+                        "operation_name": "value_info",
+                        "origin_from": "old_kind_list"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "9",
+                    "title": "帮我找房",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "2e54d00010e066eeb3876",
+                            "url": "http://p.pstatp.com/origin/2e54d00010e066eeb3876",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/2e54d00010e066eeb3876"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "sslocal://house_find",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "old_kind_list_icon",
+                        "operation_name": "driving_find_house",
+                        "origin_from": "old_kind_list"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                },
+                {
+                    "id": "8",
+                    "title": "房贷计算器",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": [
+                        {
+                            "uri": "2e2f200128b931f11eec6",
+                            "url": "http://p.pstatp.com/origin/2e2f200128b931f11eec6",
+                            "width": 140,
+                            "height": 180,
+                            "url_list": [
+                                "http://p.pstatp.com/origin/2e2f200128b931f11eec6"
+                            ],
+                            "image_type": 0
+                        }
+                    ],
+                    "open_url": "fschema://webview?url=https%3A%2F%2Fm.haoduofangs.com%2Ff100%2Finner%2Fcalculator%3Fcity_id%3D122&title=%E6%88%BF%E8%B4%B7%E8%AE%A1%E7%AE%97%E5%99%A8&hide_more=false&back_button_icon=true",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "element_from": "old_kind_list_icon",
+                        "operation_name": "price_debit",
+                        "origin_from": "old_kind_list"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                }
+            ]
+        },
+        "realtor_evaluation": {
+            "score_tags": [
+                "非常不满意",
+                "不满意",
+                "一般",
+                "满意",
+                "非常满意"
+            ],
+            "good_tag_ids": [
+                2000001,
+                2000002,
+                2000003,
+                2000004
+            ],
+            "bad_tag_ids": [
+                2000005,
+                2000006,
+                2000007,
+                2000008
+            ],
+            "good_tags": [
+                {
+                    "id": 2000001,
+                    "text": "房源真实"
+                },
+                {
+                    "id": 2000002,
+                    "text": "服务热情"
+                },
+                {
+                    "id": 2000003,
+                    "text": "很专业"
+                },
+                {
+                    "id": 2000004,
+                    "text": "回复较快"
+                }
+            ],
+            "bad_tags": [
+                {
+                    "id": 2000005,
+                    "text": "房源信息虚假"
+                },
+                {
+                    "id": 2000006,
+                    "text": "态度恶劣"
+                },
+                {
+                    "id": 2000007,
+                    "text": "不专业"
+                },
+                {
+                    "id": 2000008,
+                    "text": "回复较慢"
+                }
+            ],
+            "good_placeholder": "您可输入具体评价，以便经纪人为您提供更好的服务",
+            "bad_placeholder": "请输入不少于5个字的评价，让经纪人做得更好"
+        },
+        "house_list_banner": {
+            "op_style": 0,
+            "icon_row_num": 0,
+            "items": null
+        },
+        "jump_page_on_startup": "tab_stream",
+        "show_location_authorization_modal": false,
+        "tab_widget": {
+            "id": "10002",
+            "title": "",
+            "description": "",
+            "add_description": "",
+            "tag_image": null,
+            "image": [
+                {
+                    "uri": "2f4880010b5f9e2b13d97",
+                    "url": "http://p1.pstatp.com/origin/2f4880010b5f9e2b13d97",
+                    "width": 118,
+                    "height": 66,
+                    "url_list": [
+                        "http://p1.pstatp.com/origin/2f4880010b5f9e2b13d97"
+                    ],
+                    "image_type": 0
+                }
+            ],
+            "open_url": "sslocal://webview?url=https%3A%2F%2Fm.xflapp.com%2Ff100%2Finner%2Fforum%3Forigin_from%3Dxfl_pendant&title=%E6%98%A5%E9%A3%8E%E5%8C%96%E2%80%9C%E7%96%AB%E2%80%9D&share_enable=true",
+            "background_color": "",
+            "text_color": "",
+            "log_pb": {
+                "activity_id": "10002",
+                "activity_name": "春风化疫"
+            },
+            "report_params": null,
+            "closeable": true
+        },
+        "op_tab": {
+            "enable": false,
+            "tab_id": "",
+            "title": "",
+            "open_url": "",
+            "static_image": null,
+            "activation_image": null,
+            "log_pb": null
+        },
+        "main_page_top_op_data": {
+            "op_style": 1,
+            "icon_row_num": 1,
+            "items": [
+                {
+                    "id": "map_search",
+                    "title": "",
+                    "description": "",
+                    "add_description": "",
+                    "tag_image": null,
+                    "image": null,
+                    "open_url": "sslocal://mapfind_house?center_latitude=39.904989&center_longitude=116.405285&house_type=2&resize_level=10&house_type_list=[2,1]",
+                    "background_color": "",
+                    "text_color": "",
+                    "log_pb": {
+                        "enter_from": "maintab",
+                        "origin_from": "ditu_icon"
+                    },
+                    "report_params": null,
+                    "closeable": false
+                }
+            ]
+        },
+        "channel_type": 1,
+        "bar_config": {
+            "status": 1
+        },
+        "personalized_status": 1
+    },
+    "message": "success",
+    "status": 0
+}

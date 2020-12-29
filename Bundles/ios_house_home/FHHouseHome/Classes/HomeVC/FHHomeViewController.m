@@ -56,13 +56,13 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) BOOL isRefreshing;
 @property (nonatomic, assign) BOOL isShowToasting;
 @property (nonatomic, strong) ArticleListNotifyBarView * notifyBar;
-@property (nonatomic) BOOL adColdHadJump;
+//@property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic) BOOL adUGCHadJump;
 @property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
-@property (nonatomic, assign) NSInteger configTime;
+//@property (nonatomic, assign) NSInteger configTime;
 
 @end
 
@@ -73,7 +73,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self = [super init];
     if (self) {
         _isMainTabVC = YES;
-        _configTime = 2;
+//        _configTime = 2;
         [[FHHomeRenderFlow sharedInstance] traceHomeInit];
         FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:@"maintab" withUrl:@"" withTabName:currentDataModel.jumpPageOnStartup withPriority:0];
@@ -89,7 +89,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
     self.ttTrackStayEnable = YES;
     self.isRefreshing = NO;
-    self.adColdHadJump = NO;
+//    self.adColdHadJump = NO;
     self.adUGCHadJump = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
     [FHEnvContext sharedInstance].isShowingHomeHouseFind = YES;
@@ -118,41 +118,47 @@ static CGFloat const kSectionHeaderHeight = 38;
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         StrongSelf;
         //开屏广告启动不会展示，保留逻辑代码
-        self.configTime--;
-        if (self.configTime != 0) {
+        FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+        if (currentDataModel.isFromLocalCache) {
             return;
         }
-        if (!self.adColdHadJump) {
-            self.adColdHadJump = YES;
-            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-            if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]] && currentDataModel.jump2AdRecommend.length > 0) {
+//        self.configTime--;
+//        if (self.configTime != 0) {
+//            return;
+//        }
+
+//        if (!self.adColdHadJump) {
+//            self.adColdHadJump = YES;
+//
+        if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]] && currentDataModel.jump2AdRecommend.length > 0) {
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
                 TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
-                            NSURL *url = [NSURL btd_URLWithString:currentDataModel.jump2AdRecommend];
-                            NSString *pageType = url.host;
-                            if ([pageType isEqualToString:@"house_list"]) {
-                                NSString *houseType = [[url btd_queryItems] btd_stringValueForKey:@"house_type" default:@"2"];
-                                pageType = [NSString stringWithFormat:@"%@&house_type=%@", pageType, houseType];
-                            }
-                            [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:pageType withUrl:currentDataModel.jump2AdRecommend withTabName:@"" withPriority:1];
-                            [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
-                            if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
-                                //通勤找房
-                                [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
-                            }else
-                            {
-                                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
-                            }
+                    if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
+                        NSURL *url = [NSURL btd_URLWithString:currentDataModel.jump2AdRecommend];
+                        NSString *pageType = url.host;
+                        if ([pageType isEqualToString:@"house_list"]) {
+                            NSString *houseType = [[url btd_queryItems] btd_stringValueForKey:@"house_type" default:@"2"];
+                            pageType = [NSString stringWithFormat:@"%@&house_type=%@", pageType, houseType];
                         }
-                        [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
-                    });
+                        [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:pageType withUrl:currentDataModel.jump2AdRecommend withTabName:@"" withPriority:1];
+                        [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+                        if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+                            //通勤找房
+                            [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+                        }else
+                        {
+                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                        }
+                    }
+                    [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
                 });
-            } else {
-                [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
-            }
+            });
+        } else {
+            [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
         }
+        //        }
     }];
 }
 

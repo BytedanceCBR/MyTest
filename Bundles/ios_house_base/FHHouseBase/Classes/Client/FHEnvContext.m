@@ -510,7 +510,24 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     
     //开始生成config缓存
-    [self.generalBizConfig onStartAppGeneralCache];
+    if (self.generalBizConfig.configCache) {
+        [self.generalBizConfig onStartAppGeneralCache];
+    } else {
+        NSString *bundlePath = [[NSBundle mainBundle]
+                                pathForResource:@"FHHouseBase" ofType:@"bundle"];
+        if (bundlePath) {
+            NSBundle *bunle = [NSBundle bundleWithPath:bundlePath];
+            NSString *jsonFilePath = [bunle pathForResource:@"config" ofType:@"json"];
+            NSData *jsonData = [[NSData alloc] initWithContentsOfFile:jsonFilePath];
+            if (jsonData) {
+                FHConfigModel *configModel = [[FHConfigModel alloc] initWithData:jsonData error:nil];
+                if (configModel) {
+                    [self saveGeneralConfig:configModel];
+                    [self.generalBizConfig onStartAppGeneralCache];
+                }
+            }
+        }
+    }
     
     if ([self hasConfirmPermssionProtocol]) {
         //开始定位

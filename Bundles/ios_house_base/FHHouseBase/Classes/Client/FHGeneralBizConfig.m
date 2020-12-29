@@ -169,6 +169,7 @@ static NSString *const kFHEpidemicSituationCacheKey = @"EpidemicSituation";
 
     if ([configDict isKindOfClass:[NSDictionary class]]) {
         FHConfigDataModel *configModel = [self lazyInitConfig:configDict];
+        configModel.isFromLocalCache = YES;
         self.configCache = configModel;
         if ([configModel isKindOfClass:[FHConfigDataModel class]]) {
             if (configModel.cityAvailability) {
