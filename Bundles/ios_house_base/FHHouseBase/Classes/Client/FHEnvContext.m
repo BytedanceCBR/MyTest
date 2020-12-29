@@ -591,7 +591,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
         dispatch_async(dispatch_get_main_queue(), ^{
             [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:YES];
             if (isGranted) {
-                
+                [FHUtils setContent:@(YES) forKey:kUserHasSelectedCityKey];
             } else {
                 //检测是否需要打开城市列表
                 [self check2CityList];
