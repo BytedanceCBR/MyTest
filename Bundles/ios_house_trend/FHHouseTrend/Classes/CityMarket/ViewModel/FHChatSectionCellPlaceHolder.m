@@ -153,6 +153,28 @@
         maxValue = MAX(maxValue, [obj floatValue]);
         minValue = MIN(minValue, [obj floatValue]);
     }];
+    
+    CGFloat yFixedValueMax = maxValue;
+    CGFloat yFixedValueMin = minValue;
+    CGFloat deltaValue = (yFixedValueMax - yFixedValueMin) * 3;
+    yFixedValueMax += deltaValue;
+    yFixedValueMin -= deltaValue;
+    if (yFixedValueMin < 0) {
+        yFixedValueMin = 0;
+    }
+    if (yFixedValueMax > 10000) {
+        shouldUseTenThousandUnit = YES;
+    }
+    if (shouldUseTenThousandUnit) {
+        chartView.lineChart.yLabelFormat = @"%.2f";
+        yFixedValueMax = yFixedValueMax / 10000;
+        yFixedValueMin = yFixedValueMin / 10000;
+    } else {
+        chartView.lineChart.yLabelFormat = @"%.0f";
+    }
+    chartView.lineChart.yFixedValueMax = yFixedValueMax;
+    chartView.lineChart.yFixedValueMin = yFixedValueMin;
+    
     FHCityMarketDetailResponseDataMarketTrendListDistrictMarketInfoListTrendLinesModel* trendLine = values.trendLines.firstObject;
     if (shouldUseTenThousandUnit) {
         chartView.banner.unitLabel.text = [NSString stringWithFormat:@"万%@", trendLine.valueUnit];
@@ -188,29 +210,6 @@
         };
         return data01;
     }];
-    CGFloat yFixedValueMax = maxValue;
-    CGFloat yFixedValueMin = minValue;
-    CGFloat deltaValue = (yFixedValueMax - yFixedValueMin) * 3;
-    yFixedValueMax += deltaValue;
-    yFixedValueMin -= deltaValue;
-    if (yFixedValueMin < 0) {
-        yFixedValueMin = 0;
-    }
-    if (yFixedValueMax > 10000) {
-        shouldUseTenThousandUnit = YES;
-    }
-    if (shouldUseTenThousandUnit) {
-        chartView.lineChart.yLabelFormat = @"%.2f";
-        yFixedValueMax = yFixedValueMax / 10000;
-        yFixedValueMin = yFixedValueMin / 10000;
-    } else {
-        chartView.lineChart.yLabelFormat = @"%.0f";
-    }
-
-//    chartView.lineChart.yFixedValueMin = 0;
-    
-    chartView.lineChart.yFixedValueMax = yFixedValueMax;
-    chartView.lineChart.yFixedValueMin = yFixedValueMin;
 
     chartView.lineChart.chartData = lineDatas;
     [chartView.lineChart strokeChart];
