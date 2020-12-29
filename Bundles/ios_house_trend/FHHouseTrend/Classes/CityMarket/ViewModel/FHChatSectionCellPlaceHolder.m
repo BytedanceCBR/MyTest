@@ -157,6 +157,10 @@
     CGFloat yFixedValueMax = maxValue;
     CGFloat yFixedValueMin = minValue;
     CGFloat deltaValue = (yFixedValueMax - yFixedValueMin) * 3;
+    
+    if (deltaValue < 0.1) {
+        deltaValue = yFixedValueMax;
+    }
     yFixedValueMax += deltaValue;
     yFixedValueMin -= deltaValue;
     if (yFixedValueMin < 0) {
