@@ -367,6 +367,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _mapView.runLoopMode = NSDefaultRunLoopMode;
         _mapView.desiredAccuracy = kCLLocationAccuracyHundredMeters;
         
+        _mapView.runLoopMode = NSDefaultRunLoopMode;
+        _mapView.maxRenderFrame = 60;
+        _mapView.isAllowDecreaseFrame = NO;
+        
         _mapView.zoomLevel = _configModel.resizeLevel;
         _mapView.userTrackingMode = MAUserTrackingModeFollow;
         MAUserLocationRepresentation *representation = [[MAUserLocationRepresentation alloc] init];
@@ -2785,12 +2789,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
             
             
-            [self doClear];
+            [wself doClear];
             
             wself.lastBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
             wself.lastNewHouseBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
-            [wself.lastBubble overwriteFliter:self.filterConditionParams];
-            [wself.lastNewHouseBubble overwriteFliter:self.filterConditionParams];
+            [wself.lastBubble overwriteFliter:wself.filterConditionParams];
+            [wself.lastNewHouseBubble overwriteFliter:wself.filterConditionParams];
 
             NSMutableDictionary *param = [NSMutableDictionary new];
             
