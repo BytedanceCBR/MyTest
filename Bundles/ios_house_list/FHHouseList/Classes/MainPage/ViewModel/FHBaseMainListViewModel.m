@@ -889,7 +889,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     traceParam[@"origin_from"] = wself.originFrom;
                     traceParam[@"origin_search_id"] = wself.originSearchId;
                     traceParam[@"rank"] = @(0);
-                    if(self.houseType == FHHouseTypeNeighborhood){
+                    if([model.realtorType isEqualToString:@"4"]){
                         traceParam[@"element_type"] = @"neighborhood_expert_card";
                     }else{
                         traceParam[@"element_type"] = @"area_expert_card";
@@ -986,7 +986,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     traceParam[@"origin_from"] = wself.originFrom;
                     traceParam[@"origin_search_id"] = wself.originSearchId;
                     traceParam[@"rank"] = @(0);
-                    if(self.houseType == FHHouseTypeNeighborhood){
+                    if([model.realtorType isEqualToString:@"4"]){
                         traceParam[@"element_type"] = @"neighborhood_expert_card";
                     }else{
                         traceParam[@"element_type"] = @"area_expert_card";
@@ -2547,7 +2547,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [self addLeadShowLog:agencyCM];
         tracerDict[@"page_type"] = [self pageTypeString];
         tracerDict[@"card_type"] = @"left_pic";
-        if(self.houseType == FHHouseTypeNeighborhood){
+        if([agencyCM.realtorType isEqualToString:@"4"]){
             tracerDict[@"element_type"] = @"neighborhood_expert_card";
             tracerDict[@"house_type"] = @"neighborhood";
         }else{
@@ -2569,7 +2569,7 @@ extern NSString *const INSTANT_DATA_KEY;
             tracerDict[@"page_type"] = [self pageTypeString];
             tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
             tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
-            if(self.houseType == FHHouseTypeNeighborhood){
+            if([cm.realtorType isEqualToString:@"4"]){
                 tracerDict[@"element_type"] = @"neighborhood_expert_card";
             }else{
                 tracerDict[@"element_type"] = @"area_expert_card";
@@ -2626,7 +2626,7 @@ extern NSString *const INSTANT_DATA_KEY;
     tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
     tracerDict[@"realtor_id"] = cellModel.id;
     
-    if(self.houseType == FHHouseTypeNeighborhood){
+    if([cellModel.realtorType isEqualToString:@"4"]){
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
         tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
         tracerDict[@"house_type"] = @"neighborhood";
