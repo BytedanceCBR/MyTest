@@ -184,8 +184,9 @@
 }
 
 - (void)postDelete:(NSString *)operationCode {
+    WeakSelf;
     [FHHouseUGCAPI postOperation:self.cellModel.groupId cellType:self.cellModel.cellType socialGroupId:self.cellModel.community.socialGroupId operationCode:operationCode enterFrom:self.cellModel.tracerDic[@"enter_from"] pageType:self.cellModel.tracerDic[@"page_type"] completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
-        
+        StrongSelf;
         //已经审核通过的问题删除就返回这个
         if(model && [model.status integerValue] == 2001){
             [[ToastManager manager] showToast:(model.message ?: @"删除失败")];

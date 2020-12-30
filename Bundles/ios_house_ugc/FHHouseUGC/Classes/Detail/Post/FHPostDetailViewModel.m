@@ -82,6 +82,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     // 编辑成功
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
+    // 删帖成功
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
     return self;
 }
 
@@ -191,10 +193,19 @@
     }
 }
 
+- (void)postDeleteSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        if ([cellModel.groupId isEqualToString:self.detailData.groupId]) {
+            [self.detailController goBack];
+        }
+    }
+}
+
 // 关注状态改变
 - (void)followStateChanged:(NSNotification *)notification {
     if (notification) {
-        NSDictionary *userInfo = notification.userInfo;
         BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
         NSString *groupId = notification.userInfo[@"social_group_id"];
         NSString *currentGroupId = self.social_group_id;

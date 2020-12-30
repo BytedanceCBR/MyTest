@@ -79,6 +79,8 @@
     self.forumID = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    // 删帖成功
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
     return self;
 }
 
@@ -102,6 +104,16 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)postDeleteSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        if ([cellModel.groupId isEqualToString:self.detailData.groupId]) {
+            [self.detailController goBack];
+        }
+    }
 }
 
 // 关注列表改变

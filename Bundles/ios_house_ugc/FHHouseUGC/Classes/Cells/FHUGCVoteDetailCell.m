@@ -242,11 +242,6 @@
     self.cellModel = data;
     //设置userInfo
     [self.userInfoView refreshWithData:cellModel];
-    __weak typeof(self) weakSelf = self;
-    self.userInfoView.deleteCellBlock = ^{
-        FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
-        [viewModel.detailController goBack];
-    };
     //设置底部
     [self.bottomView refreshWithData:cellModel];
     //内容
