@@ -9,6 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@protocol FHHouseNewComponentViewModelProtocol;
 @protocol FHHouseCardCellViewModelProtocol;
 @protocol FHHouseTableViewDataSource <NSObject>
 
@@ -16,6 +17,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 //{ViewModelClassName: CellClassName}
 - (NSDictionary<NSString *, NSString *> *)fhHouse_supportCellStyles;
+
+@optional
+- (NSArray<id<FHHouseNewComponentViewModelProtocol>> *)fhHouse_headerList;
+
+- (NSDictionary<NSString *, NSString *> *)fhHouse_supportHeaderStyles;
+
+- (NSArray<id<FHHouseNewComponentViewModelProtocol>> *)fhHouse_footerList;
+
+- (NSDictionary<NSString *, NSString *> *)fhHouse_supportFooterStyles;
 
 @end
 

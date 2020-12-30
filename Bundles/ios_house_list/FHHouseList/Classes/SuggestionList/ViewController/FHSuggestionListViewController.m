@@ -6,7 +6,7 @@
 //
 
 #import "FHSuggestionListViewController.h"
-#import "TTDeviceHelper.h"
+#import "UIDevice+BTDAdditions.h"
 #import "FHHouseType.h"
 #import "FHHouseTypeManager.h"
 #import "FHSuggestionListViewModel.h"

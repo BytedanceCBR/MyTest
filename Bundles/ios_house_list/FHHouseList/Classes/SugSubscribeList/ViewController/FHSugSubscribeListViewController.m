@@ -17,7 +17,7 @@
 #import "UIView+Refresh_ErrorHandler.h"
 #import "UIViewController+NavbarItem.h"
 #import "UIViewController+NavigationBarStyle.h"
-#import "TTDeviceHelper.h"
+#import "UIDevice+BTDAdditions.h"
 #import "FHSugSubscribeListViewModel.h"
 #import "FHFakeInputNavbar.h"
 #import "FHEnvContext.h"
@@ -112,7 +112,7 @@
     _tableView.estimatedRowHeight = 75;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
-    if ([TTDeviceHelper isIPhoneXDevice]) {
+    if ([UIDevice btd_isIPhoneXSeries]) {
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
     }
 }

@@ -5,14 +5,14 @@
 //  Created by xubinbin on 2020/10/26.
 //
 
-#import "FHHouseBaseUsuallyCell.h"
+#import "FHHouseBaseCommonCell.h"
 
-@implementation FHHouseBaseUsuallyCell
+@implementation FHHouseBaseCommonCell
 
-@synthesize mainTitleLabel = _mainTitleLabel, pricePerSqmLabel = _pricePerSqmLabel, priceLabel = _priceLabel, houseMainImageBackView = _houseMainImageBackView;
+@synthesize mainTitleLabel = _mainTitleLabel, pricePerSqmLabel = _pricePerSqmLabel, priceLabel = _priceLabel;
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    NSAssert(![self isMemberOfClass:[FHHouseBaseUsuallyCell class]], @"业务不可直接用基类，请继承基类");
+    NSAssert(![self isMemberOfClass:[FHHouseBaseCommonCell class]], @"业务不可直接用基类，请继承基类");
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         
@@ -22,14 +22,7 @@
 
 - (void)initUI {
     [self.contentView addSubview:self.houseCellBackView];
-    [self.contentView addSubview:self.houseMainImageBackView];
     [self.contentView addSubview:self.mainImageView];
-    [self.houseMainImageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.mainImageView);
-        make.left.top.equalTo(self.mainImageView);
-        make.bottom.equalTo(self.mainImageView).offset(-1);
-        make.right.equalTo(self.mainImageView).offset(-1);
-    }];
     [self.mainImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.contentView).offset(10);
         make.left.equalTo(self.contentView).offset(15);
@@ -188,18 +181,6 @@
         _priceLabel.textColor = [UIColor themeOrange1];
     }
     return _priceLabel;
-}
-
-- (UIView *)houseMainImageBackView {
-    if (!_houseMainImageBackView) {
-        _houseMainImageBackView = [[UIView alloc] init];
-        CALayer * layer = _houseMainImageBackView.layer;
-        layer.shadowOffset = CGSizeMake(0, 4);
-        layer.shadowRadius = 6;
-        layer.shadowColor = [UIColor blackColor].CGColor;;
-        layer.shadowOpacity = 0.2;
-    }
-    return _houseMainImageBackView;
 }
 
 @end

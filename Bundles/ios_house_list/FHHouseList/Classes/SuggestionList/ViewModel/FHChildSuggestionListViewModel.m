@@ -974,9 +974,9 @@
             if(model.cardType == FHSearchCardTypeGuessYouWantContent){//相关推荐高度
                 return 42;
             }else if (model.cardType == FHSearchCardTypeGuessYouWantTip) {//tips高度
-                return 60;
+                return 55;
             }else if (model.cardType == FHSearchCardTypeFindHouseHelper) {  //帮我找房卡片高度
-                return 93;
+                return 83;
             }else if (model.houseType.intValue == FHHouseTypeNewHouse) {// 新房
                 if([model.text2 length] <= 0){
                     return 46.5;
