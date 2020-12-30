@@ -292,7 +292,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.showPlaceHolder) {
-        return 355;
+        return  [UIScreen mainScreen].bounds.size.width * 355/375;
     }
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];

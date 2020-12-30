@@ -237,7 +237,7 @@
     if (self.showPlaceHolder) {
         NSString *identifier = @"FHPlaceHolderCell";
         FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
+        [cell.contentView setBackgroundColor:[UIColor whiteColor]];
         return cell;
     }
         if ([FHEnvContext isDisplayNewCardType]) {
