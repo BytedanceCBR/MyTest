@@ -235,12 +235,12 @@
         self.currentIndex = tabIndex;
         self.feedViewController.headerView.selectedSegmentIndex = self.currentIndex;
     } else {
-        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > (CGFloat)([UIScreen mainScreen].bounds.size.width * (self.feedViewController.headerView.sectionTitles.count - 1))){
+        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (CGFloat)(self.feedViewController.headerView.sectionTitles.count - 1)){
             self.feedViewController.headerView.selectedSegmentIndex = self.currentIndex;
             if (scrollView.contentOffset.x < 0) {
                 self.lastOffset = 0;
             } else {
-                self.lastOffset = (CGFloat)([UIScreen mainScreen].bounds.size.width * (self.feedViewController.headerView.sectionTitles.count - 1));
+                self.lastOffset = [UIScreen mainScreen].bounds.size.width * (CGFloat)(self.feedViewController.headerView.sectionTitles.count - 1);
             }
             return;
         }

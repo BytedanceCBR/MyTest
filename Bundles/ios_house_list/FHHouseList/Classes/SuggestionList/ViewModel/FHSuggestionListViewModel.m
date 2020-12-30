@@ -189,12 +189,12 @@
             [self.listController scrollToIndex:index];
         }
     } else {
-        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > (CGFloat)([UIScreen mainScreen].bounds.size.width * (self.listController.segmentControl.sectionTitles.count - 1))){
+        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (CGFloat)(self.listController.segmentControl.sectionTitles.count - 1)){
             self.listController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
             if (scrollView.contentOffset.x < 0) {
                 _oldX = 0;
             } else {
-                _oldX = (CGFloat)([UIScreen mainScreen].bounds.size.width * (self.listController.segmentControl.sectionTitles.count - 1));
+                _oldX = [UIScreen mainScreen].bounds.size.width * (CGFloat)(self.listController.segmentControl.sectionTitles.count - 1);
             }
             return;
         }
