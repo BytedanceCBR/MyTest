@@ -43,7 +43,7 @@
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
         make.bottom.mas_equalTo(-5);
-        make.height.mas_equalTo(0);
+        make.top.mas_equalTo(5);
     }];
 }
 
@@ -51,38 +51,24 @@
     [super setViewModel:viewModel];
     if ([viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
         self.cardView.viewModel = viewModel;
-        [self.cardView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo([FHHouseNewCardView calculateViewHeight:viewModel]);
-        }];
+        [self.cardView refreshOpacityWithData:viewModel];
+        FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;
+        __weak typeof(self) wSelf = self;
+        newViewModel.opacityDidChange = ^{
+            [wSelf.cardView refreshOpacityWithData:wSelf.viewModel];
+        };
     }
+}
+
+- (void)cellWillEnterForground {
+    [self.cardView resumeVRIcon];
 }
 
 + (CGFloat)calculateViewHeight:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if ([viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
-        FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;
-        CGFloat topMargin = 0;
-        if ([newViewModel.model isKindOfClass:[FHSearchHouseItemModel class]]) {
-            topMargin = ((FHSearchHouseItemModel *)newViewModel.model).topMargin;
-        }
-        return [FHHouseNewCardView calculateViewHeight:viewModel] + 5 + topMargin;
+        return [FHHouseNewCardView calculateViewHeight:viewModel] + 10;
     }
     return 0.0f;
-}
-
-- (void)cellWillShowAtIndexPath:(NSIndexPath *)indexPath {
-    [super cellWillShowAtIndexPath:indexPath];
-    if ([self.viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
-        FHHouseNewCardViewModel *cardViewModel = (FHHouseNewCardViewModel *)self.viewModel;
-        [cardViewModel showCardAtIndexPath:indexPath];
-    }
-}
-
-- (void)cellDidClickAtIndexPath:(NSIndexPath *)indexPath {
-    [super cellDidClickAtIndexPath:indexPath];
-    if ([self.viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
-        FHHouseNewCardViewModel *cardViewModel = (FHHouseNewCardViewModel *)self.viewModel;
-        [cardViewModel clickCardAtIndexPath:indexPath];
-    }
 }
 
 @end

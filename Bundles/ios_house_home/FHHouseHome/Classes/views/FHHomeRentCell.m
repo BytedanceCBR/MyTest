@@ -46,13 +46,6 @@
         make.top.mas_equalTo(12);
         make.left.mas_equalTo(26);
     }];
-    self.houseMainImageBackView.backgroundColor = [UIColor whiteColor];
-    [self.houseMainImageBackView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.mainImageView).offset(3);
-        make.left.mas_equalTo(self.mainImageView).offset(3);
-        make.right.mas_equalTo(self.mainImageView).offset(-3);
-        make.bottom.mas_equalTo(self.mainImageView).offset(-3);
-    }];
     [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(-40);
     }];
@@ -67,10 +60,25 @@
     }];
 }
 
+- (void)refreshOpacityWithData:(id)data {
+    if (![data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        return;
+    }
+    FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
+    CGFloat opacity = 1;
+    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
+        opacity = FHHouseCardReadOpacity;
+    }
+    self.mainTitleLabel.layer.opacity = opacity;
+    self.subTitleLabel.layer.opacity = opacity;
+    self.tagLabel.layer.opacity = opacity;
+}
+
 - (void)refreshWithData:(id)data {
     if (![data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
         return;
     }
+    [self refreshOpacityWithData:data];
     FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
     self.homeItemModel = model;
     if (model.dislikeInfo) {

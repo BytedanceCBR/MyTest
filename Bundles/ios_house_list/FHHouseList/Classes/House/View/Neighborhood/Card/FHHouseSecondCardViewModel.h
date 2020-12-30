@@ -5,7 +5,7 @@
 //  Created by xubinbin on 2020/11/26.
 //
 
-#import "FHHouseNewComponentViewModel.h"
+#import "FHHouseNewComponentViewModel+HouseCard.h"
 #import "FHSearchHouseModel.h"
 #import "FHHouseListBaseItemModel.h"
 #import "FHSingleImageInfoCellModel.h"
@@ -13,9 +13,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (^FHHouseCardOpacityDidChange)(void);
+
 @class FHHouseTitleAndTagViewModel;
 @class FHHouseRecommendViewModel;
 @interface FHHouseSecondCardViewModel : FHHouseNewComponentViewModel
+
+@property (nonatomic, copy) FHHouseCardOpacityDidChange opacityDidChange;
 
 @property (nonatomic, strong, readonly) FHImageModel *leftImageModel;
 
@@ -38,6 +42,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) BOOL isFirst;
 
 @property (nonatomic, assign) CGFloat tagListMaxWidth;
+
+@property (nonatomic, copy, readonly) NSString *houseId;
+
+@property (nonatomic, assign, readonly) CGFloat opacity;
 
 - (instancetype)initWithModel:(id)model;
 
