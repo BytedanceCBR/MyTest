@@ -182,7 +182,7 @@
         BOOL isBlackmailRealtor = isPunish && tips.length > 0;
         [self.viewController showBottomBar:!isBlackmailRealtor];
         [self.viewController.blackmailReatorBottomBar show:isBlackmailRealtor WithHint:tips btnAction:^{
-            // TODO: JOKER 点击埋点
+            // 点击埋点
             NSMutableDictionary *clickParams = [NSMutableDictionary dictionary];
             clickParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM];
             clickParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
@@ -191,8 +191,7 @@
             clickParams[UT_CLICK_POSITION] = @"find_other_realtor";
             TRACK_EVENT(@"click_options",clickParams);
             //---
-            
-            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:self.data.redirect]];
+            [[IMManager shareInstance] jumpRealtorListH5PageWithUrl:self.data.redirect reportParam:clickParams];
         }];
         
         //初始化segment

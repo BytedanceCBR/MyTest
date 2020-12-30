@@ -431,7 +431,7 @@
         [self.tagsView updateWithTags:tags.copy];
         
         
-        // TODO: JOKER 添加关黑tag
+        // 添加关黑tag
         BOOL isBlackmail = conv.isRealtorBlackmailed;
         self.iconCoverView.hidden = !isBlackmail;
         

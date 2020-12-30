@@ -282,7 +282,7 @@
 }
 
 - (void)processJumpToConversation:(IMConversation *)conv {
-    // TODO: JOKER 判断经纪人是否被关黑
+    // 判断经纪人是否被关黑
     [conv getTargetUserInfoWithCompletion:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
         BOOL isPunish = [userInfo.punishStatus boolValue];
         NSString *tips = userInfo.punishTips;
