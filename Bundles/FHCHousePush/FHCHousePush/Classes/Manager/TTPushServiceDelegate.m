@@ -272,8 +272,6 @@ API_AVAILABLE(ios(10.0))
     NSDictionary *aps = [content.userInfo btd_objectForKey:@"aps" default:@{}];
     NSString *threadID = [aps btd_objectForKey:@"thread-id" default:@""];
     [self removeNotificationsInSameGroupByThreadID:threadID];
-    ///TODO: DEBUG代码，MR前删除！！！
-    [FHUserTracker writeEvent:@"push_test" params:content.userInfo];
 
     if (@available(iOS 10.0, *)) {
         if ([content.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
