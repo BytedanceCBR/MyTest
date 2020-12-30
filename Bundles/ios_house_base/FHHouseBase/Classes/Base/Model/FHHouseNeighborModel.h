@@ -11,6 +11,7 @@
 #import "FHHouseListModel.h"
 #import "FHHouseBaseInfoModel.h"
 #import "FHDetailBaseModel.h"
+#import "FHSearchHouseModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -48,6 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *gaodeLng;
 @property (nonatomic, copy , nullable) NSString *gaodeLat;
 @property (nonatomic, copy , nullable) NSString *imprId;
+@property (nonatomic, copy , nullable) NSString *groupId;
 @property (nonatomic, copy , nullable) NSString *displayBuiltYear;
 @property (nonatomic, strong , nullable) NSArray<FHImageModel> *images;
 @property (nonatomic, copy , nullable) NSString *houseType;
@@ -62,6 +64,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *pricePerSqmNum;
 @property (nonatomic, copy , nullable) NSString *pricePerSqmUnit;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
+@property (nonatomic, strong, nullable) NSArray<FHSearchHouseItemTitleTagModel> *titleTags;
+
 @end
 
 

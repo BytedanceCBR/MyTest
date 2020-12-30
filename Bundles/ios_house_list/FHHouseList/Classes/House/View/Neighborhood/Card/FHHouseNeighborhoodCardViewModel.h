@@ -29,15 +29,13 @@ typedef void (^FHHouseCardOpacityDidChange)(void);
 
 @property (nonatomic, strong, readonly) FHHouseTitleAndTagViewModel *titleAndTag;
 
-@property (nonatomic, strong) FHSearchHouseItemModel *model;
+@property (nonatomic, strong) id model;
 
 @property (nonatomic, copy, readonly) NSString *houseId;
 
 @property (nonatomic, assign, readonly) CGFloat opacity;
 
-@property (nonatomic, assign, readonly) CGFloat topMargin;
-
-- (instancetype)initWithModel:(FHSearchHouseItemModel *)model;
+- (instancetype)initWithModel:(id)model;
 
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath;
 

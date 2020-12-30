@@ -41,6 +41,8 @@ typedef void (^FHHouseCardOpacityDidChange)(void);
 
 @property (nonatomic, assign, readonly) BOOL isFirst;
 
+@property (nonatomic, assign) CGFloat topMargin;
+
 @property (nonatomic, assign) CGFloat tagListMaxWidth;
 
 @property (nonatomic, copy, readonly) NSString *houseId;
