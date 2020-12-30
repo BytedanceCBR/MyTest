@@ -1865,7 +1865,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
         }
     }
     
-    [params setValue:@"comment_detail" forKey:@"page_type"];
+    [params setValue:@"video_detail" forKey:@"page_type"];
     
     if (isDigg) {
         [TTTrackerWrapper eventV3:@"click_like" params:params];

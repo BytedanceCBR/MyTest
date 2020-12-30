@@ -345,6 +345,11 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 //获取ugc用户v图标
 + (NSArray *)getUGCUserVWhiteList;
 
+//获取首页进入搜索sug时，用户上一次选择的值
++ (NSInteger)lastSearchSugHouseType;
+//记录首页进入搜索sug时，用户上一次选择的值
++ (void)setLastSearchSugHouseType:(NSInteger)houseType;
+
 @end
 
 

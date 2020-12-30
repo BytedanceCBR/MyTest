@@ -131,25 +131,16 @@
 
 - (void)initSegmentView {
     self.segmentView = [[FHCommunityDetailSegmentView alloc] init];
-    self.segmentView.underLinePaddingToLab = 35;
-    self.segmentView.underLineWidth = 20;
     [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
         *titleScrollViewColorKey  = @"Background21";
-        *norColorKey = @"grey3"; //
-        *selColorKey = @"grey1";//grey1
+        *norColorKey = @"grey1";
+        *selColorKey = @"red4";
         *titleFont = [UIFont themeFontRegular:16];
         *selectedTitleFont = [UIFont themeFontSemibold:16];
-    }];
-    [_segmentView setUpUnderLineEffect:^(BOOL *isUnderLineDelayScroll, CGFloat *underLineH, NSString *__autoreleasing *underLineColorKey, BOOL *isUnderLineEqualTitleWidth) {
-        *isUnderLineDelayScroll = NO;
-        *underLineH = 4;
-        *underLineColorKey = @"orange4";
-        *isUnderLineEqualTitleWidth = YES;
     }];
     _segmentView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
     _segmentView.bottomLine.hidden = YES;
     _segmentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [_segmentView setUnderLineLayer:2];
 }
 
 - (void)setNavBar {

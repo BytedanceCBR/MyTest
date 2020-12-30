@@ -259,25 +259,21 @@
     [params setValue:self.detailModel.answerEntity.ansid forKey:@"group_id"];
     [params setValue:self.detailModel.answerEntity.ansid forKey:@"ansid"];
     [params setValue:@"house_app2c_v2" forKey:@"event_type"];
+    [params setValue:[self.detailModel.gdExtJsonDict tta_stringForKey:@"origin_from"]  forKey:@"origin_from"];
     [params setValue:[self.detailModel.gdExtJsonDict tta_stringForKey:@"enter_from"]  forKey:@"enter_from"];
     [params setValue:[self.detailModel.gdExtJsonDict tta_stringForKey:@"category_name"]  forKey:@"category_name"];
     [params setValue:[self.detailModel.gdExtJsonDict tta_stringForKey:@"qid"]  forKey:@"qid"];
     [params setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"log_pb"]  forKey:@"log_pb"];
     [params setValue:[self.detailModel.gdExtJsonDict tt_objectForKey:@"element_from"] forKey:@"element_from"];
     [params setValue:@"detail" forKey:@"position"];
-    if (self.detailModel.apiParam[@"enter_from"]
-        && [self.detailModel.apiParam[@"enter_from"] isKindOfClass:[NSString class]]
-        && [self.detailModel.apiParam[@"enter_from"] isEqualToString:@"question"]) {
-        // 来源于问答相关
-        [params setValue:self.detailModel.apiParam[@"enter_from"] forKey:@"enter_from"];
-        [params setValue:@"answer" forKey:@"page_type"];
-    }
+    [params setValue:@"answer" forKey:@"page_type"];
+
     if (!self.detailModel.answerEntity.userRepined) {
          [self tt_sendDetailLogicTrackWithLabel:label];
-        [BDTrackerProtocol eventV3:@"click_disfavourite" params:params];
+        [BDTrackerProtocol eventV3:@"click_disfavorite" params:params];
     }
     else {
-        [BDTrackerProtocol eventV3:@"click_favourite" params:params];
+        [BDTrackerProtocol eventV3:@"click_favorite" params:params];
     }
 }
 
