@@ -167,7 +167,7 @@ extern NSString *const kFHToastCountKey;
             [wself.view updateView:wself.viewController.model infoModel:wself.viewController.infoModel];
             [wself.viewController refreshContentOffset:wself.view.scrollView.contentOffset];
             [wself.viewController.emptyView hideEmptyView];
-            _neighborhoodDetailModel = model;
+            wself.neighborhoodDetailModel = model;
             [wself.view updateChart:model];
         }else{
             [wself.viewController setNavBar:YES];
