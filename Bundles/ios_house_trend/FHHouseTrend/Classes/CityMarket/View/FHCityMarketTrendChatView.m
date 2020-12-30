@@ -295,6 +295,7 @@
     self.lineChart.yLabelColor = [UIColor themeGray2];
     self.lineChart.yLabelFormat = @"%.2f";
     self.lineChart.yLabelFont = [UIFont themeFontRegular:12];
+    self.lineChart.yLabelAdjust = NO;
     self.lineChart.yLabelHeight = 17;
     self.lineChart.showGenYLabels = YES; // 竖轴的label值
     self.lineChart.xLabelColor = [UIColor themeGray2];

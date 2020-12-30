@@ -28,7 +28,6 @@ extern NSString *const TTStartupProtectPrefix;
 
 - (void)setTaskNormal:(BOOL)isNormal;//设置标志位 本任务是否正常
 
-
 - (BOOL)isConcurrent;  //是否支持多线程并发
 
 @end

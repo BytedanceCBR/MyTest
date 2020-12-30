@@ -79,11 +79,6 @@
     
     self.viewController.isLoadingData = YES;
     
-    if(self.isRefreshingTip){
-        [self.tableView finishPullDownWithSuccess:YES];
-        return;
-    }
-    
     if(isFirst){
         [self.viewController startLoading];
     }
@@ -267,11 +262,6 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self.viewController.scrollViewDelegate scrollViewDidScroll:scrollView];
-    if(scrollView == self.tableView){
-        if (scrollView.isDragging) {
-            [self.viewController.notifyBarView performSelector:@selector(hideIfNeeds) withObject:nil];
-        }
-    }
 }
 
 #pragma mark - FHUGCBaseCellDelegate

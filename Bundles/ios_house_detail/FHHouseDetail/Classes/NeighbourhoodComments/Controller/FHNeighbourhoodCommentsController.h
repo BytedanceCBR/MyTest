@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHNeighbourhoodCommentsController : FHBaseViewController
 
 @property(nonatomic, assign) FHCommunityFeedListType listType;
-@property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property(nonatomic, strong) NSArray *dataList;
 //附加在feed上面的自定义view
 @property(nonatomic, strong) UIView *tableHeaderView;
@@ -53,15 +52,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy) void(^beforeInsertPostBlock)(void);
 //圈子信息
 @property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
-
-- (void)showNotify:(NSString *)message ;
-- (void)showNotify:(NSString *)message completion:(void(^)())completion;
 //下拉刷新数据
 - (void)startLoadData;
 //下拉刷新数据,不清之前的数据
 - (void)startLoadData:(BOOL)isFirst;
 
-- (void)hideImmediately;
 
 @end
 

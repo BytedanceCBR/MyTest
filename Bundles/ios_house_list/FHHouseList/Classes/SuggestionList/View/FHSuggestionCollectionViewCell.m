@@ -38,6 +38,13 @@
     _houseType = houseType;
     if (!_vc) {
         _vc = [[FHChildSuggestionListViewController alloc] initWithRouteParamObj:data];
+        
+        if([data isKindOfClass:[TTRouteParamObj class]]){
+            TTRouteParamObj *paramObj = (TTRouteParamObj *)data;
+            NSInteger hp = [paramObj.allParams[@"house_type"] integerValue];
+            _vc.needShowKeyBoardWhenFirstEnter = (hp >= 1 && hp <= 4 && hp == houseType);
+        }
+        
         [self.contentView addSubview:_vc.view];
         [_vc.view mas_makeConstraints:^(MASConstraintMaker *make) {
             make.edges.mas_equalTo(self.contentView);

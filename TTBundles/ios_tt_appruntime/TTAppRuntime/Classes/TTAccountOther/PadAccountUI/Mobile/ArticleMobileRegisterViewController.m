@@ -231,8 +231,6 @@
             }
         }];
     };
-    
-    @ArticleTipAndReturnIFNetworkNotOK;
     if (self.captchaImage && !self.captchaValue) {
         alertCaptchaBlock(self.captchaImage, self.error, TTASMSCodeScenarioPhoneRegisterSubmit);
     } else {

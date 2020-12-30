@@ -32,6 +32,7 @@
 #import "FHHouseListBaseItemModel.h"
 #import "FHMapSearchSecondCell.h"
 #import "FHEnvContext.h"
+#import "FHPlaceHolderCell.h"
 
 #define kCellId @"singleCellId"
 
@@ -49,11 +50,10 @@
 @property(nonatomic , assign) BOOL dismissing;
 @property(nonatomic , strong) FHMapSearchDataListModel *currentNeighbor;
 @property(nonatomic , strong) FHMapSearchBubbleModel *currentBubble;
-@property(nonatomic , assign) CGPoint panStartLocation;
-@property(nonatomic , assign) CGFloat panStartDockLocation;
 @property(nonatomic , strong) NSMutableDictionary *houseLogs;
 @property(nonatomic , strong) FHHouseListDataModel *currentHouseDataModel;
 @property(nonatomic , strong) FHSearchHouseDataModel *currentRentDataModel;
+@property(nonatomic , assign) BOOL showPlaceHolder;
 //for rent house list
 
 
@@ -69,7 +69,7 @@
         _houseLogs = [NSMutableDictionary new];
         self.listController = viewController;
         self.tableView = tableView;
-        
+        self.showPlaceHolder = YES;
         [self configTableView];
         
     }
@@ -89,8 +89,10 @@
     
 //    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
      [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kCellId];
+    [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
      [_tableView registerClass:[FHMapSearchSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHMapSearchSecondCell class])];
     
+    [self setupPannableGesture];
 }
 
 -(void)setHeaderView:(FHHouseAreaHeaderView *)headerView
@@ -109,9 +111,6 @@
         [wself reloadingHouseData:nil];
     };
     
-    UIPanGestureRecognizer *gesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
-    [maskView addGestureRecognizer:gesture];
-    gesture.delegate = self;
     
 }
 
@@ -146,6 +145,7 @@
     
     [self showMaskView:NO];
     if (data) {
+        self.showPlaceHolder = NO;
         [_houseList addObjectsFromArray:data.items];
         self.searchId = data.searchId;
         if (data.hasMore) {
@@ -154,6 +154,7 @@
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }
     } else {
+        self.showPlaceHolder = YES;
         self.searchId = nil;
         [self reloadingHouseData:nil];
     }
@@ -176,11 +177,20 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (self.showPlaceHolder) {
+        return 10;
+    }
     return _houseList.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    if (self.showPlaceHolder) {
+        FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+        return cell;
+    }
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
     FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
     if([cellModel isKindOfClass:[FHHouseListBaseItemModel class]]){
@@ -206,19 +216,14 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.showPlaceHolder) {
+        return;
+    }
     [self addHouseShowLog:indexPath];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    id model = _houseList[indexPath.row];
-    if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
-        FHSearchHouseDataItemsModel *oldModel = (FHSearchHouseDataItemsModel *)model;
-//        if ([oldModel showRecommendReason]) {
-//            return 105+[FHHouseBaseItemCell recommendReasonHeight];
-//        }
-        return 88;
-    }
     return 88;
 }
 
@@ -268,7 +273,6 @@
         return;
     }
     self.dismissing = YES;
-    self.tableView.scrollEnabled = false;
     if (self.listController.willSwipeDownDismiss) {
         self.listController.willSwipeDownDismiss(duration,self.currentBubble);
     }
@@ -278,7 +282,6 @@
         if (self.listController.didSwipeDownDismiss) {
             self.listController.didSwipeDownDismiss(self.currentBubble);
         }
-        self.tableView.scrollEnabled = true;
         self.dismissing = NO;
     }];
     [self.tableView.mj_footer resetNoMoreData];
@@ -286,80 +289,6 @@
     [self addHouseListDurationLog];
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    if (!scrollView.scrollEnabled) {
-        //不是用户主动滑动
-        scrollView.contentOffset = CGPointZero;
-        return;
-    }
-    
-    CGFloat minTop =  [self.listController minTop];
-    if ([self.listController canMoveup]) {
-        [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
-        scrollView.contentOffset = CGPointZero;
-//        //PM 要求不能一下滑上去
-//        if (fabs(self.listController.view.top - [self.listController minTop]) < 0.2) {
-//            scrollView.scrollEnabled = NO;
-//            [self.headerView hideTopTip:YES];
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                scrollView.scrollEnabled = YES;
-//            });
-//        }
-    }else if (scrollView.contentOffset.y < 0){
-        [self.listController moveTop:(self.tableView.superview.top - scrollView.contentOffset.y)];
-        scrollView.contentOffset = CGPointZero;
-    }
-    
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    [self checkScrollMoveEffect:scrollView];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
-    if(@available(iOS 13.0 , *)){
-       
-    }else{
-        [self checkScrollMoveEffect:scrollView];
-    }
-}
-
--(void)checkScrollMoveEffect:(UIScrollView *)scrollview
-{
-    if (self.listController.view.top > self.listController.view.height*0.6) {
-        [self handleDismiss:0.3];
-    }else if((self.listController.view.top > [self.listController minTop]) && (self.listController.view.top - [self.listController minTop]  < [UIScreen mainScreen].bounds.size.height/3)){
-        //吸附都顶部
-        [self.headerView hideTopTip:YES];
-        [self.listController moveTop:0];
-    }else if((self.listController.view.top > [self.listController minTop]) ){//&& (self.listController.view.top < self.listController.view.height*0.7)
-        [self.headerView hideTopTip:NO];
-        [self.listController moveTop:[self.listController initialTop]];
-        self.listController.moveDock();
-    }else{
-        [self.headerView hideTopTip:NO];
-    }
-//    else if([self.listController canMoveup]){
-//        //当前停留在中间
-//        [self.headerView hideTopTip:NO];
-//        self.listController.moveDock();
-//        [self addHouseListDurationLog];
-//    }
-}
-
-- (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
-{
-    if (scrollView.contentOffset.y < 1 && (self.listController.view.top > [self.listController minTop]) && velocity.y < -2.5) {
-        //quickly swipe done
-        [self handleDismiss:0.1];
-    }
-    if (scrollView.contentOffset.y > 50 && velocity.y < -2) {
-        *targetContentOffset =  CGPointMake(0, 0.5);
-    }
-}
 
 -(void)overwirteCondition:(NSString *)condition
 {
@@ -377,7 +306,7 @@
     self.condition = condition;
     
     CGPoint offset = CGPointMake(0, -(self.listController.view.bottom - self.listController.view.superview.height));
-    [self.listController showLoadingAlert:nil offset:offset];
+//    [self.listController showLoadingAlert:nil offset:offset];
     [self.houseList removeAllObjects];
     [self.tableView reloadData];
     [self loadHouseData:YES];
@@ -414,9 +343,6 @@
     }
     if (self.searchId) {
         param[@"search_id"] = self.searchId;
-    }
-    if (showLoading) {
-        self.tableView.scrollEnabled = NO;
     }
     
     if (query.length == 0) {
@@ -489,7 +415,7 @@
 //                NSString *toast = [NSString stringWithFormat:@"共找到%@套房源",houseModel.total];
 //                [[FHMainManager sharedInstance] showToast:toast duration:1];
             }
-            
+            self.showPlaceHolder = NO;
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
             if (houseModel.hasMore) {
@@ -498,7 +424,6 @@
                 [wself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
             wself.tableView.mj_footer.hidden = NO;
-            wself.tableView.scrollEnabled = YES;
         
             if (wself.houseList.count < 10 && !houseModel.hasMore) {
                 wself.tableView.mj_footer.hidden = YES;
@@ -559,9 +484,6 @@
         param[@"search_id"] = self.searchId;
     }
 
-    if (showLoading) {
-        self.tableView.scrollEnabled = NO;
-    }
 
     if (query.length == 0) {
         query = self.configModel.conditionQuery;
@@ -624,7 +546,6 @@
                 [wself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
             wself.tableView.mj_footer.hidden = NO;
-            wself.tableView.scrollEnabled = YES;
             
             
             if (wself.houseList.count < 10 && !houseModel.hasMore) {
@@ -685,40 +606,6 @@
     [self addHouseListDurationLog];
 }
 
-#pragma mark - gesture recognizer
--(void)handleGesture:(UIPanGestureRecognizer *)pan
-{
-    CGPoint touchLocation =  [pan locationInView:[UIApplication sharedApplication].delegate.window];
-    switch (pan.state) {
-        case UIGestureRecognizerStateBegan:
-        {
-            self.panStartDockLocation = self.listController.view.top;
-            self.panStartLocation = touchLocation;
-        }
-            break;
-        case UIGestureRecognizerStateChanged:
-        {
-            CGFloat delta = (touchLocation.y - self.panStartLocation.y);
-            [self.listController moveTop:self.panStartDockLocation +(delta)];
-        }
-            break;
-        case UIGestureRecognizerStateEnded:
-        case UIGestureRecognizerStateFailed:
-        case UIGestureRecognizerStateCancelled:
-        {
-            [self checkScrollMoveEffect:self.tableView];
-        }
-            break;
-        default:
-            break;
-    }
-}
-
-//#pragma mark - gesture delegate
-//- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-//{
-//    return YES;
-//}
 
 #pragma mark - log
 
@@ -835,6 +722,10 @@
 //        imprId = item.imprId;
 //    }
 //
+    if (_houseList.count == 0) {
+        return;
+    }
+    
     FHHouseListBaseItemModel *model = _houseList[indexPath.row];
     NSDictionary *logPb = model.logPb;
     NSString *imprId = model.imprId;;
@@ -881,6 +772,145 @@
     }else{
         TRACK_EVENT(@"mapfind_half_category", param);
     }
+}
+
+#pragma mark - 列表滑动交互
+- (void)setupPannableGesture {
+    UIPanGestureRecognizer *panGR = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    panGR.delegate = self;
+    [self.tableView addGestureRecognizer:panGR];
+    
+    self.listController.view.userInteractionEnabled = YES;
+    UIPanGestureRecognizer *panGR2 = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+    [self.listController.view addGestureRecognizer:panGR2];
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]] && otherGestureRecognizer.view == self.tableView);
+}
+
+static BOOL canPan = NO;
+- (void)handlePan:(UIPanGestureRecognizer *)gesture {
+    switch (gesture.state) {
+        case UIGestureRecognizerStateBegan: {
+            CGPoint velocity = [gesture velocityInView:self.listController.view];
+            canPan = [self canPanWithVelocity:velocity];
+            self.tableView.scrollEnabled = !canPan;
+            if (canPan) {
+                self.tableView.contentOffset = CGPointZero;
+            }
+            break;
+        }
+        case UIGestureRecognizerStateChanged: {
+            CGPoint velocity = [gesture velocityInView:self.listController.view];
+            canPan = [self canPanWithVelocity:velocity];
+            self.tableView.scrollEnabled = !canPan;
+            if (canPan) {
+                self.tableView.contentOffset = CGPointZero;
+            }
+            
+            if (!canPan) {
+                [gesture setTranslation:CGPointMake(0, 0) inView:gesture.view];
+                return;
+            }
+            
+            CGFloat minTop = [self.listController minTop];
+            CGFloat offsetY = [gesture translationInView: self.listController.view].y;
+            CGFloat listTop = self.listController.view.top + offsetY;
+            if (listTop < minTop) {
+                listTop = minTop;
+            }
+            self.listController.view.top = listTop;
+            if (self.listController.movingBlock) {
+                self.listController.movingBlock(self.listController.view.top);
+            }
+ 
+            [gesture setTranslation:CGPointMake(0, 0) inView:gesture.view];
+            break;
+        }
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateFailed:
+        case UIGestureRecognizerStateCancelled: {
+            if (!canPan) return;
+            CGPoint velocity = [gesture velocityInView:self.listController.view];
+            [self moveIfNeedWithVelocity:velocity];
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+- (BOOL)canPanWithVelocity:(CGPoint)velocity {
+    //列表页内容不满一屏
+    if (self.tableView.height >= self.tableView.contentSize.height) {
+        return YES;
+    }
+    
+    //列表不在最顶部
+    if (self.listController.view.top > [self.listController minTop]) {
+        return YES;
+    }
+    
+    //列表内容滚到顶部，向下拉
+    if (self.tableView.contentOffset.y <= 0 && velocity.y > 0) {
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (void)moveIfNeedWithVelocity:(CGPoint)velocity {
+    CGFloat currentH = self.listController.view.superview.height - self.listController.view.top;
+    CGFloat initH = self.listController.view.superview.height - [self.listController initialTop];
+    CGFloat maxH = self.listController.view.superview.height;
+    CGFloat minH = 0;
+    if (fabs(velocity.y) < 500) {
+        //慢速松手
+        if (currentH >= initH + (maxH - initH) / 2) {
+            [self moveToTop];
+        } else if (currentH < initH + (maxH - initH) / 2 && currentH >= minH + (initH - minH) / 2) {
+            [self moveToMiddle];
+        } else {
+            [self moveToBottom];
+        }
+    } else {
+        //快速松手
+        if (velocity.y > 0) {
+            if (currentH > initH) {
+                [self moveToMiddle];
+            } else {
+                [self moveToBottom];
+            }
+        } else {
+            if (currentH > initH) {
+                [self moveToTop];
+            } else {
+                [self moveToMiddle];
+            }
+        }
+    }
+}
+
+- (void)moveToMiddle {
+    __weak typeof(self) wself = self;
+    [self.listController moveTop:[self.listController initialTop] completion:^(BOOL finished) {
+        __strong typeof(wself) self = wself;
+        self.tableView.scrollEnabled = NO;
+    }];
+    self.listController.moveDock();
+}
+
+- (void)moveToTop {
+    __weak typeof(self) wself = self;
+    [self.listController moveTop:0 completion:^(BOOL finished) {
+        __strong typeof(wself) self = wself;
+        self.tableView.scrollEnabled = YES;//(self.tableView.height < self.tableView.contentSize.height);
+    }];
+}
+
+- (void)moveToBottom {
+    [self handleDismiss:0.3];
 }
 
 @end

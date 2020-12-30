@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHNewHouseDetailHeaderTitleCellModel : NSObject
 
 @property (nonatomic, copy) NSString *titleStr;
+@property (nonatomic, copy) NSString *aliasName;
 @property (nonatomic, strong) NSArray *tags;// FHHouseTagsModel item类型
 @property (nonatomic, copy , nullable) NSString *businessTag;
 @property (nonatomic, copy , nullable) NSString *advantage;

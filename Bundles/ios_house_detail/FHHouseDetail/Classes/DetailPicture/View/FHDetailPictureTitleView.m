@@ -45,7 +45,7 @@
 - (UIView *)indicatorView {
     if (!_indicatorView) {
         _indicatorView = [[UIView alloc] init];
-        _indicatorView.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
+        _indicatorView.backgroundColor = [UIColor whiteColor];
         _indicatorView.frame = CGRectMake(5, CGRectGetHeight(self.colletionView.frame) - 13, 20, 4);
         _indicatorView.layer.masksToBounds = YES;
         _indicatorView.layer.cornerRadius = 2.0;
@@ -109,7 +109,7 @@
             if (indexPath) {
                 [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
             }
-            if (self.usedInPictureList || self.usedInNewHouseDetail) {
+            if (!self.usedInPictureList) {
                 UICollectionViewLayoutAttributes *attributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
                 CGRect frame = attributes.frame;
                 
@@ -195,29 +195,25 @@
     if (self.usedInNewHouseDetail) {
         titleIndex = self.selectIndex;
     }
-    UIColor *selectColor = [UIColor whiteColor];
-    UIColor *normalColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.4];
+    UIColor *selectColor = [UIColor themeRed4];
+    UIColor *normalColor = [UIColor themeGray1];
     UIFont *selectFont = [UIFont themeFontRegular:16];
     UIFont *normalFont = [UIFont themeFontRegular:16];
-    if (self.usedInPictureList) {
-        selectColor = [UIColor themeGray1];
-        normalColor = [UIColor colorWithHexStr:@"#6d7278"];
-        selectFont = [UIFont themeFontSemibold:16];
+    if (!self.usedInPictureList) {
+        selectColor = [UIColor whiteColor];
+        normalColor = [UIColor colorWithHexString:@"#ffffff" alpha:0.4];
         [cell.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(22);
             make.bottom.mas_equalTo(-15);
             make.centerX.mas_equalTo(cell.contentView);
         }];
-    }
-    if (self.usedInNewHouseDetail) {
-        normalColor = [UIColor themeGray1];
-        selectFont = [UIFont themeFontMedium:18];
-        selectColor = [UIColor themeGray1];
+    }else{
         [cell.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(cell.contentView);
             make.centerX.mas_equalTo(cell.contentView);
         }];
     }
+
     if (titleIndex == index) {
         cell.titleLabel.textColor = selectColor;
         cell.titleLabel.font = selectFont;

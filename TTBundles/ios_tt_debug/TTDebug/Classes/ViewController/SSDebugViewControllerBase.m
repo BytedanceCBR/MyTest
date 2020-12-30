@@ -412,18 +412,20 @@
 }
 
 - (NSArray<NSString *> *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    NSArray<NSString *> *ret = [self.dataSource btd_map:^id _Nullable(STTableViewSectionItem * _Nonnull section) {
-        if(section.headerTitle.length >= 4) {
-            return [section.headerTitle substringToIndex:4];
-        };
-        return section.headerTitle;
+    return [self.dataSource btd_map:^id _Nullable(STTableViewSectionItem * _Nonnull obj) {
+        return @"⦁";
     }];
-    return ret;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-    [[ToastManager manager] showToast:title];
+    NSString *headerTitle = [self.dataSource btd_objectAtIndex:index].headerTitle;
+    if(headerTitle.length > 0) {
+        [[ToastManager manager] showToast:headerTitle];
+    }
     return index;
+}
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.view endEditing:YES];
 }
 @end
 

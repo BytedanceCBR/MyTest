@@ -14,7 +14,7 @@
 #import <TTNetBusiness/TTNetworkUtilities.h>
 #import <Masonry/Masonry.h>
 #import "NSDictionary+TTAdditions.h"
-
+#import "WKWebView+FHCommitURL.h"
 
 #define DESTROY_UIWEBVIEW_ARC(__WEBVIEW)   { __WEBVIEW.delegate = nil; [__WEBVIEW stopLoading]; __WEBVIEW = nil; }
 #define DESTROY_WKWEBVIEW_ARC(__WEBVIEW)   { __WEBVIEW.navigationDelegate = nil; __WEBVIEW.scrollView.delegate = nil; [__WEBVIEW stopLoading]; __WEBVIEW = nil; }
@@ -856,7 +856,7 @@ YSWebViewNavigationType mapUIWebViewNavigationTypeToYSWebViewNavigationType(UIWe
 }
 
 - (void)webView:(WKWebView *)webView didCommitNavigation:(null_unspecified WKNavigation *)navigation {
-    
+    webView.fh_commitURL = webView.URL;
 }
 
 - (void)webviewDidLayoutSubviews:(nullable id)webview {

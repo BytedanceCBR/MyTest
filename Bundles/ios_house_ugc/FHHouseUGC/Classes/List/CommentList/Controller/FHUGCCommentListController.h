@@ -15,7 +15,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHUGCCommentListController : FHBaseViewController
 
 @property(nonatomic, assign) FHCommunityFeedListType listType;
-@property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 //发布按钮
 @property(nonatomic, strong) UIButton *publishBtn;
 @property(nonatomic, copy) void(^publishBlock)(void);
@@ -36,8 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) BOOL showErrorView;
 
 @property(nonatomic, weak) id<UIScrollViewDelegate> scrollViewDelegate;
-- (void)showNotify:(NSString *)message ;
-- (void)showNotify:(NSString *)message completion:(void(^)(void))completion;
 //下拉刷新数据
 - (void)startLoadData;
 //下拉刷新数据,不清之前的数据
@@ -47,7 +44,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)viewWillDisappear;
 
-- (void)hideImmediately;
 
 @end
 

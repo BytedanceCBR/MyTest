@@ -11,10 +11,11 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import <TTBaseLib/UIViewAdditions.h>
 
-#define HOR_MARGIN 20
+#define HOR_MARGIN 15
+
 
 @interface FHHomePlaceHolderCell ()
-
+@property(nonatomic , strong) UIView *bacView;
 @property(nonatomic , strong) UIImageView *placeHolderImageView;
 
 @property(nonatomic , strong) UIView *view1;
@@ -38,20 +39,28 @@
     if (self) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
 //        UIImage *image = [UIImage imageNamed:@"house_cell_placeholder"];
+        
+        self.contentView.backgroundColor = [UIColor themeGray7];
+        [self.contentView addSubview:self.bacView];
+        
         _placeHolderImageView = [[UIImageView alloc] initWithImage:nil];
         
-        [self.contentView addSubview:_placeHolderImageView];
+        [self.bacView addSubview:_placeHolderImageView];
         
-        [self.contentView addSubview:self.view1];
-        [self.contentView addSubview:self.view2];
-        [self.contentView addSubview:self.view3];
+        [self.bacView addSubview:self.view1];
+        [self.bacView addSubview:self.view2];
+        [self.bacView addSubview:self.view3];
+        [self.bacView addSubview:self.view4];
         
-        CGFloat vleft = HOR_MARGIN+85+10;
-        CGFloat vWidth = (SCREEN_WIDTH - vleft - HOR_MARGIN);
-        _placeHolderImageView.frame = CGRectMake(HOR_MARGIN, 10, 85, 64);
-        _view1.frame = CGRectMake(vleft, 10, vWidth, 14);
-        _view2.frame = CGRectMake(vleft, _view1.bottom + 9, vWidth-44, 14);
-        _view3.frame = CGRectMake(vleft, _view2.bottom + 13, _view2.centerX - vleft + 10 , 14);
+        _bacView.frame = CGRectMake(HOR_MARGIN, 5, SCREEN_WIDTH - 2*HOR_MARGIN, 114);
+        
+        CGFloat vleft = HOR_MARGIN+84+10;
+        CGFloat vWidth = (SCREEN_WIDTH - vleft - HOR_MARGIN*3);
+        _placeHolderImageView.frame = CGRectMake(HOR_MARGIN, 15, 84, 84);
+        _view1.frame = CGRectMake(vleft, 15, vWidth, 14);
+        _view2.frame = CGRectMake(vleft, _view1.bottom + 7, vWidth-44, 16);
+        _view3.frame = CGRectMake(vleft, _view2.bottom + 7, _view2.centerX - vleft + 10 , 16);
+        _view4.frame = CGRectMake(vleft, _view3.bottom + 7, _view3.centerX - vleft + 10 , 16);
                 
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -60,12 +69,23 @@
 
 - (void)setTopOffset:(CGFloat)topOffset {
     _topOffset = topOffset;
+    _bacView.top = topOffset;
+//    _placeHolderImageView.top = _bacView.top + 10;
+//    _view1.top = _bacView.top + 10;
+//    _view2.top = _view1.bottom + 7;
+//    _view3.top = _view2.bottom + 7;
+//    _view4.top = _view3.bottom + 7;
+}
+
+-(UIView *)bacView {
     
-    _placeHolderImageView.top = topOffset;
-    _view1.top = topOffset;
-    _view2.top = _view1.bottom + 9;
-    _view3.top = _view2.bottom + 13;
-    
+    if (!_bacView) {
+        _bacView = [[UIView alloc]init];
+        _bacView.backgroundColor = [UIColor whiteColor];
+        _bacView.layer.cornerRadius = 10;
+        _bacView.clipsToBounds = YES;
+    }
+    return _bacView;
 }
 
 -(UIView *)view1 {
@@ -105,6 +125,7 @@
 }
 
 
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
     
@@ -115,7 +136,7 @@
 {
     [super willMoveToSuperview:newSuperview];
     if(newSuperview && !_placeHolderImageView.image){
-        _placeHolderImageView.image = [UIImage imageNamed:@"house_cell_placeholder"];
+        _placeHolderImageView.image = [UIImage imageNamed:@"house_cell_placeholder_square"];
     }
 }
 
