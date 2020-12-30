@@ -418,7 +418,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-    NSString *headerTitle = self.dataSource[index].headerTitle;
+    NSString *headerTitle = [self.dataSource btd_objectAtIndex:index].headerTitle;
     if(headerTitle.length > 0) {
         [[ToastManager manager] showToast:headerTitle];
     }

@@ -34,7 +34,7 @@
         launchTaskInfo.taskTypeName = [self taskTypeToString:launchTaskInfo.taskType];
         id tasks = self.lauchGroupsDict[key];
         if([tasks isKindOfClass:NSArray.class]) {
-            launchTaskInfo.priorityTasks = [tasks btd_compactMap:^TTStartupTask * _Nullable(NSValue * _Nonnull taskValue) {
+            launchTaskInfo.priorityTasks = [tasks btd_compactMap:^TTLaunchTaskInfo * _Nullable(NSValue * _Nonnull taskValue) {
                 task_header_info taskHeaderInfo;
                 [taskValue getValue:&taskHeaderInfo];
                 NSString *taskName = [NSString stringWithCString:taskHeaderInfo.name encoding:NSUTF8StringEncoding];

@@ -983,7 +983,6 @@ extern NSString *const PPE_OPEN_KEY;
 
 - (void)_ugcDebugTest:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setBool:uiswitch.isOn forKey:@"kUGCDebugConfigKey"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)_ssoDebugClick {
@@ -1189,7 +1188,6 @@ extern NSString *const PPE_OPEN_KEY;
 
 - (void)_setShouldSaveApplog:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setBool:uiswitch.isOn forKey:@"kShouldSaveApplogKey"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL)_shouldSaveApplog {
@@ -1214,7 +1212,6 @@ extern NSString *const PPE_OPEN_KEY;
 {
     NSString *testHost = textField.text;
     [[NSUserDefaults standardUserDefaults] setObject:testHost forKey:@"message_notification_test_host"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)_openFlexActionFired
@@ -1267,7 +1264,6 @@ extern NSString *const PPE_OPEN_KEY;
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"TTContactsGuideTimestampKey"];
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"kTTContactsCheckTimestampKey"];
     [[NSUserDefaults standardUserDefaults] setObject:@NO forKey:@"TTHasUploadedContactsFlagKey"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)_openNetworkStubActionFired
@@ -1449,20 +1445,17 @@ extern NSString *const PPE_OPEN_KEY;
 
 - (void)_testImageSubjectActionFired:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setValue:@(uiswitch.isOn) forKey:@"TTTestImageSubject"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     [self reloadData];
     
 }
 
 - (void)_testVideoFacebookActionFired:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setValue:@(uiswitch.isOn) forKey:@"TTTestVideoFacebook"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     [self reloadData];
 }
 
 - (void)_setShouldAutomaticallyChangeCity:(BOOL)shouldChange {
     [[NSUserDefaults standardUserDefaults] setBool:shouldChange forKey:@"kArticleCategoryManagerUserSelectedLocalCityKey"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL)_shouldAutomaticallyChangeCity {
@@ -2123,7 +2116,6 @@ extern NSString *const PPE_OPEN_KEY;
 - (void)switchPPE:(UISwitch *)sw {
     BOOL isOn = [self.class isPPEOn];
     [[NSUserDefaults standardUserDefaults] setBool:!isOn forKey:PPE_OPEN_KEY];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     
     if(sw && [self.class isBOEOn]) {
         [self switchBOE:nil];
@@ -2139,7 +2131,6 @@ extern NSString *const PPE_OPEN_KEY;
 -(void)switchBOE:(UISwitch *)sw {
     BOOL isOn = [self.class isBOEOn];
     [[NSUserDefaults standardUserDefaults] setBool:!isOn forKey:BOE_OPEN_KEY];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     
     if(sw && [self.class isPPEOn]) {
         [self switchPPE:nil];

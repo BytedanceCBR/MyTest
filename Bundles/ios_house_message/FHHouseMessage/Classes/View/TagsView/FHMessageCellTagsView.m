@@ -11,11 +11,12 @@
 #import "FHMessageCellTagsViewLayout.h"
 #import "FHMessageTagViewCell.h"
 #import <Masonry.h>
+#import <ByteDanceKit.h>
 
 @interface FHMessageCellTagsView()<UICollectionViewDelegate, UICollectionViewDataSource>
 @property (nonatomic, strong) UICollectionView  *collectionView;
 @property (nonatomic, strong) FHMessageCellTagsViewLayout *layout;
-@property (nonatomic, strong) NSArray<FHMessageCellTagModel *> *tags;
+@property (nonatomic, copy) NSArray<FHMessageCellTagModel *> *tags;
 @end
 
 @implementation FHMessageCellTagsView
@@ -78,7 +79,7 @@
 - (__kindof UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     FHMessageTagViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:[FHMessageTagViewCell reuseIdentifier] forIndexPath:indexPath];
     if(indexPath.row >= 0 && indexPath.row < self.tags.count) {
-        FHMessageCellTagModel *tag = self.tags[indexPath.row];
+        FHMessageCellTagModel *tag = [self.tags btd_objectAtIndex:indexPath.row];
         [cell updateWithTag:tag];
     }
     return cell;
