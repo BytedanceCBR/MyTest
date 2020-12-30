@@ -165,8 +165,8 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 #pragma mark  埋点
 - (void)applicationDidEnterBackground:(NSNotification *)notification {
-    if (self.houseType == FHHouseTypeSecondHandHouse) {
-      
+    if (self.isSelectedItem) {
+        [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
     }
 }
 

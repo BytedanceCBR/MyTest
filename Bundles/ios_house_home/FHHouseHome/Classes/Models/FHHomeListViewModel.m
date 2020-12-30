@@ -238,11 +238,22 @@
         }
     }
     
+    [self setSelectedItemVC];
+    
     [self setUpSubtableIndex:indexValue];
     
     [self updateIndexChangedScrollStatus];
     
     [self bindItemVCTrace];
+}
+
+///给推荐列表传递一个被选中的状态
+- (void)setSelectedItemVC {
+    for (FHHomeItemViewController *vc in self.itemsVCArray) {
+        if ([vc isKindOfClass:[FHHomeItemViewController class]]) {
+            vc.isSelectedItem = (vc.houseType == self.houseType);
+        }
+    }
 }
 
 - (void)requestOriginData:(BOOL)isFirstChange isShowPlaceHolder:(BOOL)showPlaceHolder
