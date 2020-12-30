@@ -673,8 +673,6 @@
     };
 }
 
-#pragma mark - show notify
-
 -(void)showErrorMaskView
 {
 

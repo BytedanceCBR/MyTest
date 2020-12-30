@@ -9,6 +9,7 @@
 #import "FHSingleImageInfoCellModel.h"
 #import "FHCommonDefines.h"
 #import <UIDevice+BTDAdditions.h>
+#import "FHHouseCardStatusManager.h"
 
 @interface FHHouseListRentCell()
 
@@ -36,7 +37,7 @@
     BOOL isLastCell = NO;
     if([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
-        isLastCell = model.isLastCell;
+        //isLastCell = model.isLastCell;
         CGFloat reasonHeight = [model showRecommendReason] ? [self recommendReasonHeight] : 0;
         return (isLastCell ? 108 : 88) + reasonHeight;
     }
@@ -48,13 +49,6 @@
     [self.mainImageView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(12);
     }];
-    self.houseMainImageBackView.backgroundColor = [UIColor whiteColor];
-    [self.houseMainImageBackView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.mainImageView).offset(3);
-        make.left.mas_equalTo(self.mainImageView).offset(3);
-        make.right.mas_equalTo(self.mainImageView).offset(-3);
-        make.bottom.mas_equalTo(self.mainImageView).offset(-3);
-    }];
     [self.contentView addSubview:self.distanceLabel];
     [self.distanceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainTitleLabel);
@@ -64,10 +58,27 @@
     self.distanceLabel.hidden = YES;
 }
 
+- (void)refreshOpacityWithData:(id)data {
+    if (![data isKindOfClass:[FHSearchHouseItemModel class]]) {
+        return;
+    }
+    FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+    CGFloat opacity = 1;
+    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
+        opacity = FHHouseCardReadOpacity;
+    }
+    self.mainTitleLabel.layer.opacity = opacity;
+    self.subTitleLabel.layer.opacity = opacity;
+    self.tagLabel.layer.opacity = opacity;
+    self.distanceLabel.layer.opacity = opacity;
+}
+
 - (void)refreshWithData:(id)data {
     if (![data isKindOfClass:[FHSearchHouseItemModel class]]) {
         return;
     }
+    self.model = data;
+    [self refreshOpacityWithData:data];
     FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
     NSAttributedString *attributeString = nil;
     if (model.reasonTags.count > 0) {

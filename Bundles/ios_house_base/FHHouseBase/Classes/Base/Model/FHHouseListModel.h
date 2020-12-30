@@ -54,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *openUrl;
 @property(nonatomic, copy)void (^clickRightBlock)(NSString *openUrl);
 
+
 @end
 
 @interface FHHouseListModel : NSObject

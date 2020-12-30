@@ -23,7 +23,7 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         [self setupUI];
         [self setupConstraints];
-        self.contentView.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
+        self.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
     }
     return self;
 }
@@ -36,8 +36,8 @@
     [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
-        make.top.mas_equalTo(10);
-        make.bottom.mas_equalTo(0);
+        make.top.mas_equalTo(5);
+        make.bottom.mas_equalTo(-5);
     }];
 }
 
@@ -55,6 +55,12 @@
     [super setViewModel:viewModel];
     if ([viewModel isKindOfClass:[FHHouseNeighborhoodCardViewModel class]]) {
         self.cardView.viewModel = (FHHouseNeighborhoodCardViewModel *)viewModel;
+        [self.cardView refreshOpacityWithData:viewModel];
+        FHHouseNeighborhoodCardViewModel *neighborhoodViewModel = (FHHouseNeighborhoodCardViewModel *)viewModel;
+        __weak typeof(self) wSelf = self;
+        neighborhoodViewModel.opacityDidChange = ^{
+            [wSelf.cardView refreshOpacityWithData:wSelf.viewModel];
+        };
     }
 }
 

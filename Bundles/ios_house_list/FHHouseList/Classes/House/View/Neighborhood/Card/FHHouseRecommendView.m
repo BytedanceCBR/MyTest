@@ -52,7 +52,7 @@
 
 - (void)setupConstraints {
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-15);
+        make.right.mas_equalTo(0);
         make.left.mas_equalTo(4);
         make.bottom.mas_equalTo(-28);
         make.height.mas_equalTo(1);
@@ -68,6 +68,12 @@
         make.height.mas_equalTo(10);
         make.right.mas_equalTo(0);
     }];
+}
+
+- (void)refreshOpacity:(CGFloat)opacity {
+    if (!self.hidden) {
+        self.recommendLabel.layer.opacity = opacity;
+    }
 }
 
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {

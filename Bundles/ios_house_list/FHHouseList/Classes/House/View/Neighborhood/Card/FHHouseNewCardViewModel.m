@@ -21,6 +21,7 @@
 #import "FHHouseBridgeManager.h"
 #import "FHHouseNeighborAgencyViewModel.h"
 #import "FHHouseReserveAdviserViewModel.h"
+#import "FHHouseCardStatusManager.h"
 
 @interface FHHouseNewCardViewModel()
 
@@ -46,6 +47,8 @@
 
 @property (nonatomic, assign) BOOL hasVideo;
 
+@property (nonatomic, copy) NSString *houseId;
+
 @end
 
 @implementation FHHouseNewCardViewModel
@@ -67,6 +70,7 @@
             self.propertyText = item.propertyTag.content;
             self.propertyBorderColor = item.propertyTag.borderColor;
             self.tagImageModel = item.tagImage.firstObject;
+            self.houseId = item.id;
         } else if ([model isKindOfClass:[FHHouseListBaseItemModel class]]) {
             FHHouseListBaseItemModel *item = (FHHouseListBaseItemModel *)model;
             _recommendViewModel = [[FHHouseRecommendViewModel alloc] initWithModel:item.advantageDescription];
@@ -79,13 +83,23 @@
             self.propertyBorderColor = item.propertyTag.borderColor;
             self.hasVr = item.vrInfo.hasVr;
             self.hasVideo = !self.hasVr && item.videoInfo.hasVideo;
+            self.houseId = item.houseid;
         }
     }
     return self;
 }
 
+- (CGFloat)opacity {
+    CGFloat opacity = 1;
+    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:self.houseId withHouseType:FHHouseTypeNewHouse]) {
+        opacity = FHHouseCardReadOpacity;
+    }
+    return opacity;
+}
+
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        [[FHHouseCardStatusManager sharedInstance] readHouseId:self.houseId withHouseType:FHHouseTypeNewHouse];
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
         NSString *urlStr = nil;
         NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];
@@ -112,6 +126,9 @@
                 @"biz_trace": [model bizTrace] ? : UT_BE_NULL
             }];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+        if (self.opacityDidChange) {
+            self.opacityDidChange();
         }
     }
 }

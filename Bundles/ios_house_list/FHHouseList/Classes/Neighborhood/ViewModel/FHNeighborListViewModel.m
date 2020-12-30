@@ -235,7 +235,7 @@
                         break;
                 }
                 if ([identifier length] > 0) {
-                    FHHouseBaseUsuallyCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+                    FHHouseBaseCommonCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
                     [cell refreshWithData:cellModel];
                     return cell;
                 }
