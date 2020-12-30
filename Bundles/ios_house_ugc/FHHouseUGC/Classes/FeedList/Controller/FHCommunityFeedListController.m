@@ -278,7 +278,7 @@
 }
 
 - (void)scrollToTopAndRefresh {
-    if(self.viewModel.isRefreshingTip || self.isLoadingData){
+    if(self.isLoadingData){
         return;
     }
     [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];

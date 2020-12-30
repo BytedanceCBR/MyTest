@@ -222,7 +222,7 @@
 }
 
 - (void)scrollToTopAndRefresh {
-    if(self.viewModel.isRefreshingTip || self.isLoadingData || self.dataList.count <= 0){
+    if( self.isLoadingData || self.dataList.count <= 0){
         return;
     }
     

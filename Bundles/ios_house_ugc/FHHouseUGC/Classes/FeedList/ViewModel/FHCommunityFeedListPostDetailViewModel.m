@@ -201,7 +201,6 @@
     if(self.viewController.tableViewNeedPullDown){
         // 下拉刷新
         [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
-            wself.isRefreshingTip = NO;
             [wself requestData:YES first:NO];
         }];
     }
@@ -221,11 +220,6 @@
     
     self.viewController.needReloadData = NO;
     self.viewController.isLoadingData = YES;
-    
-    if(self.isRefreshingTip){
-        [self.tableView finishPullDownWithSuccess:YES];
-        return;
-    }
     
     if(isFirst){
         self.tableView.scrollEnabled = NO;
