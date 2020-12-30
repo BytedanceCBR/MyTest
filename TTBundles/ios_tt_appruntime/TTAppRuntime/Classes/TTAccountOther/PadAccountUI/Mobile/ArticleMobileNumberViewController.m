@@ -366,7 +366,6 @@
     
     TTAccountManager.draftMobile = self.mobileField.text;
     
-    @ArticleTipAndReturnIFNetworkNotOK;
     switch (self.usingType) {
         case ArticleMobileNumberUsingTypeBind: {
             /// 绑定
