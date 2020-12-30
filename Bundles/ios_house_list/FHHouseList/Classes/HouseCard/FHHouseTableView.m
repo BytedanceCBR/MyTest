@@ -116,6 +116,62 @@
     return [self getCellClassWithViewModel:viewModel];
 }
 
+- (NSObject<FHHouseNewComponentViewModelProtocol> *)getHeaderViewModelAtSection:(NSInteger)section {
+    NSArray *headerList = nil;
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(fhHouse_headerList)]) {
+        headerList = [self.fhHouse_dataSource fhHouse_headerList];
+    }
+    
+    if (section < 0 || section >= headerList.count) return nil;
+    NSObject *headerItem = [headerList btd_objectAtIndex:section];
+    if (![headerItem conformsToProtocol:@protocol(FHHouseNewComponentViewModelProtocol)]) return nil;
+    return (NSObject<FHHouseNewComponentViewModelProtocol> *)headerItem;
+}
+
+- (Class)getHeaderClassWithViewModel:(NSObject<FHHouseNewComponentViewModelProtocol> *)viewModel {
+    if (viewModel == nil) return nil;
+    
+    NSString *itemClassName = NSStringFromClass(viewModel.class);
+    if (itemClassName == nil) return nil;
+    
+    NSDictionary *supportHeaderStyles = nil;
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(fhHouse_supportHeaderStyles)]) {
+        supportHeaderStyles = [self.fhHouse_dataSource fhHouse_supportHeaderStyles];
+    }
+    
+    NSString *headerClassName = [supportHeaderStyles btd_objectForKey:itemClassName default:nil];
+    Class headerClass = NSClassFromString(headerClassName);
+    return headerClass;
+}
+
+
+- (NSObject<FHHouseNewComponentViewModelProtocol> *)getFooterViewModelAtSection:(NSInteger)section {
+    NSArray *footerList = nil;
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(fhHouse_footerList)]) {
+        footerList = [self.fhHouse_dataSource fhHouse_footerList];
+    }
+    
+    if (section < 0 || section >= footerList.count) return nil;
+    NSObject *item = [footerList btd_objectAtIndex:section];
+    if (![item conformsToProtocol:@protocol(FHHouseNewComponentViewModelProtocol)]) return nil;
+    return (NSObject<FHHouseNewComponentViewModelProtocol> *)item;
+}
+
+- (Class)getFooterClassWithViewModel:(NSObject<FHHouseNewComponentViewModelProtocol> *)viewModel {
+    if (viewModel == nil) return nil;
+    
+    NSString *itemClassName = NSStringFromClass(viewModel.class);
+    if (itemClassName == nil) return nil;
+    
+    NSDictionary *supportStyles = nil;
+    if ([self.fhHouse_dataSource respondsToSelector:@selector(fhHouse_supportFooterStyles)]) {
+        supportStyles = [self.fhHouse_dataSource fhHouse_supportFooterStyles];
+    }
+    
+    NSString *className = [supportStyles btd_objectForKey:itemClassName default:nil];
+    Class footerClass = NSClassFromString(className);
+    return footerClass;
+}
 
 #pragma mark - UITableViewDataSource
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -175,20 +231,48 @@
     return [cellClass viewHeightWithViewModel:viewModel];
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    if ([self.customDelegate respondsToSelector:@selector(tableView:heightForHeaderInSection:)]) {
-        return [self.customDelegate tableView:tableView heightForHeaderInSection:section];
-    }
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = [self getHeaderViewModelAtSection:section];
+    if (viewModel == nil) return nil;
     
-    return CGFLOAT_MIN;
+    Class headerClass = [self getHeaderClassWithViewModel:viewModel];
+    if (headerClass == nil) return nil;
+    
+    UIView<FHHouseNewComponentViewProtocol> *headerView = [[headerClass alloc] init];
+    headerView.viewModel = viewModel;
+    return headerView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = [self getHeaderViewModelAtSection:section];
+    if (viewModel == nil) return CGFLOAT_MIN;
+    
+    Class headerClass = [self getHeaderClassWithViewModel:viewModel];
+    if (headerClass == nil) return CGFLOAT_MIN;
+    
+    return [headerClass viewHeightWithViewModel:viewModel];
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = [self getFooterViewModelAtSection:section];
+    if (viewModel == nil) return nil;
+    
+    Class footerClass = [self getFooterClassWithViewModel:viewModel];
+    if (footerClass == nil) return nil;
+    
+    UIView<FHHouseNewComponentViewProtocol> *footerView = [[footerClass alloc] init];
+    footerView.viewModel = viewModel;
+    return footerView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    if ([self.customDelegate respondsToSelector:@selector(tableView:heightForFooterInSection:)]) {
-        return [self.customDelegate tableView:tableView heightForFooterInSection:section];
-    }
+    NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = [self getFooterViewModelAtSection:section];
+    if (viewModel == nil) return CGFLOAT_MIN;
     
-    return CGFLOAT_MIN;
+    Class footerClass = [self getFooterClassWithViewModel:viewModel];
+    if (footerClass == nil) return CGFLOAT_MIN;
+    
+    return [footerClass viewHeightWithViewModel:viewModel];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

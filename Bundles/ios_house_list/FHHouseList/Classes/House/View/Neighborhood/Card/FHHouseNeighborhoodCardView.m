@@ -149,6 +149,16 @@ static const CGFloat StateInfoHeight = 18.0f;
     return (FHHouseNeighborhoodCardViewModel *)self.viewModel;
 }
 
+- (void)refreshOpacityWithData:(id)viewModel {
+    if (![viewModel isKindOfClass:[FHHouseNeighborhoodCardViewModel class]]) {
+        return;
+    }
+    CGFloat opacity = ((FHHouseNeighborhoodCardViewModel *)viewModel).opacity;
+    [self.titleAndTagView refreshOpacity:opacity];
+    self.subtitleLabel.layer.opacity = opacity;
+    self.stateInfoLabel.layer.opacity = opacity;
+}
+
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
     [self.leftImageView setImageModel:self.cardViewModel.leftImageModel];
