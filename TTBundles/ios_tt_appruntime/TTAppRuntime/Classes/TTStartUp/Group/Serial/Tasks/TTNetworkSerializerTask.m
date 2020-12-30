@@ -220,15 +220,13 @@ DEC_TASK("TTNetworkSerializerTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+6);
         // 设置BOE请求头
         BOOL isBOE = [TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"BOE_OPEN_KEY"];
         if (isBOE) {
-            [[TTNetworkManager shareInstance] addRequestFilterBlock:^(TTHttpRequest *request) {
-                NSMutableDictionary *headers = [NSMutableDictionary dictionary];
-                if(request.allHTTPHeaderFields.count) {
-                    [headers addEntriesFromDictionary:request.allHTTPHeaderFields];
-                }
-                [headers setObject:@"prod" forKey:@"X-Tt-Env"];
-                [headers setObject:@"1" forKey:@"X-Use-Boe"];
-                request.allHTTPHeaderFields = headers;
-            }];
+            NSMutableDictionary *headers = [NSMutableDictionary dictionary];
+            if(request.allHTTPHeaderFields.count) {
+                [headers addEntriesFromDictionary:request.allHTTPHeaderFields];
+            }
+            [headers setObject:@"prod" forKey:@"X-Tt-Env"];
+            [headers setObject:@"1" forKey:@"X-Use-Boe"];
+            request.allHTTPHeaderFields = headers;
         }
     }];
 //    [TTNetworkManager shareInstance].requestFilterBlock = ^(TTHttpRequest *request){
