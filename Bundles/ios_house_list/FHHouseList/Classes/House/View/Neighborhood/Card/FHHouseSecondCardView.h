@@ -11,7 +11,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseSecondCardView : FHHouseNewComponentView
 
+
+- (void)resumeVRIcon;
+
 - (instancetype)initWithLeftMargin:(CGFloat)left rightMargin:(CGFloat)right;
+
+- (void)refreshOpacityWithData:(id)viewModel;
 
 @end
 

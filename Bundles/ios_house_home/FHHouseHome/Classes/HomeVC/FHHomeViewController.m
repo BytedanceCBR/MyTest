@@ -7,7 +7,6 @@
 
 #import "FHHomeViewController.h"
 #import "FHHomeListViewModel.h"
-#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHEnvContext.h"
 #import "FHHomeCellHelper.h"
 #import "FHHomeConfigManager.h"
@@ -41,6 +40,7 @@
 #import "NSObject+FHTracker.h"
 #import "FHUserTracker.h"
 #import "FHHomeRenderFlow.h"
+#import "FHTrackingManager.h"
 #import "FHFirstPageManager.h"
 #import <BytedanceKit.h>
 
@@ -56,13 +56,13 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) BOOL isRefreshing;
 @property (nonatomic, assign) BOOL isShowToasting;
 @property (nonatomic, strong) ArticleListNotifyBarView * notifyBar;
-@property (nonatomic) BOOL adColdHadJump;
+//@property (nonatomic) BOOL adColdHadJump;
 @property (nonatomic) BOOL adUGCHadJump;
 @property (nonatomic, strong) FHHomeSearchPanelViewModel *panelVM;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
-@property (nonatomic, assign) NSInteger configTime;
+//@property (nonatomic, assign) NSInteger configTime;
 
 @end
 
@@ -73,7 +73,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self = [super init];
     if (self) {
         _isMainTabVC = YES;
-        _configTime = 2;
+//        _configTime = 2;
         [[FHHomeRenderFlow sharedInstance] traceHomeInit];
         FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:@"maintab" withUrl:@"" withTabName:currentDataModel.jumpPageOnStartup withPriority:0];
@@ -89,7 +89,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
     self.ttTrackStayEnable = YES;
     self.isRefreshing = NO;
-    self.adColdHadJump = NO;
+//    self.adColdHadJump = NO;
     self.adUGCHadJump = NO;
     self.automaticallyAdjustsScrollViewInsets = NO;
     [FHEnvContext sharedInstance].isShowingHomeHouseFind = YES;
@@ -114,46 +114,56 @@ static CGFloat const kSectionHeaderHeight = 38;
             self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
         }
     }];
+
     WeakSelf;
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         StrongSelf;
         //开屏广告启动不会展示，保留逻辑代码
-        self.configTime--;
-        if (self.configTime != 0) {
+        FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+        if (currentDataModel.isFromLocalCache) {
             return;
         }
-        if (!self.adColdHadJump) {
-            self.adColdHadJump = YES;
-            FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
-            if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]] && currentDataModel.jump2AdRecommend.length > 0) {
+//        self.configTime--;
+//        if (self.configTime != 0) {
+//            return;
+//        }
+
+//        if (!self.adColdHadJump) {
+//            self.adColdHadJump = YES;
+//
+        if ([currentDataModel.jump2AdRecommend isKindOfClass:[NSString class]] && currentDataModel.jump2AdRecommend.length > 0) {
+            static dispatch_once_t onceToken;
+            dispatch_once(&onceToken, ^{
                 TTTabBarController *topVC = [TTUIResponderHelper topmostViewController];
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
-                            NSURL *url = [NSURL btd_URLWithString:currentDataModel.jump2AdRecommend];
-                            NSString *pageType = url.host;
-                            if ([pageType isEqualToString:@"house_list"]) {
-                                NSString *houseType = [[url btd_queryItems] btd_stringValueForKey:@"house_type" default:@"2"];
-                                pageType = [NSString stringWithFormat:@"%@&house_type=%@", pageType, houseType];
-                            }
-                            [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:pageType withUrl:currentDataModel.jump2AdRecommend withTabName:@"" withPriority:1];
-                            [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
-                            if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
-                                //通勤找房
-                                [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
-                            }else
-                            {
-                                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
-                            }
+                    if ([topVC tabBarIsVisible] && !topVC.tabBar.hidden) {
+                        NSURL *url = [NSURL btd_URLWithString:currentDataModel.jump2AdRecommend];
+                        NSString *pageType = url.host;
+                        if ([pageType isEqualToString:@"house_list"]) {
+                            NSString *houseType = [[url btd_queryItems] btd_stringValueForKey:@"house_type" default:@"2"];
+                            pageType = [NSString stringWithFormat:@"%@&house_type=%@", pageType, houseType];
                         }
-                        [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
-                    });
+                        [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:pageType withUrl:currentDataModel.jump2AdRecommend withTabName:@"" withPriority:1];
+                        [self traceJump2AdEvent:currentDataModel.jump2AdRecommend];
+                        if ([currentDataModel.jump2AdRecommend containsString:@"://commute_list"]){
+                            //通勤找房
+                            [[FHCommuteManager sharedInstance] tryEnterCommutePage:currentDataModel.jump2AdRecommend logParam:nil];
+                        }else
+                        {
+                            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:currentDataModel.jump2AdRecommend]];
+                        }
+                    }
+                    [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
                 });
-            } else {
-                [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
-            }
+            });
+        } else {
+            [[FHFirstPageManager sharedInstance] sendTrace]; //上报用户第一次感知的页面埋点
         }
+        //        }
     }];
+    
+    ///尝试弹出IDFA引导弹窗及授权弹窗
+    [self showTrackingAuthenticationPopup];
 }
 
 - (void)bindIndexChangedBlock
@@ -221,18 +231,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (!configModel) {
         [self tt_startUpdate];
     }
-    
-    if (self.notifyBar) {
-        [self.notifyBar removeFromSuperview];
-    }
-    
-    self.notifyBar = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.notifyBar];
-    
-    [self.notifyBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.mainTableView);
-        make.height.mas_equalTo(32);
-    }];
 }
 
 #pragma mark - notifications
@@ -274,51 +272,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
--(void)showNotify:(NSString *)message
-{
-    //如果首页没有显示，则不提示tip
-    if (!self.isShowing) {
-        return;
-    }
-    
-    [self hideImmediately];
-    
-    self.isShowRefreshTip = YES;
-    
-    UIEdgeInsets inset = self.mainTableView.contentInset;
-    inset.top = 32;
-    self.mainTableView.contentInset = inset;
-    WeakSelf;
-    [self.notifyBar showMessage:message
-              actionButtonTitle:@""
-                      delayHide:YES
-                       duration:1.8
-            bgButtonClickAction:nil
-         actionButtonClickBlock:nil
-                   didHideBlock:nil
-                  willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
-                      [UIView animateWithDuration:0.3 animations:^{
-                          UIEdgeInsets inset = self.mainTableView.contentInset;
-                          inset.top = 0;
-                          self.mainTableView.contentInset = inset;
-                          [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-                          self.homeListViewModel.isResetingOffsetZero = NO;
-                      }completion:^(BOOL finished) {
-                          if(!isImmediately){
-                              self.isShowRefreshTip = NO;
-                          }
-                      }];
 
-    }];
-}
-
-- (void)hideImmediately
-{
-    if(!self.notifyBar.hidden){
-        [self.notifyBar hideImmediately];
-        self.isShowRefreshTip = NO;
-    }
-}
 
 - (void)retryLoadData
 {
@@ -427,12 +381,17 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [TTSandBoxHelper setAppFirstLaunchForAd];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
     
     [self bindIndexChangedBlock];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [TTSandBoxHelper setAppFirstLaunchForAd];
 }
 
 
@@ -529,7 +488,7 @@ static CGFloat const kSectionHeaderHeight = 38;
         _scrollView = [[FHHomeBaseScrollView alloc] init];
         _scrollView.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [[FHHomeCellHelper sharedInstance] heightForFHHomeListHouseSectionHeight]);
         _scrollView.pagingEnabled = YES;
-        _scrollView.bounces = NO;
+        _scrollView.bounces = YES;
 //        _scrollView.decelerationRate = 0.5;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
@@ -546,6 +505,12 @@ static CGFloat const kSectionHeaderHeight = 38;
 #pragma mark - Tracker相关
 - (NSString *)fh_pageType {
     return @"maintab";
+}
+
+#pragma mark - IDFA授权弹窗
+
+- (void)showTrackingAuthenticationPopup {
+    [[FHTrackingManager sharedInstance] showTrackingServicePopupInHomePage:YES];
 }
 
 @end

@@ -231,6 +231,29 @@
     }];
 }
 
+- (void)refreshOpacityWithData:(id)data {
+    CGFloat opacity = 1;
+    NSAttributedString *attributeString;
+    if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
+        if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
+            opacity = FHHouseCardReadOpacity;
+        }
+        attributeString = [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152 withOpacity:opacity];
+    } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
+        FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
+        if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
+            opacity = FHHouseCardReadOpacity;
+        }
+        attributeString = [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152 withOpacity:opacity];
+    }
+    self.mainTitleLabel.layer.opacity = opacity;
+    self.subTitleLabel.layer.opacity = opacity;
+    self.tagLabel.attributedText = attributeString;
+    self.bottomRecommendLabel.layer.opacity = opacity;
+    self.propertyTagLabel.layer.opacity = opacity;
+}
+
 - (void)refreshWithData:(id)data {
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
@@ -273,6 +296,7 @@
         [self updateAdvantage:model];
         [self updateVr:model.vrInfo.hasVr Video:model.videoInfo.hasVideo];
     }
+    [self refreshOpacityWithData:data];
 }
 
 - (void)resumeVRIcon

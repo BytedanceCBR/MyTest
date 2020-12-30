@@ -60,7 +60,7 @@ static FHCombineChannelSingleton* _instance;
         NSInteger count = [memo unsignedIntegerValue];
         return @(count += [each.unread integerValue]);
     }];
-    [[FHEnvContext sharedInstance].messageManager setUnreadSystemMsgCount:[count integerValue]];
+    [[FHEnvContext sharedInstance].messageManager writeUnreadSystemMsgCount:[count integerValue]];
 
     NSMutableArray *combineChannels = [NSMutableArray array];
     [combineChannels addObjectsFromArray:channels];

@@ -145,8 +145,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     if (model.extraInfo) {
         FHDetailExtarInfoCorrectingRowView *rowView = nil;
         if (model.extraInfo.neighborhoodInfo) {
-            rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
-            [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
+            rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero];
+            [rowView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jump2Page:)]];
             [rowView updateWithNeighborhoodInfoData:model.extraInfo.neighborhoodInfo];
             [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
@@ -155,8 +155,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             lastView = rowView;
         }
         if (model.extraInfo.budget) {
-            rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
-            [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
+            rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero];
+            [rowView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jump2Page:)]];
             [rowView updateWithBudgetData:model.extraInfo.budget];
             [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
@@ -166,7 +166,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         }
         if (model.extraInfo.floorInfo) {
             rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
-            [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
+            [rowView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jump2Page:)]];
             [rowView updateWithFloorInfo:model.extraInfo.floorInfo];
             [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
@@ -175,8 +175,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             lastView = rowView;
         }
         if (model.extraInfo.official) {
-            rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
-            [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
+            rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero];
+            [rowView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onRowViewAction:)]];
             [rowView updateWithOfficalData:model.extraInfo.official];
             [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
@@ -186,8 +186,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         }
         
         if (model.extraInfo.houseCertificationInfo) {
-            rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
-            [rowView addTarget:self action:@selector(jump2Page:) forControlEvents:UIControlEventTouchUpInside];
+            rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero];
+            [rowView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jump2Page:)]];
             [rowView updateWithHouseCertificationInfo:model.extraInfo.houseCertificationInfo];
             [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
@@ -199,7 +199,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     if (model.rentExtraInfo.securityInformation) {
         FHDetailExtarInfoCorrectingRowView *rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero ];
-        [rowView addTarget:self action:@selector(onRowViewAction:) forControlEvents:UIControlEventTouchUpInside];
+        [rowView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(onRowViewAction:)]];
         [rowView updateWithSecurityInfo:model.rentExtraInfo.securityInformation];
         [self.containerView addSubview:rowView];
         [self.itemArray addObject:rowView];
@@ -280,14 +280,22 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     return  _shadowImage;
 }
 
--(void)onRowViewAction:(FHDetailExtarInfoCorrectingRowView *)view
+-(void)onRowViewAction:(UIGestureRecognizer *)gesture
 {
+    FHDetailExtarInfoCorrectingRowView *view = gesture.view;
+    if (![view isKindOfClass:[FHDetailExtarInfoCorrectingRowView class]]) {
+        return;
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:DETAIL_SHOW_POP_LAYER_NOTIFICATION object:nil userInfo:@{@"cell":self,@"model":view.data?:@""}];
 }
 
 
-- (void)jump2Page:(FHDetailExtarInfoCorrectingRowView *)view
+- (void)jump2Page:(UIGestureRecognizer *)gesture
 {
+    FHDetailExtarInfoCorrectingRowView *view = gesture.view;
+    if (![view isKindOfClass:[FHDetailExtarInfoCorrectingRowView class]]) {
+        return;
+    }
     NSString *positionStr = @"be_null";
     if ([view.data isKindOfClass:[FHDetailDataBaseExtraNeighborhoodModel class]]) {
         // 二手房详情下发小区字段

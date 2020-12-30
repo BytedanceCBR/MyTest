@@ -119,9 +119,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         self.photoViewPools = [[NSMutableSet alloc] initWithCapacity:5];
         self.videoViewPools = [[NSMutableSet alloc] initWithCapacity:3];
         self.vrViewPools = [[NSMutableSet alloc] initWithCapacity:3];
-        
-        self.ttDisableDragBack = YES;
-        
+                
         _isRotating = NO;
         
         _whiteMaskViewEnable = YES;
@@ -713,7 +711,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             self.currentTypeName = self.rootGroupName[titleIndex];
         }
         
-        self.naviView.titleLabel.text = [NSString stringWithFormat:@"%ld/%d",self.currentIndex - sum.unsignedIntValue + 1,num.unsignedIntValue];
+        self.naviView.titleLabel.text = [NSString stringWithFormat:@"%@ %ld/%d",self.currentTypeName ,self.currentIndex - sum.unsignedIntValue + 1,num.unsignedIntValue];
     }
 }
 
@@ -1699,6 +1697,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         rootViewController = self.topVC;
     }
     [rootViewController addChildViewController:self];
+    rootViewController.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     self.view.alpha = 0;
     _addedToContainer = YES;
@@ -1788,6 +1787,15 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     self.pictureTitleView.hidden = YES;
     self.videoInfoView.hidden = YES;
     
+    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    while (rootViewController.presentedViewController) {
+        rootViewController = rootViewController.presentedViewController;
+    }
+    if (self.topVC) {
+        rootViewController = self.topVC;
+    }
+    rootViewController.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    
     if (self.reachDismissCondition) {
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         
@@ -1836,13 +1844,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             //[showImageView hideGifIfNeeded];
             largeImageView.frame = transBeginFrame;
             
-            UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-            while (rootViewController.presentedViewController) {
-                rootViewController = rootViewController.presentedViewController;
-            }
-            if (self.topVC) {
-                rootViewController = self.topVC;
-            }
+
             UIView * containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
             containerView.backgroundColor = [UIColor blackColor];
             [rootViewController.view addSubview:containerView];

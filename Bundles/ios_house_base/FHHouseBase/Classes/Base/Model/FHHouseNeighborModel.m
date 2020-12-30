@@ -68,6 +68,7 @@
                            @"gaodeLng": @"gaode_lng",
                            @"displayPricePerSqm": @"display_price_per_sqm",
                            @"imprId": @"impr_id",
+                           @"groupId": @"group_id",
                            @"displayBuiltYear": @"display_built_year",
                            @"houseType": @"house_type",
                            @"houseVideo": @"house_video",
@@ -81,6 +82,7 @@
                            @"pricePerSqmNum": @"price_per_sqm_num",
                            @"pricePerSqmUnit": @"price_per_sqm_unit",
                            @"associateInfo": @"associate_info",
+                           @"titleTags": @"title_tags",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

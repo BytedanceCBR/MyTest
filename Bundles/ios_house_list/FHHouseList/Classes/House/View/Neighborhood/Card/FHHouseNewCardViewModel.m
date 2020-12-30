@@ -19,6 +19,9 @@
 #import "FHHouseListViewModel.h"
 #import "FHHouseEnvContextBridge.h"
 #import "FHHouseBridgeManager.h"
+#import "FHHouseNeighborAgencyViewModel.h"
+#import "FHHouseReserveAdviserViewModel.h"
+#import "FHHouseCardStatusManager.h"
 
 @interface FHHouseNewCardViewModel()
 
@@ -44,6 +47,8 @@
 
 @property (nonatomic, assign) BOOL hasVideo;
 
+@property (nonatomic, copy) NSString *houseId;
+
 @end
 
 @implementation FHHouseNewCardViewModel
@@ -65,6 +70,7 @@
             self.propertyText = item.propertyTag.content;
             self.propertyBorderColor = item.propertyTag.borderColor;
             self.tagImageModel = item.tagImage.firstObject;
+            self.houseId = item.id;
         } else if ([model isKindOfClass:[FHHouseListBaseItemModel class]]) {
             FHHouseListBaseItemModel *item = (FHHouseListBaseItemModel *)model;
             _recommendViewModel = [[FHHouseRecommendViewModel alloc] initWithModel:item.advantageDescription];
@@ -77,44 +83,52 @@
             self.propertyBorderColor = item.propertyTag.borderColor;
             self.hasVr = item.vrInfo.hasVr;
             self.hasVideo = !self.hasVr && item.videoInfo.hasVideo;
+            self.houseId = item.houseid;
         }
     }
     return self;
 }
 
+- (CGFloat)opacity {
+    CGFloat opacity = 1;
+    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:self.houseId withHouseType:FHHouseTypeNewHouse]) {
+        opacity = FHHouseCardReadOpacity;
+    }
+    return opacity;
+}
+
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        [[FHHouseCardStatusManager sharedInstance] readHouseId:self.houseId withHouseType:FHHouseTypeNewHouse];
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
         NSString *urlStr = nil;
-        NSNumber *isFirstHavetipNum = [self.context btd_numberValueForKey:@"is_first_havetip"];
-        NSInteger row = indexPath.row;
-        if (isFirstHavetipNum && isFirstHavetipNum.boolValue == NO) {
-            row--;
-        }
+        NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];
+        NSInteger rank = indexPath.row + rankOffset;
         id<FHHouseEnvContextBridge> contextBridge = [[FHHouseBridgeManager sharedInstance]envContextBridge];
         [contextBridge setTraceValue:self.fh_trackModel.originFrom forKey:@"origin_from"];
         [contextBridge setTraceValue:self.fh_trackModel.originSearchId forKey:@"origin_search_id"];
         
         NSMutableDictionary *traceParam = @{}.mutableCopy;
-        traceParam[UT_ENTER_FROM] = self.fh_trackModel.pageType ? : @"be_null";
-        traceParam[UT_ELEMENT_FROM] = @"be_null";
-        traceParam[UT_LOG_PB] = model.logPbWithTags ? : @"be_null";;
-        traceParam[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : @"be_null";
-        traceParam[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : @"be_null";
-        traceParam[@"rank"] = @(row);
+        traceParam[UT_ENTER_FROM] = self.fh_trackModel.pageType ? : UT_BE_NULL;
+        traceParam[UT_ELEMENT_FROM] = self.fh_trackModel.elementType ? : UT_BE_NULL;
+        traceParam[UT_LOG_PB] = model.logPbWithTags ? : UT_BE_NULL;
+        traceParam[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
+        traceParam[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
+        traceParam[@"rank"] = @(rank);
         traceParam[@"card_type"] = @"left_pic";
-        if (model.isRecommendCell) {
-            traceParam[UT_ELEMENT_FROM] = @"search_related";
-        }
+        
         urlStr = [NSString stringWithFormat:@"sslocal://new_house_detail?court_id=%@",model.id];
         if (urlStr.length > 0) {
             NSURL *url = [NSURL URLWithString:urlStr];
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{
                 @"house_type":@(model.houseType.integerValue) ,
                 @"tracer": traceParam,
-                @"biz_trace": [model bizTrace] ? : @"be_null"
+                @"biz_trace": [model bizTrace] ? : UT_BE_NULL
             }];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+        }
+        if (self.opacityDidChange) {
+            self.opacityDidChange();
         }
     }
 }
@@ -129,28 +143,37 @@
 - (void)addHouseShowWithIndexPath:(NSIndexPath *)indexPath {
     if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
-        NSNumber *isFirstHavetipNum = [self.context btd_numberValueForKey:@"is_first_havetip"];
-        NSInteger row = indexPath.row;
-        if (isFirstHavetipNum && isFirstHavetipNum.boolValue == NO) {
-            row--;
-        }
+        NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];
+        NSInteger rank = indexPath.row + rankOffset;
         NSMutableDictionary *tracerDict = [NSMutableDictionary dictionary];
-        tracerDict[@"rank"] = @(row);
-        tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : @"be_null";
-        tracerDict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : @"be_null";
-        tracerDict[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : @"be_null";
-        tracerDict[UT_ELEMENT_TYPE] = self.fh_trackModel.elementType ? : @"be_null";
-        tracerDict[UT_SEARCH_ID] = self.fh_trackModel.searchId ? : @"be_null";
-        tracerDict[@"group_id"] = model.id ? : @"be_null";
-        tracerDict[@"impr_id"] = model.imprId ? : @"be_null";
-        tracerDict[UT_LOG_PB] = model.logPbWithTags ? : @"be_null";
+        tracerDict[@"rank"] = @(rank);
+        tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
+        tracerDict[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
+        tracerDict[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : UT_BE_NULL;
+        tracerDict[UT_ELEMENT_TYPE] = self.fh_trackModel.elementType ? : UT_BE_NULL;
+        tracerDict[UT_SEARCH_ID] = self.fh_trackModel.searchId ? : UT_BE_NULL;
+        tracerDict[@"group_id"] = model.id ? : UT_BE_NULL;
+        tracerDict[@"impr_id"] = model.imprId ? : UT_BE_NULL;
+        tracerDict[UT_LOG_PB] = model.logPbWithTags ? : UT_BE_NULL;
         tracerDict[@"house_type"] = @"new";
-        tracerDict[@"biz_trace"] = [self.model bizTrace] ? : @"be_null";
+        tracerDict[@"biz_trace"] = [self.model bizTrace] ? : UT_BE_NULL;
         tracerDict[@"card_type"] = @"left_pic";
-        if (self.fh_trackModel.elementFrom && ![self.fh_trackModel.elementFrom isEqualToString:@"be_null"]) {
+        if (self.fh_trackModel.elementFrom && ![self.fh_trackModel.elementFrom isEqualToString:UT_BE_NULL]) {
             tracerDict[UT_ELEMENT_FROM] = self.fh_trackModel.elementFrom;
         }
         [FHUserTracker writeEvent:@"house_show" params:tracerDict];
+    }
+}
+
+- (void)adjustIfNeedWithPreviousViewModel:(id<FHHouseCardCellViewModelProtocol>)viewModel {
+    if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
+        if (viewModel == nil) {
+            //如果在首位，topMargin=10
+            model.topMargin = 10;
+        } else {
+            model.topMargin = 5;
+        }
     }
 }
 

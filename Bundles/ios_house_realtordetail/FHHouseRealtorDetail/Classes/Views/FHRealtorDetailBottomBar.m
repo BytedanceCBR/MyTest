@@ -58,14 +58,7 @@
         }
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
-        _contactBtn.layer.cornerRadius = 22;
-        // 阴影颜色
-        _contactBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#fe5500"].CGColor;
-        // 阴影偏移量 默认为(0,3)
-        _contactBtn.layer.shadowOffset = CGSizeMake(0, 8);
-        // 阴影透明度
-        _contactBtn.layer.shadowOpacity = .2;
-        _contactBtn.layer.shadowRadius = 6;
+        _contactBtn.layer.cornerRadius = 20;
         _contactBtn.backgroundColor =[UIColor colorWithHexStr:@"#fe5500"];
         [_contactBtn addTarget:self action:@selector(clickPhone:) forControlEvents:UIControlEventTouchDown];
      
@@ -76,11 +69,7 @@
 - (UIButton *)imChatBtn {
     if (!_imChatBtn) {
         _imChatBtn = [[UIButton alloc] init];
-        _imChatBtn.layer.cornerRadius = 22;
-        _imChatBtn.layer.shadowColor = [UIColor colorWithHexStr:@"#ff9629"].CGColor;
-        _imChatBtn.layer.shadowOffset = CGSizeMake(0, 8);
-        _imChatBtn.layer.shadowOpacity = .2 ;
-        _imChatBtn.layer.shadowRadius = 6;
+        _imChatBtn.layer.cornerRadius = 20;
         _imChatBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
         if ([UIDevice btd_isIPhoneXSeries]) {
             _imChatBtn.titleLabel.font = [UIFont themeFontRegular:14];

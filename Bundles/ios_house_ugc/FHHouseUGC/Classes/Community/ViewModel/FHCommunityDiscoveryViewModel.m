@@ -282,7 +282,13 @@
         self.viewController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
     }
     else{
-        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (self.viewController.segmentControl.sectionTitles.count - 1)){
+        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (CGFloat)(self.viewController.segmentControl.sectionTitles.count - 1)){
+            self.viewController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
+            if (scrollView.contentOffset.x < 0) {
+                _oldX = 0;
+            } else {
+                _oldX = [UIScreen mainScreen].bounds.size.width * (CGFloat)(self.viewController.segmentControl.sectionTitles.count - 1);
+            }
             return;
         }
         
@@ -323,6 +329,8 @@
             page_type = @"hot_discuss_feed";
         }else if (cellModel.type == FHCommunityCollectionCellTypeCustom) {
             page_type = cellModel.category;
+        } else if(cellModel.type == FHCommunityCollectionCellTypeHouseComfortFind) {
+            page_type = @"f_house_finder";
         }
     }
     return page_type;

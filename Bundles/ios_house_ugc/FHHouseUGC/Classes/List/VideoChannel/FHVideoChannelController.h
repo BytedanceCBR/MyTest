@@ -19,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHVideoChannelController : FHBaseViewController<FHUGCFeedListProtocol>
 
 @property(nonatomic, assign) FHCommunityFeedListType listType;
-@property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property(nonatomic, strong) NSArray *dataList;
 //内容分类
 @property(nonatomic, strong) NSString *category;
@@ -66,8 +65,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, assign) NSTimeInterval startMonitorTime;
 @property(nonatomic, assign) BOOL alreadyReportPageMonitor;
 
-- (void)showNotify:(NSString *)message ;
-- (void)showNotify:(NSString *)message completion:(nullable void(^)(void))completion;
 //下拉刷新数据
 - (void)startLoadData;
 //下拉刷新数据,不清之前的数据
@@ -80,8 +77,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)scrollToTopAndRefresh;
 
 - (void)scrollToTopAndRefreshAllData;
-
-- (void)hideImmediately;
 @end
 
 NS_ASSUME_NONNULL_END

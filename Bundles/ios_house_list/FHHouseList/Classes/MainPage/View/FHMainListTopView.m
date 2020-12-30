@@ -21,7 +21,6 @@
 @property(nonatomic , strong) UIView *filterBgView;
 @property(nonatomic , strong) UIView *filterBarView;
 @property(nonatomic , strong) UIView *filterTagsView;
-@property(nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
 @property(nonatomic , strong) UIView       *theBottomView;
 @property(nonatomic , strong) CAShapeLayer *maskLayer;
 @end
@@ -63,8 +62,6 @@
             filterTagsView.top = self.filterBgView.bottom;
             top = filterTagsView.bottom;
         }
-        self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, top, width, NOTIFY_HEIGHT)];
-        [self addSubview:_notifyBarView];
         if (bannerView) {
             [self addSubview:bannerView];
             self.theBottomView = bannerView;
@@ -88,28 +85,11 @@
             [self addSubview:filterTagsView];
             self.theBottomView = filterTagsView;
         }
-        _notifyBarView.hidden = YES;
         self.frame = CGRectMake(0, 0, width, self.theBottomView.bottom);
     }
     return self;
 }
 
--(CGFloat)showNotify:(NSString *)message willCompletion:(void (^)(void))willCompletion
-{
-    if (message.length > 0) {
-        self.height = self.notifyBarView.bottom;
-        [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:^(ArticleListNotifyBarView *barView) {
-            
-        }];
-        if (willCompletion) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                willCompletion();
-            });
-        }
-        return self.notifyBarView.bottom;
-    }
-    return self.theBottomView.bottom;
-}
 
 -(CGFloat)filterTop
 {
@@ -147,10 +127,6 @@
         top = self.filterTagsView.bottom;
         self.theBottomView = self.filterTagsView;
     }
-
-    CGRect notifyBarFrame = _notifyBarView.frame;
-    notifyBarFrame.origin.y = top;
-    _notifyBarView.frame = notifyBarFrame;
     CGRect frame = self.frame;
     frame.size.height = self.theBottomView.bottom;
     self.frame = frame;

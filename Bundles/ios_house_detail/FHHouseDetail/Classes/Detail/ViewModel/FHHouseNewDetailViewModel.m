@@ -438,7 +438,6 @@
     }else{
         [self reloadData];
     }
-    
     [self.detailController updateLayout:model.isInstantData];
 }
 

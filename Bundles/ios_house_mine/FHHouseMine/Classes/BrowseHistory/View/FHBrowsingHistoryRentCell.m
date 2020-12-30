@@ -49,13 +49,6 @@
     [self.mainImageView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(12);
     }];
-    self.houseMainImageBackView.backgroundColor = [UIColor whiteColor];
-    [self.houseMainImageBackView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.mainImageView).offset(3);
-        make.left.mas_equalTo(self.mainImageView).offset(3);
-        make.right.mas_equalTo(self.mainImageView).offset(-3);
-        make.bottom.mas_equalTo(self.mainImageView).offset(-3);
-    }];
     self.opView = [[UIView alloc] init];
     [self.opView setBackgroundColor:[UIColor colorWithRed:170.0/255 green:170.0/255 blue:170.0/255 alpha:0.8]];
     self.opView.layer.shadowOffset = CGSizeMake(4, 6);

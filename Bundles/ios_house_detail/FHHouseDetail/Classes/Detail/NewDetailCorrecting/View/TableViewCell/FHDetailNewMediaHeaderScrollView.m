@@ -169,7 +169,8 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset {
     //房源详情 左滑 超过 52px，松手，进入图片列表页
     if (self.closeInfinite) {
-        if (scrollView.contentOffset.x >= 52 + self.colletionView.frame.size.width * (self.medias.count - 1)) {
+        CGFloat xDeltaValue = scrollView.contentOffset.x - self.colletionView.frame.size.width * (self.medias.count - 1);
+        if (xDeltaValue >= 52 || (xDeltaValue > 0 && velocity.x > 0.5) ) {
             if (self.goToPictureListFrom) {
                 self.goToPictureListFrom(@"view_more_slide");
             }

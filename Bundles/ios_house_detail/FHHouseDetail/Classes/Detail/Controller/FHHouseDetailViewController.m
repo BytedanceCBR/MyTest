@@ -30,6 +30,7 @@
 #import <TTSettingsManager/TTSettingsManager.h>
 #import <FHHouseBase/FHRelevantDurationTracker.h>
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
+#import "FHDetailPlaceHolderView.h"
 
 @interface FHHouseDetailViewController ()<UIGestureRecognizerDelegate>
 
@@ -61,6 +62,8 @@
 @property (nonatomic, assign) BOOL isPhoneCalled;// 新房UGC留资使用
 @property (nonatomic, assign) CGPoint lastContentOffset;
 @property (nonatomic, strong) NSDictionary *extraInfo;
+
+@property (strong, nonatomic) FHDetailPlaceHolderView *placeHolderView;
 
 @property (nonatomic) double initTimeInterval;
 @end
@@ -176,6 +179,10 @@
     });
 }
 
+- (void)hiddenPlaceHolder {
+    self.placeHolderView.hidden = YES;
+    [self.placeHolderView removeFromSuperview];
+}
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.viewModel.contactViewModel refreshMessageDot];
@@ -277,11 +284,12 @@
 - (void)startLoadData {
     if ([TTReachability isNetworkConnected]) {
 //        if (!self.instantData) {
-            [self startLoading];
+//            [self startLoading];
 //        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
+        [self hiddenPlaceHolder];
         //无网就显示蒙层
 //        if (!self.instantData) {
             [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -408,7 +416,11 @@
         make.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.bottomBar.mas_top).offset(-30);
     }];
-    
+    self.placeHolderView = [[FHDetailPlaceHolderView alloc]init];
+    [self.view addSubview:self.placeHolderView];
+    [_placeHolderView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
     [self.view bringSubviewToFront:_navBar];
 }
 
@@ -658,6 +670,7 @@
 
 - (void)configTableView {
     self.tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.tableView.bounces = NO;
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
@@ -830,7 +843,7 @@
         traceParams[@"target_id"] = self.houseId;
         tracerDic[@"star_num"] = @(scoreCount);
         traceParams[@"evaluation_type"] = @(0);
-        [[FHIMConfigManager shareInstance]submitRealtorEvaluation:content scoreCount:scoreCount scoreTags:scoreTags traceParams:traceParams];
+        [[FHIMConfigManager shareInstance] submitRealtorEvaluation:content scoreCount:scoreCount scoreTags:scoreTags traceParams:traceParams completion:nil];
         
         tracerDic[@"click_position"] = @"confirm";
         tracerDic[@"star_num"] = @(scoreCount);

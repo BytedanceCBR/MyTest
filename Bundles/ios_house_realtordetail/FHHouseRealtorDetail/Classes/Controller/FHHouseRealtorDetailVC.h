@@ -11,6 +11,8 @@
 #import "FHCommunityDetailSegmentView.h"
 #import "TTHorizontalPagingView.h"
 #import "TTBadgeNumberView.h"
+#import "FHRealtorDetailBottomBar.h"
+#import "FHBlackmailRealtorBottomBar.h"
 
 @class FHCommunityFeedListController;
 NS_ASSUME_NONNULL_BEGIN
@@ -19,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *tabName;
 @property (nonatomic, strong) FHHouseRealtorDetailHeaderView *headerView;
 @property (nonatomic, strong) FHCommunityDetailSegmentView *segmentView;
+@property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
+@property (nonatomic, strong) FHBlackmailRealtorBottomBar *blackmailReatorBottomBar;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *subTitleLabel;
 @property (nonatomic, strong) UIView *titleContainer;
