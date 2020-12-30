@@ -104,7 +104,9 @@
         if (argumentsDict[@"params"] && argumentsDict[@"report_params"]) {
             
             [[FHFlutterChannels sharedInstance] setPhoneCallBlock:^(BOOL finished) {
-                resultCallBack(@(YES));
+                if(resultCallBack){
+                    resultCallBack(@(YES));
+                }
                 [FHFlutterChannels sharedInstance].phoneCallBlock = nil;
             }];
             
@@ -133,10 +135,14 @@
                 }
             }];
         } else {
-            resultCallBack(nil);
+            if(resultCallBack){
+                resultCallBack(nil);
+            }
         }
     } else {
-        resultCallBack(nil);
+        if(resultCallBack){
+            resultCallBack(nil);
+        }
     }
    
     
