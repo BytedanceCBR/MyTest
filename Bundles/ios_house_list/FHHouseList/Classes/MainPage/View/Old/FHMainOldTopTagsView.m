@@ -204,9 +204,11 @@
     if (isSelected) {
         self.backgroundColor = [UIColor themeOrange2];
         _label.textColor = [UIColor themeOrange1];
+        _label.font = [UIFont themeFontSemibold:12];
     } else {
         self.backgroundColor = [UIColor themeGray8];
         _label.textColor = [UIColor themeGray1];
+        _label.font = [UIFont themeFontRegular:12];
     }
 }
 
