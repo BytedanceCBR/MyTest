@@ -381,7 +381,7 @@
         NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
         [tracer setValue:@"message_list" forKey:@"origin_from"];
         [tracer setValue:@"message_list" forKey:@"enter_from"];
-        NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_group_chat" queryItems:params];
+        NSURL *openUrl = [NSURL btd_URLWithString:@"sslocal://open_group_chat" queryItems:params];
         [self clickImMessageEvent:conv];
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
@@ -391,12 +391,12 @@
         [params setValue:conv.identifier forKey:KSCHEMA_CONVERSATION_ID];
         [params setValue:title forKey:KSCHEMA_CHAT_TITLE];
         NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
-        [tracer setValue:@"message_list" forKey:@"origin_from"];
-        [tracer setValue:@"message_list" forKey:@"enter_from"];
+        tracer[UT_ORIGIN_FROM] = self.viewController.fatherVC.tracerDict[UT_ORIGIN_FROM];
+        tracer[UT_ENTER_FROM] = @"message_weiliao";
         tracer[@"element_from"] = @"be_null";
         tracer[@"log_pb"] = @"be_null";
         tracer[@"origin_search_id"] = self.viewController.tracerModel.originSearchId;
-        NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_single_chat" queryItems:params];
+        NSURL *openUrl = [NSURL btd_URLWithString:@"sslocal://open_single_chat" queryItems:params];
         [self clickImMessageEvent:conv];
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
