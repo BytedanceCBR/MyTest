@@ -348,12 +348,6 @@
                     if(wself.viewController.requestSuccess){
                         wself.viewController.requestSuccess(wself.viewController.hasValidateData);
                     }
-                        
-                    NSString *refreshTip = feedListModel.tips.displayInfo;
-                    if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-                        wself.isRefreshingTip = YES;
-                        [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-                    }
                 });
             });
         }

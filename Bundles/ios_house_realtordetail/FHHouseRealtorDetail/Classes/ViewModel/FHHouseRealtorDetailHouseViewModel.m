@@ -318,7 +318,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
-        FHHomeHouseDataItemsModel *model = self.dataList[indexPath.row -1];
+        FHHomeHouseDataItemsModel *model = self.dataList[indexPath.row];
         [self addHouseShow:model ];
     }
 }

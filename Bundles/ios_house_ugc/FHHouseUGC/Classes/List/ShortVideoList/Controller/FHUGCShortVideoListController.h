@@ -46,8 +46,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)scrollToTopAndRefreshAllData;
 
-- (void)hideImmediately;
-
 - (void)viewAppearForEnterType:(NSInteger)enterType;
 
 - (void)viewDisAppearForEnterType:(NSInteger)enterType;
