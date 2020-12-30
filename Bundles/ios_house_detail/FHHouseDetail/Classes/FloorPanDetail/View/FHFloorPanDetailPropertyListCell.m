@@ -159,7 +159,7 @@
                  rowView.infoLabel.font = [UIFont themeFontMedium:14];
                  rowView.infoLabel.textColor = [UIColor themeGray2];
                  rowView.infoLabel.text = model.baseExtra.court.content;
-                 [rowView addTarget:self action:@selector(jumpToDetailNewPage:) forControlEvents:UIControlEventTouchUpInside];
+                 [rowView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jumpToDetailNewPage:)]];
                  [self.contentView addSubview:rowView];
                  [self.itemArray addObject:rowView];
                  [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -200,7 +200,7 @@
                  rowView.infoLabel.font = [UIFont themeFontMedium:14];
                  rowView.infoLabel.textColor = [UIColor themeGray2];
                  rowView.infoLabel.text = model.baseExtra.address.content;
-                 [rowView addTarget:self action:@selector(jumpToDetailNewAddressPage:) forControlEvents:UIControlEventTouchUpInside];
+                 [rowView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(jumpToDetailNewAddressPage:)]];
                  [self.contentView addSubview:rowView];
                  [self.itemArray addObject:rowView];
                  [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -282,7 +282,7 @@
 }
 
 //跳转新房详情页，如果是从详情页来的，则回到房源详情页，否则跳转详情页
-- (void)jumpToDetailNewPage:(id)sender {
+- (void)jumpToDetailNewPage:(UIGestureRecognizer *)gesture {
     FHFloorPanDetailPropertyListModel *model = (FHFloorPanDetailPropertyListModel *)self.currentData;
     NSMutableDictionary *traceParam = self.baseViewModel.detailTracerDic;
     traceParam[@"enter_from"] = @"house_model_detail";
@@ -301,7 +301,7 @@
 }
 
 //跳转
-- (void)jumpToDetailNewAddressPage:(id)sender {
+- (void)jumpToDetailNewAddressPage:(UIGestureRecognizer *)gesure {
     FHFloorPanDetailPropertyListModel *model = (FHFloorPanDetailPropertyListModel *)self.currentData;
     //地图页调用示例
     NSString *longitude = model.baseExtra.address.gaodeLng;

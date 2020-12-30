@@ -66,7 +66,7 @@
                     // 第1列
                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                     v.tag = 100+idx;
-                    [v addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
+                    [v addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openUrlDidClick:)]];
                     [self.contentView addSubview:v];
                     [self.itemArray addObject:v];
                     [v mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -87,7 +87,7 @@
                     // 第2列
                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                     v.tag = 100+idx;
-                    [v addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
+                    [v addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openUrlDidClick:)]];
                     [self.contentView addSubview:v];
                     [self.itemArray addObject:v];
                     [v mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -118,7 +118,7 @@
             [singles enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                 v.tag = 100+obj.realIndex;
-                [v addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
+                [v addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openUrlDidClick:)]];
                 [self.contentView addSubview:v];
                 [self.itemArray addObject:v];
                 [v mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -150,9 +150,9 @@
 
 }
 
-- (void)openUrlDidClick:(UIControl *)btn
+- (void)openUrlDidClick:(UIGestureRecognizer *)gesture
 {
-    NSInteger index = btn.tag - 100;
+    NSInteger index = gesture.view.tag - 100;
     FHDetailNewPropertyListCellModel *model = (FHDetailNewPropertyListCellModel *)self.currentData;
 
     if (index < 0 || index >= model.baseInfo.count) {

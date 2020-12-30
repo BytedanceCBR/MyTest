@@ -26,7 +26,6 @@
 #import "JSONAdditions.h"
 #import "FHBaseViewController.h"
 #import "UIViewController+TTMovieUtil.h"
-#import "FHIntroduceManager.h"
 #import "TTPushServiceDelegate.h"
 #import <BDALog/BDAgileLog.h>
 #import "FHCHousePushUtils.h"
@@ -117,9 +116,10 @@ static APNsManager *_sharedManager = nil;
         return;
     }
     //当push进来引导页已经在显示了，则关闭
-    if([FHIntroduceManager sharedInstance].isShowing){
-        [[FHIntroduceManager sharedInstance] hideIntroduceView];
-    }
+    //114 删除用户引导页
+//    if([FHIntroduceManager sharedInstance].isShowing){
+//        [[FHIntroduceManager sharedInstance] hideIntroduceView];
+//    }
     //news_notification_view埋点，用户在后台点击推送时上报，如果有rid则上报rid
     NSString *rid = [userInfo btd_stringValueForKey:@"rid"];
     NSString *postBack = [userInfo btd_stringValueForKey:@"post_back"];
