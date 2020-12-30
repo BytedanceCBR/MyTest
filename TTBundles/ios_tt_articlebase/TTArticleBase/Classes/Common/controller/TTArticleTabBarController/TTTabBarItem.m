@@ -159,11 +159,9 @@ static TTPersistence *tabBarItemPersistence;
 }
 
 - (void)layoutBadgeView {
-    CGFloat paddingX = self.ttBadgeView.badgeNumber == -1 ? 10.f : 0;
-    if(self.ttBadgeView.badgeNumber == TTBadgeNumberPoint){
-        paddingX = -7;
-    }
-    self.ttBadgeView.centerX = ceilf(self.imageView.right) + paddingX;
+    CGSize badgeSize = [self.ttBadgeView sizeThatFits:self.imageView.size];
+    CGFloat xOffset = 4;
+    self.ttBadgeView.centerX = self.imageView.centerX + xOffset + badgeSize.width / 2.0f;
     CGFloat offsetV = self.ttBadgeOffsetV != MAXFLOAT ? self.ttBadgeOffsetV : offsetRedDotV;
     self.ttBadgeView.centerY = ceilf(self.imageView.top + offsetV);
 }
