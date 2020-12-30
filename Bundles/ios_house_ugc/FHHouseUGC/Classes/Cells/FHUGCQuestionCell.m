@@ -97,16 +97,7 @@
     //设置userInfo
     [self updateUserInfoView:cellModel];
     
-    self.bottomView.cellModel = cellModel;
-    if (![cellModel.desc.string isEqualToString:@"0个回答"]) {
-        self.bottomView.descLabel.attributedText = cellModel.desc;
-    }else {
-        self.bottomView.descLabel.attributedText = [[NSAttributedString alloc]initWithString:@""];;
-    }
-    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-    self.bottomView.position.text = cellModel.community.name;
-    [self.bottomView showPositionView:showCommunity];
-    [_bottomView updateIsQuestion];
+    [self.bottomView refreshWithData:cellModel];
 }
 
 - (void)updateUserInfoView:(FHFeedUGCCellModel *)cellModel {

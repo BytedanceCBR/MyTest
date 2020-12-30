@@ -14,8 +14,6 @@
 #import "UIFont+House.h"
 #import "FHArticleLayout.h"
 
-#define bottomViewHeight 35
-
 @interface FHArticleCell ()
 
 @property(nonatomic ,strong) TTUGCAsyncLabel *contentLabel;
@@ -74,7 +72,7 @@
     _imageViewContainer.hidden = YES;
     [self.contentView addSubview:_imageViewContainer];
     
-    self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
+    self.bottomView = [[FHArticleCellBottomView alloc] init];
     [self.contentView addSubview:_bottomView];
     
     for (NSInteger i = 0; i < 3; i++) {

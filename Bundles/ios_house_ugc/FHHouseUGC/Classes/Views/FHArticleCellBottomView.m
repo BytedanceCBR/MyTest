@@ -16,9 +16,15 @@
 
 @interface FHArticleCellBottomView ()
 
+@property(nonatomic ,strong) UILabel *position;
+@property(nonatomic ,strong) UILabel *descLabel;
+@property(nonatomic ,strong) UIButton *moreBtn;
+@property(nonatomic ,strong) UIButton *answerBtn;
+@property(nonatomic ,strong) UIView *positionView;
 @property(nonatomic ,strong) UIView *bottomSepView;
 @property(assign ,nonatomic) BOOL showPositionView;
 @property(nonatomic ,strong) FHUGCMoreOperationManager *moreOperationManager;
+@property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 
 @end
 
@@ -28,9 +34,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         _moreOperationManager = [[FHUGCMoreOperationManager alloc] init];
+        _showPositionView = NO;
         [self initViews];
         [self initConstraints];
-        _showPositionView = NO;
     }
     return self;
 }
@@ -120,15 +126,6 @@
 
 - (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
     self.cellModel = cellModel;
-    self.descLabel.attributedText = cellModel.desc;
-    
-    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-    self.position.text = cellModel.community.name;
-    [self showPositionView:showCommunity];
-}
-
-- (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
-    _cellModel = cellModel;
     
     self.moreBtn.hidden = cellModel.hiddenMore;
     
@@ -136,6 +133,16 @@
     self.bottomSepView.top = self.height - cellModel.bottomLineHeight;
     self.bottomSepView.height = cellModel.bottomLineHeight;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
+    
+    self.descLabel.attributedText = cellModel.desc;
+    
+    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
+    self.position.text = cellModel.community.name;
+    [self showPositionView:showCommunity];
+    
+    if(cellModel.cellSubType == FHUGCFeedListCellSubTypeQuestion){
+        [self updateIsQuestion];
+    }
 }
 
 - (void)showPositionView:(BOOL)isShow {
@@ -208,6 +215,11 @@
 }
 
 - (void)updateIsQuestion {
+    if (![self.cellModel.desc.string isEqualToString:@"0个回答"]) {
+        self.descLabel.attributedText = self.cellModel.desc;
+    }else {
+        self.descLabel.attributedText = [[NSAttributedString alloc] initWithString:@""];;
+    }
     self.moreBtn.hidden = YES;
     self.answerBtn.hidden = NO;
     if (_showPositionView) {

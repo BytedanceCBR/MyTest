@@ -141,18 +141,22 @@
             if(buttonTitle.length > 4){
                 buttonTitle = [buttonTitle substringToIndex:4];
             }
+            NSString *originText = self.button.titleLabel.text;
             [_button setTitle:buttonTitle forState:UIControlStateNormal];
-            [_button sizeToFit];
-            
-            self.titleLabel.width = self.width - 58 - 15 - self.button.width - 10 - 5;
-            self.descLabel.width = self.titleLabel.width;
-            self.spLine.left = self.titleLabel.right + 5;
-            self.button.height = self.height;
-            self.button.left = self.spLine.right + 10;
+            if(originText.length != buttonTitle.length){
+                CGRect buttonTitleRect = [buttonTitle boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, self.height) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : [UIFont themeFontRegular:14]} context:nil];
+                self.button.width = ceil(buttonTitleRect.size.width);
+                self.titleLabel.width = self.width - 58 - 15 - self.button.width - 10 - 5;
+                self.descLabel.width = self.titleLabel.width;
+                self.spLine.left = self.titleLabel.right + 5;
+                self.button.height = self.height;
+                self.button.left = self.spLine.right + 10;
+            }
         }else{
             self.button.hidden = YES;
             self.spLine.hidden = YES;
             
+            [_button setTitle:@"" forState:UIControlStateNormal];
             self.titleLabel.width = self.width - 58 - 15;
             self.descLabel.width = self.titleLabel.width;
             self.spLine.left = self.titleLabel.right + 5;
