@@ -11,6 +11,7 @@
 #import "TTRoute.h"
 #import "FHHouseTitleAndTagViewModel.h"
 #import "FHCommonDefines.h"
+#import "FHHouseCardStatusManager.h"
 #import "FHHouseNeighborModel.h"
 
 @interface FHHouseNeighborhoodCardViewModel()
@@ -24,6 +25,8 @@
 @property (nonatomic, copy) NSString *price;
 
 @property (nonatomic, assign) BOOL showed;
+
+@property (nonatomic, copy) NSString *houseId;
 
 @end
 
@@ -41,12 +44,14 @@
             self.subtitle = model.displaySubtitle;
             self.stateInfo = model.displayStatsInfo;
             self.price = model.displayPrice;
+            self.houseId = model.id;
         } else if ([data isKindOfClass:[FHHouseNeighborDataItemsModel class]]) {
             FHHouseNeighborDataItemsModel *model = (FHHouseNeighborDataItemsModel *)data;
             self.leftImageModel = model.images.firstObject;
             self.subtitle = model.displaySubtitle;
             self.stateInfo = model.displayStatsInfo;
             self.price = model.displayPrice;
+            self.houseId = model.id;
         }
     }
     return self;
@@ -54,6 +59,14 @@
 
 - (BOOL)isValid {
     return YES;
+}
+
+- (CGFloat)opacity {
+    CGFloat opacity = 1;
+    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:self.houseId withHouseType:FHHouseTypeNeighborhood]) {
+        opacity = FHHouseCardReadOpacity;
+    }
+    return opacity;
 }
 
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath {
@@ -86,6 +99,7 @@
 
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        [[FHHouseCardStatusManager sharedInstance] readHouseId:self.houseId withHouseType:FHHouseTypeNeighborhood];
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
         NSMutableDictionary *traceParam = @{}.mutableCopy;
         traceParam[UT_ENTER_FROM] = self.fh_trackModel.pageType ? : @"be_null";
@@ -106,7 +120,14 @@
             }];
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
+        if (self.opacityDidChange) {
+            self.opacityDidChange();
+        }
     }
+}
+
+- (void)adjustIfNeedWithPreviousViewModel:(id<FHHouseCardCellViewModelProtocol>)viewModel {
+    
 }
 
 @end

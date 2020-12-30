@@ -74,9 +74,11 @@
     _tableView.estimatedRowHeight = 0;
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
+    CGFloat bottom = 0;
     if ([UIDevice btd_isIPhoneXSeries]) {
-        _tableView.contentInset = UIEdgeInsetsMake(0, 0, 34, 0);
+        bottom = 34;
     }
+    _tableView.contentInset = UIEdgeInsetsMake(5, 0, bottom, 0);
 }
 
 - (void)startLoadData {

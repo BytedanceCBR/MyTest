@@ -24,6 +24,7 @@
 #import <TTReachability/TTReachability.h>
 #import "FHHouseNeighborhoodCardViewModel.h"
 #import "UITableView+FHHouseCard.h"
+#import <FHHouseBase/NSObject+FHOptimize.h>
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -146,6 +147,11 @@
                     }
                 }
             }];
+            __weak typeof(self) wSelf = self;
+            [self executeOnce:^{
+                wSelf.tableView.contentOffset = CGPointMake(0, -5);
+            } token:FHExecuteOnceUniqueTokenForCurrentContext];
+            
             [self.tableView reloadData];
             [self updateTableViewWithMoreData:hasMore];
             

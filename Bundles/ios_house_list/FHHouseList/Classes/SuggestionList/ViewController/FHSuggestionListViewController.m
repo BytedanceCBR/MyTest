@@ -6,7 +6,7 @@
 //
 
 #import "FHSuggestionListViewController.h"
-#import "TTDeviceHelper.h"
+#import "UIDevice+BTDAdditions.h"
 #import "FHHouseType.h"
 #import "FHHouseTypeManager.h"
 #import "FHSuggestionListViewModel.h"
@@ -186,7 +186,7 @@
     self.topView = [[UIView alloc] init];
     self.topView.backgroundColor = [UIColor themeGray8];
     [self.view addSubview:_topView];
-    BOOL isIphoneX = [TTDeviceHelper isIPhoneXDevice];
+    BOOL isIphoneX = [UIDevice btd_isIPhoneXSeries];
     CGFloat naviHeight = 44 + (isIphoneX ? 44 : 20) + 54;
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.top.mas_equalTo(0);
@@ -278,7 +278,7 @@
     NSInteger count = _segmentControl.sectionTitles.count;
     float tabMargin = ([UIScreen mainScreen].bounds.size.width - (count - 1) * 32 - count * 36 - 18) / 2;
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(_topView);
+        make.centerX.equalTo(self.topView);
         make.height.mas_equalTo(44);
         make.bottom.mas_equalTo(-60);
         make.left.mas_equalTo(tabMargin);

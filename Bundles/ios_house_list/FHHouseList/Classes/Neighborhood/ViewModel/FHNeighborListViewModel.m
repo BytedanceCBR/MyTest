@@ -244,7 +244,7 @@
                         break;
                 }
                 if ([identifier length] > 0) {
-                    FHHouseBaseUsuallyCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+                    FHHouseBaseCommonCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
                     [cell refreshWithData:cellModel];
                     return cell;
                 }
@@ -425,7 +425,16 @@
             self.hasEnterCategory = YES;
         }
         if (self.firstRequestData && self.houseList.count > 0) {
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            if (self.listController.neighborListVCType == FHNeighborListVCTypeErshouNearBy || self.listController.neighborListVCType == FHNeighborListVCTypeNeighborErshou) {
+                UIEdgeInsets inset = self.tableView.contentInset;
+                inset.top = 5;
+                self.tableView.contentInset = inset;
+                CGPoint point = self.tableView.contentOffset;
+                point.y = -5;
+                self.tableView.contentOffset = point;
+            } else {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            }
         }
         if (!hasMore && self.houseList.count < 10) {
             self.tableView.mj_footer.hidden = YES;

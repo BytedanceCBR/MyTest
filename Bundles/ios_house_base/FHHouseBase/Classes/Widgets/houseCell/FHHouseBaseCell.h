@@ -28,7 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) UIView *leftInfoView;
 @property (nonatomic, strong) UIImageView *mainImageView;
 @property (nonatomic, strong) UIImageView *videoImageView;
-@property (nonatomic, strong) UIView *houseMainImageBackView;
 @property (nonatomic, strong) FHCornerView *imageTagLabelBgView;
 @property (nonatomic, strong) UILabel *imageTagLabel;
 @property (nonatomic, strong) UIImageView *houseVideoImageView;

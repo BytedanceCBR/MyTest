@@ -15,7 +15,6 @@
 #import "ToastManager.h"
 #import "TTNavigationController.h"
 #import "FHSugSubscribeListViewController.h"
-#import "HMDTTMonitor.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHOldSuggestionItemCell.h"
 #import "FHSuggestionEmptyCell.h"
@@ -24,6 +23,7 @@
 #import "UIDevice+BTDAdditions.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHMonitor.h"
 
 @interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -421,10 +421,10 @@
             NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
             [paramsExtra setValue:@"跳转错误" forKey:@"desc"];
             [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"guess_you_want_error" status:1 extra:paramsExtra];
+            [FHMonitor hmdTrackService:@"guess_you_want_error" status:1 extra:paramsExtra];
         }else
         {
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"guess_you_want_error" status:0 extra:nil];
+            [FHMonitor hmdTrackService:@"guess_you_want_error" status:0 extra:nil];
         }
         
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
