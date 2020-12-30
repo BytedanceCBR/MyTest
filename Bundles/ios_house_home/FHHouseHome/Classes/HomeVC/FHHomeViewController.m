@@ -42,6 +42,7 @@
 #import "FHHomeRenderFlow.h"
 #import "FHTrackingManager.h"
 #import "FHFirstPageManager.h"
+#import "ArticleListNotifyBarView.h"
 #import <BytedanceKit.h>
 
 static CGFloat const kShowTipViewHeight = 32;
