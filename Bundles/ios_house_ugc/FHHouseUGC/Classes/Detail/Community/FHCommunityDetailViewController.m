@@ -21,6 +21,7 @@
 #import "UIImage+FIconFont.h"
 #import <FHShareManager.h>
 #import <BDImageCache.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHCommunityDetailViewController ()<TTUIViewControllerTrackProtocol, FHUGCPostMenuViewDelegate>
 @property (nonatomic, strong) FHCommunityDetailViewModel *viewModel;
@@ -185,7 +186,7 @@
 - (void)initHeaderView {
     CGFloat headerBackNormalHeight = 144;
     CGFloat headerBackXSeriesHeight = headerBackNormalHeight + 24; //刘海平多出24
-    CGFloat height = [TTDeviceHelper isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight + 40;
+    CGFloat height = [UIDevice btd_isIPhoneXSeries] ? headerBackXSeriesHeight : headerBackNormalHeight + 40;
     
     self.headerView = [[FHCommunityDetailHeaderView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, height)];
     self.headerView.followButton.groupId = self.communityId;
@@ -205,24 +206,18 @@
     //随机一张背景图
     NSInteger randomImageIndex = [self.communityId integerValue] % 4;
     randomImageIndex = randomImageIndex < 0 ? 0 : randomImageIndex;
-    NSString *imageName = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back%d", randomImageIndex];
+    NSString *imageName = [NSString stringWithFormat:@"fh_ugc_community_detail_header_back%ld", (long)randomImageIndex];
     self.headerView.topBack.image = [UIImage imageNamed:imageName];
 }
 
 - (void)initSegmentView {
     self.segmentView = [[FHCommunityDetailSegmentView alloc] init];
     [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
-        *norColorKey = @"grey3"; //grey3
-        *selColorKey = @"grey1";//grey1
+        *norColorKey = @"grey1"; //grey1
+        *selColorKey = @"red4";//red4
         *titleFont = [UIFont themeFontRegular:16];
         *selectedTitleFont = [UIFont themeFontSemibold:16];
     }];
-//    [_segmentView setUpUnderLineEffect:^(BOOL *isUnderLineDelayScroll, CGFloat *underLineH, NSString *__autoreleasing *underLineColorKey, BOOL *isUnderLineEqualTitleWidth) {
-//        *isUnderLineDelayScroll = NO;
-//        *underLineH = 2;
-//        *underLineColorKey = @"akmain";
-//        *isUnderLineEqualTitleWidth = YES;
-//    }];
     _segmentView.backgroundColor = [UIColor clearColor];
     _segmentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 }
@@ -283,7 +278,7 @@
     }];
     
     CGFloat publishBtnBottomHeight;
-    if ([TTDeviceHelper isIPhoneXSeries]) {
+    if ([UIDevice btd_isIPhoneXSeries]) {
         publishBtnBottomHeight = 44;
     }else{
         publishBtnBottomHeight = 10;

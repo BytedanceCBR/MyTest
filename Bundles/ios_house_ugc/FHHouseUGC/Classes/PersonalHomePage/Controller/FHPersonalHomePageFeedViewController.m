@@ -92,7 +92,7 @@
     self.collectionView = [[FHPersonalHomePageCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     self.collectionView.backgroundColor = [UIColor clearColor];
     self.collectionView.pagingEnabled = YES;
-    self.collectionView.bounces = NO;
+    self.collectionView.bounces = YES;
     self.collectionView.showsHorizontalScrollIndicator = NO;
     self.collectionView.showsVerticalScrollIndicator = NO;
     [self.view addSubview:self.collectionView];
