@@ -65,8 +65,8 @@
     //    layout.estimatedItemSize = CGSizeMake(71, 22);
     layout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
     layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    layout.minimumLineSpacing = 0;
-    layout.minimumInteritemSpacing = 0.01f;
+    layout.minimumLineSpacing = 6;
+    layout.minimumInteritemSpacing = 6;
     
     _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), CGRectGetHeight(self.frame)) collectionViewLayout:layout];
     _colletionView.backgroundColor = [UIColor clearColor];
@@ -188,7 +188,7 @@
     NSInteger titleIndex = self.titleIndex;
     titleIndex = self.selectIndex;
     
-    UIColor *selectColor = [UIColor themeOrange1];
+    UIColor *selectColor = [UIColor themeRed4];
     UIColor *normalColor = [UIColor themeGray1];
     UIFont *selectFont = [UIFont themeFontRegular:14];
     UIFont *normalFont = [UIFont themeFontRegular:14];

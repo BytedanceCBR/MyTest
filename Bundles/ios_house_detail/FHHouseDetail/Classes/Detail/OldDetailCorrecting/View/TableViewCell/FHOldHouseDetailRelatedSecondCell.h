@@ -5,11 +5,11 @@
 //  Created by xubinbin on 2020/11/9.
 //
 
-#import "FHHouseBaseUsuallyCell.h"
+#import "FHHouseBaseCommonCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHOldHouseDetailRelatedSecondCell : FHHouseBaseUsuallyCell
+@interface FHOldHouseDetailRelatedSecondCell : FHHouseBaseCommonCell
 
 @end
 

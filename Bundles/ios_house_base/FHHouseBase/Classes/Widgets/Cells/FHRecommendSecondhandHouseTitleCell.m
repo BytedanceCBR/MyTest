@@ -59,7 +59,7 @@
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-15);
-        make.centerY.mas_equalTo(self.contentView);
+        make.centerY.mas_equalTo(self.contentView).offset(5);
         make.height.mas_equalTo(24);
     }];
 }

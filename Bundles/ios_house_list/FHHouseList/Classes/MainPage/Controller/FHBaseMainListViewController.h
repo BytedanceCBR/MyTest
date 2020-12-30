@@ -7,6 +7,8 @@
 
 #import "FHBaseViewController.h"
 
+static const float FHHouseListInsetTop = 5;
+
 NS_ASSUME_NONNULL_BEGIN
 //二手房 租房 大类页
 

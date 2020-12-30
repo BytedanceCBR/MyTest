@@ -71,26 +71,24 @@
 {
     _segmentedControl = [HMSegmentedControl new];
     _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 13);
-    _segmentedControl.selectionIndicatorHeight = 4;
-    _segmentedControl.selectionIndicatorCornerRadius = 2;
-    _segmentedControl.selectionIndicatorWidth = 20;
-    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange4];
+//    _segmentedControl.selectionIndicatorHeight = 4;
+//    _segmentedControl.selectionIndicatorCornerRadius = 2;
+//    _segmentedControl.selectionIndicatorWidth = 20;
+//    _segmentedControl.selectionIndicatorColor = [UIColor themeOrange4];
     _segmentedControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _segmentedControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentedControl.isNeedNetworkCheck = YES;
     //    _segmentedControl.selec
     NSDictionary *attributeNormal = [NSDictionary dictionaryWithObjectsAndKeys:
                                      [UIFont themeFontRegular:16],NSFontAttributeName,
-                                     [UIColor blackColor],NSForegroundColorAttributeName,nil];
+                                     [UIColor themeGray1],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontSemibold:18],NSFontAttributeName,
-                                     [UIColor blackColor],NSForegroundColorAttributeName,nil];
+                                     [UIFont themeFontRegular:16],NSFontAttributeName,
+                                     [UIColor themeRed4],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
-    //_segmentedControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(-3, 0, -3, 0);
-    _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-    WeakSelf;
+    _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationNone;
 
     [self.view addSubview:_segmentedControl];
     

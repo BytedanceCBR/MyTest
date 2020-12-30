@@ -28,6 +28,9 @@
 #import "FHEnvContext.h"
 #import "FHHouseListSecondRelatedCell.h"
 #import "FHHouseListRentRelatedCell.h"
+#import "UITableView+FHHouseCard.h"
+#import "FHHouseSecondCardViewModel.h"
+#import "FHCommonDefines.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -64,7 +67,6 @@
 {
     _tableView.delegate = self;
     _tableView.dataSource = self;
-    
     [_tableView registerClass:[FHSuggestionRealHouseTopCell class] forCellReuseIdentifier:NSStringFromClass([FHSuggestionRealHouseTopCell class])];
 //    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
 //    [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
@@ -73,6 +75,7 @@
     [_tableView registerClass:[FHRecommendCourtCell class] forCellReuseIdentifier:NSStringFromClass([FHRecommendCourtCell class])];
     [_tableView registerClass:[FHHouseListSecondRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListSecondRelatedCell class])];
     [_tableView registerClass:[FHHouseListRentRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListRentRelatedCell class])];
+    [self.tableView fhHouseCard_registerCellStyles];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -114,8 +117,13 @@
     if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
         FHRecommendCourtItem  *data = (FHRecommendCourtItem *)self.houseList[indexPath.row];
         cellModel = data.item;
-    } else {
+    }else if ([self.houseList[indexPath.row] isKindOfClass:[FHHouseListBaseItemModel class]]) {
         cellModel = self.houseList[indexPath.row];
+    } else if ([self.houseList[indexPath.row] isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+        FHHouseSecondCardViewModel *viewModel = self.houseList[indexPath.row];
+        if ([viewModel.model isKindOfClass:[FHHouseListBaseItemModel class]]) {
+            cellModel = viewModel.model;
+        }
     }
     if (cellModel) {
         NSString *origin_from = self.listController.tracerDict[@"origin_from"];
@@ -210,7 +218,6 @@
 {
     if (self.listController.hasValidateData == YES) {
         if (self.houseList.count > indexPath.row) {
-//            FHSingleImageInfoCellModel *cellModel = self.houseList[indexPath.row];
             if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
                 FHRecommendCourtCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHRecommendCourtCell class])];
                 BOOL isFirst = (indexPath.row == 0);
@@ -218,6 +225,9 @@
                 [cell refreshWithData:isFirst andLast:isLast];
                 [cell refreshWithData:self.houseList[indexPath.row]];
                 return cell;
+            } else if ([self.houseList[indexPath.row] isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+                UITableViewCell *cell = [tableView fhHouseCard_cellForEntity:self.houseList[indexPath.row] atIndexPath:indexPath];
+                if (cell) return cell;
             }
             FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
             if ([FHEnvContext isDisplayNewCardType]) {
@@ -228,14 +238,13 @@
                         identifier = NSStringFromClass([FHHouseListRentRelatedCell class]);
                         break;
                     case FHNeighborListVCTypeErshouSameNeighbor:
-                    case FHNeighborListVCTypeErshouNearBy:
                         identifier = NSStringFromClass([FHHouseListSecondRelatedCell class]);
                         break;
                     default:
                         break;
                 }
                 if ([identifier length] > 0) {
-                    FHHouseBaseUsuallyCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+                    FHHouseBaseCommonCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
                     [cell refreshWithData:cellModel];
                     return cell;
                 }
@@ -280,23 +289,14 @@
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.listController.hasValidateData) {
-        
-        BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
         if (indexPath.row < self.houseList.count) {
+            id data = self.houseList[indexPath.row];
+            CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath];
+            if (cellHeight > -0.001f) return cellHeight;
             
             if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
                 return 104;
             }
-            FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
-            
-//            if (cellModel.isRealHouseTopCell) {
-//                if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-//                    return 71;
-//                }
-//            }
-//            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell recommendReasonHeight] : 0;
-//            BOOL isLastCell = (indexPath.row == self.houseList.count - 1);
-//            return (isLastCell ? 125 : 106)+reasonHeight;
             return 88;
         }
     }
@@ -396,17 +396,20 @@
             [self.listController.emptyView hideEmptyView];
             // 转换模型类型
             [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//                FHSingleImageInfoCellModel *cellModel = [self houseItemByModel:obj];
                  FHHouseListBaseItemModel *cellModel = (FHHouseListBaseItemModel *)obj;
                 if (cellModel) {
-//                    if ([cellModel.realHouseTopModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
-//                        cellModel.isRealHouseTopCell = YES;
-//                    }else
-//                    {
+                    if (self.listController.neighborListVCType == FHNeighborListVCTypeErshouNearBy || self.listController.neighborListVCType == FHNeighborListVCTypeNeighborErshou) {
+                        FHHouseSecondCardViewModel *viewModel = [[FHHouseSecondCardViewModel alloc] initWithModel:cellModel];
+                        if (viewModel) {
+                            viewModel.topMargin = ([self.houseList count] == 0) ? 10 : 5;
+                            viewModel.tagListMaxWidth = SCREEN_WIDTH - 30 * 2 - 90 - 8;
+                            [viewModel cutTagListWithFont:[UIFont themeFontRegular:10]];
+                            [self.houseList addObject:viewModel];
+                        }
+                    } else {
                         cellModel.isRealHouseTopCell = NO;
-//                    }
-                    
-                    [self.houseList addObject:cellModel];
+                        [self.houseList addObject:cellModel];
+                    }
                 }
             }];
             [self.tableView reloadData];
@@ -422,13 +425,20 @@
             self.hasEnterCategory = YES;
         }
         if (self.firstRequestData && self.houseList.count > 0) {
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            if (self.listController.neighborListVCType == FHNeighborListVCTypeErshouNearBy || self.listController.neighborListVCType == FHNeighborListVCTypeNeighborErshou) {
+                UIEdgeInsets inset = self.tableView.contentInset;
+                inset.top = 5;
+                self.tableView.contentInset = inset;
+                CGPoint point = self.tableView.contentOffset;
+                point.y = -5;
+                self.tableView.contentOffset = point;
+            } else {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            }
         }
-        
         if (!hasMore && self.houseList.count < 10) {
             self.tableView.mj_footer.hidden = YES;
         }
-        
     } else {
         [self processError:FHEmptyMaskViewTypeNetWorkError tips:@"网络异常"];
     }
@@ -553,8 +563,13 @@
     if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
         FHRecommendCourtItem  *data = (FHRecommendCourtItem *)self.houseList[indexPath.row];
         cellModel = data.item;
-    } else {
+    } else if ([self.houseList[indexPath.row] isKindOfClass:[FHHouseListBaseItemModel class]]) {
         cellModel = self.houseList[indexPath.row];
+    } else if ([self.houseList[indexPath.row] isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+        FHHouseSecondCardViewModel *viewModel = self.houseList[indexPath.row];
+        if ([viewModel.model isKindOfClass:[FHHouseListBaseItemModel class]]) {
+            cellModel = viewModel.model;
+        }
     }
     if (!cellModel) {
         return;

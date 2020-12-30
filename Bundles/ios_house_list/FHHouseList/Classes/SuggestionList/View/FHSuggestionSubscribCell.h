@@ -26,8 +26,6 @@ static NSString * const kFHSuggestionSubscribeNotificationKey = @"kFHSuggestionS
 
 - (void)refreshUI:(JSONModel *)data;
 
-- (void)updateHeightByIsFirst:(BOOL)isFirst;
-
 @end
 
 NS_ASSUME_NONNULL_END

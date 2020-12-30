@@ -76,7 +76,7 @@
             paragraphStyle.maximumLineHeight = lineHeight;
             paragraphStyle.lineSpacing = 2;
             
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
             [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
             
             [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
@@ -120,7 +120,7 @@
                 paragraphStyle.minimumLineHeight = lineHeight;
                 paragraphStyle.maximumLineHeight = lineHeight;
                 paragraphStyle.lineSpacing = 2;
-                paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+                paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
                 [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
             }
             
@@ -152,23 +152,6 @@
     
     if (!isEmptyString(threadContent.text)) {
                 CGFloat lineHeight = ceil(16 * 1.4);
-        
-//             NSMutableAttributedString *userAttrStr = [[NSMutableAttributedString alloc]init];
-//                if (model.user.name) {
-//                    NSAttributedString *as = [[NSAttributedString alloc]initWithString:[NSString stringWithFormat:@" %@说：",model.user.name]];
-//                    [userAttrStr appendAttributedString:as];
-//                    NSMutableDictionary *attributes = @{}.mutableCopy;
-//                    [attributes setValue:[UIColor themeGray2] forKey:NSForegroundColorAttributeName];
-//                    [attributes setValue:[UIFont themeFontSemibold:14] forKey:NSFontAttributeName];
-//                    NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-//                    paragraphStyle.minimumLineHeight = lineHeight;
-//                    paragraphStyle.maximumLineHeight = lineHeight;
-//                    paragraphStyle.lineSpacing = 2;
-//                    paragraphStyle.firstLineHeadIndent = 20;
-//                    paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
-//                    [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
-//                    [userAttrStr addAttributes:attributes range:NSMakeRange(0, userAttrStr.length)];
-//                }
                 
                 NSAttributedString *attrStr = [TTUGCEmojiParser parseInTextKitContext:threadContent.text fontSize:16 topAdjust:1.5];
                 if (attrStr) {
@@ -178,18 +161,14 @@
                     [attributes setValue:[UIFont themeFontRegular:14]  forKey:NSFontAttributeName];
 
                     NSMutableParagraphStyle * paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-                    
+
                     paragraphStyle.minimumLineHeight = lineHeight;
                     paragraphStyle.maximumLineHeight = lineHeight;
                     paragraphStyle.lineSpacing = 2;
                     paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
                     [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
-                    
+
                     [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
-                    
-//                    if (userAttrStr) {
-//                        [mutableAttributedString insertAttributedString:userAttrStr atIndex:0];
-//                    }
                     
                     model.contentAStr = mutableAttributedString;
                     
@@ -705,7 +684,7 @@
             paragraphStyle.maximumLineHeight = lineHeight;
             paragraphStyle.lineSpacing = 2;
             
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
             [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
             
             [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
@@ -735,7 +714,7 @@
             paragraphStyle.maximumLineHeight = 22;
             paragraphStyle.lineSpacing = 2;
             
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
             [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
             
             [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];
@@ -773,7 +752,7 @@
             paragraphStyle.maximumLineHeight = 20;
             paragraphStyle.lineSpacing = 2;
             
-            paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+            paragraphStyle.lineBreakMode = NSLineBreakByCharWrapping;
             [attributes setValue:paragraphStyle forKey:NSParagraphStyleAttributeName];
             
             [mutableAttributedString addAttributes:attributes range:NSMakeRange(0, attrStr.length)];

@@ -348,7 +348,8 @@ static const float kMapSearchBtnRightPading = 50;
     tracerParams[@"origin_from"] = @"maintab_search";
     
     NSMutableDictionary *infos = [NSMutableDictionary new];
-    infos[@"house_type"] = @(FHHouseTypeSecondHandHouse);
+    infos[@"house_type"] = @([FHEnvContext lastSearchSugHouseType]);
+    infos[@"isNeedHouseTypeCache"] = @(1);
     infos[@"tracer"] = tracerParams;
     infos[@"from_home"] = @(FHEnterSuggestionTypeHome);
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:infos];
