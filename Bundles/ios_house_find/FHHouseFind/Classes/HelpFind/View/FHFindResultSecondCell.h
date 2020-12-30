@@ -5,11 +5,11 @@
 //  Created by xubinbin on 2020/10/27.
 //
 
-#import "FHHouseBaseUsuallyCell.h"
+#import "FHHouseBaseCommonCell.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHFindResultSecondCell : FHHouseBaseUsuallyCell
+@interface FHFindResultSecondCell : FHHouseBaseCommonCell
 
 @end
 

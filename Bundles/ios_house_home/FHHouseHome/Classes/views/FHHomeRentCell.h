@@ -5,7 +5,7 @@
 //  Created by xubinbin on 2020/11/2.
 //
 
-#import "FHHouseBaseUsuallyCell.h"
+#import "FHHouseBaseCommonCell.h"
 #import "FHHomeHouseModel.h"
 #import "FHHouseCardStatusManager.h"
 
@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHHomeRentCell : FHHouseBaseUsuallyCell<FHHouseCardReadStateProtocol>
+@interface FHHomeRentCell : FHHouseBaseCommonCell<FHHouseCardReadStateProtocol>
 
 @property (nonatomic, weak) id<FHHomeRentCellDelegate> delegate;
 

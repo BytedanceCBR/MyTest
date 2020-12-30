@@ -5,14 +5,14 @@
 //  Created by xubinbin on 2020/10/26.
 //
 
-#import "FHHouseBaseUsuallyCell.h"
+#import "FHHouseBaseCommonCell.h"
 
-@implementation FHHouseBaseUsuallyCell
+@implementation FHHouseBaseCommonCell
 
 @synthesize mainTitleLabel = _mainTitleLabel, pricePerSqmLabel = _pricePerSqmLabel, priceLabel = _priceLabel;
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    NSAssert(![self isMemberOfClass:[FHHouseBaseUsuallyCell class]], @"业务不可直接用基类，请继承基类");
+    NSAssert(![self isMemberOfClass:[FHHouseBaseCommonCell class]], @"业务不可直接用基类，请继承基类");
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         
