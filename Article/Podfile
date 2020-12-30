@@ -70,9 +70,9 @@ def fhPods
 #    'DelegateForC'
 #    ]
     
-#    pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
+#   pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
 #   pod 'ios_house_im' ,'0.10.0.0-alpha.3', :inhibit_warnings => false
-   pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '82ce4c22c9b3885ab47aafbc6a76e07940add142', :inhibit_warnings => false
+    pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => '82ce4c22c9b3885ab47aafbc6a76e07940add142', :inhibit_warnings => false
 
 end
 
