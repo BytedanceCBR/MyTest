@@ -51,6 +51,7 @@
 #import <FHFlutter/FHFlutterManager.h>
 #import "FHHouseUGCAPI.h"
 #import "FHUGCUserVWhiteModel.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -1273,8 +1274,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 + (NSInteger)lastSearchSugHouseType {
     id houseType = [FHUtils contentForKey:@"last_search_sug_house_type"];
-    if (houseType) {
-        return [houseType integerValue];
+    if (houseType && [houseType isKindOfClass:[NSNumber class]]) {
+        return [((NSNumber *)houseType) integerValue];
     }
     return 0;
 }
