@@ -366,6 +366,10 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
         _mapView.runLoopMode = NSDefaultRunLoopMode;
         _mapView.desiredAccuracy = kCLLocationAccuracyHundredMeters;
         
+        _mapView.runLoopMode = NSDefaultRunLoopMode;
+        _mapView.maxRenderFrame = 60;
+        _mapView.isAllowDecreaseFrame = NO;
+        
         _mapView.zoomLevel = _configModel.resizeLevel;
         _mapView.userTrackingMode = MAUserTrackingModeFollow;
         MAUserLocationRepresentation *representation = [[MAUserLocationRepresentation alloc] init];
