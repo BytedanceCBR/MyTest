@@ -14,11 +14,8 @@
 @implementation FHHousePlaceholderStyle2ViewModel
 
 - (CGFloat)topOffset {
-    return 20.0f;
+    return 15.0f;
 }
 
 @end
 
-@implementation FHHousePlaceholderStyle3ViewModel
-
-@end

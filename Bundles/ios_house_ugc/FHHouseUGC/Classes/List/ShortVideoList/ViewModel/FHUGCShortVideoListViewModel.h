@@ -14,7 +14,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHUGCShortVideoListViewModel : NSObject
 
 @property(nonatomic, copy) NSString *categoryId;
-@property(nonatomic, assign) BOOL isRefreshingTip;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property(nonatomic, assign) NSInteger refer;
 @property(nonatomic, assign) BOOL isShowing;

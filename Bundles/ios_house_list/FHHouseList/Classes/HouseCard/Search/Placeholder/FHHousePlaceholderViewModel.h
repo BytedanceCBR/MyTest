@@ -20,9 +20,5 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHHousePlaceholderStyle3ViewModel : FHHouseNewComponentViewModel
-
-
-@end
 
 NS_ASSUME_NONNULL_END

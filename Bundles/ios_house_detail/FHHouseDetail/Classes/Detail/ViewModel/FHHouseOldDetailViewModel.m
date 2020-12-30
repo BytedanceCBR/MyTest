@@ -161,6 +161,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 }
 //处理网络请求错误
 - (void)requsetDataErrorWithModel:(FHDetailOldModel *)model Message:(NSString *)message{
+    [self.detailController hiddenPlaceHolder];
     self.detailController.isLoadingData = NO;
     self.detailController.hasValidateData = NO;
     self.bottomBar.hidden = YES;
@@ -182,6 +183,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             if (model.data) {
                 [[FHHousedetailModelManager sharedInstance] saveHouseDetailModel:model With:key.copy];
                 [wSelf afterLoadData:model isCachemodel:NO];
+            }else {
+                [self.detailController hiddenPlaceHolder];
             }
         } else {
             [wSelf requsetDataErrorWithModel:model Message:error.domain?:@"empty"];
@@ -786,20 +789,24 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     
     // --
     [self.contactViewModel generateImParams:self.houseId houseTitle:model.data.title houseCover:imgUrl houseType:houseType  houseDes:houseDes housePrice:price houseAvgPrice:avgPrice];
-    
-
-    self.contactViewModel.contactPhone = contactPhone;
-    self.contactViewModel.shareInfo = model.data.shareInfo;
-    self.contactViewModel.subTitle = model.data.reportToast;
-    self.contactViewModel.toast = model.data.reportDoneToast;
-    self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
-    self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
-    self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
-    if (model.isInstantData) {
-        [self.tableView reloadData];
-    }else{
-        [self reloadData];
-    }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.contactViewModel.contactPhone = contactPhone;
+            self.contactViewModel.shareInfo = model.data.shareInfo;
+            self.contactViewModel.subTitle = model.data.reportToast;
+            self.contactViewModel.toast = model.data.reportDoneToast;
+            self.contactViewModel.followStatus = model.data.userStatus.houseSubStatus;
+            self.contactViewModel.chooseAgencyList = model.data.chooseAgencyList;
+            self.contactViewModel.highlightedRealtorAssociateInfo = model.data.highlightedRealtorAssociateInfo;
+            if (model.isInstantData) {
+                [self.tableView reloadData];
+            }else{
+                [self reloadData];
+            }
+//            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.detailController hiddenPlaceHolder];
+//            });
+            [self.detailController updateLayout:model.isInstantData];
+        });
     self.firstReloadInterval = CFAbsoluteTimeGetCurrent();
     [self.detailController updateLayout:model.isInstantData];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{

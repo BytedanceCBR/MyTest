@@ -135,6 +135,7 @@
 {
     _tableView.delegate = self;
     _tableView.dataSource = self;
+    _tableView.bounces = NO;
 //    _tableView.backgroundColor = [UIColor colorWithRed:252 green:252 blue:252 alpha:1];
 //    self.detailController.view.backgroundColor = [UIColor redColor];
     [self registerCellClasses];
@@ -143,6 +144,7 @@
 - (void)reloadData {
 //    CGRect frame = self.tableView.frame;
     [self.tableView reloadData];
+   
     //防止滑动卡顿，测试前关闭
     
 //    if (!self.scretchingWhenLoading) {
