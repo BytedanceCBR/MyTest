@@ -61,6 +61,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *mainPageInfo;
 @property (nonatomic, copy , nullable) NSString *realtorId;
 @property (nonatomic, copy , nullable) NSString *realtorName;
+@property (nonatomic, copy , nullable) NSString *realtorPunishStatus;
 @property (nonatomic, copy , nullable) NSDictionary *realtorLogpb;
 @property (nonatomic, strong) FHClueAssociateInfoModel *associateInfo; // 线索相关参数
 @end

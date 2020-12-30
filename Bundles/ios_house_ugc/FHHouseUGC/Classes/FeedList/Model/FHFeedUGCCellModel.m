@@ -741,6 +741,7 @@
         realtor.associateInfo = model.rawData.realtor.associateInfo;
         realtor.realtorLogpb = model.rawData.realtor.realtorLogpb;
         realtor.firstBizType = model.rawData.realtor.firstBizType;
+        realtor.realtorPunishStatus = model.rawData.realtor.realtorPunishStatus;
         cellModel.realtor = realtor;
         
         
@@ -966,7 +967,8 @@
         realtor.realtorName  = model.realtor.realtorName;
         realtor.associateInfo  = model.realtor.associateInfo;
         realtor.realtorLogpb = model.realtor.realtorLogpb;
-         realtor.firstBizType = model.realtor.firstBizType;
+        realtor.firstBizType = model.realtor.firstBizType;
+        realtor.realtorPunishStatus = model.realtor.realtorPunishStatus;
         cellModel.realtor = realtor;
     } else if(model.rawData.realtor) {
         realtor.agencyName = model.rawData.realtor.agencyName;
@@ -981,6 +983,7 @@
         realtor.associateInfo  = model.rawData.realtor.associateInfo;
         realtor.realtorLogpb = model.rawData.realtor.realtorLogpb;
         realtor.firstBizType = model.rawData.realtor.firstBizType;
+        realtor.realtorPunishStatus = model.rawData.realtor.realtorPunishStatus;
         cellModel.realtor = realtor;
     }
     

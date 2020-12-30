@@ -100,6 +100,7 @@
 #import "FIMDebugManager.h"
 #import <TTTracker/TTTracker.h>
 #import <FlutterPackagesDebugViewController.h>
+#import <FHHouseBase/FHEnvContext.h>
 
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
@@ -108,7 +109,8 @@ extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
 extern NSDictionary *ttvs_videoMidInsertADDict(void);
 extern NSInteger ttvs_getVideoMidInsertADReqStartTime(void);
 extern NSInteger ttvs_getVideoMidInsertADReqEndTime(void);
-extern NSString *const BOE_OPEN_KEY ;
+extern NSString *const BOE_OPEN_KEY;
+extern NSString *const PPE_OPEN_KEY;
 
 @interface SSDebugViewController () {
     
@@ -532,12 +534,27 @@ extern NSString *const BOE_OPEN_KEY ;
         item71.checked = [self _shouldAllowHttps];
         item71.switchAction = @selector(_httpsSettingActionFired:);
         
-        STTableViewCellItem *item72 = [[STTableViewCellItem alloc] initWithTitle:@"BOE开关" target:self action:@selector(switchBOEAction)];
-        item72.switchStyle = YES;
-        item72.checked = [self.class isBOEOn];
-        item72.switchAction = @selector(switchBOE:);
+        STTableViewCellItem *boeEnvSwitch = [[STTableViewCellItem alloc] initWithTitle:@"BOE开关" target:self action:@selector(switchBOEAction)];
+        NSString *boeChannelName = [FHEnvContext sharedInstance].boeChannelName;
+        if(boeChannelName.length <= 0) {
+            boeChannelName = @"未设置";
+        }
+        boeEnvSwitch.detail = [NSString stringWithFormat:@"当前泳道环境(点击修改): %@",boeChannelName];
+        boeEnvSwitch.switchStyle = YES;
+        boeEnvSwitch.checked = [self.class isBOEOn];
+        boeEnvSwitch.switchAction = @selector(switchBOE:);
         
-        STTableViewSectionItem *section7 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"网络 开关" items:@[item71,item72]];
+        STTableViewCellItem *ppeEnvSwitch = [[STTableViewCellItem alloc] initWithTitle:@"PPE开关" target:self action:@selector(switchPPEAction)];
+        NSString *ppeChannelName = [FHEnvContext sharedInstance].ppeChannelName;
+        if(ppeChannelName.length <= 0) {
+            ppeChannelName = @"未设置";
+        }
+        ppeEnvSwitch.detail = [NSString stringWithFormat:@"当前泳道环境(点击修改): %@",ppeChannelName];
+        ppeEnvSwitch.switchStyle = YES;
+        ppeEnvSwitch.checked = [self.class isPPEOn];
+        ppeEnvSwitch.switchAction = @selector(switchPPE:);
+        
+        STTableViewSectionItem *section7 = [[STTableViewSectionItem alloc] initWithSectionTitle:@"网络 开关" items:@[item71,boeEnvSwitch,ppeEnvSwitch]];
         
         [dataSource addObject:section7];
     }
@@ -831,6 +848,7 @@ extern NSString *const BOE_OPEN_KEY ;
     // Do any additional setup after loading the view.
     self.navigationItem.title = @"高级调试";
     self.statusBarStyle = SSViewControllerStatsBarDayWhiteNightBlackStyle;
+    self.disableKeyboardNotificationHandling = YES;
     
     self.dataSource = [self _constructDataSource];
     
@@ -965,7 +983,6 @@ extern NSString *const BOE_OPEN_KEY ;
 
 - (void)_ugcDebugTest:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setBool:uiswitch.isOn forKey:@"kUGCDebugConfigKey"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)_ssoDebugClick {
@@ -1171,7 +1188,6 @@ extern NSString *const BOE_OPEN_KEY ;
 
 - (void)_setShouldSaveApplog:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setBool:uiswitch.isOn forKey:@"kShouldSaveApplogKey"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL)_shouldSaveApplog {
@@ -1196,7 +1212,6 @@ extern NSString *const BOE_OPEN_KEY ;
 {
     NSString *testHost = textField.text;
     [[NSUserDefaults standardUserDefaults] setObject:testHost forKey:@"message_notification_test_host"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)_openFlexActionFired
@@ -1249,7 +1264,6 @@ extern NSString *const BOE_OPEN_KEY ;
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"TTContactsGuideTimestampKey"];
     [[NSUserDefaults standardUserDefaults] setObject:nil forKey:@"kTTContactsCheckTimestampKey"];
     [[NSUserDefaults standardUserDefaults] setObject:@NO forKey:@"TTHasUploadedContactsFlagKey"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)_openNetworkStubActionFired
@@ -1431,20 +1445,17 @@ extern NSString *const BOE_OPEN_KEY ;
 
 - (void)_testImageSubjectActionFired:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setValue:@(uiswitch.isOn) forKey:@"TTTestImageSubject"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     [self reloadData];
     
 }
 
 - (void)_testVideoFacebookActionFired:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setValue:@(uiswitch.isOn) forKey:@"TTTestVideoFacebook"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
     [self reloadData];
 }
 
 - (void)_setShouldAutomaticallyChangeCity:(BOOL)shouldChange {
     [[NSUserDefaults standardUserDefaults] setBool:shouldChange forKey:@"kArticleCategoryManagerUserSelectedLocalCityKey"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (BOOL)_shouldAutomaticallyChangeCity {
@@ -2040,17 +2051,92 @@ extern NSString *const BOE_OPEN_KEY ;
 }
 
 -(void)switchBOEAction {
-    [self switchBOE:nil];
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请输入BOE泳道名称" message:@"确认后请重启应用" preferredStyle:UIAlertControllerStyleAlert];
+    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.keyboardType = UIKeyboardTypeASCIICapable;
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    @weakify(alertVC);
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确认开启" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        @strongify(alertVC);
+        NSString *channelName = [alertVC.textFields.firstObject.text btd_trimmed];
+        if(channelName.length > 0) {
+            NSString *oldChannelName = [[NSUserDefaults standardUserDefaults] stringForKey:@"FH_BOE_CHANNEL_NAME_KEY"];
+            if(![oldChannelName isEqualToString:channelName]) {
+                [[NSUserDefaults standardUserDefaults] setObject:channelName forKey:@"FH_BOE_CHANNEL_NAME_KEY"];
+                if(![self.class isBOEOn]) {
+                    [self switchBOE:nil];
+                }
+                if([self.class isPPEOn]) {
+                    [self switchPPE:nil];
+                }
+                [self reconstrucDataSource];
+            }
+        }
+    }];
+    [alertVC addAction:cancel];
+    [alertVC addAction:confirm];
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:alertVC animated:YES completion:nil];
+}
+
+#pragma mark - PPE 环境配置
++(BOOL)isPPEOn {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:PPE_OPEN_KEY];
+}
+- (void)switchPPEAction {
+    UIAlertController *alertVC = [UIAlertController alertControllerWithTitle:@"请输入PPE泳道名称" message:@"确认后请重启应用" preferredStyle:UIAlertControllerStyleAlert];
+    [alertVC addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        textField.keyboardType = UIKeyboardTypeASCIICapable;
+    }];
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    @weakify(alertVC);
+    UIAlertAction *confirm = [UIAlertAction actionWithTitle:@"确认开启" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        @strongify(alertVC);
+        NSString *channelName = [alertVC.textFields.firstObject.text btd_trimmed];
+        if(channelName.length > 0) {
+            NSString *oldChannelName = [[NSUserDefaults standardUserDefaults] stringForKey:@"FH_PPE_CHANNEL_NAME_KEY"];
+            if(![oldChannelName isEqualToString:channelName]) {
+                [[NSUserDefaults standardUserDefaults] setObject:channelName forKey:@"FH_PPE_CHANNEL_NAME_KEY"];
+                if(![self.class isPPEOn]) {
+                    [self switchPPE:nil];
+                }
+                if([self.class isBOEOn]) {
+                    [self switchBOE:nil];
+                }
+                [self reconstrucDataSource];
+            }
+        }
+    }];
+    [alertVC addAction:cancel];
+    [alertVC addAction:confirm];
+    [[TTUIResponderHelper visibleTopViewController] presentViewController:alertVC animated:YES completion:nil];
+}
+- (void)switchPPE:(UISwitch *)sw {
+    BOOL isOn = [self.class isPPEOn];
+    [[NSUserDefaults standardUserDefaults] setBool:!isOn forKey:PPE_OPEN_KEY];
+    
+    if(sw && [self.class isBOEOn]) {
+        [self switchBOE:nil];
+        [self reconstrucDataSource];
+    }
+}
+
+- (void)reconstrucDataSource {
+    self.dataSource = [self _constructDataSource];
     [self.tableView reloadData];
 }
-
--(void)switchBOE:(UISwitch *)sw
-{
+#pragma mark - BOE 配置
+-(void)switchBOE:(UISwitch *)sw {
     BOOL isOn = [self.class isBOEOn];
     [[NSUserDefaults standardUserDefaults] setBool:!isOn forKey:BOE_OPEN_KEY];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    if(sw && [self.class isPPEOn]) {
+        [self switchPPE:nil];
+        [self reconstrucDataSource];
+    }
 }
-
 +(BOOL)isBOEOn
 {
     return [[NSUserDefaults standardUserDefaults]boolForKey:BOE_OPEN_KEY];
@@ -2092,7 +2178,7 @@ static SSDebugSubitems _suppertedSubitems = SSDebugSubitemAll;
 
 #if TARGET_OS_SIMULATOR
 #if INHOUSE
-#import <FLEX/FLEXManager.h>
+#import "FLEXManager+Extensibility.h"
 #import "ExploreCellHelper.h"
 
 #import "TTStringHelper.h"
@@ -2101,14 +2187,12 @@ static SSDebugSubitems _suppertedSubitems = SSDebugSubitemAll;
 +(void) load
 {
     void (^notiBlock)(void) = ^{
-        
         TTThemeMode mode = [[TTThemeManager sharedInstance_tt] currentThemeMode];
         mode = (mode == TTThemeModeDay) ? TTThemeModeNight : TTThemeModeDay;
         [[TTThemeManager sharedInstance_tt] switchThemeModeto:mode];
     };
     
     [[FLEXManager sharedManager] registerSimulatorShortcutWithKey:@"t" modifiers:0 action:notiBlock description:@"Post Themed Change Notification"];
-    
 }
 
 @end
@@ -2118,3 +2202,4 @@ static SSDebugSubitems _suppertedSubitems = SSDebugSubitemAll;
 #endif
 
 NSString *const BOE_OPEN_KEY = @"BOE_OPEN_KEY";
+NSString *const PPE_OPEN_KEY = @"PPE_OPEN_KEY";

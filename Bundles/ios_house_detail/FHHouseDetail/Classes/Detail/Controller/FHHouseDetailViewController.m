@@ -843,7 +843,7 @@
         traceParams[@"target_id"] = self.houseId;
         tracerDic[@"star_num"] = @(scoreCount);
         traceParams[@"evaluation_type"] = @(0);
-        [[FHIMConfigManager shareInstance]submitRealtorEvaluation:content scoreCount:scoreCount scoreTags:scoreTags traceParams:traceParams];
+        [[FHIMConfigManager shareInstance] submitRealtorEvaluation:content scoreCount:scoreCount scoreTags:scoreTags traceParams:traceParams completion:nil];
         
         tracerDic[@"click_position"] = @"confirm";
         tracerDic[@"star_num"] = @(scoreCount);

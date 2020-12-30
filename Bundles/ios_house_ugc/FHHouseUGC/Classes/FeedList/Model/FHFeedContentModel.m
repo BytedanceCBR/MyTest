@@ -726,6 +726,7 @@
                            @"realtorLogpb":@"realtor_log_pb",
                            @"firstBizType":@"first_biz_type",
                            @"imageTag": @"image_tag",
+                           @"realtorPunishStatus": @"realtor_punish_status",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;

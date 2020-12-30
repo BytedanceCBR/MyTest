@@ -68,6 +68,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 @implementation FHEnvContext
 
+- (NSString *)boeChannelName {
+    NSString *boeChannel = [[NSUserDefaults standardUserDefaults] stringForKey:@"FH_BOE_CHANNEL_NAME_KEY"];
+    return boeChannel;
+}
+
+- (NSString *)ppeChannelName {
+    NSString *ppeChannel = [[NSUserDefaults standardUserDefaults] stringForKey:@"FH_PPE_CHANNEL_NAME_KEY"];
+    return ppeChannel;
+}
+
 + (instancetype)sharedInstance
 {
     static FHEnvContext * manager = nil;
