@@ -2714,12 +2714,12 @@ typedef NS_ENUM(NSInteger , FHMapZoomViewLevelType) {
             }
             
             
-            [self doClear];
+            [wself doClear];
             
             wself.lastBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
             wself.lastNewHouseBubble =  [FHMapSearchBubbleModel bubbleFromUrl:@"http://a"];
-            [wself.lastBubble overwriteFliter:self.filterConditionParams];
-            [wself.lastNewHouseBubble overwriteFliter:self.filterConditionParams];
+            [wself.lastBubble overwriteFliter:wself.filterConditionParams];
+            [wself.lastNewHouseBubble overwriteFliter:wself.filterConditionParams];
 
             NSMutableDictionary *param = [NSMutableDictionary new];
             
