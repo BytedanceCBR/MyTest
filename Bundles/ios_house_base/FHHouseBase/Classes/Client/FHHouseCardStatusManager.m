@@ -6,10 +6,11 @@
 //
 
 #import "FHHouseCardStatusManager.h"
+#import "NSDictionary+BTDAdditions.h"
 
 @interface FHHouseCardStatusManager()
 
-@property (nonatomic, copy) NSMutableDictionary *dict;
+@property (nonatomic, strong) NSMutableDictionary *dict;
 
 @end
 
@@ -36,16 +37,16 @@
     if (!houseId || [houseId isEqualToString:@""] || houseType > 4 || houseType < 1) {
         return;
     }
-    NSString *Id = [NSString stringWithFormat:@"%ld%@", houseType, houseId];
-    [self.dict setObject:@(YES) forKey:Id];
+    NSString *identifier = [NSString stringWithFormat:@"%ld%@", houseType, houseId];
+    [self.dict btd_setObject:@(YES) forKey:identifier];
 }
 
 - (BOOL)isReadHouseId:(NSString *)houseId withHouseType:(NSInteger)houseType {
     if (!houseId || [houseId isEqualToString:@""]) {
         return NO;
     }
-    NSString *Id = [NSString stringWithFormat:@"%ld%@", houseType, houseId];
-    if ([self.dict objectForKey:Id]) {
+    NSString *identifier = [NSString stringWithFormat:@"%ld%@", houseType, houseId];
+    if ([self.dict objectForKey:identifier]) {
         return YES;
     }
     return NO;
