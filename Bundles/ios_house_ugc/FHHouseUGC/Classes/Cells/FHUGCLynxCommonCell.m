@@ -61,7 +61,6 @@
             
            if (templateData) {
                 if (templateData != self.currentTemData) {
-                   NSNumber *costTime = @(0);
                    _loadTime = [[NSDate date] timeIntervalSince1970];
                     self.currentTemData = templateData;
                     self.currentReuseIdentifier = reuseIdentifier;
@@ -92,7 +91,6 @@
             return;
         }
         self.currentTemData = templateData;
-        NSNumber *costTime = @(0);
         _loadTime = [[NSDate date] timeIntervalSince1970];
     
         [self.lynxView loadTemplate:templateData withURL:@"local"];

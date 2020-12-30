@@ -78,8 +78,6 @@
 
 - (void)voteCompleteNoti:(NSNotification *)notification {
     if (notification) {
-        NSDictionary *userInfo = notification.userInfo;
-        
         FHUGCVoteInfoVoteInfoModel *voteInfo = notification.userInfo[@"vote_info"];
         if (voteInfo) {
             // 完成(或者过期) 或者 取消投票
@@ -116,8 +114,6 @@
 }
 
 - (void)setupViews {
-    __weak typeof(self) wself = self;
-    
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
     
@@ -669,10 +665,10 @@
     }];
 }
 
-- (BOOL)isChinese:(NSString *)str {
-    NSString *match = @"(^[\u4e00-\u9fa5]+$)";
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF matches %@", match];
-    return [predicate evaluateWithObject:str];
+- (BOOL)isChinese:(NSString *)str {
+    NSString *match = @"(^[\u4e00-\u9fa5]+$)";
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF matches %@", match];
+    return [predicate evaluateWithObject:str];
 }
 
 // 编辑按钮点击
@@ -800,7 +796,6 @@
     }];
     // 计算百分比
     [self.optionsViewArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHUGCOptionView *optionV = obj;
         if (idx < self.voteInfo.items.count) {
             FHUGCVoteInfoVoteInfoItemsModel *item = self.voteInfo.items[idx];
             if (totalCount <= 0) {
@@ -975,7 +970,6 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
-    __weak typeof(self) wSelf = self;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功

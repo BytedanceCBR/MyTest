@@ -65,8 +65,7 @@
            NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName] version:0];
            
             if (templateData) {
-                 NSNumber *costTime = @(0);
-                    _loadTime = [[NSDate date] timeIntervalSince1970];
+                _loadTime = [[NSDate date] timeIntervalSince1970];
         
                 [self.lynxView loadTemplate:templateData withURL:@"local"];
                 
@@ -96,7 +95,6 @@
            
          
             self.currentTemData = templateData;
-            NSNumber *costTime = @(0);
             _loadTime = [[NSDate date] timeIntervalSince1970];
         
             [self.lynxView loadTemplate:templateData withURL:@"local"];

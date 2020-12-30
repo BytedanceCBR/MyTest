@@ -111,13 +111,10 @@
 
 - (void)updateUserInfoView:(FHFeedUGCCellModel *)cellModel {
     [self.userInfoView setTitleModel:cellModel];
-//    UILabel *lab = [[UILabel alloc]init];
-//      lab.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
     NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
-    CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
+    CGRect titleRect = [titleStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : [UIFont themeFontMedium:16]} context:nil];
     CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
-    CGFloat userInfoHeight = 0;
-    if(size.width > maxTitleLabelSizeWidth){
+    if(titleRect.size.width > maxTitleLabelSizeWidth){
         self.userInfoView.height = 50;
     }else {
         self.userInfoView.height = 30;
@@ -132,13 +129,11 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-//        UILabel *lab = [[UILabel alloc]init];
-//        lab.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
         NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
-        CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
+        CGRect titleRect = [titleStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : [UIFont themeFontMedium:16]} context:nil];
         CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
         CGFloat userInfoHeight = 0;
-        if(size.width > maxTitleLabelSizeWidth){
+        if(titleRect.size.width > maxTitleLabelSizeWidth){
             userInfoHeight = 50;
         }else {
             userInfoHeight = 30;
@@ -149,12 +144,6 @@
         return height;
     }
     return 44;
-}
-
-- (void)deleteCell {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
-        [self.delegate deleteCell:self.cellModel];
-    }
 }
 
 @end

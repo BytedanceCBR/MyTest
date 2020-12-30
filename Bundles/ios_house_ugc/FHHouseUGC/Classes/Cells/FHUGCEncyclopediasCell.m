@@ -86,9 +86,9 @@
     return _iconImage;
 }
 
-- (TTUGCAttributedLabel *)contentLab {
+- (TTUGCAsyncLabel *)contentLab {
     if (!_contentLab) {
-        TTUGCAttributedLabel *contentLab = [[TTUGCAsyncLabel alloc]initWithFrame:CGRectZero];
+        TTUGCAsyncLabel *contentLab = [[TTUGCAsyncLabel alloc]initWithFrame:CGRectZero];
         contentLab.numberOfLines = maxLines;
         contentLab.layer.masksToBounds = YES;
         contentLab.delegate = self;
@@ -120,13 +120,9 @@
     }
     self.currentData = data;
     self.cellModel = model;
-//    [self.titleView.icon bd_setImageWithURL:[NSURL URLWithString:model.user.avatarUrl]];
-//    self.titleView.userName.text = model.user.name;
-//    self.titleView.descLabel.text = model.articleTitle;
-//    self.titleView.cellModel = model;
     
     [self.titleView refreshWithData:model];
-    
+
     self.titleView.userName.userInteractionEnabled = model.user && model.user.schema;
     self.titleView.avatarView.userInteractionEnabled = model.user && model.user.schema;
     self.titleView.descLabel.userInteractionEnabled = model.user && model.user.schema;
