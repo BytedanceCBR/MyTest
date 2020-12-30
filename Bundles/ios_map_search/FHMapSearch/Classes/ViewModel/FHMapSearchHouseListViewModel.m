@@ -32,6 +32,7 @@
 #import "FHHouseListBaseItemModel.h"
 #import "FHMapSearchSecondCell.h"
 #import "FHEnvContext.h"
+#import "FHPlaceHolderCell.h"
 
 #define kCellId @"singleCellId"
 
@@ -52,6 +53,7 @@
 @property(nonatomic , strong) NSMutableDictionary *houseLogs;
 @property(nonatomic , strong) FHHouseListDataModel *currentHouseDataModel;
 @property(nonatomic , strong) FHSearchHouseDataModel *currentRentDataModel;
+@property(nonatomic , assign) BOOL showPlaceHolder;
 //for rent house list
 
 
@@ -67,8 +69,7 @@
         _houseLogs = [NSMutableDictionary new];
         self.listController = viewController;
         self.tableView = tableView;
-        self.tableView.bounces = NO;
-        
+        self.showPlaceHolder = YES;
         [self configTableView];
         
     }
@@ -88,6 +89,7 @@
     
 //    [_tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:kCellId];
      [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kCellId];
+    [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
      [_tableView registerClass:[FHMapSearchSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHMapSearchSecondCell class])];
     
     [self setupPannableGesture];
@@ -143,6 +145,7 @@
     
     [self showMaskView:NO];
     if (data) {
+        self.showPlaceHolder = NO;
         [_houseList addObjectsFromArray:data.items];
         self.searchId = data.searchId;
         if (data.hasMore) {
@@ -151,6 +154,7 @@
             [self.tableView.mj_footer endRefreshingWithNoMoreData];
         }
     } else {
+        self.showPlaceHolder = YES;
         self.searchId = nil;
         [self reloadingHouseData:nil];
     }
@@ -173,11 +177,20 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (self.showPlaceHolder) {
+        return 10;
+    }
     return _houseList.count;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
+    if (self.showPlaceHolder) {
+        FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+        return cell;
+    }
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellId];
     FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
     if([cellModel isKindOfClass:[FHHouseListBaseItemModel class]]){
@@ -203,19 +216,14 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.showPlaceHolder) {
+        return;
+    }
     [self addHouseShowLog:indexPath];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    id model = _houseList[indexPath.row];
-    if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
-        FHSearchHouseDataItemsModel *oldModel = (FHSearchHouseDataItemsModel *)model;
-//        if ([oldModel showRecommendReason]) {
-//            return 105+[FHHouseBaseItemCell recommendReasonHeight];
-//        }
-        return 88;
-    }
     return 88;
 }
 
@@ -265,7 +273,6 @@
         return;
     }
     self.dismissing = YES;
-    self.tableView.scrollEnabled = false;
     if (self.listController.willSwipeDownDismiss) {
         self.listController.willSwipeDownDismiss(duration,self.currentBubble);
     }
@@ -275,7 +282,6 @@
         if (self.listController.didSwipeDownDismiss) {
             self.listController.didSwipeDownDismiss(self.currentBubble);
         }
-        self.tableView.scrollEnabled = true;
         self.dismissing = NO;
     }];
     [self.tableView.mj_footer resetNoMoreData];
@@ -300,7 +306,7 @@
     self.condition = condition;
     
     CGPoint offset = CGPointMake(0, -(self.listController.view.bottom - self.listController.view.superview.height));
-    [self.listController showLoadingAlert:nil offset:offset];
+//    [self.listController showLoadingAlert:nil offset:offset];
     [self.houseList removeAllObjects];
     [self.tableView reloadData];
     [self loadHouseData:YES];
@@ -337,9 +343,6 @@
     }
     if (self.searchId) {
         param[@"search_id"] = self.searchId;
-    }
-    if (showLoading) {
-        self.tableView.scrollEnabled = NO;
     }
     
     if (query.length == 0) {
@@ -412,7 +415,7 @@
 //                NSString *toast = [NSString stringWithFormat:@"共找到%@套房源",houseModel.total];
 //                [[FHMainManager sharedInstance] showToast:toast duration:1];
             }
-            
+            self.showPlaceHolder = NO;
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
             if (houseModel.hasMore) {
@@ -421,7 +424,6 @@
                 [wself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
             wself.tableView.mj_footer.hidden = NO;
-            wself.tableView.scrollEnabled = YES;
         
             if (wself.houseList.count < 10 && !houseModel.hasMore) {
                 wself.tableView.mj_footer.hidden = YES;
@@ -482,9 +484,6 @@
         param[@"search_id"] = self.searchId;
     }
 
-    if (showLoading) {
-        self.tableView.scrollEnabled = NO;
-    }
 
     if (query.length == 0) {
         query = self.configModel.conditionQuery;
@@ -547,7 +546,6 @@
                 [wself.tableView.mj_footer endRefreshingWithNoMoreData];
             }
             wself.tableView.mj_footer.hidden = NO;
-            wself.tableView.scrollEnabled = YES;
             
             
             if (wself.houseList.count < 10 && !houseModel.hasMore) {
@@ -724,6 +722,10 @@
 //        imprId = item.imprId;
 //    }
 //
+    if (_houseList.count == 0) {
+        return;
+    }
+    
     FHHouseListBaseItemModel *model = _houseList[indexPath.row];
     NSDictionary *logPb = model.logPb;
     NSString *imprId = model.imprId;;

@@ -22,10 +22,6 @@
 + (void)startPrefetchShortVideoInDetailWithDataFetchManager:(FHShortVideoDetailFetchManager *)manager
 {
     
-    if (![TTSandBoxHelper isInHouseApp] || ![FHEnvContext isHasPerLoadForVideo]) {
-        return;
-    }
-    
     NSInteger currentIndex = manager.currentIndex;
     NSMutableArray *preLoadArr = [[NSMutableArray alloc]init];
     for (int m = 0; m <5; m ++) {

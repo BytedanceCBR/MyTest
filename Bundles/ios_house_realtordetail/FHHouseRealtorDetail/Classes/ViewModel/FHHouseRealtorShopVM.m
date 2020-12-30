@@ -24,6 +24,7 @@
 #import "FHRealtorSecondCell.h"
 #import <ios_house_im/IMManager.h>
 #import <Masonry.h>
+#import "FHPlaceHolderCell.h"
 
 @interface FHHouseRealtorShopVM ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
@@ -36,6 +37,7 @@
 @property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
 @property(nonatomic, strong) NSMutableArray *dataList;
 @property (nonatomic, assign) NSInteger lastOffset;
+@property(nonatomic , assign) BOOL showPlaceHolder;
 @property (nonatomic, strong) NSString *currentSearchId;
 @property (nonatomic, assign) BOOL hasMore;
 @property (nonatomic, strong) NSDictionary *realtorInfo;
@@ -49,6 +51,7 @@
         self.detailController = viewController;
             self.bottomBar = bottomBar;
         self.tracerDict = tracer;
+        self.showPlaceHolder = YES;
         self.tableView = tableView;
         [self addGoDetailLog];
         self.realtorPhoneCallModel = [[FHRealtorEvaluatingPhoneCallModel alloc]initWithHouseType:nil houseId:nil];
@@ -79,10 +82,12 @@
     }
     NSMutableDictionary *params= [NSMutableDictionary new];
     params[@"realtor_id"] = self.realtorInfo[@"realtor_id"];
+    [self.detailController startLoading];
     // 详情页数据-Main
     [FHMainApi requestRealtorShop:params completion:^(FHHouseRealtorShopDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
+                [self.detailController endLoading];
                 [self configTableView];
                 self.data = model.data;
                 [self requestData:YES first:YES];
@@ -117,6 +122,9 @@
                     }
                 }];
             }
+        }else {
+            [self.detailController endLoading];
+            [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
     }];
 }
@@ -222,6 +230,7 @@
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
     [self.tableView registerClass:[FHRealtorSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHRealtorSecondCell class])];
+    [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:@"FHPlaceHolderCell"];
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -235,7 +244,6 @@
     self.detailController.isLoadingData = YES;
     
     if(isFirst){
-        [self.detailController startLoading];
     }
     __weak typeof(self) wself = self;
     NSMutableDictionary *requestDictonary = [NSMutableDictionary new];
@@ -258,7 +266,6 @@
     self.requestTask = nil;
     self.requestTask = [FHMainApi requestRealtorHomeRecommend:requestDictonary completion:^(FHHomeHouseModel * _Nonnull model, NSError * _Nonnull error) {
         wself.detailController.isLoadingData = NO;
-        [wself.detailController endLoading];
         if (error) {
             //TODO: show handle error
             if(isFirst){
@@ -270,6 +277,8 @@
                 [[ToastManager manager] showToast:@"网络异常"];
                 [wself updateTableViewWithMoreData:YES];
             }
+            self.showPlaceHolder = NO;
+            [self.tableView reloadData];
             [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
             return;
         }
@@ -286,10 +295,12 @@
             if (model.data.total) {
                 self.houseTotal = [NSString stringWithFormat:@"热卖房源(%@)",model.data.total];
             }
-            [self.tableView reloadData];
+           
         }else {
             [self.detailController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
+        self.showPlaceHolder = NO;
+        [self.tableView reloadData];
     }];
 }
 
@@ -323,15 +334,28 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (self.showPlaceHolder) {
+        return 10;
+    }
     return self.dataList.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.showPlaceHolder) {
+    return 88;
+    }
     return 86;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    if (self.showPlaceHolder) {
+        NSString *identifier = @"FHPlaceHolderCell";
+        FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        [cell.contentView setBackgroundColor:[UIColor whiteColor]];
+        return cell;
+    }
     //to do 房源cell
     if ([FHEnvContext isDisplayNewCardType]) {
         NSString *identifier = NSStringFromClass([FHRealtorSecondCell class]);
