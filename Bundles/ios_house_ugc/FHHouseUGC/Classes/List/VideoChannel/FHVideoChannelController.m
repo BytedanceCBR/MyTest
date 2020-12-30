@@ -112,7 +112,6 @@
 
 - (void)initView {
     [self initTableView];
-    [self initNotifyBarView];
     if(self.showErrorView){
         [self addDefaultEmptyViewFullScreen];
         if(self.errorViewTopOffset != 0){
@@ -187,10 +186,6 @@
     }];
 }
 
-- (void)initNotifyBarView {
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 32)];
-    [self.view addSubview:self.notifyBarView];
-}
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
@@ -254,7 +249,7 @@
 }
 
 - (void)scrollToTopAndRefresh {
-    if(self.viewModel.isRefreshingTip || self.isLoadingData){
+    if(self.isLoadingData){
         return;
     }
     [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
@@ -263,34 +258,6 @@
 
 - (void)retryLoadData {
     [self startLoadData];
-}
-
-#pragma mark - show notify
-
-- (void)showNotify:(NSString *)message {
-    [self showNotify:message completion:nil];
-}
-
-- (void)showNotify:(NSString *)message completion:(void(^)(void))completion {
-    if(!self.alreadySetContentInset){
-        self.originContentInset = self.tableView.contentInset;
-        self.alreadySetContentInset = YES;
-    }
-    UIEdgeInsets inset = self.tableView.contentInset;
-    inset.top = self.notifyBarView.height;
-    self.tableView.contentInset = inset;
-    self.tableView.contentOffset = CGPointMake(0, -inset.top);
-    self.notifyCompletionBlock = completion;
-    WeakSelf;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
-        if(!isImmediately) {
-            [wself hideIfNeeds];
-        } else {
-            if(wself.notifyCompletionBlock) {
-                wself.notifyCompletionBlock();
-            }
-        }
-    }];
 }
 
 - (void)hideIfNeeds {
@@ -304,10 +271,6 @@
             self.notifyCompletionBlock();
         }
     }];
-}
-
-- (void)hideImmediately {
-    [self.notifyBarView hideImmediately];
 }
 
 - (NSArray *)dataList {

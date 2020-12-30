@@ -267,7 +267,7 @@
         }
     } else {
         // PlaceholderCell
-        FHPlaceHolderCell *cell = (FHPlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
+        FHHomePlaceHolderCell *cell = (FHHomePlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
         return cell;
     }
     return [[UITableViewCell alloc] init];
@@ -300,8 +300,7 @@
             return 88;
         }
     }
-    
-    return 88;
+        return 124;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

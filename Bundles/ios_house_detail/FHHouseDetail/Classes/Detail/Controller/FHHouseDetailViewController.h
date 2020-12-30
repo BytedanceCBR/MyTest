@@ -51,6 +51,8 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(void)updateLayout:(BOOL)isInstant;
 
+- (void)hiddenPlaceHolder;
+
 @end
 
 NS_ASSUME_NONNULL_END

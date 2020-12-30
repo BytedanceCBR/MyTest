@@ -17,7 +17,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst;
 
 @property (copy, nonatomic) NSString *channel_id;
-@property(nonatomic, assign) BOOL isRefreshingTip;
 @property(nonatomic, strong) FHTracerModel *tracerModel;
 @end
 

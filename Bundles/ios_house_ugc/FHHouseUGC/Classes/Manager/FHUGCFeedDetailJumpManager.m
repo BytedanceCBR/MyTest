@@ -380,7 +380,7 @@
         if(extraDic){
             [tracerDic addEntriesFromDictionary:extraDic];
         }
-        [info setValue:tracerDic forKey:@"extraDic"];
+        [info setValue:tracerDic forKey:@"tracer"];
     }
     
     NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
