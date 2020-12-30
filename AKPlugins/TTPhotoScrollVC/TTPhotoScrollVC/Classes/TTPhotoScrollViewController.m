@@ -193,6 +193,7 @@
     
     _photoScrollView.backgroundColor = [UIColor clearColor];
     _photoScrollView.pagingEnabled = YES;
+    _photoScrollView.bounces = YES;
     _photoScrollView.showsVerticalScrollIndicator = NO;
     _photoScrollView.showsHorizontalScrollIndicator = YES;
     

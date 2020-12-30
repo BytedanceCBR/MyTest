@@ -45,11 +45,6 @@
     if(self){
         
         _bgLayer = [CALayer layer];
-        _bgLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, BG_LAYER_HEIGHT);
-        UIImage *bgImg = SYS_IMG(@"map_search_nav_bg");
-        bgImg = [bgImg resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5) resizingMode:UIImageResizingModeStretch];
-        _bgLayer.contents = (id)[bgImg CGImage];
-        
         [self.layer addSublayer:_bgLayer];
         
         UIImage *backImg = FHBackBlackImage;
@@ -155,19 +150,19 @@
     _houseSegmentControl.titleTextAttributes = titleTextAttributes;
     
     NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
-                                                  NSForegroundColorAttributeName: [UIColor themeGray1]};
+                                                  NSForegroundColorAttributeName: [UIColor themeRed4]};
     _houseSegmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _houseSegmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     _houseSegmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
     _houseSegmentControl.isNeedNetworkCheck = NO;
     _houseSegmentControl.userDraggable = NO;
     _houseSegmentControl.segmentEdgeInset = UIEdgeInsetsMake(8, 10, 0, 10);
-    _houseSegmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
-    _houseSegmentControl.selectionIndicatorWidth = 20.0f;
-    _houseSegmentControl.selectionIndicatorHeight = 4.0f;
-    _houseSegmentControl.selectionIndicatorCornerRadius = 2.0f;
-    _houseSegmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
-    _houseSegmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
+    _houseSegmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationNone;
+//    _houseSegmentControl.selectionIndicatorWidth = 20.0f;
+//    _houseSegmentControl.selectionIndicatorHeight = 4.0f;
+//    _houseSegmentControl.selectionIndicatorCornerRadius = 2.0f;
+//    _houseSegmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
+//    _houseSegmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     [_houseSegmentControl setBackgroundColor:[UIColor clearColor]];
 
     //    _segmentControl.selectionIndicatorImage = [UIImage imageNamed:@"fh_ugc_segment_selected"];
@@ -297,6 +292,11 @@
     }
     
     CGFloat left = 18;
+    
+    _bgLayer.frame = CGRectMake(0, 0, SCREEN_WIDTH, BG_LAYER_HEIGHT + top);
+    UIImage *bgImg = SYS_IMG(@"map_search_nav_bg");
+    bgImg = [bgImg resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5) resizingMode:UIImageResizingModeStretch];
+    _bgLayer.contents = (id)[bgImg CGImage];
     
     [_backButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(left);

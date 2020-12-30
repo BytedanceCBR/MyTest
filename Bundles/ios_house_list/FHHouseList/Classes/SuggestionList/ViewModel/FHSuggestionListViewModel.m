@@ -16,6 +16,8 @@
 @property (nonatomic, strong) NSMutableDictionary *cellDict;
 @property (nonatomic, assign) CGPoint beginOffSet;
 @property (nonatomic, assign) CGFloat oldX;
+//第一次进入页面
+@property (nonatomic, assign) BOOL isFirstLoad;
 
 @end
 
@@ -164,6 +166,7 @@
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.listController.view endEditing:YES];
     self.beginOffSet = CGPointMake(self.currentTabIndex * [UIScreen mainScreen].bounds.size.width, scrollView.contentOffset.y);
     self.oldX = scrollView.contentOffset.x;
 }
@@ -183,10 +186,18 @@
         if (index >= 0 && index < [self.listController.houseTypeArray count]) {
             self.currentTabIndex = index;
             self.listController.segmentControl.selectedSegmentIndex = index;
-//            self.listController.houseType = [self.listController.houseTypeArray[index] integerValue];
             [self.listController scrollToIndex:index];
         }
     } else {
+        if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (CGFloat)(self.listController.segmentControl.sectionTitles.count - 1)){
+            self.listController.segmentControl.selectedSegmentIndex = self.currentTabIndex;
+            if (scrollView.contentOffset.x < 0) {
+                _oldX = 0;
+            } else {
+                _oldX = [UIScreen mainScreen].bounds.size.width * (CGFloat)(self.listController.segmentControl.sectionTitles.count - 1);
+            }
+            return;
+        }
         //加载数据
         CGFloat value = scrollDistance/[UIScreen mainScreen].bounds.size.width;
         [self.listController.segmentControl setScrollValue:value isDirectionLeft:diff < 0];

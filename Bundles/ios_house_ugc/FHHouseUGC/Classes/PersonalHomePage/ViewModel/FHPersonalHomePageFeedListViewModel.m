@@ -160,13 +160,11 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
         if(model){
             self.showPlaceHolder = NO;
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
-                NSArray *resultArr = [self convertModel:feedListModel.data isHead:isHead];
                 if(isHead){
                     [self.dataList removeAllObjects];
-                    [self.dataList addObjectsFromArray:resultArr];
-                }else{
-                    [self.dataList addObjectsFromArray:resultArr];
                 }
+                NSArray *resultArr = [self convertModel:feedListModel.data isHead:isHead];
+                [self.dataList addObjectsFromArray:resultArr];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.tableView.hasMore = feedListModel.hasMore;
                     [self reloadTableViewDataWithHasMore:feedListModel.hasMore];

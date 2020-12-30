@@ -77,9 +77,9 @@ CGFloat kFHNeighborhoodDetailFloorpanItemCollectionCellHeight = 85;
         id data = self.items[indexPath.row];
         NSString *identifier = NSStringFromClass([data class]);
         if(identifier.length > 0) {
-            FHDetailBaseCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+            FHNeighborhoodDetailFloorpanItemCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
             if(cell) {
-                [cell refreshWithData:data];
+                [cell refreshWithData:data withIsLast:(indexPath.row == self.items.count - 1) ? YES : NO];
                 return cell;
             }
         }
@@ -168,13 +168,17 @@ CGFloat kFHNeighborhoodDetailFloorpanItemCollectionCellHeight = 85;
     }];
 }
 
--(void)refreshWithData:(id)data {
+-(void)refreshWithData:(id)data withIsLast:(BOOL)isLast {
     if(self.currentData == data || ![data isKindOfClass:[FHDetailNeighborhoodSaleHouseInfoItemModel class]]) {
         return;
     }
     self.currentData = data;
     FHDetailNeighborhoodSaleHouseInfoItemModel *model =(FHDetailNeighborhoodSaleHouseInfoItemModel *) data;
-    self.roomLabel.text = [NSString stringWithFormat:@"%@居室",[self transformNumber:model.roomNum]];
+    if (isLast && [model.roomNum integerValue] >= 4) {
+        self.roomLabel.text = [NSString stringWithFormat:@"%@居及以上",[self transformNumber:model.roomNum]];
+    } else {
+        self.roomLabel.text = [NSString stringWithFormat:@"%@居室",[self transformNumber:model.roomNum]];
+    }
     NSString *info = model.areaRange;
     if(model.count.length > 0) {
         info = [NSString stringWithFormat:@"%@ %@套", info, model.count];
