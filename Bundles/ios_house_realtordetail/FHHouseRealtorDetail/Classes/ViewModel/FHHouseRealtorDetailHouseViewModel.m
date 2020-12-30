@@ -18,7 +18,7 @@
 #import "FHHouseBaseItemCell.h"
 #import "FHHouseRealtorDetailPlaceCell.h"
 #import "FHRealtorSecondCell.h"
-#import "FHHomePlaceHolderCell.h"
+#import "FHPlaceHolderCell.h"
 
 @interface FHHouseRealtorDetailHouseViewModel ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
@@ -76,7 +76,7 @@
     [self.tableView registerClass:[FHHouseRealtorDetailPlaceCell class] forCellReuseIdentifier:@"FHHouseRealtorDetailPlaceCell"];
     [self.tableView registerClass:[FHHouseBaseItemCell class] forCellReuseIdentifier:@"FHHomeSmallImageItemCell"];
     [self.tableView registerClass:[FHRealtorSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHRealtorSecondCell class])];
-    [self.tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:@"FHHomePlaceHolderCell"];
+    [self.tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:@"FHPlaceHolderCell"];
 }
 
 - (void)requestData:(BOOL)isHead first:(BOOL)isFirst {
@@ -226,7 +226,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.showPlaceHolder) {
-        return 124;
+        return 88;
     }else {
         return 86;
     }
@@ -235,8 +235,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     if (self.showPlaceHolder) {
-        NSString *identifier = @"FHHomePlaceHolderCell";
-        FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+        NSString *identifier = @"FHPlaceHolderCell";
+        FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
         return cell;
     }
