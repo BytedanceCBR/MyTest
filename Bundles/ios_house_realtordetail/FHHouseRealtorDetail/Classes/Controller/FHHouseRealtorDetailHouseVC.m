@@ -7,6 +7,7 @@
 
 #import "FHHouseRealtorDetailHouseVC.h"
 #import "FHHouseRealtorDetailHouseViewModel.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
 @interface FHHouseRealtorDetailHouseVC ()
 @property (strong, nonatomic) FHHouseRealtorDetailHouseViewModel *viewModel;
 @end

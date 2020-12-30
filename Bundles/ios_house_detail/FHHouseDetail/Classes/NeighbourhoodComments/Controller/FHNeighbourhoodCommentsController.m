@@ -97,7 +97,6 @@
 
 - (void)initView {
     [self initTableView];
-    [self initNotifyBarView];
     [self initBottomView];
     [self addDefaultEmptyViewFullScreen];
 }
@@ -134,10 +133,6 @@
     }
 }
 
-- (void)initNotifyBarView {
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.notifyBarView];
-}
 
 - (void)initBottomView {
     self.bottomView = [[UIView alloc] init];
@@ -173,11 +168,6 @@
         }
         make.left.right.mas_equalTo(self.view);
         make.bottom.mas_equalTo(self.bottomView.mas_top);
-    }];
-    
-    [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.tableView);
-        make.height.mas_equalTo(32);
     }];
     
     CGFloat bottom = 64;
@@ -228,32 +218,6 @@
     [self startLoadData];
 }
 
-#pragma mark - show notify
-
-- (void)showNotify:(NSString *)message
-{
-    [self showNotify:message completion:nil];
-}
-
-- (void)showNotify:(NSString *)message completion:(void(^)(void))completion{
-    UIEdgeInsets inset = self.tableView.contentInset;
-    inset.top = self.notifyBarView.height;
-    self.tableView.contentInset = inset;
-    self.tableView.contentOffset = CGPointMake(0, -inset.top);
-    self.notifyCompletionBlock = completion;
-    WeakSelf;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
-        WeakSelf;
-        if(!isImmediately) {
-            [wself hideIfNeeds];
-        } else {
-            if(wself.notifyCompletionBlock) {
-                wself.notifyCompletionBlock();
-            }
-        }
-    }];
-}
-
 - (void)hideIfNeeds {
     [UIView animateWithDuration:0.3 animations:^{
         
@@ -273,10 +237,6 @@
             self.notifyCompletionBlock();
         }
     }];
-}
-
-- (void)hideImmediately {
-    [self.notifyBarView hideImmediately];
 }
 
 - (void)gotoCommentPublish {

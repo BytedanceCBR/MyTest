@@ -74,6 +74,9 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 @property(nonatomic, assign) BOOL isShowingSpringHang;
 //正在显示的画运营位ID
 @property(nonatomic, copy) NSString *currentShowHangId;
+@property(nonatomic, copy, readonly) NSString *boeChannelName;
+@property(nonatomic, copy, readonly) NSString *ppeChannelName;
+
 
 + (instancetype)sharedInstance;
 /*
@@ -271,10 +274,6 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
  */
 + (BOOL)isHasVideoList;
 
-/*
- 是否开启视频预加载实验，默认NO
-  */
- + (BOOL)isHasPerLoadForVideo;
 
 /*
  降级卡片开关

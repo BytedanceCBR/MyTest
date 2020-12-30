@@ -128,8 +128,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, nullable) NSString *chatOpenUrl;
 ///经纪人店铺模块信息
 @property (nonatomic, strong, nullable) NSDictionary *realtorShop;
-/////经纪人rgc Tab内容
+///经纪人rgc Tab内容
 @property (nonatomic, strong, nullable) NSArray <FHHouseRealtorDetailRgcTabModel>*ugcTabList;
+///关黑经纪人跳转选择经纪人列表页
+@property (nonatomic, copy,   nullable) NSString *redirect;
 @end
 
 @interface FHHouseRealtorDetailModel : JSONModel
@@ -150,7 +152,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSDictionary *topNeighborhood;
 @property (nonatomic, strong, nullable) NSDictionary *houseImage;
 @property (nonatomic, copy, nullable) NSString *houseCount;
-
+@property (nonatomic, copy, nullable) NSString *redirect;
 @end
 
 @interface FHHouseRealtorShopDetailModel : JSONModel

@@ -37,10 +37,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setTopEdgesTop:(CGFloat)top andBottom:(CGFloat)bottom;
 
-- (void)showNotify:(NSString *)message;
-
-- (void)hideImmediately;
-
 - (void)resetMaintableView;
 
 - (void)bindIndexChangedBlock;

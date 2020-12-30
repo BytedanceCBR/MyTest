@@ -392,7 +392,14 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     
     NSString *messageSchema = @"sslocal://message_conversation_list";
     NSURL *openUrl = [NSURL URLWithString:messageSchema];
-    [[TTRoute sharedRoute] openURLByPushViewController:openUrl];
+    
+    NSMutableDictionary *userInfoDict = [NSMutableDictionary dictionary];
+    NSMutableDictionary *traceDict = [NSMutableDictionary dictionary];
+    traceDict[UT_ENTER_FROM] = self.tracerDict[UT_PAGE_TYPE];
+    traceDict[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM];
+    userInfoDict[TRACER_KEY] = traceDict;
+    TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+    [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
 }
 
 - (void)setContactPhone:(FHDetailContactModel *)contactPhone

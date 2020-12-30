@@ -76,6 +76,7 @@
                 // 周边数据请求
 
             } else {
+                [wSelf.detailController hiddenPlaceHolder];
                 wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
@@ -83,6 +84,7 @@
                 [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
+            [wSelf.detailController hiddenPlaceHolder];
 //            if (wSelf.detailController.instantData) {
 //                SHOW_TOAST(@"请求失败");
 //            }else{

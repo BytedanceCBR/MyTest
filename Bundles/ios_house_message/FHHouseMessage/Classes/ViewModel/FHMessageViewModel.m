@@ -14,8 +14,6 @@
 #import "UIViewController+Refresh_ErrorHandler.h"
 #import "FHMessageViewController.h"
 #import "FHConversationDataCombiner.h"
-#import "ChatRootViewController.h"
-#import "IMManager.h"
 #import "IMChatStateObserver.h"
 #import "TTURLUtils.h"
 #import <libextobjc/extobjc.h>
@@ -26,6 +24,7 @@
 #import "TTAccountManager.h"
 #import "FHMessageNotificationTipsManager.h"
 #import <ReactiveObjC/ReactiveObjC.h>
+#import <ios_house_im/IMManager.h>
 
 #define kCellId @"FHMessageCell_id"
 
@@ -273,9 +272,73 @@
             
         } else {
             IMConversation *conv = item;
-            [self openConversation:conv];
+            if(conv.type == IMConversationType1to1Chat) {
+                [self processJumpToConversation:conv];
+            } else {
+                [self openConversation:conv];
+            }
         }
     }
+}
+
+- (void)processJumpToConversation:(IMConversation *)conv {
+    // 判断经纪人是否被关黑
+    [conv getTargetUserInfoWithCompletion:^(NSString * _Nonnull userId, FHChatUserInfo * _Nonnull userInfo) {
+        BOOL isPunish = [userInfo.punishStatus boolValue];
+        NSString *tips = userInfo.punishTips;
+        BOOL isBlackmail = (isPunish && tips.length > 0);
+        if(isBlackmail) {
+        
+            NSString *enterFrom = self.viewController.fatherVC.tracerDict[UT_ENTER_FROM];
+            NSString *originFrom = self.viewController.fatherVC.tracerDict[UT_ORIGIN_FROM];
+            if(self.viewController.fatherVC.tracerDict.allKeys.count == 0) {
+                enterFrom = @"message_list";
+                originFrom = @"message_list";
+            }
+            
+            // 展现埋点
+            NSMutableDictionary *showParams = [NSMutableDictionary dictionary];
+            showParams[@"popup_name"] = @"black_popup";
+            showParams[UT_PAGE_TYPE] = @"message_weiliao";;
+            showParams[UT_ELEMENT_TYPE] = @"black_popup";
+            showParams[UT_ENTER_FROM] = enterFrom;
+            showParams[UT_ORIGIN_FROM] = originFrom;
+            TRACK_EVENT(@"popup_show", showParams);
+            // ---
+            
+            [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:tips leftTitle:@"其他经纪人" leftAction:^{
+                
+                // 点击埋点
+                NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
+                clickParam[@"popup_name"] = @"black_popup";
+                clickParam[UT_CLICK_POSITION] = @"other_realtor";
+                clickParam[UT_PAGE_TYPE] = @"message_weiliao";
+                clickParam[UT_ELEMENT_TYPE] = @"black_popup";
+                clickParam[UT_ENTER_FROM] = enterFrom;
+                clickParam[UT_ORIGIN_FROM] = originFrom;
+                TRACK_EVENT(@"popup_click", clickParam);
+                //---
+                [[IMManager shareInstance] jumpRealtorListH5PageWithUrl:userInfo.redirect reportParam:clickParam];
+                
+            } rightTitle:@"继续联系" rightAction:^{
+                
+                // 点击埋点
+                NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
+                clickParam[@"popup_name"] = @"black_popup";
+                clickParam[UT_CLICK_POSITION] = @"continue_contact";
+                clickParam[UT_PAGE_TYPE] = @"message_weiliao";
+                clickParam[UT_ELEMENT_TYPE] = @"black_popup";
+                clickParam[UT_ENTER_FROM] = enterFrom;
+                clickParam[UT_ORIGIN_FROM] = originFrom;
+                TRACK_EVENT(@"popup_click", clickParam);
+                //---
+                
+                [self openConversation:conv];
+            }];
+        } else {
+            [self openConversation:conv];
+        }
+    }];
 }
 
 - (void)reloadData {
@@ -289,7 +352,7 @@
     RACTupleUnpack(NSNumber *totalUnmuteUnreadNumber, NSNumber *totalMuteUnreadNumber) = unreadNumberTuple;
     NSInteger chatNumber = totalUnmuteUnreadNumber.unsignedIntegerValue;
     // 更新消息中心的数据源，用于底部未读数展示
-    [[FHEnvContext sharedInstance].messageManager setUnreadChatMsgCount:chatNumber];
+    [[FHEnvContext sharedInstance].messageManager writeUnreadChatMsgCount:chatNumber];
     BOOL hasChatRedPoint = (totalMuteUnreadNumber.unsignedIntegerValue > 0);
     
     // 更新顶部未读数标签
@@ -318,7 +381,7 @@
         NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
         [tracer setValue:@"message_list" forKey:@"origin_from"];
         [tracer setValue:@"message_list" forKey:@"enter_from"];
-        NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_group_chat" queryItems:params];
+        NSURL *openUrl = [NSURL btd_URLWithString:@"sslocal://open_group_chat" queryItems:params];
         [self clickImMessageEvent:conv];
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
@@ -328,12 +391,12 @@
         [params setValue:conv.identifier forKey:KSCHEMA_CONVERSATION_ID];
         [params setValue:title forKey:KSCHEMA_CHAT_TITLE];
         NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
-        [tracer setValue:@"message_list" forKey:@"origin_from"];
-        [tracer setValue:@"message_list" forKey:@"enter_from"];
+        tracer[UT_ORIGIN_FROM] = self.viewController.fatherVC.tracerDict[UT_ORIGIN_FROM]?:@"message_list";
+        tracer[UT_ENTER_FROM] = @"message_weiliao";
         tracer[@"element_from"] = @"be_null";
         tracer[@"log_pb"] = @"be_null";
         tracer[@"origin_search_id"] = self.viewController.tracerModel.originSearchId;
-        NSURL *openUrl = [TTURLUtils URLWithString:@"sslocal://open_single_chat" queryItems:params];
+        NSURL *openUrl = [NSURL btd_URLWithString:@"sslocal://open_single_chat" queryItems:params];
         [self clickImMessageEvent:conv];
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:@{@"tracer": tracer}];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];

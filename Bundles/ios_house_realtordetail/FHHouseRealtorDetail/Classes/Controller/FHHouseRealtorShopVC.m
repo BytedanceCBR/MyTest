@@ -14,15 +14,13 @@
 #import "FHUserTracker.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "UIImage+FIconFont.h"
-#import "FHRealtorDetailBottomBar.h"
 #import "UIViewAdditions.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
+
 @interface FHHouseRealtorShopVC ()
-@property (strong, nonatomic)UITableView *tableView;
 @property (strong, nonatomic) FHHouseRealtorShopVM *viewModel;
 @property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
 @property (nonatomic, strong) UIView *bottomMaskView;
-@property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
 @property (nonatomic, strong) NSMutableDictionary *realtorInfoDic;
 @end
 @implementation FHHouseRealtorShopVC
@@ -41,9 +39,15 @@
     [super viewDidLoad];
     [self initHeaderView];
     [self initTableView];
-    [self initFrame];
     [self setNavBar];
     [self initBottomBar];
+    [self initBlackmailRealtorBottomBar];
+    
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.mas_equalTo(self.view);
+        make.bottom.equalTo(self.bottomBar.mas_top);
+    }];
+    
     [self addDefaultEmptyViewWithEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 0)];
     self.emptyView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
      [self createModel];
@@ -53,14 +57,6 @@
     [super viewDidAppear:animated];
     [self.viewModel updateNavBarWithAlpha:self.customNavBarView.bgView.alpha];
 }
-
-- (void)initFrame {
-    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.view);
-        make.bottom.equalTo(self.bottomBar);
-    }];
-}
-
 - (void)createModel {
     NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"lynx_realtor_shop_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
        if (!templateData) {
@@ -103,6 +99,21 @@
         make.top.mas_equalTo(self.bottomBar.mas_top);
         make.left.right.bottom.mas_equalTo(self.view);
     }];
+    
+    [self showBottomBar:NO];
+}
+
+- (void)initBlackmailRealtorBottomBar {
+    // 关黑经纪人底部提示
+    [self.view addSubview:self.blackmailReatorBottomBar];
+    [self.blackmailReatorBottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self);
+        if (@available(iOS 11.0, *)) {
+            make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
+        }else {
+            make.bottom.mas_equalTo(self.view);
+        }
+    }];
 }
 
 - (void)initTableView {
@@ -117,14 +128,6 @@
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
     [self.view addSubview:_tableView];
-    [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.view);
-              if (@available(iOS 11.0, *)) {
-                 make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom -64);
-             }else {
-                 make.bottom.mas_equalTo(-64);
-             }
-    }];
 }
 
 - (void)initHeaderView {
@@ -163,5 +166,19 @@
         return nil;
     }
     return dic;
+}
+
+- (void)showBottomBar:(BOOL)show {
+    self.bottomBar.hidden = !show;
+    self.bottomMaskView.hidden = !show;
+}
+#pragma mark - 懒加载成员
+- (FHBlackmailRealtorBottomBar *)blackmailReatorBottomBar {
+    if(!_blackmailReatorBottomBar) {
+        _blackmailReatorBottomBar = [[FHBlackmailRealtorBottomBar alloc] init];
+        _blackmailReatorBottomBar.hidden = YES;
+        _blackmailReatorBottomBar.backgroundColor = [UIColor themeWhite];
+    }
+    return _blackmailReatorBottomBar;
 }
 @end

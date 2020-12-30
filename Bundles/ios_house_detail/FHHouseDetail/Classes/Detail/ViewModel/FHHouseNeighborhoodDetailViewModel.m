@@ -113,6 +113,7 @@
                 // 周边数据请求
                 [wSelf requestRelatedData:neighborhoodId];
             } else {
+                [self.detailController hiddenPlaceHolder];
                 wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
@@ -120,6 +121,7 @@
                 [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
+            [self.detailController hiddenPlaceHolder];
 //            if (wSelf.detailController.instantData) {
 //                SHOW_TOAST(@"请求失败");
 //            }else{
@@ -348,6 +350,7 @@
     self.items = [FHNeighborhoodDetailModuleHelper moduleClassificationMethod:self.items];
     [self reloadData];
     
+    [self.detailController hiddenPlaceHolder];
     [self.detailController updateLayout:NO];
 }
 //小区顶部i地图按钮点击事件
