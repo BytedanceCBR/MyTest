@@ -19,12 +19,10 @@
 #import "FHUserTracker.h"
 #import "UIViewController+NavigationBarStyle.h"
 #import "UIImage+FIconFont.h"
-#import "FHRealtorDetailBottomBar.h"
 #import "FHLynxManager.h"
 @interface FHHouseRealtorDetailVC ()<TTUIViewControllerTrackProtocol>
 @property (nonatomic, strong) FHHouseRealtorDetailVM *viewModel;
 @property (nonatomic, strong) UIView *bottomMaskView;
-@property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
 @property (nonatomic, strong )NSDictionary *realtorDetailInfo;
 
 @end
@@ -77,9 +75,9 @@
     [self initSegmentView];
     [self addDefaultEmptyViewFullScreen];
     [self initBottomBar];
+    [self initBlackmailRealtorBottomBar];
     
 }
-
 
 - (void)showBottomBar:(BOOL)show {
     self.bottomBar.hidden = !show;
@@ -102,10 +100,23 @@
         }
     }];
     [_bottomMaskView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.bottomBar.mas_top);
-        make.left.right.bottom.mas_equalTo(self.view);
+        make.top.equalTo(self.bottomBar);
+        make.left.right.bottom.equalTo(self.view);
     }];
     [self showBottomBar:NO];
+}
+
+- (void)initBlackmailRealtorBottomBar {
+    // 关黑经纪人底部提示
+    [self.view addSubview:self.blackmailReatorBottomBar];
+    [self.blackmailReatorBottomBar mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.right.equalTo(self);
+        if (@available(iOS 11.0, *)) {
+            make.bottom.mas_equalTo(self.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom);
+        }else {
+            make.bottom.mas_equalTo(self.view);
+        }
+    }];
 }
 
 - (void)initHeaderView {
@@ -131,7 +142,6 @@
     _segmentView.bottomLine.hidden = YES;
     _segmentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 }
-
 
 - (void)setNavBar {
     self.customNavBarView.title.text = @"经纪人主页";
@@ -170,4 +180,13 @@
     return @"realtor_detail";
 }
 
+#pragma mark - 懒加载成员
+- (FHBlackmailRealtorBottomBar *)blackmailReatorBottomBar {
+    if(!_blackmailReatorBottomBar) {
+        _blackmailReatorBottomBar = [[FHBlackmailRealtorBottomBar alloc] init];
+        _blackmailReatorBottomBar.hidden = YES;
+        _blackmailReatorBottomBar.backgroundColor = [UIColor themeWhite];
+    }
+    return _blackmailReatorBottomBar;
+}
 @end
