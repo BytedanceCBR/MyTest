@@ -80,7 +80,7 @@
 #import "FHCommonApi.h"
 #import "UIColor+Theme.h"
 #import "UIImage+FIconFont.h"
-#import <FHHouseBase/FHRealtorAvatarView.h>
+#import "FHUGCAvatarView.h"
 #import "NSString+BTDAdditions.h"
 #import <BDWebImage/UIImageView+BDWebImage.h>
 #import "FHShortVideoTracerUtil.h"
@@ -99,7 +99,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
 // Top controls
 @property (nonatomic, strong) UIView *topBarView;
 @property (nonatomic, strong) CAGradientLayer *topBarGradientLayer;
-@property (nonatomic, strong) FHRealtorAvatarView *avatarView;
+@property (nonatomic, strong) FHUGCAvatarView *avatarView;
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UIImageView *sourceImage;
 //@property (nonatomic, strong) UIButton *moreButton;
@@ -224,7 +224,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         _userInfoContainerView = [[UIView alloc] init];
         _userInfoContainerView.backgroundColor = [UIColor clearColor];
 
-        _avatarView = [[FHRealtorAvatarView alloc] init];
+        _avatarView = [[FHUGCAvatarView alloc] init];
         _avatarView.userInteractionEnabled = YES;
         
         _nameLabel = [[UILabel alloc] init];

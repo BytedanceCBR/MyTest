@@ -14,12 +14,18 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
+@protocol FHHouseNewComponentViewModelDelegate <NSObject>
+
+@end
+
+
 @protocol FHHouseNewComponentViewModelProtocol <NSObject>
 
 @property (nonatomic, assign) CGFloat cachedHeight;
 @property (nonatomic, assign) BOOL needCalculateHeight;
 
 @property (nonatomic, copy) NSDictionary *context;
+@property (nonatomic, weak) id<FHHouseNewComponentViewModelDelegate> delegate;
 
 - (void)setNeedCalculateHeight;
 
@@ -36,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
     NSHashTable *_observers;
 }
 @property (nonatomic, copy) NSDictionary *context;
+@property (nonatomic, weak) id<FHHouseNewComponentViewModelDelegate> delegate;
 @end
 
 NS_ASSUME_NONNULL_END

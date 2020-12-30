@@ -51,6 +51,7 @@
 #import <FHFlutter/FHFlutterManager.h>
 #import "FHHouseUGCAPI.h"
 #import "FHUGCUserVWhiteModel.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -1081,6 +1082,22 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return NewCardType;
 }
 
++ (BOOL)isHouseListComponentEnable {
+    static BOOL isHouseListComponentEnable = NO;
+    static dispatch_once_t isHouseListComponentEnableOnceToken;
+    dispatch_once(&isHouseListComponentEnableOnceToken, ^{
+        /**
+         增加服务端实验用于控制是否使用大类页/列表页列表组件，默认情况下不使用
+         实验地址：https://data.bytedance.net/libra/flight/558019/edit/
+         */
+        NSDictionary *settings = [SSCommonLogic fhSettings];
+        if (settings && [settings isKindOfClass:[NSDictionary class]]) {
+            isHouseListComponentEnable = [settings btd_boolValueForKey:@"f_houselist_component_enabled"];
+        }
+    });
+    return isHouseListComponentEnable;
+}
+
 + (BOOL)isIntroduceOpen {
     return YES;
 }
@@ -1255,12 +1272,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
     [self.stashModel addUNRemoteNOtification:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
 }
 
-- (BOOL)isColdStart {
-    return !_hadColdStart;
++ (NSInteger)lastSearchSugHouseType {
+    id houseType = [FHUtils contentForKey:@"last_search_sug_house_type"];
+    if (houseType && [houseType isKindOfClass:[NSNumber class]]) {
+        return [((NSNumber *)houseType) integerValue];
+    }
+    return 0;
 }
 
-- (void)setColdStart {
-    _hadColdStart = YES;
++ (void)setLastSearchSugHouseType:(NSInteger)houseType {
+    [FHUtils setContent:@(houseType) forKey:@"last_search_sug_house_type"];
 }
 
 @end

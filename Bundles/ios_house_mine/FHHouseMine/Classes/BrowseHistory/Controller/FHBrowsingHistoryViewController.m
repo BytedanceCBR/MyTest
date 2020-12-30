@@ -17,7 +17,41 @@
 #import "UIViewController+Track.h"
 #import "FHFakeInputNavbar.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import "TTNavigationController.h"
 
+@interface FHBrowsingHistoryViewController(FHDragBack)
+
+- (void)fixDragBackConfict;
+
+@end
+
+@implementation FHBrowsingHistoryViewController(FHDragBack)
+
+//处理侧滑返回手势和collectionView手势冲突
+- (void)fixDragBackConfict {
+    if ([self.navigationController isKindOfClass:TTNavigationController.class]) {
+        TTNavigationController *naviController = (TTNavigationController *)self.navigationController;
+        if (naviController.panRecognizer && naviController.panRecognizer.enabled) {
+            [self.collectionView.panGestureRecognizer requireGestureRecognizerToFail:naviController.panRecognizer];
+        }
+    }
+}
+
+//支持边缘侧滑返回
+- (NSInteger)ttDragBackLeftEdge {
+    return TTNavigationControllerDefaultSwapLeftEdge;
+}
+
+//边缘滑动时，往左滑动禁止返回
+- (BOOL)shouldEnableBackActionWhenPanRight:(id)panRightValue {
+    BOOL enableBackAction = NO;
+    if ([panRightValue respondsToSelector:@selector(boolValue)]) {
+        enableBackAction = [panRightValue boolValue];
+    }
+    return enableBackAction;
+}
+
+@end
 
 static const float kSegementedOneWidth = 50;
 
@@ -91,7 +125,7 @@ static const float kSegementedOneWidth = 50;
     self.collectionView = [[FHSuggestionCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
-    _collectionView.bounces = NO;
+    _collectionView.bounces = YES;
     _collectionView.scrollEnabled = YES;
     _collectionView.showsHorizontalScrollIndicator = NO;
     _collectionView.backgroundColor = [UIColor themeGray7];
@@ -111,6 +145,11 @@ static const float kSegementedOneWidth = 50;
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self fixDragBackConfict];
 }
 
 -(NSArray *)getSegmentTitles {

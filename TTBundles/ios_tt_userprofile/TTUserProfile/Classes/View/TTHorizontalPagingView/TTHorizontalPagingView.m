@@ -168,13 +168,14 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 
 - (void)scrollToIndex:(NSInteger)pageIndex withAnimation:(BOOL)animation {
     if(pageIndex >= self.section || pageIndex < 0 || self.section <= 0) return;
-    [self.currentContentView setContentOffset:self.currentContentView.contentOffset animated:NO];
     self.animation = animation;
     [self.horizontalCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:pageIndex inSection:0] atScrollPosition:UICollectionViewScrollPositionNone animated:animation];
     if(!animation) {
         self.isSwitching = YES;
         self.segmentView.isSwitching = YES;
-        [self scrollViewDidEndScrollingAnimation:self.horizontalCollectionView];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self scrollViewDidEndScrollingAnimation:self.horizontalCollectionView];
+        });
     }
 }
 
@@ -405,7 +406,9 @@ static void *TTHorizontalPagingViewSettingInset = &TTHorizontalPagingViewSetting
 {
     NSInteger currentIndex = scrollView.contentOffset.x / self.width;
     [self didSwitchIndex:self.lastPageIndex to:currentIndex];
-    [self.segmentView scrollToIndex:currentIndex];
+    if(self.segmentView.selectedIndex != currentIndex){
+        [self.segmentView scrollToIndex:currentIndex];
+    }
     [self advanceLoadData];
     [self adjustContentViewOffsetWithScrollView:self.currentContentView];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0)), dispatch_get_main_queue(), ^{

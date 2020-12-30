@@ -46,7 +46,6 @@
 @property (nonatomic, assign)   NSInteger       totalCount; // 订阅搜索总个数
 @property (nonatomic, strong , nullable) NSMutableArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
 
-@property (nonatomic, assign)   BOOL       hasShowKeyboard;
 @property (nonatomic, assign)   BOOL       hasExposedHouseFindFloatButton;
 @property (nonatomic, assign)   BOOL       hasExposedHouseFindCard;
 
@@ -975,9 +974,9 @@
             if(model.cardType == FHSearchCardTypeGuessYouWantContent){//相关推荐高度
                 return 42;
             }else if (model.cardType == FHSearchCardTypeGuessYouWantTip) {//tips高度
-                return 60;
+                return 55;
             }else if (model.cardType == FHSearchCardTypeFindHouseHelper) {  //帮我找房卡片高度
-                return 93;
+                return 83;
             }else if (model.houseType.intValue == FHHouseTypeNewHouse) {// 新房
                 if([model.text2 length] <= 0){
                     return 46.5;
@@ -1169,6 +1168,7 @@
     if (self.sugHttpTask) {
         [self.sugHttpTask cancel];
     }
+    self.jumpHouseType = self.houseType;
     self.sugListData = NULL;
     self.othersugListData = NULL;
     [self reloadSugTableView];
@@ -1204,7 +1204,9 @@
 
 - (void)reloadHistoryTableView {
     if (self.loadRequestTimes >= 3) {
-        self.listController.hasValidateData = YES;
+        [self.listController endLoading];
+        self.listController.isLoadingData = NO;
+        //self.listController.hasValidateData = YES;
         
         if (self.historyData.count > 0) {
             self.historyView.historyItems = self.historyData;
@@ -1288,6 +1290,7 @@
         } else {
             wself.historyView.historyItems = nil;
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                wself.listController.historyIsSuccess = NO;
                 wself.listController.isLoadingData = NO;
                 [wself.listController endLoading];
                 [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -1327,6 +1330,7 @@
         } else {
             wself.subscribeView.subscribeItems = NULL;
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                wself.listController.historyIsSuccess = NO;
                 wself.listController.isLoadingData = NO;
                 [wself.listController endLoading];
                 [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -1350,6 +1354,7 @@
             [strongSelf reloadHistoryTableView];
         }  else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
+                wself.listController.historyIsSuccess = NO;
                 wself.listController.isLoadingData = NO;
                 [wself.listController endLoading];
                 [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
@@ -1367,6 +1372,8 @@
     self.associatedCount += 1;
     __weak typeof(self) wself = self;
     self.sugHttpTask = [FHHouseListAPI requestSuggestionCityId:cityId houseType:houseType query:query class:[FHSuggestionResponseModel class] completion:(FHMainApiCompletion)^(FHSuggestionResponseModel *  _Nonnull model, NSError * _Nonnull error) {
+        [wself.listController endLoading];
+        wself.listController.isLoadingData = NO;
         if (model != NULL && error == NULL) {
             wself.jumpHouseType = model.data.jumpHouseType;// 构建数据源
             [wself.sugListData removeAllObjects];
@@ -1381,14 +1388,14 @@
                 [wself.othersugListData addObjectsFromArray:model.data.otherItems];
             }
             [wself.listController.emptyView hideEmptyView];
+            wself.listController.suggestTableView.hidden = NO;
             [wself reloadSugTableView];
             [wself.listController.fatherVC trackSuggestionWithWord:query houseType:houseType result:model];
             // 埋点 associate_word_show
             [wself associateWordShow];
         } else {
             if (error && ![error.userInfo[@"NSLocalizedDescription"] isEqualToString:@"the request was cancelled"]) {
-                wself.listController.isLoadingData = NO;
-                [wself.listController endLoading];
+                wself.listController.emptyView.hidden = NO;
                 [wself.listController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
             }
         }

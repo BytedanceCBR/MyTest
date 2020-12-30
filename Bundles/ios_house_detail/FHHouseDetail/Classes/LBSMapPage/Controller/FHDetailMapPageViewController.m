@@ -35,7 +35,6 @@
 
 static NSInteger const kBottomBarTagValue = 100;
 static NSInteger const kBottomButtonLabelTagValue = 1000;
-static NSInteger const kBottomButtonIndicatorTagValue = 10000;
 
 static MAMapView *kFHPageMapView = nil;
 
@@ -89,12 +88,11 @@ static MAMapView *kFHPageMapView = nil;
             self.centerPoint = CLLocationCoordinate2DMake(latitatue, longitude);
         }
         
-        if ([[userInfo.allInfo objectForKey:@"category"] isKindOfClass:[NSString class]]) {
-            self.searchCategory = [userInfo.allInfo objectForKey:@"category"];
-        }
-        
-        if ([[userInfo.allInfo objectForKey:@"title"] isKindOfClass:[NSString class]]) {
-            self.titleStr = [userInfo.allInfo objectForKey:@"title"];
+        self.searchCategory = [paramObj.allParams btd_stringValueForKey:@"category"];
+
+        self.titleStr = [paramObj.allParams btd_stringValueForKey:@"title"];
+        if (!self.titleStr.length) {
+            self.titleStr = [paramObj.allParams btd_stringValueForKey:@"target_name"];
         }
         
         if (paramObj.allParams[@"baiduPanoramaUrl"]) {
@@ -417,47 +415,25 @@ static MAMapView *kFHPageMapView = nil;
         [scrollViewItem addSubview:iconView];
 
         UIButton *buttonIcon = [UIButton buttonWithType:UIButtonTypeCustom];
-//        if (i == self.selectedIndex) {
-//            NSString *stringName = [NSString stringWithFormat:@"%@-pressed",_imageNameArray[i]];
-//            [buttonIcon setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@-pressed",_imageNameArray[i]]] forState:UIControlStateNormal];
-//            self.previouseIconButton = buttonIcon;
-//        }else
-//        {
-//        [buttonIcon setImage:[UIImage imageNamed:_imageNameArray[i]] forState:UIControlStateNormal];
-//        }
         [buttonIcon addTarget:self action:@selector(typeButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         buttonIcon.tag = i;
         [buttonIcon setFrame:CGRectMake((itemWidth - 32) / 2, 0, 32, 32)];
-
-        
+ 
         UILabel *buttonLabel = [UILabel new];
         buttonLabel.text = _nameArray[i];
         buttonLabel.textAlignment = NSTextAlignmentCenter;
         buttonLabel.textColor = [UIColor themeGray1];
-
-  
 
         buttonLabel.tag = i + kBottomButtonLabelTagValue;
         [buttonLabel setFrame:CGRectMake(0, 11, itemWidth, 22)];
         buttonLabel.textAlignment = NSTextAlignmentCenter;
         [iconView addSubview:buttonLabel];
         
-        
-        UIView *selectIndicator = [[UIView alloc] initWithFrame:CGRectMake((itemWidth - 20)/2,buttonLabel.frame.origin.y + buttonLabel.frame.size.height + 3, 20, 4)];
-        [selectIndicator setBackgroundColor:[UIColor colorWithHexStr:@"#ff9629"]];
-        selectIndicator.layer.masksToBounds = YES;
-        selectIndicator.layer.cornerRadius = 2;
-        selectIndicator.tag = i + kBottomButtonIndicatorTagValue;
-        [iconView addSubview:selectIndicator];
-        
         if (i == self.selectedIndex) {
-              self.previouseLabel = buttonLabel;
-              self.previouseIndicator = selectIndicator;
-              buttonLabel.font = [UIFont themeFontMedium:16];
-              selectIndicator.hidden = NO;
+            self.previouseLabel = buttonLabel;
+            buttonLabel.textColor = [UIColor themeRed4];
         }else{
-              buttonLabel.font = [UIFont themeFontRegular:16];
-              selectIndicator.hidden = YES;
+            buttonLabel.textColor = [UIColor themeGray1];
         }
 
         
@@ -504,23 +480,13 @@ static MAMapView *kFHPageMapView = nil;
     return buttonLabel;
 }
 
-- (UIView *)getIndicatorFromTag:(NSInteger)index
-{
-    UIView *scrollContent = [_bottomBarView viewWithTag:kBottomBarTagValue];
-    UIView *buttonLabel = [scrollContent viewWithTag:index + kBottomButtonIndicatorTagValue];
-    return buttonLabel;
-}
-
 - (void)typeButtonClick:(UIButton *)button
 {
     UILabel *buttonLabel = [self getLabelFromTag:button.tag];
-    UIView *indicatorView = [self getIndicatorFromTag:button.tag];
-    self.previouseIndicator.hidden = YES;
-    self.previouseLabel.font = [UIFont themeFontRegular:16];
+    self.previouseLabel.textColor = [UIColor themeGray1];
 
-    if (button.tag < [_imageNameArray count] && indicatorView) {
-        indicatorView.hidden = NO;
-        buttonLabel.font = [UIFont themeFontMedium:16];
+    if (button.tag < [_imageNameArray count]) {
+        buttonLabel.textColor = [UIColor themeRed4];
     }
     if (self.nameArray.count > button.tag) {
         NSString *category = self.nameArray[button.tag];
@@ -534,7 +500,6 @@ static MAMapView *kFHPageMapView = nil;
         }
     }
     [self changeBottomItemViewOffsetByIndex:button.tag];
-    self.previouseIndicator = indicatorView;
     self.previouseLabel = buttonLabel;
     
 }

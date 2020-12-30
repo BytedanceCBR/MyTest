@@ -15,6 +15,8 @@
 
 @property (nonatomic, assign) NSInteger isTracked;
 
+@property (nonatomic, assign) BOOL hadColdStart;
+
 @end
 
 @implementation FHFirstPageManager
@@ -26,6 +28,14 @@
         manager = [[self alloc] init];
     });
     return manager;
+}
+
+- (BOOL)isColdStart {
+    return !_hadColdStart;
+}
+
+- (void)setColdStart {
+    _hadColdStart = YES;
 }
 
 - (NSMutableArray *)array {

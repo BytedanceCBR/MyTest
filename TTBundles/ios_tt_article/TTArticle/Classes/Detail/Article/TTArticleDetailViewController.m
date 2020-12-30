@@ -107,6 +107,7 @@
 #import "ExploreMomentDefine_Enums.h"
 #import "FHTraceEventUtils.h"
 #import <TTArticleBase/Log.h>
+#import "FHUserTracker.h"
 
 //爱看
 #import "AKHelper.h"
@@ -1676,7 +1677,7 @@
             return;
         }
         [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
-        [self p_sendDetailLogicTrackWithLabel:@"write_button"];
+        [self writeButtonClickLog];
         TLS_LOG(@"write_button");
     }
     else if (sender == self.toolbarView.emojiButton) {
@@ -1742,6 +1743,14 @@
     else if (sender == _toolbarView.shareButton) {
         [self p_willShowSharePannel];
     }
+}
+
+- (void)writeButtonClickLog {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.reportParams];
+    dict[@"group_id"] = self.detailModel.uniqueID;
+    dict[@"page_type"] = @"article_detail";
+    dict[@"click_position"] = @"detail_comment";
+    TRACK_EVENT(@"click_comment", dict);
 }
 
 - (void)p_markIsScrollingTriggeredByCommentButtonClicked {
