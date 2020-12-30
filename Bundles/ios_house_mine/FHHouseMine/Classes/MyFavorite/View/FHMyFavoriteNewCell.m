@@ -20,13 +20,7 @@
 }
 
 - (void)initUI {
-    [self.contentView addSubview:self.houseMainImageBackView];
     [self.contentView addSubview:self.mainImageView];
-    [self.houseMainImageBackView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(self.mainImageView);
-        make.left.top.equalTo(self.mainImageView);
-        make.size.mas_equalTo(CGSizeMake(107, 81));
-    }];
     [self.mainImageView mas_makeConstraints:^(MASConstraintMaker *make) {
          make.centerY.equalTo(self.contentView);
          make.left.equalTo(self.contentView).offset(15);

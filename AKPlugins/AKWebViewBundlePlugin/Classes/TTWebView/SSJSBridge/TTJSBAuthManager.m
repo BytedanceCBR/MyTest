@@ -12,6 +12,8 @@
 #import <TTRexxar/TTRJSBForwarding.h>
 #import "TTNetworkManager.h"
 #import <TTBaseLib/NSDictionary+TTAdditions.h>
+#import "WKWebView+FHCommitURL.h"
+#import "SSJSBridgeWebView.h"
 
 NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
 @interface TTJSBAuthManager()
@@ -71,7 +73,22 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
     return self;
 }
 
+- (NSString *)getCommitURLByEngine:(id<TTRexxarEngine>)engine {
+    if ([engine isKindOfClass:[YSWebView class]] && [engine respondsToSelector:@selector(webViewWK)]) {
+        id webView = [(YSWebView *)engine valueForKey:@"webViewWK"];
+        if (webView && [webView isKindOfClass:[WKWebView class]]) {
+            return [(WKWebView *)webView fh_commitURL].host;
+        }
+    }
+    return nil;
+}
+
 - (BOOL)engine:(id<TTRexxarEngine>)engine isAuthorizedJSB:(TTRJSBCommand *)command domain:(NSString *)domain {
+    NSString *host = [self getCommitURLByEngine:engine];
+    if (host.length && [self isInnerDomain:host]) {
+        return YES;
+    }
+    
     if ([self isInnerDomain:domain]) {
         return YES;
     }
@@ -102,6 +119,11 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
 }
 
 - (BOOL)engine:(id<TTRexxarEngine>)engine isAuthorizedEvent:(NSString *)eventName domain:(NSString *)domain {
+    NSString *host = [self getCommitURLByEngine:engine];
+    if (host.length && [self isInnerDomain:host]) {
+        return YES;
+    }
+    
     if ([self isInnerDomain:domain]) {
         return YES;
     }
@@ -124,6 +146,11 @@ NSString *const kTTRemoteInnerDomainsKey = @"kTTRemoteInnerDomainsKey";
 }
 
 - (BOOL)engine:(id<TTRexxarEngine>)engine isAuthorizedMeta:(NSString *)meta domain:(NSString *)domain {
+    NSString *host = [self getCommitURLByEngine:engine];
+    if (host.length && [self isInnerDomain:host]) {
+        return YES;
+    }
+    
     if ([self isInnerDomain:domain]) {
         return YES;
     }

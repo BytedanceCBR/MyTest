@@ -31,8 +31,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign)     CGFloat keyboardHeight;
 @property (nonatomic, assign)     BOOL isTrackerCacheDisabled;
 @property (nonatomic, copy)       NSDictionary *sugWordShowtracerDic;
+@property (nonatomic, assign)     BOOL isNeedHouseTypeCache;
 
-- (void)requestDeleteHistory;
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
 
 - (void)scrollToIndex:(NSInteger)index;

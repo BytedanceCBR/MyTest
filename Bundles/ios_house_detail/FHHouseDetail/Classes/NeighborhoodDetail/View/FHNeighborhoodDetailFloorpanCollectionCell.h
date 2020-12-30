@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailFloorpanItemCollectionCell : FHDetailBaseCollectionCell
 
+- (void)refreshWithData:(id)data withIsLast:(BOOL)isLast;
+
 @end
 
 @interface FHNeighborhoodDetailFloorpanCellModel : NSObject

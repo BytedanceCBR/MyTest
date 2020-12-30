@@ -51,6 +51,7 @@
 #import "FHHouseUGCAPI.h"
 #import "FHUGCUserVWhiteModel.h"
 #import <BDUGLocationKit/BDUGLocationManager.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -1114,6 +1115,22 @@ static NSInteger kGetLightRequestRetryCount = 3;
 //    return YES;
 //}
 
++ (BOOL)isHouseListComponentEnable {
+    static BOOL isHouseListComponentEnable = NO;
+    static dispatch_once_t isHouseListComponentEnableOnceToken;
+    dispatch_once(&isHouseListComponentEnableOnceToken, ^{
+        /**
+         增加服务端实验用于控制是否使用大类页/列表页列表组件，默认情况下不使用
+         实验地址：https://data.bytedance.net/libra/flight/558019/edit/
+         */
+        NSDictionary *settings = [SSCommonLogic fhSettings];
+        if (settings && [settings isKindOfClass:[NSDictionary class]]) {
+            isHouseListComponentEnable = [settings btd_boolValueForKey:@"f_houselist_component_enabled"];
+        }
+    });
+    return isHouseListComponentEnable;
+}
+
 + (NSString *)defaultTabName {
     FHConfigDataModel *configData = [[FHEnvContext sharedInstance] getConfigFromCache];
     if (configData.jumpPageOnStartup) {
@@ -1280,6 +1297,18 @@ static NSInteger kGetLightRequestRetryCount = 3;
 -(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler
 {
     [self.stashModel addUNRemoteNOtification:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
+}
+
++ (NSInteger)lastSearchSugHouseType {
+    id houseType = [FHUtils contentForKey:@"last_search_sug_house_type"];
+    if (houseType && [houseType isKindOfClass:[NSNumber class]]) {
+        return [((NSNumber *)houseType) integerValue];
+    }
+    return 0;
+}
+
++ (void)setLastSearchSugHouseType:(NSInteger)houseType {
+    [FHUtils setContent:@(houseType) forKey:@"last_search_sug_house_type"];
 }
 
 @end

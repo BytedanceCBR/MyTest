@@ -6,6 +6,7 @@
 //
 
 #import "FHListBaseCell.h"
+#import "FHHouseCardStatusManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 //新二手房列表页、搜索页cell
@@ -21,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHHouseSearchSecondHouseCell : FHListBaseCell
+@interface FHHouseSearchSecondHouseCell : FHListBaseCell<FHHouseCardReadStateProtocol>
 
 @property (nonatomic, weak) id<FHHouseSearchSecondHouseCellDelegate> delegate;
 
