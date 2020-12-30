@@ -74,7 +74,7 @@ pod 'FHCommonUI','0.0.0.2', git:'git@code.byted.org:fproject/ios_common_ui.git'
     
 #    pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
 #   pod 'ios_house_im' ,'0.10.0.0-alpha.3', :inhibit_warnings => false
-   pod 'ios_house_im' , :git => 'git@code.byted.org:fproject/ios_house_im.git' , :commit => 'c39f586b75ffe31014c4a9eb370d2dac972caa29', :inhibit_warnings => false
+   pod 'ios_house_im' ,'0.0.0.2', :inhibit_warnings => false
 
 end
 
