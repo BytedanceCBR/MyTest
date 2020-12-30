@@ -46,7 +46,6 @@
 @property (nonatomic, assign)   NSInteger       totalCount; // 订阅搜索总个数
 @property (nonatomic, strong , nullable) NSMutableArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
 
-@property (nonatomic, assign)   BOOL       hasShowKeyboard;
 @property (nonatomic, assign)   BOOL       hasExposedHouseFindFloatButton;
 @property (nonatomic, assign)   BOOL       hasExposedHouseFindCard;
 
@@ -975,9 +974,9 @@
             if(model.cardType == FHSearchCardTypeGuessYouWantContent){//相关推荐高度
                 return 42;
             }else if (model.cardType == FHSearchCardTypeGuessYouWantTip) {//tips高度
-                return 60;
+                return 55;
             }else if (model.cardType == FHSearchCardTypeFindHouseHelper) {  //帮我找房卡片高度
-                return 93;
+                return 83;
             }else if (model.houseType.intValue == FHHouseTypeNewHouse) {// 新房
                 if([model.text2 length] <= 0){
                     return 46.5;

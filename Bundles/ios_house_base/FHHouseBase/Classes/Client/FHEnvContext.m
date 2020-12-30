@@ -51,6 +51,7 @@
 #import <FHFlutter/FHFlutterManager.h>
 #import "FHHouseUGCAPI.h"
 #import "FHUGCUserVWhiteModel.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -1269,6 +1270,18 @@ static NSInteger kGetLightRequestRetryCount = 3;
 -(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler
 {
     [self.stashModel addUNRemoteNOtification:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
+}
+
++ (NSInteger)lastSearchSugHouseType {
+    id houseType = [FHUtils contentForKey:@"last_search_sug_house_type"];
+    if (houseType && [houseType isKindOfClass:[NSNumber class]]) {
+        return [((NSNumber *)houseType) integerValue];
+    }
+    return 0;
+}
+
++ (void)setLastSearchSugHouseType:(NSInteger)houseType {
+    [FHUtils setContent:@(houseType) forKey:@"last_search_sug_house_type"];
 }
 
 @end

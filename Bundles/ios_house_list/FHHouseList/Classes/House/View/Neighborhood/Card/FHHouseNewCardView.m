@@ -131,7 +131,7 @@
     
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.mainTitleLabel);
-        make.right.mas_equalTo(0);
+        make.right.mas_equalTo(-15);
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(self.mainTitleLabel.mas_bottom).offset(1);
     }];
@@ -139,12 +139,12 @@
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.mainTitleLabel);
         make.top.mas_equalTo(self.priceLabel.mas_bottom).offset(2);
-        make.right.mas_equalTo(0);
+        make.right.mas_equalTo(-15);
         make.height.mas_equalTo(18);
     }];
     
     [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(0);
+        make.right.mas_equalTo(-15);
         make.left.mas_equalTo(self.mainTitleLabel).offset(-2);
         make.top.mas_equalTo(self.subTitleLabel.mas_bottom).offset(4);
         make.height.mas_equalTo(18);
@@ -156,6 +156,19 @@
         make.bottom.mas_equalTo(0);
         make.left.mas_equalTo(self.priceLabel).offset(-4);
     }];
+}
+
+- (void)refreshOpacityWithData:(id)viewModel {
+    if (![viewModel isKindOfClass:[FHHouseNewCardViewModel class]]) {
+        return;
+    }
+    FHHouseNewCardViewModel *newViewModel = (FHHouseNewCardViewModel *)viewModel;
+    CGFloat opacity = newViewModel.opacity;
+    self.subTitleLabel.layer.opacity = opacity;
+    self.mainTitleLabel.layer.opacity = opacity;
+    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:newViewModel.tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152 withOpacity:opacity];
+    [self.recommendView refreshOpacity:opacity];
+    self.propertyTagLabel.layer.opacity = opacity;
 }
 
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {

@@ -11,9 +11,13 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (^FHHouseCardOpacityDidChange)(void);
+
 @class FHHouseTitleAndTagViewModel;
 @class FHImageModel;
 @interface FHHouseNeighborhoodCardViewModel : FHHouseNewComponentViewModel
+
+@property (nonatomic, copy) FHHouseCardOpacityDidChange opacityDidChange;
 
 @property (nonatomic, strong, readonly) FHImageModel *leftImageModel;
 
@@ -25,9 +29,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) FHHouseTitleAndTagViewModel *titleAndTag;
 
-@property (nonatomic, strong) FHSearchHouseItemModel *model;
+@property (nonatomic, strong) id model;
 
-- (instancetype)initWithModel:(FHSearchHouseItemModel *)model;
+@property (nonatomic, copy, readonly) NSString *houseId;
+
+@property (nonatomic, assign, readonly) CGFloat opacity;
+
+- (instancetype)initWithModel:(id)model;
 
 - (void)showCardAtIndexPath:(NSIndexPath *)indexPath;
 

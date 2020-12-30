@@ -9,6 +9,7 @@
 #import "Masonry.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
+#import "UIImage+FIconFont.h"
 
 @interface FHSuggestionSearchBar()
 
@@ -47,11 +48,11 @@
     
     // searchIcon
     _searchIcon = [[UIImageView alloc] init];
-    _searchIcon.image = [UIImage imageNamed:@"sug_search_icon"];
+    _searchIcon.image = ICON_FONT_IMG(16,@"\U0000e675",[UIColor themeGray5]);
     [_searchAreaPanel addSubview:_searchIcon];
     [_searchIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(10);
-        make.height.width.mas_equalTo(18);
+        make.height.width.mas_equalTo(16);
         make.centerY.mas_equalTo(self.searchInput);
     }];
     

@@ -18,6 +18,10 @@ static const char view_model_key;
     objc_setAssociatedObject(self, &view_model_key, cardViewModel, OBJC_ASSOCIATION_RETAIN);
     if (cardViewModel) {
         [self refreshWithData:cardViewModel.model];
+        __weak typeof(self) wSelf = self;
+        cardViewModel.opacityDidChange = ^{
+            [wSelf refreshOpacityWithData:wSelf.model];
+        };
     }
 }
 

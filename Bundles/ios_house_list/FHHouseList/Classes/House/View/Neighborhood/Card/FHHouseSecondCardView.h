@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithLeftMargin:(CGFloat)left rightMargin:(CGFloat)right;
 
+- (void)refreshOpacityWithData:(id)viewModel;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -19,7 +19,6 @@
     if (cardViewModel) {
         self.backgroundColor = [UIColor clearColor];
         [self refreshWithData:cardViewModel.model];
-        [self updateHeightByIsFirst:cardViewModel.cardIndex == 0];
     }
 }
 

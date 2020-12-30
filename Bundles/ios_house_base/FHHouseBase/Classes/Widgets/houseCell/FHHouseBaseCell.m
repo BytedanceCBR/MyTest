@@ -192,19 +192,6 @@
     return _houseCellBackView;
 }
 
-- (UIView *)houseMainImageBackView {
-    if (!_houseMainImageBackView) {
-        _houseMainImageBackView = [[UIView alloc] init];
-        _houseMainImageBackView.backgroundColor = [UIColor whiteColor];
-        CALayer * layer = _houseMainImageBackView.layer;
-        layer.shadowOffset = CGSizeMake(0, 4);
-        layer.shadowRadius = 6;
-        layer.shadowColor = [UIColor blackColor].CGColor;;
-        layer.shadowOpacity = 0.2;
-    }
-    return _houseMainImageBackView;
-}
-
 - (FHCornerView *)imageTagLabelBgView {
     if (!_imageTagLabelBgView) {
         _imageTagLabelBgView = [[FHCornerView alloc] init];

@@ -24,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy)     NSString       *pageTypeStr;
 @property (nonatomic, assign)   BOOL isAssociatedCanTrack;
 @property (nonatomic, assign)   NSInteger       jumpHouseType;
+@property (nonatomic, assign)   BOOL       hasShowKeyboard;
 
 - (NSString *)pageTypeString;
 - (NSString *)categoryNameByHouseType;
