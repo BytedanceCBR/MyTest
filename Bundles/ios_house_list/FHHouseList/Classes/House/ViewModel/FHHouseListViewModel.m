@@ -80,7 +80,7 @@ extern NSString *const INSTANT_DATA_KEY;
 #define NO_HOUSE_CELL_ID @"no_house_cell"
 
 
-@interface FHHouseListViewModel(FHHouseTableView)<FHHouseTableViewDataSource, FHHouseNewComponentViewModelDelegate>
+@interface FHHouseListViewModel(FHHouseTableView)<FHHouseTableViewDataSource, FHHouseTableViewDelegate, FHHouseNewComponentViewModelDelegate>
 
 - (NSObject *)getEntityFromModel:(id)model;
 
@@ -414,6 +414,7 @@ extern NSString *const INSTANT_DATA_KEY;
 {
     if ([FHEnvContext isHouseListComponentEnable]) {
         [(FHHouseTableView *)self.tableView setFhHouse_dataSource:self];
+        [(FHHouseTableView *)self.tableView setFhHouse_delegate:self];
         [(FHHouseTableView *)self.tableView registerCellStyles];
     } else {
         self.tableView.delegate = self;
@@ -1091,7 +1092,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 traceParam[@"origin_from"] = wself.originFrom;
                 traceParam[@"origin_search_id"] = wself.originSearchId;
                 traceParam[@"rank"] = @(0);
-                if(self.houseType == FHHouseTypeNeighborhood){
+                if([agencyModel.realtorType isEqualToString:@"4"]){
                     traceParam[@"realtor_position"] = @"neighborhood_expert_card";
                 }else{
                     traceParam[@"realtor_position"] = @"area_expert_card";
@@ -1117,7 +1118,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 traceParam[@"origin_from"] = wself.originFrom;
                 traceParam[@"origin_search_id"] = wself.originSearchId;
                 traceParam[@"rank"] = @(0);
-                if(self.houseType == FHHouseTypeNeighborhood){
+                if([model.realtorType isEqualToString:@"4"]){
                     traceParam[@"element_type"] = @"neighborhood_expert_card";
                 }else{
                     traceParam[@"element_type"] = @"area_expert_card";
@@ -1138,16 +1139,31 @@ extern NSString *const INSTANT_DATA_KEY;
             //            }
         }];
         
+        if ([FHEnvContext isHouseListComponentEnable]) {
+            lastObj = nil;
+        }
+        
         [recommendItemArray enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
             //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
             //                id theItemModel = [[self class] searchItemModelByDict:itemDict];
             
             if ([FHEnvContext isHouseListComponentEnable]) {
+                if (lastObj == nil && self.sugesstHouseList.count > 0) {
+                    lastObj = [self.sugesstHouseList lastObject];
+                }
+                
                 NSObject *entity = [self getEntityFromModel:theItemModel];
                 if (entity) {
                     entity.fh_trackModel.searchId = self.recommendSearchId;
                     entity.fh_trackModel.elementType = @"search_related";
+                    
+                    if ([entity conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)] && [entity respondsToSelector:@selector(adjustIfNeedWithPreviousViewModel:)]) {
+                        NSObject<FHHouseCardCellViewModelProtocol> *viewModel = (NSObject<FHHouseCardCellViewModelProtocol> *)entity;
+                        [viewModel adjustIfNeedWithPreviousViewModel:lastObj];
+                    }
+                    
                     [self.sugesstHouseList addObject:entity];
+                    lastObj = entity;
                 }
                 
                 return;
@@ -1229,7 +1245,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 traceParam[@"origin_from"] = wself.originFrom;
                 traceParam[@"origin_search_id"] = wself.originSearchId;
                 traceParam[@"rank"] = @(0);
-                if(self.houseType == FHHouseTypeNeighborhood){
+                if([model.realtorType isEqualToString:@"4"]){
                     traceParam[@"element_type"] = @"neighborhood_expert_card";
                 }else{
                     traceParam[@"element_type"] = @"area_expert_card";
@@ -2391,20 +2407,14 @@ extern NSString *const INSTANT_DATA_KEY;
     tracerDict[@"is_report"] = @(0);
     tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
     tracerDict[@"realtor_id"] = cellModel.id;
-    if(self.houseType == FHHouseTypeNeighborhood){
+    if([cellModel.realtorType isEqualToString:@"4"]){
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
         tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
         tracerDict[@"house_type"] = @"neighborhood";
     }else{
-        if (self.isHasFilterCondition) {
-            tracerDict[@"element_type"] = @"area_expert_card";
-            tracerDict[@"realtor_position"] = @"area_expert_card";
-            tracerDict[@"house_type"] = @"area";
-        }else{
-            tracerDict[@"element_type"] = @"neighborhood_expert_card";
-            tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
-            tracerDict[@"house_type"] = @"neighborhood";
-        }
+        tracerDict[@"element_type"] = @"area_expert_card";
+        tracerDict[@"realtor_position"] = @"area_expert_card";
+        tracerDict[@"house_type"] = @"area";
     }
     
     [FHUserTracker writeEvent:@"realtor_show" params:tracerDict];
@@ -2478,7 +2488,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [self addLeadShowLog:agencyCM];
         tracerDict[@"page_type"] = [self pageTypeString];
         tracerDict[@"card_type"] = @"left_pic";
-        if(self.houseType == FHHouseTypeNeighborhood){
+        if([agencyCM.realtorType isEqualToString:@"4"]){
             tracerDict[@"element_type"] = @"neighborhood_expert_card";
             tracerDict[@"house_type"] = @"neighborhood";
         }else{
@@ -2505,7 +2515,7 @@ extern NSString *const INSTANT_DATA_KEY;
             tracerDict[@"page_type"] = [self pageTypeString];
             tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
             tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
-            if(self.houseType == FHHouseTypeNeighborhood){
+            if([cm.realtorType isEqualToString:@"4"]){
                 tracerDict[@"element_type"] = @"neighborhood_expert_card";
             }else{
                 tracerDict[@"element_type"] = @"area_expert_card";

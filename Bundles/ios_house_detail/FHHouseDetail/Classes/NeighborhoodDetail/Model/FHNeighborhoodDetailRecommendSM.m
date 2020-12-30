@@ -18,7 +18,7 @@
     NSMutableArray *arrayM = [[NSMutableArray alloc] init];
     for (FHSearchHouseDataItemsModel *item in data.items) {
         item.advantageDescription = nil;
-        id obj = [FHHouseCardUtils getEntityFromModel:item];
+        id obj = [FHHouseCardUtils getDetailEntityFromModel:item];
         if (obj && [obj isKindOfClass:[FHHouseSecondCardViewModel class]]) {
             FHHouseSecondCardViewModel *model = (FHHouseSecondCardViewModel *)obj;
             model.tagListMaxWidth = SCREEN_WIDTH - 21 * 2 - 90 - 8;

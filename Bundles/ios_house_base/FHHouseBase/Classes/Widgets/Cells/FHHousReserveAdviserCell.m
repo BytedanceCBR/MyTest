@@ -72,6 +72,22 @@
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (BOOL)isVisible {
+    BOOL isVisible = NO;
+    for (UITableViewCell *visibleCell in [self.modelData.tableView visibleCells]) {
+        if (visibleCell == self) {
+            isVisible = YES;
+            break;
+        }
+    }
+    
+    return isVisible;
+}
+
 - (void)updateHeightByIsFirst:(BOOL)isFirst {
     CGFloat top = 5;
     if (isFirst) {
@@ -588,6 +604,10 @@
 
 #pragma mark - 键盘通知
 - (void)keyboardWillShowNotifiction:(NSNotification *)notification {
+    if (![self isVisible]) {
+        return;
+    }
+    
     if (!self.textField.isFirstResponder) {
         return;
     }
@@ -612,6 +632,10 @@
 }
 
 - (void)keyboardWillHideNotifiction:(NSNotification *)notification {
+    if (![self isVisible]) {
+        return;
+    }
+    
     self.offsetY = 0;
     if(self.modelData.tableView.contentOffset.y + self.modelData.tableView.frame.size.height > self.modelData.tableView.contentSize.height){
         //剩余不满一屏幕

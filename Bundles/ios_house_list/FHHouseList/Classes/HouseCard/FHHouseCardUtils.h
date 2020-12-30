@@ -26,6 +26,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (id)getNoResultViewModelWithExistModel:(id)existModel containerHeight:(CGFloat)containerHeight;
 
++ (void)trackUseListComponentIfNeed;
+
+@end
+
+@interface FHHouseCardUtils(Detail)
+
++ (id)getDetailEntityFromModel:(id)model;
+
 @end
 
 NS_ASSUME_NONNULL_END
