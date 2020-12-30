@@ -510,6 +510,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     
     //开始生成config缓存
+//    [self.generalBizConfig onStartAppGeneralCache];
     if (self.generalBizConfig.configCache) {
         [self.generalBizConfig onStartAppGeneralCache];
     } else {

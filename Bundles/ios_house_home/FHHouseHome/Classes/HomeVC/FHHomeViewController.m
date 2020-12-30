@@ -433,12 +433,17 @@ static CGFloat const kSectionHeaderHeight = 38;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [TTSandBoxHelper setAppFirstLaunchForAd];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
     
     [self bindIndexChangedBlock];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    [TTSandBoxHelper setAppFirstLaunchForAd];
 }
 
 
