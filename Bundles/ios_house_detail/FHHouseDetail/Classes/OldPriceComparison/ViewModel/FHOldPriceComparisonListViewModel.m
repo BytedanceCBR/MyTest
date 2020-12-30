@@ -24,7 +24,7 @@
 //#import "FHOldPriceComparisonCell.h"
 #import "FHHouseListBaseItemCell.h"
 #import "FHHouseListBaseItemModel.h"
-#import "FHHomePlaceHolderCell.h"
+#import "FHPlaceHolderCell.h"
 #import "FHPriceComparisonSecondCell.h"
 #import "FHEnvContext.h"
 
@@ -86,7 +86,7 @@
     self.tableView.mj_footer = self.refreshFooter;
     _refreshFooter.hidden = YES;
     [_tableView registerClass:[FHHouseListBaseItemCell class] forCellReuseIdentifier:kSingleImageCellId];
-    [_tableView registerClass:[FHHomePlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
+    [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
     [_tableView registerClass:[FHPriceComparisonSecondCell class] forCellReuseIdentifier:NSStringFromClass([FHPriceComparisonSecondCell class])];
 }
 
@@ -273,7 +273,7 @@
         return cell;
     } else {
         // PlaceholderCell
-        FHHomePlaceHolderCell *cell = (FHHomePlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
+        FHPlaceHolderCell *cell = (FHPlaceHolderCell *)[tableView dequeueReusableCellWithIdentifier:kPlaceholderCellId];
         return cell;
     }
     return [[UITableViewCell alloc] init];
