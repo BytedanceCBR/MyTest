@@ -69,13 +69,22 @@
 #import "FHHouseCardUtils.h"
 #import "NSObject+FHTracker.h"
 #import "FHHouseListRentCell.h"
+#import "FHHouseTableView.h"
 #import "FHHouseNewComponentViewModel.h"
+#import "FHHouseCardCellViewModelProtocol.h"
 #import "FHSuggestionDefines.h"
 #import "SSCommonLogic.h"
 
 extern NSString *const INSTANT_DATA_KEY;
 
 #define NO_HOUSE_CELL_ID @"no_house_cell"
+
+
+@interface FHHouseListViewModel(FHHouseTableView)<FHHouseTableViewDataSource, FHHouseTableViewDelegate, FHHouseNewComponentViewModelDelegate>
+
+- (NSObject *)getEntityFromModel:(id)model;
+
+@end
 
 @interface FHHouseListViewModel () <UITableViewDelegate, UITableViewDataSource, FHMapSearchOpenUrlDelegate, FHHouseSuggestionDelegate,FHCommutePOISearchDelegate>
 
@@ -201,7 +210,7 @@ extern NSString *const INSTANT_DATA_KEY;
             self.houseType = FHHouseTypeRentHouse;
             self.commute = YES;
         }
-        if ([paramObj.host isEqualToString:@"neighborhood_deal_list"]) {
+        if ([paramObj.host isEqualToString:@"neighborhood_deal_list"]) { //和冯康确认过，这个功能已经下线了
             self.houseType = FHHouseTypeNeighborhood;
             self.searchType = FHHouseListSearchTypeNeighborhoodDeal;
         }
@@ -403,8 +412,16 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(void)configTableView
 {
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
+    if ([FHEnvContext isHouseListComponentEnable]) {
+        [(FHHouseTableView *)self.tableView setFhHouse_dataSource:self];
+        [(FHHouseTableView *)self.tableView setFhHouse_delegate:self];
+        [(FHHouseTableView *)self.tableView registerCellStyles];
+    } else {
+        self.tableView.delegate = self;
+        self.tableView.dataSource = self;
+        [self.tableView fhHouseCard_registerCellStyles];
+        [self registerCellClasses];
+    }
     
     __weak typeof(self)wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
@@ -416,10 +433,6 @@ extern NSString *const INSTANT_DATA_KEY;
     if ([self isNeighborhoodList]) {
         self.tableView.backgroundColor = [UIColor themeGray7];
     }
-    
-    [self.tableView fhHouseCard_registerCellStyles];
-    
-    [self registerCellClasses];
 }
 
 - (BOOL)isNeighborhoodList {
@@ -863,8 +876,7 @@ extern NSString *const INSTANT_DATA_KEY;
 }
 
 - (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRecommendSearch:(BOOL)isRecommendSearch
-{
-    
+{    
     if (error) {
         
         [self processError:error];
@@ -982,6 +994,25 @@ extern NSString *const INSTANT_DATA_KEY;
                 hideRefreshTip = YES;
             }
             
+            if ([FHEnvContext isHouseListComponentEnable]) {
+                if (lastObj == nil && self.houseList.count > 0) {
+                    lastObj = [self.houseList lastObject];
+                }
+                
+                NSObject *entity = [self getEntityFromModel:theItemModel];
+                if (entity) {
+                    if ([entity conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)] && [entity respondsToSelector:@selector(adjustIfNeedWithPreviousViewModel:)]) {
+                        NSObject<FHHouseCardCellViewModelProtocol> *viewModel = (NSObject<FHHouseCardCellViewModelProtocol> *)entity;
+                        [viewModel adjustIfNeedWithPreviousViewModel:lastObj];
+                    }
+                    
+                    [self.houseList addObject:entity];
+                    lastObj = entity;
+                }
+                
+                return;
+            }
+            
             NSObject *entity = [FHHouseCardUtils getEntityFromModel:theItemModel];
             if (entity) {
                 
@@ -998,7 +1029,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
                     dict[@"search_type"] = @(self.searchType);
                     dict[@"house_type"] = @(self.houseType);
-                    dict[@"is_first_havetip"] = @(self.isFirstHavetip);
+                    dict[@"rank_offset"] = @(!self.isFirstHavetip ? -1 : 0);
                     NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = (NSObject<FHHouseNewComponentViewModelProtocol> *)entity;
                     viewModel.context = dict;
                 }
@@ -1026,7 +1057,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     itemModel.topMargin = 10;
                 }
                 theItemModel = itemModel;
-            }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
+            }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) { //废弃
                 FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
                 if (agencyInfoModel.agencyTotal.integerValue != 0 && agencyInfoModel.houseTotal.integerValue != 0) {
                     if (wself.isRefresh) {
@@ -1039,7 +1070,7 @@ extern NSString *const INSTANT_DATA_KEY;
             }else if ([theItemModel isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]] && wself.isRefresh) {
                 // 展示搜索订阅卡片
                 wself.isShowSubscribeCell = YES;
-            }else if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+            }else if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) { //废弃
                 
                 FHSugListRealHouseTopInfoModel *infoModel = theItemModel;
                 infoModel.searchId = wself.searchId;
@@ -1061,7 +1092,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 traceParam[@"origin_from"] = wself.originFrom;
                 traceParam[@"origin_search_id"] = wself.originSearchId;
                 traceParam[@"rank"] = @(0);
-                if(self.houseType == FHHouseTypeNeighborhood){
+                if([agencyModel.realtorType isEqualToString:@"4"]){
                     traceParam[@"realtor_position"] = @"neighborhood_expert_card";
                 }else{
                     traceParam[@"realtor_position"] = @"area_expert_card";
@@ -1087,7 +1118,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 traceParam[@"origin_from"] = wself.originFrom;
                 traceParam[@"origin_search_id"] = wself.originSearchId;
                 traceParam[@"rank"] = @(0);
-                if(self.houseType == FHHouseTypeNeighborhood){
+                if([model.realtorType isEqualToString:@"4"]){
                     traceParam[@"element_type"] = @"neighborhood_expert_card";
                 }else{
                     traceParam[@"element_type"] = @"area_expert_card";
@@ -1108,9 +1139,35 @@ extern NSString *const INSTANT_DATA_KEY;
             //            }
         }];
         
+        if ([FHEnvContext isHouseListComponentEnable]) {
+            lastObj = nil;
+        }
+        
         [recommendItemArray enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
             //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
             //                id theItemModel = [[self class] searchItemModelByDict:itemDict];
+            
+            if ([FHEnvContext isHouseListComponentEnable]) {
+                if (lastObj == nil && self.sugesstHouseList.count > 0) {
+                    lastObj = [self.sugesstHouseList lastObject];
+                }
+                
+                NSObject *entity = [self getEntityFromModel:theItemModel];
+                if (entity) {
+                    entity.fh_trackModel.searchId = self.recommendSearchId;
+                    entity.fh_trackModel.elementType = @"search_related";
+                    
+                    if ([entity conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)] && [entity respondsToSelector:@selector(adjustIfNeedWithPreviousViewModel:)]) {
+                        NSObject<FHHouseCardCellViewModelProtocol> *viewModel = (NSObject<FHHouseCardCellViewModelProtocol> *)entity;
+                        [viewModel adjustIfNeedWithPreviousViewModel:lastObj];
+                    }
+                    
+                    [self.sugesstHouseList addObject:entity];
+                    lastObj = entity;
+                }
+                
+                return;
+            }
             
             if ([theItemModel isKindOfClass:[FHSearchHouseItemModel class]]) {
                 FHSearchHouseItemModel *itemModel = (FHSearchHouseItemModel *)theItemModel;
@@ -1142,7 +1199,7 @@ extern NSString *const INSTANT_DATA_KEY;
                         NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
                         dict[@"search_type"] = @(self.searchType);
                         dict[@"house_type"] = @(self.houseType);
-                        dict[@"is_first_havetip"] = @(self.isFirstHavetip);
+                        dict[@"rank_offset"] = @(!self.isFirstHavetip ? -1 : 0);
                         NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = (NSObject<FHHouseNewComponentViewModelProtocol> *)entity;
                         viewModel.context = dict;
                     }
@@ -1151,13 +1208,13 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
                 
             }
-            if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) {
+            if ([theItemModel isKindOfClass:[FHSugListRealHouseTopInfoModel class]]) { //废弃
                 FHSugListRealHouseTopInfoModel *infoModel = theItemModel;
                 infoModel.searchId = wself.searchId;
                 infoModel.tracerDict = traceDictParams;
                 infoModel.searchQuery = wself.subScribeQuery;
                 theItemModel = infoModel;
-            }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
+            }else if ([theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) { //废弃
                 FHSearchRealHouseAgencyInfo *agencyInfoModel = (FHSearchRealHouseAgencyInfo *)theItemModel;
                 if (agencyInfoModel.agencyTotal.integerValue == 0 || agencyInfoModel.houseTotal.integerValue == 0) {
                     theItemModel = nil;
@@ -1188,7 +1245,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 traceParam[@"origin_from"] = wself.originFrom;
                 traceParam[@"origin_search_id"] = wself.originSearchId;
                 traceParam[@"rank"] = @(0);
-                if(self.houseType == FHHouseTypeNeighborhood){
+                if([model.realtorType isEqualToString:@"4"]){
                     traceParam[@"element_type"] = @"neighborhood_expert_card";
                 }else{
                     traceParam[@"element_type"] = @"area_expert_card";
@@ -1208,13 +1265,22 @@ extern NSString *const INSTANT_DATA_KEY;
 
         BOOL addNoHouseCell = NO;
         if(self.houseList.count == 1 && self.sugesstHouseList.count == 0){
-            //只有一个筛选提示时 增加无数据提示
-            if ([self.houseList.firstObject isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
-                //add place holder
-                FHHouseListNoHouseCellModel *cellModel = [[FHHouseListNoHouseCellModel alloc] init];
-                cellModel.cellHeight = self.tableView.height - 64 - 121;
-                [self.houseList addObject:cellModel];
-                addNoHouseCell = YES;
+            if ([FHEnvContext isHouseListComponentEnable]) {
+                id existModel = self.houseList.firstObject;
+                id noResultViewModel = [FHHouseCardUtils getNoResultViewModelWithExistModel:existModel containerHeight:self.tableView.height];
+                if (noResultViewModel) {
+                    [self.houseList addObject:noResultViewModel];
+                    addNoHouseCell = YES;
+                }
+            } else {
+                //只有一个筛选提示时 增加无数据提示
+                if ([self.houseList.firstObject isKindOfClass:[FHSugSubscribeDataDataSubscribeInfoModel class]]) {
+                    //add place holder
+                    FHHouseListNoHouseCellModel *cellModel = [[FHHouseListNoHouseCellModel alloc] init];
+                    cellModel.cellHeight = self.tableView.height - 64 - 121;
+                    [self.houseList addObject:cellModel];
+                    addNoHouseCell = YES;
+                }
             }
         }
         [self.tableView reloadData];
@@ -2344,20 +2410,14 @@ extern NSString *const INSTANT_DATA_KEY;
     tracerDict[@"is_report"] = @(0);
     tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
     tracerDict[@"realtor_id"] = cellModel.id;
-    if(self.houseType == FHHouseTypeNeighborhood){
+    if([cellModel.realtorType isEqualToString:@"4"]){
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
         tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
         tracerDict[@"house_type"] = @"neighborhood";
     }else{
-        if (self.isHasFilterCondition) {
-            tracerDict[@"element_type"] = @"area_expert_card";
-            tracerDict[@"realtor_position"] = @"area_expert_card";
-            tracerDict[@"house_type"] = @"area";
-        }else{
-            tracerDict[@"element_type"] = @"neighborhood_expert_card";
-            tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
-            tracerDict[@"house_type"] = @"neighborhood";
-        }
+        tracerDict[@"element_type"] = @"area_expert_card";
+        tracerDict[@"realtor_position"] = @"area_expert_card";
+        tracerDict[@"house_type"] = @"area";
     }
     
     [FHUserTracker writeEvent:@"realtor_show" params:tracerDict];
@@ -2431,7 +2491,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [self addLeadShowLog:agencyCM];
         tracerDict[@"page_type"] = [self pageTypeString];
         tracerDict[@"card_type"] = @"left_pic";
-        if(self.houseType == FHHouseTypeNeighborhood){
+        if([agencyCM.realtorType isEqualToString:@"4"]){
             tracerDict[@"element_type"] = @"neighborhood_expert_card";
             tracerDict[@"house_type"] = @"neighborhood";
         }else{
@@ -2458,7 +2518,7 @@ extern NSString *const INSTANT_DATA_KEY;
             tracerDict[@"page_type"] = [self pageTypeString];
             tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
             tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
-            if(self.houseType == FHHouseTypeNeighborhood){
+            if([cm.realtorType isEqualToString:@"4"]){
                 tracerDict[@"element_type"] = @"neighborhood_expert_card";
             }else{
                 tracerDict[@"element_type"] = @"area_expert_card";
@@ -2717,48 +2777,94 @@ extern NSString *const INSTANT_DATA_KEY;
     return [self categoryLogDict];
 }
 
-+ (id)searchItemModelByDict:(NSDictionary *)itemDict
-{
-    NSInteger cardType = [itemDict btd_integerValueForKey:@"card_type"];
-    id itemModel = nil;
-    NSError *jerror = nil;
-    
-    switch (cardType) {
-        case FHSearchCardTypeSecondHouse:
-            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeNewHouse:
-            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeRentHouse:
-            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeNeighborhood:
-            itemModel = [[FHSearchHouseItemModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeSubscribe:
-            itemModel = [[FHSugSubscribeDataDataSubscribeInfoModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeNeighborExpert:
-            itemModel = [[FHHouseNeighborAgencyModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeAgencyInfo:
-            itemModel = [[FHSearchRealHouseAgencyInfo alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeFilterHouseTip:
-            itemModel = [[FHSugListRealHouseTopInfoModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeGuessYouWantTip:
-            itemModel = [[FHSearchGuessYouWantTipsModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        case FHSearchCardTypeGuessYouWantContent:
-            itemModel = [[FHSearchGuessYouWantContentModel alloc]initWithDictionary:itemDict error:&jerror];
-            break;
-        default:
-            break;
-    }
-    return itemModel;
+
+@end
+
+@implementation FHHouseListViewModel(FHHouseTableView)
+
+- (FHTracerModel *)getCurrentTracerModel {
+    FHTracerModel *tracerModel = [[FHTracerModel alloc] init];
+    tracerModel.originSearchId = self.originSearchId;
+    tracerModel.searchId = self.searchId;
+    tracerModel.originFrom = self.tracerModel.originFrom;
+    tracerModel.enterFrom = self.tracerModel.enterFrom;
+    tracerModel.elementFrom = self.tracerModel.elementFrom;
+    tracerModel.elementType = [self elementTypeString];
+    tracerModel.pageType = [self pageTypeString];
+    tracerModel.categoryName = [self categoryName];
+    return tracerModel;
 }
 
+- (NSDictionary *)getCurrentContext {
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+    dict[@"search_type"] = @(self.searchType);
+    dict[@"house_type"] = @(self.houseType);
+    dict[@"pre_house_type"] = @(self.preHouseType);
+    dict[@"rank_offset"] = @(!self.isFirstHavetip ? -1 : 0);
+    if (self.subScribeQuery) {
+        dict[@"subscribe_query"] = self.subScribeQuery;
+    }
+    dict[@"subscribe_offset"] = @(self.subScribeOffset);
+    if (self.subScribeSearchId) {
+        dict[@"subscribe_search_id"] = self.subScribeSearchId;
+    }
+    
+    return dict;
+}
+
+- (NSObject *)getEntityFromModel:(id)model {
+    NSObject *entity = [FHHouseCardUtils getEntityFromModel:model];
+    if (entity) {
+        entity.fh_trackModel = [self getCurrentTracerModel];
+        
+        if ([entity conformsToProtocol:@protocol(FHHouseNewComponentViewModelProtocol)]) {
+            NSObject<FHHouseNewComponentViewModelProtocol> *viewModel = (NSObject<FHHouseNewComponentViewModelProtocol> *)entity;
+            viewModel.delegate = self;
+            viewModel.context = [self getCurrentContext];
+        }
+    }
+    
+    return entity;
+}
+
+#pragma mark - FHHouseTableViewDataSource
+- (NSArray<NSArray<id<FHHouseNewComponentViewModelProtocol>> *> *)fhHouse_dataList {
+    if (self.showPlaceHolder) {
+        NSInteger count = 10;
+        NSArray *placeholderViewModels = @[];
+        if (self.houseType == FHHouseTypeNewHouse) {
+            placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle1 count:count];
+        } else {
+            if (self.commute){
+                placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle3 count:count];
+            } else {
+                placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle2 count:count];
+            }
+        }
+        
+        return @[placeholderViewModels];
+    }
+    
+    return @[self.houseList.count ? self.houseList : @[],
+        self.sugesstHouseList.count ? self.sugesstHouseList : @[]
+    ];
+}
+
+- (NSDictionary<NSString *, NSString *> *)fhHouse_supportCellStyles {
+    return [FHHouseCardUtils supportCellStyleMap];
+}
+
+#pragma mark - FHHouseReserveAdviserViewModelDelegate
+- (NSMutableDictionary *)belongSubscribeCache {
+    return self.subscribeCache;
+}
+
+- (UIViewController *)belongsVC {
+    return self.listVC;
+}
+
+- (UITableView *)belongTableView {
+    return self.tableView;
+}
 
 @end
