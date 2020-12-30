@@ -178,6 +178,10 @@
 }
 
 + (NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList withInset:(UIEdgeInsets)inset withMaxWidth:(CGFloat)maxWidth {
+    return [self tagsStringWithTagList:tagList withInset:inset withMaxWidth:maxWidth withOpacity:1];
+}
+
++ (NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList withInset:(UIEdgeInsets)inset withMaxWidth:(CGFloat)maxWidth withOpacity:(CGFloat)opacity {
     
     NSMutableAttributedString *text = [[NSMutableAttributedString alloc]init];
     if (tagList.count > 0) {
@@ -189,7 +193,7 @@
             FHHouseTagsModel *element = obj;
             if (element.content && element.textColor && element.backgroundColor) {
                 
-                UIColor *textColor = [UIColor colorWithHexString:element.textColor] ? : [UIColor colorWithHexString:@"#f85959"];
+                UIColor *textColor = [UIColor colorWithHexString:element.textColor alpha:opacity] ? : [UIColor colorWithHexString:@"#f85959" alpha:opacity];
                 UIColor *backgroundColor = [UIColor colorWithHexString:element.backgroundColor] ? : [UIColor colorWithRed:248/255.0 green:89/255.0 blue:89/255.0 alpha:0.08];
                 NSAttributedString *attr = [self.class createTagAttrString:element.content isFirst:idx == 0 textColor:textColor backgroundColor:backgroundColor withInsets:inset];
                 [attrTexts addObject:attr];

@@ -73,6 +73,7 @@
 #import "TTBlockContentItem.h"
 #import "TTReportContentItem.h"
 #import <FHShareManager.h>
+#import "FHUserTracker.h"
 
 
 extern NSInteger const kWDPostCommentBindingErrorCode;
@@ -1893,6 +1894,14 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [BDTrackerProtocol eventData:dict];
 }
 
+- (void)writeButtonClickLog {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
+    dict[@"group_id"] = self.detailModel.answerEntity.ansid;
+    dict[@"page_type"] = @"answer";
+    dict[@"click_position"] = @"detail_comment";
+    TRACK_EVENT(@"click_comment", dict);
+}
+
 #pragma mark - WDBottomToolViewDelegate
 
 - (void)bottomView:(WDBottomToolView *)bottomView writeButtonClicked:(SSThemedButton *)wirteButton
@@ -1902,7 +1911,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     } else {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"该回答禁止评论" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:nil];
     }
-    [self p_sendDetailLogicTrackWithLabel:@"write_button"];
+    [self writeButtonClickLog];
 }
 
 - (void)bottomView:(WDBottomToolView *)bottomView commentButtonClicked:(SSThemedButton *)commentButton

@@ -125,9 +125,14 @@
     }
     self.view.hidden = NO;
     
+    CGFloat top = floor(self.view.superview.height/2 - 12);
     [UIView animateWithDuration:0.3 animations:^{
-        self.view.top =  floor(self.view.superview.height/2 - 12);
+        self.view.top =  top;
     }];
+    
+    if (self.movingBlock) {
+        self.movingBlock(top);
+    }
 
     [self.viewModel updateWithHouseData:nil neighbor:neighbor bubble:bubble];
 }
@@ -166,8 +171,13 @@
     return (self.view.top - 0.01) > [self minTop];
 }
 
--(void)moveTop:(CGFloat)top
-{
+- (void)moveTop:(CGFloat)top {
+    [self moveTop:top completion:^(BOOL finished) {
+        
+    }];
+}
+
+- (void)moveTop:(CGFloat)top completion:(void (^ __nullable)(BOOL finished))completion {
     CGFloat minTop = [self minTop];
     top = MAX(minTop, top);
     if (((top + 0.1) < self.view.top) && (top == minTop) ) {
@@ -177,8 +187,12 @@
         }
     }
     
-    [UIView animateWithDuration:0.1 animations:^{
+    [UIView animateWithDuration:0.2 animations:^{
         self.view.top = top;
+    } completion:^(BOOL finished) {
+        if (completion) {
+            completion(finished);
+        }
     }];
     
     if (self.movingBlock) {

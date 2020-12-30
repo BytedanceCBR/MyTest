@@ -43,7 +43,7 @@
     NSMutableAttributedString *attributedString = [WDLayoutHelper attributedStringWithString:text fontSize:fontSize lineHeight:lineHeight paragraphSpace:paraSpace];
     [attributedString addAttribute:NSForegroundColorAttributeName value:[UIColor tt_themedColorForKey:@"grey1"] range:NSMakeRange(0, [attributedString.string length])];
     self.abstContentLabel.numberOfLines = numberOfLines;
-    self.abstContentLabel.attributedTruncationToken = [self tokenAttributeString];
+//    self.abstContentLabel.attributedTruncationToken = [self tokenAttributeString];
     self.abstContentLabel.attributedText = attributedString;
 }
 
@@ -90,7 +90,7 @@
     if (!_abstContentLabel) {
         CGFloat fontSize = [WDListCellLayoutModel lightAnswerAbstractContentFontSize];
         _abstContentLabel = [[TTTAttributedLabel alloc] initWithFrame:CGRectZero];
-        _abstContentLabel.attributedTruncationToken = [self tokenAttributeString];
+//        _abstContentLabel.attributedTruncationToken = [self tokenAttributeString];
         _abstContentLabel.numberOfLines = 0;
         _abstContentLabel.clipsToBounds = YES;
         _abstContentLabel.font = [UIFont systemFontOfSize:fontSize];

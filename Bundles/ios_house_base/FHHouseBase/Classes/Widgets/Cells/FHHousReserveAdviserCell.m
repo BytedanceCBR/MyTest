@@ -12,7 +12,6 @@
 #import "FHDetailBaseModel.h"
 #import <BDWebImage/BDWebImage.h>
 #import "FHDetailAgentListCell.h"
-#import "FHShadowView.h"
 #import "FHHousePhoneCallUtils.h"
 #import "UIColor+Theme.h"
 #import <FHHouseBase/FHCommonDefines.h>
@@ -37,7 +36,6 @@
 
 
 @property(nonatomic, strong) UIView *containerView;
-@property(nonatomic, strong) FHShadowView *shadowView;
 
 @property(nonatomic, strong) UIView *topInfoView;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //小区名称
@@ -72,6 +70,22 @@
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (BOOL)isVisible {
+    BOOL isVisible = NO;
+    for (UITableViewCell *visibleCell in [self.modelData.tableView visibleCells]) {
+        if (visibleCell == self) {
+            isVisible = YES;
+            break;
+        }
+    }
+    
+    return isVisible;
+}
+
 - (void)updateHeightByIsFirst:(BOOL)isFirst {
     CGFloat top = 5;
     if (isFirst) {
@@ -87,18 +101,11 @@
     self.contentView.clipsToBounds = NO;
     self.clipsToBounds = NO;
 
-    _shadowView = [[FHShadowView alloc] initWithFrame:CGRectZero];
-    [_shadowView setCornerRadius:10];
-    [_shadowView setShadowColor:[UIColor whiteColor]];
-    [_shadowView setShadowOffset:CGSizeMake(0, 2)];
-    [self.contentView addSubview:_shadowView];
-
     _containerView = [[UIView alloc] init];
+    _containerView.backgroundColor = [UIColor whiteColor];
     CALayer *layer = _containerView.layer;
     layer.cornerRadius = 10;
     layer.masksToBounds = YES;
-    layer.borderColor =  [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
-    layer.borderWidth = 0.5f;
     [self.contentView addSubview:_containerView];
 
     _topInfoView = [[UIView alloc] init];
@@ -180,17 +187,13 @@
         make.bottom.mas_equalTo(self.contentView).offset(-5);
     }];
 
-    [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.containerView);
-    }];
-
     [self.topInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.mas_equalTo(self.containerView);
         make.height.mas_equalTo(73);
     }];
 
     [self.mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.topInfoView).mas_offset(-14);
+        make.centerY.mas_equalTo(self.topInfoView).mas_offset(-10);
         make.left.mas_equalTo(self.topInfoView).offset(15);
         make.height.mas_equalTo(22);
         make.right.mas_lessThanOrEqualTo(self.pricePerSqmLabel.mas_left).offset(-10);
@@ -413,10 +416,9 @@
     if ([data isKindOfClass:[FHHouseReserveAdviserModel class]]) {
         FHHouseReserveAdviserModel *model = (FHHouseReserveAdviserModel *)data;
         if ([SSCommonLogic isEnableVerifyFormAssociate] || model.isSubcribed) {
-            return 126;
+            return 136;
         }
     }
-    
     return 211;
 }
 
@@ -588,6 +590,10 @@
 
 #pragma mark - 键盘通知
 - (void)keyboardWillShowNotifiction:(NSNotification *)notification {
+    if (![self isVisible]) {
+        return;
+    }
+    
     if (!self.textField.isFirstResponder) {
         return;
     }
@@ -612,6 +618,10 @@
 }
 
 - (void)keyboardWillHideNotifiction:(NSNotification *)notification {
+    if (![self isVisible]) {
+        return;
+    }
+    
     self.offsetY = 0;
     if(self.modelData.tableView.contentOffset.y + self.modelData.tableView.frame.size.height > self.modelData.tableView.contentSize.height){
         //剩余不满一屏幕

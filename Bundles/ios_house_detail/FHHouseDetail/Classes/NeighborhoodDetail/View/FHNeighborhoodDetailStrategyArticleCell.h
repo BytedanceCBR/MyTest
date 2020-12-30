@@ -11,6 +11,7 @@
 NS_ASSUME_NONNULL_BEGIN
 typedef void(^lynxEndLoadBlock)(CGFloat cellHeight);
 @interface FHNeighborhoodDetailStrategyArticleCell : FHDetailBaseCollectionCell
+@property (nonatomic, strong) NSDictionary *tracerDic;
 @property (copy, nonatomic)  lynxEndLoadBlock lynxEndLoadBlock;
 @end
 

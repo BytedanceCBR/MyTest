@@ -592,6 +592,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                 NSMutableDictionary *categoryDict = [NSMutableDictionary dictionary];
                 categoryDict[@"error"] = @"1";
                 categoryDict[@"reason"] = @"消息tab未读数与分段页面未读数之和不相等";
+                categoryDict[@"currentTab"] = [FHEnvContext getCurrentTabIdentifier];
                 NSMutableDictionary *extraDict = [NSMutableDictionary dictionary];
                 extraDict[@"1.top:notify_tab_unread"] = @(sysUnreadNumber).stringValue;
                 extraDict[@"1.top:chat_tab_unread"] = @(chatUnreadNumber).stringValue;
@@ -628,7 +629,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                 }];
                 extraDict[@"6.diffTIMOConvDict"] = diffDict2;
                 
-                extraDict[@"7.currentTab"] = [FHEnvContext getCurrentTabIdentifier];
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"f_message_tab_badget_number_display_error"
                                                         metric:nil
                                                       category:categoryDict.copy

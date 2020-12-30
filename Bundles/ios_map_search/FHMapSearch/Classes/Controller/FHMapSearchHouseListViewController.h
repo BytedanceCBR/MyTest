@@ -42,7 +42,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(BOOL)canMoveup;
 
--(void)moveTop:(CGFloat)top;
+- (void)moveTop:(CGFloat)top;
+
+- (void)moveTop:(CGFloat)top completion:(void (^ __nullable)(BOOL finished))completion;
 
 -(void)dismiss;
 

@@ -83,6 +83,7 @@
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <TTArticleBase/CommonURLSetting.h>
 #import <FHShareManager.h>
+#import "FHUserTracker.h"
 
 extern BOOL ttvs_isShareIndividuatioEnable(void);
 extern NSInteger ttvs_isShareTimelineOptimize(void);
@@ -402,6 +403,23 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     
 }
 
+- (void)writeButtonClickLog {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    if (self.detailModel.gdExtJsonDict && self.detailModel.gdExtJsonDict.count > 0){
+        [dict addEntriesFromDictionary:self.detailModel.gdExtJsonDict];
+    }
+    if (self.detailModel.reportParams && self.detailModel.reportParams.count > 0){
+        [dict addEntriesFromDictionary:self.detailModel.reportParams];
+    }
+    dict[@"group_id"] = self.detailModel.uniqueID;
+    dict[@"page_type"] = @"video_detail";
+    dict[@"click_position"] = @"detail_comment";
+    
+    [dict setValue:self.detailModel.categoryID forKey:@"category_id"];
+
+    TRACK_EVENT(@"click_comment", dict);
+}
+
 #pragma mark - Actions
 
 - (void)_writeCommentActionFired:(id)sender
@@ -413,6 +431,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
             @"source" : @"comment"
         }];
     }
+    [self writeButtonClickLog];
     NSMutableDictionary *paramsDict = [[NSMutableDictionary alloc] initWithCapacity:5];
     [paramsDict setValue:self.videoInfo.itemID forKey:@"item_id"];
     [paramsDict setValue:self.videoInfo.groupModel.groupID forKey:@"group_id"];
@@ -1216,17 +1235,21 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
 #pragma mark - Log
 
 - (void)favoriteLog3{
-    NSMutableDictionary *extra = [NSMutableDictionary dictionary];
-    if (self.videoInfo.userRepined) {
-        [extra setValue:@"rt_favourite" forKey:@"favorite_name"];
-    }else{
-        [extra setValue:@"rt_unfavourite" forKey:@"favorite_name"];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    if (self.detailModel.gdExtJsonDict && self.detailModel.gdExtJsonDict.count > 0){
+        [dict addEntriesFromDictionary:self.detailModel.gdExtJsonDict];
     }
-    [extra addEntriesFromDictionary:_shareSectionAndEventDic];
-    Article *covertArticle = [self.videoInfo ttv_convertedArticle];
-    [extra setValue:@(TTActivitySectionTypeDetailBottomBar)forKey:@"sectionType"];
-    SAFECALL_MESSAGE(TTVShareDetailTrackerMessage,@selector(message_detailShareTrackWithGroupID:ActivityType:extraDic:fullScreen:),message_detailShareTrackWithGroupID:@(covertArticle.uniqueID).stringValue ActivityType:TTActivityTypeFavorite extraDic:extra fullScreen:NO);
+    if (self.detailModel.reportParams && self.detailModel.reportParams.count > 0){
+        [dict addEntriesFromDictionary:self.detailModel.reportParams];
+    }
+    dict[@"group_id"] = self.detailModel.uniqueID;
+    dict[@"page_type"] = @"video_detail";
     
+    if (self.videoInfo.userRepined) {
+        TRACK_EVENT(@"click_favorite", dict);
+    }else{
+        TRACK_EVENT(@"click_disfavorite", dict);
+    }
 }
 
 - (void)commodityLogV3WithEventName:(NSString *)eventName

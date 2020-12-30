@@ -15,7 +15,6 @@
 #import "ToastManager.h"
 #import "TTNavigationController.h"
 #import "FHSugSubscribeListViewController.h"
-#import "HMDTTMonitor.h"
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "FHOldSuggestionItemCell.h"
 #import "FHSuggestionEmptyCell.h"
@@ -24,6 +23,7 @@
 #import "UIDevice+BTDAdditions.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "FHMonitor.h"
 
 @interface FHChildSuggestionListViewController ()<UITextFieldDelegate>
 
@@ -220,9 +220,12 @@
         return;
     }
     _isCanTrack = isCanTrack;
-    if (isCanTrack && self.fatherVC.naviBar.searchInput.text.length == 0) {
-        [self.viewModel reloadHistoryTableView];
+    if (!self.historyIsSuccess) {
+        [self requestData];
     }
+//    if (isCanTrack && self.fatherVC.naviBar.searchInput.text.length == 0) {
+//        [self.viewModel reloadHistoryTableView];
+//    }
 }
 
 - (FHSuggectionTableView *)createTableView {
@@ -271,6 +274,7 @@
     
     _houseType = houseType;
     self.viewModel.houseType = self.houseType;
+    self.viewModel.hasShowKeyboard = !self.needShowKeyBoardWhenFirstEnter;
     // 清空埋点key
     [self.viewModel.guessYouWantShowTracerDic removeAllObjects];
     // 网络请求
@@ -313,6 +317,7 @@
             self.isCanTrack = isCanTrack;
         }
         [self.viewModel clearSugTableView];
+        self.lastSearchWord = nil;
     }
     if (isCanTrack) {
         _textFieldText = text;
@@ -417,10 +422,10 @@
             NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
             [paramsExtra setValue:@"跳转错误" forKey:@"desc"];
             [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"guess_you_want_error" status:1 extra:paramsExtra];
+            [FHMonitor hmdTrackService:@"guess_you_want_error" status:1 extra:paramsExtra];
         }else
         {
-            [[HMDTTMonitor defaultManager] hmdTrackService:@"guess_you_want_error" status:0 extra:nil];
+            [FHMonitor hmdTrackService:@"guess_you_want_error" status:0 extra:nil];
         }
         
         [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
@@ -438,11 +443,12 @@
     BOOL hasText = text.length > 0;
     
     if (hasText) {
-         [self requestSuggestion:text];
         _suggestTableView.hidden = !hasText;
         _historyTableView.hidden = hasText;
+         [self requestSuggestion:text];
     }
     // 历史记录 + 猜你想搜
+    self.historyIsSuccess = YES;
     [self.viewModel clearHistoryTableView];
     self.viewModel.loadRequestTimes = 0;
     [self requestHistoryFromRemote];
@@ -498,9 +504,12 @@
         if (![self shouldReloadSuggestionWord:text]) {
             return;
         }
-        self.isLoadingData = YES;
         NSInteger cityId = [[FHEnvContext getCurrentSelectCityIdFromLocal] integerValue];
         if (cityId) {
+            self.suggestTableView.hidden = YES;
+            self.emptyView.hidden = YES;
+            [self startLoading];
+            self.isLoadingData = YES;
             [self.viewModel requestSuggestion:cityId houseType:self.houseType query:text];
         }
     }

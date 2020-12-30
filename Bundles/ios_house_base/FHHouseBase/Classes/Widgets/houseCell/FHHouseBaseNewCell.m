@@ -66,19 +66,9 @@
     }];
     
     [self.contentView addSubview:self.leftInfoView];
-    [self.leftInfoView addSubview:self.houseMainImageBackView];
     [self.leftInfoView addSubview:self.mainImageView];
     [self.leftInfoView addSubview:self.imageTagLabelBgView];
     [self.imageTagLabelBgView addSubview:self.imageTagLabel];
-    
-    [self.houseMainImageBackView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
-        layout.isEnabled = YES;
-        layout.position = YGPositionTypeAbsolute;
-        layout.top = YGPointValue(11.5 + 3);
-        layout.left = YGPointValue(8.5);
-        layout.width = YGPointValue(106 - 6);
-        layout.height = YGPointValue(80 - 6);
-    }];
     
     [self.mainImageView configureLayoutWithBlock:^(YGLayout * _Nonnull layout) {
         layout.isEnabled = YES;

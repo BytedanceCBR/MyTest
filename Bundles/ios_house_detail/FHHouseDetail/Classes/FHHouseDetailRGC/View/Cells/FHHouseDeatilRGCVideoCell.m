@@ -85,6 +85,7 @@
     
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 30, 0)];
     _contentLabel.numberOfLines = maxLines;
+    _contentLabel.font = [UIFont themeFontRegular:14];
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
     _contentLabel.delegate = self;
@@ -182,7 +183,7 @@
     
     self.headerView.top = cellModel.isInRealtorEvaluationList?18:topMargin;
     self.headerView.left = 0;
-    self.headerView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.headerView.width = [UIScreen mainScreen].bounds.size.width - 15 * 2;
     self.headerView.height = userInfoViewHeight;
     
     self.contentLabel.top = self.userInfoView.bottom + 7;

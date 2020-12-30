@@ -424,7 +424,6 @@
         cellModel.content = model.rawData.content.answer.abstractText;
         cellModel.openUrl = model.rawData.content.answer.answerDetailSchema;
         cellModel.commentSchema = model.rawData.content.commentSchema;
-        cellModel.showLookMore = YES;
         cellModel.fromGid = model.rawData.fromGid;
         cellModel.fromGroupSource = model.rawData.fromGroupSource;
         
@@ -486,7 +485,6 @@
         cellModel.content = model.rawData.commentBase.content;
         cellModel.contentRichSpan = model.rawData.commentBase.contentRichSpan;
         cellModel.openUrl = model.rawData.commentBase.detailSchema;
-        cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
         cellModel.fromGid = model.rawData.fromGid;
         cellModel.fromGroupSource = model.rawData.fromGroupSource;
@@ -719,7 +717,6 @@
         cellModel.videoSourceIcon = model.rawData.videoSourceIcon;
         cellModel.userRepin = model.rawData.userRepin;
         cellModel.videoAction = [model.rawData.action copy];
-        cellModel.showLookMore = YES;
         cellModel.numberOfLines = 3;
         cellModel.createTime = [FHBusinessManager ugcCustomtimeAndCustomdateStringSince1970:model.rawData.createTime.doubleValue type:@"onlyDate"];
         NSString *dur = model.rawData.video.duration;
@@ -781,9 +778,9 @@
         cellModel.imageList = model.rawData.firstFrameImageList;
         cellModel.largeImageList = model.rawData.detailCoverImageModel;
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:3];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:3 font:[UIFont themeFontRegular:14]];
         }else {
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
+            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         }
     } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideoList){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeSmallVideoList;
@@ -837,7 +834,6 @@
         cellModel.allSchema = model.rawData.allSchema;
         cellModel.numberOfLines = 3;
         cellModel.avatar = model.rawData.avatar;
-        cellModel.showLookMore = YES;
         if(isEmptyString(cellModel.avatar)){
             [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         }else{
@@ -901,7 +897,6 @@
     }
     cellModel.logPb = logPbDic;
     
-    cellModel.showLookMore = YES;
     cellModel.needLinkSpan = YES;
     cellModel.numberOfLines = 3;
     cellModel.hasEdit = [model.hasEdit boolValue];

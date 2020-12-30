@@ -1,11 +1,11 @@
 //
-//  FHRealtorAvatarView.m
+//  FHUGCAvatarView.m
 //  Pods
 //
 //  Created by bytedance on 2020/8/11.
 //
 
-#import "FHRealtorAvatarView.h"
+#import "FHUGCAvatarView.h"
 #import <BDWebImage/BDWebImage.h>
 #import <Masonry/Masonry.h>
 #import <FHHouseDetail/FHDetailBaseModel.h>
@@ -13,20 +13,17 @@
 #import <TTShortVideoModel.h>
 #import <FHCommonDefines.h>
 
-@interface FHRealtorAvatarView ()
+@interface FHUGCAvatarView ()
 
 @end
 
-@implementation FHRealtorAvatarView
+@implementation FHUGCAvatarView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.clipsToBounds = YES;
         self.userInteractionEnabled = NO;
-        
         _avatarImageView = [[FHUGCCommonAvatar alloc] init];
-//        _avatarImageView.layer.masksToBounds = YES;
-//        _avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
         _placeHoldName = @"detail_default_avatar";
         [self addSubview:_avatarImageView];
         [self.avatarImageView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -54,10 +51,8 @@
     if(url.length) {
         [self.avatarImageView setAvatarUrl:url];
         [self.avatarImageView setUserId:self.userId];
-//        [self.avatarImageView bd_setImageWithURL:[NSURL URLWithString:url] placeholder:[UIImage imageNamed:self.placeHoldName]];
     } else {
         [self.avatarImageView setPlaceholderImage:self.placeHoldName];
-//        self.avatarImageView.image = [UIImage imageNamed:self.placeHoldName];
     }
 }
 
