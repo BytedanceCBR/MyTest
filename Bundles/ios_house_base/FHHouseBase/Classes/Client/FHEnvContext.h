@@ -282,6 +282,11 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 + (BOOL)isDisplayNewCardType;
 
 /*
+ 大类页/列表页列表组件开关
+ */
++ (BOOL)isHouseListComponentEnable;
+
+/*
 判断开启首次安装用户引导，默认YES
  */
 + (BOOL)isIntroduceOpen;
