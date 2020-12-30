@@ -19,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
  * 上级页面配置
  */
 @property(nonatomic, copy) NSString *elementFrom; //上级页面 组件名称
+@property(nonatomic, copy) NSString *elementType; //上级页面 组件名称
 @property(nonatomic, copy) NSString *enterFrom; //上级页面名称
 @property(nonatomic, copy) NSString *enterType; //上级页面名称
 

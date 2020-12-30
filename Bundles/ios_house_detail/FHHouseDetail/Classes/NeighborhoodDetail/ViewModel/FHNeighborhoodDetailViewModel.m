@@ -59,41 +59,12 @@
 
 @end
 
-id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions readingOptions) {
-    if ([JSONObject isKindOfClass:[NSArray class]]) {
-        NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:[(NSArray *)JSONObject count]];
-        for (id value in (NSArray *)JSONObject) {
-            if (![value isEqual:[NSNull null]]) {
-                [mutableArray addObject:FHJSONObjectByRemovingKeysWithNullValues(value, readingOptions)];
-            }
-        }
-
-        return (readingOptions & NSJSONReadingMutableContainers) ? mutableArray : [NSArray arrayWithArray:mutableArray];
-    } else if ([JSONObject isKindOfClass:[NSDictionary class]]) {
-        NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithDictionary:JSONObject];
-        for (id <NSCopying> key in [(NSDictionary *)JSONObject allKeys]) {
-            id value = (NSDictionary *)JSONObject[key];
-            if (!value || [value isEqual:[NSNull null]]) {
-                [mutableDictionary removeObjectForKey:key];
-            } else if ([value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]]) {
-                mutableDictionary[key] = FHJSONObjectByRemovingKeysWithNullValues(value, readingOptions);
-            }
-        }
-
-        return (readingOptions & NSJSONReadingMutableContainers) ? mutableDictionary : [NSDictionary dictionaryWithDictionary:mutableDictionary];
-    }
-
-    return JSONObject;
-}
-
 @implementation FHNeighborhoodDetailViewModel
 
 - (void)startLoadData {
     __weak typeof(self) wSelf = self;
-    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId logPB:self.listLogPB query:nil extraInfo:self.extraInfo completion:^(FHDetailNeighborhoodModel * _Nullable model, NSData * _Nullable resultData, NSError * _Nullable error) {
+    [FHHouseDetailAPI requestNeighborhoodDetail:self.houseId ridcode:self.ridcode realtorId:self.realtorId logPB:self.listLogPB query:nil extraInfo:self.extraInfo completion:^(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error) {
         if (model && error == NULL) {
-            NSDictionary *originDetailDict = [NSJSONSerialization JSONObjectWithData:resultData options:0 error:nil];
-            wSelf.originDetailDict = FHJSONObjectByRemovingKeysWithNullValues(originDetailDict, 0);
             if (model.data) {
                 [wSelf processDetailData:model];
                 wSelf.detailController.hasValidateData = YES;
