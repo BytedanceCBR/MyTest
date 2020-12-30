@@ -58,7 +58,7 @@
         }
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateNormal];
         [_contactBtn setTitle:@"电话咨询" forState:UIControlStateHighlighted];
-        _contactBtn.layer.cornerRadius = 22;
+        _contactBtn.layer.cornerRadius = 20;
         _contactBtn.backgroundColor =[UIColor colorWithHexStr:@"#fe5500"];
         [_contactBtn addTarget:self action:@selector(clickPhone:) forControlEvents:UIControlEventTouchDown];
      
@@ -69,7 +69,7 @@
 - (UIButton *)imChatBtn {
     if (!_imChatBtn) {
         _imChatBtn = [[UIButton alloc] init];
-        _imChatBtn.layer.cornerRadius = 22;
+        _imChatBtn.layer.cornerRadius = 20;
         _imChatBtn.backgroundColor = [UIColor colorWithHexStr:@"#ff9629"];
         if ([UIDevice btd_isIPhoneXSeries]) {
             _imChatBtn.titleLabel.font = [UIFont themeFontRegular:14];

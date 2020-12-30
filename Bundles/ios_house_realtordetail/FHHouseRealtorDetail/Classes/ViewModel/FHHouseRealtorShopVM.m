@@ -22,7 +22,10 @@
 #import "NSObject+YYModel.h"
 #import "FHUserTracker.h"
 #import "FHRealtorSecondCell.h"
+#import <ios_house_im/IMManager.h>
+#import <Masonry.h>
 #import "FHPlaceHolderCell.h"
+
 @interface FHHouseRealtorShopVM ()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic, weak)TTHttpTask *requestTask;
 @property(nonatomic , weak) UITableView *tableView;
@@ -77,24 +80,47 @@
         [self updateNavBarWithAlpha:1];
         return;
     }
+    NSMutableDictionary *params= [NSMutableDictionary new];
+    params[@"realtor_id"] = self.realtorInfo[@"realtor_id"];
     [self.detailController startLoading];
-    NSMutableDictionary *parmas= [NSMutableDictionary new];
-    [parmas setValue:self.realtorInfo[@"realtor_id"]?:@"" forKey:@"realtor_id"];
     // 详情页数据-Main
-    __weak typeof(self) wSelf = self;
-    [FHMainApi requestRealtorShop:parmas completion:^(FHHouseRealtorShopDetailModel * _Nonnull model, NSError * _Nonnull error) {
+    [FHMainApi requestRealtorShop:params completion:^(FHHouseRealtorShopDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
                 [self.detailController endLoading];
-                 [self configTableView];
+                [self configTableView];
                 self.data = model.data;
                 [self requestData:YES first:YES];
                 [self loadDataForShop:model];
                 [self prossHeaderData:model];
                 [self updateNavBarWithAlpha:0];
-//                [self requestData:YES first:YES];
-                //                [wSelf updateUIWithData];
-                //                    [wSelf processDetailData:model];
+                
+                NSString *tips = [self.data.realtor btd_stringValueForKey:@"punish_tips"];
+                BOOL isPunish = [[self.data.realtor btd_numberValueForKey:@"punish_status" default:@(0)] boolValue];
+                BOOL isBlackmailRealtor = isPunish && tips.length > 0;
+                [self.detailController showBottomBar:!isBlackmailRealtor];
+                [self.detailController.blackmailReatorBottomBar show:isBlackmailRealtor WithHint:tips btnAction:^{
+                    
+                    // 点击埋点
+                    NSMutableDictionary *clickParams = [NSMutableDictionary dictionary];
+                    clickParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM];
+                    clickParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+                    clickParams[UT_PAGE_TYPE] = self.tracerDict[UT_PAGE_TYPE];
+                    clickParams[UT_ELEMENT_TYPE] = @"find_other_realtor";
+                    clickParams[UT_CLICK_POSITION] = @"find_other_realtor";
+                    TRACK_EVENT(@"click_options",clickParams);
+                    //---
+                    [[IMManager shareInstance] jumpRealtorListH5PageWithUrl:self.data.redirect reportParam:clickParams];
+                }];
+                
+                [self.detailController.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+                    make.top.left.right.mas_equalTo(self.detailController.view);
+                    if(self.detailController.blackmailReatorBottomBar.hidden == NO) {
+                        make.bottom.equalTo(self.detailController.blackmailReatorBottomBar.mas_top);
+                    } else {
+                        make.bottom.equalTo(self.detailController.bottomBar.mas_top);
+                    }
+                }];
             }
         }else {
             [self.detailController endLoading];
@@ -102,6 +128,7 @@
         }
     }];
 }
+
 
 - (void)loadDataForShop:(FHHouseRealtorShopDetailModel *)model {
     if (model.data.realtor) {
