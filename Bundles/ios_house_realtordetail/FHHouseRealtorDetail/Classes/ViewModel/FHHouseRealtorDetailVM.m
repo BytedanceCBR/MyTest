@@ -41,6 +41,7 @@
 #import "TTURLUtils.h"
 #import "NSObject+YYModel.h"
 #import "NSDictionary+BTDAdditions.h"
+#import "UIViewController+Refresh_ErrorHandler.h"
 #define kSegmentViewHeight 44
 @interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate,TTHorizontalPagingSegmentViewDelegate>
 
@@ -50,6 +51,7 @@
 @property (nonatomic, strong) FHHouseRealtorDetailDataModel *data;
 @property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
 @property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
+@property(nonatomic, assign) CGFloat headerViewHeight;
 @property (nonatomic, strong) NSMutableArray *subVCs;
 @property (nonatomic, strong) NSMutableArray *segmentTitles;
 @property (nonatomic, copy) NSString *currentSegmentType;
@@ -98,6 +100,7 @@
         [self updateNavBarWithAlpha:1];
         return;
     }
+    [self.viewController startLoading];
     NSMutableDictionary *parmas= [NSMutableDictionary new];
     [parmas setValue:realtorId forKey:@"realtor_id"];
     // 详情页数据-Main
@@ -111,10 +114,12 @@
             }else {
                 [wSelf addGoDetailLog];
                 [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [self.viewController endLoading];
             }
         }else {
             [wSelf addGoDetailLog];
             [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [self.viewController endLoading];
         }
     }];
 }
@@ -157,6 +162,7 @@
             [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
         }
         [self.viewController.headerView reloadDataWithDic:dic];
+        [self.viewController endLoading];
         if ([model.data.realtor.allKeys containsObject:@"is_preferred_realtor"]) {
             BOOL isHightScore = [model.data.realtor btd_boolValueForKey:@"is_preferred_realtor"];
             if (isHightScore) {
@@ -171,6 +177,7 @@
         }
         
         self.viewController.headerView.height = self.viewController.headerView.viewHeight;
+        self.headerViewHeight = self.viewController.headerView.viewHeight;
         if (realtorLeave) {
             [self.viewController showRealtorLeaveHeader];
             return;

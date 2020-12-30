@@ -7,7 +7,6 @@
 
 #import "FHHomeViewController.h"
 #import "FHHomeListViewModel.h"
-#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHEnvContext.h"
 #import "FHHomeCellHelper.h"
 #import "FHHomeConfigManager.h"
@@ -227,18 +226,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     if (!configModel) {
         [self tt_startUpdate];
     }
-    
-    if (self.notifyBar) {
-        [self.notifyBar removeFromSuperview];
-    }
-    
-    self.notifyBar = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.notifyBar];
-    
-    [self.notifyBar mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.mainTableView);
-        make.height.mas_equalTo(32);
-    }];
 }
 
 #pragma mark - notifications
@@ -280,51 +267,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     self.homeListViewModel.stayTime = [[NSDate date] timeIntervalSince1970];
 }
 
--(void)showNotify:(NSString *)message
-{
-    //如果首页没有显示，则不提示tip
-    if (!self.isShowing) {
-        return;
-    }
-    
-    [self hideImmediately];
-    
-    self.isShowRefreshTip = YES;
-    
-    UIEdgeInsets inset = self.mainTableView.contentInset;
-    inset.top = 32;
-    self.mainTableView.contentInset = inset;
-    WeakSelf;
-    [self.notifyBar showMessage:message
-              actionButtonTitle:@""
-                      delayHide:YES
-                       duration:1.8
-            bgButtonClickAction:nil
-         actionButtonClickBlock:nil
-                   didHideBlock:nil
-                  willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
-                      [UIView animateWithDuration:0.3 animations:^{
-                          UIEdgeInsets inset = self.mainTableView.contentInset;
-                          inset.top = 0;
-                          self.mainTableView.contentInset = inset;
-                          [FHEnvContext sharedInstance].isRefreshFromCitySwitch = NO;
-                          self.homeListViewModel.isResetingOffsetZero = NO;
-                      }completion:^(BOOL finished) {
-                          if(!isImmediately){
-                              self.isShowRefreshTip = NO;
-                          }
-                      }];
 
-    }];
-}
-
-- (void)hideImmediately
-{
-    if(!self.notifyBar.hidden){
-        [self.notifyBar hideImmediately];
-        self.isShowRefreshTip = NO;
-    }
-}
 
 - (void)retryLoadData
 {

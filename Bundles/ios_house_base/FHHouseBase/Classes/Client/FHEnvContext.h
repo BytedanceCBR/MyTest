@@ -271,10 +271,6 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
  */
 + (BOOL)isHasVideoList;
 
-/*
- 是否开启视频预加载实验，默认NO
-  */
- + (BOOL)isHasPerLoadForVideo;
 
 /*
  降级卡片开关

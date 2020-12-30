@@ -12,7 +12,7 @@
 
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (![viewModel isKindOfClass:FHHousePlaceholderStyle1ViewModel.class]) return 0.0f;
-    return 118;
+    return 88;
 }
 
 @end
@@ -29,17 +29,9 @@
 
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (![viewModel isKindOfClass:FHHousePlaceholderStyle2ViewModel.class]) return 0.0f;
-    return 88;
+    return 124;
 }
 
 
 @end
 
-@implementation FHHousePlaceholderStyle3Cell
-
-+ (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
-    if (![viewModel isKindOfClass:FHHousePlaceholderStyle3ViewModel.class]) return 0.0f;
-    return 105;
-}
-
-@end

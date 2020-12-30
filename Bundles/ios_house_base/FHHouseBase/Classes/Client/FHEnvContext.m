@@ -113,11 +113,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
-            
             NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
-            
             [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
-            
             if (isSuccess) {
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 FHConfigDataModel *configModel = model.data;
@@ -1095,14 +1092,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 + (BOOL)isHasVideoList {
     return YES;
-}
-
-+ (BOOL)isHasPerLoadForVideo {
-    id res = [BDABTestManager getExperimentValueForKey:@"is_video_perload" withExposure:YES];
-    if(res){
-        return [res boolValue];
-    }
-    return NO;
 }
 
 + (BOOL)isDisplayNewCardType {

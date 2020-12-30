@@ -63,8 +63,6 @@
     if(self.viewController.tableViewNeedPullDown){
         // 下拉刷新
         [self.tableView tt_addDefaultPullDownRefreshWithHandler:^{
-            wself.isRefreshingTip = NO;
-            [wself.viewController hideImmediately];
             [wself requestData:YES first:NO];
         }];
     }
@@ -77,10 +75,6 @@
     
     self.viewController.isLoadingData = YES;
     
-    if(self.isRefreshingTip){
-        [self.tableView finishPullDownWithSuccess:YES];
-        return;
-    }
     
     if(isFirst){
         [self.viewController startLoading];
@@ -194,15 +188,6 @@
             [wself.tableView reloadData];
             
             NSString *refreshTip = feedListModel.tips.displayInfo;
-            if (isHead && wself.dataList.count > 0 && ![refreshTip isEqualToString:@""] && wself.viewController.tableViewNeedPullDown && !wself.isRefreshingTip){
-                wself.isRefreshingTip = YES;
-                [wself.viewController showNotify:refreshTip completion:^{
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        wself.isRefreshingTip = NO;
-                    });
-                }];
-                [wself.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:NO];
-            }
         }
     }];
 }
@@ -373,11 +358,6 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self.viewController.scrollViewDelegate scrollViewDidScroll:scrollView];
-    if(scrollView == self.tableView){
-        if (scrollView.isDragging) {
-            [self.viewController.notifyBarView performSelector:@selector(hideIfNeeds) withObject:nil];
-        }
-    }
 }
 
 #pragma mark - FHUGCBaseCellDelegate

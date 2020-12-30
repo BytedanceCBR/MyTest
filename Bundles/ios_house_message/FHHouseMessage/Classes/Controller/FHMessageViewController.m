@@ -196,6 +196,7 @@
 }
 
 - (void)retryLoadData {
+    [self.emptyView hideEmptyView];
     [self startLoadData];
 }
 
