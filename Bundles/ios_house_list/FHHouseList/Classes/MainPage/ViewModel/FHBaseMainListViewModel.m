@@ -1090,6 +1090,7 @@ extern NSString *const INSTANT_DATA_KEY;
         NSMutableDictionary *dict = @{}.mutableCopy;
         NSMutableDictionary *tracerDict = @{}.mutableCopy;
         tracerDict[UT_ENTER_FROM] = [self categoryName] ? : @"be_null";
+        tracerDict[UT_ORIGIN_FROM] = self.tracerModel.originFrom;
         dict[@"tracer"] = tracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
