@@ -391,7 +391,7 @@
         [params setValue:conv.identifier forKey:KSCHEMA_CONVERSATION_ID];
         [params setValue:title forKey:KSCHEMA_CHAT_TITLE];
         NSMutableDictionary *tracer = [NSMutableDictionary dictionary];
-        tracer[UT_ORIGIN_FROM] = self.viewController.fatherVC.tracerDict[UT_ORIGIN_FROM];
+        tracer[UT_ORIGIN_FROM] = self.viewController.fatherVC.tracerDict[UT_ORIGIN_FROM]?:@"message_list";
         tracer[UT_ENTER_FROM] = @"message_weiliao";
         tracer[@"element_from"] = @"be_null";
         tracer[@"log_pb"] = @"be_null";
