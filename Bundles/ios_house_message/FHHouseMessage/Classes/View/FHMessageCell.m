@@ -426,7 +426,7 @@
         // 经纪公司tag
         if (!isEmptyString(conv.companyName)) {
             FHMessageCellTagModel *companyTag = [[FHMessageCellTagModel alloc] initWithName:conv.companyName];
-            [tags addObject:companyTag];
+            [tags btd_addObject:companyTag];
         }
         [self.tagsView updateWithTags:tags.copy];
         

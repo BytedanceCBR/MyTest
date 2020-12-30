@@ -329,7 +329,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
             id data = [jsonObj btd_objectForKey:@"data" default:nil];
             BOOL isBlackmailed = NO;
             if(data && [data isKindOfClass:NSDictionary.class]) {
-                isBlackmailed = [[data btd_objectForKey:@"punish_status" default:@0] boolValue];
+                isBlackmailed = [[data btd_stringValueForKey:@"punish_status"] boolValue];
             }
             if(isBlackmailed) {
                 // 展现埋点

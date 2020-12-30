@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface TTLaunchTaskDebugInfo : NSObject
 @property (nonatomic, copy) NSString *taskTypeName;
 @property (nonatomic, assign) FHTaskType taskType;
-@property (nonatomic, strong) NSArray<TTLaunchTaskInfo *> *priorityTasks;
+@property (nonatomic, copy) NSArray<TTLaunchTaskInfo *> *priorityTasks;
 @end
 
 @interface TTLaunchManager(Debug)

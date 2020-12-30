@@ -111,7 +111,7 @@
 }
 @end
 @interface TTLaunchManagerDebugInfoViewController()<UITableViewDelegate, UITableViewDataSource>
-@property (nonatomic, strong) NSArray<TTLaunchTaskDebugInfo *> *dataSource;
+@property (nonatomic, copy) NSArray<TTLaunchTaskDebugInfo *> *dataSource;
 @property (nonatomic, strong) UITableView *tableView;
 @end
 
@@ -151,19 +151,19 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    TTLaunchTaskDebugInfo *taskGroup = self.dataSource[section];
+    TTLaunchTaskDebugInfo *taskGroup = [self.dataSource btd_objectAtIndex:section];
     return taskGroup.priorityTasks.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     TTLaunchManagerDebugInfoCell *cell = [tableView dequeueReusableCellWithIdentifier:[TTLaunchManagerDebugInfoCell reuseIdentifier] forIndexPath:indexPath];
-    TTLaunchTaskInfo *taskInfo = self.dataSource[indexPath.section].priorityTasks[indexPath.row];
+    TTLaunchTaskInfo *taskInfo = [[self.dataSource btd_objectAtIndex:indexPath.section].priorityTasks btd_objectAtIndex:indexPath.row];
     [cell configWithTaskInfo:taskInfo];
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    TTLaunchTaskDebugInfo *taskGroup = self.dataSource[section];
+    TTLaunchTaskDebugInfo *taskGroup = [self.dataSource btd_objectAtIndex:section];
     return [taskGroup.taskTypeName stringByAppendingFormat:@"(枚举值: %@)", @(taskGroup.taskType)];
 }
 
