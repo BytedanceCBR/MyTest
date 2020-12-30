@@ -46,7 +46,6 @@
 @property (nonatomic, assign)   NSInteger       totalCount; // 订阅搜索总个数
 @property (nonatomic, strong , nullable) NSMutableArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
 
-@property (nonatomic, assign)   BOOL       hasShowKeyboard;
 @property (nonatomic, assign)   BOOL       hasExposedHouseFindFloatButton;
 @property (nonatomic, assign)   BOOL       hasExposedHouseFindCard;
 
