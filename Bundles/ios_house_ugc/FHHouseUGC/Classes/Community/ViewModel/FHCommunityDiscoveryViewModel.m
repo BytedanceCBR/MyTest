@@ -287,7 +287,7 @@
             if (scrollView.contentOffset.x < 0) {
                 _oldX = 0;
             } else {
-                _oldX = [UIScreen mainScreen].bounds.size.width * (self.viewController.segmentControl.sectionTitles.count - 1);
+                _oldX = (CGFloat)[UIScreen mainScreen].bounds.size.width * (self.viewController.segmentControl.sectionTitles.count - 1);
             }
             return;
         }
