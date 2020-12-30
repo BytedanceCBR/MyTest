@@ -151,6 +151,7 @@
     
     dict[@"enter_from"] = reportParams.enterFrom ? : @"be_null";
     dict[@"element_from"] = reportParams.elementFrom ? : @"be_null";
+    dict[@"element_type"] = reportParams.elementType ? : @"be_null";
     dict[@"origin_from"] = reportParams.originFrom ? : @"be_null";
     dict[@"log_pb"] = reportParams.logPb ? : @"be_null";
     dict[@"origin_search_id"] = reportParams.originSearchId ? : @"be_null";
