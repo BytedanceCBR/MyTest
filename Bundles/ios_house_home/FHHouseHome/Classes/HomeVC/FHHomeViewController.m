@@ -40,6 +40,7 @@
 #import "NSObject+FHTracker.h"
 #import "FHUserTracker.h"
 #import "FHHomeRenderFlow.h"
+#import "FHTrackingManager.h"
 #import "FHFirstPageManager.h"
 #import <BytedanceKit.h>
 
@@ -113,6 +114,7 @@ static CGFloat const kSectionHeaderHeight = 38;
             self.homeListViewModel = [[FHHomeListViewModel alloc] initWithViewController:self.mainTableView andViewController:self andPanelVM:self.panelVM];
         }
     }];
+
     WeakSelf;
     [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         StrongSelf;
@@ -159,6 +161,9 @@ static CGFloat const kSectionHeaderHeight = 38;
         }
         //        }
     }];
+    
+    ///尝试弹出IDFA引导弹窗及授权弹窗
+    [self showTrackingAuthenticationPopup];
 }
 
 - (void)bindIndexChangedBlock
@@ -500,6 +505,12 @@ static CGFloat const kSectionHeaderHeight = 38;
 #pragma mark - Tracker相关
 - (NSString *)fh_pageType {
     return @"maintab";
+}
+
+#pragma mark - IDFA授权弹窗
+
+- (void)showTrackingAuthenticationPopup {
+    [[FHTrackingManager sharedInstance] showTrackingServicePopupInHomePage:YES];
 }
 
 @end

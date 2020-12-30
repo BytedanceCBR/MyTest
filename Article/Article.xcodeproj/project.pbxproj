@@ -214,6 +214,9 @@
 		D45F59FD2458039F00A14982 /* LynxLocalChannels in Resources */ = {isa = PBXBuildFile; fileRef = D45F59FB2458039E00A14982 /* LynxLocalChannels */; };
 		D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
+		D751169F257CC6AD00A5E084 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D751169E257CC6AD00A5E084 /* AppTrackingTransparency.framework */; };
+		D75116A0257CC6BC00A5E084 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D751169E257CC6AD00A5E084 /* AppTrackingTransparency.framework */; };
+		D75116A1257CC6CC00A5E084 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D751169E257CC6AD00A5E084 /* AppTrackingTransparency.framework */; };
 		D4A37AE925654D14002B01F5 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4A37AE825654D14002B01F5 /* SafariServices.framework */; };
 		D4A37AEA25654D21002B01F5 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4A37AE825654D14002B01F5 /* SafariServices.framework */; };
 		F85629476F410FEDF98AB2BA /* libPods-serviceNofExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8F614528BFD84403C72AE68 /* libPods-serviceNofExtension.a */; };
@@ -504,6 +507,7 @@
 		D37495DF23965409006D44D2 /* gaode_house_detail_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_house_detail_style.data; sourceTree = "<group>"; };
 		D45F59FB2458039E00A14982 /* LynxLocalChannels */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LynxLocalChannels; sourceTree = "<group>"; };
 		D48E93C0233CF142005A42CD /* VRImageLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VRImageLoading.json; sourceTree = "<group>"; };
+		D751169E257CC6AD00A5E084 /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
 		D4A37AE825654D14002B01F5 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoResource.xcassets; sourceTree = "<group>"; };
 		E34D4345B7726A4914383123 /* Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-com.f100.client.FHNotificationServiceExtension/Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
@@ -546,6 +550,7 @@
 				2D1B0ACB256A8EE9006091A2 /* libbz2.tbd in Frameworks */,
 				2D1B0ACC256A8EE9006091A2 /* WebKit.framework in Frameworks */,
 				2D1B0ACD256A8EE9006091A2 /* CoreSpotlight.framework in Frameworks */,
+				D75116A1257CC6CC00A5E084 /* AppTrackingTransparency.framework in Frameworks */,
 				2D1B0ACE256A8EE9006091A2 /* CoreMotion.framework in Frameworks */,
 				2D1B0ACF256A8EE9006091A2 /* ImageIO.framework in Frameworks */,
 				2D1B0AD0256A8EE9006091A2 /* libz.1.1.3.dylib in Frameworks */,
@@ -620,6 +625,7 @@
 				B373CEF12174587A008F9905 /* CoreText.framework in Frameworks */,
 				B373CEF22174587A008F9905 /* CoreTelephony.framework in Frameworks */,
 				B373CEF32174587A008F9905 /* CoreData.framework in Frameworks */,
+				D75116A0257CC6BC00A5E084 /* AppTrackingTransparency.framework in Frameworks */,
 				B373CEF42174587A008F9905 /* QuartzCore.framework in Frameworks */,
 				B373CEF52174587A008F9905 /* MessageUI.framework in Frameworks */,
 				B373CEF62174587A008F9905 /* AudioToolbox.framework in Frameworks */,
@@ -663,6 +669,7 @@
 				FEFA5A3F205FB1A8001F50D8 /* CoreTelephony.framework in Frameworks */,
 				FEFA5A40205FB1A8001F50D8 /* CoreData.framework in Frameworks */,
 				FEFA5A41205FB1A8001F50D8 /* QuartzCore.framework in Frameworks */,
+				D751169F257CC6AD00A5E084 /* AppTrackingTransparency.framework in Frameworks */,
 				FEFA5A42205FB1A8001F50D8 /* MessageUI.framework in Frameworks */,
 				FEFA5A43205FB1A8001F50D8 /* AudioToolbox.framework in Frameworks */,
 				FEFA5A45205FB1A8001F50D8 /* CFNetwork.framework in Frameworks */,
@@ -726,6 +733,7 @@
 		3AA5028315876A1F00EB27FA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D751169E257CC6AD00A5E084 /* AppTrackingTransparency.framework */,
 				D4A37AE825654D14002B01F5 /* SafariServices.framework */,
 				176E29DB25382BB500783D5E /* libc++.tbd */,
 				2B53A10C24C5787200923B3C /* libsqlite3.tbd */,

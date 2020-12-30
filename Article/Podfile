@@ -433,6 +433,11 @@ def appPods
       'Data',
       'AES'
     ]
+    #-----iOS14 IDFA授权弹窗库-----
+    pod 'BDInstallPopup', '0.0.7',:subspecs => [
+      'Core',
+      'URLConfig/China'
+    ]
     
     pod 'Lynx','1.3.7-alpha.29',:subspecs =>[
     'Framework',
