@@ -82,7 +82,7 @@
         self.cellModel = cellModel;
         if(cellModel.originItemModel.imageModel){
             if (cellModel.originItemModel.imageModel && cellModel.originItemModel.imageModel.url.length > 0) {
-                [self.iconView fh_setImageWithURLs:@[cellModel.originItemModel.imageModel.url] placeholder:nil reSize:self.iconView.size];
+                [self.iconView fh_setImageWithURL:[NSURL URLWithString:cellModel.originItemModel.imageModel.url] placeholder:nil reSize:self.iconView.size];
             }
             _iconView.hidden = NO;
             

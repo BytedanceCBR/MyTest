@@ -28,10 +28,18 @@
 }
 
 + (void)updateView:(UIView *)view withLayout:(FHLayoutItem *)layout {
-    view.top = layout.top;
-    view.left = layout.left;
-    view.width = layout.width;
-    view.height = layout.height;
+    if(view.top != layout.top){
+        view.top = layout.top;
+    }
+    if(view.left != layout.left){
+        view.left = layout.left;
+    }
+    if(view.width != layout.width){
+        view.width = layout.width;
+    }
+    if(view.height != layout.height){
+        view.height = layout.height;
+    }
 }
 
 - (CGFloat)right {

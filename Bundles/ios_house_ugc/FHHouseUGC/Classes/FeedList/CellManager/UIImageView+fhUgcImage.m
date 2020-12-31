@@ -11,6 +11,7 @@
 #import "TTDeviceHelper.h"
 #import "FHBlockTransformer.h"
 #import "UIDevice+BTDAdditions.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @implementation UIImageView (fhUgcImage)
 
@@ -53,10 +54,17 @@
     WeakSelf;
     FHBlockTransformer *transform = [FHBlockTransformer transformWithBlock:^UIImage * _Nullable(UIImage * _Nullable image) {
         StrongSelf;
-        return [self compressImage:image toSize:reSize];
+        UIImage *resultImage = [self compressImage:image toSize:reSize];
+        NSString *url = [imageURLs firstObject];
+        if(url.length > 0){
+            NSString *cacheKey = [[BDWebImageManager sharedManager] requestKeyWithURL:[NSURL URLWithString:[imageURLs firstObject]]];
+            [[BDWebImageManager sharedManager].imageCache setImage:resultImage imageData:nil forKey:cacheKey withType:BDImageCacheTypeAll callBack:nil];
+        }
+        return resultImage;
     }];
-    return [self bd_setImageWithURLs:imageURLs placeholder:placeholder options:BDImageRequestSetDelaySetImage transformer:transform progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+    return [self bd_setImageWithURLs:imageURLs placeholder:placeholder options:BDImageRequestSetDelaySetImage | BDImageRequestNotCacheToMemery | BDImageRequestNotCacheToDisk transformer:transform progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
         StrongSelf;
+        
         NSMutableDictionary *imageData = [NSMutableDictionary dictionary];
         imageData[@"image"] = image;
         imageData[@"from"] = @(from);
@@ -73,11 +81,15 @@
     [self.layer removeAnimationForKey:@"contents"];
     WeakSelf;
     FHBlockTransformer *transform = [FHBlockTransformer transformWithBlock:^UIImage * _Nullable(UIImage * _Nullable image) {
-        StrongSelf;
-        return [self compressImage:image toSize:reSize];
-    }];
+            StrongSelf;
+            UIImage *resultImage = [self compressImage:image toSize:reSize];
+            NSString *cacheKey = [[BDWebImageManager sharedManager] requestKeyWithURL:imageURL];
+            [[BDWebImageManager sharedManager].imageCache setImage:resultImage imageData:nil forKey:cacheKey withType:BDImageCacheTypeAll callBack:nil];
+            
+            return resultImage;
+        }];
     
-    return [self bd_setImageWithURL:imageURL placeholder:placeholder options:BDImageRequestSetDelaySetImage transformer:transform progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+    return [self bd_setImageWithURL:imageURL placeholder:placeholder options:BDImageRequestSetDelaySetImage | BDImageRequestNotCacheToMemery | BDImageRequestNotCacheToDisk  transformer:transform progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
         StrongSelf;
         NSMutableDictionary *imageData = [NSMutableDictionary dictionary];
         imageData[@"image"] = image;
