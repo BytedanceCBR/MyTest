@@ -45,6 +45,15 @@
 #import "FHHouseCardStatusManager.h"
 #import "FHHomeItemRequestManager.h"
 
+
+@interface FHHomeErrorTableViewCell : UITableViewCell
+
+@end
+
+@implementation FHHomeErrorTableViewCell
+
+@end
+
 extern NSString *const INSTANT_DATA_KEY;
 
 NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
@@ -411,6 +420,8 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     [self.tableView registerClass:[FHHouseSearchNewHouseCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseSearchNewHouseCell class])];
     
     [self.tableView registerClass:[FHHomeRentCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeRentCell class])];
+    
+    [self.tableView registerClass:[FHHomeErrorTableViewCell class] forCellReuseIdentifier:NSStringFromClass([FHHomeErrorTableViewCell class])];
 }
 
 //判断是否有运营位
@@ -936,7 +947,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     {
         if (self.showNoDataErrorView) {
             
-            UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+            FHHomeErrorTableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHomeErrorTableViewCell class])];
             for (UIView *subView in cellError.contentView.subviews) {
                 [subView removeFromSuperview];
             }
@@ -951,7 +962,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         }
         
         if (self.showRequestErrorView) {
-            UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+            FHHomeErrorTableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHomeErrorTableViewCell class])];
             for (UIView *subView in cellError.contentView.subviews) {
                 [subView removeFromSuperview];
             }
@@ -995,7 +1006,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         }
         
         if (self.showDislikeNoDataView) {
-            UITableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([UITableViewCell class])];
+            FHHomeErrorTableViewCell *cellError = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHHomeErrorTableViewCell class])];
             for (UIView *subView in cellError.contentView.subviews) {
                 [subView removeFromSuperview];
             }
@@ -1093,6 +1104,10 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    if ([cell isKindOfClass:FHHomeErrorTableViewCell.class]) {
+        return;
+    }
+    
     if (indexPath.section == kFHHomeHouseTypeBannerViewSection) {
         if (self.houseType == _listModel.houseType && ![self.traceRecordDict objectForKey:@(self.houseType)] && [self checkIsHaveEntrancesList]) {
             [self.traceRecordDict setValue:@"" forKey:@(self.houseType).stringValue];
@@ -1171,6 +1186,11 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if ([cell isKindOfClass:FHHomeErrorTableViewCell.class]) {
+        return;
+    }
+    
     if (!self.showPlaceHolder && indexPath.section == 1) {
         [self jumpToDetailPage:indexPath];
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
