@@ -146,8 +146,7 @@
                 make.top.mas_equalTo(self.tableView.mas_bottom);
                 make.left.mas_equalTo(30);
                 make.right.mas_equalTo(-30);
-                make.height.mas_equalTo(43);
-                make.bottom.mas_equalTo(self.containerView).offset(-20);
+                make.height.mas_equalTo(46);
             }];
         } else {
             // 查看更多自己布局
@@ -155,8 +154,7 @@
                 make.top.mas_equalTo(self.containerView).offset(16);
                 make.left.mas_equalTo(30);
                 make.right.mas_equalTo(-30);
-                make.height.mas_equalTo(43);
-                make.bottom.mas_equalTo(self.containerView).offset(-20);
+                make.height.mas_equalTo(46);
             }];
         }
     }
