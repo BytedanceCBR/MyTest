@@ -196,7 +196,9 @@ extern NSString *const INSTANT_DATA_KEY;
         self.isFirstLoad = YES;
         self.isFirstHavetip = YES;
         self.tableView = tableView;
-        //tableView.contentInset = UIEdgeInsetsMake(5, 0, 0, 0);
+        UIEdgeInsets inset = self.tableView.contentInset;
+        inset.top = 5;
+        self.tableView.contentInset = inset;
         self.isShowSubscribeCell = NO;
         //prehousetype表示从sug页面所在的housetype
         //jumphousetype表示sug页面网络请求期待跳向的housetype,该housetype不一定开通
@@ -1288,13 +1290,10 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
             }
         }
+        [self.tableView reloadData];
         if (isFirstLoadCopy) {
-            UIEdgeInsets inset = self.tableView.contentInset;
-            inset.top = 5;
-            self.tableView.contentInset = inset;
             [FHMainApi addUserOpenVCDurationLog:@"pss_house_list" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
         }
-        [self.tableView reloadData];
         if(addNoHouseCell){
             self.tableView.mj_footer.hidden = YES;
         }else{
@@ -1787,7 +1786,7 @@ extern NSString *const INSTANT_DATA_KEY;
             return cell;
         }else{
             FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kFHHouseListPlaceholderCellId];
-            cell.topOffset = indexPath.row == 0 ? 10 :5;
+            cell.topOffset = 5;
             return cell;
         }
     }
@@ -1970,7 +1969,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if (self.houseType == FHHouseTypeRentHouse) {
             return 88;
         }
-        return indexPath.row == 0?129:height;
+        return 124;
     }
     id data = nil;
     if (indexPath.section == 0) {
