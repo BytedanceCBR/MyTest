@@ -145,7 +145,7 @@
 
     _houseSegmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:titlesArray];
     
-    NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
+    NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
                                           NSForegroundColorAttributeName: [UIColor themeGray1]};
     _houseSegmentControl.titleTextAttributes = titleTextAttributes;
     
