@@ -16,7 +16,7 @@
 @implementation UIImageView (fhUgcImage)
 
 - (nullable BDWebImageRequest *)fh_setImageWithURL:(nonnull NSURL *)imageURL placeholder:(nullable UIImage *)placeholder {
-    [self.layer removeAnimationForKey:@"contents"];
+//    [self.layer removeAnimationForKey:@"contents"];
     WeakSelf;
     return [self bd_setImageWithURL:imageURL placeholder:placeholder options:BDImageRequestSetDelaySetImage completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
         StrongSelf;
@@ -33,7 +33,7 @@
 }
 
 - (nullable BDWebImageRequest *)fh_setImageWithURLs:(nonnull NSArray *)imageURLs placeholder:(nullable UIImage *)placeholder {
-    [self.layer removeAnimationForKey:@"contents"];
+//    [self.layer removeAnimationForKey:@"contents"];
     WeakSelf;
     return [self bd_setImageWithURLs:imageURLs placeholder:placeholder options:BDImageRequestSetDelaySetImage transformer:nil progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
         StrongSelf;
@@ -50,7 +50,7 @@
 }
 
 - (nullable BDWebImageRequest *)fh_setImageWithURLs:(nonnull NSArray *)imageURLs placeholder:(nullable UIImage *)placeholder reSize:(CGSize)reSize{
-    [self.layer removeAnimationForKey:@"contents"];
+//    [self.layer removeAnimationForKey:@"contents"];
     WeakSelf;
     FHBlockTransformer *transform = [FHBlockTransformer transformWithBlock:^UIImage * _Nullable(UIImage * _Nullable image) {
         StrongSelf;
@@ -78,7 +78,7 @@
 }
 
 - (nullable BDWebImageRequest *)fh_setImageWithURL:(nonnull NSURL *)imageURL placeholder:(nullable UIImage *)placeholder reSize:(CGSize)reSize {
-    [self.layer removeAnimationForKey:@"contents"];
+//    [self.layer removeAnimationForKey:@"contents"];
     WeakSelf;
     FHBlockTransformer *transform = [FHBlockTransformer transformWithBlock:^UIImage * _Nullable(UIImage * _Nullable image) {
             StrongSelf;
@@ -105,19 +105,19 @@
 
 - (void)setImageWithData:(NSDictionary *)imageData {
     UIImage *image = imageData[@"image"];
-    BDWebImageResultFrom from = [imageData[@"from"] integerValue];
+//    BDWebImageResultFrom from = [imageData[@"from"] integerValue];
     
     if(image){
         self.image = image;
     }
     
-    if(image && from == BDWebImageResultFromDownloading){
-        CATransition *transition = [CATransition animation];
-        transition.duration = 0.15;
-        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-        transition.type = kCATransitionFade;
-        [self.layer addAnimation:transition forKey:@"contents"];
-    }
+//    if(image && from == BDWebImageResultFromDownloading){
+//        CATransition *transition = [CATransition animation];
+//        transition.duration = 0.15;
+//        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//        transition.type = kCATransitionFade;
+//        [self.layer addAnimation:transition forKey:@"contents"];
+//    }
 }
 
 - (UIImage*)compressImage:(UIImage*)sourceImage toSize:(CGSize)size {
