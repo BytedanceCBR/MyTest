@@ -77,8 +77,6 @@ extern const NSInteger ArticleRetrieveTimeoutInterval;
 @property(nonatomic, assign) BOOL automaticallyAdjustKeyboardOffset;
 @property(nonatomic, assign) CGFloat maximumHeightOfContent;
 
-- (void)showNotifyBarMsg:(NSString *)msg;
-
 #pragma mark - WaitingIndicator
 /**
  *  显示waitingIndicator

@@ -90,6 +90,7 @@
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
     _contentLabel.delegate = self;
+    _contentLabel.font = [UIFont themeFontRegular:14];
     [self.contentView addSubview:_contentLabel];
     
     
@@ -183,6 +184,8 @@
     NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
     if ([vwhiteList containsObject:cellModel.user.userId]) {
         self.useride.text = cellModel.user.verifiedContent;
+    } else {
+        self.useride.text = @"";
     }
 
     [self.userIma setAvatarUrl:cellModel.user.avatarUrl];

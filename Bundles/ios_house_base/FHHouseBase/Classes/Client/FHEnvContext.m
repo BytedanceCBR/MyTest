@@ -32,7 +32,6 @@
 #import "TTArticleTabBarController.h"
 #import "TTCategoryBadgeNumberManager.h"
 #import "FHMainApi.h"
-#import "FHIntroduceManager.h"
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import <TTLocationManager/TTLocationManager.h>
@@ -51,6 +50,8 @@
 #import <FHFlutter/FHFlutterManager.h>
 #import "FHHouseUGCAPI.h"
 #import "FHUGCUserVWhiteModel.h"
+#import <BDUGLocationKit/BDUGLocationManager.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -66,6 +67,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
 @end
 
 @implementation FHEnvContext
+
+- (NSString *)boeChannelName {
+    NSString *boeChannel = [[NSUserDefaults standardUserDefaults] stringForKey:@"FH_BOE_CHANNEL_NAME_KEY"];
+    return boeChannel;
+}
+
+- (NSString *)ppeChannelName {
+    NSString *ppeChannel = [[NSUserDefaults standardUserDefaults] stringForKey:@"FH_PPE_CHANNEL_NAME_KEY"];
+    return ppeChannel;
+}
 
 + (instancetype)sharedInstance
 {
@@ -103,17 +114,17 @@ static NSInteger kGetLightRequestRetryCount = 3;
         }
         
         __block NSInteger retryGetLightCount = kGetLightRequestRetryCount;
-        
-        if(![FHIntroduceManager sharedInstance].isShowing){
-            [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
-        }
+
+        //114 删除用户引导页
+//        if(![FHIntroduceManager sharedInstance].isShowing){
+//            [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
+//        }
+        [[ToastManager manager] showCustomLoading:@"正在切换城市" isUserInteraction:YES];
+
         [FHEnvContext sharedInstance].isRefreshFromCitySwitch = YES;
         [[FHLocManager sharedInstance] requestConfigByCityId:cityId completion:^(BOOL isSuccess,FHConfigModel * _Nullable model) {
-            
             NSMutableDictionary *paramsExtra = [NSMutableDictionary new];
-            
             [paramsExtra setValue:[BDTrackerProtocol deviceID] forKey:@"device_id"];
-            
             if (isSuccess) {
                 [FHEnvContext sharedInstance].isSendConfigFromFirstRemote = YES;
                 FHConfigDataModel *configModel = model.data;
@@ -163,9 +174,11 @@ static NSInteger kGetLightRequestRetryCount = 3;
                     completion(NO);
                 }
                 [[ToastManager manager] dismissCustomLoading];
-                if(![FHIntroduceManager sharedInstance].isShowing){
-                    [[ToastManager manager] showToast:@"切换城市失败"];
-                }
+                //114 删除用户引导页
+//                if(![FHIntroduceManager sharedInstance].isShowing){
+//                    [[ToastManager manager] showToast:@"切换城市失败"];
+//                }
+                [[ToastManager manager] showToast:@"切换城市失败"];
                 NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:@{@"desc":@"切换城市失败",@"reason":@"请求config接口失败"}];
                 
                 [[HMDTTMonitor defaultManager] hmdTrackService:@"home_switch_config_error" status:1 extra:paramsExtra];
@@ -505,14 +518,29 @@ static NSInteger kGetLightRequestRetryCount = 3;
     }
     
     //开始生成config缓存
-    [self.generalBizConfig onStartAppGeneralCache];
+//    [self.generalBizConfig onStartAppGeneralCache];
+    if (self.generalBizConfig.configCache) {
+        [self.generalBizConfig onStartAppGeneralCache];
+    } else {
+        NSString *bundlePath = [[NSBundle mainBundle]
+                                pathForResource:@"FHHouseBase" ofType:@"bundle"];
+        if (bundlePath) {
+            NSBundle *bunle = [NSBundle bundleWithPath:bundlePath];
+            NSString *jsonFilePath = [bunle pathForResource:@"config" ofType:@"json"];
+            NSData *jsonData = [[NSData alloc] initWithContentsOfFile:jsonFilePath];
+            if (jsonData) {
+                FHConfigModel *configModel = [[FHConfigModel alloc] initWithData:jsonData error:nil];
+                if (configModel) {
+                    [self saveGeneralConfig:configModel];
+                    [self.generalBizConfig onStartAppGeneralCache];
+                }
+            }
+        }
+    }
     
     if ([self hasConfirmPermssionProtocol]) {
         //开始定位
         [self startLocation];
-        
-        //检测是否需要打开城市列表
-        [self check2CityList];
         
     }else{
                 
@@ -583,10 +611,19 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if (![self hasConfirmPermssionProtocol]) {
         return;
     }
-    
     [[FHLocManager sharedInstance] setUpLocManagerLocalInfo];
     
-    [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:YES];
+    [[BDUGLocationManager sharedManager] requestWhenInUseAuthorizationWithCompletion:^(BOOL isGranted) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[FHLocManager sharedInstance] requestCurrentLocation:NO andShowSwitch:YES];
+            if (isGranted) {
+                [FHUtils setContent:@(YES) forKey:kUserHasSelectedCityKey];
+            } else {
+                //检测是否需要打开城市列表
+                [self check2CityList];
+            }
+        });
+    }];
 }
 
 - (void)check2CityList {
@@ -1067,19 +1104,15 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return YES;
 }
 
-+ (BOOL)isHasPerLoadForVideo {
-    id res = [BDABTestManager getExperimentValueForKey:@"is_video_perload" withExposure:YES];
-    if(res){
-        return [res boolValue];
-    }
-    return NO;
-}
-
 + (BOOL)isDisplayNewCardType {
     NSDictionary *fhSettings= [SSCommonLogic fhSettings];
     BOOL NewCardType = [fhSettings btd_boolValueForKey:@"f_house_card_type" default:NO];
     return NewCardType;
 }
+
+//+ (BOOL)isIntroduceOpen {
+//    return YES;
+//}
 
 + (BOOL)isHouseListComponentEnable {
     static BOOL isHouseListComponentEnable = NO;
@@ -1095,10 +1128,6 @@ static NSInteger kGetLightRequestRetryCount = 3;
         }
     });
     return isHouseListComponentEnable;
-}
-
-+ (BOOL)isIntroduceOpen {
-    return YES;
 }
 
 + (NSString *)defaultTabName {
@@ -1228,18 +1257,16 @@ static NSInteger kGetLightRequestRetryCount = 3;
     self.stashModel = nil;
     
     [self startLocation];
-    [self check2CityList];
-    
     
     [NewsBaseDelegate startRegisterRemoteNotification];
     
-    if([FHEnvContext isIntroduceOpen]){
-        if([FHIntroduceManager sharedInstance].alreadyShow){
-            return;
-        }
-        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
-        [FHIntroduceManager sharedInstance].alreadyShow = YES;
-    }
+//    if([FHEnvContext isIntroduceOpen]){
+//        if([FHIntroduceManager sharedInstance].alreadyShow){
+//            return;
+//        }
+//        [[FHIntroduceManager sharedInstance] showIntroduceView:SharedAppDelegate.window];
+//        [FHIntroduceManager sharedInstance].alreadyShow = YES;
+//    }
     
 }
 
@@ -1269,6 +1296,18 @@ static NSInteger kGetLightRequestRetryCount = 3;
 -(void)addUNRemoteNOtification:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler
 {
     [self.stashModel addUNRemoteNOtification:center didReceiveNotificationResponse:response withCompletionHandler:completionHandler];
+}
+
++ (NSInteger)lastSearchSugHouseType {
+    id houseType = [FHUtils contentForKey:@"last_search_sug_house_type"];
+    if (houseType && [houseType isKindOfClass:[NSNumber class]]) {
+        return [((NSNumber *)houseType) integerValue];
+    }
+    return 0;
+}
+
++ (void)setLastSearchSugHouseType:(NSInteger)houseType {
+    [FHUtils setContent:@(houseType) forKey:@"last_search_sug_house_type"];
 }
 
 @end

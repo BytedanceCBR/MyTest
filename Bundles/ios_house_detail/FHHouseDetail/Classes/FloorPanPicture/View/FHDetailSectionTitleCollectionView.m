@@ -17,6 +17,7 @@
     self.moreActionBlock = nil;
     self.arrowsImg.hidden = YES;
     self.subTitleLabel.hidden = YES;
+    self.tagViews.hidden = YES;
     [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.centerY.mas_equalTo(self).offset(2);
@@ -40,7 +41,7 @@
         self.arrowsImg.hidden = YES;
         [self addSubview:self.arrowsImg];
         [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self).offset(-12);
+            make.right.mas_equalTo(self).offset(-16);
             make.height.width.mas_equalTo(20);
             make.centerY.mas_equalTo(self.titleLabel);
         }];
@@ -55,6 +56,9 @@
             make.centerY.mas_equalTo(self.titleLabel);
         }];
         
+        [self.tagViews mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(self);
+        }];
         [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moreAction:)]];
     }
     return self;
@@ -68,6 +72,59 @@
         self.subTitleLabel.hidden = YES;
     }
 }
+
+-(UIView *)getTagViewWithName:(NSInteger)idx{
+    UIView *tagView = [[UIView alloc ]init];
+    UILabel *tagLab = [[UILabel alloc] initWithFrame:CGRectMake(16, 0, 48, 17)];
+    tagLab.font = [UIFont themeFontRegular:12];
+    tagLab.textColor = [UIColor colorWithHexString:@"#aeadad"];
+    tagLab.text = [[self getTagName] objectAtIndex:idx];
+    UIImageView *imgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[[self getTagViewName] objectAtIndex:idx]]];
+    imgView.frame = CGRectMake(0,0,16,16);
+    [tagView addSubview:tagLab];
+    [tagView addSubview:imgView];
+    [self addSubview:tagView];
+    [self.tagViews addSubview:tagView];
+    return tagView;
+}
+
+- (UIView *)tagViews{
+    if(!_tagViews){
+        UIView *tagViews = [[UIView alloc]init];
+        [self addSubview: tagViews];
+        _tagViews = tagViews;
+        _tagViews.hidden = YES;
+    }
+    return _tagViews;
+}
+
+-(NSArray *)getTagName{
+    return @[@"免费带看",@"专属服务",@"详情解读",@"户型分析"];
+}
+
+-(NSArray *)getTagViewName{
+    return @[@"releatortag1",@"releatortag2",@"releatortag3",@"releatortag4"];
+}
+
+- (void)setSubTagView{
+    [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.top.mas_offset(20);
+    }];
+    if(_tagViews && _tagViews.subviews.count){
+        self.tagViews.hidden = NO;
+    }else{
+        CGFloat width = (self.bounds.size.width - 32 - 16)/4;
+        [[self getTagName] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            [[self getTagViewWithName:idx] mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self).offset(width*idx + 16);
+                make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
+            }];
+        }];
+        self.tagViews.hidden = NO;
+    }
+}
+
 
 - (void)setupNeighborhoodDetailStyle {
     self.titleLabel.font = [UIFont themeFontSemibold:16];

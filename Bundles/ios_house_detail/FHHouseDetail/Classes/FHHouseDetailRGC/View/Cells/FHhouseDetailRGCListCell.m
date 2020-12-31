@@ -368,6 +368,12 @@
     for (int m = 0; m < _contentModel.data.count;  m++) {
         NSString *content = _contentModel.data[m];
         FHFeedUGCCellModel *model = [FHFeedUGCCellModel modelFromFeed:content];
+        // 经纪人被关黑不显示联系相关按钮
+        BOOL isRealtorBlackmailed = [model.realtor.realtorPunishStatus boolValue];
+        if(isRealtorBlackmailed) {
+            model.isHiddenConnectBtn = YES;
+        }
+        
         model.realtorIndex = m;
         model.isShowLineView = m < _contentModel.data.count -1;
         switch (model.cellType) {

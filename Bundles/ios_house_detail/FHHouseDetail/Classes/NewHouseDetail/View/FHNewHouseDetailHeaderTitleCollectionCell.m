@@ -16,6 +16,7 @@
 @property (nonatomic, strong) FHDetailTopBannerView *topBanner;
 @property (nonatomic, weak) UIView *tagBacView;
 @property (nonatomic, weak) UILabel *nameLabel;
+@property (nonatomic, weak) UILabel *aliasNameLabel;
 @property (nonatomic, weak) UILabel *addressLab;
 
 @end
@@ -31,9 +32,11 @@
             height += 40; //banner height
         }
         
-        height += 20; //title margin
+        height += 16; //title margin
         
-        height += [model.titleStr btd_sizeWithFont:[UIFont themeFontRegular:24] width:width - 15 * 2 maxLine:2].height;
+        float tt = [model.titleStr btd_sizeWithFont:[UIFont themeFontRegular:24] width:width - 15 * 2 maxLine:2].height;
+        
+        height += tt;
         
         height += 15; //tag margin
         NSArray *tags = model.tags;
@@ -42,6 +45,10 @@
         height += tagHeight;
         
         height += 4;
+        if(model.aliasName.length >0){
+        height += 8;
+        }
+        
         return CGSizeMake(width, height);
     }
     return CGSizeZero;
@@ -80,6 +87,16 @@
             make.top.mas_equalTo(self.topBanner.mas_bottom).offset(20);
         }];
         
+        UILabel *aliasNameLabel = [UILabel createLabel:@"" textColor:@"#aeadad" fontSize:12];
+        aliasNameLabel.numberOfLines = 1;
+        [self addSubview:aliasNameLabel];
+        self.aliasNameLabel = aliasNameLabel;
+        [self.aliasNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.mas_equalTo(self).offset(15);
+            make.right.mas_equalTo(self).offset(-15);
+            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(1);
+        }];
+        
         UIView *tagBacView = [[UIView alloc]init];
         tagBacView.clipsToBounds = YES;
         [self addSubview:tagBacView];
@@ -87,7 +104,7 @@
         [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self).offset(15);
             make.right.mas_equalTo(self).offset(-15);
-            make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(15);
+            make.top.mas_equalTo(self.aliasNameLabel.mas_bottom).offset(10);
             make.height.mas_offset(0);
             make.bottom.mas_equalTo(self);
         }];
@@ -119,7 +136,9 @@
         make.height.mas_equalTo(topHeight);
     }];
     self.nameLabel.text = model.titleStr;
-    
+    if(model.aliasName.length){
+        self.aliasNameLabel.text =  [NSString stringWithFormat:@"别名: %@",model.aliasName];
+    }
     [self.tagBacView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(tagHeight);
     }];

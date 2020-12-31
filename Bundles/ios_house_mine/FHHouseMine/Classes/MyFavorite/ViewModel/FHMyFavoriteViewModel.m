@@ -559,7 +559,7 @@ extern NSString *const kFHDetailFollowUpNotification;
                     break;
             }
             if ([identifier length] > 0) {
-                FHHouseBaseUsuallyCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+                FHHouseBaseCommonCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
                 if (indexPath.row < self.dataList.count) {
                     FHHouseListBaseItemModel *cellModel = self.dataList[indexPath.row];
                     [cell refreshWithData:cellModel];

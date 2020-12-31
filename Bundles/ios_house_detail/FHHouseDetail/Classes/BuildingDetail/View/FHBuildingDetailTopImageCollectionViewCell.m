@@ -10,6 +10,7 @@
 #import "FHBuildingDetailTopImageView.h"
 #import "FHVideoAndImageItemCorrectingView.h"
 #import <Masonry/Masonry.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHBuildingDetailTopImageCollectionViewCell () <UIScrollViewDelegate>
 

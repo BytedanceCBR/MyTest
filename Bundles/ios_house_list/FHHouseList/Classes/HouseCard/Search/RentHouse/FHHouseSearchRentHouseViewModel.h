@@ -9,7 +9,11 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (^FHHouseCardOpacityDidChange)(void);
+
 @interface FHHouseSearchRentHouseViewModel : FHHouseNewComponentViewModel
+
+@property (nonatomic, copy) FHHouseCardOpacityDidChange opacityDidChange;
 
 @end
 

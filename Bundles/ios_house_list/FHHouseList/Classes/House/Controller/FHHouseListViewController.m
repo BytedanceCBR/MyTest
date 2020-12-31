@@ -12,7 +12,6 @@
 #import <FHHouseBase/FHHouseBridgeManager.h>
 #import "FHFakeInputNavbar.h"
 #import "UIViewAdditions.h"
-#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "FHTracerModel.h"
 #import "FHErrorMaskView.h"
 #import "FHHouseListViewModel.h"
@@ -53,8 +52,6 @@
 @property (nonatomic , strong) UIControl *filterBgControl;
 @property (nonatomic , strong) FHConditionFilterViewModel *houseFilterViewModel;
 @property (nonatomic , strong) id<FHHouseFilterBridge> houseFilterBridge;
-
-@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
 
 @property (nonatomic , strong) FHErrorView *errorMaskView;
 
@@ -551,11 +548,6 @@
         make.left.right.bottom.mas_equalTo(self.containerView);
     }];
     
-    [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.tableView);
-        make.height.mas_equalTo(32);
-    }];
-    
 }
 
 
@@ -627,9 +619,6 @@
     [self.containerView addSubview:_errorMaskView];
     self.errorMaskView.hidden = YES;
 
-    //notifyview
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.notifyBarView];
     [self setupTopTagsView];
 
     [self.view addSubview:self.navbar];
@@ -682,24 +671,6 @@
         [weakSelf.houseFilterViewModel trigerConditionChanged];
         [weakSelf.viewModel addTagsViewClick:value_id];
     };
-}
-
-#pragma mark - show notify
-
-- (void)showNotify:(NSString *)message inViewModel:(FHBaseHouseListViewModel *)viewModel
-{
-    UIEdgeInsets inset = self.tableView.contentInset;
-    inset.top = self.notifyBarView.height;
-    self.tableView.contentInset = inset;
-    
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
-
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:0.3 animations:^{
-            self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 34 , 0);
-        }];
-    });
-
 }
 
 -(void)showErrorMaskView

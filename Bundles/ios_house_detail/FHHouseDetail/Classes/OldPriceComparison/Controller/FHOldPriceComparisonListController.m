@@ -23,8 +23,6 @@
 @property (nonatomic, copy) NSString *orderBy;
 @property (nonatomic, copy) NSString *roomNum;
 @property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic , strong) ArticleListNotifyBarView *notifyBarView;
-
 @end
 
 @implementation FHOldPriceComparisonListController
@@ -68,18 +66,10 @@
     self.viewModel.query = [self getQueryStr];
     [self.view addSubview:_tableView];
     
-    //notifyview
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.notifyBarView];
-    
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.view);
         make.top.mas_equalTo(self.customNavBarView.mas_bottom);
         make.bottom.mas_equalTo(self.view);
-    }];
-    [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.tableView);
-        make.height.mas_equalTo(32);
     }];
     
     [self addDefaultEmptyViewFullScreen];
@@ -113,22 +103,6 @@
     } else {
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
     }
-}
-
-#pragma mark - show notify
-
-- (void)showNotify:(NSString *)message {
-    UIEdgeInsets inset = self.tableView.contentInset;
-    inset.top = self.notifyBarView.height;
-    self.tableView.contentInset = inset;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil];
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [UIView animateWithDuration:0.3 animations:^{
-            self.tableView.contentInset = UIEdgeInsetsZero;
-        }];
-    });
-    
 }
 
 #pragma mark - TTUIViewControllerTrackProtocol

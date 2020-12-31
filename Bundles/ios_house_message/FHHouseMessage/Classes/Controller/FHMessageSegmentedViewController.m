@@ -382,7 +382,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.ttDisableDragBack = YES;
     _isLogin = [TTAccountManager isLogin];
     _loginStateChange = YES;
     self.enterType = @"dafault";

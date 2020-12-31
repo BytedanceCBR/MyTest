@@ -33,6 +33,11 @@
     traceParam[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
     traceParam[UT_ORIGIN_SEARCH_ID] = self.fh_trackModel.originSearchId ? : UT_BE_NULL;
     traceParam[@"rank"] = @(0);
+    if ([model.realtorType isEqualToString:@"4"]) {
+        traceParam[@"realtor_position"] = @"neighborhood_expert_card";
+    } else {
+        traceParam[@"realtor_position"] = @"area_expert_card";
+    }
     model.tracerDict = traceParam;
    
     if ([self.delegate respondsToSelector:@selector(belongsVC)]) {
@@ -47,7 +52,6 @@
     NSInteger rankOffset = [self.context btd_integerValueForKey:@"rank_offset"];
     NSInteger rank = indexPath.row + rankOffset;
     
-    NSInteger houseType = [self.context btd_integerValueForKey:@"house_type"];
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[@"rank"] = @(rank);
     tracerDict[UT_ORIGIN_FROM] = self.fh_trackModel.originFrom ? : UT_BE_NULL;
@@ -57,7 +61,7 @@
     [self addLeadShowLog:agencyCM];
     tracerDict[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : UT_BE_NULL;
     tracerDict[@"card_type"] = @"left_pic";
-    if(houseType == FHHouseTypeNeighborhood){
+    if([agencyCM.realtorType isEqualToString:@"4"]){
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
         tracerDict[@"house_type"] = @"neighborhood";
     }else{
@@ -77,8 +81,6 @@
 
 - (void)addLeadShowLog:(id)cm
 {
-    NSInteger houseType = [self.context btd_integerValueForKey:@"house_type"];
-
     FHHouseNeighborAgencyModel *cellModel = (FHHouseNeighborAgencyModel *)cm;
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
     tracerDict[UT_PAGE_TYPE] = self.fh_trackModel.pageType ? : UT_BE_NULL;
@@ -95,7 +97,7 @@
     tracerDict[@"is_report"] = @(0);
     tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
     tracerDict[@"realtor_id"] = cellModel.id;
-    if (houseType == FHHouseTypeNeighborhood) {
+    if ([cellModel.realtorType isEqualToString:@"4"]) {
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
         tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
         tracerDict[@"house_type"] = @"neighborhood";

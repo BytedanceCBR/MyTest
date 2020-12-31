@@ -49,7 +49,7 @@ completion:(void(^)(FHDetailNewModel * _Nullable model , NSError * _Nullable err
                                   logPB:(NSDictionary *)logPB
                                   query:(NSString*)query
                               extraInfo:(NSDictionary *)extraInfo
-                             completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model , NSData * _Nullable resultData, NSError * _Nullable error))completion;
+                             completion:(void(^)(FHDetailNeighborhoodModel * _Nullable model, NSError * _Nullable error))completion;
 
 // 租房详情页请求
 +(TTHttpTask*)requestRentDetail:(NSString*)rentCode
@@ -148,8 +148,8 @@ completion:(void(^)(FHListResultHouseModel *model , NSError *error))completion;
 +(TTHttpTask *)requestPhoneFeedback:(NSString *)houseId houseType:(FHHouseType)houseType realtorId:(NSString *)realtorId imprId:(NSString *)imprId searchId:(NSString *)searchId score:(NSInteger)score requestId:(NSString*) requestId completion:(void (^)(bool succss , NSError *error))completion;
 
 
-+ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion;
-+ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString * _Nullable)from completion:(void (^)(bool, NSError * _Nullable))completion;
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable, NSDictionary *))completion;
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString * _Nullable)from completion:(void (^)(bool, NSError * _Nullable, NSDictionary *))completion;
 
 //1.0.2 楼栋详情 
 +(TTHttpTask*)requestBuildingDetail:(NSString*)courtId

@@ -298,8 +298,8 @@ static const CGFloat kFloatingViewOriginY = 230;
         self.dataFetchManager.currentIndex= 0;
         self.dataFetchManager.shouldShowNoMoreVideoToast = YES;
         self.dataFetchManager.categoryId = @"f_house_smallvideo_flow";
-        if(paramObj.allParams[@"extraDic"] && [paramObj.allParams[@"extraDic"] isKindOfClass:[NSDictionary class]]){
-            self.extraDic = paramObj.allParams[@"extraDic"];
+        if(paramObj.allParams[@"tracer"] && [paramObj.allParams[@"tracer"] isKindOfClass:[NSDictionary class]]){
+            self.extraDic = paramObj.allParams[@"tracer"];
             self.dataFetchManager.tracerDic = self.extraDic;
           }
         self.dataFetchManager.groupID = self.groupID;
@@ -1041,6 +1041,7 @@ static const CGFloat kFloatingViewOriginY = 230;
         [TSVSlideUpPromptViewController setSlideUpPromotionShown];
     }
 
+    [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:0 eventPosition:@"feed_comment"];
     self.commentView.hidden = NO;
 
     [UIView animateWithDuration:.2 customTimingFunction:CustomTimingFunctionCubicOut animation:^{
@@ -1423,6 +1424,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 //    [self.inputBar becomeActive];
     
     [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:commentModel.id.stringValue];
+    [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:indexPath.row eventPosition:@"comment_reply"];
     [self.commentWriteView setTextViewPlaceholder:[NSString stringWithFormat:@"@%@：", commentModel.userName]];
 }
 

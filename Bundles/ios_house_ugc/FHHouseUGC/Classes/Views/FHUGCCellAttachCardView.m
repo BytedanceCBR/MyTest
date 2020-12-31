@@ -125,7 +125,6 @@
         
         self.cellModel = cellModel;
         
-        [self.iconView setBd_isOpenDownsample:YES];
         if (cellModel.attachCardInfo.imageModel && cellModel.attachCardInfo.imageModel.url.length > 0) {
             [self.iconView fh_setImageWithURLs:@[cellModel.attachCardInfo.imageModel.url] placeholder:nil reSize:self.iconView.size];
         }else{

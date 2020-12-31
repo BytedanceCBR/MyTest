@@ -102,12 +102,6 @@
     [self trackCategoryRefresh:refreshType];
     
     self.viewController.isLoadingData = YES;
-    
-    if(self.isRefreshingTip){
-        [self.tableView finishPullDownWithSuccess:YES];
-        return;
-    }
-
     if(isFirst){
         self.retryCount = 0;
     }

@@ -79,11 +79,7 @@
     __weak typeof(self) wself = self;
     [self getNewNumberWithCompletion:^(NSInteger number,id obj ,NSError * _Nonnull error) {
         if(!error){
-            wself.unreadSystemMsgCount = number;
-//            [wself setBadgeNumber:number];
-            [self refreshBadgeNumber];
-//            [wself setBadgeNumber:number];
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHMessageUnreadChangedNotification" object:obj];
+            [wself writeUnreadSystemMsgCount:number];
         }
     }];
 }
@@ -129,7 +125,7 @@
 }
 
 - (NSInteger)getTotalUnreadMessageCount {
-    return _unreadSystemMsgCount + _unreadChatMsgCount + [[FHMessageNotificationTipsManager sharedManager] unreadNumber];
+    return self.unreadSystemMsgCount + self.unreadChatMsgCount + [[FHMessageNotificationTipsManager sharedManager] unreadNumber];
 }
 
 - (NSInteger)systemMsgUnreadNumber {
@@ -147,16 +143,16 @@
     [self refreshBadgeNumber];
 }
 
--(void)setUnreadSystemMsgCount:(NSUInteger) count {
-    _unreadSystemMsgCount = count;
+-(void)writeUnreadSystemMsgCount:(NSUInteger) count {
+    self.unreadSystemMsgCount = count;
     [self refreshBadgeNumber];
 }
 
-- (void)setUnreadChatMsgCount:(NSUInteger)unreadCount {
+- (void)writeUnreadChatMsgCount:(NSUInteger)unreadCount {
     if (unreadCount < 0) {
         return;
     }
-    _unreadChatMsgCount = unreadCount;
+    self.unreadChatMsgCount = unreadCount;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHChatMessageUnreadChangedNotification" object:nil];
     [self refreshBadgeNumber];
 }
@@ -164,18 +160,14 @@
 - (void)onMessageUnreadCountChanged:(NSInteger)unreadCount {
     // 不使用SDK发过来的未读数,这个未读数据源有机率和所有会话未读数总和不一致，所有微聊未读数以所有会话未读数总和为准
     // 等SDK修复后，再使用，对接人 屈永播<quyongbo@bytedance.com>
-    // [self setUnreadChatMsgCount:unreadCount];
+    // [self writeUnreadSystemMsgCount:unreadCount];
 }
 - (void)clearAllMessageUnreadCount {
-    [self setUnreadChatMsgCount:0];
+    [self writeUnreadChatMsgCount:0];
 }
 
 -(void)reduceSystemMessageTabBarBadgeNumber:(NSInteger)reduce {
-    self.unreadSystemMsgCount = self.unreadSystemMsgCount - reduce;
-    if (self.unreadSystemMsgCount < 0) {
-        self.unreadSystemMsgCount = 0;
-    }
-    [self refreshBadgeNumber];
+    [self writeUnreadSystemMsgCount:MAX(0, self.unreadSystemMsgCount - reduce)];
 }
 
 @end

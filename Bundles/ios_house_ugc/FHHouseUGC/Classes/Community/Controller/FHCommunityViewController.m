@@ -168,22 +168,22 @@
         [self initPublishBtn];
     }
 }
-- (void)initLoginTipView {
-    if (!self.isShowLoginTip) {
-        self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.view navbarHeight:0 withTracerDic:self.tracerDict];
-        self.isShowLoginTip = YES;
-        self.loginTipview.type = FHLoginTipViewtTypeNeighborhood;
-    }else {
-        if (self.loginTipview) {
-            if ([TTAccount sharedAccount].isLogin) {
-                [self.loginTipview removeFromSuperview];
-            }else {
-                [self.loginTipview startTimer];
-            }
-        }
-    }
-    
-}
+//- (void)initLoginTipView {
+//    if (!self.isShowLoginTip) {
+//        self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.view navbarHeight:0 withTracerDic:self.tracerDict];
+//        self.isShowLoginTip = YES;
+//        self.loginTipview.type = FHLoginTipViewtTypeNeighborhood;
+//    }else {
+//        if (self.loginTipview) {
+//            if ([TTAccount sharedAccount].isLogin) {
+//                [self.loginTipview removeFromSuperview];
+//            }else {
+//                [self.loginTipview startTimer];
+//            }
+//        }
+//    }
+//
+//}
 
 - (void)initPublishBtn {
     self.publishBtn = [[UIButton alloc] init];
@@ -216,7 +216,7 @@
         [self.viewModel viewWillAppear];
     }
     
-    [self initLoginTipView];
+//    [self initLoginTipView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 
     //去掉邻里tab的红点
@@ -295,9 +295,9 @@
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     _collectionView.allowsSelection = NO;
     _collectionView.pagingEnabled = YES;
-    _collectionView.bounces = NO;
+    _collectionView.bounces = YES;
     _collectionView.showsHorizontalScrollIndicator = NO;
-    _collectionView.backgroundColor = [UIColor themeGray7];
+    _collectionView.backgroundColor = [UIColor themeWhite];
     [self.containerView addSubview:_collectionView];
 
     [self.collectionView mas_remakeConstraints:^(MASConstraintMaker *make) {
