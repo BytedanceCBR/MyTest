@@ -1288,10 +1288,13 @@ extern NSString *const INSTANT_DATA_KEY;
                 }
             }
         }
-        [self.tableView reloadData];
         if (isFirstLoadCopy) {
+            UIEdgeInsets inset = self.tableView.contentInset;
+            inset.top = 5;
+            self.tableView.contentInset = inset;
             [FHMainApi addUserOpenVCDurationLog:@"pss_house_list" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
         }
+        [self.tableView reloadData];
         if(addNoHouseCell){
             self.tableView.mj_footer.hidden = YES;
         }else{
