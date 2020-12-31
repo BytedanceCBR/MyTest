@@ -101,7 +101,7 @@
     
     if(image && from == BDWebImageResultFromDownloading){
         CATransition *transition = [CATransition animation];
-        transition.duration = 0.2;
+        transition.duration = 0.15;
         transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         transition.type = kCATransitionFade;
         [self.layer addAnimation:transition forKey:@"contents"];
