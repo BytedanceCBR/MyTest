@@ -32,7 +32,6 @@
 @property (nonatomic, assign)   BOOL       present;
 @property (nonatomic, assign)   BOOL       isFromMineTab;
 @property (nonatomic, weak) UITextField *textField;
-@property (nonatomic, assign) BOOL isDisableDragBack;
 @property (nonatomic, assign) BOOL isShowLoginHintToast;
 @end
 
@@ -52,9 +51,9 @@
     }
     
     if(self.isShowLoginHintToast) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             if (![TTAccountManager isLogin]) {
-                [[ToastManager manager] showToast:@"需要先登录才能进行操作哦" duration:2 isUserInteraction:YES];
+                [[ToastManager manager] showToast:@"需要先登录才能进行操作哦" duration:1 isUserInteraction:NO];
             }
         });
     }
@@ -99,7 +98,6 @@
         if(params[@"is_show_login_hint_toast"]) {
             self.isShowLoginHintToast = [params[@"is_show_login_hint_toast"] boolValue];
         }
-        self.isDisableDragBack = [params tta_boolForKey:@"ttDisableDragBack"];
     }
     return self;
 }
@@ -110,8 +108,6 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self initNavbar];
     [self initViewModel];
-
-    self.ttDisableDragBack = self.isDisableDragBack;
 }
 
 - (void)viewWillAppear:(BOOL)animated {

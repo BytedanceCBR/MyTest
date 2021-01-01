@@ -55,8 +55,9 @@ def fhPods
 
 
 #    pod 'FHCommonUI','0.9.0.4', :inhibit_warnings => false
-#    pod 'FHCommonUI',:path => '/../../ios_common_ui/'
-    pod 'FHCommonUI','0.9.0.10'
+#    pod 'FHCommonUI',:path => '../../ios_common_ui/'
+#    pod 'FHCommonUI','0.9.0.10'
+    pod 'FHCommonUI','0.9.0.12'
 
     pod 'FHPopupViewCenter', '0.0.3-rc.4', :inhibit_warnings => false, :subspecs => [
     'Core',
@@ -71,10 +72,9 @@ def fhPods
 #    'DelegateForC'
 #    ]
     
-#    pod 'ios_house_im' , :path => '../../../im/bugfix', :inhibit_warnings => false
-     pod 'ios_house_im' ,'0.10.0.0-alpha.3', :inhibit_warnings => false
-#    pod 'ios_house_im' ,'0.10.0.0-alpha.2', :inhibit_warnings => false
-
+#    pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
+#   pod 'ios_house_im' ,'0.10.0.0-alpha.3', :inhibit_warnings => false
+   pod 'ios_house_im' ,'0.0.0.2', :inhibit_warnings => false
 
 end
 
@@ -204,7 +204,7 @@ def appPods
     pod_binary 'TTNetworkDownloader','1.0.5'
     pod 'TransBridge-iOS','0.1.6'
 #    pod 'FCFlutterShell' , :path => '../Bundles/f_c_flutter_shell', :inhibit_warnings => false
-    pod_binary 'FCFlutterShell','1.1.3-rc.3'
+    pod_binary 'FCFlutterShell','1.1.4-rc.1'
     
     
     pod 'BDUGSettingsInterface' , '1.1.0'
@@ -299,8 +299,9 @@ def appPods
     pod_binary 'TTThemed','0.1.36'
 
     #-----头条UI组件库-----
-    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '1747684c1496869f05f057d419a17743c5ddde6c'
+    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => 'daa6f765d77788a1bcae15fece1297a2767e00e8'
 #    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :com => 'fproject'
+#    pod 'TTUIWidget', :path => '../../tt_pods_ui'
     
     pod 'Bytedancebase','1.4.0-rc.0', :subspecs => [
     'BDPlatformSDK',
@@ -390,7 +391,7 @@ def appPods
     pod_binary 'TTEntityBase', '0.2.4'
     #--- 图片库 --
     pod_binary 'TTImage', '0.8.4'
-    pod_binary 'BDWebImage','1.4.6',:subspecs => [
+    pod_binary 'BDWebImage','1.4.6.1',:subspecs => [
        'Core',
        'Decoder',
        'Download',
@@ -431,6 +432,11 @@ def appPods
     pod 'BDDataDecorator','2.0.4-alpha.1',:subspecs => [
       'Data',
       'AES'
+    ]
+    #-----iOS14 IDFA授权弹窗库-----
+    pod 'BDInstallPopup', '0.0.7',:subspecs => [
+      'Core',
+      'URLConfig/China'
     ]
     
     pod 'Lynx','1.3.7-alpha.29',:subspecs =>[
@@ -516,7 +522,7 @@ def appPods
     pod_source 'AMapLocation' , '2.6.4'
     pod_source 'AMap3DMap' , '7.7.0'
     pod_source 'AMapSearch'  , '7.6.0'
-    pod_binary 'AMapFoundation' , '1.6.4'
+    pod_binary 'AMapFoundation' , '1.6.5.1'
     pod_binary 'OpenUDID', '0.1.0'
     
     #支持自动约束cell缓存高度
@@ -642,7 +648,7 @@ def testPods
     pod 'BDSSOAuthSDK' ,  '1.1.1-alpha.6'
     
     pod_binary 'TTDebugAssistant', '0.2.33'
-    pod_binary 'FLEX', '3.1.2'#, :configurations=>['Debug']
+    pod_binary 'FLEX', '4.2.2'#, :configurations=>['Debug']
 #    pod_source 'BDNetworkDevMonitor', '0.1.6'
     pod_binary 'TTSettingsManager/Debug'
     pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'

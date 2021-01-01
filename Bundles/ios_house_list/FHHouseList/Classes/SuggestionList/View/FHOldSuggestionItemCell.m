@@ -12,6 +12,7 @@
 #import "TTDeviceHelper.h"
 #import "NSAttributedString+YYText.h"
 #import "YYLabel.h"
+#import "UIDevice+BTDAdditions.h"
 @interface FHOldSuggestionItemCell ()
 @property (weak, nonatomic) UIView *zoneTypeView;
 @property (weak, nonatomic) UILabel *zoneTypeLab;
@@ -66,12 +67,11 @@
         make.right.mas_lessThanOrEqualTo(self.amountLab.mas_left).offset(-6);
         make.top.equalTo(self.titleLab.mas_bottom).offset(3);
     }];
-    CGFloat lineH = UIScreen.mainScreen.scale > 2.5 ? 0.35 : 0.5;
     [self.sepLine mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
+            make.right.mas_equalTo(-15) ;
             make.bottom.mas_equalTo(0);
-            make.height.mas_equalTo(lineH);
+            make.height.mas_equalTo([UIDevice btd_onePixel]);
     }];
     [self.regionLab setContentCompressionResistancePriority:UILayoutPrioritySceneSizeStayPut forAxis:UILayoutConstraintAxisHorizontal];
     [self.villageLab setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
@@ -164,7 +164,7 @@
     if(!_sepLine){
         UIView *sepLine = [[UIView alloc]init];
         _sepLine=sepLine;
-        _sepLine.backgroundColor = [UIColor colorWithHexString:@"#e7e7e7"];
+        _sepLine.backgroundColor = [UIColor themeGray6];
         [self.contentView addSubview:_sepLine];
     }
     return _sepLine;

@@ -15,6 +15,7 @@
 #import <FHHouseBase/FHUserTracker.h>
 #import "HMDTTMonitor.h"
 #import "FHDetailBaseModel.h"
+#import <ios_house_im/IMManager.h>
 
 typedef enum : NSUInteger {
     FHPhoneCallTypeSuccessVirtual = 0,
@@ -149,13 +150,16 @@ typedef enum : NSUInteger {
             }
             [self addClickCallWith:associatePhoneModel isVirtual:isVirtual];
             [self callPhone:urlStr];
+            
             if (completionBlock) {
                 completionBlock(YES,nil,model.data);
             }
             return;
         }
         if(![model.status isEqualToString:@"0"]){
-            [[ToastManager manager] showToast:model.message];
+            NSString *toastContent = model.message;
+            CGFloat duration = MAX(1,toastContent.length * 0.1);
+            [[ToastManager manager] showToast:toastContent duration:duration style:FHToastViewStyleDefault position:FHToastViewPositionCenter verticalOffset:0];
         }
         else{
             [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
@@ -180,6 +184,7 @@ typedef enum : NSUInteger {
     params[@"card_type"] = reportParams[@"card_type"] ? : @"be_null";
     params[@"enter_from"] = reportParams[@"enter_from"] ? : @"be_null";
     params[@"element_from"] = reportParams[@"element_from"] ? : @"be_null";
+    params[@"element_type"] = reportParams[@"element_type"] ? : @"be_null";
     params[@"rank"] = reportParams[@"rank"] ? : @"be_null";
     params[@"origin_from"] = reportParams[@"origin_from"] ? : @"be_null";
     params[@"origin_search_id"] = reportParams[@"origin_search_id"] ? : @"be_null";

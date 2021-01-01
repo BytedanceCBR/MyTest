@@ -514,6 +514,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong , nullable) NSDictionary *originDict;
 
+//114 版本 首页判断是否从硬盘缓存获取的config，如果是不跳转
+@property (nonatomic, assign) BOOL isFromLocalCache;
+
 -(instancetype)initShadowWithDictionary:(NSDictionary *)dict error:(NSError *__autoreleasing *)err;
 
 @end

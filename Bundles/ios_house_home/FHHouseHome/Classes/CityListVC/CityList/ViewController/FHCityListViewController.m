@@ -170,6 +170,7 @@
             __weak typeof(self) wSelf = self;
             [[FHLocManager sharedInstance] requestConfigByCityId:0 completion:^(BOOL isSuccess, FHConfigModel * _Nullable model) {
                 if (isSuccess) {
+                    [[ToastManager manager] dismissCustomLoading];
                     [wSelf.emptyView hideEmptyView];
                     [wSelf.viewModel loadListCityData:model.data];
                     wSelf.hasShowenConfigListData = YES;

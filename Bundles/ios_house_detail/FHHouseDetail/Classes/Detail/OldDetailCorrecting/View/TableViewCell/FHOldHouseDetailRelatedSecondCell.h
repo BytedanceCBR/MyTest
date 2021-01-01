@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHOldHouseDetailRelatedSecondCell : FHHouseBaseCommonCell
 
+- (void)refreshWithData:(id)data withLast:(BOOL)isLast;
+
 @end
 
 NS_ASSUME_NONNULL_END

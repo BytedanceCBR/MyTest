@@ -31,6 +31,7 @@
         [self.foldButton.keyLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(-5);
         }];
+        self.foldButton.hidden = YES;
     }
     return self;
 }

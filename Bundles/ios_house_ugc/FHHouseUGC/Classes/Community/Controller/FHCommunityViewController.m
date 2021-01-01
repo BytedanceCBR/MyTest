@@ -169,22 +169,22 @@
         [self initPublishBtn];
     }
 }
-- (void)initLoginTipView {
-    if (!self.isShowLoginTip) {
-        self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.view navbarHeight:0 withTracerDic:self.tracerDict];
-        self.isShowLoginTip = YES;
-        self.loginTipview.type = FHLoginTipViewtTypeNeighborhood;
-    }else {
-        if (self.loginTipview) {
-            if ([TTAccount sharedAccount].isLogin) {
-                [self.loginTipview removeFromSuperview];
-            }else {
-                [self.loginTipview startTimer];
-            }
-        }
-    }
-    
-}
+//- (void)initLoginTipView {
+//    if (!self.isShowLoginTip) {
+//        self.loginTipview =  [FHLoginTipView showLoginTipViewInView:self.view navbarHeight:0 withTracerDic:self.tracerDict];
+//        self.isShowLoginTip = YES;
+//        self.loginTipview.type = FHLoginTipViewtTypeNeighborhood;
+//    }else {
+//        if (self.loginTipview) {
+//            if ([TTAccount sharedAccount].isLogin) {
+//                [self.loginTipview removeFromSuperview];
+//            }else {
+//                [self.loginTipview startTimer];
+//            }
+//        }
+//    }
+//
+//}
 
 - (void)initPublishBtn {
     self.publishBtn = [[UIButton alloc] init];
@@ -217,7 +217,7 @@
         [self.viewModel viewWillAppear];
     }
     
-    [self initLoginTipView];
+//    [self initLoginTipView];
     self.stayTime = [[NSDate date] timeIntervalSince1970];
 
     //去掉邻里tab的红点

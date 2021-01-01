@@ -33,10 +33,12 @@
 #import "FHHousePhoneCallUtils.h"
 #import "FHDetailBaseModel.h"
 #import "FIMDebugManager.h"
+#import "FIMDebugManager+Accelerometer.h"
 #import <TTUIWidget/TTNavigationController.h>
 #import "TTDialogDirector.h"
 #import "TTWeakPushAlertView.h"
 #import "FHUserTracker.h"
+#import <TTRoute.h>
 
 DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 
@@ -84,10 +86,24 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
 }
 
 - (BOOL)isBOE {
-    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults]boolForKey:@"BOE_OPEN_KEY"]) {
+    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"BOE_OPEN_KEY"]) {
         return YES;
     }
     return NO;
+}
+
+- (BOOL)isPPE {
+    if ([TTSandBoxHelper isInHouseApp] && [[NSUserDefaults standardUserDefaults] boolForKey:@"PPE_OPEN_KEY"]) {
+        return YES;
+    }
+    return NO;
+}
+
+- (NSString *)ppeChannelName {
+    return [FHEnvContext sharedInstance].ppeChannelName;
+}
+- (NSString *)boeChannelName {
+    return [FHEnvContext sharedInstance].boeChannelName;
 }
 
 - (NSString *)appId {
@@ -211,6 +227,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                     if ([@"be_null" isEqualToString:serverImprId]) {
                         [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_EMPTY_IMPRID extra:monitorParams];
                     }
+                    
                     NSString *phoneUrl = [NSString stringWithFormat:@"tel://%@", phone];
                     NSURL *url = [NSURL URLWithString:phoneUrl];
                     if ([[UIApplication sharedApplication]canOpenURL:url]) {
@@ -222,7 +239,15 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
                         }
                     }
                 } else {
-                    [[ToastManager manager] showToast:@"网络异常，请稍后重试!"];
+                    NSString *message = nil;
+                    if ([obj isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary *jsonObj = (NSDictionary *)obj;
+                        message = [jsonObj btd_stringValueForKey:@"message"];
+                    }
+                    NSString *toastContent = message?:@"网络异常，请稍后重试!";
+                    CGFloat duration = MAX(1,toastContent.length * 0.1);
+                    [[ToastManager manager] showToast:toastContent duration:duration style:FHToastViewStyleDefault position:FHToastViewPositionCenter verticalOffset:0];
+                    
                     [monitorParams setValue:error forKey:@"server_error"];
                     [[HMDTTMonitor defaultManager] hmdTrackService:IM_PHONE_MONITOR value:IM_PHONE_SERVER_ERROR extra:monitorParams];
                     
@@ -288,7 +313,7 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     [[HMDTTMonitor defaultManager]hmdTrackService:@"clue_call_error_rate" metric:nil category:categoryDict extra:extraDict];
 }
 
-- (void)submitRealtorEvaluation:(NSString *)content scoreCount:(NSInteger)scoreCount scoreTags:(NSArray<NSString *> *)scoreTags traceParams:(NSDictionary *)traceParams
+- (void)submitRealtorEvaluation:(NSString *)content scoreCount:(NSInteger)scoreCount scoreTags:(NSArray<NSString *> *)scoreTags traceParams:(NSDictionary *)traceParams completion:(nullable RealtorEvaluationCallback)completion
 {
     NSString *realtorId = traceParams[@"realtor_id"];
     NSString *targetId = traceParams[@"target_id"];
@@ -296,11 +321,61 @@ DEC_TASK("FHIMStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+16);
     NSInteger evaluationType = [traceParams btd_integerValueForKey:@"evaluation_type"];
     NSString *element_from = [traceParams btd_stringValueForKey:@"element_from"];
 
-    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:scoreCount tags:scoreTags from:element_from completion:^(bool succss, NSError *_Nullable error) {
-        if (succss) {
+    [FHHouseDetailAPI requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:scoreCount tags:scoreTags from:element_from completion:^(bool success, NSError *_Nullable error, NSDictionary *jsonObj) {
+        if (success) {
             [[ToastManager manager] showToast:@"提交成功，感谢您的评价"];
-        } else {
-            [[ToastManager manager] showToast:@"提交失败"];
+        }
+        else {
+            id data = [jsonObj btd_objectForKey:@"data" default:nil];
+            BOOL isBlackmailed = NO;
+            if(data && [data isKindOfClass:NSDictionary.class]) {
+                isBlackmailed = [[data btd_stringValueForKey:@"punish_status"] boolValue];
+            }
+            if(isBlackmailed) {
+                // 展现埋点
+                NSMutableDictionary *showParams = [NSMutableDictionary dictionary];
+                showParams[@"popup_name"] = @"black_popup";
+                showParams[UT_PAGE_TYPE] = traceParams[UT_PAGE_TYPE];
+                showParams[UT_ELEMENT_TYPE] = @"black_popup";
+                showParams[UT_ENTER_FROM] = traceParams[UT_ENTER_FROM];
+                showParams[UT_ORIGIN_FROM] = traceParams[UT_ORIGIN_FROM];
+                TRACK_EVENT(@"popup_show", showParams);
+                // ---
+                
+                NSString *punishTips = [data btd_stringValueForKey:@"punish_tips"];
+                NSString *redirect = [data btd_stringValueForKey:@"redirect"];
+                [[IMManager shareInstance] showBlackmailRealtorPopupViewWithContent:punishTips leftTitle:@"其他经纪人" leftAction:^{
+                    // 点击埋点
+                    NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
+                    clickParam[@"popup_name"] = @"black_popup";
+                    clickParam[UT_CLICK_POSITION] = @"other_realtor";
+                    clickParam[UT_PAGE_TYPE] = traceParams[UT_PAGE_TYPE];
+                    clickParam[UT_ELEMENT_TYPE] = @"black_popup";
+                    clickParam[UT_ENTER_FROM] = traceParams[UT_ENTER_FROM];
+                    clickParam[UT_ORIGIN_FROM] = traceParams[UT_ORIGIN_FROM];
+                    TRACK_EVENT(@"popup_click", clickParam);
+                    //---
+                    [[IMManager shareInstance] jumpRealtorListH5PageWithUrl:redirect reportParam:clickParam];
+                } rightTitle:@"知道了" rightAction:^{
+                    // 点击埋点
+                    NSMutableDictionary *clickParam = [NSMutableDictionary dictionary];
+                    clickParam[@"popup_name"] = @"black_popup";
+                    clickParam[UT_CLICK_POSITION] = @"know";
+                    clickParam[UT_PAGE_TYPE] = traceParams[UT_PAGE_TYPE];
+                    clickParam[UT_ELEMENT_TYPE] = @"black_popup";
+                    clickParam[UT_ENTER_FROM] = traceParams[UT_ENTER_FROM];
+                    clickParam[UT_ORIGIN_FROM] = traceParams[UT_ORIGIN_FROM];
+                    TRACK_EVENT(@"popup_click", clickParam);
+                    //---
+                }];
+            }
+            else {
+                [[ToastManager manager] showToast:@"提交失败"];
+            }
+        }
+        
+        if(completion) {
+            completion(success, error, jsonObj);
         }
     }];
 }

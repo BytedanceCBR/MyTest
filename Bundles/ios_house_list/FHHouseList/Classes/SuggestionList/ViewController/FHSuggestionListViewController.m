@@ -42,11 +42,6 @@
     }
 }
 
-//支持边缘侧滑返回
-- (NSInteger)ttDragBackLeftEdge {
-    return TTNavigationControllerDefaultSwapLeftEdge;
-}
-
 //边缘滑动时，往左滑动禁止返回
 - (BOOL)shouldEnableBackActionWhenPanRight:(id)panRightValue {
     BOOL enableBackAction = NO;

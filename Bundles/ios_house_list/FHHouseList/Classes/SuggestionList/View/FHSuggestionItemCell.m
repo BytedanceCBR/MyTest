@@ -13,6 +13,7 @@
 #import "BDWebImage.h"
 #import "UILabel+BTDAdditions.h"
 #import "YYLabel.h"
+#import "UIDevice+BTDAdditions.h"
 
 @interface FHSuggestionItemCell ()
 
@@ -228,7 +229,7 @@
     [_subLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     [_subLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
-    // _secondarySubLabel
+    // _secondarySuwbLabel
     _secondarySubLabel = [[UILabel alloc] init];
     _secondarySubLabel.font = [UIFont themeFontRegular:14];
     _secondarySubLabel.textColor = [UIColor colorWithHexStr:@"#999999"];
@@ -244,10 +245,9 @@
     _sepLine = [[UIView alloc] init];
     _sepLine.backgroundColor = [UIColor themeGray6];
     [self.contentView addSubview:_sepLine];
-    CGFloat lineH = UIScreen.mainScreen.scale > 2.5 ? 0.35 : 0.5;
     [_sepLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(lineH);
+        make.height.mas_equalTo([UIDevice btd_onePixel]);
     }];
 }
 

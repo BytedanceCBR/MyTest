@@ -10,6 +10,17 @@
 #import <TTTracker/TTTracker.h>
 #import <TTBaseLib/TTBaseMacro.h>
 #import "SSNavigationBar.h"
+#if __has_include(<TTTracker/TTTracker.h>)
+#import <TTTracker/TTTracker.h>
+#endif
+
+#if __has_include(<BDTracker/BDTrackerClient.h>)
+#import <BDTracker/BDTrackerClient.h>
+#import <BDTracker/BDTrackerSDK+Debug.h>
+#endif
+
+#import <objc/runtime.h>
+#import <objc/message.h>
 
 #define ScreenHeight [UIScreen mainScreen].bounds.size.height
 #define ScreenWidth [UIScreen mainScreen].bounds.size.width
@@ -24,6 +35,28 @@
 
 @implementation LogViewerSettingViewController
 
+-(void)turnOnETData:(NSString *)address {
+    
+    [[TTTracker sharedInstance] setDebugLogServerAddress: address];
+    
+#if __has_include(<BDTracker/BDTrackerClient.h>)
+    if (NSClassFromString(@"BDTrackerClient")) {
+        BDTrackerClient *client = [NSClassFromString(@"BDTrackerClient") shareInstance];
+        [client performSelector:@selector(startLogger)];
+    }
+    Class cls = NSClassFromString(@"BDTrackerSDK");
+    SEL sel = NSSelectorFromString(@"setIsInHouseVersion:");
+    if (cls && sel && [cls respondsToSelector:sel]) {
+        void (*action)(Class,SEL,BOOL) = (void(*)(Class,SEL,BOOL))objc_msgSend;
+        action(cls, sel, YES);
+    }
+    
+#endif
+    
+    //https://data.bytedance.net/et_api/logview/verify/
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -33,6 +66,10 @@
     [self configForSimulator];
 #else
     [self configCamera];
+#endif
+    
+#ifdef DEBUG
+    [self turnOnETData:@"https://data.bytedance.net/et_api/logview/verify/"];
 #endif
 }
 
@@ -79,7 +116,7 @@
 
 - (void)confirmBtnAction: (UIButton *)sender {
     NSString *address = self.addressTextField.text.length > 0 ? self.addressTextField.text : self.addressTextField.placeholder;
-    [[TTTracker sharedInstance] setDebugLogServerAddress: address];
+    [self turnOnETData:address];
     [self back:nil];
 }
 
@@ -250,7 +287,7 @@
         NSString *data = metadataObject.stringValue;
         NSLog(@"data: %@", data);
         if (!isEmptyString(data)) {
-            [[TTTracker sharedInstance] setDebugLogServerAddress:data];
+            [self turnOnETData:data];
         }
         [self.navigationController popViewControllerAnimated:YES];
 //        ScanResultViewController *resultVC = [[ScanResultViewController alloc] init];

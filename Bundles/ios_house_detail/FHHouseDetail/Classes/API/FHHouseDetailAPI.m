@@ -28,6 +28,7 @@
 #import "TTBaseMacro.h"
 #import <FHHouseBase/FHSearchChannelTypes.h>
 #import "FHBuildingDetailModel.h"
+#import <FHHouseBase/JSONModel+FHOriginDictData.h>
 
 #define GET @"GET"
 #define POST @"POST"
@@ -65,11 +66,21 @@
             paramDic[kFHClueExtraInfo] = string;
         }
     }
-    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailNewModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
-        if (completion) {
-            completion((FHDetailNewModel *)model,error);
+    return [FHMainApi getRequestWithOriginData:url query:nil params:paramDic completion:^(NSDictionary * _Nullable resultDict, NSError * _Nullable error) {
+        FHDetailNewModel *model = nil;
+        if (resultDict && [resultDict isKindOfClass:[NSDictionary class]]) {
+            model = [[FHDetailNewModel alloc] initWithDictionary:resultDict error:nil];
+            model.fhOriginDictData = resultDict;
         }
-    }];
+        if (completion) {
+            completion((FHDetailNewModel *)model, error);
+        }
+    }];;
+//    return [FHMainApi getRequest:url query:nil params:paramDic jsonClass:[FHDetailNewModel class] completion:^(JSONModel * _Nullable model, NSError * _Nullable error) {
+//        if (completion) {
+//            completion((FHDetailNewModel *)model,error);
+//        }
+//    }];
 }
 
 +(TTHttpTask*)requestOldDetail:(NSString *)houseId
@@ -118,7 +129,7 @@
                                   logPB:(NSDictionary *)logPB
                                   query:(NSString*)query
                               extraInfo:(NSDictionary *)extraInfo
-                             completion:(nonnull void (^)(FHDetailNeighborhoodModel * _Nullable, NSData * _Nullable resultData, NSError * _Nullable))completion
+                             completion:(nonnull void (^)(FHDetailNeighborhoodModel * _Nullable, NSError * _Nullable))completion
 {
     NSString * host = [FHURLSettings baseURL] ?: @"https://i.haoduofangs.com";
     NSString* url = [host stringByAppendingFormat:@"/f100/api/neighborhood/info?neighborhood_id=%@",neighborhoodId];
@@ -142,13 +153,14 @@
             paramDic[kFHClueExtraInfo] = string;
         }
     }
-    return [FHMainApi getStringRequest:url query:nil params:paramDic completion:^(NSDictionary * _Nullable resultDict, NSData * _Nullable resultData, NSError * _Nullable error) {
+    return [FHMainApi getRequestWithOriginData:url query:nil params:paramDic completion:^(NSDictionary * _Nullable resultDict, NSError * _Nullable error) {
         FHDetailNeighborhoodModel *model = nil;
         if (resultDict && [resultDict isKindOfClass:[NSDictionary class]]) {
             model = [[FHDetailNeighborhoodModel alloc] initWithDictionary:resultDict error:nil];
+            model.fhOriginDictData = resultDict;
         }
         if (completion) {
-            completion((FHDetailNeighborhoodModel *)model, resultData, error);
+            completion((FHDetailNeighborhoodModel *)model, error);
         }
     }];;
 
@@ -576,10 +588,10 @@
 }
 
 
-+ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable))completion {
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags completion:(void (^)(bool, NSError * _Nullable, NSDictionary *))completion {
     return [self requestRealtorEvaluationFeedback:targetId targetType:targetType evaluationType:evaluationType realtorId:realtorId content:content score:score tags:tags from:nil completion:completion];
 }
-+ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString * _Nullable)from completion:(void (^)(bool, NSError * _Nullable))completion {
++ (TTHttpTask *)requestRealtorEvaluationFeedback:(NSString *)targetId targetType:(NSInteger)targetType evaluationType:(NSInteger)evaluationType realtorId:(NSString *)realtorId content:(NSString *)content score:(NSInteger)score tags: (NSArray*)tags from:(NSString * _Nullable)from completion:(void (^)(bool, NSError * _Nullable, NSDictionary *))completion {
 
     NSString *path = @"/f100/api/associate/realtor_evaluation/assign";
     NSMutableDictionary *param = [NSMutableDictionary new];
@@ -612,7 +624,7 @@
             }
         }
         if (completion) {
-            completion(success , error);
+            completion(success , error, result);
         }
     }];
 }
