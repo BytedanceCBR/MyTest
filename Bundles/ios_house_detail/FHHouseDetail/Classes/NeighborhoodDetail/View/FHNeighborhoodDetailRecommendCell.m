@@ -9,19 +9,6 @@
 #import "FHHouseSecondCardView.h"
 #import "FHHouseSecondCardViewModel.h"
 #import "Masonry.h"
-#import "UIColor+Theme.h"
-
-#import "FHHouseSearchSecondHouseCell.h"
-#import "FHCommonDefines.h"
-#import <YYText/YYLabel.h>
-#import <lottie-ios/Lottie/LOTAnimationView.h>
-#import "Masonry.h"
-#import <FHCommonUI/UIColor+Theme.h>
-#import <FHCommonUI/UIFont+House.h>
-#import "UIButton+TTAdditions.h"
-#import <BDWebImage/UIImageView+BDWebImage.h>
-#import "UILabel+BTDAdditions.h"
-#import "FHSingleImageInfoCellModel.h"
 
 @interface FHNeighborhoodDetailRecommendCell()
 
