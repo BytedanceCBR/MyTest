@@ -40,9 +40,12 @@
         _vc = [[FHChildSuggestionListViewController alloc] initWithRouteParamObj:data];
         
         if([data isKindOfClass:[TTRouteParamObj class]]){
-            TTRouteParamObj *paramObj = (TTRouteParamObj *)data;
-            NSInteger hp = [paramObj.allParams[@"house_type"] integerValue];
-            _vc.needShowKeyBoardWhenFirstEnter = (hp >= 1 && hp <= 4 && hp == houseType);
+            if(self.mainVc.isFirstLoad){
+                self.mainVc.isFirstLoad = NO;
+                _vc.needShowKeyBoardWhenFirstEnter = YES;
+            }else{
+                _vc.needShowKeyBoardWhenFirstEnter = NO;
+            }
         }
         
         [self.contentView addSubview:_vc.view];

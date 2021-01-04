@@ -76,7 +76,7 @@
         self.paramObj = paramObj;
         // 1、house_type
         _houseType = 0; // 特殊值，为了第一次setHouseType的时候执行相关功能
-        
+        _isFirstLoad = YES;
         _houseTypeArray = [[NSMutableArray alloc] init];
         _segmentTitles = [self getSegmentTitles];
         
