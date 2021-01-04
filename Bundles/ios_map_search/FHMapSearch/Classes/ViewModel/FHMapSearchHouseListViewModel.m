@@ -250,6 +250,9 @@
 //            self.listController.showHouseDetailBlock(model,indexPath.row,self.currentBubble);
 //        }
 //    }
+    if (self.showPlaceHolder) {
+        return;
+    }
     FHHouseListBaseItemModel *model = _houseList[indexPath.row];
        if(model.houseType == FHHouseTypeRentHouse){
            if (self.listController.showRentHouseDetailBlock) {
