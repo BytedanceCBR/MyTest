@@ -274,13 +274,11 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)startLoadData {
-    [self.viewController startLoading];
-
     __weak typeof(self) weakSelf = self;
     void(^syncInfoBlock)(void) = ^(void) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         strongSelf.mobileNumber = [FHLoginSharedModel sharedModel].mobileNumber;
-        [strongSelf.viewController endLoading];
+//        [strongSelf.viewController endLoading];
         [strongSelf updateViewType];
     };
     
@@ -332,7 +330,7 @@ static FHLoginSharedModel *_sharedModel = nil;
             if (index > 0) {
                 index -= 1;
             }
-            [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:YES];
+            [self.viewController.navigationController popToViewController:self.viewController.navigationController.viewControllers[index] animated:YES];
         } else {
             [self.viewController.navigationController popToRootViewControllerAnimated:YES];
         }
@@ -496,12 +494,12 @@ static FHLoginSharedModel *_sharedModel = nil;
                 if (self.currentViewType != FHLoginViewTypeDouYin) {
                     //当前vc不是抖音登录，说明使用的抖音icon登录，不用跳转
                     if (self.viewController != self.viewController.navigationController.viewControllers.lastObject) {
-                        [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:YES];
+                        [self.viewController.navigationController popToViewController:self.viewController.navigationController.viewControllers[index] animated:YES];
                     }
                 }else {
                     //退出到登录首页，进入手机登录授权页
                     if (self.viewController != self.viewController.navigationController.viewControllers.lastObject) {
-                        [self.viewController.navigationController popToViewController:self.viewController.navigationController.childViewControllers[index] animated:NO];
+                        [self.viewController.navigationController popToViewController:self.viewController.navigationController.viewControllers[index] animated:NO];
                     }
                     [self goToOneKeyLogin];
                 }

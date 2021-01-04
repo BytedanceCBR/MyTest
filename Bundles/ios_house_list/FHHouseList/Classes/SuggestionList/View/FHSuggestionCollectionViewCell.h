@@ -8,12 +8,14 @@
 #import <UIKit/UIKit.h>
 #import "FHHouseType.h"
 #import "FHChildSuggestionListViewController.h"
+#import "FHSuggestionListViewController.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHSuggestionCollectionViewCell : UICollectionViewCell
 
 @property(nonatomic, strong) FHChildSuggestionListViewController *vc;
+@property(nonatomic, weak) FHSuggestionListViewController *mainVc;
 @property(nonatomic, assign) FHHouseType houseType;
 
 - (void)cellDisappear;

@@ -210,6 +210,7 @@
     NSString *rowStr = [NSString stringWithFormat:@"%zi", index];
     if (index < self.listController.houseTypeArray.count && index >= 0 && self.cellDict[rowStr]) {
         FHSuggestionCollectionViewCell *cell = self.cellDict[rowStr];
+        cell.mainVc = self.listController;
         [cell refreshData:self.listController.paramObj andHouseType:[self.listController.houseTypeArray[index] integerValue]];
         if (cell.vc && ![self.listController.childViewControllers containsObject:cell.vc]) {
             [self.listController addChildViewController:cell.vc];
