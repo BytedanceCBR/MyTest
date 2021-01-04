@@ -7,7 +7,6 @@
 
 #import "FHFindHouseAreaSelectionPanel.h"
 #import <Masonry/Masonry.h>
-#import "AreaSelectionTableViewVM.h"
 #import "UIColor+Theme.h"
 //#import "ButtomBarView.h"
 #import "FHFilterNodeModel.h"
@@ -165,6 +164,17 @@
     [_selectionViewModels enumerateObjectsUsingBlock:^(FHFindHouseAreaSelectionTableViewVM * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         [obj setSelectedIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
     }];
+}
+
+/**
+ 透传展示、隐藏事件给panel，通知panel恢复之前选中的区域和商圈
+ */
+-(void)willDisplay {
+    [self viewWillDisplay];
+}
+
+-(void)willDismiss {
+    [self viewDidDismiss];
 }
 
 -(void)initLayoutTables {
