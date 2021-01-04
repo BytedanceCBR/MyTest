@@ -390,6 +390,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    //114删除用户引导页后，对新用户第一次打开app的判断都失效了，所以移动到首页消失以后才算完成
     [TTSandBoxHelper setAppFirstLaunchForAd];
 }
 

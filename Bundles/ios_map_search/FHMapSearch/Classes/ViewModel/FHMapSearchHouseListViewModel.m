@@ -250,6 +250,9 @@
 //            self.listController.showHouseDetailBlock(model,indexPath.row,self.currentBubble);
 //        }
 //    }
+    if (self.showPlaceHolder) {
+        return;
+    }
     FHHouseListBaseItemModel *model = _houseList[indexPath.row];
        if(model.houseType == FHHouseTypeRentHouse){
            if (self.listController.showRentHouseDetailBlock) {
@@ -537,7 +540,7 @@
 //                NSString *toast = [NSString stringWithFormat:@"共找到%@套房源",houseModel.total];
 //                [[FHMainManager sharedInstance] showToast:toast duration:1];
             }
-            
+            self.showPlaceHolder = NO;
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
             if (houseModel.hasMore) {
