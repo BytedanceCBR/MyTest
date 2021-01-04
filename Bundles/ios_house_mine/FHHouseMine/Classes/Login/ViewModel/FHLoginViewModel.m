@@ -274,13 +274,11 @@ static FHLoginSharedModel *_sharedModel = nil;
 }
 
 - (void)startLoadData {
-    [self.viewController startLoading];
-
     __weak typeof(self) weakSelf = self;
     void(^syncInfoBlock)(void) = ^(void) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         strongSelf.mobileNumber = [FHLoginSharedModel sharedModel].mobileNumber;
-        [strongSelf.viewController endLoading];
+//        [strongSelf.viewController endLoading];
         [strongSelf updateViewType];
     };
     

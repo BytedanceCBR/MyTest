@@ -163,6 +163,7 @@
     [self.viewModel setLoginViewViewTypeChanged:^(FHLoginViewType type) {
         [weakSelf configureSubviewWithType:type];
     }];
+    [self startLoading];
     [self.viewModel startLoadData];
 }
 
@@ -250,5 +251,6 @@
             break;
     }
     [self.view bringSubviewToFront:self.customNavBarView];
+    [self endLoading];
 }
 @end
