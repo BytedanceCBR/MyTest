@@ -21,6 +21,9 @@
 #import <FHHouseBase/FHHouseBaseItemCell.h>
 #import "FHOldHouseDetailRelatedSecondCell.h"
 #import "FHEnvContext.h"
+#import "FHHouseCardUtils.h"
+#import "FHHouseSecondCardViewModel.h"
+#import "FHHouseSecondCardView.h"
 
 @interface FHDetailRelatedHouseCell ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -30,8 +33,7 @@
 @property (nonatomic, strong)   UITableView       *tableView;
 @property (nonatomic, strong)   FHDetailBottomOpenAllView       *openAllView;// 查看更多
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowCache; // 埋点缓存
-
-@property (nonatomic, strong , nullable) NSArray<FHSearchHouseDataItemsModel> *items;
+@property (nonatomic, strong) NSMutableArray *dataList;
 
 @end
 
@@ -73,22 +75,31 @@
             make.top.bottom.equalTo(self.contentView);
         }];
     }
-    CGFloat cellHeight = 88;
+    CGFloat cellHeight = 0;
     BOOL hasMore = model.relatedHouseData.hasMore;
     CGFloat bottomOffset = 20;
     if (hasMore) {
         bottomOffset = 68;
     }
-    self.items = model.relatedHouseData.items;
+    for (FHSearchHouseDataItemsModel *item in model.relatedHouseData.items) {
+        item.advantageDescription = nil;
+        id obj = [FHHouseCardUtils getDetailEntityFromModel:item];
+        if (obj && [obj isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+            FHHouseSecondCardViewModel *model = (FHHouseSecondCardViewModel *)obj;
+            [model setTitleMaxWidth:SCREEN_WIDTH - 30 * 2 - 84 - 8];
+            cellHeight += [FHOldHouseDetailRelatedSecondCell heightForData:obj];
+            [self.dataList addObject:obj];
+        }
+    }
     NSString *title = @"周边房源";
-    FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
+    FHDetailOldModel *oldDetail = (FHDetailOldModel *)self.baseViewModel.detailData;
     if (oldDetail) {
         title = oldDetail.data.recommendedHouseTitle.length > 0 ? oldDetail.data.recommendedHouseTitle : @"周边房源";
     }
     _headerView.label.text = title;
     if (model.relatedHouseData.items.count > 0) {
         UITableView *tv = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-        tv.estimatedRowHeight = 88;
+        //tv.estimatedRowHeight = 88;
         tv.estimatedSectionHeaderHeight = 0;
         tv.estimatedSectionFooterHeight = 0;
         tv.backgroundColor = [UIColor clearColor];
@@ -103,7 +114,7 @@
         [self.containerView addSubview:tv];
         [tv mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView);
-            make.height.mas_equalTo(cellHeight * model.relatedHouseData.items.count);
+            make.height.mas_equalTo(cellHeight);
             make.left.right.mas_equalTo(self.containerView);
             make.bottom.mas_equalTo(self.containerView).offset(-bottomOffset);
         }];
@@ -115,10 +126,14 @@
     if (model.relatedHouseData.hasMore) {
         // 添加查看更多
         self.openAllView = [[FHDetailBottomOpenAllView alloc] init];
+        self.openAllView.layer.cornerRadius = 4;
         self.openAllView.title.font = [UIFont themeFontRegular:16];
-        self.openAllView.title.textColor = [UIColor themeGray3];
+        self.openAllView.title.textColor = [UIColor themeGray1];
+        self.openAllView.title.text = [NSString stringWithFormat:@"查看在售%@套房源", model.relatedHouseData.total];
+        self.openAllView.title.backgroundColor = [UIColor colorWithHexStr:@"#fafafa"];
         self.openAllView.topBorderView.hidden = YES;
-        self.openAllView.settingArrowImageView.image = [UIImage imageNamed:@"arrowicon-feed-4"];
+        self.openAllView.backgroundColor = [UIColor colorWithHexStr:@"#fafafa"];
+        self.openAllView.settingArrowImageView.image = [UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"];
         [self.containerView addSubview:self.openAllView];
         // 查看更多按钮点击
         __weak typeof(self) wSelf = self;
@@ -129,17 +144,17 @@
             // 查看更多相对tableView布局
             [self.openAllView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.tableView.mas_bottom);
-                make.left.right.mas_equalTo(self.containerView);
-                make.height.mas_equalTo(43);
-                make.bottom.mas_equalTo(self.containerView).offset(-20);
+                make.left.mas_equalTo(30);
+                make.right.mas_equalTo(-30);
+                make.height.mas_equalTo(46);
             }];
         } else {
             // 查看更多自己布局
             [self.openAllView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.containerView).offset(16);
-                make.left.right.mas_equalTo(self.containerView);
-                make.height.mas_equalTo(43);
-                make.bottom.mas_equalTo(self.containerView).offset(-20);
+                make.left.mas_equalTo(30);
+                make.right.mas_equalTo(-30);
+                make.height.mas_equalTo(46);
             }];
         }
     }
@@ -152,6 +167,7 @@
                 reuseIdentifier:reuseIdentifier];
     if (self) {
         [self setupUI];
+        self.dataList = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -177,10 +193,10 @@
     _headerView.label.font = [UIFont themeFontMedium:20];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).offset(11);
+        make.left.mas_equalTo(self.contentView).offset(15);
         make.right.mas_equalTo(self.contentView).offset(-11);
         make.top.equalTo(self.shadowImage).offset(20);
-        make.height.mas_equalTo(46);
+        make.height.mas_equalTo(50);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
@@ -201,7 +217,7 @@
     FHDetailRelatedHouseModel *model = (FHDetailRelatedHouseModel *)self.currentData;
     if (model.relatedHouseData.hasMore)
     {
-        FHDetailOldModel *oldDetail = self.baseViewModel.detailData;
+        FHDetailOldModel *oldDetail = (FHDetailOldModel *)self.baseViewModel.detailData;
         NSString *group_id = @"be_null";
         if (oldDetail && oldDetail.data.neighborhoodInfo.id.length > 0) {
             group_id = oldDetail.data.neighborhoodInfo.id;
@@ -238,8 +254,12 @@
 
 // 单个cell点击
 - (void)cellDidSeleccted:(NSInteger)index {
-    if (index >= 0 && index < self.items.count) {
-        FHSearchHouseDataItemsModel *dataItem = self.items[index];
+    if (index >= 0 && index < [self.dataList count]) {
+        FHHouseSecondCardViewModel *viewModel = (FHHouseSecondCardViewModel *)self.dataList[index];
+        if (![viewModel.model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+            return;
+        }
+        FHSearchHouseDataItemsModel *dataItem = (FHSearchHouseDataItemsModel *)viewModel.model;
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);
         tracerDic[@"card_type"] = @"left_pic";
@@ -264,28 +284,14 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return self.items.count;
+    return [self.dataList count];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row >= 0 && indexPath.row < self.items.count) {
-        FHSearchHouseItemModel *item = self.items[indexPath.row];
-        FHSingleImageInfoCellModel *cellModel = [FHSingleImageInfoCellModel houseItemByModel:item];
-        if ([FHEnvContext isDisplayNewCardType]) {
-            FHHouseBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHOldHouseDetailRelatedSecondCell class])];
-            [cell refreshWithData:cellModel];
-            return cell;
-        }
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"FHHomeSmallImageItemCell"];
-        if ([cell isKindOfClass:[FHHouseBaseItemCell  class]]) {
-            FHHouseBaseItemCell  *imageInfoCell = (FHHouseBaseItemCell  *)cell;
-            CGFloat reasonHeight = [cellModel.secondModel showRecommendReason] ? [FHHouseBaseItemCell  recommendReasonHeight] : 0;
-            [imageInfoCell refreshTopMargin:0];
-            [imageInfoCell updateWithOldHouseDetailCellModel:cellModel];
-        }
-        cell.contentView.backgroundColor = [UIColor clearColor];
-        cell.backgroundColor = [UIColor clearColor];
+    if (indexPath.row >= 0 && indexPath.row < [self.dataList count]) {
+        FHOldHouseDetailRelatedSecondCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHOldHouseDetailRelatedSecondCell class])];
+        [cell refreshWithData:self.dataList[indexPath.row] withLast:(indexPath.row == [self.dataList count] - 1) ? YES : NO];
         return cell;
     }
     return [[UITableViewCell alloc] init];
@@ -293,7 +299,10 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 88;
+    if (indexPath.item < [self.dataList count]) {
+        return [FHOldHouseDetailRelatedSecondCell heightForData:self.dataList[indexPath.row]];
+    }
+    return 0;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -317,21 +326,23 @@
     if (vcParentView) {
         CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
         NSInteger index = (UIScreen.mainScreen.bounds.size.height - point.y - 70) / 108;
-        if (index >= 0 && index < self.items.count) {
-            [self addHouseShowByIndex:index];
-        }
+        [self addHouseShowByIndex:index];
     }
 }
 
 // 添加house_show 埋点
 - (void)addHouseShowByIndex:(NSInteger)index {
-    if (index >= 0 && index < self.items.count) {
+    if (index >= 0 && index < [self.dataList count]) {
         NSString *tempKey = [NSString stringWithFormat:@"%ld", index];
         if ([self.houseShowCache valueForKey:tempKey]) {
             return;
         }
         [self.houseShowCache setValue:@(YES) forKey:tempKey];
-        FHSearchHouseDataItemsModel *dataItem = self.items[index];
+        FHHouseSecondCardViewModel *viewModel = (FHHouseSecondCardViewModel *)self.dataList[index];
+        if (![viewModel.model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
+            return;
+        }
+        FHSearchHouseDataItemsModel *dataItem = (FHSearchHouseDataItemsModel *)viewModel.model;
         // house_show
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"rank"] = @(index);

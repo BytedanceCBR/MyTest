@@ -123,7 +123,6 @@
 -(void)dealloc
 {
     [self enablePan:YES];
-    [self tryCallbackOpenUrl];
 }
 
 -(void)setupConfigModel
@@ -219,7 +218,6 @@
 {
     if (self.viewModel.showMode == FHMapSearchShowModeMap || self.viewModel.showMode == FHMapSearchShowModeSubway) {
         [self.navigationController popViewControllerAnimated:YES];
-        [self tryCallbackOpenUrl];
     }else{
         [self.viewModel dismissHouseListView];
     }    
@@ -456,17 +454,6 @@
         self.simpleNavBar.alpha =  alpha;
     }completion:^(BOOL finished) {
     }];
-}
-
--(void)tryCallbackOpenUrl
-{
-    if (self.openUrlDelegate) {
-        NSString *houseListOpenUrl = [self.viewModel backHouseListOpenUrl];
-        if( houseListOpenUrl.length > 0) {
-            [self.openUrlDelegate handleHouseListCallback:houseListOpenUrl];
-        }
-        self.openUrlDelegate = nil;
-    }
 }
 
 #pragma mark - 画图找房

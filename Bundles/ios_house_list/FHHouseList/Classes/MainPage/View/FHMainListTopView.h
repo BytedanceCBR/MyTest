@@ -13,8 +13,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 -(instancetype)initWithBannerView:(UIView *)bannerView filterView:(UIView *)filterView filterTagsView:(UIView *)filterTagsView;
 
--(CGFloat)showNotify:(NSString *)message willCompletion:(void (^)(void))willCompletion;
-
 -(CGFloat)filterTop;
 
 -(CGFloat)filterBottom;

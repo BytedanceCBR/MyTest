@@ -292,9 +292,10 @@
 
 - (void)refreshAlpha:(CGFloat)alpha
 {
-    _bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:alpha];
     _subAlpha = alpha;
     if (alpha > 0) {
+        self.alpha = alpha;
+        _bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:1];
         _gradientView.alpha = 0;
         if (self.isForVouch) {
             [_backBtn setImage:self.backWhiteImage forState:UIControlStateNormal];
@@ -327,6 +328,8 @@
         }
         
     }else {
+        self.alpha = 1;
+        _bgView.backgroundColor = [UIColor colorWithWhite:1 alpha:0];
         _gradientView.alpha = 1;
         UIImage *image = self.followStatus ? self.collectYellowImage : self.collectWhiteImage;
         [_backBtn setImage:self.backWhiteImage forState:UIControlStateNormal];

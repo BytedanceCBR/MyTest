@@ -74,6 +74,9 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 @property(nonatomic, assign) BOOL isShowingSpringHang;
 //正在显示的画运营位ID
 @property(nonatomic, copy) NSString *currentShowHangId;
+@property(nonatomic, copy, readonly) NSString *boeChannelName;
+@property(nonatomic, copy, readonly) NSString *ppeChannelName;
+
 
 + (instancetype)sharedInstance;
 /*
@@ -271,10 +274,6 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
  */
 + (BOOL)isHasVideoList;
 
-/*
- 是否开启视频预加载实验，默认NO
-  */
- + (BOOL)isHasPerLoadForVideo;
 
 /*
  降级卡片开关
@@ -282,9 +281,14 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 + (BOOL)isDisplayNewCardType;
 
 /*
+ 大类页/列表页列表组件开关
+ */
++ (BOOL)isHouseListComponentEnable;
+
+/*
 判断开启首次安装用户引导，默认YES
  */
-+ (BOOL)isIntroduceOpen;
+//+ (BOOL)isIntroduceOpen;
 /*
  第一次启动和切城市默认跳转的tab
  
@@ -336,6 +340,11 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 
 //获取ugc用户v图标
 + (NSArray *)getUGCUserVWhiteList;
+
+//获取首页进入搜索sug时，用户上一次选择的值
++ (NSInteger)lastSearchSugHouseType;
+//记录首页进入搜索sug时，用户上一次选择的值
++ (void)setLastSearchSugHouseType:(NSInteger)houseType;
 
 @end
 

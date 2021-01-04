@@ -83,7 +83,6 @@
 
 - (void)initView {
     [self initTableView];
-    [self initNotifyBarView];
     [self addDefaultEmptyViewFullScreen];
 }
 
@@ -123,11 +122,6 @@
     }
 }
 
-- (void)initNotifyBarView {
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.notifyBarView];
-}
-
 - (void)initConstraints {
     [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         if (@available(iOS 11.0, *)) {
@@ -138,10 +132,6 @@
         make.left.right.bottom.mas_equalTo(self.view);
     }];
     
-    [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self.tableView);
-        make.height.mas_equalTo(32);
-    }];
     
     [self.publishBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.bottom.mas_equalTo(self.view).offset(-self.publishBtnBottomHeight);
@@ -180,31 +170,6 @@
     [self startLoadData];
 }
 
-#pragma mark - show notify
-
-- (void)showNotify:(NSString *)message
-{
-    [self showNotify:message completion:nil];
-}
-
-- (void)showNotify:(NSString *)message completion:(void(^)(void))completion{
-    UIEdgeInsets inset = self.tableView.contentInset;
-    inset.top = self.notifyBarView.height;
-    self.tableView.contentInset = inset;
-    self.tableView.contentOffset = CGPointMake(0, -inset.top);
-    self.notifyCompletionBlock = completion;
-    WeakSelf;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
-        WeakSelf;
-        if(!isImmediately) {
-            [wself hideIfNeeds];
-        } else {
-            if(wself.notifyCompletionBlock) {
-                wself.notifyCompletionBlock();
-            }
-        }
-    }];
-}
 
 - (void)hideIfNeeds {
     [UIView animateWithDuration:0.3 animations:^{
@@ -227,9 +192,6 @@
     }];
 }
 
-- (void)hideImmediately {
-    [self.notifyBarView hideImmediately];
-}
 
 #pragma mark - TTUIViewControllerTrackProtocol
 

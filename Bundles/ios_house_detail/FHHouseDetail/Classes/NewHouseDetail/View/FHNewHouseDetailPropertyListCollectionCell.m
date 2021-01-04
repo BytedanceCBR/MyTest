@@ -72,7 +72,7 @@
                 // 两列
                 FHPropertyListCorrectingRowView *rowView = [[FHPropertyListCorrectingRowView alloc] init];
                 rowView.tag = 100+idx;
-                [rowView addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
+                [rowView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openUrlDidClick:)]];
                 [self.contentView addSubview:rowView];
                 [self.itemArray addObject:rowView];
                 rowView.keyLabel.text = obj.attr;
@@ -110,7 +110,7 @@
             [singles enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHPropertyListCorrectingRowView *rowView = [[FHPropertyListCorrectingRowView alloc] init];
                 rowView.tag = 100+obj.realIndex;
-                [rowView addTarget:self action:@selector(openUrlDidClick:) forControlEvents:UIControlEventTouchUpInside];
+                [rowView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(openUrlDidClick:)]];
                 [self.contentView addSubview:rowView];
                 [self.itemArray addObject:rowView];
                 [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -132,9 +132,9 @@
     }
 }
 
-- (void)openUrlDidClick:(UIControl *)btn
+- (void)openUrlDidClick:(UITapGestureRecognizer *)gesture
 {
-    NSInteger index = btn.tag - 100;
+    NSInteger index = gesture.view.tag - 100;
     FHNewHouseDetailPropertyListCellModel *model = (FHNewHouseDetailPropertyListCellModel *)self.currentData;
 
     if (index < 0 || index >= model.baseInfo.count) {

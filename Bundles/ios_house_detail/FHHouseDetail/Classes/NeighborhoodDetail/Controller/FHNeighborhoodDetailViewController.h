@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)updateLayout;
 
+- (void)hiddenPlaceHolder;
+
 @end
 
 NS_ASSUME_NONNULL_END

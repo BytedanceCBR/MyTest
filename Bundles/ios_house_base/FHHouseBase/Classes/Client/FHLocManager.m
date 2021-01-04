@@ -24,7 +24,6 @@
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTArticleCategoryManager.h"
 #import "FHHouseUGCAPI.h"
-#import "FHIntroduceManager.h"
 #import "FHPopupViewManager.h"
 #import "TTSettingsManager.h"
 
@@ -493,7 +492,9 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                 }
                 
                 BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
-                BOOL isShowIntoduceView = [FHIntroduceManager sharedInstance].isShowing;
+                
+                BOOL isShowIntoduceView = NO;
+//                BOOL isShowIntoduceView = [FHIntroduceManager sharedInstance].isShowing;
                 
                 
                 
@@ -516,7 +517,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                     }
                 }else
                 {
-                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && hasSelectedCity && [self isTopCitySwitchTimeCompare] &&(![FHEnvContext canShowLoginTip] || [TTAccount sharedAccount].isLogin)) {
+                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && hasSelectedCity && [self isTopCitySwitchTimeCompare]) {
                         NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
                         [FHUtils setContent:stringCurrentDate forKey:kFHTopSwitchCityLocalKey];
                         
@@ -667,7 +668,8 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                 }
                 
                 BOOL hasSelectedCity = [(id)[FHUtils contentForKey:kUserHasSelectedCityKey] boolValue];
-                BOOL isShowIntoduceView = [FHIntroduceManager sharedInstance].isShowing;
+                BOOL isShowIntoduceView = NO;
+//                BOOL isShowIntoduceView = [FHIntroduceManager sharedInstance].isShowing;
                 
             
                 
@@ -690,7 +692,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                      }
                 }else
                 {
-                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && [self isTopCitySwitchTimeCompare] && (![FHEnvContext canShowLoginTip] || [TTAccount sharedAccount].isLogin)) {
+                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && [self isTopCitySwitchTimeCompare]) {
                         NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
                         [FHUtils setContent:stringCurrentDate forKey:kFHTopSwitchCityLocalKey];
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeInitSwitchCityTopView" object:nil];

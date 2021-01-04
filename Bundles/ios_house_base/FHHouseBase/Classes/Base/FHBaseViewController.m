@@ -16,8 +16,6 @@
 #import "FHErrorView.h"
 #import "UIViewAdditions.h"
 #import "TTProjectLogicManager.h"
-#import "FHIntroduceManager.h"
-#import <FHIntroduceManager.h>
 #import <TTBaseLib/TTDeviceHelper.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 #import "UIImage+FIconFont.h"
@@ -46,9 +44,9 @@
         self.isFirstViewDidAppear = YES;
         self.needRemoveLastVC = NO;
         self.isResetStatusBar = YES;
-        self.ttDisableDragBack = NO;
+//        self.ttDisableDragBack = NO;
 //        self.ttDragBackLeftEdge = TTNavigationControllerDefaultSwapLeftEdge; //屏幕边缘左滑
-        self.ttDragBackLeftEdge = 0; //全屏
+//        self.ttDragBackLeftEdge = 0; //全屏
 
         self.titleName = [paramObj.allParams objectForKey:VCTITLE_KEY];
         NSDictionary *tracer = paramObj.allParams[TRACER_KEY];
@@ -157,7 +155,8 @@
     [super viewDidLoad];
     // push过来的页面默认状态栏是隐藏的
     UIApplication *application = [UIApplication sharedApplication];
-    if(application.statusBarHidden && ![FHIntroduceManager sharedInstance].isShowing){
+    //114 删除用户引导页  && ![FHIntroduceManager sharedInstance].isShowing
+    if(application.statusBarHidden){
         [application setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     }
     

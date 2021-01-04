@@ -382,7 +382,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.ttDisableDragBack = YES;
     _isLogin = [TTAccountManager isLogin];
     _loginStateChange = YES;
     self.enterType = @"dafault";
@@ -414,6 +413,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     imViewController.fatherVC = self;
     [imViewController setUpdateRedPoint:^(NSInteger chatNumber, BOOL hasRedPoint, NSInteger systemMessageNumber) {
         [weakSelf updateRedPointWithChat:chatNumber andHasChatRedPoint:hasRedPoint andSystemMessage:systemMessageNumber];
+        [weakSelf networkStateChange:nil];
     }];
     imViewController.isSegmentedChildViewController = YES;
     imViewController.dataType = FHMessageRequestDataTypeIM;

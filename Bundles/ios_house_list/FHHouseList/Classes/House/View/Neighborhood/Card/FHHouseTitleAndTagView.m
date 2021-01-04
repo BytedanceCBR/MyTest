@@ -55,6 +55,10 @@
     return _titleLabel;
 }
 
+- (void)refreshOpacity:(CGFloat)opacity {
+    self.titleLabel.layer.opacity = opacity;
+}
+
 - (void)setViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     [super setViewModel:viewModel];
     FHHouseTitleAndTagViewModel *titleAndTagViewModel = (FHHouseTitleAndTagViewModel *)self.viewModel;

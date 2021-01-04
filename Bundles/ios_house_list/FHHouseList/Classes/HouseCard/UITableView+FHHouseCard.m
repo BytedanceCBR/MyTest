@@ -69,14 +69,29 @@
 
 - (BOOL)fhHouseCard_willShowCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     if (![cell conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)]) return NO;
+    if (![self fhHouseCard_canSupportCell:cell]) return NO;
     [(UITableViewCell<FHHouseCardTableViewCellProtocol> *)cell cellWillShowAtIndexPath:indexPath];
     return YES;
 }
 
 - (BOOL)fhHouseCard_didClickCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     if (![cell conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)]) return NO;
+    if (![self fhHouseCard_canSupportCell:cell]) return NO;
     [(UITableViewCell<FHHouseCardTableViewCellProtocol> *)cell cellDidClickAtIndexPath:indexPath];
     return YES;
+}
+
+- (BOOL)fhHouseCard_canSupportCell:(UITableViewCell *)cell {
+    if (![cell conformsToProtocol:@protocol(FHHouseCardTableViewCellProtocol)]) return NO;
+    NSObject *entity = ((UITableViewCell<FHHouseCardTableViewCellProtocol> *)cell).viewModel;
+    if (entity == nil) return NO;
+    NSString *entityClassName = NSStringFromClass(((NSObject *)entity).class);
+    if (entityClassName) {
+        NSDictionary *dict = [FHHouseCardUtils supportCellStyleMap];
+        NSString *cellClassName = [dict btd_stringValueForKey:entityClassName];
+        if (cellClassName) return YES;
+    }
+    return NO;
 }
 
 @end

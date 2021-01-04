@@ -15,7 +15,6 @@
 #import "FHTracerModel.h"
 #import "TTCategoryStayTrackManager.h"
 #import "ToastManager.h"
-#import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "UIScrollView+Refresh.h"
 #import "MJRefresh.h"
 #import "FHRefreshCustomFooter.h"
@@ -48,7 +47,6 @@
 @property (nonatomic, assign) FHHouseType previousHouseType;
 @property (nonatomic, assign) FHHomePullTriggerType currentPullType;
 @property(nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
-@property (nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property (nonatomic, strong) TTHttpTask * requestOriginTask;
 @property (nonatomic, strong) TTHttpTask * requestRefreshTask;
 @property (nonatomic, assign) BOOL isHasCallBackForFirstTime;
@@ -177,8 +175,6 @@
 //                [FHEnvContext addTabUGCGuid];
             }else
             {
-                //收起tip
-                [self.homeViewController hideImmediately];
                 //                [self.homeViewController resetMaintableView];
                 [self updateCategoryViewSegmented:YES];
             }
@@ -218,8 +214,6 @@
     //上报stay埋点
     [self sendTraceEvent:FHHomeCategoryTraceTypeStay];
     
-    //收起tip
-    [self.homeViewController hideImmediately];
     
     //设置当前房源类型
     FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
@@ -238,11 +232,22 @@
         }
     }
     
+    [self setSelectedItemVC];
+    
     [self setUpSubtableIndex:indexValue];
     
     [self updateIndexChangedScrollStatus];
     
     [self bindItemVCTrace];
+}
+
+///给推荐列表传递一个被选中的状态
+- (void)setSelectedItemVC {
+    for (FHHomeItemViewController *vc in self.itemsVCArray) {
+        if ([vc isKindOfClass:[FHHomeItemViewController class]]) {
+            vc.isSelectedItem = (vc.houseType == self.houseType);
+        }
+    }
 }
 
 - (void)requestOriginData:(BOOL)isFirstChange isShowPlaceHolder:(BOOL)showPlaceHolder
@@ -409,7 +414,6 @@
         if([dataModel isKindOfClass:[FHHomeHouseModel class]] && isSuccess)
         {
             FHHomeHouseModel *houseData = (FHHomeHouseModel *)dataModel;
-            [self.homeViewController showNotify:houseData.data.refreshTip];
             [self setUpTableScrollOffsetZero];
         }
         if ([[FHEnvContext sharedInstance] getConfigFromCache].cityAvailability.enable.boolValue) {
@@ -702,7 +706,6 @@
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self.homeViewController hideImmediately];
     self.isResetingOffsetZero = NO;
     if (scrollView == self.homeViewController.scrollView) {
         self.isSelectIndex = NO;
@@ -771,10 +774,10 @@
         }
     } else if (scrollView == self.homeViewController.scrollView) {
         self.superScrollEnable = NO;
-        CGFloat contentWidth = (KFHScreenWidth * [FHEnvContext sharedInstance].generalBizConfig.configCache.houseTypeList.count) - KFHScreenWidth;
-        if (scrollView.contentOffset.x >= contentWidth) {
-            scrollView.contentOffset = CGPointMake(contentWidth, 0);
-        }
+//        CGFloat contentWidth = (KFHScreenWidth * [FHEnvContext sharedInstance].generalBizConfig.configCache.houseTypeList.count) - KFHScreenWidth;
+//        if (scrollView.contentOffset.x >= contentWidth) {
+//            scrollView.contentOffset = CGPointMake(contentWidth, 0);
+//        }
         
         NSInteger scrollIndex = (NSInteger)((scrollView.contentOffset.x + KFHScreenWidth/2)/KFHScreenWidth);
         if (!self.isSelectIndex) {

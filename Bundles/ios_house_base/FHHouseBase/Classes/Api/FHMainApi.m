@@ -23,6 +23,7 @@
 #import "FHErrorHubManagerUtil.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "FHHomeRenderFlow.h"
+#import "FHUserTracker.h"
 #import "FHUtils.h"
 #import "FHFirstPageManager.h"
 
@@ -37,6 +38,33 @@
 
 
 #define QURL(QPATH) [[self host] stringByAppendingString:QPATH]
+
+id FHJSONObjectByRemovingKeysWithNullValues(id JSONObject, NSJSONReadingOptions readingOptions) {
+    if ([JSONObject isKindOfClass:[NSArray class]]) {
+        NSMutableArray *mutableArray = [NSMutableArray arrayWithCapacity:[(NSArray *)JSONObject count]];
+        for (id value in (NSArray *)JSONObject) {
+            if (![value isEqual:[NSNull null]]) {
+                [mutableArray addObject:FHJSONObjectByRemovingKeysWithNullValues(value, readingOptions)];
+            }
+        }
+
+        return (readingOptions & NSJSONReadingMutableContainers) ? mutableArray : [NSArray arrayWithArray:mutableArray];
+    } else if ([JSONObject isKindOfClass:[NSDictionary class]]) {
+        NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionaryWithDictionary:JSONObject];
+        for (id <NSCopying> key in [(NSDictionary *)JSONObject allKeys]) {
+            id value = (NSDictionary *)JSONObject[key];
+            if (!value || [value isEqual:[NSNull null]]) {
+                [mutableDictionary removeObjectForKey:key];
+            } else if ([value isKindOfClass:[NSArray class]] || [value isKindOfClass:[NSDictionary class]]) {
+                mutableDictionary[key] = FHJSONObjectByRemovingKeysWithNullValues(value, readingOptions);
+            }
+        }
+
+        return (readingOptions & NSJSONReadingMutableContainers) ? mutableDictionary : [NSDictionary dictionaryWithDictionary:mutableDictionary];
+    }
+
+    return JSONObject;
+}
 
 @implementation FHMainApi
 
@@ -614,7 +642,11 @@
     
 }
 
-+(void)addUserOpenVCDurationLog:(NSString *)vcKey resultType:(FHNetworkMonitorType)type duration:(CGFloat)duration{
++(void)addUserOpenVCDurationLog:(NSString *)vcKey resultType:(FHNetworkMonitorType)type duration:(CGFloat)duration {
+    [self addUserOpenVCDurationLog:vcKey resultType:type duration:duration context:nil];
+}
+
++(void)addUserOpenVCDurationLog:(NSString *)vcKey resultType:(FHNetworkMonitorType)type duration:(CGFloat)duration context:(NSDictionary *)context {
     NSString *key = vcKey.copy;
     NSMutableDictionary *extra = [NSMutableDictionary new];
     extra[@"requestStatus"] = @(type);
@@ -631,7 +663,21 @@
     }else{
         cat[@"status"] = @"0";
     }
+    
+    if (context) {
+        [cat addEntriesFromDictionary:context];
+    }
     [[HMDTTMonitor defaultManager] hmdTrackService:key metric:metricDict category:cat extra:extra];
+
+#if DEBUG
+    if ([vcKey isEqualToString:@"pss_homepage"]) {
+        NSMutableDictionary *logParams = [NSMutableDictionary dictionary];
+        [logParams addEntriesFromDictionary:metricDict];
+        [logParams addEntriesFromDictionary:cat];
+        [logParams addEntriesFromDictionary:extra];
+        TRACK_EVENT(@"zzw_pss_homepage", logParams);
+    }
+#endif
 }
 
 
@@ -847,7 +893,7 @@
     }];
 }
 
-+(TTHttpTask *_Nullable)getStringRequest:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable resultDict ,NSData *_Nullable resultData, NSError *_Nullable error))completion {
++(TTHttpTask *_Nullable)getRequestWithOriginData:(NSString *_Nonnull)path query:(NSString *_Nullable)query params:(NSDictionary *_Nullable)param  completion:(void(^_Nullable)(NSDictionary *_Nullable resultDict, NSError *_Nullable error))completion {
     NSString *url = nil;
     if (![[path lowercaseString] hasPrefix:@"http"]) {
         url = QURL(path);
@@ -875,6 +921,7 @@
             if (!error) {
                 @try{
                     json = [NSJSONSerialization JSONObjectWithData:obj options:kNilOptions error:&error];
+                    json = FHJSONObjectByRemovingKeysWithNullValues(json, kNilOptions);
                 }
                 @catch(NSException *e){
                     error = [NSError errorWithDomain:e.reason code:API_ERROR_CODE userInfo:e.userInfo ];
@@ -903,7 +950,7 @@
                    extraDict[@"status"] = @(status);
                }
             [self addRequestLog:response.URL.path startDate:startDate backDate:backDate serializeDate:nil resultType:resultType errorCode:code errorMsg:errMsg extra:extraDict responseCode:responseCode];
-            completion(json, obj,error);
+            completion(json, error);
         }
     }];
 }
