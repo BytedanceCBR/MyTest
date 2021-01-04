@@ -854,26 +854,8 @@
             if (model.houseType.intValue == FHHouseTypeNewHouse) {
                 FHSuggestionNewHouseItemCell *cell = (FHSuggestionNewHouseItemCell *)[tableView dequeueReusableCellWithIdentifier:@"suggestNewItemCell" forIndexPath:indexPath];
                 cell.selectionStyle = UITableViewCellSelectionStyleNone;
-                NSAttributedString *text1 = [self processHighlightedDefault:model.text font:[UIFont themeFontSemibold:16] textColor:[UIColor themeGray1]];
-                NSAttributedString *text2 = [self processHighlightedDefault:model.text2 font:[UIFont themeFontRegular:14] textColor:[UIColor themeGray3]];
-                
-                cell.label.attributedText = [self processHighlighted:text1 originText:model.text textColor:[UIColor themeOrange1]  font:[UIFont themeFontSemibold:16]];
-                cell.subLabel.attributedText = [self processHighlighted:text2 originText:model.text2 textColor:[UIColor themeOrange1]  font:[UIFont themeFontRegular:14]];
-                if([model.text2 length] <= 0){
-                    [cell.secondarySubLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                        make.centerY.mas_equalTo(cell.label);
-                    }];
-                }
+                [cell refreshData:model];
                 cell.sepLine.hidden = indexPath.row == nowsugListData.count - 1;
-                if(model.newtip){
-                    cell.secondaryLabel.text = model.newtip.content;
-                    cell.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:model.newtip.backgroundcolor];
-                    cell.secondaryLabel.textColor = [UIColor colorWithHexStr:model.newtip.textcolor];
-                    [cell.secondaryLabel setNeedsLayout];
-                    [cell.secondaryLabel layoutIfNeeded];
-                    cell.secondaryLabel.textContainerInset = UIEdgeInsetsMake(0, 5, 0, 5);
-                }
-                cell.secondarySubLabel.text = model.tips2;
                 return cell;
             }else if(model.houseType.intValue == FHHouseTypeSecondHandHouse) {// 二手房
                 FHOldSuggestionItemCell *cell = (FHOldSuggestionItemCell *)[tableView dequeueReusableCellWithIdentifier:@"FHOldSuggestionItemCell" forIndexPath:indexPath];

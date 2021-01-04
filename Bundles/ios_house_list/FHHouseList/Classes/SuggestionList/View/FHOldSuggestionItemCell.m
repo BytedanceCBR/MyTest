@@ -198,6 +198,13 @@
         self.villageLab.text = model.tag2;
         self.amountLab.text = model.countDisplay;
         
+        if(model.tag.length || model.tag2.length){
+            [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.centerY.mas_equalTo(self.regionLab);
+                make.right.equalTo(self.contentView).offset(-15);
+            }];
+        }
+        
         UILabel *leftLab = [model.oldName length] > 0 ? self.subTitleLab:self.titleLab;
         float margin = [model.oldName length] > 0 ? 1:6;
         

@@ -14,6 +14,7 @@
 #import "UILabel+BTDAdditions.h"
 #import "YYLabel.h"
 #import "UIDevice+BTDAdditions.h"
+#import "NSAttributedString+YYText.h"
 
 @interface FHSuggestionItemCell ()
 
@@ -189,27 +190,38 @@
     _label.textColor = [UIColor themeGray1];
     _label.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_label];
-    [_label mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.top.mas_equalTo(11);
-        make.width.mas_lessThanOrEqualTo([UIScreen mainScreen].bounds.size.width - 73);
-    }];
-
     
-    // secondaryLabel
+    _oldNameLabel = [[UILabel alloc] init];
+    _oldNameLabel.font = [UIFont themeFontRegular:16];
+    _oldNameLabel.textColor = [UIColor themeGray1];
+    _oldNameLabel.textAlignment = NSTextAlignmentLeft;
+    [self.contentView addSubview:_oldNameLabel];
+
+    [_oldNameLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+    [_oldNameLabel setContentHuggingPriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+    //物业类型标签
+    _propertyManagementLabel = [[YYLabel alloc] init];
+    _propertyManagementLabel.font = [UIFont themeFontRegular:10];
+    _propertyManagementLabel.textColor = [UIColor colorWithHexStr:@"#4a4139"];
+    _propertyManagementLabel.text = @"住宅";
+    _propertyManagementLabel.layer.masksToBounds = YES;
+    _propertyManagementLabel.layer.cornerRadius = 2;
+    _propertyManagementLabel.layer.borderColor = [[UIColor colorWithHexStr:@"#4a4139"] CGColor];
+    _propertyManagementLabel.layer.borderWidth = 0.5;
+    _propertyManagementLabel.textContainerInset = UIEdgeInsetsMake(1, 3, 1, 3);
+    [self.contentView addSubview:_propertyManagementLabel];
+    [_propertyManagementLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [_propertyManagementLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    
+    
+    // 售卖状态标签
     _secondaryLabel = [[YYLabel alloc] init];
     _secondaryLabel.font = [UIFont themeFontRegular:10];
     _secondaryLabel.textColor = [UIColor themeGray3];
     _secondaryLabel.layer.masksToBounds = YES;
     _secondaryLabel.layer.cornerRadius = 2;
-//    _secondaryLabel.textAlignment = NSTextAlignmentCenter;
+    _secondaryLabel.textContainerInset = UIEdgeInsetsMake(2, 3, 2, 3);
     [self.contentView addSubview:_secondaryLabel];
-    [_secondaryLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.label.mas_right).offset(5);
-        make.centerY.mas_equalTo(self.label);
-//        make.right.mas_equalTo(self.contentView).offset(-20);
-        make.width.mas_lessThanOrEqualTo(63).priorityHigh();
-    }];
     [_secondaryLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     [_secondaryLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
@@ -219,13 +231,6 @@
     _subLabel.textColor = [UIColor themeGray3];
     _subLabel.textAlignment = NSTextAlignmentLeft;
     [self.contentView addSubview:_subLabel];
-    [_subLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.top.mas_equalTo(self.label.mas_bottom).offset(6);
-        make.height.mas_equalTo(17);
-        make.bottom.mas_equalTo(-13);
-    }];
-    
     [_subLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     [_subLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
     
@@ -235,20 +240,68 @@
     _secondarySubLabel.textColor = [UIColor colorWithHexStr:@"#999999"];
     _secondarySubLabel.textAlignment = NSTextAlignmentRight;
     [self.contentView addSubview:_secondarySubLabel];
+    // sepLine
+    _sepLine = [[UIView alloc] init];
+    _sepLine.backgroundColor = [UIColor themeGray6];
+    [self.contentView addSubview:_sepLine];
+}
+
+- (NSMutableAttributedString *)getAttributedTextWithUIfont:(UIFont *)font UIcolor:(UIColor *)color text:(NSString *)text  hightLightText:(NSString *)hightLightText{
+    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text];
+    NSDictionary *commonTextStyle = @{ NSFontAttributeName:font,NSForegroundColorAttributeName:color};
+    [attrText addAttributes:commonTextStyle range:NSMakeRange(0,text.length)];
+    NSRange tapRange = [attrText.string rangeOfString:hightLightText];
+    [attrText yy_setColor:[UIColor themeOrange1] range:tapRange];
+    return attrText;
+}
+
+- (void)refreshData:(id)data{
+    if(![data isKindOfClass:[FHSuggestionResponseItemModel class]]){
+        return ;
+    }
+    FHSuggestionResponseItemModel *model = (FHSuggestionResponseItemModel *)data;
+    self.label.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontSemibold:16] UIcolor:[UIColor themeGray1] text:model.text hightLightText:model.query];
+    self.subLabel.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontRegular:14] UIcolor:[UIColor themeGray3] text:model.text2?:@"" hightLightText:model.query];
+    self.oldNameLabel.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontRegular:14] UIcolor:[UIColor themeGray3] text:model.info.oldName?:@"" hightLightText:model.query];
+    if(model.newtip){
+        self.secondaryLabel.text = model.newtip.content;
+        self.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:model.newtip.backgroundcolor];
+        self.secondaryLabel.textColor = [UIColor colorWithHexStr:model.newtip.textcolor];
+    }
+    self.secondarySubLabel.text = model.tips2;
+    [_label mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.top.mas_equalTo(11);
+    }];
+    [_oldNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(11);
+        make.right.mas_lessThanOrEqualTo(self.secondaryLabel.mas_left).offset(-20);
+        make.left.mas_equalTo(self.label.mas_right);
+    }];
+    [_propertyManagementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self.contentView).offset(-15);
+        make.centerY.mas_equalTo(self.label);
+    }];
+    [_subLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.top.mas_equalTo(self.label.mas_bottom).offset(6);
+        make.height.mas_equalTo(17);
+        make.bottom.mas_equalTo(-13);
+    }];
+    [_secondaryLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(self.label);
+        make.right.mas_equalTo(self.propertyManagementLabel.mas_left).mas_offset(-4);
+    }];
     [_secondarySubLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.subLabel.mas_right).offset(5);
         make.centerY.mas_equalTo(self.subLabel);
         make.right.mas_equalTo(self.contentView).offset(-15);
     }];
-    
-    // sepLine
-    _sepLine = [[UIView alloc] init];
-    _sepLine.backgroundColor = [UIColor themeGray6];
-    [self.contentView addSubview:_sepLine];
     [_sepLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.bottom.right.mas_equalTo(self.contentView);
         make.height.mas_equalTo([UIDevice btd_onePixel]);
     }];
+    [self.contentView layoutIfNeeded];
 }
 
 @end
