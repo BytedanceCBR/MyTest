@@ -62,6 +62,8 @@
 @property (nonatomic, assign) NSInteger headerHeight;
 
 @property (nonatomic, strong) NSArray *itemsVCArray;
+@property(nonatomic , assign) CGPoint beginOffSet;
+@property(nonatomic , assign) CGFloat oldX;
 
 @end
 
@@ -700,7 +702,13 @@
         self.isSelectIndex = NO;
 //        self.tableViewV.scrollEnabled = NO;
           self.previousHouseType = self.houseType;
-    
+        CGFloat x = scrollView.contentOffset.x;
+        if ([self.homeViewController.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
+            FHHomeMainViewController *mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
+            x = mainVC.topView.houseSegmentControl.selectedSegmentIndex * KFHScreenWidth;
+        };
+        self.beginOffSet = CGPointMake(x, scrollView.contentOffset.y);
+        self.oldX = scrollView.contentOffset.x;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:nil];
         
         [self setUpHomeItemScrollView:NO];
@@ -781,16 +789,29 @@
             }
         }
         [self.categoryView refreshSelectionIconFromOffsetX:scrollView.contentOffset.x];
+        CGFloat scrollDistance = scrollView.contentOffset.x - _oldX;
+        CGFloat diff = scrollView.contentOffset.x - self.beginOffSet.x;
+        CGFloat tabIndex = scrollView.contentOffset.x / KFHScreenWidth;
+        if(diff >= 0){
+            tabIndex = floorf(tabIndex);
+        }else if (diff < 0){
+            tabIndex = ceilf(tabIndex);
+        }
+        NSInteger index = (int)tabIndex;
+        
         FHHomeMainViewController *mainVC = nil;
         if ([self.homeViewController.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
             mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
         };
         
-        if (mainVC.topView.houseSegmentControl.selectedSegmentIndex != scrollIndex) {
+        if (mainVC.topView.houseSegmentControl.selectedSegmentIndex != index) {
             [self updateIndexChangedScrollStatus];
+            mainVC.topView.houseSegmentControl.selectedSegmentIndex = index;
+        } else {
+            CGFloat value = scrollDistance / KFHScreenWidth;
+            [mainVC.topView.houseSegmentControl setScrollValue:value isDirectionLeft:diff < 0];
         }
-  
-        mainVC.topView.houseSegmentControl.selectedSegmentIndex = scrollIndex;
+        _oldX = scrollView.contentOffset.x;
     }
 }
 

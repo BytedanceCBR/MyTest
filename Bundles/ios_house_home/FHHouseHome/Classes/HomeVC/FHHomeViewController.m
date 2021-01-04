@@ -20,7 +20,6 @@
 #import "TTSandBoxHelper.h"
 #import "TTArticleCategoryManager.h"
 #import "FHHomeScrollBannerCell.h"
-#import "TTDeviceHelper.h"
 #import "TTAppUpdateHelper.h"
 #import "CommonURLSetting.h"
 #import "FHCommuteManager.h"
@@ -43,7 +42,8 @@
 #import "FHTrackingManager.h"
 #import "FHFirstPageManager.h"
 #import "ArticleListNotifyBarView.h"
-#import <BytedanceKit.h>
+#import <ByteDanceKit.h>
+#import <UIDevice+BTDAdditions.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -256,7 +256,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)setUpMainTableConstraints
 {
-    if ([TTDeviceHelper isIPhoneXSeries]) {
+    if ([UIDevice btd_isIPhoneXSeries]) {
         [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 44 - 49)];
     }else
     {
