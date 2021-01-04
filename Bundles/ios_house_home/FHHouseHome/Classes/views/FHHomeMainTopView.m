@@ -222,7 +222,6 @@ static const float kMapSearchBtnRightPading = 50;
     
     if ([houstTypeList containsObject:userSelectType]) {
         indexValue = [houstTypeList indexOfObject:userSelectType];
-        NSNumber *numberType = [houstTypeList objectAtIndex:indexValue];
     }
     
     _houseSegmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:titlesArray];
@@ -230,7 +229,7 @@ static const float kMapSearchBtnRightPading = 50;
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
                                           NSForegroundColorAttributeName: [UIColor themeGray1]};
     _houseSegmentControl.titleTextAttributes = titleTextAttributes;
-    
+    _houseSegmentControl.shouldFixedSelectPosition = YES;
     NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
     _houseSegmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;

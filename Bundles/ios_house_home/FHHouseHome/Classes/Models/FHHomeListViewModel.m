@@ -808,6 +808,15 @@
             [self updateIndexChangedScrollStatus];
             mainVC.topView.houseSegmentControl.selectedSegmentIndex = index;
         } else {
+            if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (CGFloat)(mainVC.topView.houseSegmentControl.sectionTitles.count - 1)){
+                mainVC.topView.houseSegmentControl.selectedSegmentIndex = index;
+                if (scrollView.contentOffset.x < 0) {
+                    _oldX = 0;
+                } else {
+                    _oldX = [UIScreen mainScreen].bounds.size.width * (CGFloat)(mainVC.topView.houseSegmentControl.sectionTitles.count - 1);
+                }
+                return;
+            }
             CGFloat value = scrollDistance / KFHScreenWidth;
             [mainVC.topView.houseSegmentControl setScrollValue:value isDirectionLeft:diff < 0];
         }
