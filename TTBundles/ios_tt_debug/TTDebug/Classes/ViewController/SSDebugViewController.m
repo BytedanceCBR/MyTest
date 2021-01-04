@@ -100,7 +100,7 @@
 #import "FIMDebugManager.h"
 #import <TTTracker/TTTracker.h>
 #import <FlutterPackagesDebugViewController.h>
-
+#import <FHFlutter/FHQRCodeScanViewController.h>
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
@@ -178,6 +178,10 @@ extern NSString *const BOE_OPEN_KEY ;
         clientABDebugItem.switchStyle = NO;
         [itemArray addObject:clientABDebugItem];
         
+        
+        STTableViewCellItem *flutterQRDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Flutter扫一扫" target:self action:@selector(_showFlutterQRDebug)];
+        flutterQRDebugItem.switchStyle = NO;
+        [itemArray addObject:flutterQRDebugItem];
         
         STTableViewCellItem *flutterDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Flutter动态包" target:self action:@selector(_showFlutterDebug)];
         flutterDebugItem.switchStyle = NO;
@@ -960,6 +964,11 @@ extern NSString *const BOE_OPEN_KEY ;
 -(void)_showFlutterDebug
 {
     FlutterPackagesDebugViewController *controller = [[FlutterPackagesDebugViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (void)_showFlutterQRDebug{
+    FHQRCodeScanViewController *controller = [[FHQRCodeScanViewController alloc] init];
     [self.navigationController pushViewController:controller animated:YES];
 }
 

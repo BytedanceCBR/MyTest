@@ -26,6 +26,9 @@
 #import <UIColor+Theme.h>
 #import "PackageRouteManager.h"
 #import <TTBaseMacro.h>
+#import "RouteAppFileUtil.h"
+#import "TTSandBoxHelper.h"
+#import "RouteAppPackagePackageInfo.h"
 
 @interface FHFlutterViewController()
 
@@ -127,6 +130,8 @@
     BOOL canFlutterDynamicart =  [FHFlutterManager isCanFlutterDynamicart];
 
     _loadDynamicartNoPackage = NO;
+    
+    
 
     if(hasLocalPackage && canFlutterDynamicart && !isEmptyString(pluginName)){
         NSString *flutterUrl = [NSString stringWithFormat:@"local-flutter://%@%@",pluginName,[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"]];
@@ -147,6 +152,28 @@
           [resultPrams setValue:[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"] forKey:@"url"];
         }
     }
+    
+    
+    
+    if ([TTSandBoxHelper isInHouseApp]) {
+        NSString *packageFilePath = [RouteAppFileUtil getDebugPackagePathForPackageName:pluginName];
+
+        if ([RouteAppFileUtil checkFileExist:packageFilePath]) {
+            RouteAppPackagePackageInfo *package = [[RouteAppPackagePackageInfo alloc] init];
+            package.name = pluginName;
+            package.zipPackagePath = packageFilePath;
+            NSString *flutterUrl = [NSString stringWithFormat:@"local-flutter://%@%@",pluginName,[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"]];
+            
+            NSMutableDictionary *pageParams = @{
+                @"url":[NSString stringWithFormat:@"local-flutter://%@%@", pluginName, flutterUrl],@"packageInfo": package
+            };
+            if (resultPrams) {
+                [resultPrams addEntriesFromDictionary:pageParams];
+                [resultPrams setValue:flutterUrl forKey:@"url"];
+            }
+        }
+    }
+
     
     NSString * paramsStr = [paramObj.allParams btd_objectForKey:kFHFlutterchemaParamsKey default:@""];
     if ([paramsStr isKindOfClass:[NSString class]]) {
