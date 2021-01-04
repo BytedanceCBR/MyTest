@@ -684,6 +684,7 @@ end
 target 'f100' do
 #    testPods
   pod 'LookinServer', :configurations => ['Debug']
+  pod_binary 'FLEX', '4.2.2', :configurations => ['Debug']
     fhPods
     appPods
     appDevelopPods
