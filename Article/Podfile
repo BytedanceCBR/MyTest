@@ -50,7 +50,7 @@ def fhPods
 
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
 #    pod 'ios_house_filter' , '1.0.3-rc.0', :inhibit_warnings => false
-    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '9ea5e6b089dec76d962b8c8e4f76623ad9697ff3'
+    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => 'dd745d24f1435bf439cb2e073e06b73deb26ad29'
 #    pod 'ios_house_filter' , :path => '../../ios_house_filter'
 
 
@@ -299,7 +299,7 @@ def appPods
     pod_binary 'TTThemed','0.1.36'
 
     #-----头条UI组件库-----
-    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => 'daa6f765d77788a1bcae15fece1297a2767e00e8'
+    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '42fab116138ea2d068ab5bab90f01ea773cebe55'
 #    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :com => 'fproject'
 #    pod 'TTUIWidget', :path => '../../tt_pods_ui'
     
@@ -687,6 +687,7 @@ end
 target 'f100' do
 #    testPods
   pod 'LookinServer', :configurations => ['Debug']
+  pod_binary 'FLEX', '4.2.2', :configurations => ['Debug']
     fhPods
     appPods
     appDevelopPods

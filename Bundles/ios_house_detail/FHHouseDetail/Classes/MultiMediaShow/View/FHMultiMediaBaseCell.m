@@ -15,7 +15,7 @@
 
 -(UIImage *)placeHolder {
     if (!_placeHolder) {
-        _placeHolder = [UIImage imageNamed:@"default_image"];
+        _placeHolder = [UIImage imageNamed:@"default_image_detail"];
     }
     return _placeHolder;
 }

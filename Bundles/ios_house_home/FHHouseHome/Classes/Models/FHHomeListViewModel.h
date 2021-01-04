@@ -57,6 +57,8 @@ static const NSUInteger kFHHomeHeaderViewSectionHeight = 45;
 
 - (void)selectIndexHouseType:(NSInteger)indexValue;
 
+- (void)setSelectedItemVC;
+
 @end
 
 NS_ASSUME_NONNULL_END

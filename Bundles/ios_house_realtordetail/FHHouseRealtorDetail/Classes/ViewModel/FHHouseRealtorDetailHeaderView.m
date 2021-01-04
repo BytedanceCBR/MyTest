@@ -280,7 +280,19 @@
             LynxTemplateData *tem = [[LynxTemplateData alloc]initWithJson:lynxData];
             [self.realtorInfoView loadTemplate:templateData withURL:@"local" initData:tem];
         }
-        self.viewHeight = ceil([self.realtorInfoView intrinsicContentSize].height + self.navHeight + ([_channel isEqualToString:@"lynx_realtor_detail_header"] ?32:50));
+        
+        CGFloat placeHolderHeight = 0;
+        
+        if ([dic.allKeys containsObject:@"ugc_tab_list"]) {
+            NSArray *ugc_tab_list = dic[@"ugc_tab_list"];
+            if (ugc_tab_list.count == 0) {
+                placeHolderHeight = 47;
+            }else {
+                placeHolderHeight = 32;
+            }
+        }
+        
+        self.viewHeight = ceil([self.realtorInfoView intrinsicContentSize].height + self.navHeight + ([_channel isEqualToString:@"lynx_realtor_detail_header"] ?placeHolderHeight:50));
     }
 }
 @end
