@@ -540,7 +540,7 @@
 //                NSString *toast = [NSString stringWithFormat:@"共找到%@套房源",houseModel.total];
 //                [[FHMainManager sharedInstance] showToast:toast duration:1];
             }
-            
+            self.showPlaceHolder = NO;
             [wself.houseList addObjectsFromArray:houseModel.items];
             [wself.tableView reloadData];
             if (houseModel.hasMore) {
