@@ -72,7 +72,7 @@ def fhPods
 #    'DelegateForC'
 #    ]
     
-#    pod 'ios_house_im' , :path => '../../../im/feature', :inhibit_warnings => false
+#    pod 'ios_house_im' , :path => '../../../im/bugfix', :inhibit_warnings => false
 #   pod 'ios_house_im' ,'0.10.0.0-alpha.3', :inhibit_warnings => false
    pod 'ios_house_im' ,'0.0.0.2', :inhibit_warnings => false
 
@@ -648,7 +648,7 @@ def testPods
     pod 'BDSSOAuthSDK' ,  '1.1.1-alpha.6'
     
     pod_binary 'TTDebugAssistant', '0.2.33'
-    pod_binary 'FLEX', '4.2.2'#, :configurations=>['Debug']
+    pod_binary 'FLEX', '4.2.2', :configurations=>['Debug']
 #    pod_source 'BDNetworkDevMonitor', '0.1.6'
     pod_binary 'TTSettingsManager/Debug'
     pod 'TTDebug' , :path => '../TTBundles/ios_tt_debug'
