@@ -50,6 +50,7 @@
 #import <FHFlutter/FHFlutterManager.h>
 #import "FHHouseUGCAPI.h"
 #import "FHUGCUserVWhiteModel.h"
+#import "FHTrackingManager.h"
 #import <BDUGLocationKit/BDUGLocationManager.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 
@@ -541,6 +542,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if ([self hasConfirmPermssionProtocol]) {
         //开始定位
         [self startLocation];
+        [self showIDFAPopup];
         
     }else{
                 
@@ -624,6 +626,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
             }
         });
     }];
+}
+
+/**
+ 展示IDFA授权弹窗
+ */
+- (void)showIDFAPopup {
+    [[FHTrackingManager sharedInstance] showTrackingServicePopupInHomePage:YES];
 }
 
 - (void)check2CityList {
@@ -1257,6 +1266,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     self.stashModel = nil;
     
     [self startLocation];
+    [self showIDFAPopup];
     
     [NewsBaseDelegate startRegisterRemoteNotification];
     

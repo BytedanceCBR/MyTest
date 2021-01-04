@@ -162,9 +162,6 @@ static CGFloat const kSectionHeaderHeight = 38;
         }
         //        }
     }];
-    
-    ///尝试弹出IDFA引导弹窗及授权弹窗
-    [self showTrackingAuthenticationPopup];
 }
 
 - (void)bindIndexChangedBlock
@@ -507,12 +504,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 #pragma mark - Tracker相关
 - (NSString *)fh_pageType {
     return @"maintab";
-}
-
-#pragma mark - IDFA授权弹窗
-
-- (void)showTrackingAuthenticationPopup {
-    [[FHTrackingManager sharedInstance] showTrackingServicePopupInHomePage:YES];
 }
 
 @end
