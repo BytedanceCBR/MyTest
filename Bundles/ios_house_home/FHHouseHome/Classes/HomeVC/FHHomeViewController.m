@@ -386,6 +386,7 @@ static CGFloat const kSectionHeaderHeight = 38;
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
     
     [self bindIndexChangedBlock];
+    [self.homeListViewModel setSelectedItemVC];
     
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
