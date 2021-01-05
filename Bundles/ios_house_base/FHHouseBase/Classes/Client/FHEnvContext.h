@@ -346,6 +346,9 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 //记录首页进入搜索sug时，用户上一次选择的值
 + (void)setLastSearchSugHouseType:(NSInteger)houseType;
 
+//房源卡片已读未读透明度设置
++ (CGFloat)FHHouseCardReadOpacity;
+
 @end
 
 
