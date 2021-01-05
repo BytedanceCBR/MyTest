@@ -700,14 +700,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
         }
     }];
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:reportParamsDict error:nil];
-    configModel.houseType = associatePhone.houseType;
-    configModel.followId = associatePhone.houseId;
-    configModel.actionType = associatePhone.houseType;
-    
-    // 静默关注功能
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
 }
+
 - (void)fillFormActionWithParams:(NSDictionary *)formParamsDict
 {
     NSString *title = nil;

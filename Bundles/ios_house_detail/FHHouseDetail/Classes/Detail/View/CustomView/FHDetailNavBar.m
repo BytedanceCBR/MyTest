@@ -9,7 +9,7 @@
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "Masonry.h"
-#import "TTDeviceHelper.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 #import <ReactiveObjC/ReactiveObjC.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
 #import <TTRoute.h>
@@ -49,7 +49,7 @@
 - (instancetype)initWithType:(FHDetailNavBarType)type
 {
     CGRect screenBounds = [UIScreen mainScreen].bounds;
-    CGFloat navBarHeight = [TTDeviceHelper isIPhoneXDevice] ? 44 : 20;
+    CGFloat navBarHeight = [UIDevice btd_isIPhoneXSeries] ? 44 : 20;
     CGRect frame = CGRectMake(0, 0, screenBounds.size.width, navBarHeight + 44);
     _type = type;
     self = [self initWithFrame:frame];
@@ -420,7 +420,7 @@
 - (void)displayMessageDot:(NSInteger)dotNumber{
     self.messageDotNumber.alpha = (dotNumber <= 0) ? 0 : 1;
     if (dotNumber > 0) {
-        self.messageDotNumber.text = dotNumber >99?@"99+":[NSString stringWithFormat:@"%ld",dotNumber];
+        self.messageDotNumber.text = dotNumber > 99 ? @"99+" : [NSString stringWithFormat:@"%ld",(long)dotNumber];
         if(dotNumber > 9) {
             [self.messageDotNumber mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(dotNumber>99?29:22);

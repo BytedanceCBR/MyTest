@@ -37,65 +37,6 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     return YES;
 }
 
-+ (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel
-{
-    [self silentFollowHouseWithConfigModel:configModel completionBlock:nil];
-}
-
-+ (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel completionBlock:(void(^)(BOOL isSuccess))completionBlock
-{
-    
-//    if ([FHUtils getSettingEnableBooleanForKey:@"f_login_before_house_subscribe"]) {
-        return;
-//    }
-    
-    if (![TTReachability isNetworkConnected]) {
-        if (completionBlock) {
-            completionBlock(NO);
-        }
-        return;
-    }
-    NSString *followId = configModel.followId;
-    FHHouseType houseType = configModel.houseType;
-    FHFollowActionType actionType = configModel.actionType ? : configModel.houseType;
-    BOOL showTip = configModel.showTip;
-    BOOL hideToast = configModel.hideToast;
-    
-    [self isFollowUpParamsValid:configModel];
-    
-    [FHMainApi requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
-        
-        if (!error) {
-            BOOL isSuccess = NO;
-            if (model.status.integerValue == 0) {
-                if (model.data.followStatus == 0) {
-                    if (!hideToast) {
-                        [self showFollowToast];
-                    }
-                    isSuccess = YES;
-                }
-                NSMutableDictionary *userInfo = @{}.mutableCopy;
-                userInfo[@"followId"] = followId;
-                userInfo[@"followStatus"] = @(1);
-                [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
-                if(model.data.socialGroupFollowStatus == 0 && model.data.socialGroupId){
-                    if ([TTAccountManager isLogin]) {
-                        // 修改逻辑 登录状态下 自动关注圈子
-                        [[FHUGCConfig sharedInstance] followUGCBy:model.data.socialGroupId isFollow:YES completion:nil];
-                    }
-                }
-                if (completionBlock) {
-                    completionBlock(isSuccess);
-                }
-            }
-        }else {
-            if (completionBlock) {
-                completionBlock(NO);
-            }
-        }
-    }];
-}
-
 +(void)showFollowToast
 {
     NSInteger toastCount = [[NSUserDefaults standardUserDefaults]integerForKey:kFHToastCountKey];
@@ -119,14 +60,6 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     }
 }
 
-+ (void)silentFollowHouseWithConfig:(NSDictionary *)config
-{
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:config error:nil];
-    if (configModel) {
-        [self silentFollowHouseWithConfigModel:configModel];
-    }
-}
-
 + (void)followHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel
 {
     [self addClickFollowLog:configModel];
@@ -138,27 +71,23 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     FHHouseType houseType = configModel.houseType;
     FHFollowActionType actionType = configModel.actionType ? :configModel.houseType;
     
+    //115改动，关注状态及时生效，不看接口状态
+    if ([FHPushAuthorizeManager isFollowAlertEnabled]) {
+        NSMutableDictionary *params = @{}.mutableCopy;
+        params[@"page_type"] = configModel.pageType;
+        [FHPushAuthorizeManager showFollowAlertIfNeeded:params];
+    }else {
+        [[ToastManager manager] showToast:@"关注成功"];
+    }
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    userInfo[@"followId"] = followId;
+    userInfo[@"followStatus"] = @(1);
+    [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
+    
     [FHMainApi requestFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
         
-        if (error) {
-            [[ToastManager manager] showToast:@"关注失败"];
-        }else {
+        if (!error) {
             if (model.status.integerValue == 0) {
-                if ([FHPushAuthorizeManager isFollowAlertEnabled]) {
-                    NSMutableDictionary *params = @{}.mutableCopy;
-                    params[@"page_type"] = configModel.pageType;
-                    [FHPushAuthorizeManager showFollowAlertIfNeeded:params];
-                }else {
-                    if (model.data.followStatus == 0) {
-                        [[ToastManager manager] showToast:@"关注成功"];
-                    }else {
-                        [[ToastManager manager] showToast:@"已经关注"];
-                    }
-                }
-                NSMutableDictionary *userInfo = @{}.mutableCopy;
-                userInfo[@"followId"] = followId;
-                userInfo[@"followStatus"] = @(1);
-                [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
                 if(model.data.socialGroupFollowStatus == 0 && model.data.socialGroupId){
                     if ([TTAccountManager isLogin]) {
                         // 修改逻辑 登录状态下 自动关注圈子
@@ -168,14 +97,6 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
             }
         }
     }];
-}
-
-+ (void)followHouseWithConfig:(NSDictionary *)config
-{
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:config error:nil];
-    if (configModel) {
-        [self followHouseWithConfigModel:configModel];
-    }
 }
 
 + (void)cancelFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel
@@ -188,29 +109,16 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     FHHouseType houseType = configModel.houseType;
     FHFollowActionType actionType = configModel.actionType;
     
-    [FHMainApi requestCancelFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
-        
-        if (error) {
-            [[ToastManager manager] showToast:@"取消失败"];
-        }else {
-            if (model.status.integerValue == 0) {
-                [[ToastManager manager] showToast:@"取消关注"];
-                NSMutableDictionary *userInfo = @{}.mutableCopy;
-                userInfo[@"followId"] = followId;
-                userInfo[@"followStatus"] = @(0);
-                [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
-            }
-        }
-        
-    }];
-}
+    //115改动，关注状态及时生效，不看接口状态
+    [[ToastManager manager] showToast:@"取消关注"];
+    NSMutableDictionary *userInfo = @{}.mutableCopy;
+    userInfo[@"followId"] = followId;
+    userInfo[@"followStatus"] = @(0);
+    [[NSNotificationCenter defaultCenter]postNotificationName:kFHDetailFollowUpNotification object:nil userInfo:userInfo];
 
-+ (void)cancelFollowHouseWithConfig:(NSDictionary *)config
-{
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:config error:nil];
-    if (configModel) {
-        [self cancelFollowHouseWithConfigModel:configModel];
-    }
+    [FHMainApi requestCancelFollow:followId houseType:houseType actionType:actionType completion:^(FHDetailUserFollowResponseModel * _Nullable model, NSError * _Nullable error) {
+                
+    }];
 }
 
 #pragma mark 埋点相关
