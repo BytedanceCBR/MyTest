@@ -54,6 +54,7 @@
 #import <BDUGLocationKit/BDUGLocationManager.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
+#import "FHHouseCardStatusManager.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -1138,6 +1139,20 @@ static NSInteger kGetLightRequestRetryCount = 3;
     NSDictionary *fhSettings= [SSCommonLogic fhSettings];
     BOOL NewCardType = [fhSettings btd_boolValueForKey:@"f_house_card_type" default:NO];
     return NewCardType;
+}
+
+//房源卡片已读未读开关
++ (BOOL)isHouseCanRead {
+    NSDictionary *fhSettings= [SSCommonLogic fhSettings];
+    BOOL isHouseCanRead = [fhSettings btd_boolValueForKey:@"f_house_read" default:NO];
+    return isHouseCanRead;
+}
+
++ (CGFloat)FHHouseCardReadOpacity {
+    if ([self isHouseCanRead]) {
+        return FHHouseCardReadOpacity;
+    }
+    return 1;
 }
 
 //+ (BOOL)isIntroduceOpen {
