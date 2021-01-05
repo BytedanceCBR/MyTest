@@ -45,6 +45,7 @@ static const NSUInteger kFHHomeHouseTypeHouseSection = 1;
 @property (nonatomic, strong) NSMutableDictionary *traceEnterTopTabache;
 @property (nonatomic, strong) NSString *enterType; //当前enterType，用于enter_category
 @property (nonatomic, assign) BOOL isShowRefreshTip; //是否主页的tip正在刷新，开始刷新为YES，tips收回之后变成NO
+@property (nonatomic, assign) BOOL isSelectedItem; //是否是正在展示的推荐列表
 
 
 @property (nonatomic, copy) void (^requestCallBack)(FHHomePullTriggerType refreshType,FHHouseType houseType,BOOL isSuccess,JSONModel *dataModel);

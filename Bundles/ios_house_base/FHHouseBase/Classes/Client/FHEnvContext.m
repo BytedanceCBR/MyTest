@@ -50,8 +50,10 @@
 #import <FHFlutter/FHFlutterManager.h>
 #import "FHHouseUGCAPI.h"
 #import "FHUGCUserVWhiteModel.h"
+#import "FHTrackingManager.h"
 #import <BDUGLocationKit/BDUGLocationManager.h>
 #import <ByteDanceKit/ByteDanceKit.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -78,17 +80,37 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return ppeChannel;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 + (instancetype)sharedInstance
 {
     static FHEnvContext * manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[self alloc] init];
-        manager.configDataReplay = [RACReplaySubject subject];
-        manager.isRefreshFromAlertCitySwitch = NO;
     });
-    
     return manager;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.configDataReplay = [RACReplaySubject subject];
+        self.isRefreshFromAlertCitySwitch = NO;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
+    }
+    return self;
+}
+
+- (void)configDataLoadSuccess:(NSNotification *)noti {
+    //config加载完成
+    if (CLLocationManager.authorizationStatus == kCLAuthorizationStatusAuthorizedAlways || CLLocationManager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        //自动定义获取的config
+        if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
+            [[[FHHouseBridgeManager sharedInstance] cityListModelBridge] switchCityByOpenUrlSuccess];
+        }
+    }
 }
 
 + (void)openSwitchCityURL:(NSString *)urlString completion:(void(^)(BOOL isSuccess))completion
@@ -541,6 +563,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     if ([self hasConfirmPermssionProtocol]) {
         //开始定位
         [self startLocation];
+        [self showIDFAPopup];
         
     }else{
                 
@@ -624,6 +647,13 @@ static NSInteger kGetLightRequestRetryCount = 3;
             }
         });
     }];
+}
+
+/**
+ 展示IDFA授权弹窗
+ */
+- (void)showIDFAPopup {
+    [[FHTrackingManager sharedInstance] showTrackingServicePopupInHomePage:YES];
 }
 
 - (void)check2CityList {
@@ -1257,6 +1287,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
     self.stashModel = nil;
     
     [self startLocation];
+    [self showIDFAPopup];
     
     [NewsBaseDelegate startRegisterRemoteNotification];
     
