@@ -245,7 +245,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
 - (void)updateInteractiveTransition:(CGFloat)percentComplete {
     self.percentComplete = percentComplete;
-    
     [self.transitionContext updateInteractiveTransition:percentComplete];
     UIViewController* fromViewController = [self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController* toViewController = [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
@@ -282,6 +281,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 @property (nonatomic, assign) BOOL isLogin;
 @property (nonatomic, assign) BOOL loginStateChange;
 @property (nonatomic, strong) RACSubject *conversationUpdateSubject;
+@property (nonatomic, assign) CGFloat oldX;
 
 @end
 
@@ -680,7 +680,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 - (void)startLoadData {
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     if (vc) {
         [vc startLoadData];
     }
@@ -714,7 +714,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 - (void)reloadData {
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     if (vc && vc.viewModel) {
         [vc.viewModel reloadData];
     }
@@ -723,7 +723,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)refreshConversationList {
     NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
     [_combiner resetConversations:allConversations];
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     if (vc && vc.viewModel) {
         [vc.viewModel reloadData];
     }
@@ -732,7 +732,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)refreshConversationListDisplayEmptyMaskViewIfNeed {
     NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
     [_combiner resetConversations:allConversations];
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     if (vc && vc.viewModel) {
         [vc.viewModel checkShouldShowEmptyMaskView];
     }
@@ -805,8 +805,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             }
             
             self.segmentedControl.userInteractionEnabled = YES;
-            
-            self.segmentedControl.selectedSegmentIndex = [self.viewControllers indexOfObject:self.activeViewController];
+            [self.segmentedControl setSelectedSegmentIndex:[self.viewControllers indexOfObject:self.activeViewController] animated:YES];
         };
         
         void(^viewControllerTransitionRollback)(void) = ^{
@@ -826,7 +825,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                 [self.delegate segmentedViewController:self didChangeContentViewControllerFromViewController:toViewController toViewController:fromViewController];
             }
             
-            self.segmentedControl.selectedSegmentIndex = [self.viewControllers indexOfObject:self.activeViewController];
+            [self.segmentedControl setSelectedSegmentIndex:[self.viewControllers indexOfObject:self.activeViewController] animated:YES];
         };
         
         
@@ -869,6 +868,8 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             //Begin
             self.interactivePanDirection = FHSegmentedControllerAnimatedTransitionDirectionUnknown;
             self.interactivePanInitialPoint = [sender locationInView:self.view];
+            
+            _oldX = self.interactivePanInitialPoint.x;
         }break;
         case UIGestureRecognizerStateChanged:{
             //Change
@@ -880,8 +881,21 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                     self.interactivePanDirection = FHSegmentedControllerAnimatedTransitionDirectionFromRightToLeft;
                 }
             }];
+            BOOL isToLeft = YES;;
+            if (currentPoint.x > self.interactivePanInitialPoint.x) {
+                isToLeft = NO;
+            }
             double progress = ABS(currentPoint.x - self.interactivePanInitialPoint.x)/CGRectGetWidth(self.contentView.bounds);
+            CGFloat value = (_oldX - currentPoint.x) / CGRectGetWidth(self.contentView.bounds);
+            CGFloat distance = currentPoint.x - self.interactivePanInitialPoint.x;
+            if (distance > 0 && self.segmentedControl.selectedSegmentIndex == 0) {
+                value = 0;
+            } else if (distance < 0 && self.segmentedControl.selectedSegmentIndex == 1) {
+                value = 0;
+            }
+            [self.segmentedControl setScrollValue:value isDirectionLeft:isToLeft];
             [self.interactiveTransitionAnimator updateInteractiveTransition:progress];
+            _oldX = currentPoint.x;
         }break;
         default:{
             //End
@@ -892,12 +906,14 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                 } else {
                     [self.interactiveTransitionAnimator cancelInteractiveTransition];
                 }
+                //[self.segmentedControl setSelectedSegmentIndex:1 animated:YES];
             } else if (velocity.x > 20) {
                 if (self.interactivePanDirection == FHSegmentedControllerAnimatedTransitionDirectionFromLeftToRight) {
                     [self.interactiveTransitionAnimator finishInteractiveTransition];
                 } else {
                     [self.interactiveTransitionAnimator cancelInteractiveTransition];
                 }
+                //[self.segmentedControl setSelectedSegmentIndex:0 animated:YES];
             } else {
                 CGPoint currentPoint = [sender locationInView:self.view];
                 double progress = ABS(currentPoint.x - self.interactivePanInitialPoint.x)/CGRectGetWidth(self.contentView.bounds);
@@ -917,7 +933,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     if (!self.activeViewController) {
         return;
     }
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     [vc addEnterCategoryLogWithType: enterType];
 }
 
@@ -1029,7 +1045,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 -(NSDictionary *)categoryLogDict {
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     NSInteger badgeNumber = [[vc.viewModel messageBridgeInstance] getMessageTabBarBadgeNumber];
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;
