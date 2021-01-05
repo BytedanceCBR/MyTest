@@ -1144,7 +1144,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 //房源卡片已读未读开关
 + (BOOL)isHouseCanRead {
     NSDictionary *fhSettings= [SSCommonLogic fhSettings];
-    BOOL isHouseCanRead = [fhSettings btd_boolValueForKey:@"f_house_read" default:NO];
+    BOOL isHouseCanRead = [fhSettings btd_boolValueForKey:@"f_house_read_enable" default:NO];
     return isHouseCanRead;
 }
 
