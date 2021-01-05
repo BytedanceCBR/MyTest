@@ -45,54 +45,16 @@
     return [self.awemedDetailItems objectAtIndex:index];
 }
 
-//- (FHFeedUGCCellModel *)itemAtIndex:(NSInteger)index replaced:(BOOL)replaced
-//{
-//    NSParameterAssert(index < [self.awemedDetailItems count]);
-//
-//    if (replaced && self.replacedModel && index == self.replacedIndex) {
-//        return self.replacedModel;
-//    } else if (index < [self.awemedDetailItems count]) {
-//        return [self.awemedDetailItems objectAtIndex:index];
-//    }
-//    return nil;
-//}
 
-
-- (void)requestDataForGroupIdAutomatically:(BOOL)isAutomatically
-                               finishBlock:(TTFetchListFinishBlock)finishBlock
-{
-//    NSString *urlStr = [ArticleURLSetting shortVideoInfoURL];
-//    NSDictionary *params = @{
-//        @"group_id" : self.groupID,
-//    };
-//    WeakSelf;
-//    [[TTNetworkManager shareInstance] requestForJSONWithURL:urlStr params:params method:@"POST" needCommonParams:YES requestSerializer:nil responseSerializer:[HTSVideoPlayJSONResponseSerializer class] autoResume:YES callback:^(NSError *error, id jsonObj) {
-//        StrongSelf;
-//        if (error || jsonObj == nil || jsonObj[@"data"] == nil) {
-//            if (finishBlock){
-//                finishBlock(0,error);
-//            }
-//            return;
-//        }
-//        if (![jsonObj isKindOfClass:[NSDictionary class]]) {
-//            return;
-//        }
-//        NSDictionary *dic = @{@"raw_data":jsonObj[@"data"],@"cell_type":@(FHUGCFeedListCellTypeUGCSmallVideo)};
-//        FHFeedUGCCellModel *cellModle = [FHFeedUGCCellModel modelFromFeed:dic];
-//        if (!cellModle) {
-//            return;
-//        }
-//        [self.awemedDetailItems addObject:cellModle];
-//        if (wself.dataDidChangeBlock) {
-//            wself.dataDidChangeBlock();
-//        }
-//    }];
-}
 
 - (void)requestDataAutomatically:(BOOL)isAutomatically
                      finishBlock:(TTFetchListFinishBlock)finishBlock
 {
     if(self.isLoadingMoreData){
+        return;
+    }
+    
+    if (!self.canLoadMore) {
         return;
     }
     
@@ -146,11 +108,94 @@
     if (currentShortVideoModel && currentShortVideoModel.originContent) {
         FHFeedUGCCellModel *cellmodel = [FHFeedUGCCellModel copyFromModel:currentShortVideoModel];
         if (cellmodel) {
+            if (!self.canLoadMore) {
+                [self handleCellModel:cellmodel];
+            }
             cellmodel.tracerDic =  [self trackDict:currentShortVideoModel rank:0];
             [self.awemedDetailItems addObject:cellmodel];
         }
+    }else {
+        [self requestShortVideoByGroupId];
     }
 }
+
+- (void)requestShortVideoByGroupId {
+    self.awemedDetailItems = [[NSMutableArray alloc]init];
+    if ([self numberOfShortVideoItems] == 0 && !isEmptyString(self.groupID)) {
+        NSString *urlStr = [ArticleURLSetting shortVideoInfoURL];
+        NSDictionary *params = @{
+                                 @"group_id" : self.groupID,
+                                 };
+        self.isLoadingRequest = YES;
+        WeakSelf;
+        [[TTNetworkManager shareInstance] requestForJSONWithURL:urlStr params:params method:@"POST" needCommonParams:YES requestSerializer:nil responseSerializer:[HTSVideoPlayJSONResponseSerializer class] autoResume:YES callback:^(NSError *error, id jsonObj) {
+            StrongSelf;
+            if (error || jsonObj == nil || jsonObj[@"data"] == nil) {
+                self.hasMoreToLoad = NO;
+                self.isLoadingRequest = NO;
+                return;
+            }
+            NSMutableDictionary *fixedDict = [NSMutableDictionary dictionary];
+            [fixedDict setValue:jsonObj[@"data"] forKey:@"raw_data"];
+            
+            NSDictionary *dic = @{@"raw_data":jsonObj[@"data"],@"cell_type":@(FHUGCFeedListCellTypeUGCSmallVideo)};
+            FHFeedUGCCellModel *cellModle = [FHFeedUGCCellModel modelFromFeed:dic];
+            cellModle.tracerDic = [self trackDict:cellModle rank:0];
+            NSString *enter_from = self.tracerDic[@"enter_from"];
+            if ([enter_from isEqualToString:@"favorite"]) {
+                cellModle.userRepin = YES;
+            }
+            if (!cellModle) {
+                return;
+            }
+            [self handleCellModel:cellModle];
+            NSMutableDictionary *tracerDic = [self.tracerDic mutableCopy];
+            [tracerDic setValue:self.groupID forKey:@"group_id"];
+            cellModle.tracerDic = [tracerDic copy];
+            [self.awemedDetailItems addObject:cellModle];
+            if (wself.dataDidChangeBlock) {
+                wself.dataDidChangeBlock();
+            }
+        }];
+    }
+}
+
+- (void)handleCellModel:(FHFeedUGCCellModel *)cellModel {
+    __weak typeof(self)weakSelf = self;
+        [FHHouseUGCAPI requestShortVideoWithGroupId:self.groupID completion:^(id<FHBaseModelProtocol>  _Nonnull models, NSError * _Nonnull errors) {
+            if (!errors && models) {
+                FHUGCShortVideoRealtor *realtor = [(FHUGCShortVideoRealtorInfoModel *)models data];
+                weakSelf.realtorInfo = realtor.realtor;
+            }
+            if (weakSelf.realtorInfo) {
+                FHFeedUGCCellRealtorModel *realtor = [[FHFeedUGCCellRealtorModel alloc] init];
+                realtor.avatarUrl  = weakSelf.realtorInfo.avatarUrl;
+                realtor.avatarTagUrl =  weakSelf.realtorInfo.imageTag.imageUrl;
+                realtor.realtorId  = weakSelf.realtorInfo.realtorId;
+                realtor.realtorName  =  weakSelf.realtorInfo.realtorName;
+                realtor.firstBizType = weakSelf.realtorInfo.firstBizType;
+                cellModel.realtor = realtor;
+                
+                FHFeedUGCCellUserModel *user = cellModel.user;
+                
+                if (realtor.realtorId.length>0) {
+                    user.name = realtor.realtorName;
+                    user.avatarUrl = realtor.avatarUrl;
+                    user.realtorId = realtor.realtorId;
+                    user.firstBizType = realtor.firstBizType;
+                }
+            }
+            NSMutableArray *awemeDetailItems = [NSMutableArray array];
+            if (cellModel) {
+                [awemeDetailItems addObject:cellModel];
+            }
+            self.awemedDetailItems = awemeDetailItems;
+            self.isLoadingRequest = NO;
+        }];
+
+}
+
+
 
 - (void)setOtherShortVideoModels:(NSArray<FHFeedUGCCellModel *> *)otherShortVideoModels {
     for (int m =0; m < otherShortVideoModels.count; m ++) {
@@ -205,6 +250,7 @@
     }
     return dict;
 }
+
 
 - (void)removeDuplicaionModel:(NSString *)groupId {
     for (FHFeedUGCCellModel *itemModel in self.awemedDetailItems) {
