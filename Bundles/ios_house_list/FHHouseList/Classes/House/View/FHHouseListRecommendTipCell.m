@@ -73,7 +73,7 @@
         self.noDataTipLabel.attributedText = attrText;
         [self.noDataTipLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.centerX.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(-15);
+            make.top.mas_equalTo(model.content.length ? 15 : 20);//model.content.length>0说明是列表页 否则是sug页
             make.height.mas_equalTo(20);
             make.width.mas_equalTo([model.text btd_widthWithFont:[UIFont themeFontRegular:14] height:20]);
         }];
