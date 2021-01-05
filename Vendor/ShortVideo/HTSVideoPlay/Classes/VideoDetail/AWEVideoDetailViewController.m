@@ -272,13 +272,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 @implementation AWEVideoDetailViewController
 
-+ (void)load
-{
-    RegisterRouteObjWithEntryName(@"awemevideo");
-    RegisterRouteObjWithEntryName(@"ugc_video_recommend");
-    RegisterRouteObjWithEntryName(@"huoshanvideo");
-}
-
 - (instancetype)initWithRouteParamObj:(TTRouteParamObj *)paramObj
 {
     self = [super initWithRouteParamObj:paramObj];

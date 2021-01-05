@@ -20,73 +20,31 @@
 // Manager
 #import "AWEVideoCommentDataManager.h"
 // Util
-#import <Masonry/Masonry.h>
-//#import <AFNetworking/AFNetworking.h>
-#import <AssetsLibrary/AssetsLibrary.h>
 #import "UIScrollView+Refresh.h"
 #import "UIViewController+NavigationBarStyle.h"
-#import "UIButton+TTAdditions.h"
-#import "EXTKeyPathCoding.h"
-#import "TTURLUtils.h"
-#import <MBProgressHUD/MBProgressHUD.h>
-#import "TTNavigationController.h"
-#import "UIImage+TTThemeExtension.h"
-#import "TTDeviceHelper.h"
+
 #import "TTModuleBridge.h"
 #import "AWEVideoConstants.h"
 #import "AWEVideoContainerViewController.h"
 #import "AWEVideoDetailControlOverlayViewController.h"
-#import "NSObject+FBKVOController.h"
-#import "TTImagePreviewAnimateManager.h"
-#import <TTBaseLib/TTUIResponderHelper.h>
-#import "UIViewController+TabBarSnapShot.h"
-#import "UIImageView+WebCache.h"
-#import "AWEVideoDetailFirstUsePromptViewController.h"
 #import <TTReporter/TTReportManager.h>
-#import "TTMonitor.h"
 #import "TSVVideoDetailPromptManager.h"
 #import "AWEVideoShareModel.h"
 #import "TTShareManager.h"
 #import "TTServiceCenter.h"
-
 #import "TTAdManagerProtocol.h"
 #import "TTShortVideoModel+TTAdFactory.h"
-#import "TTAdShortVideoModel.h"
-
 #import "TTIndicatorView.h"
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import "DetailActionRequestManager.h"
-#import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <ReactiveObjC/ReactiveObjC.h>
-#import "TTDeviceHelper.h"
-//#import "TSVProfileViewController.h"
-//#import "TSVProfileViewModel.h"
-#import "TTSettingsManager.h"
-#import "TSVSlideUpPromptViewController.h"
 #import <TTUIWidget/UIView+CustomTimingFunction.h>
-#import <TTBaseLib/UIViewAdditions.h>
-#import "TSVDownloadManager.h"
 #import "TSVSlideUpPromptViewController.h"
-//#import "TSVProfileConfig.h"
-#import "TSVDetailViewModel.h"
-#import "UIImageView+YYWebImage.h"
-#import "UIImage+YYWebImage.h"
-#import "SDWebImageManager.h"
-#import <TTBaseLib/TTStringHelper.h>
-#import "TTCustomAnimationDelegate.h"
 #import "TSVStartupTabManager.h"
 #import "TSVUIResponderHelper.h"
-#import "AWEVideoDetailScrollConfig.h"
-#import "TSVTransitionAnimationManager.h"
-#import <TTNetworkManager/TTNetworkManager.h>
 #import "CommonURLSetting.h"
-#import "TSVVideoDetailShareHelper.h"
 #import "TSVVideoShareManager.h"
-#import "TSVPrefetchImageManager.h"
 #import "TTAudioSessionManager.h"
-
-#import "TTBusinessManager+StringUtils.h"
-
 #import "FHPostDetailCommentWriteView.h"
 #import "SSCommentInputHeader.h"
 #import "FHShortVideoDetailFetchManager.h"
@@ -143,7 +101,6 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, assign) BOOL firstLoadFinished;
 @property (nonatomic, assign) BOOL hasMore;      // 还有没有评论数据可以拉取
 @property (nonatomic, assign) NSInteger offset;  // 请求新数据的时候，offet参数
-@property (nonatomic, assign) AWEVideoDetailCloseStyle closeStyle;
 // 详情页数据
 @property (nonatomic, strong) FHFeedUGCCellModel *model;
 @property (nonatomic, strong) NSArray<NSDictionary *> *userReportOptions;
@@ -239,8 +196,8 @@ static const CGFloat kFloatingViewOriginY = 230;
         self.dataFetchManager.groupID = self.groupID;
         self.dataFetchManager.topID = self.topID;
         self.dataFetchManager.canLoadMore = self.canLoadMore;
-        NSMutableArray *Arr = extraParams[@"current_video"];
-        if (Arr.count == 0) {
+        FHFeedUGCCellModel *currentShortVideoModel = extraParams[@"current_video"];
+        if (!currentShortVideoModel) {
             [self startLoading];
         }
         self.dataFetchManager.currentShortVideoModel = extraParams[@"current_video"];
@@ -291,7 +248,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     _isCommentViewAnimating = NO;
     _slideUpViewType = [TSVSlideUpPromptViewController slideUpViewType];
     self.ttHideNavigationBar = YES;
-    _closeStyle = AWEVideoDetailCloseStyleNavigationPan;//默认为右滑
     self.detailPromptManager = [[TSVVideoDetailPromptManager alloc] init];
 }
 
@@ -1032,7 +988,6 @@ static const CGFloat kFloatingViewOriginY = 230;
             /// 给混排列表发通知
             [[NSNotificationCenter defaultCenter] postNotificationName:kTSVShortVideoDeleteNotification object:nil userInfo:@{kTSVShortVideoDeleteUserInfoKeyGroupID : self.model.groupId? : @""}];
             self.model.userRepin = NO;
-            self.closeStyle = AWEVideoDetailCloseStyleNavigationPan;
             [self.navigationController popViewControllerAnimated:YES];
         }
     }];
@@ -1176,7 +1131,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)dismissByClickingCloseButton
 {
-    self.closeStyle = AWEVideoDetailCloseStyleCloseButton;
     [self.navigationController popViewControllerAnimated:YES];
 }
 
