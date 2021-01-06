@@ -53,6 +53,8 @@
 #import "FHTrackingManager.h"
 #import <BDUGLocationKit/BDUGLocationManager.h>
 #import <ByteDanceKit/ByteDanceKit.h>
+#import <FHHouseBase/TTSandBoxHelper+House.h>
+#import "FHHouseCardStatusManager.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
@@ -79,17 +81,37 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return ppeChannel;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 + (instancetype)sharedInstance
 {
     static FHEnvContext * manager = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[self alloc] init];
-        manager.configDataReplay = [RACReplaySubject subject];
-        manager.isRefreshFromAlertCitySwitch = NO;
     });
-    
     return manager;
+}
+
+- (instancetype)init {
+    if (self = [super init]) {
+        self.configDataReplay = [RACReplaySubject subject];
+        self.isRefreshFromAlertCitySwitch = NO;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(configDataLoadSuccess:) name:kFHAllConfigLoadSuccessNotice object:nil];
+    }
+    return self;
+}
+
+- (void)configDataLoadSuccess:(NSNotification *)noti {
+    //config加载完成
+    if (CLLocationManager.authorizationStatus == kCLAuthorizationStatusAuthorizedAlways || CLLocationManager.authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        //自动定义获取的config
+        if ([TTSandBoxHelper isAPPFirstLaunchForAd]) {
+            [[[FHHouseBridgeManager sharedInstance] cityListModelBridge] switchCityByOpenUrlSuccess];
+        }
+    }
 }
 
 + (void)openSwitchCityURL:(NSString *)urlString completion:(void(^)(BOOL isSuccess))completion
@@ -1117,6 +1139,20 @@ static NSInteger kGetLightRequestRetryCount = 3;
     NSDictionary *fhSettings= [SSCommonLogic fhSettings];
     BOOL NewCardType = [fhSettings btd_boolValueForKey:@"f_house_card_type" default:NO];
     return NewCardType;
+}
+
+//房源卡片已读未读开关
++ (BOOL)isHouseCanRead {
+    NSDictionary *fhSettings= [SSCommonLogic fhSettings];
+    BOOL isHouseCanRead = [fhSettings btd_boolValueForKey:@"f_house_read_enable" default:NO];
+    return isHouseCanRead;
+}
+
++ (CGFloat)FHHouseCardReadOpacity {
+    if ([self isHouseCanRead]) {
+        return FHHouseCardReadOpacity;
+    }
+    return 1;
 }
 
 //+ (BOOL)isIntroduceOpen {

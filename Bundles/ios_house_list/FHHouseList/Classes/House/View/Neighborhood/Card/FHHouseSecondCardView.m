@@ -179,7 +179,7 @@
         make.height.mas_equalTo(titleHeight);
     }];
     self.subTitleLabel.text = secondViewModel.subtitle;
-    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:secondViewModel.tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:self.frame.size.width - 90 - self.leftMargin - self.rightMargin - 8 withOpacity:secondViewModel.opacity];
+    self.tagLabel.attributedText = [FHSingleImageInfoCellModel tagsStringWithTagList:secondViewModel.tagList withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:self.frame.size.width - 90 - self.leftMargin - self.rightMargin - 8];
     self.priceLabel.text = secondViewModel.price;
     CGFloat width = [self.priceLabel btd_widthWithHeight:22];
     [self.priceLabel mas_updateConstraints:^(MASConstraintMaker *make) {

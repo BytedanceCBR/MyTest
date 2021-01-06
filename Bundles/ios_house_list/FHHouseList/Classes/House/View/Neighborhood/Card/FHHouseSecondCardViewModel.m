@@ -24,6 +24,7 @@
 #import "FHHouseReserveAdviserViewModel.h"
 #import "FHHouseCardStatusManager.h"
 #import "NSString+BTDAdditions.h"
+#import "FHEnvContext.h"
 
 @interface FHHouseSecondCardViewModel()
 
@@ -122,7 +123,8 @@
 - (CGFloat)opacity {
     CGFloat opacity = 1;
     if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:self.houseId withHouseType:FHHouseTypeSecondHandHouse]) {
-        opacity = FHHouseCardReadOpacity;
+        opacity = [FHEnvContext FHHouseCardReadOpacity];
+        //FHHouseCardReadOpacity;
     }
     return opacity;
 }
