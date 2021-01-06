@@ -8,7 +8,7 @@
 #import "FHOneTouchBackManager.h"
 #import "ByteDanceKit.h"
 #import "UIImage+TTThemeExtension.h"
-
+#import "FHUserTracker.h"
 
 @interface FHOneTouchBackManager()
 
@@ -16,6 +16,7 @@
 @property(nonatomic, strong )UIButton *button;
 @property(nonatomic, strong )NSURL *backUrl;
 @property(nonatomic, strong )UIWindow *window;
+@property(nonatomic, strong )NSMutableDictionary *tracerDic ;
 
 @end
 
@@ -36,19 +37,19 @@
     
     self.params = [url btd_queryItemsWithDecoding].mutableCopy;
     
-    NSURL *backUrl = [NSURL URLWithString:[self.params.copy btd_stringValueForKey:@"back_url" default:@""]];
+    NSURL *backUrl = [NSURL URLWithString:[self.params.copy btd_stringValueForKey:@"backurl" default:@""]];
     
     if(![[UIApplication sharedApplication] canOpenURL:backUrl]){
         return ;
     }else if(![self.params.copy btd_stringValueForKey:@"btn_name"]){
-        self.params[@"btn_name"] = [self getbtnNameWithUrl:[self.params.copy btd_stringValueForKey:@"back_url" default:@""]];
+        self.params[@"btn_name"] = [self getbtnNameWithUrl:[self.params.copy btd_stringValueForKey:@"backurl" default:@""]];
     }
     
     self.window = window;
     self.backUrl = backUrl;
     
     NSString *title = [NSString stringWithFormat:@"返回%@ ",[self.params.copy btd_stringValueForKey:@"btn_name" default:@""]];
-    self.button.frame = CGRectMake(0, window.bounds.size.height/3, (title.length) * 12 + 8, 17);
+    self.button.frame = CGRectMake(0, window.bounds.size.height/3, (title.length) * 12 + 8, 21);
     [self.button setImage:[UIImage themedImageNamed:@"arrow_down_black_line"] forState:UIControlStateNormal];
     self.button.backgroundColor = [UIColor colorWithRed:0 / 255.0 green:0 / 255.0 blue:0 / 255.0 alpha:0.3];
     [self.button setTitle:title forState:UIControlStateNormal];
@@ -57,6 +58,11 @@
     [self.button addTarget: self action: @selector(liveApp) forControlEvents: UIControlEventTouchDown];
     [self setmask];
     [window addSubview:self.button];
+    
+    self.tracerDic = [[self.params btd_stringValueForKey:@"ext_growth"] btd_jsonDictionary].mutableCopy;
+    self.tracerDic[@"button_name"] = @"click_position";
+    
+    [FHUserTracker writeEvent:@"botton_show" params:self.tracerDic];
 }
 
 - (UIButton *)button{
@@ -79,6 +85,9 @@
 }
 - (void)liveApp{
     [[self.window viewWithTag:20210106] removeFromSuperview];
+    self.tracerDic[@"click_position"] = @"click_position";
+    [self.tracerDic removeObjectForKey:@"button_name"];
+    [FHUserTracker writeEvent:@"click_options" params:self.tracerDic];
     [[UIApplication sharedApplication] openURL:self.backUrl];
 }
 
@@ -97,4 +106,5 @@
         return  @"";
     }
 }
+
 @end
