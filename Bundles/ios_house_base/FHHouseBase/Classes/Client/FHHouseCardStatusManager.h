@@ -8,15 +8,30 @@
 #import <Foundation/Foundation.h>
 #import "FHHouseType.h"
 
-const float FHHouseCardReadOpacity = 0.5;
+const float FHHouseCardReadOpacity = 0.5;  //已读卡片透明度
+const float FHHouseCardTouchAnimateTime = 0.2;  //触摸动效动画时长
+const float FHHouseCardShrinkRate = 0.9;  //触摸动效卡片缩小率
 
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHHouseCardReadStateProtocol <NSObject>
 
-@optional
+@required
 
+//渲染已读房源卡片UI
 - (void)refreshOpacityWithData:(id)data;
+
+@end
+
+@protocol FHHouseCardTouchAnimationProtocol <NSObject>
+
+@required
+
+//触摸动效，卡片缩小
+- (void)shrinkWithAnimation;
+
+//触摸动效，卡片还原
+- (void)restoreWithAnimation;
 
 @end
 

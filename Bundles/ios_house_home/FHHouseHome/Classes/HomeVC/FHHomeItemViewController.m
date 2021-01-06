@@ -84,6 +84,8 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 @property (nonatomic, strong) NSMutableDictionary *cahceHouseRankidsDict;
 @property (nonatomic, strong) NSMutableDictionary *similarTraceParam;
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
+@property (nonatomic, strong) UILongPressGestureRecognizer *gesture;
+@property (nonatomic, strong) UITableViewCell *selectCell;
 
 @end
 
@@ -158,7 +160,9 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES isInit:YES];
     
     self.tableView.scrollsToTop = NO;
-    
+    self.gesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressAction:)];
+    self.gesture.minimumPressDuration = 0.05;
+    [self.tableView addGestureRecognizer:self.gesture];
 }
 
 - (void)initNotifications {
@@ -827,6 +831,16 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             }
         }
     }
+    
+    //长按手势优先级最低，触摸动效复原
+    self.gesture.enabled = NO;
+    self.gesture.enabled = YES;
+    if (self.selectCell) {
+        if ([self.selectCell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [self.selectCell respondsToSelector:@selector(restoreWithAnimation)]) {
+            [self.selectCell performSelector:@selector(restoreWithAnimation)];
+        }
+        self.selectCell = nil;
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -1206,6 +1220,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     }
 }
 
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -1320,6 +1335,39 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         }
     }
     return _tableView;
+}
+
+- (void)longPressAction:(UILongPressGestureRecognizer *)gesture {
+    CGPoint point = [gesture locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    self.selectCell = cell;
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        if ([cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [cell respondsToSelector:@selector(shrinkWithAnimation)]) {
+            [cell performSelector:@selector(shrinkWithAnimation)];
+        }
+    } else if (gesture.state == UIGestureRecognizerStateEnded) {
+        if ([cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [cell respondsToSelector:@selector(restoreWithAnimation)]) {
+            [cell performSelector:@selector(restoreWithAnimation)];
+        }
+        self.selectCell = nil;
+        WeakSelf;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            StrongSelf;
+            if (!self.showPlaceHolder && indexPath.section == 1) {
+                [self jumpToDetailPage:indexPath];
+                if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)]) {
+                    [((id<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData: self.houseDataItemsModel[indexPath.row]];
+                }
+                if(self.houseDataItemsModel.count > indexPath.row){
+                    FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
+                    if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse && [theModel.cardType integerValue] != kFHHomeAgentCardType) {
+                        [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+                    }
+                }
+            }
+        });
+    }
 }
 
 - (void)dealloc {
