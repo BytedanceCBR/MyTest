@@ -397,7 +397,7 @@
             [items enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                  FHHouseListBaseItemModel *cellModel = (FHHouseListBaseItemModel *)obj;
                 if (cellModel) {
-                    if (self.listController.neighborListVCType == FHNeighborListVCTypeErshouNearBy || self.listController.neighborListVCType == FHNeighborListVCTypeNeighborErshou) {
+                    if (self.listController.neighborListVCType == FHNeighborListVCTypeErshouNearBy || self.listController.neighborListVCType == FHNeighborListVCTypeNeighborErshou || self.listController.neighborListVCType == FHNeighborListVCTypeErshouSameNeighbor) {
                         FHHouseSecondCardViewModel *viewModel = [[FHHouseSecondCardViewModel alloc] initWithModel:cellModel];
                         if (viewModel) {
                             viewModel.topMargin = ([self.houseList count] == 0) ? 10 : 5;
@@ -424,7 +424,7 @@
             self.hasEnterCategory = YES;
         }
         if (self.firstRequestData && self.houseList.count > 0) {
-            if (self.listController.neighborListVCType == FHNeighborListVCTypeErshouNearBy || self.listController.neighborListVCType == FHNeighborListVCTypeNeighborErshou) {
+            if (self.listController.neighborListVCType == FHNeighborListVCTypeErshouNearBy || self.listController.neighborListVCType == FHNeighborListVCTypeNeighborErshou || self.listController.neighborListVCType == FHNeighborListVCTypeErshouSameNeighbor) {
                 UIEdgeInsets inset = self.tableView.contentInset;
                 inset.top = 5;
                 self.tableView.contentInset = inset;
