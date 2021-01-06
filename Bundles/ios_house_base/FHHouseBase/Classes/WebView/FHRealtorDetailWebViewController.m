@@ -137,14 +137,6 @@ static NSString *s_oldAgent = nil;
             completion(TTRJSBMsgFailed, @{});
         }
     }];
-    
-//    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-//    configModel.houseType = self.houseType;
-//    configModel.followId = self.houseId;
-//    configModel.hideToast = YES;
-//    // 静默关注功能
-//    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
-    
 }
 
 -(NSMutableDictionary*)goDetailParams {

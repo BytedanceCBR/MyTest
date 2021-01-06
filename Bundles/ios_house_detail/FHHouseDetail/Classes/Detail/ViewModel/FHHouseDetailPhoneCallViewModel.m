@@ -122,29 +122,6 @@ extern NSString *const kFHToastCountKey;
     [FHHouseIMClueHelper jump2SessionPageWithAssociateIM:associateIMModel];
 }
 
-- (void)silentFollow:(NSDictionary *)extraDict
-{
-    NSMutableDictionary *params = @{}.mutableCopy;
-    if (self.tracerDict) {
-        [params addEntriesFromDictionary:self.tracerDict];
-    }
-    if (extraDict) {
-        [params addEntriesFromDictionary:extraDict];
-    }
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-    configModel.houseType = self.houseType;
-    configModel.followId = self.houseId;
-    configModel.actionType = self.houseType;
-    configModel.hideToast = YES;
-    // 静默关注功能
-    __weak typeof(self)wself = self;
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel completionBlock:^(BOOL isSuccess) {
-        if (isSuccess) {
-            wself.isEnterIM = YES;
-        }
-    }];
-}
-
 - (void)generateImParams:(NSString *)houseId houseTitle:(NSString *)houseTitle houseCover:(NSString *)houseCover houseType:(NSString *)houseType houseDes:(NSString *)houseDes housePrice:(NSString *)housePrice houseAvgPrice:(NSString *)houseAvgPrice {
     if (houseTitle.length > 20) {
         houseTitle = [houseTitle substringToIndex:20];

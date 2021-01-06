@@ -1036,17 +1036,6 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             [[ToastManager manager] showToast:[NSString stringWithFormat:@"%@%@",model.message.length ? @"" : @"提交失败 ", model.message]];
         }
     }];
-    // 静默关注功能
-    NSMutableDictionary *params = @{}.mutableCopy;
-    if (self.detailTracerDic) {
-        [params addEntriesFromDictionary:self.detailTracerDic];
-    }
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-    configModel.houseType = self.houseType;
-    configModel.followId = self.houseId;
-    configModel.actionType = self.houseType;
-    
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
 }
 
 - (BOOL)isShowSubscribe {

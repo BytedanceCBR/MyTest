@@ -55,20 +55,7 @@
 
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-        [self silentFollowHouse:configModel];
     }
-}
-
-+ (void)silentFollowHouse:(FHHouseIMClueConfigModel *)imConfig
-{
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]init];
-    configModel.houseType = imConfig.houseType;
-    configModel.followId = imConfig.houseId;
-    configModel.actionType = imConfig.houseType;
-    configModel.hideToast = YES;
-    // 静默关注功能
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel completionBlock:^(BOOL isSuccess) {
-    }];
 }
 
 + (void)jump2SessionPageWithConfig:(NSDictionary *)configDict
@@ -106,41 +93,8 @@
         userInfoDict[@"extra_info"] = associateIM.extraInfo;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
         
-
         // 跳转IM会话页
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-
-        // 静默关注处理
-        [self silentFollowHouseWithAssociateIM:associateIM];
-    }
-}
-
-+ (void)silentFollowHouseWithAssociateIM:(FHAssociateIMModel *)associateIM
-{
-    NSMutableDictionary *params = @{}.mutableCopy;
-    
-    if(associateIM.reportParams.toDictionary) {
-        [params addEntriesFromDictionary:associateIM.reportParams.toDictionary];
-    }
-    
-    if(associateIM.reportParams.extra) {
-        [params addEntriesFromDictionary:associateIM.reportParams.extra];
-    }
-
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc] initWithDictionary:params error:nil];
-    
-    configModel.houseType = associateIM.houseType;
-    configModel.followId = associateIM.houseId;
-    configModel.actionType = associateIM.houseType;
-    configModel.hideToast = YES;
-    
-    if (configModel.followId && configModel.followId.length > 0) {
-        // 静默关注功能
-        [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel completionBlock:^(BOOL isSuccess) {
-            if(associateIM.slientFollowCallbackBlock) {
-                associateIM.slientFollowCallbackBlock(isSuccess);
-            }
-        }];
     }
 }
 

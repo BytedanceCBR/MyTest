@@ -178,16 +178,6 @@ extern NSString *const kFHToastCountKey;
             [[ToastManager manager] showToast:message];
         }
     }];
-    // 静默关注功能
-    NSMutableDictionary *params = @{}.mutableCopy;
-
-    FHHouseFollowUpConfigModel *followConfig = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-    followConfig.houseType = associateReport.houseType;
-    followConfig.followId = associateReport.houseId;
-    followConfig.actionType = associateReport.actionType;
-    followConfig.showTip = YES;
-    
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:followConfig];
 }
 
 + (void)revokeFillFormAssociate:(NSString *)associateId alertView:(FHDetailNoticeAlertView *)alertView{

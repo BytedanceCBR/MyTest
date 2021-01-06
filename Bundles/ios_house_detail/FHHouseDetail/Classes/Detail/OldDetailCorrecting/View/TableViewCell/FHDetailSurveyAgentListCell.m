@@ -216,14 +216,6 @@
                 vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
             }
         }];
-
-        FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:extraDict error:nil];
-        configModel.houseType = self.baseViewModel.houseType;
-        configModel.followId = self.baseViewModel.houseId;
-        configModel.actionType = self.baseViewModel.houseType;
-        
-        // 静默关注功能
-        [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
     }
 }
 

@@ -100,14 +100,6 @@
 //                vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
 //            }
         }];
-
-        FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:extraDict error:nil];
-        configModel.houseType = FHHouseTypeNewHouse;
-        configModel.followId = self.detailViewController.viewModel.houseId;
-        configModel.actionType = FHHouseTypeNewHouse;
-        
-        // 静默关注功能
-        [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
     }
 
 }
