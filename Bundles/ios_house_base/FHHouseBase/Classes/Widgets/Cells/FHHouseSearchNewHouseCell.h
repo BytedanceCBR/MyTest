@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseSearchNewHouseCell : FHListBaseCell<FHHouseCardReadStateProtocol>
+@interface FHHouseSearchNewHouseCell : FHListBaseCell<FHHouseCardReadStateProtocol, FHHouseCardTouchAnimationProtocol>
 
 - (void)resumeVRIcon;
 

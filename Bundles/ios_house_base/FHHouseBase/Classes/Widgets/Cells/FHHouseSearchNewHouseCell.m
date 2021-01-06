@@ -39,6 +39,7 @@
 @property (nonatomic, strong) UILabel *bottomRecommendLabel; //活动title
 @property (nonatomic, strong) UIView *bottomLine;
 @property (nonatomic, strong) UIView *containerView;//圆角背景
+@property (nonatomic, strong) UIView *backView;
 @property (nonatomic, strong) FHCornerItemLabel *tagTitleLabel; //降 新 榜等标签
 @property (nonatomic, strong) UILabel *propertyTagLabel;
 
@@ -94,10 +95,16 @@
     [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(top);
     }];
+    [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(top);
+    }];
 }
 
 - (void)updateHeightByTopMargin:(CGFloat)topMarigin {
     [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(topMarigin);
+    }];
+    [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(topMarigin);
     }];
 }
@@ -105,6 +112,14 @@
 -(void)initUI
 {
     self.contentView.backgroundColor = [UIColor themeGray7];
+    [self.contentView addSubview:self.backView];
+    [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.top.mas_equalTo(5);
+        make.bottom.mas_equalTo(-5);
+    }];
+    
     [self.contentView addSubview:self.containerView];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
@@ -517,6 +532,16 @@
     return _priceLabel;
 }
 
+- (UIView *)backView {
+    if (!_backView) {
+        _backView = [[UIView alloc] init];
+        _backView.backgroundColor = [UIColor whiteColor];
+        _backView.layer.cornerRadius = 10;
+        _backView.layer.masksToBounds = YES;
+    }
+    return _backView;
+}
+
 - (UIView *)containerView {
     if (!_containerView) {
         _containerView = [[UIView alloc] init];
@@ -536,6 +561,20 @@
         _propertyTagLabel.layer.borderWidth = 0.5;
     }
     return _propertyTagLabel;
+}
+
+#pragma mark - FHHouseCardTouchAnimationProtocol
+
+- (void)shrinkWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.containerView.transform = CGAffineTransformMakeScale(FHHouseCardShrinkRate, FHHouseCardShrinkRate);
+    }];
+}
+
+- (void)restoreWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.containerView.transform = CGAffineTransformMakeScale(1, 1);
+    }];
 }
 
 @end

@@ -749,19 +749,6 @@
     }
 }
 
-- (void)shrinkWithAnimated {
-    [UIView animateWithDuration:0.2 animations:^{
-        self.containerView.transform = CGAffineTransformMakeScale(0.9, 0.9);
-    }];
-}
-
-- (void)expandWithAnimated {
-    [UIView animateWithDuration:0.2 animations:^{
-        self.containerView.transform = CGAffineTransformMakeScale(1, 1);
-    }];
-}
-
-
 - (void)dislikeConfirm:(FHHouseDislikeView *)view {
     if (![TTReachability isNetworkConnected]) {
         [[ToastManager manager] showToast:@"网络异常"];
@@ -785,6 +772,20 @@
         }else{
             [[ToastManager manager] showToast:@"反馈失败"];
         }
+    }];
+}
+
+#pragma mark - FHHouseCardTouchAnimationProtocol
+
+- (void)shrinkWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.containerView.transform = CGAffineTransformMakeScale(FHHouseCardShrinkRate, FHHouseCardShrinkRate);
+    }];
+}
+
+- (void)restoreWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.containerView.transform = CGAffineTransformMakeScale(1, 1);
     }];
 }
 

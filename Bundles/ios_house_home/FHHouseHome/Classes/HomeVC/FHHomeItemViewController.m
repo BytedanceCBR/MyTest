@@ -831,14 +831,15 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             }
         }
     }
-    if (scrollView == self.tableView) {
-        self.gesture.enabled = NO;
-        self.gesture.enabled = YES;
-        if (self.selectCell) {
-            if ([self.selectCell respondsToSelector:@selector(expandWithAnimated)]) {
-                [self.selectCell performSelector:@selector(expandWithAnimated)];
-            }
+    
+    //长按手势优先级最低，触摸动效复原
+    self.gesture.enabled = NO;
+    self.gesture.enabled = YES;
+    if (self.selectCell) {
+        if ([self.selectCell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [self.selectCell respondsToSelector:@selector(restoreWithAnimation)]) {
+            [self.selectCell performSelector:@selector(restoreWithAnimation)];
         }
+        self.selectCell = nil;
     }
 }
 
@@ -1342,12 +1343,12 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     self.selectCell = cell;
     if (gesture.state == UIGestureRecognizerStateBegan) {
-        if ([cell respondsToSelector:@selector(shrinkWithAnimated)]) {
-            [cell performSelector:@selector(shrinkWithAnimated)];
+        if ([cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [cell respondsToSelector:@selector(shrinkWithAnimation)]) {
+            [cell performSelector:@selector(shrinkWithAnimation)];
         }
     } else if (gesture.state == UIGestureRecognizerStateEnded) {
-        if ([cell respondsToSelector:@selector(expandWithAnimated)]) {
-            [cell performSelector:@selector(expandWithAnimated)];
+        if ([cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [cell respondsToSelector:@selector(restoreWithAnimation)]) {
+            [cell performSelector:@selector(restoreWithAnimation)];
         }
         self.selectCell = nil;
         WeakSelf;

@@ -20,6 +20,7 @@
 @property (nonatomic, strong) FHSingleImageInfoCellModel *cellModel;
 @property (nonatomic, strong) UIButton *closeBtn;
 @property (nonatomic, strong) FHHomeHouseDataItemsModel *homeItemModel;
+@property (nonatomic, strong) UIView *backView;
 
 @end
 
@@ -34,6 +35,13 @@
 }
 
 - (void)initUI {
+    [self.contentView addSubview:self.backView];
+    [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.top.bottom.mas_equalTo(0);
+    }];
+    
     [super initUI];
     self.contentView.backgroundColor = [UIColor themeGray7];
     self.houseCellBackView.hidden = NO;
@@ -58,6 +66,14 @@
         make.top.mas_equalTo(14);
         make.width.height.mas_equalTo(16);
     }];
+}
+
+- (UIView *)backView {
+    if (!_backView) {
+        _backView = [[UIView alloc] init];
+        _backView.backgroundColor = [UIColor whiteColor];
+    }
+    return _backView;
 }
 
 - (void)refreshOpacityWithData:(id)data {
@@ -108,8 +124,10 @@
         maskLayer.frame = frame;
         maskLayer.path = maskPath.CGPath;
         self.houseCellBackView.layer.mask = maskLayer;
+        self.backView.layer.mask = maskLayer;
     } else {
         self.houseCellBackView.layer.mask = nil;
+        self.backView.layer.mask = nil;
     }
 }
 
@@ -189,6 +207,20 @@
         }else{
             [[ToastManager manager] showToast:@"反馈失败"];
         }
+    }];
+}
+
+#pragma mark - FHHouseCardTouchAnimationProtocol
+
+- (void)shrinkWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.houseCellBackView.transform = CGAffineTransformMakeScale(FHHouseCardShrinkRate, FHHouseCardShrinkRate);
+    }];
+}
+
+- (void)restoreWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.houseCellBackView.transform = CGAffineTransformMakeScale(1, 1);
     }];
 }
 

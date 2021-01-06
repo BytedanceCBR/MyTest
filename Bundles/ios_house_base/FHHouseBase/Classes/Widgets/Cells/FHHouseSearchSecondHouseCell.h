@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHHouseSearchSecondHouseCell : FHListBaseCell<FHHouseCardReadStateProtocol>
+@interface FHHouseSearchSecondHouseCell : FHListBaseCell<FHHouseCardReadStateProtocol, FHHouseCardTouchAnimationProtocol>
 
 @property (nonatomic, weak) id<FHHouseSearchSecondHouseCellDelegate> delegate;
 
@@ -31,10 +31,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)resumeVRIcon;
 
 - (void)updateHeightByIsFirst:(BOOL)isFirst;
-
-- (void)shrinkWithAnimated;
-
-- (void)expandWithAnimated;
 
 @end
 
