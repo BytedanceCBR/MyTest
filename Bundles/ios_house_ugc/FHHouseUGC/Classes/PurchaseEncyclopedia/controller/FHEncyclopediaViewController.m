@@ -141,7 +141,6 @@
 - (void)initViewModel {
     _viewModel = [[FHEncyclopediaViewModel alloc] initWithWithController:self collectionView:self.collectionView headerView:self.encyclopediaHeader
                                                              tracerModel:self.tracerModel lynxBaseIndexParam:self.lynxBaseParam];
-    _
     
 }
 
