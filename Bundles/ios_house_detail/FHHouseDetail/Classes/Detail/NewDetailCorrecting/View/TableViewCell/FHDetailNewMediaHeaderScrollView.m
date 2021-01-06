@@ -87,9 +87,11 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
     return index;
 }
 
-- (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
+- (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated {
     if ([self.colletionView numberOfSections] > indexPath.section && [self.colletionView numberOfItemsInSection:indexPath.section] > indexPath.row) {
-        [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
+        UICollectionViewLayoutAttributes *cellAttributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
+        [self.colletionView setContentOffset:CGPointMake(cellAttributes.frame.origin.x, 0) animated:animated];
+//        [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
     }
 }
 

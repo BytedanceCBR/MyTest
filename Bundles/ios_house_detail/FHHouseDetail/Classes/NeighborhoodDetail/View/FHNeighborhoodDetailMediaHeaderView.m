@@ -213,7 +213,7 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
     
     self.segmentViewChangedFlag = YES;
-    [self.scrollView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    [self.scrollView scrollToItemAtIndexPath:indexPath animated:NO];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         self.segmentViewChangedFlag = NO;
         NSInteger curPage = [self.scrollView getCurPagae];
@@ -233,7 +233,7 @@
 - (void)scrollToItemAtIndex:(NSInteger)index {
     NSInteger item = index + 1;
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
-    [self.scrollView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+    [self.scrollView scrollToItemAtIndexPath:indexPath animated:NO];
     [self updateItemAndInfoLabel:index];
 }
 
