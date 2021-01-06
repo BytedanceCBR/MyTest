@@ -190,6 +190,7 @@
         self.top = screenHeight - self.height;
     }];
     
+    [self.areaPanel willDisplay];
 }
 
 - (void)finishBtnDidClick:(UIButton *)btn
@@ -219,6 +220,8 @@
         [self->_bgView removeFromSuperview];
         [self removeFromSuperview];
     }];
+    
+    [self.areaPanel willDismiss];
 }
 
 - (UIView *)contentView

@@ -8,7 +8,7 @@
 
 #import "FHFindHouseAreaSelectionTableViewVM.h"
 #import "FHFilterNodeModel.h"
-#import "AreaSelectionItemCell.h"
+#import "FHFindHouseAreaSelectionCell.h"
 #import "TransactionIndexPathSet.h"
 #import "FHFilterRedDotManagement.h"
 #import "DynamicAreaSelectionTableVM.h"
@@ -32,7 +32,7 @@
         _tableView.delegate = self;
         _tableView.dataSource = self;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        [tableView registerClass:[AreaSelectionItemCell class] forCellReuseIdentifier:@"item"];
+        [tableView registerClass:[FHFindHouseAreaSelectionCell class] forCellReuseIdentifier:@"item"];
     }
     return self;
 }
@@ -64,8 +64,8 @@
         [[cell contentView] setBackgroundColor:_cellBackgroundColor];
     }
     if (cell != nil) {
-        if ([cell isKindOfClass:[AreaSelectionItemCell class]]) {
-            AreaSelectionItemCell* areaCell = (AreaSelectionItemCell*) cell;
+        if ([cell isKindOfClass:[FHFindHouseAreaSelectionCell class]]) {
+            FHFindHouseAreaSelectionCell* areaCell = (FHFindHouseAreaSelectionCell*) cell;
             if (_isAllowLabelShift) {
                 areaCell.nameLabel.numberOfLines = 0;
             } else {
