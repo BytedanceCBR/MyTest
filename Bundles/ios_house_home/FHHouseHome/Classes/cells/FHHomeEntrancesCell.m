@@ -105,7 +105,7 @@
     }];
     
     CGFloat margin = (SCREEN_WIDTH - countPerRow*itemFrame.size.width - 2*HOR_MARGIN)/(countPerRow-1);
-    UIImage *placeHolder = [UIImage imageNamed:@"icon_placeholder"];;
+    UIImage *placeHolder = [UIImage imageNamed:@"new_icon_placeholder"];;
     for (NSInteger i = 0 ; i < totalCount; i++) {
         FHConfigDataOpDataItemsModel *model = items[i];
         FHHomeEntranceItemView *itemView = _itemViews[i];
