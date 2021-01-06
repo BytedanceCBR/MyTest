@@ -87,6 +87,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (strong, nonatomic, nullable) NSArray *items;
 @property (nonatomic, copy, nullable) NSString *status;
 @property (nonatomic, copy, nullable) NSString *message;
+@property (nonatomic, copy, nullable) NSString *currentSelectedMainIndex;
+@property (nonatomic, copy, nullable) NSString *currentSelectedSubIndex;
 @end
 
 

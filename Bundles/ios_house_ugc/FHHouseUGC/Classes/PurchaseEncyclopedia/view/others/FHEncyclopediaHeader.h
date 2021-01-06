@@ -18,6 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHEncyclopediaHeader : UIView
 @property (weak, nonatomic) id <FHEncyclopediaHeaderDelegate>delegate;
 @property (assign, nonatomic) CGFloat viewHeight;
+@property(nonatomic, strong) NSDictionary *lynxBaseParam;
 - (void)updateModel:(EncyclopediaConfigDataModel *)model;
 @end
 

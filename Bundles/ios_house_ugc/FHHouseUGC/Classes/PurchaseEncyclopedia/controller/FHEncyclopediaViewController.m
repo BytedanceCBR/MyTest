@@ -19,6 +19,7 @@
 @property (weak, nonatomic) UICollectionView *collectionView;
 @property (weak, nonatomic) FHEncyclopediaHeader *encyclopediaHeader;
 @property (strong, nonatomic) FHEncyclopediaViewModel *viewModel;
+@property(nonatomic, strong) NSDictionary *lynxBaseParam;
 @end
 
 @implementation FHEncyclopediaViewController
@@ -28,6 +29,7 @@
     self = [super initWithRouteParamObj:paramObj];
     if (self) {
         [self createTracerDic:paramObj.allParams];
+        [self createLynxBaseParam:paramObj.allParams];
     }
     return self;
 }
@@ -138,13 +140,15 @@
 
 - (void)initViewModel {
     _viewModel = [[FHEncyclopediaViewModel alloc] initWithWithController:self collectionView:self.collectionView headerView:self.encyclopediaHeader
-                                                             tracerModel:self.tracerModel];
+                                                             tracerModel:self.tracerModel lynxBaseIndexParam:self.lynxBaseParam];
+    _
     
 }
 
 - (FHEncyclopediaHeader *)encyclopediaHeader {
     if (!_encyclopediaHeader) {
         FHEncyclopediaHeader *encyclopediaHeader = [[FHEncyclopediaHeader alloc]init];
+        encyclopediaHeader.lynxBaseParam = self.lynxBaseParam;
         [self.view addSubview:encyclopediaHeader];
         _encyclopediaHeader = encyclopediaHeader;
     }
@@ -180,6 +184,13 @@
     [dic removeObjectForKey:@"tracer"];
     FHTracerModel *model =[FHTracerModel makerTracerModelWithDic:dic];
     self.tracerModel = model;
+}
+
+- (void)createLynxBaseParam:(NSDictionary *)param {
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
+    [dic setValue:[param.allKeys containsObject:@"mainIndex"]?@([param[@"mainIndex"] intValue]):@(0)  forKey:@"currentSelectedMainIndex"];
+    [dic setValue:[param.allKeys containsObject:@"subIndex"]?@([param[@"subIndex"] intValue]):@(0) forKey:@"currentSelectedSubIndex"];
+    self.lynxBaseParam= dic;
 }
 
 @end
