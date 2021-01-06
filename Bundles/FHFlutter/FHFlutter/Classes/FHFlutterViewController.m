@@ -155,7 +155,7 @@
     
     
     
-    if ([TTSandBoxHelper isInHouseApp]) {
+//    if ([TTSandBoxHelper isInHouseApp]) {
         NSString *packageFilePath = [RouteAppFileUtil getDebugPackagePathForPackageName:pluginName];
 
         if ([RouteAppFileUtil checkFileExist:packageFilePath]) {
@@ -172,7 +172,7 @@
                 [resultPrams setValue:flutterUrl forKey:@"url"];
             }
         }
-    }
+//    }
 
     
     NSString * paramsStr = [paramObj.allParams btd_objectForKey:kFHFlutterchemaParamsKey default:@""];
