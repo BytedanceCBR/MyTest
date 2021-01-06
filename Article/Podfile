@@ -59,18 +59,18 @@ def fhPods
 #    pod 'FHCommonUI','0.9.0.10'
     pod 'FHCommonUI','0.9.0.12'
 
-    # pod 'FHPopupViewCenter', '0.0.3-rc.4', :inhibit_warnings => false, :subspecs => [
-    # 'Core',
-    # 'DelegateForC'
-    # ], :inhibit_warnings => false
+     pod 'FHPopupViewCenter', '0.0.3', :inhibit_warnings => false, :subspecs => [
+     'Core',
+     'DelegateForC'
+     ], :inhibit_warnings => false
 #    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
 #    'DelegateForC'
 #    ], :inhibit_warnings => false
-    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => 'c88b6f93182c06bee410732adfdbe14f7e354eea', :subspecs => [
-    'Core',
-    'DelegateForC'
-    ]
+#    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => 'c88b6f93182c06bee410732adfdbe14f7e354eea', :subspecs => [
+#    'Core',
+#    'DelegateForC'
+#    ]
     
 #     pod 'ios_house_im' , :path => '../../../im/bugfix', :inhibit_warnings => false
     pod 'ios_house_im' ,'0.10.0.1', :inhibit_warnings => false
