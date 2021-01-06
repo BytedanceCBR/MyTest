@@ -141,7 +141,6 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 @property (nonatomic, strong) TTBubbleView *tabbarTipView;
 @property (nonatomic, strong) ArticleCategoryManagerView *categoryManagerView;
 //@property (nonatomic, strong) TTContactsAddFriendsViewController *addFriendsViewController;
-@property (nonatomic, assign) BOOL isInvisble;//当前视图是否已经push或者Present到别的页面
 @property (nonatomic, assign) BOOL isBackground;//当前视图是否已经被挂起到后台
 @property (nonatomic, assign) BOOL needShowSurfaceTip;
 @property (nonatomic, assign) BOOL autoEnterShortVideoTab;
