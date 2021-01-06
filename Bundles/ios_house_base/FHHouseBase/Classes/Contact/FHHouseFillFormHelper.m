@@ -23,7 +23,6 @@
 #import "FHHouseFollowUpHelper.h"
 #import "FHFillFormAgencyListItemModel.h"
 #import "FHHouseDetailViewController.h"
-#import "FHHouseNewDetailViewModel.h"
 #import <FHHouseBase/FHUserInfoManager.h>
 #import "SSCommonLogic.h"
 #import <TTAccountSDK/TTAccount.h>

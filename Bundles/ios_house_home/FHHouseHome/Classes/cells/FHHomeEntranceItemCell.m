@@ -44,7 +44,7 @@
 
 - (void)bindModel:(FHConfigDataOpDataItemsModel *)model {
     FHConfigDataOpDataItemsImageModel *imgModel = model.image.firstObject;
-    [self.iconView bd_setImageWithURL:[NSURL URLWithString:imgModel.url] placeholder:[UIImage imageNamed:@"icon_placeholder"]];
+    [self.iconView bd_setImageWithURL:[NSURL URLWithString:imgModel.url] placeholder:[UIImage imageNamed:@"new_icon_placeholder"]];
     self.nameLabel.text = model.title;
 //    [self.nameLabel sizeToFit];
     self.nameLabel.centerX = self.width/2;

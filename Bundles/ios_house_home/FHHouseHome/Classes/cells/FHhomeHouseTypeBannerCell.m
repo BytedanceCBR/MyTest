@@ -89,7 +89,7 @@
             FHConfigDataOpData2ItemsImageModel *itemImage = (FHConfigDataOpData2ItemsImageModel *)itemModel.image.firstObject;
             
             if ([itemImage.url isKindOfClass:[NSString class]]) {
-                [backImage bd_setImageWithURL:[NSURL URLWithString:itemImage.url]];
+                [backImage bd_setImageWithURL:[NSURL URLWithString:itemImage.url] placeholder:[UIImage imageNamed:@"house_type_banner_placeholder"]];
             }
         }
         

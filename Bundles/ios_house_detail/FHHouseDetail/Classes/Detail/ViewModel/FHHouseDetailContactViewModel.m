@@ -50,7 +50,6 @@
 #import "FHUGCConfig.h"
 #import "FHLoginViewController.h"
 #import "FHHouseUGCAPI.h"
-#import "FHHouseNewDetailViewModel.h"
 #import "FHDetailBaseCell.h"
 #import "FHErrorHubManagerUtil.h"
 #import "FHDetailNewModel.h"
@@ -1095,11 +1094,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                     weakSelf.socialInfo.socialGroupInfo.contentCount = socialModel.data.contentCount;
                     
                     weakSelf.socialInfo.socialGroupInfo.userAuth = socialModel.data.userAuth;
-                }
-                // 刷新Cell
-                if (socialModel.data.socialGroupId.length > 0) {
-                    NSDictionary *userInfo = @{@"social_group_id":socialModel.data.socialGroupId};
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHDetailNewUGCSocialCellNotiKey" object:nil userInfo:userInfo];
                 }
                 // 从登录过来的
                 if (isFromLogin) {
