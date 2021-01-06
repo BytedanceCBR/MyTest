@@ -349,6 +349,8 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 //房源卡片已读未读透明度设置
 + (CGFloat)FHHouseCardReadOpacity;
 
++ (BOOL)purelyCanOpenURL:(NSURL *)url;
+
 @end
 
 
