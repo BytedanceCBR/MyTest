@@ -6,7 +6,6 @@
 //
 
 #import "FHHouseDetailBaseViewModel.h"
-#import "FHHouseNeighborhoodDetailViewModel.h"
 #import "FHHouseOldDetailViewModel.h"
 #import "FHHouseRentDetailViewModel.h"
 #import "FHDetailBaseCell.h"
@@ -63,7 +62,6 @@
             viewModel = [[FHHouseRentDetailViewModel alloc] initWithController:viewController tableView:tableView houseType:houseType];
             break;
         case FHHouseTypeNeighborhood:
-            viewModel = [[FHHouseNeighborhoodDetailViewModel alloc] initWithController:viewController tableView:tableView houseType:houseType];
             break;
         default:
             break;

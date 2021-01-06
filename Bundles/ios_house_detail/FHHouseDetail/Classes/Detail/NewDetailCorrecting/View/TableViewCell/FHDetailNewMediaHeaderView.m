@@ -10,6 +10,9 @@
 #import "FHVideoAndImageItemCorrectingView.h"
 #import "FHCommonDefines.h"
 #import <ByteDanceKit/ByteDanceKit.h>
+#import <Masonry/Masonry.h>
+#import <FHCommonUI/UIColor+Theme.h>
+#import <FHCommonUI/UIFont+House.h>
 
 @interface FHDetailNewMediaHeaderView ()
 
