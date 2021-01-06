@@ -6,7 +6,17 @@
 //
 
 #import "FHOldHouseDetailRelatedSecondCell.h"
-#import "FHSingleImageInfoCellModel.h"
+#import "FHHouseSecondCardView.h"
+#import "FHHouseSecondCardViewModel.h"
+#import "Masonry.h"
+
+@interface FHOldHouseDetailRelatedSecondCell()
+
+@property (nonatomic, strong) FHHouseSecondCardView *cardView;
+
+@property (nonatomic, strong) UIView *line;
+
+@end
 
 @implementation FHOldHouseDetailRelatedSecondCell
 
@@ -14,89 +24,44 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self initUI];
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }
 
 - (void)initUI {
-    [super initUI];
-    self.contentView.backgroundColor = [UIColor themeGray7];
-    self.houseCellBackView.hidden = NO;
-    [self.houseCellBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.cardView = [[FHHouseSecondCardView alloc] init];
+    [self.contentView addSubview:self.cardView];
+    [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(0);
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
-        make.top.bottom.mas_equalTo(0);
+        make.bottom.mas_equalTo(-4);
     }];
-    [self.mainImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(12);
-        make.left.mas_equalTo(26);
-    }];
-    self.houseMainImageBackView.backgroundColor = [UIColor whiteColor];
-    [self.houseMainImageBackView mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.mainImageView).offset(3);
-        make.left.mas_equalTo(self.mainImageView).offset(3);
-        make.right.mas_equalTo(self.mainImageView).offset(-3);
-        make.bottom.mas_equalTo(self.mainImageView).offset(-3);
-    }];
-    [self.contentView addSubview:self.topLeftTagImageView];
-    [self.topLeftTagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.equalTo(self.mainImageView);
-        make.size.mas_equalTo(CGSizeMake(48, 18));
-    }];
-    [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-23);
-    }];
-    [self.pricePerSqmLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-23);
-    }];
-    [self.contentView addSubview:self.tagTitleLabel];
-    [self.tagTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.greaterThanOrEqualTo(self.mainTitleLabel.mas_right).offset(2);
-        make.height.mas_equalTo(16);
-        make.top.mas_equalTo(self.mainTitleLabel).offset(1.5);
+    
+    self.line = [[UIView alloc] init];
+    self.line.backgroundColor = [UIColor themeGray6];
+    [self.contentView addSubview:self.line];
+    [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(30);
+        make.right.mas_equalTo(-30);
+        make.height.mas_equalTo(0.5);
+        make.bottom.mas_equalTo(0);
     }];
 }
 
-- (void)refreshWithData:(id)data {
-    if (![data isKindOfClass:[FHSingleImageInfoCellModel class]]) {
-        return;
+- (void)refreshWithData:(id)data withLast:(BOOL)isLast {
+    self.line.hidden = isLast;
+    if ([data isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+        self.cardView.viewModel = data;
     }
-    FHSingleImageInfoCellModel *cellModel  = (FHSingleImageInfoCellModel *)data;
-    FHSearchHouseDataItemsModel *model  = cellModel.secondModel;
-    self.mainTitleLabel.text = model.displayTitle;
-    self.subTitleLabel.text =model.displaySubtitle;
-    NSAttributedString * attributeStrings =  [FHSingleImageInfoCellModel tagsStringSmallImageWithTagList:model.tags];
-    self.tagLabel.attributedText =  attributeStrings;
-    self.priceLabel.text = model.displayPrice;
-    FHImageModel *imageModel = model.houseImage.firstObject;
-    [self updateMainImageWithUrl:imageModel.url];
-    self.priceLabel.font = [UIFont themeFontSemibold:[UIDevice btd_isScreenWidthLarge320] ? 16 : 15];
-    self.pricePerSqmLabel.textColor = [UIColor themeGray1];
-    self.pricePerSqmLabel.font = [UIFont themeFontRegular:12];
-    if (model.originPrice) {
-        self.pricePerSqmLabel.attributedText = [self originPriceAttr:model.originPrice];
-    }else{
-        self.pricePerSqmLabel.attributedText = [[NSAttributedString alloc]initWithString:(model.displayPricePerSqm.length>0?model.displayPricePerSqm:@"") attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleNone)}];
+}
+
++ (CGFloat)heightForData:(id)data {
+    if ([data isKindOfClass:[FHHouseSecondCardViewModel class]]) {
+        return [FHHouseSecondCardView viewHeightWithViewModel:data] + 4;
     }
-    //企业担保标签
-    [self configTopLeftTagWithTagImages:model.tagImage];
-    CGSize titleSize = [self.mainTitleLabel sizeThatFits:CGSizeMake(100, 22)];
-    if (model.houseTitleTag.text.length > 0) {
-        self.tagTitleLabel.hidden = NO;
-        self.tagTitleLabel.text = model.houseTitleTag.text;
-        self.tagTitleLabel.backgroundColor = [UIColor colorWithHexString:model.houseTitleTag.backgroundColor];
-        self.tagTitleLabel.textColor = [UIColor colorWithHexString:model.houseTitleTag.textColor];
-        [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(titleSize.width + 3);
-        }];
-        //修改两字标签
-        CGFloat width = model.houseTitleTag.text.length > 1 ? 28 : 16;
-        [self.tagTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.width.mas_equalTo(width);
-        }];
-     } else {
-          self.tagTitleLabel.hidden = YES;
-    }
+    return 0;
 }
 
 @end

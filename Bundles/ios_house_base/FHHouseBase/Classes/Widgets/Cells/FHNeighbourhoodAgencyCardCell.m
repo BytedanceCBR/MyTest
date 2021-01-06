@@ -9,7 +9,6 @@
 #import "FHDetailBaseModel.h"
 #import <BDWebImage/BDWebImage.h>
 #import "FHDetailAgentListCell.h"
-#import "FHShadowView.h"
 #import "FHHousePhoneCallUtils.h"
 #import "UIColor+Theme.h"
 #import <FHHouseBase/FHCommonDefines.h>
@@ -23,7 +22,6 @@
 
 
 @property(nonatomic, strong) UIView *containerView;
-@property(nonatomic, strong) FHShadowView *shadowView;
 
 @property(nonatomic, strong) UIView *topInfoView;
 @property(nonatomic, strong) UILabel *mainTitleLabel; //小区名称
@@ -61,33 +59,16 @@
     return self;
 }
 
-- (void)updateHeightByIsFirst:(BOOL)isFirst {
-    CGFloat top = 5;
-    if (isFirst) {
-        top = 10;
-    }
-    [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self).offset(top);
-    }];
-}
-
 - (void)initUI {
 
     self.contentView.clipsToBounds = NO;
     self.clipsToBounds = NO;
 
-    _shadowView = [[FHShadowView alloc] initWithFrame:CGRectZero];
-    [_shadowView setCornerRadius:10];
-    [_shadowView setShadowColor:[UIColor whiteColor]];
-    [_shadowView setShadowOffset:CGSizeMake(0, 2)];
-    [self.contentView addSubview:_shadowView];
-
     _containerView = [[UIView alloc] init];
+    _containerView.backgroundColor = [UIColor whiteColor];
     CALayer *layer = _containerView.layer;
     layer.cornerRadius = 10;
     layer.masksToBounds = YES;
-    layer.borderColor =  [UIColor colorWithHexString:@"#e8e8e8"].CGColor;
-    layer.borderWidth = 0.5f;
     [self.contentView addSubview:_containerView];
 
     _topInfoView = [[UIView alloc] init];
@@ -175,12 +156,8 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self).mas_offset(15);
         make.right.mas_equalTo(self).mas_offset(-15);
-        make.top.mas_equalTo(self).offset(5);
+        make.height.mas_equalTo(165);
         make.bottom.mas_equalTo(self).offset(-5);
-    }];
-
-    [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.containerView);
     }];
 
     [self.topInfoView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -349,7 +326,7 @@
 
 + (CGFloat)heightForData:(id)data
 {
-    return 169;// + 10;
+    return 175;
 }
 
 - (BOOL)shouldShowContact:(FHDetailContactModel *)contact {

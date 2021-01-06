@@ -33,8 +33,6 @@ const NSInteger ArticleRetrieveTimeoutInterval = 60;
 }
 
 @property(nonatomic, strong) SSThemedView *backgroundView;
-
-@property(nonatomic, retain) ArticleListNotifyBarView *notifyBarView;
 @property(nonatomic, strong) TTIndicatorView *waitingIndicatorView;
 
 @property(nonatomic, assign) BOOL mobileButtonEnabled;
@@ -89,10 +87,6 @@ const NSInteger ArticleRetrieveTimeoutInterval = 60;
     tapGestureRecognizer.cancelsTouchesInView = NO;
     [self.containerView addGestureRecognizer:tapGestureRecognizer];
     
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]
-                          initWithFrame:[self _notifyBarViewFrame]];
-    [self.view addSubview:_notifyBarView];
-    
     self.inputContainerView = [[SSThemedView alloc] initWithFrame:[self _inputContainerViewFrame]];
     self.inputContainerView.layer.borderWidth = [TTDeviceHelper ssOnePixel];
     self.inputContainerView.borderColorThemeKey = kColorLine1;
@@ -143,7 +137,6 @@ const NSInteger ArticleRetrieveTimeoutInterval = 60;
     self.backgroundView.frame = [self _backgroundViewFrame];
     self.navigationBar.frame = [self _navigationBarFrame];
     self.containerView.frame = [self _containerViewFrame];
-    self.notifyBarView.frame = [self _notifyBarViewFrame];
     self.inputContainerView.frame = [self _inputContainerViewFrame];
     _mobileButton.size = CGSizeMake((self.containerView.width), [ArticleMobileViewController heightOfMobileButton]);
     
@@ -334,17 +327,6 @@ const NSInteger ArticleRetrieveTimeoutInterval = 60;
                      completion:^(BOOL finished) { self.containerView.frame = frame; }];
 }
 
-- (void)showNotifyBarMsg:(NSString *)msg {
-    if (!isEmptyString(msg)) {
-        [_notifyBarView showMessage:msg
-                  actionButtonTitle:nil
-                          delayHide:YES
-                           duration:3
-                bgButtonClickAction:NULL
-             actionButtonClickBlock:NULL
-                       didHideBlock:NULL];
-    }
-}
 
 #pragma mark - WaitingIndicator
 

@@ -40,6 +40,7 @@
 #import "FHDetailNavigationTitleView.h"
 #import <FHHouseBase/FHEventShowProtocol.h>
 #import <FHHouseBase/NSObject+FHOptimize.h>
+#import "FHDetailPlaceHolderView.h"
 
 
 @interface FHNewHouseDetailViewController () <UIGestureRecognizerDelegate, IGListAdapterDataSource, UICollectionViewDelegate, UIScrollViewDelegate>
@@ -74,6 +75,7 @@
 @property (nonatomic, assign) BOOL segmentViewChangedFlag;
 //是否显示
 @property (nonatomic, assign) BOOL isViewDidDisapper;
+@property (strong, nonatomic) FHDetailPlaceHolderView *placeHolderView;
 
 @end
 
@@ -150,6 +152,11 @@
     });
 }
 
+- (void)hiddenPlaceHolder {
+    self.placeHolderView.hidden = YES;
+    [self.placeHolderView removeFromSuperview];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -206,6 +213,7 @@
 {
     self.detailFlowLayout = [[FHNewHouseDetailFlowLayout alloc] init];
     self.collectionView = [[FHBaseCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.detailFlowLayout];
+    self.collectionView.bounces = NO;
     self.collectionView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     UITapGestureRecognizer *tapGesturRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapAction:)];
     tapGesturRecognizer.cancelsTouchesInView = NO;
@@ -275,6 +283,12 @@
         make.bottom.mas_equalTo(self.bottomBar.mas_top).offset(-30);
     }];
 
+    self.placeHolderView = [[FHDetailPlaceHolderView alloc]init];
+    [self.view addSubview:self.placeHolderView];
+    [_placeHolderView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self);
+    }];
+    
     [self.view bringSubviewToFront:_navBar];
     
     self.segmentTitleView = [[FHDetailNavigationTitleView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.navBar.frame), CGRectGetWidth(self.view.bounds), 42)];
@@ -356,6 +370,7 @@
         self.isLoadingData = NO;
         self.hasValidateData = NO;
         self.bottomBar.hidden = YES;
+        [self hiddenPlaceHolder];
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
     } else {
         self.hasValidateData = YES;
@@ -416,11 +431,13 @@
     if (self.segmentTitleView.selectIndex == 0) {
         self.segmentTitleView.selectIndex = 0;
     }
-    
+    __weak typeof(self)weakSelf = self;
     self.detailFlowLayout.sectionModels = sectionModels;
     [self.listAdapter performUpdatesAnimated:NO
                                       completion:^(BOOL finished) {
+        [weakSelf hiddenPlaceHolder];
     }];
+
 }
 
 
@@ -576,13 +593,14 @@
 {
     if ([TTReachability isNetworkConnected]) {
         //        if (!self.instantData) {
-        [self startLoading];
+//        [self startLoading];
         //        }
         self.isLoadingData = YES;
         [self.viewModel startLoadData];
     } else {
         //无网就显示蒙层
         //        if (!self.instantData) {
+        [self hiddenPlaceHolder];
         [self.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoNetWorkAndRefresh];
         //        }
     }

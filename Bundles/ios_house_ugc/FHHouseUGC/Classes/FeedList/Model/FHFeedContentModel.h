@@ -239,6 +239,7 @@ typedef NS_ENUM(NSUInteger, FHFeedContentStickStyle) {
 @property (nonatomic, copy , nullable) NSString *mainPageInfo;
 @property (nonatomic, copy , nullable) NSString *realtorId;
 @property (nonatomic, copy , nullable) NSString *realtorName;
+@property (nonatomic, copy , nullable) NSString *realtorPunishStatus;
 @property (nonatomic, strong,nullable) FHClueAssociateInfoModel *associateInfo; // 线索相关参数
 @property (nonatomic, copy , nullable) NSDictionary *realtorLogpb;
 @end

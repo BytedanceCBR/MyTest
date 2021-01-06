@@ -9,7 +9,8 @@
 #import "FHDetailHeaderTitleView.h"
 #import "FHVideoAndImageItemCorrectingView.h"
 #import "FHCommonDefines.h"
-#import <ByteDanceKit/NSString+BTDAdditions.h>
+#import <ByteDanceKit/ByteDanceKit.h>
+
 @interface FHDetailNewMediaHeaderView ()
 
 @property (nonatomic, strong) FHDetailHeaderTitleView *titleView;            //头图下面的标题栏
@@ -56,6 +57,7 @@
     [self addSubview:self.titleView];
 
     self.itemView = [[FHVideoAndImageItemCorrectingView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 20)];
+    self.itemView.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
     self.itemView.hidden = YES;
 
     [self addSubview:self.itemView];
@@ -115,7 +117,7 @@
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);//
-        make.width.mas_equalTo(self.scrollView.mas_width);
+        make.width.mas_equalTo(0);
         make.height.mas_equalTo(20);
     }];
 
@@ -145,6 +147,13 @@
         self.itemView.hidden = NO;
         [self setNeedsLayout];
         [self layoutIfNeeded];
+        [self.itemView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(self.itemArray.count * 44);
+        }];
+        CGRect frame = self.itemView.frame;
+        frame.size.width = self.itemArray.count * 44;
+        self.itemView.frame = frame;
+        [self.itemView setNeedsLayout];
         self.itemView.titleArray = _itemArray;
         [self.itemView selectedItem:_itemArray[0]];
     } else {

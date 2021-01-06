@@ -99,6 +99,7 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
     
     __weak typeof(self) wself = self;
     self.itemView = [[FHVideoAndImageItemCorrectingView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 20)];
+    self.itemView.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
     _itemView.hidden = YES;
     _itemView.selectedBlock = ^(NSInteger index, NSString * _Nonnull name, NSString * _Nonnull value) {
         [wself selectItem:index];
@@ -209,7 +210,7 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
         make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);//
-        make.width.mas_equalTo(self.bounds.size.width);
+        make.width.mas_equalTo(0);
         make.height.mas_equalTo(20);
     }];
     
@@ -234,7 +235,10 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
     if(index < self.itemIndexArray.count){
         NSInteger item = [self.itemIndexArray[index] integerValue] + 1;
         NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
-        [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
+        UICollectionViewLayoutAttributes *cellAttributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
+        [self.colletionView setContentOffset:CGPointMake(cellAttributes.frame.origin.x, 0) animated:NO];
+
+//        [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:NO];
         
         NSInteger curPage = (NSInteger)(_colletionView.contentOffset.x / _colletionView.frame.size.width);
         if (_medias.count > 1) {
@@ -311,7 +315,10 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
 
 - (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated {
     if ([self.colletionView numberOfSections] > indexPath.section && [self.colletionView numberOfItemsInSection:indexPath.section] > indexPath.row) {
-        [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
+        UICollectionViewLayoutAttributes *cellAttributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
+        [self.colletionView setContentOffset:CGPointMake(cellAttributes.frame.origin.x, 0) animated:animated];
+
+//        [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:scrollPosition animated:animated];
     }
 }
 
@@ -492,7 +499,9 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
         }
         if (indexPath  && !self.isShowTopImageTab) {
             //循环滚动
-            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            UICollectionViewLayoutAttributes *cellAttributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
+            [self.colletionView setContentOffset:CGPointMake(cellAttributes.frame.origin.x, 0) animated:NO];
+//            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
         
         NSInteger index = indexPath ? [self indexForIndexPath:indexPath] : (curPage - 1);
@@ -562,7 +571,10 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
         self.noDataImageView.hidden = YES;
         if (_medias.count > 1) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
-            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            UICollectionViewLayoutAttributes *cellAttributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
+            [self.colletionView setContentOffset:CGPointMake(cellAttributes.frame.origin.x, 0) animated:NO];
+
+//            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
         [self setInfoLabelText:[NSString stringWithFormat:@"%d/%lu",1,(unsigned long)_medias.count]];
     } else {
@@ -588,6 +600,13 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
     
     if(_itemArray.count > 1 && self.isShowTopImageTab == false){
         self.itemView.hidden = NO;
+        [self.itemView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.width.mas_equalTo(self.itemArray.count * 44);
+        }];
+        CGRect frame = self.itemView.frame;
+        frame.size.width = self.itemArray.count * 44;
+        self.itemView.frame = frame;
+        [self.itemView setNeedsLayout];
         self.itemView.titleArray = _itemArray;
         [self.itemView selectedItem:_itemArray[0]];
         
@@ -603,6 +622,8 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
     }else{
         self.itemView.hidden = YES;
     }
+    
+    [self.colletionView layoutIfNeeded];
     
     
 }

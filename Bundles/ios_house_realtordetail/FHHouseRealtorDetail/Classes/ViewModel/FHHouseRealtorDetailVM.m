@@ -41,6 +41,9 @@
 #import "TTURLUtils.h"
 #import "NSObject+YYModel.h"
 #import "NSDictionary+BTDAdditions.h"
+#import <ios_house_im/IMManager.h>
+#import "UIViewController+Refresh_ErrorHandler.h"
+
 #define kSegmentViewHeight 44
 @interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate,TTHorizontalPagingSegmentViewDelegate>
 
@@ -50,6 +53,7 @@
 @property (nonatomic, strong) FHHouseRealtorDetailDataModel *data;
 @property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
 @property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
+@property(nonatomic, assign) CGFloat headerViewHeight;
 @property (nonatomic, strong) NSMutableArray *subVCs;
 @property (nonatomic, strong) NSMutableArray *segmentTitles;
 @property (nonatomic, copy) NSString *currentSegmentType;
@@ -98,23 +102,25 @@
         [self updateNavBarWithAlpha:1];
         return;
     }
-    NSMutableDictionary *parmas= [NSMutableDictionary new];
-    [parmas setValue:realtorId forKey:@"realtor_id"];
+    NSMutableDictionary *params= [NSMutableDictionary new];
+    params[@"realtor_id"] = realtorId;
+    [self.viewController startLoading];
     // 详情页数据-Main
-    __weak typeof(self) wSelf = self;
-    [FHMainApi requestRealtorHomePage:parmas completion:^(FHHouseRealtorDetailModel * _Nonnull model, NSError * _Nonnull error) {
+    [FHMainApi requestRealtorHomePage:params completion:^(FHHouseRealtorDetailModel * _Nonnull model, NSError * _Nonnull error) {
         if (model && error == NULL) {
             if (model.data) {
-                wSelf.viewController.emptyView.hidden = YES;
+                self.viewController.emptyView.hidden = YES;
                 //                [wSelf updateUIWithData];
-                [wSelf processDetailData:model];
-            }else {
-                [wSelf addGoDetailLog];
-                [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [self processDetailData:model];
+            } else {
+                [self addGoDetailLog];
+                [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+                [self.viewController endLoading];
             }
-        }else {
-            [wSelf addGoDetailLog];
-            [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+        } else {
+            [self addGoDetailLog];
+            [self.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
+            [self.viewController endLoading];
         }
     }];
 }
@@ -157,6 +163,7 @@
             [dic setObject:lynxReortParams forKey:@"encoded_report_params"];
         }
         [self.viewController.headerView reloadDataWithDic:dic];
+        [self.viewController endLoading];
         if ([model.data.realtor.allKeys containsObject:@"is_preferred_realtor"]) {
             BOOL isHightScore = [model.data.realtor btd_boolValueForKey:@"is_preferred_realtor"];
             if (isHightScore) {
@@ -171,11 +178,29 @@
         }
         
         self.viewController.headerView.height = self.viewController.headerView.viewHeight;
+        self.headerViewHeight = self.viewController.headerView.viewHeight;
         if (realtorLeave) {
             [self.viewController showRealtorLeaveHeader];
             return;
         }
-        [self.viewController showBottomBar:YES];
+        
+        NSString *tips = [self.data.realtor btd_stringValueForKey:@"punish_tips"];
+        BOOL isPunish = [[self.data.realtor btd_numberValueForKey:@"punish_status" default:@(0)] boolValue];
+        BOOL isBlackmailRealtor = isPunish && tips.length > 0;
+        [self.viewController showBottomBar:!isBlackmailRealtor];
+        [self.viewController.blackmailReatorBottomBar show:isBlackmailRealtor WithHint:tips btnAction:^{
+            // 点击埋点
+            NSMutableDictionary *clickParams = [NSMutableDictionary dictionary];
+            clickParams[UT_ORIGIN_FROM] = self.tracerDict[UT_ORIGIN_FROM];
+            clickParams[UT_ENTER_FROM] = self.tracerDict[UT_ENTER_FROM];
+            clickParams[UT_PAGE_TYPE] = self.tracerDict[UT_PAGE_TYPE];
+            clickParams[UT_ELEMENT_TYPE] = @"find_other_realtor";
+            clickParams[UT_CLICK_POSITION] = @"find_other_realtor";
+            TRACK_EVENT(@"click_options",clickParams);
+            //---
+            [[IMManager shareInstance] jumpRealtorListH5PageWithUrl:self.data.redirect reportParam:clickParams];
+        }];
+        
         //初始化segment
         self.ugcTabList = model.data.ugcTabList.mutableCopy;
         FHHouseRealtorDetailRgcTabModel *models =  [[FHHouseRealtorDetailRgcTabModel alloc]init];
@@ -229,7 +254,7 @@
     if (tabListArr.count == 1) {
         self.placeHolderCellHeight = CGFLOAT_MIN;
     }else {
-         self.placeHolderCellHeight = 15;
+         self.placeHolderCellHeight = CGFLOAT_MIN;
     }
     
     if(tabListArr && tabListArr.count > 0) {
@@ -248,10 +273,11 @@
     [self.viewController.view insertSubview:self.pagingView atIndex:0];
     [self.pagingView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.right.left.equalTo(self.viewController.view);
-        if (@available(iOS 11.0, *)) {
-            make.bottom.mas_equalTo(self.viewController.view.mas_bottom).mas_offset(-[UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom -64);
-        }else {
-            make.bottom.mas_equalTo(-64);
+        if(self.viewController.blackmailReatorBottomBar.hidden == NO) {
+            make.bottom.equalTo(self.viewController.blackmailReatorBottomBar.mas_top);
+        }
+        else {
+            make.bottom.equalTo(self.viewController.bottomBar.mas_top);
         }
     }];
 }
@@ -446,16 +472,16 @@
     if ((delta + navBarH) >self.pagingView.headerViewHeight || (delta + navBarH) == self.pagingView.headerViewHeight) {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
             *titleScrollViewColorKey  = @"Background4";
-            *norColorKey = @"grey3"; //
-            *selColorKey = @"grey1";//grey1
+            *norColorKey = @"grey3";
+            *selColorKey = @"red4";
             *titleFont = [UIFont themeFontRegular:16];
             *selectedTitleFont = [UIFont themeFontSemibold:16];
         }];
     }else {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
             *titleScrollViewColorKey  = @"Background21";
-            *norColorKey = @"grey3"; //
-            *selColorKey = @"grey1";//grey1
+            *norColorKey = @"grey3";
+            *selColorKey = @"red4";
             *titleFont = [UIFont themeFontRegular:16];
             *selectedTitleFont = [UIFont themeFontSemibold:16];
         }];
@@ -497,7 +523,7 @@
             }
         }
         [self addEnterCategoryLog:position];
-        [self.pagingView scrollToIndex:toIndex withAnimation:YES];
+        [self.pagingView scrollToIndex:toIndex withAnimation:NO];
     }
 }
 

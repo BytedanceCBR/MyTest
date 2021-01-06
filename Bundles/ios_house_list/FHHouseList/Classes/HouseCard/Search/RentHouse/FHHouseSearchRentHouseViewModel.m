@@ -14,7 +14,7 @@
 #import "TTRoute.h"
 #import "FHHouseNeighborAgencyViewModel.h"
 #import "FHHouseReserveAdviserViewModel.h"
-
+#import "FHHouseCardStatusManager.h"
 
 @implementation FHHouseSearchRentHouseViewModel
 
@@ -52,6 +52,7 @@
     NSString *elementFrom = self.fh_trackModel.elementType ? : UT_BE_NULL;
     NSMutableDictionary *traceParam = @{}.mutableCopy;
     FHSearchHouseItemModel *theModel = (FHSearchHouseItemModel *)self.model;
+    [[FHHouseCardStatusManager sharedInstance] readHouseId:theModel.id withHouseType:FHHouseTypeRentHouse];
     NSString *urlStr = [NSString stringWithFormat:@"sslocal://rent_detail?house_id=%@",theModel.id];;
     if (theModel.isRecommendCell) {
         traceParam[UT_SEARCH_ID] = self.fh_trackModel.searchId ? : UT_BE_NULL;
@@ -79,6 +80,9 @@
     dict[@"biz_trace"] = theModel.bizTrace;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
+    if (self.opacityDidChange) {
+        self.opacityDidChange();
+    }
 }
 
 @end

@@ -206,7 +206,7 @@
         self.colletionView.hidden = YES;
         self.noDataImageView.hidden = NO;
         if (!_noDataImageView.image) {
-            _noDataImageView.image = [UIImage imageNamed:@"default_image"];
+            _noDataImageView.image = [UIImage imageNamed:@"default_image_detail"];
         }
     }
 }

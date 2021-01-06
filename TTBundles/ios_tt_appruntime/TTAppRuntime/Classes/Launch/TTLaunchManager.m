@@ -6,7 +6,6 @@
 //
 
 #import "TTLaunchManager.h"
-#import "TTLaunchDefine.h"
 #import <mach-o/dyld.h>
 #import <mach-o/getsect.h>
 #import "TTStartupTask.h"

@@ -20,7 +20,6 @@
 @property (strong, nonatomic) FHEncyclopediaListViewModel *viewModel;
 @property (weak, nonatomic) UITableView *mainTable;
 @property(nonatomic, copy) void(^notifyCompletionBlock)(void);
-@property(nonatomic, strong) ArticleListNotifyBarView *notifyBarView;
 @property(nonatomic, strong) NSDictionary *buryingPointDic;
 
 @end
@@ -70,11 +69,6 @@
         make.bottom.equalTo(self.view);
         make.top.equalTo(self.view).offset(10);
     }];
-    [self initNotifyBarView];
-    [self.notifyBarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self.mainTable);
-        make.height.mas_offset(32);
-    }];
     [self.mainTable triggerPullDown];
 }
 
@@ -106,38 +100,7 @@
     return _mainTable;
 }
 
-#pragma mark - show notify
 
-- (void)showNotify:(NSString *)message {
-    [self showNotify:message completion:nil];
-}
-
-- (void)showNotify:(NSString *)message completion:(void(^)())completion {
-    UIEdgeInsets inset = self.mainTable.contentInset;
-    inset.top = self.notifyBarView.height;
-    self.mainTable.contentInset = inset;
-    self.mainTable.contentOffset = CGPointMake(0, -inset.top);
-    self.notifyCompletionBlock = completion;
-    WeakSelf;
-    [self.notifyBarView showMessage:message actionButtonTitle:@"" delayHide:YES duration:1 bgButtonClickAction:nil actionButtonClickBlock:nil didHideBlock:nil willHideBlock:^(ArticleListNotifyBarView *barView, BOOL isImmediately) {
-        if(!isImmediately) {
-            [wself hideIfNeeds];
-        } else {
-            if(wself.notifyCompletionBlock) {
-                wself.notifyCompletionBlock();
-            }
-        }
-    }];
-}
-
-- (void)hideImmediately {
-    [self.notifyBarView hideImmediately];
-}
-
-- (void)initNotifyBarView {
-    self.notifyBarView = [[ArticleListNotifyBarView alloc]initWithFrame:CGRectZero];
-    [self.view addSubview:self.notifyBarView];
-}
 
 - (void)hideIfNeeds {
     [UIView animateWithDuration:0.3 animations:^{

@@ -19,7 +19,7 @@
 #import "UIView+Refresh_ErrorHandler.h"
 #import "UIViewController+NavbarItem.h"
 #import "UIViewController+NavigationBarStyle.h"
-#import "TTDeviceHelper.h"
+#import "UIDevice+BTDAdditions.h"
 #import <FHHouseBase/FHBaseTableView.h>
 
 @interface FHNeighborListViewController ()<FHHouseFilterDelegate>
@@ -31,6 +31,7 @@
 @property (nonatomic, strong) TTRouteParamObj *paramObj;
 
 @property (nonatomic, strong) UITableView *tableView;
+@property (nonatomic, strong) UIView *bottomLine;
 
 @property (nonatomic, strong) FHRefreshCustomFooter *refreshFooter;
 
@@ -136,9 +137,6 @@
     [self setupDefaultNavBar:NO];
     self.ttNeedHideBottomLine = YES;
     self.customNavBarView.seperatorLine.hidden = YES;
-    if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
-        [self.customNavBarView.seperatorLine setHidden:YES];
-    }
     CGFloat height = [FHFakeInputNavbar perferredHeight];
     
     [self.filterPanel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -181,10 +179,10 @@
     self.houseFilterViewModel = bridge;
     [bridge showBottomLine:NO];
     
-    UIView *bottomLine = [[UIView alloc] init];
-    bottomLine.backgroundColor = [UIColor themeGray6];
-    [self.filterPanel addSubview:bottomLine];
-    [bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.bottomLine = [[UIView alloc] init];
+    self.bottomLine.backgroundColor = [UIColor themeGray6];
+    [self.filterPanel addSubview:self.bottomLine];
+    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.and.right.and.bottom.mas_equalTo(0);
         make.height.mas_equalTo(0.5);
     }];
@@ -203,7 +201,7 @@
     _tableView.estimatedSectionFooterHeight = 0;
     _tableView.estimatedSectionHeaderHeight = 0;
     CGFloat bottom = 0;
-    if ([TTDeviceHelper isIPhoneXDevice]) {
+    if ([UIDevice btd_isIPhoneXSeries]) {
         bottom = 34;
     }
     CGFloat top = 0;
@@ -211,9 +209,21 @@
         top = 15;
     }
     _tableView.contentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
-    if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt) {
-        _tableView.backgroundColor = [UIColor themeGray7];
+    
+    switch (self.neighborListVCType) {
+        case FHNeighborListVCTypeRecommendCourt:
+            self.tableView.backgroundColor = [UIColor themeGray7];
+            break;
+        case FHNeighborListVCTypeErshouNearBy:
+        case FHNeighborListVCTypeNeighborErshou:
+        case FHNeighborListVCTypeErshouSameNeighbor:
+            self.tableView.backgroundColor = [UIColor themeGray7];
+            self.bottomLine.hidden = YES;
+            break;
+        default:
+            break;
     }
+    
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         [wself loadMore];

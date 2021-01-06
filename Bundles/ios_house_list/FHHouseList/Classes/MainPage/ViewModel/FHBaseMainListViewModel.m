@@ -88,6 +88,8 @@
 #import "FHHouseCardUtils.h"
 #import "FHHouseCardCellViewModelProtocol.h"
 #import "FHSuggestionDefines.h"
+#import "FHHouseCardStatusManager.h"
+#import "FHBaseMainInsetHeaderView.h"
 
 #define kPlaceCellId @"placeholder_cell_id"
 #define kSingleCellId @"single_cell_id"
@@ -121,6 +123,8 @@ extern NSString *const INSTANT_DATA_KEY;
 @property (nonatomic, strong) NSMutableDictionary *subscribeCache;
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
 
+@property (nonatomic, strong) FHBaseMainInsetHeaderViewModel *insetHeaderViewModel;
+
 @end
 
 
@@ -148,6 +152,8 @@ extern NSString *const INSTANT_DATA_KEY;
         _currentRecommendHouseDataModel = nil;
         _houseDataModel = nil;
         _startMonitorTime = [[NSDate date] timeIntervalSince1970];
+        
+        _insetHeaderViewModel = [[FHBaseMainInsetHeaderViewModel alloc] init];
 
         self.tableView = tableView;
         self.houseType = houseType;
@@ -883,7 +889,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     traceParam[@"origin_from"] = wself.originFrom;
                     traceParam[@"origin_search_id"] = wself.originSearchId;
                     traceParam[@"rank"] = @(0);
-                    if(self.houseType == FHHouseTypeNeighborhood){
+                    if([model.realtorType isEqualToString:@"4"]){
                         traceParam[@"element_type"] = @"neighborhood_expert_card";
                     }else{
                         traceParam[@"element_type"] = @"area_expert_card";
@@ -980,7 +986,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     traceParam[@"origin_from"] = wself.originFrom;
                     traceParam[@"origin_search_id"] = wself.originSearchId;
                     traceParam[@"rank"] = @(0);
-                    if(self.houseType == FHHouseTypeNeighborhood){
+                    if([model.realtorType isEqualToString:@"4"]){
                         traceParam[@"element_type"] = @"neighborhood_expert_card";
                     }else{
                         traceParam[@"element_type"] = @"area_expert_card";
@@ -1043,14 +1049,14 @@ extern NSString *const INSTANT_DATA_KEY;
             [self.houseNewTopViewModel loadFinishWithData:billboardModel];
         }
         
-        if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
-            if (!_showFilter && !hideRefreshTip) {
-                [self showNotifyMessage:refreshTip];
-            }else {
-                [self showNotifyMessage:nil];
-            }
-        }
-                
+//        if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
+//            if (!_showFilter && !hideRefreshTip) {
+//                [self showNotifyMessage:refreshTip];
+//            }else {
+//                [self showNotifyMessage:nil];
+//            }
+//        }
+//                
         if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
             [self showErrorMask:YES tip:FHEmptyMaskViewTypeNoDataForCondition enableTap:NO ];
         } else {
@@ -1157,6 +1163,7 @@ extern NSString *const INSTANT_DATA_KEY;
         NSMutableDictionary *dict = @{}.mutableCopy;
         NSMutableDictionary *tracerDict = @{}.mutableCopy;
         tracerDict[UT_ENTER_FROM] = [self categoryName] ? : @"be_null";
+        tracerDict[UT_ORIGIN_FROM] = self.tracerModel.originFrom;
         dict[@"tracer"] = tracerDict;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
         [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
@@ -1718,12 +1725,15 @@ extern NSString *const INSTANT_DATA_KEY;
 {
 //    UITableViewCell *cell = nil;
     if (_showPlaceHolder) {
+        if (self.houseType == FHHouseTypeRentHouse) {
+            FHPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:NSStringFromClass([FHPlaceHolderCell class])];
+            return cell;
+        }
         FHHomePlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:kPlaceCellId];
-        cell.topOffset = 20;
+        cell.topOffset = indexPath.row == 0 ? 10 :5;
         return cell;
     }else{
         BOOL isLastCell = NO;
-        BOOL isFirstCell = NO;
         
         NSString *identifier = @"";
         id data = nil;
@@ -1736,7 +1746,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 data = self.sugesstHouseList[indexPath.row];
             }
         }
-        isFirstCell = (indexPath.row == 0);
         if (data) {
             identifier = [self cellIdentifierForEntity:data];
         }
@@ -1749,7 +1758,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         if (identifier.length > 0) {
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
-            if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
+            if (self.houseType != FHHouseTypeRentHouse) {
                 cell.backgroundColor = [UIColor themeGray7];
             }
             
@@ -1772,13 +1781,6 @@ extern NSString *const INSTANT_DATA_KEY;
                 helperCell.cellTapAction = ^(NSString *url){
                     [wself jump2HouseFindPageWithUrl:url];
                 };
-            }
-            if ([cell isKindOfClass:[FHHouseSearchSecondHouseCell class]]) {
-                FHHouseSearchSecondHouseCell *secondCell = (FHHouseSearchSecondHouseCell *)cell;
-                [secondCell updateHeightByIsFirst:isFirstCell];
-            } else if ([cell isKindOfClass:[FHHouseSearchNewHouseCell class]]) {
-                FHHouseSearchNewHouseCell *newCell = (FHHouseSearchNewHouseCell *)cell;
-                [newCell updateHeightByIsFirst:isFirstCell];
             }
             if ([cell isKindOfClass:[FHDynamicLynxCell class]]) {
                 FHDynamicLynxCellModel *cellModel = data;
@@ -1836,15 +1838,27 @@ extern NSString *const INSTANT_DATA_KEY;
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return CGFLOAT_MIN;
+    if (section == 0 && !_showPlaceHolder) {
+        return FHHouseListInsetTop;
+    } else {
+        return CGFLOAT_MIN;
+    }
+}
+
+- (nullable UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    return [[UIView alloc] init];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (_showPlaceHolder) {
-        return 88;
+        if (self.houseType == FHHouseTypeRentHouse) {
+            return 88;
+        }else {
+            return indexPath.row == 0?129:124;
+        }
+
     }
-    BOOL isFirstCell = NO;
     BOOL isLastCell = NO;
     id data = nil;
     if (indexPath.section == 0) {
@@ -1853,18 +1867,12 @@ extern NSString *const INSTANT_DATA_KEY;
             if (indexPath.row == self.houseList.count - 1) {
                 isLastCell = YES;
             }
-            if (indexPath.row == 0) {
-                isFirstCell = YES;
-            }
         }
     } else {
         if (indexPath.row < self.sugesstHouseList.count) {
             data = self.sugesstHouseList[indexPath.row];
             if (indexPath.row == self.sugesstHouseList.count - 1) {
                 isLastCell = YES;
-            }
-            if (indexPath.row == 0) {
-                isFirstCell = YES;
             }
         }
     }
@@ -1873,18 +1881,6 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
             FHSearchHouseItemModel *item = (FHSearchHouseItemModel *)data;
             item.isLastCell = isLastCell;
-            if ((item.houseType.integerValue == FHHouseTypeRentHouse || item.houseType.integerValue == FHHouseTypeNeighborhood) && isFirstCell) {
-                item.topMargin = 10;
-            }else {
-                item.topMargin = 0;
-            }
-            if (self.houseType == FHHouseTypeNewHouse || self.houseType == FHHouseTypeSecondHandHouse) {
-                if (isFirstCell) {
-                    item.topMargin = 5;
-                } else {
-                    item.topMargin = 0;
-                }
-            }
             data = item;
         }
         if ([[cellClass class]respondsToSelector:@selector(heightForData:)]) {
@@ -1970,7 +1966,14 @@ extern NSString *const INSTANT_DATA_KEY;
     if([cellModel isKindOfClass:[FHHouseReserveAdviserModel class]] || [cellModel isKindOfClass:[FHHouseNeighborAgencyModel class]]){
         return;
     }
-    
+    if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
+        FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
+        [[FHHouseCardStatusManager sharedInstance] readHouseId:model.id withHouseType:[model.houseType integerValue]];
+    }
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)]) {
+        [((id<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData:cellModel];
+    }
     [self showHouseDetail:cellModel atIndexPath:indexPath];
     if ([cellModel isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)cellModel;
@@ -2027,70 +2030,70 @@ extern NSString *const INSTANT_DATA_KEY;
     }
 }
 
--(void)showNotifyMessage:(NSString *)message
-{
-    self.animateShowNotify = YES;
-    __weak typeof(self) wself = self;
-    CGFloat height =  [_topView showNotify:message willCompletion:^{
-        wself.tableView.scrollEnabled = NO;
-        [UIView animateWithDuration:0.3 animations:^{
-            
-            [wself configNotifyInfo:[wself.topView filterBottom] isShow:NO];
-            
-        } completion:^(BOOL finished) {
-            wself.tableView.scrollEnabled = YES;
-            if (wself.showNotifyDoneBlock) {
-                wself.showNotifyDoneBlock();
-                wself.showNotifyDoneBlock = nil;
-            }
-            wself.animateShowNotify = NO;
-        }];
-    }];
-    
-    [self configNotifyInfo:height isShow:YES];
-    
-}
-
--(void)configNotifyInfo:(CGFloat)topViewHeight isShow:(BOOL)isShow
-{
-    UIEdgeInsets insets = self.tableView.contentInset;
-    BOOL isTop = (fabs(self.tableView.contentOffset.y) < 0.1) || fabs(self.tableView.contentOffset.y + self.tableView.contentInset.top) < 0.1; //首次进入情况
-    insets.top = topViewHeight;
-    self.tableView.contentInset = insets;
-    _topView.frame = CGRectMake(0, -topViewHeight, _topView.width, topViewHeight);
-    
-    if (isShow) {
-        if (isTop) {
-            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
-        }else{
-            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
-        }
-    }else{
-        if (isTop) {
-            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
-        } else {
-            if (self.tableView.contentOffset.y >= -[self.topView filterBottom]) {
-                if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
-                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
-                } else if (self.tableView.contentOffset.y < self.tableView.height){
-                    
-                    if (!self.tableView.isDragging || (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight))) {
-                        //小于一屏再进行设置
-                        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
-                        
-                    } 
-                }
-            }
-        }
-    }
-    
-    if (_topView.superview == self.topContainerView) {
-        self.topView.top = -[self.topView filterTop];
-        [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
-        }];
-    }
-}
+//-(void)showNotifyMessage:(NSString *)message
+//{
+//    self.animateShowNotify = YES;
+//    __weak typeof(self) wself = self;
+//    CGFloat height =  [_topView showNotify:message willCompletion:^{
+//        wself.tableView.scrollEnabled = NO;
+//        [UIView animateWithDuration:0.3 animations:^{
+//
+//            [wself configNotifyInfo:[wself.topView filterBottom] isShow:NO];
+//
+//        } completion:^(BOOL finished) {
+//            wself.tableView.scrollEnabled = YES;
+//            if (wself.showNotifyDoneBlock) {
+//                wself.showNotifyDoneBlock();
+//                wself.showNotifyDoneBlock = nil;
+//            }
+//            wself.animateShowNotify = NO;
+//        }];
+//    }];
+//
+//    [self configNotifyInfo:height isShow:YES];
+//
+//}
+//
+//-(void)configNotifyInfo:(CGFloat)topViewHeight isShow:(BOOL)isShow
+//{
+//    UIEdgeInsets insets = self.tableView.contentInset;
+//    BOOL isTop = (fabs(self.tableView.contentOffset.y) < 0.1) || fabs(self.tableView.contentOffset.y + self.tableView.contentInset.top) < 0.1; //首次进入情况
+//    insets.top = topViewHeight;
+//    self.tableView.contentInset = insets;
+//    _topView.frame = CGRectMake(0, -topViewHeight, _topView.width, topViewHeight);
+//
+//    if (isShow) {
+//        if (isTop) {
+//            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
+//        }else{
+//            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+//        }
+//    }else{
+//        if (isTop) {
+//            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
+//        } else {
+//            if (self.tableView.contentOffset.y >= -[self.topView filterBottom]) {
+//                if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
+//                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
+//                } else if (self.tableView.contentOffset.y < self.tableView.height){
+//
+//                    if (!self.tableView.isDragging || (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight))) {
+//                        //小于一屏再进行设置
+//                        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
+//
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    if (_topView.superview == self.topContainerView) {
+//        self.topView.top = -[self.topView filterTop];
+//        [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
+//            make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
+//        }];
+//    }
+//}
 
 
 #pragma mark - goto detail
@@ -2554,7 +2557,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [self addLeadShowLog:agencyCM];
         tracerDict[@"page_type"] = [self pageTypeString];
         tracerDict[@"card_type"] = @"left_pic";
-        if(self.houseType == FHHouseTypeNeighborhood){
+        if([agencyCM.realtorType isEqualToString:@"4"]){
             tracerDict[@"element_type"] = @"neighborhood_expert_card";
             tracerDict[@"house_type"] = @"neighborhood";
         }else{
@@ -2576,7 +2579,7 @@ extern NSString *const INSTANT_DATA_KEY;
             tracerDict[@"page_type"] = [self pageTypeString];
             tracerDict[@"enter_from"] = self.tracerModel.enterFrom ? : @"be_null";
             tracerDict[@"element_from"] = self.tracerModel.elementFrom ? : @"be_null";
-            if(self.houseType == FHHouseTypeNeighborhood){
+            if([cm.realtorType isEqualToString:@"4"]){
                 tracerDict[@"element_type"] = @"neighborhood_expert_card";
             }else{
                 tracerDict[@"element_type"] = @"area_expert_card";
@@ -2633,7 +2636,7 @@ extern NSString *const INSTANT_DATA_KEY;
     tracerDict[@"is_online"] = cellModel.contactModel.unregistered ? @(0) : @(1);
     tracerDict[@"realtor_id"] = cellModel.id;
     
-    if(self.houseType == FHHouseTypeNeighborhood){
+    if([cellModel.realtorType isEqualToString:@"4"]){
         tracerDict[@"element_type"] = @"neighborhood_expert_card";
         tracerDict[@"realtor_position"] = @"neighborhood_expert_card";
         tracerDict[@"house_type"] = @"neighborhood";
@@ -2858,8 +2861,14 @@ extern NSString *const INSTANT_DATA_KEY;
 #pragma mark - FHHouseTableViewDataSource
 - (NSArray<NSArray<id<FHHouseNewComponentViewModelProtocol>> *> *)fhHouse_dataList {
     if (self.showPlaceHolder) {
-        NSArray *placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle2 count:10];
-        return @[placeholderViewModels];
+        if (self.houseType == FHHouseTypeRentHouse) {
+            NSArray *placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle1 count:10];
+            return @[placeholderViewModels];
+        }else {
+            NSArray *placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle2 count:10];
+            return @[placeholderViewModels];
+        }
+
     }
     
     return @[self.houseList.count ? self.houseList : @[],
@@ -2869,6 +2878,18 @@ extern NSString *const INSTANT_DATA_KEY;
 
 - (NSDictionary<NSString *, NSString *> *)fhHouse_supportCellStyles {
     return [FHHouseCardUtils supportCellStyleMap];
+}
+
+- (NSArray<id<FHHouseNewComponentViewModelProtocol>> *)fhHouse_headerList {
+    if (self.showPlaceHolder) {
+        return @[];
+    }
+    
+    return @[_insetHeaderViewModel];
+}
+
+- (NSDictionary<NSString *,NSString *> *)fhHouse_supportHeaderStyles {
+    return @{@"FHBaseMainInsetHeaderViewModel": @"FHBaseMainInsetHeaderView"};
 }
 
 #pragma mark - FHHouseReserveAdviserViewModelDelegate

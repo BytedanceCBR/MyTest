@@ -94,6 +94,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
                 [wSelf requestRelatedData:neighborhoodId];
                 wSelf.contactViewModel.imShareInfo = model.data.imShareInfo;
             } else {
+                [self.detailController hiddenPlaceHolder];
                 wSelf.detailController.isLoadingData = NO;
                 wSelf.detailController.hasValidateData = NO;
                 wSelf.bottomBar.hidden = YES;
@@ -101,6 +102,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
                 [wSelf addDetailRequestFailedLog:model.status.integerValue message:@"empty"];
             }
         } else {
+            [self.detailController hiddenPlaceHolder];
 //            if (wSelf.detailController.instantData) {
 //                SHOW_TOAST(@"请求失败");
 //            }else{
@@ -367,7 +369,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }else{
         [self reloadData];
     }
-    
+    [self.detailController hiddenPlaceHolder];
     [self.detailController updateLayout:model.isInstantData];
  
 }

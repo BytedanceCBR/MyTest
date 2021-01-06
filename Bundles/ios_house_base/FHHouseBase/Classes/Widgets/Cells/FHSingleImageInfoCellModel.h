@@ -45,6 +45,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList withInset:(UIEdgeInsets)inset withMaxWidth:(CGFloat)maxWidth;
 
++ (NSAttributedString *)tagsStringWithTagList:(NSArray<FHHouseTagsModel *> *)tagList withInset:(UIEdgeInsets)inset withMaxWidth:(CGFloat)maxWidth withOpacity:(CGFloat)opacity;
+
 + (NSAttributedString *)tagsStringSmallImageWithTagList:(NSArray<FHHouseTagsModel *> *)tagList;
 
 + (NSAttributedString *)createTagAttrString:(NSString *)text textColor:(UIColor *)textColor backgroundColor:(UIColor *)backgroundColor;

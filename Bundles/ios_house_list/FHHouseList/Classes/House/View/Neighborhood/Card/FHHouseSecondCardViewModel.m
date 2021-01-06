@@ -22,6 +22,8 @@
 #import "FHHouseBridgeManager.h"
 #import "FHHouseNeighborAgencyViewModel.h"
 #import "FHHouseReserveAdviserViewModel.h"
+#import "FHHouseCardStatusManager.h"
+#import "NSString+BTDAdditions.h"
 
 @interface FHHouseSecondCardViewModel()
 
@@ -36,6 +38,8 @@
 @property (nonatomic, strong) NSArray<FHHouseTagsModel *> *tagList;
 
 @property (nonatomic, assign) BOOL hasVr;
+
+@property (nonatomic, copy) NSString *houseId;
 
 @end
 
@@ -57,6 +61,7 @@
             self.subtitle = item.displaySubtitle;
             self.tagList = item.tags;
             self.hasVr = item.vrInfo.hasVr;
+            self.houseId = item.id;
         } else if ([model isKindOfClass:[FHHouseListBaseItemModel class]]) {
             FHHouseListBaseItemModel *item = (FHHouseListBaseItemModel *)model;
             _recommendViewModel = [[FHHouseRecommendViewModel alloc] initWithModel:item.advantageDescription];
@@ -66,6 +71,7 @@
             self.subtitle = item.displaySubtitle;
             self.tagList = item.tags;
             self.hasVr = item.vrInfo.hasVr;
+            self.houseId = item.id;
         } else if ([model isKindOfClass:[FHSearchHouseDataItemsModel class]]) {
             FHSearchHouseDataItemsModel *item = (FHSearchHouseDataItemsModel *)model;
             _recommendViewModel = [[FHHouseRecommendViewModel alloc] initWithModel:item.advantageDescription];
@@ -75,6 +81,7 @@
             self.subtitle = item.displaySubtitle;
             self.tagList = item.tags;
             self.hasVr = item.vrInfo.hasVr;
+            self.houseId = item.hid;
         }
 
     }
@@ -86,9 +93,9 @@
         return;
     }
     FHHouseTagsModel *element = [self.tagList[0] copy];
-    CGSize textSize =  [element.content sizeWithFont:font constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
+    CGFloat width = [element.content btd_widthWithFont:font height:14];
     NSString *resultString;
-    if (textSize.width > self.tagListMaxWidth) {
+    if (width > self.tagListMaxWidth) {
         NSString *preString;
         NSArray *paramsArrary = [element.content componentsSeparatedByString:@" · "];
         for (int i = 0; i < paramsArrary.count; i ++) {
@@ -98,8 +105,8 @@
             } else {
                 preString = tagStr;
             }
-            CGSize tagSize =  [preString sizeWithFont: font constrainedToSize:CGSizeMake(CGFLOAT_MAX, 14) lineBreakMode:NSLineBreakByWordWrapping];
-            if (tagSize.width > self.tagListMaxWidth) {
+            width =  [preString btd_widthWithFont:font height:14];
+            if (width > self.tagListMaxWidth) {
                 break;
             }
             resultString = preString;
@@ -111,8 +118,18 @@
     self.tagList = @[element];
 }
 
+
+- (CGFloat)opacity {
+    CGFloat opacity = 1;
+    if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:self.houseId withHouseType:FHHouseTypeSecondHandHouse]) {
+        opacity = FHHouseCardReadOpacity;
+    }
+    return opacity;
+}
+
 - (void)clickCardAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.model isKindOfClass:[FHSearchHouseItemModel class]]) {
+        [[FHHouseCardStatusManager sharedInstance] readHouseId:self.houseId withHouseType:FHHouseTypeSecondHandHouse];
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)self.model;
         NSNumber *houseTypeNum = [self.context btd_numberValueForKey:@"house_type"];
         NSString *urlStr = nil;
@@ -157,6 +174,9 @@
             [[TTRoute sharedRoute] openURLByPushViewController:url userInfo:userInfo];
         }
         [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
+        if (self.opacityDidChange) {
+            self.opacityDidChange();
+        }
     }
 }
 

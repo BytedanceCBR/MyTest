@@ -11,6 +11,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseRecommendView : FHHouseNewComponentView
 
+- (void)refreshOpacity:(CGFloat)opacity;
+
 @end
 
 NS_ASSUME_NONNULL_END
