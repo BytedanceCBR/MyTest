@@ -15,7 +15,7 @@
 @property(nonatomic, strong )NSMutableDictionary *params;
 @property(nonatomic, strong )UIButton *button;
 @property(nonatomic, strong )NSURL *backUrl;
-@property(nonatomic, strong )UIWindow *window;
+@property(nonatomic, strong )UIViewController *vc;
 @property(nonatomic, strong )NSMutableDictionary *tracerDic ;
 
 @end
@@ -33,7 +33,7 @@
     return manager;
 }
 
-- (void)setButtonWithUrl:(NSURL *)url WithWindow:(UIWindow *)window{
+- (void)setButtonWithUrl:(NSURL *)url{
     
     self.params = [url btd_queryItemsWithDecoding].mutableCopy;
     
@@ -45,11 +45,10 @@
         self.params[@"btn_name"] = [self getbtnNameWithUrl:[self.params.copy btd_stringValueForKey:@"backurl" default:@""]];
     }
     
-    self.window = window;
     self.backUrl = backUrl;
-    
+    self.vc = [self activeVC];
     NSString *title = [NSString stringWithFormat:@"返回%@ ",[self.params.copy btd_stringValueForKey:@"btn_name" default:@""]];
-    self.button.frame = CGRectMake(0, window.bounds.size.height/3, (title.length) * 12 + 8, 21);
+    self.button.frame = CGRectMake(0, self.vc.view.bounds.size.height/3, (title.length) * 12 + 8, 21);
     [self.button setImage:[UIImage themedImageNamed:@"arrow_down_black_line"] forState:UIControlStateNormal];
     self.button.backgroundColor = [UIColor colorWithRed:0 / 255.0 green:0 / 255.0 blue:0 / 255.0 alpha:0.3];
     [self.button setTitle:title forState:UIControlStateNormal];
@@ -57,7 +56,7 @@
     self.button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:12];
     [self.button addTarget: self action: @selector(liveApp) forControlEvents: UIControlEventTouchDown];
     [self setmask];
-    [window addSubview:self.button];
+    [[self activeVC].view addSubview:self.button];
     
     self.tracerDic = [[self.params btd_stringValueForKey:@"ext_growth"] btd_jsonDictionary].mutableCopy;
     self.tracerDic[@"button_name"] = @"click_position";
@@ -68,7 +67,6 @@
 - (UIButton *)button{
     if(!_button){
         _button = [[UIButton alloc ] init];
-        self.button.tag = 20210106;
     }
     return _button;
 }
@@ -83,8 +81,9 @@
     
     self.button.layer.mask = maskLayer;
 }
+
 - (void)liveApp{
-    [[self.window viewWithTag:20210106] removeFromSuperview];
+    [self.button removeFromSuperview];
     self.tracerDic[@"click_position"] = @"click_position";
     [self.tracerDic removeObjectForKey:@"button_name"];
     [FHUserTracker writeEvent:@"click_options" params:self.tracerDic];
@@ -108,6 +107,37 @@
         return @"火山小视频";
     }else{
         return  @"";
+    }
+}
+
+//获取当前屏幕显示的 View Controller
+- (UIViewController *)activeVC
+{
+    UIWindow * window   = [[UIApplication sharedApplication] keyWindow];
+    if (window.windowLevel != UIWindowLevelNormal) {
+        NSArray *windows = [[UIApplication sharedApplication] windows];
+        for(UIWindow * tmpWin in windows) {
+            if (tmpWin.windowLevel == UIWindowLevelNormal) {
+                window = tmpWin;
+                break;
+            }
+        }
+    }
+    return [self nextTopForViewController:window.rootViewController];
+}
+
+- (UIViewController *)nextTopForViewController:(UIViewController *)inViewController {
+    while (inViewController.presentedViewController) {
+        inViewController = inViewController.presentedViewController;
+    }
+    if ([inViewController isKindOfClass:[UITabBarController class]]) {
+        UIViewController *selectedVC = [self nextTopForViewController:((UITabBarController *)inViewController).selectedViewController];
+        return selectedVC;
+    } else if ([inViewController isKindOfClass:[UINavigationController class]]) {
+        UIViewController *selectedVC = [self nextTopForViewController:((UINavigationController *)inViewController).visibleViewController];
+        return selectedVC;
+    } else {
+        return inViewController;
     }
 }
 

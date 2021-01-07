@@ -18,7 +18,6 @@
 #import "TTAppLogStartupTask.h"
 #import "revision.h"
 #import "HMDLaunchTracingTracker.h"
-#import "FHOneTouchBackManager.h"
 
 #define APPSEE_ENABLE 0
 
@@ -124,11 +123,6 @@ extern NSString *const kTTAppseeEnableKey;
 - (void) applicationWillEnterForeground:(UIApplication *)application {
     [[TTLaunchTracer shareInstance] willEnterForeground];
     [super applicationWillEnterForeground:application];
-}
-
-- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options{
-    [[FHOneTouchBackManager sharedInstance] setButtonWithUrl:url WithWindow:self.window];
-    return NO;
 }
 
 @end

@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
-- (void)setButtonWithUrl:(NSURL *)url WithWindow:(UIWindow *)window;
+- (void)setButtonWithUrl:(NSURL *)url;
 
 @end
 
