@@ -206,6 +206,9 @@
 		B373CF022174587A008F9905 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48C000AF16F7426D00FC365B /* AssetsLibrary.framework */; };
 		B388CB272142652A00653188 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E32142652800653188 /* Assets.xcassets */; };
 		B388CB292142652A00653188 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B388C9E52142652800653188 /* LaunchScreen.storyboard */; };
+		D34EC53825A766DD00CA7FEC /* FHLarkSSO.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34EC53725A766DD00CA7FEC /* FHLarkSSO.swift */; };
+		D34EC53925A766DD00CA7FEC /* FHLarkSSO.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34EC53725A766DD00CA7FEC /* FHLarkSSO.swift */; };
+		D34EC53A25A7674500CA7FEC /* FHMonkeyConfigManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B12857C2574D47700EAF2D8 /* FHMonkeyConfigManager.m */; };
 		D37495E023965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */; };
 		D37495E123965409006D44D2 /* gaode_house_detail_style_extra.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */; };
 		D37495E223965409006D44D2 /* gaode_house_detail_style.data in Resources */ = {isa = PBXBuildFile; fileRef = D37495DF23965409006D44D2 /* gaode_house_detail_style.data */; };
@@ -214,11 +217,11 @@
 		D45F59FD2458039F00A14982 /* LynxLocalChannels in Resources */ = {isa = PBXBuildFile; fileRef = D45F59FB2458039E00A14982 /* LynxLocalChannels */; };
 		D48E93C1233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
 		D48E93C2233CF142005A42CD /* VRImageLoading.json in Resources */ = {isa = PBXBuildFile; fileRef = D48E93C0233CF142005A42CD /* VRImageLoading.json */; };
+		D4A37AE925654D14002B01F5 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4A37AE825654D14002B01F5 /* SafariServices.framework */; };
+		D4A37AEA25654D21002B01F5 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4A37AE825654D14002B01F5 /* SafariServices.framework */; };
 		D751169F257CC6AD00A5E084 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D751169E257CC6AD00A5E084 /* AppTrackingTransparency.framework */; };
 		D75116A0257CC6BC00A5E084 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D751169E257CC6AD00A5E084 /* AppTrackingTransparency.framework */; };
 		D75116A1257CC6CC00A5E084 /* AppTrackingTransparency.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D751169E257CC6AD00A5E084 /* AppTrackingTransparency.framework */; };
-		D4A37AE925654D14002B01F5 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4A37AE825654D14002B01F5 /* SafariServices.framework */; };
-		D4A37AEA25654D21002B01F5 /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4A37AE825654D14002B01F5 /* SafariServices.framework */; };
 		F85629476F410FEDF98AB2BA /* libPods-serviceNofExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8F614528BFD84403C72AE68 /* libPods-serviceNofExtension.a */; };
 		FB6C55CF23ACD41800651456 /* firework.json in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55CA23ACD41700651456 /* firework.json */; };
 		FB6C55D023ACD41800651456 /* firework.json in Resources */ = {isa = PBXBuildFile; fileRef = FB6C55CA23ACD41700651456 /* firework.json */; };
@@ -497,18 +500,19 @@
 		B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTUIWidgetResources.bundle; sourceTree = "<group>"; };
 		B373CF102174587A008F9905 /* f100.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = f100.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B388C9E32142652800653188 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		B388C9E42142652800653188 /* Bubble-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Bubble-Bridging-Header.h"; sourceTree = "<group>"; };
+		B388C9E42142652800653188 /* Article-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Article-Bridging-Header.h"; sourceTree = "<group>"; };
 		B388C9E62142652800653188 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D013795E1DFE8BEF0020C6BD /* libresolv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libresolv.tbd; path = usr/lib/libresolv.tbd; sourceTree = SDKROOT; };
 		D08BFBDA1B8729AA00E6D9A1 /* FrameworkResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = FrameworkResource.xcassets; sourceTree = "<group>"; };
 		D08BFBDF1B8729B800E6D9A1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		D0A4FC4E1B897287000240C6 /* CommonResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CommonResource.xcassets; sourceTree = "<group>"; };
+		D34EC53725A766DD00CA7FEC /* FHLarkSSO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FHLarkSSO.swift; sourceTree = "<group>"; };
 		D37495DE23965409006D44D2 /* gaode_house_detail_style_extra.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_house_detail_style_extra.data; sourceTree = "<group>"; };
 		D37495DF23965409006D44D2 /* gaode_house_detail_style.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = gaode_house_detail_style.data; sourceTree = "<group>"; };
 		D45F59FB2458039E00A14982 /* LynxLocalChannels */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LynxLocalChannels; sourceTree = "<group>"; };
 		D48E93C0233CF142005A42CD /* VRImageLoading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VRImageLoading.json; sourceTree = "<group>"; };
-		D751169E257CC6AD00A5E084 /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
 		D4A37AE825654D14002B01F5 /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
+		D751169E257CC6AD00A5E084 /* AppTrackingTransparency.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppTrackingTransparency.framework; path = System/Library/Frameworks/AppTrackingTransparency.framework; sourceTree = SDKROOT; };
 		D97EB6AF1E1CA04200EE4473 /* VideoResource.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = VideoResource.xcassets; sourceTree = "<group>"; };
 		E34D4345B7726A4914383123 /* Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-com.f100.client.FHNotificationServiceExtension/Pods-com.f100.client.FHNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		E8F614528BFD84403C72AE68 /* libPods-serviceNofExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-serviceNofExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -695,6 +699,7 @@
 			children = (
 				2B12857D2574D47700EAF2D8 /* FHMonkeyConfigManager.h */,
 				2B12857C2574D47700EAF2D8 /* FHMonkeyConfigManager.m */,
+				D34EC53725A766DD00CA7FEC /* FHLarkSSO.swift */,
 			);
 			path = Monkey;
 			sourceTree = "<group>";
@@ -964,7 +969,7 @@
 				3DB7A72D21A4136D00B4D017 /* BubbleImages.xcassets */,
 				B362E6F621539E0C00BD4DF1 /* TTUIWidgetResources.bundle */,
 				B388C9E32142652800653188 /* Assets.xcassets */,
-				B388C9E42142652800653188 /* Bubble-Bridging-Header.h */,
+				B388C9E42142652800653188 /* Article-Bridging-Header.h */,
 				B388C9E52142652800653188 /* LaunchScreen.storyboard */,
 			);
 			path = Bubble;
@@ -1855,6 +1860,8 @@
 				2D1B0A92256A8EE9006091A2 /* AppDelegate.m in Sources */,
 				2D1B0A93256A8EE9006091A2 /* main.m in Sources */,
 				2D1B0A94256A8EE9006091A2 /* TTNotificationServiceExtensionBase.m in Sources */,
+				D34EC53A25A7674500CA7FEC /* FHMonkeyConfigManager.m in Sources */,
+				D34EC53925A766DD00CA7FEC /* FHLarkSSO.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1891,6 +1898,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B12857E2574D47700EAF2D8 /* FHMonkeyConfigManager.m in Sources */,
+				D34EC53825A766DD00CA7FEC /* FHLarkSSO.swift in Sources */,
 				3D2F39A12270546B00AE567D /* AppDelegate.m in Sources */,
 				3D2F39A52270547F00AE567D /* main.m in Sources */,
 				3D97BE7E226D753E0063C39A /* TTNotificationServiceExtensionBase.m in Sources */,
@@ -2026,7 +2034,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				PROVISIONING_PROFILE_SPECIFIER = f100_inhouse_dev;
 				SEPARATE_STRIP = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Bubble/Article-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2124,7 +2132,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.fp1_InHouse;
 				SEPARATE_STRIP = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Bubble/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
@@ -2517,7 +2525,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				PROVISIONING_PROFILE_SPECIFIER = f100.dev;
 				SEPARATE_STRIP = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Bubble/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
@@ -2611,7 +2619,7 @@
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = f100.dist;
 				SEPARATE_STRIP = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Bubble/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "$(ARCHS_STANDARD)";
@@ -2701,7 +2709,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				PROVISIONING_PROFILE_SPECIFIER = f100_inhouse_dev;
 				SEPARATE_STRIP = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Bubble/Article-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2799,7 +2807,7 @@
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				PROVISIONING_PROFILE_SPECIFIER = com.bytedance.fp1_InHouse;
 				SEPARATE_STRIP = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Article-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/Bubble/Article-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALID_ARCHS = "$(ARCHS_STANDARD)";

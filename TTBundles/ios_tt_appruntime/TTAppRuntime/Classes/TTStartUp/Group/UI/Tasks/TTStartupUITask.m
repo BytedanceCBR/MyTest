@@ -27,7 +27,6 @@
 #import "SSCommonLogic.h"
 
 #import "TTLaunchDefine.h"
-#import "BDSSOAuthManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import "TTSandBoxHelper.h"
 #import "FHUtils.h"
@@ -41,6 +40,10 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 - (NSString *)taskIdentifier {
     return @"UI";
+}
+
+- (BOOL)isResident {
+    return YES;
 }
 
 - (void)startWithApplication:(UIApplication *)application options:(NSDictionary *)launchOptions {
@@ -108,42 +111,19 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 + (void)setPhoneLaunchViewController
 {
-    __block void(^ssoBlock)() = ^{
-        [self setRootViewControllerWithStoryboardName:@"RootTab"];
-    };    
-// 采用条件宏，只在内测版，非 DEBUG，非模拟器条件下，要求通过 SSO 认证
-#if INHOUSE && !DEBUG && !TARGET_IPHONE_SIMULATOR
-    // 内测版要求通过 SSO 认证 @shengxuanwei
-    BOOL ssoEnabled = [[[NSBundle mainBundle] infoDictionary] tt_boolValueForKey:@"SSO_ENABLED"];
-    if (ssoEnabled) { // Info.plist 开关，用于自动化测试绕过 SSO 认证
-        Class c = NSClassFromString(@"BDSSOAuthManager");
-        if (c) {
-            id instance = [c sharedInstance];
-            SEL sel = NSSelectorFromString(@"requestSSOAuthExceptIntranet:completionHandler:");
-            NSMethodSignature *sig = [c instanceMethodSignatureForSelector:sel];
-            ssoBlock = [ssoBlock copy];
-            BOOL exceptIntranet = YES;
-            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:sig];
-            [invocation setArgument:(void *)&exceptIntranet atIndex:2];
-            [invocation setArgument:(void *)&ssoBlock atIndex:3];
-            [invocation retainArguments];
-            invocation.selector = sel;
-            [invocation invokeWithTarget:instance];
-        }
+    if ([self respondsToSelector:@selector(checkLarkSSOIfNeeded)]) {
+        [self performSelector:@selector(checkLarkSSOIfNeeded)];
     } else {
-        ssoBlock();
+        [self setRootViewControllerWithStoryboard];
     }
-#else
-    ssoBlock();
-#endif
 }
 
-+ (void)setRootViewControllerWithStoryboardName:(NSString *)name {
++ (void)setRootViewControllerWithStoryboard {
     // TTTabBarController还是先用storyBoard加载，否则tabBar上出飘新提示的时第三个Tab上面容易出现小灰条的问题
     if([SSCommonLogic isFHNewLaunchOptimizeEnabled]) {
         SharedAppDelegate.window.rootViewController = [[TTArticleTabBarController alloc] init];
     } else {
-        SharedAppDelegate.window.rootViewController = [[UIStoryboard storyboardWithName:name bundle:nil] instantiateInitialViewController];
+        SharedAppDelegate.window.rootViewController = [[UIStoryboard storyboardWithName:@"RootTab" bundle:nil] instantiateInitialViewController];
     }
     [SharedAppDelegate.window makeKeyAndVisible];
     [[FHEnvContext sharedInstance] onStartApp];
