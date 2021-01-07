@@ -558,6 +558,7 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self writeButtonClickLog];
     [BDTrackerProtocol event:@"update_detail" label:@"reply_replier_content"];
     TTMomentDetailAction *action = [TTMomentDetailAction actionWithType:TTMomentDetailActionTypePublishComment comment:nil];
     action.source = TTMomentDetailActionSourceTypeComment;
@@ -816,8 +817,17 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     [self.store dispatch:action];
 }
 
+- (void)writeButtonClickLog {
+     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.extraDic];
+    dict[@"click_position"] = @"reply";
+    dict[@"is_reply"] = @(1);
+     TRACK_EVENT(@"click_comment", dict);
+ }
+
+
 - (void)toolbarWriteButtonOnClicked:(id)sender {
     BOOL switchToEmojiInput = (sender == self.toolbarView.emojiButton);
+    [self writeButtonClickLog];
     if (switchToEmojiInput) {
         [TTTrackerWrapper eventV3:@"emoticon_click" params:@{
             @"status" : @"no_keyboard",
