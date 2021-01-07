@@ -38,7 +38,6 @@
     BOOL isLastCell = NO;
     if([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
-        //isLastCell = model.isLastCell;
         CGFloat reasonHeight = [model showRecommendReason] ? [self recommendReasonHeight] : 0;
         return (isLastCell ? 108 : 88) + reasonHeight;
     }
@@ -67,7 +66,6 @@
     CGFloat opacity = 1;
     if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
         opacity = [FHEnvContext FHHouseCardReadOpacity];
-        //FHHouseCardReadOpacity;
     }
     self.mainTitleLabel.layer.opacity = opacity;
     self.subTitleLabel.layer.opacity = opacity;
@@ -158,6 +156,20 @@
         _distanceLabel.textAlignment = NSTextAlignmentLeft;
     }
     return _distanceLabel;
+}
+
+#pragma mark - FHHouseCardTouchAnimationProtocol
+
+- (void)shrinkWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.contentView.transform = CGAffineTransformMakeScale(FHHouseCardShrinkRate, FHHouseCardShrinkRate);
+    }];
+}
+
+- (void)restoreWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.contentView.transform = CGAffineTransformMakeScale(1, 1);
+    }];
 }
 
 @end
