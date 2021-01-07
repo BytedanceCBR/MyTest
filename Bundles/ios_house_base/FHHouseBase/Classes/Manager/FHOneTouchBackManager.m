@@ -52,11 +52,6 @@
     [self.button setImage:[UIImage themedImageNamed:@"arrow_down_black_line"] forState:UIControlStateNormal];
     self.button.backgroundColor = [UIColor colorWithRed:0 / 255.0 green:0 / 255.0 blue:0 / 255.0 alpha:0.3];
     [self.button setTitle:title forState:UIControlStateNormal];
-    [self.button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    self.button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:12];
-    [self.button addTarget: self action: @selector(liveApp) forControlEvents: UIControlEventTouchDown];
-    [self setmask];
-    [[self activeVC].view addSubview:self.button];
     
     self.tracerDic = [[self.params btd_stringValueForKey:@"ext_growth"] btd_jsonDictionary].mutableCopy;
     self.tracerDic[@"button_name"] = @"click_position";
@@ -67,6 +62,11 @@
 - (UIButton *)button{
     if(!_button){
         _button = [[UIButton alloc ] init];
+        [self.button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        self.button.titleLabel.font = [UIFont fontWithName:@"PingFangSC-Medium" size:12];
+        [self.button addTarget: self action: @selector(liveApp) forControlEvents: UIControlEventTouchDown];
+        [self setmask];
+        [[self activeVC].view addSubview:self.button];
     }
     return _button;
 }
