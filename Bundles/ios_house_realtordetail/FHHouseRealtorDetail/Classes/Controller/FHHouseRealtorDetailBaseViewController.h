@@ -6,6 +6,7 @@
 //
 
 #import "FHBaseViewController.h"
+#import "FHHorizontalPagingView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,6 +19,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) CGFloat placeHolderCellHeight;
 @property (strong, nonatomic) NSDictionary *realtorInfo;
 @property (copy, nonatomic) NSString *tabName;
+@property (nonatomic,weak) FHHorizontalPagingView *pageView;
 @end
 
 NS_ASSUME_NONNULL_END
