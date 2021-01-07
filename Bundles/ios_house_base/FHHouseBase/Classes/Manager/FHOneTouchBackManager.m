@@ -47,7 +47,7 @@
     
     self.backUrl = backUrl;
     self.vc = [self activeVC];
-    NSString *title = [NSString stringWithFormat:@"返回%@ ",[self.params.copy btd_stringValueForKey:@"btn_name" default:@""]];
+    NSString *title = [NSString stringWithFormat:@"%@ ",[self.params.copy btd_stringValueForKey:@"btn_name" default:@""]];
     self.button.frame = CGRectMake(0, self.vc.view.bounds.size.height/3, (title.length) * 12 + 8, 21);
     [self.button setImage:[UIImage themedImageNamed:@"arrow_down_black_line"] forState:UIControlStateNormal];
     self.button.backgroundColor = [UIColor colorWithRed:0 / 255.0 green:0 / 255.0 blue:0 / 255.0 alpha:0.3];
@@ -96,17 +96,17 @@
 
 -(NSString *)getbtnNameWithUrl:(NSString *)url{
     if([url hasPrefix:@"snssdk141://"]){
-        return @"今日头条";
+        return @"返回今日头条";
     }else if([url hasPrefix:@"snssdk35://"]){
-        return @"今日头条Lite";
+        return @"返回今日头条Lite";
     }else if([url hasPrefix:@"snssdk1128://"]){
-        return @"抖音";
+        return @"返回抖音";
     }else if([url hasPrefix:@"snssdk32://"]){
-        return @"西瓜视频";
+        return @"返回西瓜视频";
     }else if([url hasPrefix:@"snssdk1112://"]){
-        return @"火山小视频";
+        return @"返回火山小视频";
     }else{
-        return  @"";
+        return  @"返回";
     }
 }
 
