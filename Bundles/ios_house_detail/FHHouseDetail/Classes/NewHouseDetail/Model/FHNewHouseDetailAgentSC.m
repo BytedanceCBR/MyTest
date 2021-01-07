@@ -322,9 +322,7 @@
         tracerDic[@"enter_from"] = @"new_detail";
         tracerDic[@"page_type"] = @"realtor_list";
         tracerDic[@"element_from"] = @"new_detail_related";
-        tracerDic[@"search_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"search_id"] ?: @"be_null";
-        tracerDic[@"impr_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"impr_id"] ?: @"be_null";
-        tracerDic[@"group_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"group_id"] ?: @"be_null";
+
         
         [tracerDic removeObjectsForKeys:@[@"card_type",@"rank",@"origin_search_id",@"app_house_tags",@"log_pb"]];
         [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
