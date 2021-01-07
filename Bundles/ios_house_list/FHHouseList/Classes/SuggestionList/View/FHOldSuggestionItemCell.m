@@ -55,7 +55,7 @@
     }];
     [self.subTitleLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.zoneTypeView);
-        make.left.equalTo(self.titleLab.mas_right).offset(5);
+        make.left.equalTo(self.titleLab.mas_right).offset(4);
         make.right.mas_lessThanOrEqualTo(self.amountLab.mas_left).offset(-15);
     }];
     [self.regionLab mas_makeConstraints:^(MASConstraintMaker *make) {

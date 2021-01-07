@@ -203,7 +203,7 @@
     _propertyManagementLabel = [[YYLabel alloc] init];
     _propertyManagementLabel.font = [UIFont themeFontRegular:10];
     _propertyManagementLabel.textColor = [UIColor colorWithHexStr:@"#4a4139"];
-    _propertyManagementLabel.text = @"住宅";
+    _propertyManagementLabel.text = @"经济适用房";
     _propertyManagementLabel.layer.masksToBounds = YES;
     _propertyManagementLabel.layer.cornerRadius = 2;
     _propertyManagementLabel.layer.borderColor = [[UIColor colorWithHexStr:@"#4a4139"] CGColor];
@@ -262,7 +262,7 @@
     FHSuggestionResponseItemModel *model = (FHSuggestionResponseItemModel *)data;
     self.label.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontSemibold:16] UIcolor:[UIColor themeGray1] text:model.text hightLightText:model.query];
     self.subLabel.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontRegular:14] UIcolor:[UIColor themeGray3] text:model.text2?:@"" hightLightText:model.query];
-    self.oldNameLabel.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontRegular:14] UIcolor:[UIColor themeGray3] text:model.info.oldName?:@"" hightLightText:model.query];
+    self.oldNameLabel.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontRegular:14] UIcolor:[UIColor themeGray1] text:model.oldName?:@"" hightLightText:model.query];
     if(model.newtip){
         self.secondaryLabel.text = model.newtip.content;
         self.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:model.newtip.backgroundcolor];
