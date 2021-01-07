@@ -500,7 +500,7 @@
         }
         if(cellModel){
             dispatch_async(dispatch_get_main_queue(), ^{
-                cellModel.showCommunity = YES;
+                cellModel.showCommunity = NO;
                 NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
                 for (TTRichSpanLink *richSpanLink in richSpanLinks) {
                     if (richSpanLink.type == TTRichSpanLinkTypeHashtag) {

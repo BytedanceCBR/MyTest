@@ -267,26 +267,26 @@
         cellModel.tracerDic = [self.detailController.tracerDict copy];
         if (socialGroupModel && ![socialGroupModel.hasFollow boolValue] && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
             // 未关注
-            FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
-            headerModel.socialGroupModel = socialGroupModel;
-            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
-            self.social_group_id = socialGroupModel.socialGroupId;
-            [self.items addObject:headerModel];
-            self.detailHeaderModel = headerModel;
-            [self.detailController headerInfoChanged];
-            //
-            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
+//            FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
+//            headerModel.socialGroupModel = socialGroupModel;
+//            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
+//            self.social_group_id = socialGroupModel.socialGroupId;
+//            [self.items addObject:headerModel];
+//            self.detailHeaderModel = headerModel;
+//            [self.detailController headerInfoChanged];
+//            //
+//            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
+//            [self.items addObject:grayLine];
             cellModel.showCommunity = NO;
         } else {
             if (cellModel.community && cellModel.community.name.length > 0 && cellModel.community.socialGroupId.length > 0 && ![cellModel.community.showStatus isEqualToString:@"1"]) {
-                cellModel.showCommunity = YES;
+                cellModel.showCommunity = NO;
             } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0 && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
                 // 挽救一下 balabala
                 cellModel.community = [[FHFeedUGCCellCommunityModel alloc] init];
                 cellModel.community.name = socialGroupModel.socialGroupName;
                 cellModel.community.socialGroupId = socialGroupModel.socialGroupId;
-                cellModel.showCommunity = YES;
+                cellModel.showCommunity = NO;
             } else {
                 cellModel.showCommunity = NO;
             }

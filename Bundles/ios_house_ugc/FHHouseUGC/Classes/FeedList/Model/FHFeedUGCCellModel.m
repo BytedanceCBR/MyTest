@@ -58,7 +58,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _showCommunity = YES;
+        _showCommunity = NO;
         _bottomLineHeight = 1;
         _bottomLineLeftMargin = 20;
         _bottomLineRightMargin = 20;
@@ -253,11 +253,11 @@
     }
     cellModel.community = community;
     
-    if(cellModel.community && ![cellModel.community.showStatus isEqualToString:@"1"]){
-        cellModel.showCommunity = YES;
-    }else{
-        cellModel.showCommunity = NO;
-    }
+//    if(cellModel.community && ![cellModel.community.showStatus isEqualToString:@"1"]){
+//        cellModel.showCommunity = YES;
+//    }else{
+//        cellModel.showCommunity = NO;
+//    }
     
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle){
@@ -913,11 +913,11 @@
         community.showStatus = model.rawData.community.showStatus;
     }
     cellModel.community = community;
-    if(cellModel.community && ![cellModel.community.showStatus isEqualToString:@"1"]){
-        cellModel.showCommunity = YES;
-    }else{
-        cellModel.showCommunity = NO;
-    }
+//    if(cellModel.community && ![cellModel.community.showStatus isEqualToString:@"1"]){
+//        cellModel.showCommunity = YES;
+//    }else{
+//        cellModel.showCommunity = NO;
+//    }
     
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
     if(model.user) {
