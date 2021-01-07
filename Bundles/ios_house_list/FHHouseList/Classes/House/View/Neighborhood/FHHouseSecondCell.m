@@ -14,6 +14,7 @@
 @interface FHHouseSecondCell()
 
 @property (nonatomic, strong) FHHouseSecondCardView *cardView;
+@property (nonatomic, strong) UIView *backView;
 
 @end
 
@@ -31,14 +32,27 @@
 }
 
 - (void)setupUI {
+    
+    self.backView = [[UIView alloc] init];
+    self.backView.layer.cornerRadius = 10;
+    self.backView.layer.masksToBounds = YES;
+    self.backView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:self.backView];
+    
     self.cardView = [[FHHouseSecondCardView alloc] init];
-    self.cardView.layer.cornerRadius = 10;
-    self.cardView.layer.masksToBounds = YES;
-    self.cardView.backgroundColor = [UIColor whiteColor];
+    self.cardView.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:self.cardView];
 }
 
 - (void)setupConstraints {
+    
+    [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.bottom.mas_equalTo(-5);
+        make.top.mas_equalTo(5);
+    }];
+    
     [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
@@ -69,6 +83,20 @@
         return [FHHouseSecondCardView calculateViewHeight:viewModel] + 10;
     }
     return 0.0f;
+}
+
+#pragma  mark - FHHouseCardTouchAnimationProtocol
+
+- (void)shrinkWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.cardView.transform = CGAffineTransformMakeScale(FHHouseCardShrinkRate, FHHouseCardShrinkRate);
+    }];
+}
+
+- (void)restoreWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.cardView.transform = CGAffineTransformMakeScale(1, 1);
+    }];
 }
 
 @end

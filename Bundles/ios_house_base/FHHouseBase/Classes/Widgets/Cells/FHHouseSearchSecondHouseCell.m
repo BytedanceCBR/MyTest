@@ -614,9 +614,7 @@
 - (UIView *)containerView {
     if (!_containerView) {
         _containerView = [[UIView alloc] init];
-        _containerView.backgroundColor = [UIColor whiteColor];
-        _containerView.layer.cornerRadius = 10;
-        _containerView.layer.masksToBounds = YES;
+        _containerView.backgroundColor = [UIColor clearColor];
     }
     return _containerView;
 }
@@ -781,13 +779,13 @@
 #pragma mark - FHHouseCardTouchAnimationProtocol
 
 - (void)shrinkWithAnimation {
-    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
-        self.containerView.transform = CGAffineTransformMakeScale(FHHouseCardShrinkRate, FHHouseCardShrinkRate);
+    [UIView animateWithDuration:0.3 animations:^{
+        self.containerView.transform = CGAffineTransformMakeScale(0.95, 0.95);
     }];
 }
 
 - (void)restoreWithAnimation {
-    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+    [UIView animateWithDuration:0.3 animations:^{
         self.containerView.transform = CGAffineTransformMakeScale(1, 1);
     }];
 }

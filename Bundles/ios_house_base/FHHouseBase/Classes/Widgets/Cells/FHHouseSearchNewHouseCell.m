@@ -548,9 +548,7 @@
 - (UIView *)containerView {
     if (!_containerView) {
         _containerView = [[UIView alloc] init];
-        _containerView.backgroundColor = [UIColor whiteColor];
-        _containerView.layer.cornerRadius = 10;
-        _containerView.layer.masksToBounds = YES;
+        _containerView.backgroundColor = [UIColor clearColor];
     }
     return _containerView;
 }

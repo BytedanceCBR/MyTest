@@ -6,10 +6,11 @@
 //
 
 #import "FHHouseCardTableViewCell.h"
+#import "FHHouseCardStatusManager.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseNewCell : FHHouseCardTableViewCell
+@interface FHHouseNewCell : FHHouseCardTableViewCell<FHHouseCardTouchAnimationProtocol>
 
 @end
 
