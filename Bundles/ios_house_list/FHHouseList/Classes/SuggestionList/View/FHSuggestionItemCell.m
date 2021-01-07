@@ -203,7 +203,6 @@
     _propertyManagementLabel = [[YYLabel alloc] init];
     _propertyManagementLabel.font = [UIFont themeFontRegular:10];
     _propertyManagementLabel.textColor = [UIColor colorWithHexStr:@"#4a4139"];
-    _propertyManagementLabel.text = @"经济适用房";
     _propertyManagementLabel.layer.masksToBounds = YES;
     _propertyManagementLabel.layer.cornerRadius = 2;
     _propertyManagementLabel.layer.borderColor = [[UIColor colorWithHexStr:@"#4a4139"] CGColor];
@@ -244,31 +243,7 @@
     _sepLine = [[UIView alloc] init];
     _sepLine.backgroundColor = [UIColor themeGray6];
     [self.contentView addSubview:_sepLine];
-}
-
-- (NSMutableAttributedString *)getAttributedTextWithUIfont:(UIFont *)font UIcolor:(UIColor *)color text:(NSString *)text  hightLightText:(NSString *)hightLightText{
-    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text];
-    NSDictionary *commonTextStyle = @{ NSFontAttributeName:font,NSForegroundColorAttributeName:color};
-    [attrText addAttributes:commonTextStyle range:NSMakeRange(0,text.length)];
-    NSRange tapRange = [attrText.string rangeOfString:hightLightText];
-    [attrText yy_setColor:[UIColor themeOrange1] range:tapRange];
-    return attrText;
-}
-
-- (void)refreshData:(id)data{
-    if(![data isKindOfClass:[FHSuggestionResponseItemModel class]]){
-        return ;
-    }
-    FHSuggestionResponseItemModel *model = (FHSuggestionResponseItemModel *)data;
-    self.label.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontSemibold:16] UIcolor:[UIColor themeGray1] text:model.text hightLightText:model.query];
-    self.subLabel.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontRegular:14] UIcolor:[UIColor themeGray3] text:model.text2?:@"" hightLightText:model.query];
-    self.oldNameLabel.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontRegular:14] UIcolor:[UIColor themeGray1] text:model.oldName?:@"" hightLightText:model.query];
-    if(model.newtip){
-        self.secondaryLabel.text = model.newtip.content;
-        self.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:model.newtip.backgroundcolor];
-        self.secondaryLabel.textColor = [UIColor colorWithHexStr:model.newtip.textcolor];
-    }
-    self.secondarySubLabel.text = model.tips2;
+    
     [_label mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.top.mas_equalTo(11);
@@ -303,6 +278,37 @@
             make.bottom.mas_equalTo(0);
             make.height.mas_equalTo([UIDevice btd_onePixel]);
     }];
+    
+    self.propertyManagementLabel.hidden = YES;
+    [self.secondaryLabel setHidden:YES];
+}
+
+- (NSMutableAttributedString *)getAttributedTextWithUIfont:(UIFont *)font UIcolor:(UIColor *)color text:(NSString *)text  hightLightText:(NSString *)hightLightText{
+    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text];
+    NSDictionary *commonTextStyle = @{ NSFontAttributeName:font,NSForegroundColorAttributeName:color};
+    [attrText addAttributes:commonTextStyle range:NSMakeRange(0,text.length)];
+    NSRange tapRange = [attrText.string rangeOfString:hightLightText];
+    [attrText yy_setColor:[UIColor themeOrange1] range:tapRange];
+    return attrText;
+}
+
+- (void)refreshData:(id)data{
+    if(![data isKindOfClass:[FHSuggestionResponseItemModel class]]){
+        return ;
+    }
+    FHSuggestionResponseItemModel *model = (FHSuggestionResponseItemModel *)data;
+    self.label.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontSemibold:16] UIcolor:[UIColor themeGray1] text:model.text hightLightText:model.query];
+    self.subLabel.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontRegular:14] UIcolor:[UIColor themeGray3] text:model.text2?:@"" hightLightText:model.query];
+    self.oldNameLabel.attributedText = [self getAttributedTextWithUIfont:[UIFont themeFontRegular:14] UIcolor:[UIColor themeGray1] text:model.oldName?:@"" hightLightText:model.query];
+    if(model.newtip){
+        self.secondaryLabel.text = model.newtip.content;
+        self.secondaryLabel.hidden =  !(model.newtip.content.length > 0);
+        self.secondaryLabel.backgroundColor = [UIColor colorWithHexStr:model.newtip.backgroundcolor];
+        self.secondaryLabel.textColor = [UIColor colorWithHexStr:model.newtip.textcolor];
+    }
+    self.secondarySubLabel.text = model.tips2;
+    [self.propertyManagementLabel setHidden:!(model.propertyManagementType.length > 0)];
+    _propertyManagementLabel.text = model.propertyManagementType;
     [self.contentView layoutIfNeeded];
 }
 

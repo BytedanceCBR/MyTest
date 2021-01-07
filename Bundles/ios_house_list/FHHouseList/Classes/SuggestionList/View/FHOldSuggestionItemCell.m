@@ -198,12 +198,14 @@
         self.villageLab.text = model.tag2;
         self.amountLab.text = model.countDisplay;
         
-        if(model.tag.length || model.tag2.length){
-            [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
-                make.centerY.mas_equalTo(self.regionLab);
-                make.right.equalTo(self.contentView).offset(-15);
-            }];
-        }
+        [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
+            if([model.tag length] > 0 ){
+                make.top.equalTo(self.titleLab.mas_bottom).offset(3);
+            }else{
+                make.centerY.equalTo(self.titleLab);
+            }
+            make.right.equalTo(self.contentView).offset(-15);
+        }];
         
         UILabel *leftLab = [model.oldName length] > 0 ? self.subTitleLab:self.titleLab;
         float margin = [model.oldName length] > 0 ? 1:6;
@@ -213,14 +215,6 @@
             self.zoneTypeView.layer.cornerRadius = 2;
             self.zoneTypeLab.font = [UIFont themeFontRegular:10];
             zoneTypeLabWidth = [model.newtip.content boundingRectWithSize:CGSizeMake(MAXFLOAT, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.zoneTypeLab.font} context:nil].size.width;
-            [self.amountLab mas_remakeConstraints:^(MASConstraintMaker *make) {
-                if([model.tag length] > 0 ){
-                    make.top.equalTo(self.titleLab.mas_bottom).offset(3);
-                }else{
-                    make.centerY.equalTo(self.titleLab);
-                }
-                make.right.equalTo(self.contentView).offset(-15);
-            }];
             [self.zoneTypeLab mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.equalTo(self.zoneTypeView);
                 make.width.mas_equalTo(zoneTypeLabWidth).priorityHigh();
