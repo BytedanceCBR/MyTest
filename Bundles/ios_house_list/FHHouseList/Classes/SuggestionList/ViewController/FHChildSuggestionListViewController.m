@@ -336,7 +336,7 @@
     NSString *userInputText = text;
     
     // 如果外部传入搜索文本homePageRollData并且当前tab是默认tab，直接当搜索内容进行搜索
-    if (userInputText.length == 0 && self.viewModel.houseType == self.defaultHouseType) {
+    if (userInputText.length == 0 && self.viewModel.houseType == FHHouseTypeSecondHandHouse) {
         userInputText = [self.homePageRollDic btd_stringValueForKey:@"text"];
     }
     
