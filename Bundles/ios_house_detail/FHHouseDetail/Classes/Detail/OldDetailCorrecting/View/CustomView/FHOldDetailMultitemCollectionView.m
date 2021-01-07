@@ -113,9 +113,9 @@
 }
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     id data = self.datas[indexPath.row];
-    if ([data isKindOfClass:[FHDetailSameNeighborhoodHouseSaleMoreItemModel class]]) {
-        return CGSizeMake(94, 195);
+    if ([data isKindOfClass:[FHDetailMoreItemCollectionCell class]]) {
+        return CGSizeMake(94, 181);
     }
-    return CGSizeMake(180, 195);
+    return CGSizeMake(140, 181);
 }
 @end

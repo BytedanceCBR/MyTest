@@ -19,11 +19,17 @@
 #import "FHSameHouseTagView.h"
 #import "FHOldDetailMultitemCollectionView.h"
 #import "FHDetailSurroundingAreaCell.h"
-@interface FHDetailSameNeighborhoodHouseCell ()
-@property (nonatomic, strong)   FHDetailHeaderView       *headerView;
-@property (nonatomic, weak) UIImageView *shadowImage;
-@property (nonatomic, strong)   UIView       *containerView;
+#import "UIDevice+BTDAdditions.h"
 
+
+CGFloat getSameNeighborhoodHouseImageWidth();
+CGFloat getSameNeighborhoodHouseImageHeight();
+@interface FHDetailSameNeighborhoodHouseCell () <UICollectionViewDataSource,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+@property (nonatomic, strong) FHDetailHeaderView *headerView;
+@property (nonatomic, weak) UIImageView *shadowImage;
+@property (nonatomic, strong) UIView *containerView;
+@property (nonatomic,strong) NSArray *dataList;
+@property (nonatomic, strong) NSMutableDictionary *houseShowCache;
 @end
 
 @implementation FHDetailSameNeighborhoodHouseCell
@@ -78,43 +84,95 @@
     }
     if (model.sameNeighborhoodHouseData) {
         self.headerView.label.text = [NSString stringWithFormat:@"同小区房源 (%@)",model.sameNeighborhoodHouseData.total];
-        UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        flowLayout.sectionInset = UIEdgeInsetsMake(0, 16, 0, 16);
         NSMutableArray *dataArr = [[NSMutableArray alloc]initWithArray:model.sameNeighborhoodHouseData.items];
         if (model.sameNeighborhoodHouseData.hasMore) {
             FHDetailSameNeighborhoodHouseSaleMoreItemModel *moreItem = [[FHDetailSameNeighborhoodHouseSaleMoreItemModel alloc] init];
             [dataArr addObject:moreItem];
         }
-        flowLayout.minimumInteritemSpacing = 10;
-        flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        NSString *identifier = NSStringFromClass([FHSearchHouseDataItemsModel class]);
-        NSString *moreIdentifier = NSStringFromClass([FHDetailSameNeighborhoodHouseSaleMoreItemModel class]);
-//        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 cellIdentifier:identifier cellCls:[FHDetailSameNeighborhoodHouseCollectionCell class] datas:model.sameNeighborhoodHouseData.items];
-        FHOldDetailMultitemCollectionView *colView = [[FHOldDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:216 datas:dataArr];
-        [colView registerCell:[FHDetailSameNeighborhoodHouseSaleItemCollectionCell class] forIdentifier:identifier];
-        [colView registerCell:[FHDetailSameNeighborhoodHouseSaleMoreItemCollectionCell class] forIdentifier:moreIdentifier];
-        [self.containerView addSubview:colView];
-        __weak typeof(self) wSelf = self;
-        colView.clickBlk = ^(NSInteger index) {
-            if (index == model.sameNeighborhoodHouseData.items.count) {
-                [wSelf moreButtonClick];
-            }else {
-                [wSelf collectionCellClick:index];
-            }
-        };
-        colView.displayCellBlk = ^(NSInteger index) {
-            [wSelf collectionDisplayCell:index];
-        };
-        [colView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.containerView).offset(6);
-            make.left.mas_equalTo(self.containerView).offset(15);
-            make.right.mas_equalTo(self.containerView).offset(-15);
-            make.bottom.mas_equalTo(self.containerView).offset(-10);
-        }];
-        [colView reloadData];
+        self.dataList = dataArr;
+        self.houseShowCache = [NSMutableDictionary dictionary];
+        [self initCollectionView];
     }
     
     [self layoutIfNeeded];
+}
+
+- (void)initCollectionView {
+    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 16, 0, 16);
+    flowLayout.minimumInteritemSpacing = 10;
+    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+    collectionView.dataSource = self;
+    collectionView.delegate = self;
+    collectionView.showsHorizontalScrollIndicator = NO;
+    collectionView.backgroundColor = [UIColor whiteColor];
+    NSString *identifier = NSStringFromClass([FHSearchHouseDataItemsModel class]);
+    NSString *moreIdentifier = NSStringFromClass([FHDetailSameNeighborhoodHouseSaleMoreItemModel class]);
+    [collectionView registerClass:[FHDetailSameNeighborhoodHouseSaleItemCollectionCell class] forCellWithReuseIdentifier:identifier];
+    [collectionView registerClass:[FHDetailSameNeighborhoodHouseSaleMoreItemCollectionCell class] forCellWithReuseIdentifier:moreIdentifier];
+    
+    [self.containerView addSubview:collectionView];
+    
+    [collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.containerView).offset(6);
+        make.left.mas_equalTo(self.containerView).offset(15);
+        make.right.mas_equalTo(self.containerView).offset(-15);
+        make.bottom.mas_equalTo(self.containerView).offset(-10);
+        make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight() + 80);
+    }];
+    [collectionView reloadData];
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.dataList.count;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    id data = self.dataList[indexPath.row];
+    FHDetailBaseCollectionCell *cell;
+    NSString *identifier = NSStringFromClass([data class]);
+    if (identifier.length > 0) {
+          cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        if (indexPath.row < self.dataList.count) {
+            [cell refreshWithData:self.dataList[indexPath.row]];
+        }
+    }
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    id data = self.dataList[indexPath.row];
+    [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    if ([data isKindOfClass:[FHDetailSameNeighborhoodHouseSaleMoreItemModel class]]) {
+        [self moreButtonClick];
+    }else {
+        [self collectionCellClick:indexPath.row];
+    }
+}
+
+// house_show埋点
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    if ([self.houseShowCache valueForKey:tempKey]) {
+        return;
+    }
+    [self.houseShowCache setValue:@(YES) forKey:tempKey];
+    // 添加埋点
+    [self collectionDisplayCell:indexPath.row];
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    id data = self.dataList[indexPath.row];
+    if ([data isKindOfClass:[FHDetailSameNeighborhoodHouseSaleMoreItemModel class]]) {
+        return CGSizeMake(94, getSameNeighborhoodHouseImageHeight() + 60);
+    }
+    return CGSizeMake(getSameNeighborhoodHouseImageWidth(), getSameNeighborhoodHouseImageHeight() + 60);
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -322,7 +380,7 @@
     
     [self.houseImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.equalTo(self.contentView);
-        make.height.mas_equalTo(135);
+        make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight());
     }];
     [self.descriptionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.houseImageView.mas_bottom).mas_offset(12);
@@ -428,7 +486,7 @@
     
     [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.right.equalTo(self.contentView);
-        make.height.mas_equalTo(135);
+        make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight());
     }];
     [self.moreImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.contentView);
@@ -466,3 +524,15 @@
 
 
 @end
+
+CGFloat getSameNeighborhoodHouseImageWidth() {
+    CGFloat width = 180;
+    if([UIDevice btd_isScreenWidthLarge320]) {
+        width = ceil((SCREEN_WIDTH - (15 * 2 + 16 + 10)) * 4.0 / 7.0);
+    }
+    return width;
+}
+
+CGFloat getSameNeighborhoodHouseImageHeight() {
+    return ceil(getSameNeighborhoodHouseImageWidth() * 0.75);
+}
