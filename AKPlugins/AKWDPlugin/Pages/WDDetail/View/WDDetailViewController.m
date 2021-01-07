@@ -1271,9 +1271,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         stayPageDict[@"label"] = [self enterFrom];
         stayPageDict[@"value"] = self.detailModel.answerEntity.ansid;
         stayPageDict[@"ext_value"] = @((NSInteger)duration);
-        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [BDTrackerProtocol eventData:stayPageDict];
-        }
         
         //Wenda_V3_DoubleSending
         NSMutableDictionary *v3Dic = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];

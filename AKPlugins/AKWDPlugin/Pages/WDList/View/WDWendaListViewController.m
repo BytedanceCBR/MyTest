@@ -965,10 +965,7 @@ static void extracted(WDWendaListViewController *object, WDWendaListViewControll
         stayPageDict[@"label"] = [self enterFrom];
         stayPageDict[@"value"] = self.viewModel.qID;
         stayPageDict[@"ext_value"] = @((NSInteger)duration);
-
-        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [TTTrackerWrapper eventData:stayPageDict];
-        }
+        
         //Wenda_V3_DoubleSending
         NSMutableDictionary *v3Dic = [NSMutableDictionary dictionaryWithDictionary:self.viewModel.gdExtJson];
         [v3Dic setValue:self.viewModel.qID forKey:@"group_id"];
