@@ -44,6 +44,7 @@
             self.estimatedRowHeight = 0;
             self.estimatedSectionFooterHeight = 0;
             self.estimatedSectionHeaderHeight = 0;
+            self.showsVerticalScrollIndicator = NO;
         }
     }
     return self;
@@ -57,6 +58,7 @@
             self.estimatedRowHeight = 0;
             self.estimatedSectionFooterHeight = 0;
             self.estimatedSectionHeaderHeight = 0;
+            self.showsVerticalScrollIndicator = NO;
         }
     }
     return self;
