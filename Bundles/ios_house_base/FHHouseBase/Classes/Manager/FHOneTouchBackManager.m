@@ -88,7 +88,11 @@
     self.tracerDic[@"click_position"] = @"click_position";
     [self.tracerDic removeObjectForKey:@"button_name"];
     [FHUserTracker writeEvent:@"click_options" params:self.tracerDic];
-    [[UIApplication sharedApplication] openURL:self.backUrl];
+    if (@available(iOS 10.0, *)) {
+        [[UIApplication sharedApplication] openURL:self.backUrl options:@{} completionHandler:nil];
+    } else {
+        [[UIApplication sharedApplication] openURL:self.backUrl];
+    }
 }
 
 -(NSString *)getbtnNameWithUrl:(NSString *)url{
