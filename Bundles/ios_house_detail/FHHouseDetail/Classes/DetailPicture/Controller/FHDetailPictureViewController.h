@@ -8,7 +8,6 @@
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
 #import "TTPhotoScrollViewController.h"
-#import "FHDetailMediaHeaderCell.h"
 #import "FHVideoViewController.h"
 #import "FHDetailPictureModel.h"
 
@@ -77,15 +76,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic , copy) void (^collectActionBlock)(BOOL followStatus);
 
 /** 图片URL数组*/
-@property(nonatomic, strong)NSArray * imageURLs; //every item also is array, and it contains url and header infos
+@property(nonatomic, copy, nullable) NSArray * imageURLs; //every item also is array, and it contains url and header infos
 
 /** TTImageInfosModel数组*/
-@property(nonatomic, strong, nullable) NSArray *imageInfosModels;
+@property(nonatomic, copy, nullable) NSArray *imageInfosModels;
 
 /** Extended by luohuaqing to support selecting image on preview */
 //@property (nonatomic, assign)PhotosScrollViewMode mode;
-@property (nonatomic, strong, nullable) NSArray *images;
-@property (nonatomic, strong, nullable) NSArray *assetsImages;
+@property (nonatomic, copy, nullable) NSArray *images;
+@property (nonatomic, copy, nullable) NSArray *assetsImages;
 
 /** 是否支持长按保存，默认YES */
 @property (nonatomic, assign)BOOL longPressToSave;
@@ -114,7 +113,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong)NSArray * placeholderSourceViewFrames;
 
 @property (nonatomic, copy)NSString * umengEventName;
-@property (nonatomic, weak)id<TTPhotoScrollViewControllerDelegate> delegate;
 
 
 /** targetView 用于手势拖动提供一个放白布遮罩的view 使用前可以借鉴一下其他地方的用法*/
@@ -124,8 +122,6 @@ NS_ASSUME_NONNULL_BEGIN
 /**     whiteMaskViewEnable 是否需要白色遮罩 */
 @property (nonatomic, assign)BOOL whiteMaskViewEnable;
 
-/** 将VC展示出来 */
-- (void)presentPhotoScrollView;
 /** 将VC展示出来 并提供一个回调*/
 - (void)presentPhotoScrollViewWithDismissBlock:(TTPhotoScrollViewDismissBlock)block;
 - (void)dismissSelf;

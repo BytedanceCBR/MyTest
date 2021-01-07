@@ -1,5 +1,4 @@
 //
-//  FHDetailMediaHeaderCell.m
 //  FHHouseDetail
 //
 //  Created by 谢思铭 on 2019/4/15.
@@ -14,7 +13,6 @@
 #import "UIViewController+NavigationBarStyle.h"
 #import "FHMultiMediaVideoCell.h"
 #import <FHHouseBase/FHUserTrackerDefine.h>
-#import "NSString+URLEncoding.h"
 #import "FHUtils.h"
 #import "FHMultiMediaModel.h"
 #import "FHCommonDefines.h"
@@ -29,6 +27,7 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import "TTReachability.h"
 #import "ToastManager.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -321,7 +320,7 @@
                 NSString *reportParams = [FHUtils getJsonStrFrom:param];
                 NSString *openUrl = [NSString stringWithFormat:@"%@&report_params=%@",vrModel.openUrl,reportParams];
                 self.isHasClickVR = YES;
-                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[openUrl URLEncodedString]]]];
+                [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://house_vr_web?back_button_color=white&hide_bar=true&hide_back_button=true&hide_nav_bar=true&url=%@",[openUrl btd_stringByURLEncode]]]];
 //            }
         }
         return;
@@ -372,23 +371,6 @@
         pictureDetailViewController.contactViewModel = ((FHDetailMediaHeaderCorrectingModel *)self.currentData).contactViewModel;
         pictureDetailViewController.followStatus = self.baseViewModel.contactViewModel.followStatus;
     }
-//    } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNewModel class]]) {
-//        FHDetailNewModel *model = (FHDetailNewModel *)self.baseViewModel.detailData;
-//        pictureDetailViewController.associateInfo = model.data.imageGroupAssociateInfo;
-//        if (!model.data.isShowTopImageTab) {
-//            //如果是新房，非北京、江州以外的城市，暂时隐藏头部
-//            pictureDetailViewController.isShowSegmentView = NO;
-//        }
-//    }else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailNeighborhoodModel class]]) {
-////        FHDetailNeighborhoodModel *model = (FHDetailNeighborhoodModel *)self.baseViewModel.detailData;
-//        pictureDetailViewController.isShowBottomBar = NO;
-//    } else if ([self.baseViewModel.detailData isKindOfClass:[FHDetailFloorPanDetailInfoModel class]]) {
-//        //户型详情
-//        FHDetailFloorPanDetailInfoModel *model = (FHDetailFloorPanDetailInfoModel *)self.baseViewModel.detailData;
-//        pictureDetailViewController.associateInfo = model.data.imageAssociateInfo;
-//    }
-
-
 
     // 分享
     pictureDetailViewController.shareActionBlock = ^{
@@ -890,9 +872,11 @@
    if (vcParentView && self.vedioCount > 0) {
         self.vcParentView = vcParentView;
         CGPoint point = [self convertPoint:CGPointZero toView:vcParentView];
-        CGFloat navBarHeight = ([TTDeviceHelper isIPhoneXSeries] ? 44 : 20) + 44.0;
-        CGFloat cellHei = [FHDetailMediaHeaderCell cellHeight];
-        if (-point.y + navBarHeight > cellHei) {
+        CGFloat navBarHeight = ([UIDevice btd_isIPhoneXSeries] ? 44 : 20) + 44.0;
+       
+       CGFloat photoCellHeight = 281.0;
+       photoCellHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight + 0.5);
+        if (-point.y + navBarHeight > photoCellHeight) {
             // 暂停播放
             if (self.mediaView.videoVC.playbackState == TTVPlaybackState_Playing) {
                 [self.mediaView.videoVC pause];
