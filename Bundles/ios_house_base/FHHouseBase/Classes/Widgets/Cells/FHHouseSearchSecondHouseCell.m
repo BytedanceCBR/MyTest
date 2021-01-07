@@ -24,6 +24,7 @@
 #import "TTReachability.h"
 #import "FHUserTracker.h"
 #import "FHHomeRequestAPI.h"
+#import "FHEnvContext.h"
 
 @interface FHHouseSearchSecondHouseCell()
 
@@ -344,13 +345,15 @@
     if ([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
         if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
-            opacity = FHHouseCardReadOpacity;
+            opacity = [FHEnvContext FHHouseCardReadOpacity];
+            //FHHouseCardReadOpacity;
         }
         attributeString = [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152 withOpacity:opacity];
     } else if ([data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
         FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
         if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
-            opacity = FHHouseCardReadOpacity;
+            opacity = [FHEnvContext FHHouseCardReadOpacity];
+            //FHHouseCardReadOpacity;
         }
         attributeString = [FHSingleImageInfoCellModel tagsStringWithTagList:model.tags withInset:UIEdgeInsetsMake(-2, -4, -2, -4) withMaxWidth:[UIScreen mainScreen].bounds.size.width - 152 withOpacity:opacity];
     }

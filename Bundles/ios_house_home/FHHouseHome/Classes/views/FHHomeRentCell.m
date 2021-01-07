@@ -14,6 +14,7 @@
 #import "FHHomeRequestAPI.h"
 #import "FHUserTracker.h"
 #import "FHCommonDefines.h"
+#import "FHEnvContext.h"
 
 @interface FHHomeRentCell()
 
@@ -115,7 +116,8 @@
     FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
     CGFloat opacity = 1;
     if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
-        opacity = FHHouseCardReadOpacity;
+        opacity = [FHEnvContext FHHouseCardReadOpacity];
+        //FHHouseCardReadOpacity;
     }
     self.mainTitleLabel.layer.opacity = opacity;
     self.subTitleLabel.layer.opacity = opacity;

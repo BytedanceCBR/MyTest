@@ -209,12 +209,21 @@
         top = 15;
     }
     _tableView.contentInset = UIEdgeInsetsMake(top, 0, bottom, 0);
-    if (self.neighborListVCType == FHNeighborListVCTypeRecommendCourt || self.neighborListVCType == FHNeighborListVCTypeErshouNearBy || self.neighborListVCType == FHNeighborListVCTypeNeighborErshou) {
-        if (self.neighborListVCType != FHNeighborListVCTypeRecommendCourt) {
+    
+    switch (self.neighborListVCType) {
+        case FHNeighborListVCTypeRecommendCourt:
+            self.tableView.backgroundColor = [UIColor themeGray7];
+            break;
+        case FHNeighborListVCTypeErshouNearBy:
+        case FHNeighborListVCTypeNeighborErshou:
+        case FHNeighborListVCTypeErshouSameNeighbor:
+            self.tableView.backgroundColor = [UIColor themeGray7];
             self.bottomLine.hidden = YES;
-        }
-        _tableView.backgroundColor = [UIColor themeGray7];
+            break;
+        default:
+            break;
     }
+    
     __weak typeof(self) wself = self;
     self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         [wself loadMore];
