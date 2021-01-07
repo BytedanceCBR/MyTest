@@ -63,7 +63,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
-//@property (nonatomic, assign) NSInteger configTime;
 
 @end
 
@@ -74,7 +73,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     self = [super init];
     if (self) {
         _isMainTabVC = YES;
-//        _configTime = 2;
         [[FHHomeRenderFlow sharedInstance] traceHomeInit];
         FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:@"maintab" withUrl:@"" withTabName:currentDataModel.jumpPageOnStartup withPriority:0];
@@ -124,10 +122,6 @@ static CGFloat const kSectionHeaderHeight = 38;
         if (currentDataModel.isFromLocalCache) {
             return;
         }
-//        self.configTime--;
-//        if (self.configTime != 0) {
-//            return;
-//        }
 
 //        if (!self.adColdHadJump) {
 //            self.adColdHadJump = YES;

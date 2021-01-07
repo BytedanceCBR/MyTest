@@ -15,7 +15,6 @@
 #import "FHHomeRequestAPI.h"
 #import "FHHomePlaceHolderCell.h"
 #import "FHhomeHouseTypeBannerCell.h"
-#import "TTDeviceHelper.h"
 #import "FHHouseBaseItemCell.h"
 #import "FHHomeCellHelper.h"
 #import "FHPlaceHolderCell.h"
@@ -44,6 +43,7 @@
 #import "FHHomeRenderFlow.h"
 #import "FHHouseCardStatusManager.h"
 #import "FHHomeItemRequestManager.h"
+#import <UIDevice+BTDAdditions.h>
 
 
 @interface FHHomeErrorTableViewCell : UITableViewCell
@@ -60,7 +60,7 @@ NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
 NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
-@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate, FHHouseSearchSecondHouseCellDelegate, FHHomeRentCellDelegate>
+@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate, FHHouseSearchSecondHouseCellDelegate, FHHomeRentCellDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property (nonatomic , assign) NSInteger itemCount;
@@ -86,6 +86,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
 @property (nonatomic, strong) UILongPressGestureRecognizer *gesture;
 @property (nonatomic, strong) UITableViewCell *selectCell;
+@property (nonatomic, assign) BOOL pageIsDragging;
 
 @end
 
@@ -161,6 +162,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     self.tableView.scrollsToTop = NO;
     self.gesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressAction:)];
+    self.gesture.delegate = self;
     self.gesture.minimumPressDuration = 0.05;
     [self.tableView addGestureRecognizer:self.gesture];
 }
@@ -174,6 +176,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(longPressCancel) name:@"FHHomeViewBeginDragging" object:nil];
 }
 
 #pragma mark  埋点
@@ -775,7 +778,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (CGFloat)getHeightShowNoData
 {
-    if([TTDeviceHelper isScreenWidthLarge320])
+    if([UIDevice btd_isScreenWidthLarge320])
     {
         return [UIScreen mainScreen].bounds.size.height * 0.45;
     }else
@@ -791,7 +794,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     if (self.scrollDidBegin) {
         self.scrollDidBegin();
     }
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:nil];
 }
 
@@ -831,16 +833,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             }
         }
     }
-    
-    //长按手势优先级最低，触摸动效复原
-    self.gesture.enabled = NO;
-    self.gesture.enabled = YES;
-    if (self.selectCell) {
-        if ([self.selectCell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [self.selectCell respondsToSelector:@selector(restoreWithAnimation)]) {
-            [self.selectCell performSelector:@selector(restoreWithAnimation)];
-        }
-        self.selectCell = nil;
-    }
+    [self longPressCancel];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -1337,37 +1330,57 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     return _tableView;
 }
 
+//长按手势优先级最低，触摸动效复原
+- (void)longPressCancel {
+    self.gesture.enabled = NO;
+    self.gesture.enabled = YES;
+}
+
+//长按触发动效
 - (void)longPressAction:(UILongPressGestureRecognizer *)gesture {
     CGPoint point = [gesture locationInView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if (self.selectCell && cell && self.selectCell != cell) {
+        if ([ self.selectCell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [ self.selectCell respondsToSelector:@selector(restoreWithAnimation)]) {
+            [ self.selectCell performSelector:@selector(restoreWithAnimation)];
+        }
+    }
     self.selectCell = cell;
     if (gesture.state == UIGestureRecognizerStateBegan) {
+        self.pageIsDragging = [self currentPageIsDragging];
         if ([cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [cell respondsToSelector:@selector(shrinkWithAnimation)]) {
             [cell performSelector:@selector(shrinkWithAnimation)];
         }
-    } else if (gesture.state == UIGestureRecognizerStateEnded) {
+    } else if (gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateCancelled) {
         if ([cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [cell respondsToSelector:@selector(restoreWithAnimation)]) {
             [cell performSelector:@selector(restoreWithAnimation)];
         }
         self.selectCell = nil;
-        WeakSelf;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            StrongSelf;
-            if (!self.showPlaceHolder && indexPath.section == 1) {
-                [self jumpToDetailPage:indexPath];
-                if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)]) {
-                    [((id<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData: self.houseDataItemsModel[indexPath.row]];
-                }
-                if(self.houseDataItemsModel.count > indexPath.row){
-                    FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
-                    if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse && [theModel.cardType integerValue] != kFHHomeAgentCardType) {
-                        [[FHRelevantDurationTracker sharedTracker] beginRelevantDurationTracking];
-                    }
-                }
-            }
-        });
+        if (gesture.state == UIGestureRecognizerStateEnded && !self.pageIsDragging) {
+            WeakSelf;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                StrongSelf;
+                [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+            });
+        }
     }
+}
+
+- (BOOL)currentPageIsDragging {
+    BOOL isDragging = self.tableView.isDragging;
+    UIView *view = self.view.superview;
+    if ([view isKindOfClass:[UIScrollView class]]) {
+        isDragging |= ((UIScrollView *)view).isDragging;
+    }
+    isDragging |= self.superTableView.isDragging;
+    return isDragging;
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
 }
 
 - (void)dealloc {

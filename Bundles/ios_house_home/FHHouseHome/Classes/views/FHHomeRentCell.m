@@ -35,34 +35,66 @@
 }
 
 - (void)initUI {
+    self.contentView.backgroundColor = [UIColor themeGray7];
     [self.contentView addSubview:self.backView];
     [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
         make.top.bottom.mas_equalTo(0);
     }];
-    
-    [super initUI];
-    self.contentView.backgroundColor = [UIColor themeGray7];
+    [self.contentView addSubview:self.houseCellBackView];
     self.houseCellBackView.hidden = NO;
+    self.houseCellBackView.backgroundColor = [UIColor clearColor];
     [self.houseCellBackView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
         make.top.bottom.mas_equalTo(0);
     }];
-    [self.mainImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+    
+    [self.houseCellBackView addSubview:self.mainImageView];
+    [self.mainImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(12);
-        make.left.mas_equalTo(26);
+        make.left.mas_equalTo(11);
+        make.size.mas_equalTo(CGSizeMake(85, 64));
     }];
-    [self.mainTitleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-40);
+    [self.houseCellBackView addSubview:self.mainTitleLabel];
+    [self.mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-25);
+        make.left.equalTo(self.mainImageView.mas_right).offset(12);
+        make.top.equalTo(self.mainImageView).offset(-2);
     }];
-    [self.pricePerSqmLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-23);
+    
+    [self.houseCellBackView addSubview:self.subTitleLabel];
+    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.mainTitleLabel);
+        make.top.equalTo(self.mainTitleLabel.mas_bottom).offset(2);
     }];
-    [self.contentView addSubview:self.closeBtn];
+    
+    [self.houseCellBackView addSubview:self.pricePerSqmLabel];
+    [self.pricePerSqmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-8);
+        make.left.mas_greaterThanOrEqualTo(self.subTitleLabel.mas_right).offset(2);
+        make.top.equalTo(self.subTitleLabel);
+    }];
+    [self.pricePerSqmLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.pricePerSqmLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    
+    [self.houseCellBackView addSubview:self.priceLabel];
+    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-8);
+        make.top.equalTo(self.pricePerSqmLabel.mas_bottom).offset(4);
+    }];
+    
+    [self.houseCellBackView addSubview:self.tagLabel];
+    [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.mainTitleLabel);
+        make.top.equalTo(self.subTitleLabel.mas_bottom).offset(7);
+        make.right.mas_lessThanOrEqualTo(self.priceLabel.mas_left).offset(-2);
+    }];
+    
+    [self.houseCellBackView addSubview:self.closeBtn];
     [self.closeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-23);
+        make.right.mas_equalTo(-8);
         make.top.mas_equalTo(14);
         make.width.height.mas_equalTo(16);
     }];
@@ -123,10 +155,8 @@
         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
         maskLayer.frame = frame;
         maskLayer.path = maskPath.CGPath;
-        self.houseCellBackView.layer.mask = maskLayer;
         self.backView.layer.mask = maskLayer;
     } else {
-        self.houseCellBackView.layer.mask = nil;
         self.backView.layer.mask = nil;
     }
 }

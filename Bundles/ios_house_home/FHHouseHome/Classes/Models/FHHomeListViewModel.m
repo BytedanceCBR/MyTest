@@ -65,6 +65,10 @@
 @property(nonatomic , assign) CGPoint beginOffSet;
 @property(nonatomic , assign) CGFloat oldX;
 
+
+//beginScroll开始时才通知
+@property (nonatomic, assign) BOOL isBeginDragging;
+
 @end
 
 @implementation FHHomeListViewModel
@@ -709,6 +713,10 @@
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     self.isResetingOffsetZero = NO;
+    if (!self.isBeginDragging) {
+        self.isBeginDragging = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeViewBeginDragging" object:nil];
+    }
     if (scrollView == self.homeViewController.scrollView) {
         self.isSelectIndex = NO;
 //        self.tableViewV.scrollEnabled = NO;
@@ -881,6 +889,7 @@
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.isBeginDragging = NO;
         [self setUpHomeItemScrollView:YES];
         // 滚动时发出通知
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];
