@@ -22,8 +22,8 @@
 #import "UIDevice+BTDAdditions.h"
 
 
-CGFloat getSameNeighborhoodHouseImageWidth();
-CGFloat getSameNeighborhoodHouseImageHeight();
+CGFloat getSameNeighborhoodHouseImageWidth(void);
+CGFloat getSameNeighborhoodHouseImageHeight(void);
 @interface FHDetailSameNeighborhoodHouseCell () <UICollectionViewDataSource,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
 @property (nonatomic, strong) FHDetailHeaderView *headerView;
 @property (nonatomic, weak) UIImageView *shadowImage;

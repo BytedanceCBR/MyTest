@@ -431,18 +431,18 @@
     if ((delta + navBarH) >self.viewController.headerView.height || (delta + navBarH) == self.viewController.headerView.height) {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
             *titleScrollViewColorKey  = @"Background4";
-            *norColorKey = @"grey3";
-            *selColorKey = @"red4";
+            *norColorKey = @"grey1";
+            *selColorKey = @"grey1";
             *titleFont = [UIFont themeFontRegular:16];
-            *selectedTitleFont = [UIFont themeFontSemibold:16];
+            *selectedTitleFont = [UIFont themeFontMedium:18];
         }];
     }else {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
             *titleScrollViewColorKey  = @"Background21";
-            *norColorKey = @"grey3";
-            *selColorKey = @"red4";
+            *norColorKey = @"grey1";
+            *selColorKey = @"grey1";
             *titleFont = [UIFont themeFontRegular:16];
-            *selectedTitleFont = [UIFont themeFontSemibold:16];
+            *selectedTitleFont = [UIFont themeFontMedium:18];
         }];
     }
     [self refreshContentOffset:delta];
