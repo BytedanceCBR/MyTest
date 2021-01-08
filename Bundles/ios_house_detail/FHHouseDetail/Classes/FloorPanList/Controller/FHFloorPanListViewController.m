@@ -17,6 +17,7 @@
 @property (nonatomic , strong) UICollectionView *collectionView;
 @property (nonatomic , strong) FHFloorPanListViewModel *panListModel;
 @property (nonatomic , strong) NSString *courtId;
+@property (nonatomic , strong) UIView *segmentedView;
 @end
 
 @implementation FHFloorPanListViewController
@@ -64,7 +65,7 @@
 - (void)setUpSegmentedControl
 {
     _segmentedControl = [HMSegmentedControl new];
-    _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(0, 15, 0, 13);
+    _segmentedControl.segmentEdgeInset = UIEdgeInsetsMake(5, 15, 0, 13);
     _segmentedControl.selectionIndicatorHeight = 4;
     _segmentedControl.selectionIndicatorCornerRadius = 2;
     _segmentedControl.selectionIndicatorWidth = 20;
@@ -84,21 +85,31 @@
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
     _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
 
-    [self.view addSubview:_segmentedControl];
-    
-    [_segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
+    self.segmentedView = [[UIView alloc] init];
+    [self.segmentedView addSubview:self.segmentedControl];
+    self.segmentedView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.segmentedView];
+
+    [self.segmentedView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo([self getNaviBar].mas_bottom);
-        make.left.right.equalTo(self.view);
+        make.left.right.equalTo(self.segmentedView);
         make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
         make.height.mas_equalTo(44);
+    }];
+    
+    [_segmentedControl mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.segmentedView.mas_top).offset(5);
+        make.left.right.equalTo(self.view);
+        make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
+        make.height.mas_equalTo(34);
     }];
     
     _segementBottomLine = [UIView new];
     _segementBottomLine.backgroundColor = [UIColor themeGray6];
     [_segmentedControl addSubview:_segementBottomLine];
     [_segementBottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.bottom.equalTo(self.segmentedControl);
-        make.left.right.equalTo(self.segmentedControl);
+        make.bottom.equalTo(self.segmentedView);
+        make.left.right.equalTo(self.segmentedView);
         make.width.mas_equalTo(MAIN_SCREEN_WIDTH);
         make.height.mas_equalTo(0.5);
     }];
@@ -118,7 +129,7 @@
     [self.view addSubview:self.collectionView];
     [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.left.equalTo(self.view);
-        make.top.equalTo(self.segmentedControl.mas_bottom);
+        make.top.equalTo(self.segmentedView.mas_bottom);
         make.bottom.equalTo([self getBottomBar].mas_top);
     }];
 }
