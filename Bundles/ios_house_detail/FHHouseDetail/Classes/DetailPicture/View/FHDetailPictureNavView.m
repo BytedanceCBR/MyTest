@@ -10,6 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHDetailPictureNavView ()
 @property(nonatomic , strong) UIButton *backBtn;
@@ -30,10 +31,11 @@
 
 - (void)setupUI {
     _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_backBtn setImage:ICON_FONT_IMG(24, @"\U0000e673", [UIColor whiteColor]) forState:UIControlStateNormal];
-    [_backBtn setImage:ICON_FONT_IMG(24, @"\U0000e673", [UIColor whiteColor]) forState:UIControlStateHighlighted];
+    [_backBtn setImage:ICON_FONT_IMG(24, @"\U0000e678", [UIColor whiteColor]) forState:UIControlStateNormal];
+    [_backBtn setImage:ICON_FONT_IMG(24, @"\U0000e678", [UIColor whiteColor]) forState:UIControlStateHighlighted];
     [_backBtn addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
     _backBtn.frame = CGRectMake(20, 10, 24, 24);
+    self.backBtn.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-10, -10, -10, -10);
     [self addSubview:_backBtn];
     
     _titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(50, 10, self.frame.size.width - 100, 24)];
@@ -52,7 +54,7 @@
     _albumBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_albumBtn setTitle:@"全部图片" forState:UIControlStateNormal];
     [_albumBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_albumBtn setFrame:CGRectMake(self.frame.size.width - 100, 10, 100, 34)];
+    [_albumBtn setFrame:CGRectMake(self.frame.size.width - 100, 0, 100, 44)];
     [_albumBtn addTarget:self action:@selector(albumBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     _albumBtn.hidden = YES;
     [self addSubview:_albumBtn];
