@@ -1163,4 +1163,37 @@
     self.selectionIndicatorStripLayer.frame = frame;
 }
 
+- (void)updateIndicatorProgress:(CGFloat)value isDirectionLeft:(BOOL)isDirectionLeft duration:(NSTimeInterval)duration {
+    //isDirectionLeft YES 从左向右
+    CGFloat width = self.segmentWidth;
+    if (self.segmentWidthStyle == HMSegmentedControlSegmentWidthStyleDynamic) {
+        if(isDirectionLeft && (self.selectedSegmentIndex - 1) >= 0){
+            width = ([[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex - 1)] floatValue] + [[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex)] floatValue])/2;
+        }else if(!isDirectionLeft && (self.selectedSegmentIndex + 1) < self.segmentWidthsArray.count){
+            width = ([[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex + 1)] floatValue] + [[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex)] floatValue])/2;
+        }else{
+            width = [[self.segmentWidthsArray objectAtIndex:(self.selectedSegmentIndex)] floatValue];
+        }
+    }
+    CGRect frame = [self frameForSelectionIndicator];
+    CGFloat diff = value * width;
+    if (isDirectionLeft) {
+        frame.origin.x += diff;
+    } else {
+        frame.origin.x -= diff;
+    }
+    if (duration > 0) {
+        // Animate to new position
+        self.selectionIndicatorStripLayer.actions = nil;
+        
+        [CATransaction begin];
+        [CATransaction setAnimationDuration:duration];
+        [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseOut]];
+        self.selectionIndicatorStripLayer.frame = frame;
+        [CATransaction commit];
+    } else {
+        self.selectionIndicatorStripLayer.frame = frame;
+    }
+}
+
 @end
