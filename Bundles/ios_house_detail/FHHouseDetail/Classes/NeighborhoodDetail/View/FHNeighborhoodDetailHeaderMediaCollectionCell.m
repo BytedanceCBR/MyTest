@@ -27,12 +27,10 @@
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "FHDetailNeighborhoodMediaHeaderDataHelper.h"
-#import "FHVideoViewController.h"
 #import "FHNeighborhoodDetailMediaHeaderView.h"
 
 @interface FHNeighborhoodDetailHeaderMediaCollectionCell ()<FHMultiMediaCorrectingScrollViewDelegate, FHDetailScrollViewDidScrollProtocol, FHDetailVCViewLifeCycleProtocol>
 
-@property (nonatomic, strong) FHVideoViewController *videoVC;
 @property (nonatomic, strong) FHNeighborhoodDetailMediaHeaderView *headerView;
 @property (nonatomic, strong) FHDetailNeighborhoodMediaHeaderDataHelper *dataHelper;
 @property (nonatomic, strong) FHMultiMediaModel *model;
@@ -70,17 +68,6 @@
     self.model.medias = self.dataHelper.headerViewData.mediaItemArray;
     [self.headerView updateMultiMediaModel:self.model];
     
-}
-
-- (FHVideoViewController *)videoVC {
-    if (!_videoVC) {
-        _videoVC = [[FHVideoViewController alloc] init];
-        _videoVC.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [FHNeighborhoodDetailMediaHeaderView cellHeight]);
-        NSMutableDictionary *dict = [self tracerDic].mutableCopy;
-        dict[@"element_type"] = @"large_picture_preview";
-        _videoVC.tracerDic = dict.copy;
-    }
-    return _videoVC;
 }
 
 - (NSString *)elementType {
@@ -142,7 +129,10 @@
     FHDetailPictureViewController *pictureDetailViewController = [[FHDetailPictureViewController alloc] init];
     pictureDetailViewController.detailPictureModel = self.dataHelper.pictureDetailData.detailPictureModel;
     
-    pictureDetailViewController.videoVC = self.videoVC;
+    NSMutableDictionary *videoTracerDict = [self tracerDic].mutableCopy;
+    videoTracerDict[@"element_type"] = @"large_picture_preview";
+    pictureDetailViewController.videoTracerDict = videoTracerDict.copy;
+    
     pictureDetailViewController.houseType = FHHouseTypeNeighborhood;
     if (self.pictureListViewController) {
         pictureDetailViewController.topVC = self.pictureListViewController;
@@ -243,7 +233,7 @@
         __strong typeof(weakSelf) strongSelf = weakSelf;
         //如果是从大图进入的图片列表，dismiss picturelist
         if (strongSelf.pictureDetailVC) {
-            [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
+            [strongSelf.pictureListViewController.navigationController popViewControllerAnimated:YES];
             if (index >= 0) {
                 [strongSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
             }
@@ -255,16 +245,7 @@
         [weakSelf trackClickTabWithIndex:index element:@"photo_album"];
     };
 
-    UIViewController *presentedVC;
-    if (self.pictureDetailVC) {
-        presentedVC = self.pictureDetailVC;
-    }
-    if (!presentedVC) {
-        presentedVC = [TTUIResponderHelper visibleTopViewController];
-    }
-    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:pictureListViewController];
-    navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
-    [presentedVC presentViewController:navigationController animated:YES completion:nil];
+    [[TTUIResponderHelper correctTopNavigationControllerFor:self] pushViewController:pictureListViewController animated:YES];
     self.pictureListViewController = pictureListViewController;
 }
 
