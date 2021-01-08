@@ -152,7 +152,7 @@
             cell.titleLabel.text = model.title;
             cell.sugLabel.text = model.text; 
             cell.isValid = model.status;
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            cell.selectionStyle = UITableViewCellEditingStyleDelete;
             [cell updateConstraintsIfNeeded];
             return cell;
         }
@@ -166,6 +166,16 @@
         FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[indexPath.row];
         [self addItemShowTracer:model index:indexPath.row];
     }
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        ///TODO: 删除操作
+    }
+}
+ 
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return @"删除";
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
