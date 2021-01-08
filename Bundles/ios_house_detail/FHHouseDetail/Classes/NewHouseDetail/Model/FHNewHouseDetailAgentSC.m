@@ -322,7 +322,10 @@
         tracerDic[@"enter_from"] = @"new_detail";
         tracerDic[@"page_type"] = @"realtor_list";
         tracerDic[@"element_from"] = @"new_detail_related";
-
+        NSDictionary *logpbdic = tracerDic[@"log_pb"];
+        if(logpbdic && [logpbdic isKindOfClass:[NSDictionary class]]){
+        tracerDic[@"group_id"] =[logpbdic btd_stringValueForKey:@"group_id"] ?: @"be_null";
+        }
         
         [tracerDic removeObjectsForKeys:@[@"card_type",@"rank",@"origin_search_id",@"app_house_tags",@"log_pb"]];
         [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];

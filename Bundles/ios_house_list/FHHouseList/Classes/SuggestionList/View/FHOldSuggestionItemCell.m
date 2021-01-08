@@ -151,7 +151,7 @@
 - (UILabel *)amountLab {
     if (!_amountLab) {
         UILabel *amountLab = [[UILabel alloc]init];
-        amountLab.textColor = [UIColor colorWithHexStr:@"#999999"];
+        amountLab.textColor = [UIColor colorWithHexStr:@"#333333"];
         amountLab.font = [UIFont themeFontRegular:14];
         amountLab.textAlignment = NSTextAlignmentRight;
         [self.contentView addSubview:amountLab];

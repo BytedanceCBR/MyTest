@@ -251,7 +251,7 @@
     [_oldNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(11);
         make.right.mas_lessThanOrEqualTo(self.secondaryLabel.mas_left).offset(-20);
-        make.left.mas_equalTo(self.label.mas_right);
+        make.left.mas_equalTo(self.label.mas_right).offset(4);
     }];
     [_propertyManagementLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self.contentView).offset(-15);
