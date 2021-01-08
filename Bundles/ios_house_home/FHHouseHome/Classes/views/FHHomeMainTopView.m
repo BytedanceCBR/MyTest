@@ -122,8 +122,11 @@ static const float kMapSearchBtnRightPading = 50;
         _mapSearchLabel.text = @"地图";
         _mapSearchLabel.textColor = [UIColor themeGray1];
         _mapSearchLabel.font = [UIFont themeFontMedium:14];
+        _mapSearchLabel.userInteractionEnabled = YES;
         [self addSubview:_mapSearchLabel];
-        
+        ///增大地图找房icon点击区域
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickMapSearch)];
+        [self.mapSearchLabel addGestureRecognizer:tapGesture];
         
         [_mapSearchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self).offset(-kMapSearchBtnRightPading);

@@ -1592,7 +1592,7 @@ TTEditUserProfileViewControllerDelegate
             TRACK_EVENT(@"popup_click", param);
             [self setPersonalizedStatus:0];//0表示关闭个性化推荐
         }];
-        [alert addActionWithTitle:NSLocalizedString(@"我在想想", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
+        [alert addActionWithTitle:NSLocalizedString(@"我再想想", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             [_personalRecommendSwitch setOn:[FHEnvContext getPersonalRecommend]];
             NSMutableDictionary *param = [NSMutableDictionary new];
             param[@"popup_name"] = @"personal_recommend_settings";

@@ -20,7 +20,7 @@
 #import "NSObject+FHTracker.h"
 #import "FHSuggestionDefines.h"
 
-#define BTN_WIDTH  24
+#define BTN_WIDTH  32
 #define BG_LAYER_HEIGHT 100
 
 @interface FHMapSimpleNavbar ()
@@ -298,9 +298,10 @@
     bgImg = [bgImg resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5) resizingMode:UIImageResizingModeStretch];
     _bgLayer.contents = (id)[bgImg CGImage];
     
+    ///地图找房返回图标相应区域增大8pt，对应调整布局
     [_backButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(left);
-        make.top.mas_equalTo(top);
+        make.left.mas_equalTo(left-4);
+        make.top.mas_equalTo(top-4);
         make.size.mas_equalTo(CGSizeMake(BTN_WIDTH, BTN_WIDTH));
     }];
     
