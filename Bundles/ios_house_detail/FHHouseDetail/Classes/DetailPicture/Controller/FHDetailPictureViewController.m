@@ -581,14 +581,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    UINavigationController *navi = self.topVC.navigationController;
-    if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
-        navi.interactivePopGestureRecognizer.enabled = NO;
-    }
+    
     [self setCurrentStatusStyle];
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf setCurrentStatusStyle];
+        
+        UINavigationController *navi = self.topVC.navigationController;
+        if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
+            navi.interactivePopGestureRecognizer.enabled = NO;
+        }
     });
     if ([self isVideoImageView:self.currentIndex] && !self.disableAutoPlayVideo) {
         // 视频
@@ -1778,11 +1780,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                                             withAnimation:NO];
     
     [self willMoveToParentViewController:nil];
-    // 关闭 页面时隐藏
-    self.topBar.hidden = YES;
-    self.bottomBar.hidden = YES;
-    self.pictureTitleView.hidden = YES;
-    self.videoInfoView.hidden = YES;
     
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     while (rootViewController.presentedViewController) {
@@ -1793,7 +1790,12 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
     rootViewController.navigationController.interactivePopGestureRecognizer.enabled = YES;
     
+    self.videoInfoView.hidden = YES;
     if (self.reachDismissCondition) {
+        // 关闭 页面时隐藏
+        self.topBar.hidden = YES;
+        self.bottomBar.hidden = YES;
+        
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         
         [UIView animateWithDuration:.2f animations:^{
@@ -1825,21 +1827,22 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             
             TTShowImageView * showImageView = [self showImageViewAtIndex:_currentIndex];
             UIImageView * largeImageView = [showImageView displayImageView];
-            CGRect endFrame = [[_placeholderSourceViewFrames objectAtIndex:_currentIndex] CGRectValue];
-            if ([showImageView isKindOfClass:[FHShowVideoView class]]) {
-                // 视频cell
-                endFrame = [self frameForPagingScrollView];
-            }
+            
             largeImageView.hidden = NO;
             CGRect beginFrame = largeImageView.frame;
             
             //largeImageView可能被放大了，因此需要转换
             CGRect transBeginFrame = [largeImageView.superview convertRect:beginFrame toView:nil];
+//            transBeginFrame = CGRectOffset(transBeginFrame, 0, [self frameForPagingScrollView].origin.y);
             
-            transBeginFrame = CGRectOffset(transBeginFrame, 0, [self frameForPagingScrollView].origin.y);
-            //[showImageView hideGifIfNeeded];
+            CGRect endFrame = [[_placeholderSourceViewFrames objectAtIndex:_currentIndex] CGRectValue];
+            if ([showImageView isKindOfClass:[FHShowVideoView class]]) {
+                // 视频cell
+                endFrame = [self frameForPagingScrollView];
+                transBeginFrame = endFrame;
+            }
+
             largeImageView.frame = transBeginFrame;
-            
 
             UIView * containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
             containerView.backgroundColor = [UIColor clearColor];
