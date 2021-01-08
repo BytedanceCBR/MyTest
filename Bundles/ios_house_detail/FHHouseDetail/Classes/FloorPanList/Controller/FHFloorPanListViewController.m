@@ -78,8 +78,8 @@
                                      [UIColor themeGray1],NSForegroundColorAttributeName,nil];
     
     NSDictionary *attributeSelect = [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [UIFont themeFontRegular:16],NSFontAttributeName,
-                                     [UIColor themeRed4],NSForegroundColorAttributeName,nil];
+                                     [UIFont themeFontMedium:18],NSFontAttributeName,
+                                     [UIColor themeGray1],NSForegroundColorAttributeName,nil];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
     _segmentedControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;

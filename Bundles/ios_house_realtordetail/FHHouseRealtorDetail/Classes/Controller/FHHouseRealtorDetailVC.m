@@ -135,10 +135,10 @@
     self.segmentView.underLineWidth = 20;
     [_segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
         *titleScrollViewColorKey  = @"Background21";
-        *norColorKey = @"grey3";
-        *selColorKey = @"red4";
+        *norColorKey = @"grey1";
+        *selColorKey = @"grey1";
         *titleFont = [UIFont themeFontRegular:16];
-        *selectedTitleFont = [UIFont themeFontSemibold:16];
+        *selectedTitleFont = [UIFont themeFontMedium:18];
     }];
     [_segmentView setUpUnderLineEffect:^(BOOL *isUnderLineDelayScroll, CGFloat *underLineH, NSString *__autoreleasing *underLineColorKey, BOOL *isUnderLineEqualTitleWidth) {
         *isUnderLineDelayScroll = NO;
