@@ -20,7 +20,7 @@
 #import "FHRealtorSecondCell.h"
 #import "FHPlaceHolderCell.h"
 
-@interface FHHouseRealtorDetailHouseViewModel ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHHouseRealtorDetailHouseViewModel ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>
 @property(nonatomic, weak)TTHttpTask *requestTask;
 @property(nonatomic,strong)NSDictionary *tracerDic;
 @property(nonatomic, strong)FHRefreshCustomFooter *refreshFooter;
@@ -312,10 +312,6 @@
         }
     }
 }
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
-}
-
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
         FHHomeHouseDataItemsModel *model = self.dataList[indexPath.row];
@@ -344,4 +340,19 @@
     tracerDic[@"group_id"] = model.id;
     TRACK_EVENT(@"house_show", tracerDic);
 }
+
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.detailController.pageView tableViewWillBeginDragging:scrollView];
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.detailController.pageView tableViewDidScroll:scrollView];
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [self.detailController.pageView tableViewDidEndDragging:scrollView];
+}
+
+
 @end

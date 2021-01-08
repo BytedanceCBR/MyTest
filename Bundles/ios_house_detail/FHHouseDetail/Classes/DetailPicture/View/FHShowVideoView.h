@@ -8,7 +8,6 @@
 #import <UIKit/UIKit.h>
 #import "FHBaseViewController.h"
 #import "TTPhotoScrollViewController.h"
-#import "FHDetailMediaHeaderCell.h"
 #import "TTShowImageView.h"
 #import "FHVideoViewController.h"
 

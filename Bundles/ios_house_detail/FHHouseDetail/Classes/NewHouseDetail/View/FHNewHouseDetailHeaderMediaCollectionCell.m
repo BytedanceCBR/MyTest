@@ -192,14 +192,14 @@
         pictureDetailViewController.placeholderSourceViewFrames = frames;
         pictureDetailViewController.placeholders = placeholders;
     }
-    
-    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
-        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
-    }];
 
     pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
         [weakSelf trackSavePictureWithIndex:currentIndex];
     };
+    
+    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
+        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
+    }];
     [self trackHeaderViewMediaShowWithIndex:index isLarge:YES];
     self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
     self.pictureDetailVC = pictureDetailViewController;
@@ -245,15 +245,15 @@
     pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         //如果是从大图进入的图片列表，dismiss picturelist
-        if (index < 0 || index >= weakSelf.dataHelper.pictureDetailData.mediaItemArray.count) {
+        if (index < 0 || index >= strongSelf.dataHelper.pictureDetailData.mediaItemArray.count) {
             return;
         }
-        FHMultiMediaItemModel *itemModel = weakSelf.dataHelper.pictureDetailData.mediaItemArray[index];
+        FHMultiMediaItemModel *itemModel = strongSelf.dataHelper.pictureDetailData.mediaItemArray[index];
         if (itemModel.mediaType == FHMultiMediaTypeVRPicture) {
-            [weakSelf gotoVRDetail:itemModel];
+            [strongSelf gotoVRDetail:itemModel];
         } else {
             if (strongSelf.pictureDetailVC) {
-                [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
+                [strongSelf.pictureListViewController.navigationController popViewControllerAnimated:YES];
                 if (index >= 0) {
                     [strongSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
                 }
@@ -265,20 +265,7 @@
     pictureListViewController.topImageClickTabBlock = ^(NSInteger index) {
         [weakSelf trackClickTabWithIndex:index element:@"photo_album"];
     };
-
-    UIViewController *presentedVC;
-    if (self.pictureDetailVC) {
-        presentedVC = self.pictureDetailVC;
-    }
-//    if (!presentedVC) {
-//        presentedVC = data.weakVC;
-//    }
-    if (!presentedVC) {
-        presentedVC = [TTUIResponderHelper visibleTopViewController];
-    }
-    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:pictureListViewController];
-    navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
-    [presentedVC presentViewController:navigationController animated:YES completion:nil];
+    [[TTUIResponderHelper correctTopNavigationControllerFor:self] pushViewController:pictureListViewController animated:YES];
     self.pictureListViewController = pictureListViewController;
 }
 

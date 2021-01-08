@@ -26,7 +26,7 @@
 #import "FHUtils.h"
 #import "FHHouseRealtorDetailPlaceHolderCell.h"
 
-@interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
+@interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseRealtorDetailController *detailController;
 @property(nonatomic, strong) FHErrorView *errorView;
@@ -215,10 +215,6 @@
     self.tableView.mj_footer.hidden = YES;
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
-}
-
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableView.mj_footer.hidden = NO;
     if (hasMore) {
@@ -355,6 +351,9 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(self.showPlaceHolder) {
+        return;
+    }
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
     self.currentCellModel = cellModel;
     self.currentCell = [tableView cellForRowAtIndexPath:indexPath];
@@ -478,4 +477,19 @@
     
     return str;
 }
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.detailController.pageView tableViewWillBeginDragging:scrollView];
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.detailController.pageView tableViewDidScroll:scrollView];
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [self.detailController.pageView tableViewDidEndDragging:scrollView];
+}
+
 @end
+
+
