@@ -25,10 +25,8 @@
 #import "ToastManager.h"
 #import "FHDetailNewMediaHeaderDataHelper.h"
 #import "FHDetailNewMediaHeaderView.h"
-#import "FHVideoViewController.h"
 @interface FHNewHouseDetailHeaderMediaCollectionCell ()
 
-@property (nonatomic, strong) FHVideoViewController *videoVC;
 @property (nonatomic, strong) FHDetailNewMediaHeaderView *headerView;
 @property (nonatomic, strong) FHDetailNewMediaHeaderDataHelper *dataHelper;
 @property (nonatomic, strong) FHMultiMediaModel *model;
@@ -65,17 +63,6 @@
     self.model.medias = self.dataHelper.headerViewData.mediaItemArray;
     [self.headerView updateMultiMediaModel:self.model];
     [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%lu张", (unsigned long)self.dataHelper.pictureDetailData.detailPictureModel.itemList.count]];
-}
-
-- (FHVideoViewController *)videoVC {
-    if (!_videoVC) {
-        _videoVC = [[FHVideoViewController alloc] init];
-        _videoVC.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [FHDetailNewMediaHeaderView cellHeight]);
-        NSMutableDictionary *dict = [self tracerDic].mutableCopy;
-        dict[@"element_type"] = @"large_picture_preview";
-        _videoVC.tracerDic = dict.copy;
-    }
-    return _videoVC;
 }
 
 - (NSDictionary *)tracerDic {
@@ -140,8 +127,10 @@
     //视频线索
     pictureDetailViewController.videoImageAssociateInfo = self.dataHelper.pictureDetailData.videoImageAssociateInfo;
     
+    NSMutableDictionary *videoTracerDict = [self tracerDic].mutableCopy;
+    videoTracerDict[@"element_type"] = @"large_picture_preview";
+    pictureDetailViewController.videoTracerDict = videoTracerDict.copy;
     
-    pictureDetailViewController.videoVC = self.videoVC;
     pictureDetailViewController.houseType = FHHouseTypeNewHouse;
     if (self.pictureListViewController) {
         pictureDetailViewController.topVC = self.pictureListViewController;
@@ -188,9 +177,11 @@
         NSValue *frameValue = [NSValue valueWithCGRect:frame];
         [frames addObject:frameValue];
     }
+    pictureDetailViewController.placeholders = placeholders;
     if (!self.pictureListViewController) {
         pictureDetailViewController.placeholderSourceViewFrames = frames;
-        pictureDetailViewController.placeholders = placeholders;
+    } else {
+//        pictureDetailViewController.placeholderSourceViewFrames =
     }
 
     pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {

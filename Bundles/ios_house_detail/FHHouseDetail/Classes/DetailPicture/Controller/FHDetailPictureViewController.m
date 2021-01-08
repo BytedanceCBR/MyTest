@@ -1116,9 +1116,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             showVedioView.backgroundColor = [UIColor clearColor];
             
             FHVideoViewController *videoVC = [[FHVideoViewController alloc] init];
-            videoVC.view.frame = self.videoVC.view.frame;
-            videoVC.videoFrame = self.videoVC.view.frame;
-            videoVC.tracerDic = self.videoVC.tracerDic;
+            videoVC.view.frame = self.photoScrollView.bounds;
+            videoVC.videoFrame = self.photoScrollView.bounds;
+            videoVC.tracerDic = self.videoTracerDict;
             showVedioView.videoVC = videoVC;
         }
         else {
@@ -1674,71 +1674,79 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
     [rootViewController addChildViewController:self];
     
+    [rootViewController.view addSubview:self.view]; //图片放大动画情况下，先加入view再加入遮罩
+    
     self.view.alpha = 0;
     TTShowImageView * startShowImageView = [self showImageViewAtIndex:_startWithIndex];
     if (!startShowImageView.isDownloading && self.placeholderSourceViewFrames.count > _startWithIndex && [self.placeholderSourceViewFrames objectAtIndex:_startWithIndex] != [NSNull null]) {
         
         __weak TTShowImageView * weakShowImageView = startShowImageView;
-        __weak FHDetailPictureViewController * weakSelf = self;
+        __weak typeof(self) weakSelf = self;
         
         startShowImageView.loadingCompletedAnimationBlock = ^() {
             
+            __strong typeof(weakSelf) strongSelf = weakSelf;
             UIImageView * largeImageView = [weakShowImageView displayImageView];
             CGRect endFrame = largeImageView.frame;
+            
+            UIImageView *animationImageView = [[UIImageView alloc] initWithFrame:endFrame];
+            if ([largeImageView isKindOfClass:[UIImageView class]]) {
+                animationImageView.image = largeImageView.image;
+            }
+            animationImageView.contentMode = largeImageView.contentMode;
             
             // [largeImageView.superview convertRect:endFrame toView:nil];
             // 全屏展示，无需转换 (由于navigation bar的存在，转换后的y可能差一个navigation bar的高度)
             //[weakSelf.photoScrollView convertRect:endFrame fromView:largeImageView]
             CGRect transEndFrame = endFrame;
+            transEndFrame = CGRectOffset(transEndFrame, 0, [strongSelf frameForPagingScrollView].origin.y);
             
             UIView *containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
-            containerView.backgroundColor = [UIColor blackColor];
+            containerView.backgroundColor = [UIColor clearColor];
             
-            CGRect beginFrame = [[_placeholderSourceViewFrames objectAtIndex:_startWithIndex] CGRectValue];
-            if ([weakShowImageView isKindOfClass:[FHShowVideoView class]] && _startWithIndex == 0) {
+            CGRect beginFrame = [[strongSelf.placeholderSourceViewFrames objectAtIndex:strongSelf.startWithIndex] CGRectValue];
+            if ([weakShowImageView isKindOfClass:[FHShowVideoView class]] && strongSelf.startWithIndex == 0) {
                 // 视频cell
-                beginFrame = weakSelf.videoVC.videoFrame;
-                containerView.backgroundColor = [UIColor blackColor];
+                beginFrame = [strongSelf frameForPagingScrollView];
             }
             containerView.alpha = 0;
-            largeImageView.frame = beginFrame;
-            UIView *originalSupperView = largeImageView.superview;
-            [containerView addSubview:largeImageView];
-            [rootViewController.view addSubview:weakSelf.view]; //图片放大动画情况下，先加入view再加入遮罩
+            largeImageView.alpha = 0;
+            animationImageView.frame = beginFrame;
+            [containerView addSubview:animationImageView];
             [rootViewController.view addSubview:containerView];
             
-            CGRect topBarFrame = weakSelf.topBar.frame;
-            weakSelf.topBar.frame = CGRectOffset(topBarFrame, 0, -topBarFrame.size.height);
-            weakSelf.topBar.alpha = 0;
+            CGRect topBarFrame = strongSelf.topBar.frame;
+            strongSelf.topBar.frame = CGRectOffset(topBarFrame, 0, -topBarFrame.size.height);
+            strongSelf.topBar.alpha = 0;
             
-            CGRect bottomBarFrame = weakSelf.bottomBar.frame;
-            weakSelf.bottomBar.frame = CGRectOffset(bottomBarFrame, 0, bottomBarFrame.size.height);
-            weakSelf.bottomBar.alpha = 0;
+            CGRect bottomBarFrame = strongSelf.bottomBar.frame;
+            strongSelf.bottomBar.frame = CGRectOffset(bottomBarFrame, 0, bottomBarFrame.size.height);
+            strongSelf.bottomBar.alpha = 0;
             
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             
             [UIView animateWithDuration:0.35f animations:^{
                 containerView.alpha = 1;
-                largeImageView.frame = transEndFrame;
+                animationImageView.frame = transEndFrame;
                 
-                weakSelf.topBar.alpha = 1;
-                weakSelf.topBar.frame = topBarFrame;
+                strongSelf.topBar.alpha = 1;
+                strongSelf.topBar.frame = topBarFrame;
                 
-                weakSelf.bottomBar.frame = bottomBarFrame;
-                weakSelf.bottomBar.alpha = 1;
+                strongSelf.bottomBar.frame = bottomBarFrame;
+                strongSelf.bottomBar.alpha = 1;
 
+                strongSelf.view.alpha = 1;
             } completion:^(BOOL finished) {
-                largeImageView.frame = endFrame;
-                [originalSupperView addSubview:largeImageView];
+                largeImageView.alpha = 1;
+//                [originalSupperView addSubview:largeImageView];
                 [containerView removeFromSuperview];
                 
-                weakSelf.view.alpha = 1;
                 weakShowImageView.loadingCompletedAnimationBlock = nil;
                 [weakShowImageView showGifIfNeeded];
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
                 
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                [weakSelf didMoveToParentViewController:rootViewController];
+                [strongSelf didMoveToParentViewController:rootViewController];
             }];
         };
         
@@ -1751,7 +1759,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
         
-        [UIView animateWithDuration:.3f animations:^{
+        [UIView animateWithDuration:.2f animations:^{
             self.view.alpha = 1; //本地加载图片，淡入动画
             containerView.backgroundColor = [UIColor blackColor];
         } completion:^(BOOL finished) {
@@ -1788,14 +1796,13 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     if (self.reachDismissCondition) {
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         
-        [UIView animateWithDuration:.25f animations:^{
+        [UIView animateWithDuration:.2f animations:^{
             self.view.layer.opacity = 0.0f;
         } completion:^(BOOL finished) {
             kFHStaticPhotoBrowserAtTop = NO;
             [self.view removeFromSuperview];
             [self removeFromParentViewController];
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-            [self removeFromParentViewController];
         }];
     } else {
         if (self.placeholderSourceViewFrames.count > _currentIndex && [self.placeholderSourceViewFrames objectAtIndex:_currentIndex] != [NSNull null]) {
@@ -1812,7 +1819,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                     [self.view removeFromSuperview];
                     [self removeFromParentViewController];
                     [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                    [self removeFromParentViewController];
                 }];
                 return;
             }
@@ -1822,7 +1828,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             CGRect endFrame = [[_placeholderSourceViewFrames objectAtIndex:_currentIndex] CGRectValue];
             if ([showImageView isKindOfClass:[FHShowVideoView class]]) {
                 // 视频cell
-                endFrame = self.videoVC.videoFrame;
+                endFrame = [self frameForPagingScrollView];
             }
             largeImageView.hidden = NO;
             CGRect beginFrame = largeImageView.frame;
@@ -1830,12 +1836,13 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             //largeImageView可能被放大了，因此需要转换
             CGRect transBeginFrame = [largeImageView.superview convertRect:beginFrame toView:nil];
             
+            transBeginFrame = CGRectOffset(transBeginFrame, 0, [self frameForPagingScrollView].origin.y);
             //[showImageView hideGifIfNeeded];
             largeImageView.frame = transBeginFrame;
             
 
             UIView * containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
-            containerView.backgroundColor = [UIColor blackColor];
+            containerView.backgroundColor = [UIColor clearColor];
             [rootViewController.view addSubview:containerView];
             
             //如果有提供dismissInsets来控制放大图片动画的边距
@@ -1879,10 +1886,21 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             
-            [UIView animateWithDuration:0.25f animations:^{
+            CGRect topBarFrame = self.topBar.frame;
+            topBarFrame = CGRectOffset(topBarFrame, 0, -topBarFrame.size.height);
+            
+            CGRect bottomBarFrame = self.bottomBar.frame;
+            bottomBarFrame = CGRectOffset(bottomBarFrame, 0, bottomBarFrame.size.height);
+            [UIView animateWithDuration:0.35f animations:^{
                 
-                largeImageView.alpha = 0;
-                self.containerView.alpha = 0;
+                self.topBar.frame = topBarFrame;
+                self.topBar.alpha = 0;
+                
+                self.bottomBar.frame = bottomBarFrame;
+                self.bottomBar.alpha = 0;
+                
+                largeImageView.frame = endFrame;
+                self.view.alpha = 0;
                 containerView.alpha = 0;
             } completion:^(BOOL finished) {
                 [containerView removeFromSuperview];
@@ -1890,7 +1908,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 [self.view removeFromSuperview];
                 [self removeFromParentViewController];
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                [self removeFromParentViewController];
             }];
             
         } else {
@@ -1904,7 +1921,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 [self.view removeFromSuperview];
                 [self removeFromParentViewController];
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                [self removeFromParentViewController];
             }];
         }
     }

@@ -40,7 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
 /** 打开的时候需要展示的index */
 @property(nonatomic, assign)NSUInteger startWithIndex;
 /**如果外面传了视频控制器就用外面的，如果没有就自己生成一个，但是退出该控制器后视频进度不会保存*/
-@property (nonatomic, weak)     FHVideoViewController      *videoVC;
+@property (nonatomic, copy) NSDictionary *videoTracerDict;
 
 /** 图片个数 */
 @property(nonatomic, assign, readonly)NSInteger photoCount;

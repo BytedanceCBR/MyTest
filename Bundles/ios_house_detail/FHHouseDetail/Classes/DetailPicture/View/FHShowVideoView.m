@@ -79,7 +79,7 @@
 - (CGRect)showVideoFrame {
     CGRect frame = self.videoVC.videoFrame;
     self.currentImageView.frame = frame;
-    self.currentImageView.center = CGPointMake([UIScreen mainScreen].bounds.size.width / 2, [UIScreen mainScreen].bounds.size.height / 2);
+    self.currentImageView.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
     frame = self.currentImageView.frame;
     if (self.videoVC.playbackState != TTVPlaybackState_Stopped) {
         frame = [self videoFrame:frame];
