@@ -30,8 +30,8 @@
 
 - (void)setupUI {
     _backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [_backBtn setImage:FHBackWhiteImage forState:UIControlStateNormal];
-    [_backBtn setImage:FHBackWhiteImage forState:UIControlStateHighlighted];
+    [_backBtn setImage:ICON_FONT_IMG(24, @"\U0000e673", [UIColor whiteColor]) forState:UIControlStateNormal];
+    [_backBtn setImage:ICON_FONT_IMG(24, @"\U0000e673", [UIColor whiteColor]) forState:UIControlStateHighlighted];
     [_backBtn addTarget:self action:@selector(backAction:) forControlEvents:UIControlEventTouchUpInside];
     _backBtn.frame = CGRectMake(20, 10, 24, 24);
     [self addSubview:_backBtn];
