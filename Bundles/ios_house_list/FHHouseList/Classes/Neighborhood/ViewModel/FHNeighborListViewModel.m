@@ -31,6 +31,7 @@
 #import "UITableView+FHHouseCard.h"
 #import "FHHouseSecondCardViewModel.h"
 #import "FHCommonDefines.h"
+#import "FHHouseListRelatedSecondCell.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -75,7 +76,8 @@
     [_tableView registerClass:[FHRecommendCourtCell class] forCellReuseIdentifier:NSStringFromClass([FHRecommendCourtCell class])];
     [_tableView registerClass:[FHHouseListSecondRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListSecondRelatedCell class])];
     [_tableView registerClass:[FHHouseListRentRelatedCell class] forCellReuseIdentifier:NSStringFromClass([FHHouseListRentRelatedCell class])];
-    [self.tableView fhHouseCard_registerCellStyles];
+    [self.tableView fhHouseCard_registerCellStylesWithDict:@{
+        NSStringFromClass(FHHouseSecondCardViewModel.class): NSStringFromClass(FHHouseListRelatedSecondCell.class),}];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -226,7 +228,7 @@
                 [cell refreshWithData:self.houseList[indexPath.row]];
                 return cell;
             } else if ([self.houseList[indexPath.row] isKindOfClass:[FHHouseSecondCardViewModel class]]) {
-                UITableViewCell *cell = [tableView fhHouseCard_cellForEntity:self.houseList[indexPath.row] atIndexPath:indexPath];
+                UITableViewCell *cell = [tableView fhHouseCard_cellForEntity:self.houseList[indexPath.row] atIndexPath:indexPath withDict:@{        NSStringFromClass(FHHouseSecondCardViewModel.class): NSStringFromClass(FHHouseListRelatedSecondCell.class),}];
                 if (cell) return cell;
             }
             FHHouseListBaseItemModel *cellModel = self.houseList[indexPath.row];
@@ -291,7 +293,7 @@
     if (self.listController.hasValidateData) {
         if (indexPath.row < self.houseList.count) {
             id data = self.houseList[indexPath.row];
-            CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath];
+            CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath withDict:@{        NSStringFromClass(FHHouseSecondCardViewModel.class): NSStringFromClass(FHHouseListRelatedSecondCell.class),}];
             if (cellHeight > -0.001f) return cellHeight;
             
             if ([self.houseList[indexPath.row] isKindOfClass:[FHRecommendCourtItem class]]) {
