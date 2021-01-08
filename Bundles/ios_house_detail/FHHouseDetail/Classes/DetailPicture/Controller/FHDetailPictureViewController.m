@@ -1117,6 +1117,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             
             FHVideoViewController *videoVC = [[FHVideoViewController alloc] init];
             videoVC.view.frame = self.photoScrollView.bounds;
+            videoVC.videoFrame = self.photoScrollView.bounds;
             videoVC.tracerDic = self.videoTracerDict;
             showVedioView.videoVC = videoVC;
         }
