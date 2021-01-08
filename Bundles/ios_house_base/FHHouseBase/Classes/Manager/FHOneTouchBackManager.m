@@ -9,13 +9,13 @@
 #import "ByteDanceKit.h"
 #import "UIImage+TTThemeExtension.h"
 #import "FHUserTracker.h"
+#import "UIViewController+Tree.h"
 
 @interface FHOneTouchBackManager()
 
 @property(nonatomic, strong )NSMutableDictionary *params;
 @property(nonatomic, strong )UIButton *button;
 @property(nonatomic, strong )NSURL *backUrl;
-@property(nonatomic, strong )UIViewController *vc;
 @property(nonatomic, strong )NSMutableDictionary *tracerDic ;
 
 @end
@@ -46,9 +46,8 @@
     }
     
     self.backUrl = backUrl;
-    self.vc = [self activeVC];
     NSString *title = [NSString stringWithFormat:@"%@ ",[self.params.copy btd_stringValueForKey:@"btn_name" default:@""]];
-    self.button.frame = CGRectMake(0, self.vc.view.bounds.size.height/3, (title.length) * 12 + 8, 21);
+    self.button.frame = CGRectMake(0, [self activeVC].view.bounds.size.height/3, (title.length) * 12 + 8, 21);
     [self.button setImage:[UIImage themedImageNamed:@"arrow_down_black_line"] forState:UIControlStateNormal];
     self.button.backgroundColor = [UIColor colorWithRed:0 / 255.0 green:0 / 255.0 blue:0 / 255.0 alpha:0.3];
     [self.button setTitle:title forState:UIControlStateNormal];
@@ -57,7 +56,7 @@
     [self.button addTarget: self action: @selector(liveApp) forControlEvents: UIControlEventTouchDown];
     [self setmask];
     [[self activeVC].view addSubview:self.button];
-    
+    [[self activeVC].view bringSubviewToFront:self.button];
     self.tracerDic = [[self.params btd_stringValueForKey:@"ext_growth"] btd_jsonDictionary].mutableCopy;
     self.tracerDic[@"button_name"] = @"click_position";
     
@@ -113,32 +112,11 @@
 //获取当前屏幕显示的 View Controller
 - (UIViewController *)activeVC
 {
-    UIWindow * window   = [[UIApplication sharedApplication] keyWindow];
-    if (window.windowLevel != UIWindowLevelNormal) {
-        NSArray *windows = [[UIApplication sharedApplication] windows];
-        for(UIWindow * tmpWin in windows) {
-            if (tmpWin.windowLevel == UIWindowLevelNormal) {
-                window = tmpWin;
-                break;
-            }
-        }
-    }
-    return [self nextTopForViewController:window.rootViewController];
+   return  [[UIViewController new] hmd_topViewController];
 }
 
-- (UIViewController *)nextTopForViewController:(UIViewController *)inViewController {
-    while (inViewController.presentedViewController) {
-        inViewController = inViewController.presentedViewController;
-    }
-    if ([inViewController isKindOfClass:[UITabBarController class]]) {
-        UIViewController *selectedVC = [self nextTopForViewController:((UITabBarController *)inViewController).selectedViewController];
-        return selectedVC;
-    } else if ([inViewController isKindOfClass:[UINavigationController class]]) {
-        UIViewController *selectedVC = [self nextTopForViewController:((UINavigationController *)inViewController).visibleViewController];
-        return selectedVC;
-    } else {
-        return inViewController;
-    }
+- (void)updateButton{
+    [[self activeVC].view bringSubviewToFront:self.button];
 }
 
 @end

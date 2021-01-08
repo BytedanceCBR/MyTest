@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setButtonWithUrl:(NSURL *)url;
 
+- (void)updateButton;
+
 @end
 
 NS_ASSUME_NONNULL_END
