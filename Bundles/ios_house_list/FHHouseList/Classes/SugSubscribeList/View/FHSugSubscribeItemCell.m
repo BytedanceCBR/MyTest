@@ -15,7 +15,6 @@
 @interface FHSugSubscribeItemCell ()
 
 @property (nonatomic, strong)   UILabel       *unValidLabel; // 已失效
-@property (nonatomic, strong)   UIImageView       *rightIcon; //
 @property (nonatomic, strong)   UIView       *bottomLine;
 
 @end
@@ -41,14 +40,6 @@
         make.top.mas_equalTo(15);
         make.left.mas_equalTo(20);
         make.height.mas_equalTo(24);
-    }];
-    // rightIcon
-    _rightIcon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed"]];
-    [self.contentView addSubview:_rightIcon];
-    [_rightIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(-15);
-        make.height.width.mas_equalTo(16);
     }];
     // sugLabel
     _sugLabel = [[UILabel alloc] init];
@@ -102,7 +93,6 @@
             make.width.mas_equalTo(0);
             make.right.mas_lessThanOrEqualTo(self.contentView).offset(-40);
         }];
-        _rightIcon.hidden = NO;
     } else {
         _titleLabel.textColor = [UIColor themeGray3];
         _sugLabel.textColor = [UIColor themeGray4];
@@ -110,7 +100,6 @@
             make.width.mas_equalTo(36);
             make.right.mas_lessThanOrEqualTo(self.contentView).offset(-20);
         }];
-        _rightIcon.hidden = YES;
     }
 }
 
