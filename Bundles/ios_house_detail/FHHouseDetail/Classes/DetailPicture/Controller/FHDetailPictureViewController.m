@@ -31,6 +31,7 @@
 #import <NSDictionary+BTDAdditions.h>
 #import "FHLoadingButton.h"
 #import "FHDetailBaseModel.h"
+#import <FHHouseBase/FHUserTracker.h>
 
 #define kFHDPTopBarHeight 44.f
 #define kFHDPBottomBarHeight 60.f
@@ -40,8 +41,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 @interface FHDetailPictureViewController ()<UIScrollViewDelegate, TTShowImageViewDelegate,TTPreviewPanBackDelegate,UIGestureRecognizerDelegate, FHVideoViewDelegate>
 {
-    BOOL alreadyFinished;// 防止多次点击回调造成多次popController
-    BOOL _addedToContainer;
     BOOL _navBarHidden;
     BOOL _statusBarHidden;
     UIStatusBarStyle _lastStatusBarStyle;
@@ -113,9 +112,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _isShowSegmentView = YES;
         
         self.ttHideNavigationBar = YES;
-        
-        _addedToContainer = NO;
-        
+                
         self.photoViewPools = [[NSMutableSet alloc] initWithCapacity:5];
         self.videoViewPools = [[NSMutableSet alloc] initWithCapacity:3];
         self.vrViewPools = [[NSMutableSet alloc] initWithCapacity:3];
@@ -397,7 +394,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
     UINavigationController *navi = self.topVC.navigationController;
     if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
-        [(TTNavigationController *)navi panRecognizer].enabled = NO;
+        navi.interactivePopGestureRecognizer.enabled = NO;
     }
     // 是否正在显示 视频
 //    if (_isShowBottomBar) {
@@ -586,7 +583,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     [super viewDidAppear:animated];
     UINavigationController *navi = self.topVC.navigationController;
     if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
-        [(TTNavigationController *)navi panRecognizer].enabled = NO;
+        navi.interactivePopGestureRecognizer.enabled = NO;
     }
     [self setCurrentStatusStyle];
     __weak typeof(self) weakSelf = self;
@@ -955,7 +952,19 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 
 - (CGRect)frameForPagingScrollView
 {
-    return self.view.bounds;
+    CGFloat topInset = 0;
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+    if (topInset < 1) {
+        topInset = 20;
+    }
+    CGFloat topMargin = kFHDPTopBarHeight + topInset + 42;
+    CGFloat botttomMargin = 76 + bottomInset;
+    return CGRectMake(0, topMargin, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - topMargin - botttomMargin);
+//    return self.view.bounds;
 }
 
 - (void)setPhotoScrollViewContentSize
@@ -1269,12 +1278,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     if (_dismissBlock) {
         _dismissBlock();
     }
-    if (_addedToContainer) {
-        [self dismissSelf];
-        _addedToContainer = NO;
-    } else {
-        [self dismissAnimated:NO];
-    }
+    [self dismissSelf];
 }
 
 - (void)albumBtnClick
@@ -1282,29 +1286,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     if (self.albumImageBtnClickBlock) {
         self.albumImageBtnClickBlock(self.currentIndex);
     }
-}
-
-- (void)backButtonClicked
-{
-    [self dismissAnimated:YES];
-}
-
-- (void)dismissAnimated:(BOOL)animated
-{
-    if (alreadyFinished) {
-        return;
-    }
-    
-    if(self.navigationController)
-    {
-        [self.navigationController popViewControllerAnimated:animated];
-    }
-    else
-    {
-        [self dismissViewControllerAnimated:animated completion:NULL];
-    }
-    kFHStaticPhotoBrowserAtTop = NO;
-    alreadyFinished = YES;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -1675,11 +1656,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 
 #pragma mark - Present View
 
-- (void)presentPhotoScrollView
-{
-    [self presentPhotoScrollViewWithDismissBlock:nil];
-}
-
 - (void)presentPhotoScrollViewWithDismissBlock:(TTPhotoScrollViewDismissBlock)block
 {
     kFHStaticPhotoBrowserAtTop = YES;
@@ -1697,11 +1673,8 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         rootViewController = self.topVC;
     }
     [rootViewController addChildViewController:self];
-    rootViewController.navigationController.interactivePopGestureRecognizer.enabled = NO;
     
     self.view.alpha = 0;
-    _addedToContainer = YES;
-    
     TTShowImageView * startShowImageView = [self showImageViewAtIndex:_startWithIndex];
     if (!startShowImageView.isDownloading && self.placeholderSourceViewFrames.count > _startWithIndex && [self.placeholderSourceViewFrames objectAtIndex:_startWithIndex] != [NSNull null]) {
         
@@ -1715,29 +1688,45 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             
             // [largeImageView.superview convertRect:endFrame toView:nil];
             // 全屏展示，无需转换 (由于navigation bar的存在，转换后的y可能差一个navigation bar的高度)
+            //[weakSelf.photoScrollView convertRect:endFrame fromView:largeImageView]
             CGRect transEndFrame = endFrame;
             
             UIView *containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
-            containerView.backgroundColor = [UIColor clearColor];
+            containerView.backgroundColor = [UIColor blackColor];
             
             CGRect beginFrame = [[_placeholderSourceViewFrames objectAtIndex:_startWithIndex] CGRectValue];
             if ([weakShowImageView isKindOfClass:[FHShowVideoView class]] && _startWithIndex == 0) {
                 // 视频cell
-                beginFrame = self.videoVC.videoFrame;
+                beginFrame = weakSelf.videoVC.videoFrame;
                 containerView.backgroundColor = [UIColor blackColor];
             }
+            containerView.alpha = 0;
             largeImageView.frame = beginFrame;
-            largeImageView.alpha = 1;
             UIView *originalSupperView = largeImageView.superview;
             [containerView addSubview:largeImageView];
-            [rootViewController.view addSubview:self.view]; //图片放大动画情况下，先加入view再加入遮罩
+            [rootViewController.view addSubview:weakSelf.view]; //图片放大动画情况下，先加入view再加入遮罩
             [rootViewController.view addSubview:containerView];
+            
+            CGRect topBarFrame = weakSelf.topBar.frame;
+            weakSelf.topBar.frame = CGRectOffset(topBarFrame, 0, -topBarFrame.size.height);
+            weakSelf.topBar.alpha = 0;
+            
+            CGRect bottomBarFrame = weakSelf.bottomBar.frame;
+            weakSelf.bottomBar.frame = CGRectOffset(bottomBarFrame, 0, bottomBarFrame.size.height);
+            weakSelf.bottomBar.alpha = 0;
             
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             
             [UIView animateWithDuration:0.35f animations:^{
-                containerView.backgroundColor = [UIColor blackColor];
+                containerView.alpha = 1;
                 largeImageView.frame = transEndFrame;
+                
+                weakSelf.topBar.alpha = 1;
+                weakSelf.topBar.frame = topBarFrame;
+                
+                weakSelf.bottomBar.frame = bottomBarFrame;
+                weakSelf.bottomBar.alpha = 1;
+
             } completion:^(BOOL finished) {
                 largeImageView.frame = endFrame;
                 [originalSupperView addSubview:largeImageView];
@@ -1749,7 +1738,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
                 
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                [self didMoveToParentViewController:rootViewController];
+                [weakSelf didMoveToParentViewController:rootViewController];
             }];
         };
         
