@@ -213,27 +213,39 @@
         [self initSegmentWithTabInfoArr:self.ugcTabList];
         //初始化vc
         [self initSubVCinitWithTabInfoArr:self.ugcTabList];
-
-        [self.viewController.view insertSubview:self.pageView atIndex:0];
-        if(self.viewController.blackmailReatorBottomBar.hidden == NO) {
-            self.pageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.viewController.blackmailReatorBottomBar.top);
-            self.pageView.scrollView.frame = self.pageView.frame;
-        }
-        else {
-            self.pageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.viewController.bottomBar.top);
-            self.pageView.scrollView.frame = self.pageView.frame;
-        }
-        
-        NSMutableArray *tableViewArray = [NSMutableArray array];
-        for(FHHouseRealtorDetailBaseViewController *vc in self.subVCs) {
-            [vc view];
-            [tableViewArray addObject:vc.tableView];
-        }
-        self.viewController.segmentView.height = kSegmentViewHeight;
-        [self.pageView updateWithHeaderView:self.viewController.headerView segmentedView:self.viewController.segmentView navBar:self.viewController.customNavBarView tableViewArray:tableViewArray];
-        [self scrollToIndex:self.currentIndex];
-        self.pageView.scrollView.backgroundColor = [UIColor themeGray7];
+        [self updatePageView];
     }
+}
+
+- (void)updatePageView {
+    [self.viewController.view insertSubview:self.pageView atIndex:0];
+    if(self.viewController.blackmailReatorBottomBar.hidden == NO) {
+        self.pageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.viewController.blackmailReatorBottomBar.top);
+        self.pageView.scrollView.frame = self.pageView.frame;
+    }
+    else {
+        self.pageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.viewController.bottomBar.top);
+        self.pageView.scrollView.frame = self.pageView.frame;
+    }
+    
+    NSMutableArray *tableViewArray = [NSMutableArray array];
+    for(FHHouseRealtorDetailBaseViewController *vc in self.subVCs) {
+        [vc view];
+        [tableViewArray addObject:vc.tableView];
+    }
+    self.viewController.segmentView.height = kSegmentViewHeight;
+    if(self.subVCs.count < 2) {
+        self.viewController.segmentView = nil;
+    }
+    [self.pageView updateWithHeaderView:self.viewController.headerView segmentedView:self.viewController.segmentView navBar:self.viewController.customNavBarView tableViewArray:tableViewArray];
+    [self.viewController.segmentView setNeedsLayout];
+    [self.viewController.segmentView layoutIfNeeded];
+    if(!(self.currentIndex >= 0 && self.currentIndex < self.subVCs.count)) {
+        self.currentIndex = 0;
+    }
+    [self scrollToIndex:self.currentIndex];
+    self.pageView.scrollView.backgroundColor = [UIColor themeGray7];
+    
 }
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
@@ -460,6 +472,7 @@
     self.currentIndex = index;
     if(self.isFirstEnter) {
         self.isFirstEnter = NO;
+        [self.pageView updateSelectIndex:index];
     } else {
         //上报埋点
         NSString *position = @"be_null";
