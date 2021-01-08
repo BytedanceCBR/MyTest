@@ -19,12 +19,17 @@
 #import "FHSameHouseTagView.h"
 #import "FHOldDetailMultitemCollectionView.h"
 #import "FHDetailSurroundingAreaCell.h"
-#import "FHNeighborhoodDetailHouseSaleCollectionCell.h"
-@interface FHDetailSameNeighborhoodHouseCell ()
-@property (nonatomic, strong)   FHDetailHeaderView       *headerView;
-@property (nonatomic, weak) UIImageView *shadowImage;
-@property (nonatomic, strong)   UIView       *containerView;
+#import "UIDevice+BTDAdditions.h"
 
+
+CGFloat getSameNeighborhoodHouseImageWidth();
+CGFloat getSameNeighborhoodHouseImageHeight();
+@interface FHDetailSameNeighborhoodHouseCell () <UICollectionViewDataSource,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout>
+@property (nonatomic, strong) FHDetailHeaderView *headerView;
+@property (nonatomic, weak) UIImageView *shadowImage;
+@property (nonatomic, strong) UIView *containerView;
+@property (nonatomic,strong) NSArray *dataList;
+@property (nonatomic, strong) NSMutableDictionary *houseShowCache;
 @end
 
 @implementation FHDetailSameNeighborhoodHouseCell
@@ -79,43 +84,95 @@
     }
     if (model.sameNeighborhoodHouseData) {
         self.headerView.label.text = [NSString stringWithFormat:@"同小区房源 (%@)",model.sameNeighborhoodHouseData.total];
-        UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        flowLayout.sectionInset = UIEdgeInsetsMake(0, 16, 0, 16);
         NSMutableArray *dataArr = [[NSMutableArray alloc]initWithArray:model.sameNeighborhoodHouseData.items];
         if (model.sameNeighborhoodHouseData.hasMore) {
-            FHNeighborhoodDetailHouseSaleMoreItemModel *moreItem = [[FHNeighborhoodDetailHouseSaleMoreItemModel alloc] init];
+            FHDetailSameNeighborhoodHouseSaleMoreItemModel *moreItem = [[FHDetailSameNeighborhoodHouseSaleMoreItemModel alloc] init];
             [dataArr addObject:moreItem];
         }
-        flowLayout.minimumInteritemSpacing = 10;
-        flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-        NSString *identifier = NSStringFromClass([FHSearchHouseDataItemsModel class]);
-        NSString *moreIdentifier = NSStringFromClass([FHNeighborhoodDetailHouseSaleMoreItemModel class]);
-//        FHDetailMultitemCollectionView *colView = [[FHDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:210 cellIdentifier:identifier cellCls:[FHDetailSameNeighborhoodHouseCollectionCell class] datas:model.sameNeighborhoodHouseData.items];
-        FHOldDetailMultitemCollectionView *colView = [[FHOldDetailMultitemCollectionView alloc] initWithFlowLayout:flowLayout viewHeight:201 datas:dataArr];
-        [colView registerCell:[FHNeighborhoodDetailHouseSaleItemCollectionCell class] forIdentifier:identifier];
-        [colView registerCell:[FHNeighborhoodDetailHouseSaleMoreItemCollectionCell class] forIdentifier:moreIdentifier];
-        [self.containerView addSubview:colView];
-        __weak typeof(self) wSelf = self;
-        colView.clickBlk = ^(NSInteger index) {
-            if (index == model.sameNeighborhoodHouseData.items.count) {
-                [wSelf moreButtonClick];
-            }else {
-                [wSelf collectionCellClick:index];
-            }
-        };
-        colView.displayCellBlk = ^(NSInteger index) {
-            [wSelf collectionDisplayCell:index];
-        };
-        [colView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.containerView).offset(6);
-            make.left.mas_equalTo(self.containerView).offset(15);
-            make.right.mas_equalTo(self.containerView).offset(-15);
-            make.bottom.mas_equalTo(self.containerView).offset(-10);
-        }];
-        [colView reloadData];
+        self.dataList = dataArr;
+        self.houseShowCache = [NSMutableDictionary dictionary];
+        [self initCollectionView];
     }
     
     [self layoutIfNeeded];
+}
+
+- (void)initCollectionView {
+    UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 16, 0, 16);
+    flowLayout.minimumInteritemSpacing = 10;
+    flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
+    collectionView.dataSource = self;
+    collectionView.delegate = self;
+    collectionView.showsHorizontalScrollIndicator = NO;
+    collectionView.backgroundColor = [UIColor whiteColor];
+    NSString *identifier = NSStringFromClass([FHSearchHouseDataItemsModel class]);
+    NSString *moreIdentifier = NSStringFromClass([FHDetailSameNeighborhoodHouseSaleMoreItemModel class]);
+    [collectionView registerClass:[FHDetailSameNeighborhoodHouseSaleItemCollectionCell class] forCellWithReuseIdentifier:identifier];
+    [collectionView registerClass:[FHDetailSameNeighborhoodHouseSaleMoreItemCollectionCell class] forCellWithReuseIdentifier:moreIdentifier];
+    
+    [self.containerView addSubview:collectionView];
+    
+    [collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(self.containerView).offset(6);
+        make.left.mas_equalTo(self.containerView).offset(15);
+        make.right.mas_equalTo(self.containerView).offset(-15);
+        make.bottom.mas_equalTo(self.containerView).offset(-10);
+        make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight() + 80);
+    }];
+    [collectionView reloadData];
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    return self.dataList.count;
+}
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
+    return 1;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+    id data = self.dataList[indexPath.row];
+    FHDetailBaseCollectionCell *cell;
+    NSString *identifier = NSStringFromClass([data class]);
+    if (identifier.length > 0) {
+          cell = [collectionView dequeueReusableCellWithReuseIdentifier:identifier forIndexPath:indexPath];
+        if (indexPath.row < self.dataList.count) {
+            [cell refreshWithData:self.dataList[indexPath.row]];
+        }
+    }
+    return cell;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    id data = self.dataList[indexPath.row];
+    [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    if ([data isKindOfClass:[FHDetailSameNeighborhoodHouseSaleMoreItemModel class]]) {
+        [self moreButtonClick];
+    }else {
+        [self collectionCellClick:indexPath.row];
+    }
+}
+
+// house_show埋点
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
+    if ([self.houseShowCache valueForKey:tempKey]) {
+        return;
+    }
+    [self.houseShowCache setValue:@(YES) forKey:tempKey];
+    // 添加埋点
+    [self collectionDisplayCell:indexPath.row];
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    id data = self.dataList[indexPath.row];
+    if ([data isKindOfClass:[FHDetailSameNeighborhoodHouseSaleMoreItemModel class]]) {
+        return CGSizeMake(94, getSameNeighborhoodHouseImageHeight() + 60);
+    }
+    return CGSizeMake(getSameNeighborhoodHouseImageWidth(), getSameNeighborhoodHouseImageHeight() + 60);
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -265,28 +322,94 @@
 
 @end
 
+@interface FHDetailSameNeighborhoodHouseSaleItemCollectionCell ()
 
-// FHDetailNeighborhoodItemCollectionCell
-@interface FHDetailSameNeighborhoodHouseCollectionCell ()
-
-@property(nonatomic, strong) UILabel *imageTagLabel;
-@property(nonatomic, strong) FHSameHouseTagView *imageTagLabelBgView;
-@property (nonatomic, strong) UIImageView *topLeftTagImageView;
-@property (nonatomic, strong) CAShapeLayer *topLeftTagMaskLayer;
-
-@property (nonatomic, strong) UIImageView *imageBacView;
+@property(nonatomic,strong) UIImageView *houseImageView;
+@property(nonatomic,strong) UILabel *descriptionLabel;
+@property(nonatomic,strong) UILabel *pricePerUnitLabel;
+@property(nonatomic,strong) UILabel *totalPriceLabel;
+@property(nonatomic,strong) FHSameHouseTagView *tagView;
+@property(nonatomic,strong) FHSameHouseTagImageView *tagImageView;
+@property(nonatomic,strong) UILabel *tagLabel;
 @end
 
-@implementation FHDetailSameNeighborhoodHouseCollectionCell
+@implementation FHDetailSameNeighborhoodHouseSaleItemCollectionCell
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-
-        [self setupUI];
+-(instancetype)initWithFrame:(CGRect)frame {
+    if(self = [super initWithFrame:frame]) {
+        [self initView];
     }
     return self;
+}
+
+-(void)initView {
+    self.houseImageView = [[UIImageView alloc] init];
+    self.houseImageView.layer.cornerRadius = 10;
+    self.houseImageView.layer.masksToBounds = YES;
+    self.houseImageView.layer.borderWidth = 1;
+    self.houseImageView.layer.borderColor = [UIColor themeGray6].CGColor;
+    self.descriptionLabel = [[UILabel alloc] init];
+    self.pricePerUnitLabel = [[UILabel alloc] init];
+    self.totalPriceLabel = [[UILabel alloc] init];
+    self.tagView = [[FHSameHouseTagView alloc] init];
+    self.tagImageView = [[FHSameHouseTagImageView alloc] init];
+    self.tagLabel = [[UILabel alloc] init];
+    
+    self.descriptionLabel.font = [UIFont themeFontMedium:16];
+    self.descriptionLabel.textColor = [UIColor themeGray1];
+    self.descriptionLabel.lineBreakMode = NSLineBreakByCharWrapping;
+    self.pricePerUnitLabel.font = [UIFont themeFontRegular:12];
+    self.pricePerUnitLabel.textColor = [UIColor themeGray3];
+    self.totalPriceLabel.font = [UIFont themeFontMedium:16];
+    self.totalPriceLabel.textColor = [UIColor themeOrange1];
+    self.tagView.backgroundColor = [UIColor themeOrange4];
+    self.tagView.hidden = YES;
+    self.tagImageView.backgroundColor = [UIColor themeOrange4];
+    self.tagImageView.hidden = YES;
+    self.tagLabel.textColor = [UIColor themeWhite];
+    self.tagLabel.textAlignment = NSTextAlignmentCenter;
+    self.tagLabel.font = [UIFont themeFontRegular:12];
+
+    [self.contentView addSubview:self.houseImageView];
+    [self.contentView addSubview:self.descriptionLabel];
+    [self.contentView addSubview:self.pricePerUnitLabel];
+    [self.contentView addSubview:self.totalPriceLabel];
+    [self.contentView addSubview:self.tagImageView];
+    [self.tagView addSubview:self.tagLabel];
+    [self.contentView addSubview:self.tagView];
+    
+    [self.houseImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.equalTo(self.contentView);
+        make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight());
+    }];
+    [self.descriptionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.houseImageView.mas_bottom).mas_offset(12);
+        make.left.right.equalTo(self.contentView);
+        make.height.mas_equalTo(22);
+    }];
+    [self.totalPriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.descriptionLabel.mas_bottom).offset(6);
+        make.left.equalTo(self.contentView);
+        make.height.mas_equalTo(21);
+    }];
+    [self.pricePerUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.descriptionLabel.mas_bottom).offset(10);
+        make.left.equalTo(self.totalPriceLabel.mas_right).offset(4);
+        make.height.mas_equalTo(14);
+    }];
+    [self.tagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(self.contentView);
+        make.size.mas_equalTo(CGSizeMake(60, 20));
+    }];
+    [self.tagView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.top.equalTo(self.contentView);
+        make.height.mas_equalTo(20);
+    }];
+    [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.bottom.equalTo(self.tagView);
+        make.left.equalTo(self.tagView).offset(6);
+        make.right.equalTo(self.tagView).offset(-6);
+    }];
 }
 
 - (void)refreshWithData:(id)data {
@@ -295,225 +418,121 @@
     }
     self.currentData = data;
     FHSearchHouseDataItemsModel *model = (FHSearchHouseDataItemsModel *)data;
-    if (model) {
-        if (model.houseImage.count > 0) {
-            FHImageModel *imageModel = model.houseImage[0];
-            NSString *urlStr = imageModel.url;
-            if ([urlStr length] > 0) {
-                [self.icon bd_setImageWithURL:[NSURL URLWithString:urlStr] placeholder:[UIImage imageNamed:@"default_image"]];
-            } else {
-                self.icon.image = [UIImage imageNamed:@"default_image"];
-            }
-        } else {
-            self.icon.image = [UIImage imageNamed:@"default_image"];
-        }
-        
-        //当企业担保和降价房源同时存在时，优先展示企业担保标签
-        if (!model.tagImage || !model.tagImage.count) {
-            if (model.houseImageTag.text) {
-                self.imageTagLabel.textColor = [UIColor whiteColor];
-                self.imageTagLabel.text = model.houseImageTag.text;
-                self.imageTagLabelBgView.backgroundColor = [UIColor themeOrange4];
-                self.imageTagLabelBgView.hidden = NO;
-            }else {
-                self.imageTagLabelBgView.hidden = YES;
-            }
-        }
-        
-        self.houseVideoImageView.hidden = !model.houseVideo.hasVideo;
-        
-        NSString *str = model.displaySameNeighborhoodTitle;
-        if (str == nil) {
-            str = @"";
-        }
-        NSMutableAttributedString *attributeText = [[NSMutableAttributedString alloc] initWithString:str];
-        attributeText.yy_font = [UIFont themeFontMedium:16];
-        attributeText.yy_color = [UIColor themeGray1];
-        self.descLabel.attributedText = attributeText;
-        self.priceLabel.text = model.displayPrice;
-        self.spaceLabel.text = model.displayPricePerSqm;
-        
-        //企业担保标签
-        if (model.tagImage && model.tagImage.count > 0) {
-            FHImageModel *imageModel = model.tagImage.firstObject;
-            if (!imageModel.url.length) {
-                return;
-            }
-            
-            [self.topLeftTagImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
-            
-            CGFloat width = [imageModel.width floatValue];
-            CGFloat height = [imageModel.height floatValue];
-            [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.width.mas_equalTo(width > 0.0 ? width : 60);
-            }];
-            [self.topLeftTagImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(height > 0.0 ? height : 20);
-            }];
-            
-            self.topLeftTagImageView.hidden = NO;
-        } else {
-            self.topLeftTagImageView.hidden = YES;
+    
+    self.houseImageView.image = [UIImage imageNamed:@"default_image"];
+    self.tagImageView.hidden = YES;
+    self.tagView.hidden = YES;
+    
+    if (model.houseImage.count > 0) {
+        FHImageModel *imageModel = model.houseImage.firstObject;
+        if(imageModel.url.length > 0) {
+            [self.houseImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url] placeholder:[UIImage imageNamed:@"default_image"]];
         }
     }
-    [self layoutIfNeeded];
+    
+    //优先展示企业担保标签，然后展示降价房源标签
+    if(model.tagImage.count > 0) {
+        FHImageModel *imageModel = model.tagImage.firstObject;
+        if(imageModel.url.length > 0) {
+            [self.tagImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
+            self.tagImageView.hidden = NO;
+        }
+    } else if(model.houseImageTag.text.length > 0){
+        self.tagLabel.text = model.houseImageTag.text;
+        self.tagView.hidden = NO;
+    }
+    
+    self.descriptionLabel.text = model.displayNewNeighborhoodTitle;
+    self.totalPriceLabel.text = model.displayPrice;
+    self.pricePerUnitLabel.text = model.displayPricePerSqm;
 }
 
--(UIImageView *)imageBacView
+
+@end
+
+@interface FHDetailSameNeighborhoodHouseSaleMoreItemCollectionCell ()
+@property(nonatomic,strong) UIView *shadowView;
+@property(nonatomic,strong) UIImageView *moreImageView;
+@property(nonatomic,strong) UILabel *moreLabel;
+@end
+
+@implementation FHDetailSameNeighborhoodHouseSaleMoreItemCollectionCell
+
+- (instancetype)initWithFrame:(CGRect)frame
 {
-    if (!_imageBacView) {
-        _imageBacView = [[UIImageView alloc]init];
-        [_imageBacView setImage:[UIImage imageNamed:@"old_detail_house"]];
-        _imageBacView.contentMode = UIViewContentModeScaleAspectFill;
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.backgroundColor = [UIColor whiteColor];
+        [self initView];
     }
-    return _imageBacView;
+    return self;
 }
 
-- (void)setupUI {
-    self.clipsToBounds = YES;
-        [self.contentView addSubview:self.imageBacView];
-    _icon = [[UIImageView alloc] init];
-    _icon.layer.cornerRadius = 10.0;
-    _icon.layer.borderWidth = 0.5;
-    _icon.clipsToBounds = YES;
-    _icon.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _icon.layer.shadowColor = [UIColor blackColor].CGColor;
-    _icon.layer.shadowOffset = CGSizeMake(5, 5);
-    _icon.layer.shadowOpacity = 1;
-    _icon.image = [UIImage imageNamed:@"default_image"];
-    _icon.contentMode = UIViewContentModeScaleAspectFill;
-    [self.contentView addSubview:_icon];
-
-    _houseVideoImageView = [[UIImageView alloc] init];
-    _houseVideoImageView.image = [UIImage imageNamed:@"icon_list_house_video"];
-    _houseVideoImageView.backgroundColor = [UIColor clearColor];
-    [self.contentView addSubview:_houseVideoImageView];
+- (void)initView {
+    self.shadowView = [[UIView alloc] init];
+    self.moreImageView = [[UIImageView alloc] init];
+    self.moreLabel = [[UILabel alloc] init];
     
-    _descLabel = [[YYLabel alloc] init];
-    [self.contentView addSubview:_descLabel];
+    self.shadowView.backgroundColor = [UIColor themeGray7];
+    self.shadowView.layer.cornerRadius  = 10;
+    self.moreImageView.image = [UIImage imageNamed:@"more_house"];
+    self.moreLabel.font = [UIFont themeFontRegular:14];
+    self.moreLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
+    self.moreLabel.text = @"查看更多";
     
-    _priceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _priceLabel.textColor = [UIColor colorWithHexStr:@"fe5500"];
-    _priceLabel.font = [UIFont themeFontMedium:16];
-    [self.contentView addSubview:_priceLabel];
+    [self.contentView addSubview:self.shadowView];
+    [self.contentView addSubview:self.moreImageView];
+    [self.contentView addSubview:self.moreLabel];
     
-    _spaceLabel = [UILabel createLabel:@"" textColor:@"" fontSize:12];
-    _spaceLabel.textColor = [UIColor themeGray3];
-    [self.contentView addSubview:_spaceLabel];
-    
-    [self.contentView addSubview:self.imageTagLabelBgView];
-    [self.imageTagLabelBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.icon);
-        make.top.mas_equalTo(self.icon).mas_offset(0);
-        make.height.mas_equalTo(@20);
+    [self.shadowView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.left.right.equalTo(self.contentView);
+        make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight());
+    }];
+    [self.moreImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.contentView);
+        make.top.mas_equalTo(self.contentView).offset(34);
+        make.size.mas_equalTo(CGSizeMake(26, 26));
     }];
     
-    [self.imageTagLabelBgView addSubview:self.imageTagLabel];
-    [self.imageTagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(6);
-        make.right.mas_equalTo(-6);
-        make.center.mas_equalTo(self.imageTagLabelBgView);
+    [self.moreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(self.contentView);
+        make.top.equalTo(self.moreImageView.mas_bottom).offset(10);
     }];
-    
-    [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView);
-        make.width.mas_equalTo(140);
-        make.height.mas_equalTo(120);
-        make.top.mas_equalTo(self.contentView).offset(6);
-    }];
-    [self.imageBacView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).offset(-10);
-        make.width.mas_equalTo(160);
-        make.height.mas_equalTo(140);
-        make.top.mas_equalTo(self.contentView);
-    }];
-    [self.houseVideoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self.icon);
-        make.width.mas_equalTo(30);
-        make.height.mas_equalTo(30);
-    }];
-    
-    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.icon);
-        make.height.mas_equalTo(22);
-        make.top.mas_equalTo(self.icon.mas_bottom).offset(10);
-    }];
-    [_priceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [_priceLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    
-    [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.icon);
-        make.right.mas_equalTo(self.icon);
-        make.height.mas_equalTo(17);
-        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(3);
-    }];
-    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.icon);
-        make.right.mas_equalTo(self.icon);
-        make.height.mas_equalTo(22);
-        make.top.mas_equalTo(self.spaceLabel.mas_bottom).offset(8);
-    }];
-    
-    [self.icon addSubview:self.topLeftTagImageView];
-    [self.topLeftTagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.equalTo(self.icon);
-        make.size.mas_equalTo(CGSizeMake(60, 20));
-    }];
-}
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    
-    //图片圆角
-    if (!CGRectEqualToRect(self.topLeftTagImageView.frame, CGRectZero)) {
-        if (!_topLeftTagMaskLayer || !CGSizeEqualToSize(_topLeftTagMaskLayer.frame.size, self.topLeftTagImageView.frame.size)) {
-            UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.topLeftTagImageView.bounds
-                                                           byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight
-                                                                 cornerRadii:CGSizeMake(10, 10)];
-            _topLeftTagMaskLayer = [[CAShapeLayer alloc] init];
-            _topLeftTagMaskLayer.frame = self.topLeftTagImageView.bounds;
-            _topLeftTagMaskLayer.path = maskPath.CGPath;
-            self.topLeftTagImageView.layer.mask = _topLeftTagMaskLayer;
-        }
-    }
-}
-
-- (UILabel *)imageTagLabel
-{
-    if (!_imageTagLabel) {
-        _imageTagLabel = [[UILabel alloc]init];
-        _imageTagLabel.textAlignment = NSTextAlignmentCenter;
-        _imageTagLabel.font = [UIFont themeFontRegular:12];
-        _imageTagLabel.textColor = [UIColor whiteColor];
-    }
-    return _imageTagLabel;
-}
-
-- (FHSameHouseTagView *)imageTagLabelBgView
-{
-    if (!_imageTagLabelBgView) {
-        _imageTagLabelBgView = [[FHSameHouseTagView alloc]init];
-        _imageTagLabelBgView.backgroundColor = [UIColor themeOrange4];
-        _imageTagLabelBgView.hidden = YES;
-    }
-    return _imageTagLabelBgView;
-}
-
-- (UIImageView *)topLeftTagImageView {
-    if (!_topLeftTagImageView) {
-        _topLeftTagImageView = [[UIImageView alloc] init];
-        _topLeftTagImageView.hidden = YES;
-    }
-    
-    return _topLeftTagImageView;
 }
 
 @end
 
 
-// FHDetailSameNeighborhoodHouseModel
+@implementation FHSameHouseTagImageView
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(10, 10)];
+    CAShapeLayer *layer = [[CAShapeLayer alloc] init];
+    layer.frame = self.bounds;
+    layer.path = maskPath.CGPath;
+    self.layer.mask = layer;
+}
+
+@end
+
+@implementation FHDetailSameNeighborhoodHouseSaleMoreItemModel
+
+@end
 
 @implementation FHDetailSameNeighborhoodHouseModel
 
 
 @end
+
+CGFloat getSameNeighborhoodHouseImageWidth() {
+    CGFloat width = 180;
+    if([UIDevice btd_isScreenWidthLarge320]) {
+        width = ceil((SCREEN_WIDTH - (15 * 2 + 16 + 10)) * 4.0 / 7.0);
+    }
+    return width;
+}
+
+CGFloat getSameNeighborhoodHouseImageHeight() {
+    return ceil(getSameNeighborhoodHouseImageWidth() * 0.75);
+}

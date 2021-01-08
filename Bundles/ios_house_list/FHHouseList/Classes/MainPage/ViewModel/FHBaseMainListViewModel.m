@@ -1766,6 +1766,9 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         if (identifier.length > 0) {
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)] && [cell respondsToSelector:@selector(refreshOpacityWithData:)]) {
+                [((id<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData:data];
+            }
             if (self.houseType != FHHouseTypeRentHouse) {
                 cell.backgroundColor = [UIColor themeGray7];
             }
@@ -1979,7 +1982,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [[FHHouseCardStatusManager sharedInstance] readHouseId:model.id withHouseType:[model.houseType integerValue]];
     }
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)]) {
+    if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)] && [cell respondsToSelector:@selector(refreshOpacityWithData:)]) {
         [((id<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData:cellModel];
     }
     [self showHouseDetail:cellModel atIndexPath:indexPath];

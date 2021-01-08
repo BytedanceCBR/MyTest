@@ -128,7 +128,7 @@
     if (![data isKindOfClass:[FHHomeHouseDataItemsModel class]]) {
         return;
     }
-    [self refreshOpacityWithData:data];
+    //[self refreshOpacityWithData:data];
     FHHomeHouseDataItemsModel *model = (FHHomeHouseDataItemsModel *)data;
     self.homeItemModel = model;
     if (model.dislikeInfo) {

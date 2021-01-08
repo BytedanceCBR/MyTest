@@ -1144,15 +1144,27 @@ static NSInteger kGetLightRequestRetryCount = 3;
 //房源卡片已读未读开关
 + (BOOL)isHouseCanRead {
     NSDictionary *fhSettings= [SSCommonLogic fhSettings];
-    BOOL isHouseCanRead = [fhSettings btd_boolValueForKey:@"f_house_read_enable" default:NO];
+    BOOL isHouseCanRead = [fhSettings btd_boolValueForKey:@"f_house_card_read_status" default:NO];
     return isHouseCanRead;
 }
 
 + (CGFloat)FHHouseCardReadOpacity {
+    if (![self houseCardReadAbTestEnable]) {
+        return 1;
+    }
     if ([self isHouseCanRead]) {
         return FHHouseCardReadOpacity;
     }
     return 1;
+}
+
+//房源卡片已读功能客户端实验， 默认关闭
++ (BOOL)houseCardReadAbTestEnable {
+    id res = [BDABTestManager getExperimentValueForKey:@"f_house_read_unread_enable" withExposure:YES];
+    if(res){
+        return [res boolValue];
+    }
+    return NO;
 }
 
 //+ (BOOL)isIntroduceOpen {
