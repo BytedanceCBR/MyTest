@@ -30,26 +30,6 @@
 
 @end
 
-@interface FHPersonalHomePageView : UIView
-@end
-
-@implementation FHPersonalHomePageView
-
--(UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    UIView *view = [super hitTest:point withEvent:event];
-    if([view isKindOfClass:[FHHotAreaButton class]]) {
-        return view;
-    } else {
-        if(point.x <= dragBackEdge) {
-            return self;
-        } else {
-            return view;
-        }
-    }
-}
-
-@end
-
 @interface FHPersonalHomePageViewController () 
 @property(nonatomic,strong) FHPersonalHomePageFeedViewController *feedViewController;
 @property(nonatomic,copy) NSString *userId;
@@ -68,11 +48,6 @@
         [self.homePageManager initTracerDictWithParams:params];
     }
     return self;
-}
-
--(void)loadView {
-    FHPersonalHomePageView *view = [[FHPersonalHomePageView alloc] initWithFrame: [UIScreen mainScreen].bounds];
-    self.view = view;
 }
 
 - (void)viewDidLoad {
