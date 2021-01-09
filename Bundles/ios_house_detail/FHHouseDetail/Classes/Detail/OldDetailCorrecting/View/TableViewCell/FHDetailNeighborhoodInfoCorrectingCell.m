@@ -13,7 +13,6 @@
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
 #import "TTRoute.h"
-#import "FHDetailHeaderView.h"
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
 #import "FHDetailBottomOpenAllView.h"
@@ -501,8 +500,8 @@
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.top.equalTo(self.contentView).offset(-4.5);
+        make.bottom.equalTo(self.contentView).offset(4.5);
     }];
     
     UIView *containerView = [[UIView alloc]init];
@@ -512,8 +511,8 @@
     [self.contentView addSubview:containerView];
     self.containerView = containerView;
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).mas_offset(15);
-        make.right.mas_equalTo(self.contentView).mas_offset(-15);
+        make.left.mas_equalTo(self.contentView).mas_offset(9);
+        make.right.mas_equalTo(self.contentView).mas_offset(-9);
         make.top.equalTo(self.shadowImage).offset(12);
         make.bottom.equalTo(self.shadowImage).offset(-12);
     }];

@@ -6,7 +6,6 @@
 //
 
 #import "FHNewHouseDetailMultiFloorpanCollectionCell.h"
-#import "FHDetailHeaderView.h"
 #import <FHHouseBase/FHHouseIMClueHelper.h>
 #import <BDWebImage/BDWebImage.h>
 #import "FHDetailTagBackgroundView.h"
