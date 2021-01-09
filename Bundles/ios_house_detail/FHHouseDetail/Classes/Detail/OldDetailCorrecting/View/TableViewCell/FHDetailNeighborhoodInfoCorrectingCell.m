@@ -35,8 +35,6 @@
 @interface FHDetailNeighborhoodConsultCorrectingView : UIView
 @property (nonatomic, strong) UILabel *nameLabel;
 @property (nonatomic, strong) UILabel *infoLabel;
-@property (nonatomic, strong) UIImageView *consultImgView;
-@property (nonatomic, strong) UIButton *consultBtn;
 @property (nonatomic, strong) UIButton *actionBtn;
 @property (nonatomic, copy) void (^actionBlock)(void);
 
@@ -44,8 +42,7 @@
 
 @implementation FHDetailNeighborhoodConsultCorrectingView
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         [self setupUI];
@@ -54,8 +51,7 @@
 }
 
 
-- (void)setupUI
-{
+- (void)setupUI {
     _nameLabel = [[UILabel alloc]init];
     _nameLabel.font = [UIFont themeFontRegular:AdaptFont(14)];
     _nameLabel.textColor = [UIColor themeGray3];
@@ -63,21 +59,13 @@
     
     _infoLabel = [[UILabel alloc]init];
     _infoLabel.font = [UIFont themeFontMedium:AdaptFont(14)];
-    _infoLabel.textColor = [UIColor colorWithHexStr:@"#ff9629"];
+    _infoLabel.textColor = [UIColor colorWithHexStr:@"#9c6d43"];
     [self addSubview:_infoLabel];
     _infoLabel.textAlignment = NSTextAlignmentLeft;
     
-    _consultBtn = [[UIButton alloc]init];
-    [self addSubview:_consultBtn];
-
     _actionBtn = [[UIButton alloc]init];
     [self addSubview:_actionBtn];
     [_actionBtn addTarget:self action:@selector(consultBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
-
-    _consultImgView = [[UIImageView alloc] init];
-    _consultImgView.image = [UIImage imageNamed:@"plot__message"];
-    _consultImgView.contentMode = UIViewContentModeScaleAspectFit;
-    [self addSubview:_consultImgView];
 
     // 布局
     [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -91,18 +79,8 @@
         make.top.bottom.mas_equalTo(self);
     }];
     
-    [self.consultImgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.infoLabel.mas_right).offset(AdaptOffset(3));
-        make.centerY.mas_equalTo(self).offset(-1);
-        make.height.mas_equalTo(AdaptOffset(15));
-        make.width.mas_equalTo(AdaptOffset(16));
-    }];
-    [self.consultBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(self.consultImgView);
-    }];
     [self.actionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.bottom.mas_equalTo(self.infoLabel);
-        make.right.mas_equalTo(self.consultImgView.mas_right);
+        make.left.top.bottom.right.mas_equalTo(self.infoLabel);
     }];
 }
 
@@ -175,10 +153,6 @@
     if (model.neighborhoodInfo) {
         [self updateErshouCellData];
     }
-//    // 租房
-//    if (model.rent_neighborhoodInfo) {
-//        [self updateRentCellData];
-//    }
 }
 
 - (UIImageView *)shadowImage {

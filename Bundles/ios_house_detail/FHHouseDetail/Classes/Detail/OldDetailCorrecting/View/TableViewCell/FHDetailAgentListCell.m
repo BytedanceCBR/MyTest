@@ -386,7 +386,7 @@
             };
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(showHeight);
+            make.height.mas_equalTo(showHeight + 12);
         }];
         realtorShowCount = model.recommendedRealtors.count;
     } else {
