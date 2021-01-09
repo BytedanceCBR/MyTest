@@ -76,6 +76,7 @@
     }
     
     _headerView = [[FHDetailHeaderView alloc] init];
+    [_headerView updateLayoutWithOldDetail];
     _headerView.isShowLoadMore = YES;
     [self.headerView addTarget:self action:@selector(moreButtonClick) forControlEvents:UIControlEventTouchUpInside];
     [self.containerView addSubview:_headerView];

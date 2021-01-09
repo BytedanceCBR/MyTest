@@ -202,9 +202,10 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
         make.bottom.equalTo(self.contentView).offset(14);
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
+    [_headerView updateLayoutWithOldDetail];
     _headerView.label.text = @"同小区房源";
     _headerView.loadMore.text = @"";
-    _headerView.label.font = [UIFont themeFontMedium:20];
+    //_headerView.label.font = [UIFont themeFontMedium:20];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(15);
