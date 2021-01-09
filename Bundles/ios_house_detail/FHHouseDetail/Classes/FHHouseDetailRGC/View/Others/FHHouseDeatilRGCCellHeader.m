@@ -61,7 +61,7 @@
         make.height.width.mas_offset(20);
     }];
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.mas_right).offset(-16);
+        make.right.equalTo(self.mas_right).offset(-14);
         make.centerY.equalTo(self.avatarView);
         make.size.mas_equalTo(CGSizeMake(36, 36));
     }];
