@@ -85,7 +85,7 @@
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         __block CGFloat vHeight = 68;
-        __block CGFloat marginTop = 0;
+        __block CGFloat marginTop = 9;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             StrongSelf;
             
@@ -314,13 +314,13 @@
         make.top.mas_equalTo(self.shadowImage).offset(9);
         make.right.mas_equalTo(self.shadowImage).offset(-9);
         make.left.mas_equalTo(self.shadowImage).offset(9);
-        make.height.mas_equalTo(41);
+        make.height.mas_equalTo(32);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(41 + 4.5, 9, 4.5, 9));
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(32 + 4.5, 9, 4.5, 9));
     }];
 }
 

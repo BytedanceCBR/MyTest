@@ -34,18 +34,6 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
 
 @implementation FHDetailSameNeighborhoodHouseCell
 
-
-
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailSameNeighborhoodHouseModel class]]) {
         return;
@@ -57,11 +45,7 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
     //
     FHDetailSameNeighborhoodHouseModel *model = (FHDetailSameNeighborhoodHouseModel *)data;
     self.shadowImage.image = model.shadowImage;
-//    if (model.shadowImageType == FHHouseShdowImageTypeLTR) {
-//        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.bottom.mas_equalTo(self.contentView);
-//        }];
-//    }
+    
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.contentView);
@@ -99,14 +83,14 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
 
 - (void)initCollectionView {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 16, 0, 16);
-    flowLayout.minimumInteritemSpacing = 10;
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 12, 0, 0);
+    flowLayout.minimumInteritemSpacing = 12;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
     collectionView.dataSource = self;
     collectionView.delegate = self;
     collectionView.showsHorizontalScrollIndicator = NO;
-    collectionView.backgroundColor = [UIColor whiteColor];
+    collectionView.backgroundColor = [UIColor clearColor];
     NSString *identifier = NSStringFromClass([FHSearchHouseDataItemsModel class]);
     NSString *moreIdentifier = NSStringFromClass([FHDetailSameNeighborhoodHouseSaleMoreItemModel class]);
     [collectionView registerClass:[FHDetailSameNeighborhoodHouseSaleItemCollectionCell class] forCellWithReuseIdentifier:identifier];
@@ -115,10 +99,10 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
     [self.containerView addSubview:collectionView];
     
     [collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.containerView).offset(6);
-        make.left.mas_equalTo(self.containerView).offset(15);
-        make.right.mas_equalTo(self.containerView).offset(-15);
-        make.bottom.mas_equalTo(self.containerView).offset(-10);
+        make.top.mas_equalTo(self.containerView).offset(0);
+        make.left.mas_equalTo(self.containerView).offset(9);
+        make.right.mas_equalTo(self.containerView).offset(-9);
+        make.bottom.mas_equalTo(self.containerView).offset(0);
         make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight() + 80);
     }];
     [collectionView reloadData];
@@ -196,11 +180,9 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-4.5);
-        make.bottom.equalTo(self.contentView).offset(4.5);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
+    
     _headerView = [[FHDetailHeaderView alloc] init];
     [_headerView updateLayoutWithOldDetail];
     _headerView.label.text = @"同小区房源";
@@ -208,18 +190,18 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
     //_headerView.label.font = [UIFont themeFontMedium:20];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).offset(15);
-        make.right.mas_equalTo(self.contentView).offset(-15);
-        make.top.mas_equalTo(self.shadowImage).offset(20);
-        make.height.mas_equalTo(46);
+        make.left.mas_equalTo(self.contentView).offset(9);
+        make.right.mas_equalTo(self.contentView).offset(-9);
+        make.top.mas_equalTo(self.contentView).offset(4.5);
+        make.height.mas_equalTo(32);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(4);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+        make.bottom.mas_equalTo(self.contentView).offset(-4.5);
     }];
 }
 

@@ -39,16 +39,6 @@
 
 @implementation FHDetailRelatedHouseCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailRelatedHouseModel class]]) {
         return;
@@ -161,8 +151,7 @@
     [self layoutIfNeeded];
 }
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
@@ -183,21 +172,18 @@
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-4.5);
-        make.bottom.equalTo(self.contentView).offset(4.5);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     _houseShowCache = [NSMutableDictionary new];
     _headerView = [[FHDetailHeaderView alloc] init];
     [_headerView updateLayoutWithOldDetail];
     _headerView.label.text = @"周边房源";
-//    _headerView.label.font = [UIFont themeFontMedium:20];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).offset(9);
         make.right.mas_equalTo(self.contentView).offset(-9);
-        make.top.equalTo(self.shadowImage).offset(9);
-        make.height.mas_equalTo(34);
+        make.top.equalTo(self.contentView).offset(4.5);
+        make.height.mas_equalTo(32);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
