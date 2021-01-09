@@ -1766,6 +1766,9 @@ extern NSString *const INSTANT_DATA_KEY;
         }
         if (identifier.length > 0) {
              FHListBaseCell *cell = (FHListBaseCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+            if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)] && [cell respondsToSelector:@selector(refreshOpacityWithData:)]) {
+                [((id<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData:data];
+            }
             if (self.houseType != FHHouseTypeRentHouse) {
                 cell.backgroundColor = [UIColor themeGray7];
             }
@@ -1979,7 +1982,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [[FHHouseCardStatusManager sharedInstance] readHouseId:model.id withHouseType:[model.houseType integerValue]];
     }
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)]) {
+    if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)] && [cell respondsToSelector:@selector(refreshOpacityWithData:)]) {
         [((id<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData:cellModel];
     }
     [self showHouseDetail:cellModel atIndexPath:indexPath];
@@ -2038,7 +2041,11 @@ extern NSString *const INSTANT_DATA_KEY;
             WeakSelf;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 StrongSelf;
-                [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+                if ([self.tableView isKindOfClass:[FHHouseTableView class]]) {
+                    [((id<UITableViewDelegate>)self.tableView) tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+                } else {
+                    [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+                }
             });
         }
     }

@@ -86,11 +86,11 @@
     }else {
         self.headerView.label.text = (model.houseType == FHHouseTypeNewHouse) ? @"优选顾问" : @"推荐经纪人";
     }
-    if ((model.houseType == FHHouseTypeNewHouse)) {
-        [self.headerView setSubTitleWithTitle:model.recommendedRealtorsSubTitle];
-    }else{
-        [self.headerView removeSubTitleWithTitle];
-    }
+//    if ((model.houseType == FHHouseTypeNewHouse)) {
+//        [self.headerView setSubTitleWithTitle:model.recommendedRealtorsSubTitle];
+//    }else{
+//        [self.headerView removeSubTitleWithTitle];
+//    }
     WeakSelf;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
@@ -329,6 +329,7 @@
         make.bottom.equalTo(self.contentView).offset(14);
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
+    [_headerView updateLayoutWithOldDetail];
     _headerView.label.text = @"推荐经纪人";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {

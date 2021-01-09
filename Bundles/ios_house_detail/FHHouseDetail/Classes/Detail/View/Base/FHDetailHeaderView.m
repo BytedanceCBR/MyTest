@@ -118,6 +118,14 @@
     }];
 }
 
+- (void)updateLayoutWithOldDetail {
+    self.label.font = [UIFont themeFontMedium:16];
+    [self.label mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.top.mas_equalTo(12);
+        make.height.mas_equalTo(22);
+    }];
+}
+
 - (void)removeSubTitleWithTitle { //移除setSubTitleWithTitle的影响
     _label.textColor = _label.textColor = [UIColor themeGray1];
     _subTitleLabel.hidden = YES;

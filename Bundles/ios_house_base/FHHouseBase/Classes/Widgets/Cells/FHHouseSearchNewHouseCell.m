@@ -314,7 +314,7 @@
         [self updateAdvantage:model];
         [self updateVr:model.vrInfo.hasVr Video:model.videoInfo.hasVideo];
     }
-    [self refreshOpacityWithData:data];
+    //[self refreshOpacityWithData:data];
 }
 
 - (void)resumeVRIcon

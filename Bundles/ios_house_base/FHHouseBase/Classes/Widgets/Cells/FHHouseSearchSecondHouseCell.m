@@ -394,7 +394,7 @@
             self.closeBtn.hidden = YES;
         }
     }
-    [self refreshOpacityWithData:data];
+    //[self refreshOpacityWithData:data];
 }
 
 - (void)updateVrInfo:(BOOL)hasVr {
@@ -779,13 +779,13 @@
 #pragma mark - FHHouseCardTouchAnimationProtocol
 
 - (void)shrinkWithAnimation {
-    [UIView animateWithDuration:0.3 animations:^{
-        self.containerView.transform = CGAffineTransformMakeScale(0.95, 0.95);
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.containerView.transform = CGAffineTransformMakeScale(FHHouseCardShrinkRate, FHHouseCardShrinkRate);
     }];
 }
 
 - (void)restoreWithAnimation {
-    [UIView animateWithDuration:0.3 animations:^{
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
         self.containerView.transform = CGAffineTransformMakeScale(1, 1);
     }];
 }

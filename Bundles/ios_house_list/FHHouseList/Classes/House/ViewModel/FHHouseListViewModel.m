@@ -2102,7 +2102,11 @@ extern NSString *const INSTANT_DATA_KEY;
             WeakSelf;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 StrongSelf;
-                [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+                if ([self.tableView isKindOfClass:[FHHouseTableView class]]) {
+                    [((id<UITableViewDelegate>)self.tableView) tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+                } else {
+                    [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+                }
             });
         }
     }

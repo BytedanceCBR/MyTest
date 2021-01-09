@@ -25,7 +25,6 @@
 #import "FHFloorPanDetailMediaHeaderView.h"
 
 @interface FHFloorPanDetailMediaHeaderCell ()
-@property (nonatomic, strong) FHVideoViewController *videoVC;
 @property (nonatomic, strong) FHFloorPanDetailMediaHeaderView *headerView;
 @property (nonatomic, strong) FHFloorPanDetailMediaHeaderDataHelper *dataHelper;
 @property (nonatomic, strong) FHMultiMediaModel *model;
@@ -85,17 +84,6 @@
     return self;
 }
 
-- (FHVideoViewController *)videoVC {
-    if (!_videoVC) {
-        _videoVC = [[FHVideoViewController alloc] init];
-        _videoVC.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [FHFloorPanDetailMediaHeaderView cellHeight]);
-        NSMutableDictionary *dict = [self tracerDic].mutableCopy;
-        dict[@"element_type"] = @"large_picture_preview";
-        _videoVC.tracerDic = dict.copy;
-    }
-    return _videoVC;
-}
-
 #pragma mark - UI
 - (void)createUI {
     self.pictureShowDict = [NSMutableDictionary dictionary];
@@ -133,7 +121,10 @@
     //视频线索
     pictureDetailViewController.videoImageAssociateInfo = self.dataHelper.pictureDetailData.videoImageAssociateInfo;
     
-    pictureDetailViewController.videoVC = self.videoVC;
+    NSMutableDictionary *videoTracerDict = [self tracerDic].mutableCopy;
+    videoTracerDict[@"element_type"] = @"large_picture_preview";
+    pictureDetailViewController.videoTracerDict = videoTracerDict.copy;
+    
     pictureDetailViewController.houseType = self.baseViewModel.houseType;
     pictureDetailViewController.topVC = self.baseViewModel.detailController;
 

@@ -13,7 +13,6 @@
 #import "FHDetailOldModel.h"
 #import "FHURLSettings.h"
 #import "TTRoute.h"
-#import "FHDetailHeaderView.h"
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
 #import "FHDetailBottomOpenAllView.h"
