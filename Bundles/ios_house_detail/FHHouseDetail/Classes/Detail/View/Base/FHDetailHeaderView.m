@@ -122,11 +122,12 @@
     self.label.font = [UIFont themeFontMedium:16];
     [self.label mas_updateConstraints:^(MASConstraintMaker *make) {
         make.left.top.mas_equalTo(12);
-        make.height.mas_equalTo(22);
+        make.bottom.mas_equalTo(-9);
+        make.height.mas_equalTo(20);
     }];
     [self.arrowsImg mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self).offset(-14);
-        make.height.width.mas_equalTo(12);
+        make.height.width.mas_equalTo(14);
         make.centerY.mas_equalTo(self.label.mas_centerY);
     }];
 }
