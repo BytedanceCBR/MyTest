@@ -109,16 +109,6 @@
 
 @implementation FHDetailNeighborhoodInfoCorrectingCell
 
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-}
-
 - (void)refreshWithData:(id)data
 {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailNeighborhoodInfoCorrectingModel class]]) {
@@ -191,7 +181,7 @@
                 [self.coverImageView bd_setImageWithURL:[NSURL URLWithString:imageModel.url]];
             }
         }
-        CGFloat topMargin = 8 + 12;
+        CGFloat topMargin = 12;
         if (model.neighborhoodInfo.useSchoolIm) {
             if (!self.consultView) {
                 FHDetailNeighborhoodConsultCorrectingView *consultView = [[FHDetailNeighborhoodConsultCorrectingView alloc] init];
@@ -218,7 +208,7 @@
             }
             self.schoolView.hidden = NO;
             if (model.neighborhoodInfo.schoolDictList.count < 1) {
-                topMargin = 8 + 26;
+                topMargin = 8 + 26; // TODO: Check逻辑
             }
             [self updateSchoolView:model.neighborhoodInfo.schoolDictList];
         }
@@ -288,9 +278,7 @@
     if (schoolDictList.count < 1) {
         return;
     }
-//    FHDetailNeighborhoodInfoCorrectingModel *model = (FHDetailNeighborhoodInfoCorrectingModel *)self.currentData;
-//    __block UIView *lastItemView = nil;
-//    CGFloat sumHeight = 0;
+
     NSMutableString *schoolNameComponents = [NSMutableString string];
     for (NSInteger index = 0; index < schoolDictList.count; index++) {
         FHDetailDataNeighborhoodInfoSchoolItemModel *item = schoolDictList[index];
@@ -306,31 +294,8 @@
         } else {
             [schoolNameComponents appendString:school.schoolName];
         }
-        
-//        FHOldDetailSchoolInfoItemModel *schoolInfoModel = [[FHOldDetailSchoolInfoItemModel alloc]init];
-//        schoolInfoModel.schoolItem = item;
-//        schoolInfoModel.tableView = model.tableView;
-//        FHOldDetailSchoolInfoItemView *itemView = [[FHOldDetailSchoolInfoItemView alloc]initWithSchoolInfoModel:schoolInfoModel];
-//        sumHeight += itemView.bottomY;
-//        __weak typeof(self)wself = self;
-//        itemView.foldBlock = ^(FHOldDetailSchoolInfoItemView *theItemView, CGFloat height) {
-//
-//            [model.tableView beginUpdates];
-//             [wself refreshSchoolViewFrame];
-//            [UIView animateWithDuration:0.3 animations:^{
-//                [wself refreshItemsView];
-//            } completion:^(BOOL finished) {
-//            }];
-//            [model.tableView endUpdates];
-//
-//        };
-//        [self.schoolView addSubview:itemView];
-//        itemView.frame = CGRectMake(0, lastItemView.bottom, SCREEN_WIDTH-30-97, itemView.bottomY);
-//        lastItemView = itemView;
     }
-//    [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
-//        make.height.mas_equalTo(sumHeight);
-//    }];
+
     if (schoolNameComponents.length) {
         CGFloat width = CGRectGetWidth(self.bounds) - 15 * 2 - 16 - 72 - 52 - 37;
         UILabel *nameKey = [UILabel createLabel:@"学校:" textColor:@"" fontSize:14];
@@ -366,7 +331,6 @@
                 make.right.mas_equalTo(-12);
                 make.size.mas_equalTo(CGSizeMake(16, 16));
             }];
-//            [nameValue addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(foldBtnDidClick)]];
         }
     }
 }
@@ -473,9 +437,7 @@
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-4.5);
-        make.bottom.equalTo(self.contentView).offset(4.5);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     
     UIView *containerView = [[UIView alloc]init];
@@ -487,24 +449,19 @@
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView).mas_offset(9);
         make.right.mas_equalTo(self.contentView).mas_offset(-9);
-        make.top.equalTo(self.shadowImage).offset(12);
-        make.bottom.equalTo(self.shadowImage).offset(-12);
+        make.top.equalTo(self.contentView).offset(4.5);
+        make.bottom.equalTo(self.contentView).offset(-4.5);
     }];
     
     UIImageView *coverImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"plot_image"]];
     coverImageView.contentMode = UIViewContentModeScaleAspectFill;
     coverImageView.layer.masksToBounds = YES;
     coverImageView.layer.cornerRadius = 4.0;
-//    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:mainImage.bounds byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerBottomRight) cornerRadii:CGSizeMake(10,10)];
-//    CAShapeLayer *maskLayer = [CAShapeLayer layer];
-//    maskLayer.frame = CGRectMake(0, 0, ceil(AdaptOffset(81)), ceil(AdaptOffset(96)));
-//    maskLayer.path = maskPath.CGPath;
-//    mainImage.layer.mask = maskLayer;
     [self.containerView addSubview:coverImageView];
     self.coverImageView = coverImageView;
     [self.coverImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.containerView).mas_offset(16);
-        make.top.equalTo(self.containerView).mas_offset(8 + 12);
+        make.left.equalTo(self.containerView).mas_offset(12);
+        make.top.equalTo(self.containerView).mas_offset(12);
         make.width.mas_equalTo(72);
         make.height.mas_equalTo(72);
     }];
@@ -515,10 +472,10 @@
     [self.containerView addSubview:headerView];
     self.headerView = headerView;
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.coverImageView.mas_right).mas_offset(10);
+        make.left.mas_equalTo(self.coverImageView.mas_right).mas_offset(12);
         make.right.mas_equalTo(self.containerView);
-        make.height.mas_equalTo(19);
-        make.top.mas_equalTo(8 + 12);
+        make.height.mas_equalTo(20);
+        make.top.equalTo(self.containerView).mas_equalTo(12);
     }];
     
     UIView *topView = [[UIView alloc]init];
@@ -528,7 +485,7 @@
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.headerView);
         make.height.mas_equalTo(16);
-        make.top.mas_equalTo(self.headerView.mas_bottom).mas_offset(10);
+        make.top.mas_equalTo(self.headerView.mas_bottom).mas_offset(9);
     }];
     
     UIView *schoolView = [[UIView alloc]init];
@@ -537,9 +494,9 @@
     self.schoolView = schoolView;
     [self.schoolView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.headerView);
-        make.top.mas_equalTo(self.topView.mas_bottom).mas_offset(10);
+        make.top.mas_equalTo(self.topView.mas_bottom).mas_offset(9);
         make.height.mas_equalTo(16);
-        make.bottom.mas_equalTo(-10);
+        make.bottom.mas_equalTo(-12);
     }];
 }
 
