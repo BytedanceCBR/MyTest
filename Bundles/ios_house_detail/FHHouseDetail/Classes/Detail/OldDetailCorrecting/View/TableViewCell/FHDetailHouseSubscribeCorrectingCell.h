@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailHouseSubscribeCorrectingCell : FHDetailBaseCell
 
-@property(nonatomic, copy) void (^subscribeBlock)(NSString *phoneNum);
+@property(nonatomic, copy) void (^subscribeBlock)(NSString * _Nullable phoneNum);
 @property(nonatomic, copy) void (^legalAnnouncementClickBlock)(void);
 @end
 
