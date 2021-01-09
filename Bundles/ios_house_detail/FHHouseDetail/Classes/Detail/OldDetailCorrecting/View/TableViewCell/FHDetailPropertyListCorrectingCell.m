@@ -266,7 +266,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     _containerView = [[UIView alloc] init];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(0, 0, 3+4.5, 0));
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(0, 0, 6+4.5, 0));
     }];
 }
 

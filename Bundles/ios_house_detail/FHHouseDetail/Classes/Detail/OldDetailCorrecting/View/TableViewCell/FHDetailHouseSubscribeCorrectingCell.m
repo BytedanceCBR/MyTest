@@ -88,7 +88,7 @@
     }];
     
     [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(2.5, 21, 12 + 4.5, 21));
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-2.5, 21, 12 + 4.5, 21));
         make.height.mas_equalTo(46);
     }];
     
