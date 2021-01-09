@@ -75,8 +75,8 @@
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeDefault){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView).offset(-14);
-            make.bottom.equalTo(self.contentView).offset(14);
+            make.top.equalTo(self.contentView).offset(-4.5);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
 
@@ -325,8 +325,8 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.top.equalTo(self.contentView).offset(-4.5);
+        make.bottom.equalTo(self.contentView).offset(4.5);
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
     [_headerView updateLayoutWithOldDetail];
@@ -343,8 +343,8 @@
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.mas_equalTo(self.shadowImage).mas_offset(15);
-        make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
+        make.left.mas_equalTo(self.shadowImage).mas_offset(9);
+        make.right.mas_equalTo(self.shadowImage).mas_offset(-9);
         make.height.mas_equalTo(0);
         make.bottom.mas_equalTo(self.shadowImage).offset(-30);
     }];

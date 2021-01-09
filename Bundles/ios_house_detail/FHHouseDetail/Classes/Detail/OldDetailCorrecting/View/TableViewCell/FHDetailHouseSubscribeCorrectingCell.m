@@ -173,18 +173,18 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.mas_equalTo(self.contentView).mas_offset(-14);
-        make.bottom.mas_equalTo(self.contentView).mas_offset(14);
+        make.top.mas_equalTo(self.contentView).mas_offset(-4.5);
+        make.bottom.mas_equalTo(self.contentView).mas_offset(4.5);
     }];
     
     if ([SSCommonLogic isEnableVerifyFormAssociate]) {
         self.bacIma.image = [UIImage imageNamed:@"houseSubscribeBac_new"];
         
         [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.contentView).offset(15);
-            make.right.mas_equalTo(self.contentView).offset(-15);
-            make.top.mas_equalTo(self.shadowImage).offset(20);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+            make.left.mas_equalTo(self.contentView).offset(9);
+            make.right.mas_equalTo(self.contentView).offset(-9);
+            make.top.mas_equalTo(self.shadowImage).offset(9);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-9);
             make.height.mas_equalTo(60);
         }];
         
@@ -218,10 +218,10 @@
         }];
     } else {
         [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.contentView).offset(15);
-            make.right.mas_equalTo(self.contentView).offset(-15);
-            make.top.mas_equalTo(self.shadowImage).offset(20);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+            make.left.mas_equalTo(self.contentView).offset(9);
+            make.right.mas_equalTo(self.contentView).offset(-9);
+            make.top.mas_equalTo(self.shadowImage).offset(8.9);
+            make.bottom.mas_equalTo(self.shadowImage).offset(-9);
         }];
         
         [self.titleImage mas_makeConstraints:^(MASConstraintMaker *make) {
