@@ -42,7 +42,7 @@
     if (model.buildingInfo.list) {
         height += (model.buildingInfo.list.count * (15 + 16 + 15 + 1));
     }
-    height += 15 + 40 + 20;
+    height += 15 + 40 + 12;
     return CGSizeMake(width, height);
 }
 
@@ -209,20 +209,20 @@
     UIView *bottomView = [[UIView alloc] init];
     bottomView.backgroundColor = [UIColor whiteColor];
     [self.stackView addArrangedSubview:bottomView];
-    stackViewHeight += (15 + 40 + 20);
+    stackViewHeight += (15 + 40 + 12);
     [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(15 + 40 + 20);
+        make.height.mas_equalTo(15 + 40 + 12);
     }];
     
     UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [moreButton setBackgroundColor:[UIColor colorWithHexString:@"#fff8ef"]];
+    [moreButton setBackgroundColor:[UIColor colorWithHexString:@"#fafafa"]];
     moreButton.layer.masksToBounds = YES;
-    moreButton.layer.cornerRadius = 20;
+    moreButton.layer.cornerRadius = 1;
     NSString *title = model.buildingInfo.buttonText.length ? model.buildingInfo.buttonText : @"查看全部楼栋信息";
     [moreButton setTitle:title forState:UIControlStateNormal];
-    [moreButton setTitleColor:[UIColor colorWithHexString:@"#ff9629"] forState:UIControlStateNormal];
-    moreButton.titleLabel.font = [UIFont themeFontMedium:16];
+    [moreButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    moreButton.titleLabel.font = [UIFont themeFontRegular:16];
     [moreButton addTarget:self action:@selector(clickMoreButton:) forControlEvents:UIControlEventTouchUpInside];
     [bottomView addSubview:moreButton];
     [moreButton mas_makeConstraints:^(MASConstraintMaker *make) {

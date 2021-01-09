@@ -123,6 +123,8 @@
 @interface FHDetailAgentItemView()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
 @property (nonatomic, assign) CGFloat topMargin;
+@property (nonatomic, assign) CGFloat leftMargin;
+@property (nonatomic, assign) CGFloat rightMargin;
 @property (nonatomic, strong) FHDetailContactModel *model;
 @property (nonatomic, strong) UICollectionView *tagsView;
 
@@ -130,15 +132,20 @@
 
 @implementation FHDetailAgentItemView
 
--(instancetype)initWithModel:(FHDetailContactModel *)model topMargin:(CGFloat )topMargin frame:(CGRect )frame{
+- (instancetype)initWithModel:(FHDetailContactModel *)model topMargin:(CGFloat)topMargin leftMargin:(CGFloat)leftMargin rightMargin:(CGFloat)rightMargin  frame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.topMargin = topMargin;
+        self.leftMargin = leftMargin;
+        self.rightMargin = rightMargin;
         self.model = model;
-        
         [self setupUI];
         [self refreshData];
     }
     return self;
+}
+
+- (instancetype)initWithModel:(FHDetailContactModel *)model topMargin:(CGFloat)topMargin frame:(CGRect)frame {
+    return [self initWithModel:model topMargin:topMargin leftMargin:16 rightMargin:16 frame:frame];
 }
 
 - (void)setupUI {
@@ -148,7 +155,7 @@
     [self addSubview:self.avatorView];
     [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.width.mas_equalTo(50);
-        make.left.mas_equalTo(16);
+        make.left.mas_equalTo(self.leftMargin);
         make.top.mas_equalTo(self.topMargin);
     }];
     
@@ -173,8 +180,8 @@
     [self addSubview:self.callBtn];
     [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(phoneButtonWidth);
-        make.right.mas_equalTo(-16);
-        make.centerY.mas_equalTo(self.nameLabel.mas_centerY);
+        make.right.mas_equalTo(-self.rightMargin);
+        make.centerY.mas_equalTo(self.nameLabel.mas_centerY).offset(1);
     }];
     
     self.imBtn = [[UIButton alloc] init];
@@ -276,7 +283,7 @@
         //3行全有
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
-            make.top.mas_equalTo(12);
+            make.top.mas_equalTo(self.topMargin);
             make.height.mas_equalTo(16);
         }];
         
@@ -291,7 +298,7 @@
         //2行
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
-            make.top.mas_equalTo(12);
+            make.top.mas_equalTo(self.topMargin);
             make.height.mas_equalTo(16);
         }];
         

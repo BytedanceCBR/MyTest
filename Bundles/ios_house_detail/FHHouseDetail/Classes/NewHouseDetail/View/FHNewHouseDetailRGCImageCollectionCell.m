@@ -85,27 +85,27 @@
         [self.contentView addSubview:self.contentLabel];
         [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.userInfoView.mas_bottom).mas_offset(10);
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
             make.height.mas_equalTo(0);
         }];
 
-        self.multiImageView = [[FHHouseDetailRGCMultiImageView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds) - 15*2, 0) count:3];
+        self.multiImageView = [[FHHouseDetailRGCMultiImageView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds) - 12*2, 0) count:3];
         [self.contentView addSubview:self.multiImageView];
         [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.contentLabel.mas_bottom).mas_offset(10);
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
             make.height.mas_equalTo(0);
         }];
 
-        self.lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds) - 15 * 2, .5)];
+        self.lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds) - 12 * 2, .5)];
         self.lineView.backgroundColor = [UIColor themeGray6];
         [self.contentView addSubview:self.lineView];
         [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.multiImageView.mas_bottom).mas_offset(16);
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
             make.height.mas_equalTo(0.5);
         }];
     }
@@ -152,7 +152,7 @@
        //图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     if (cellModel.imageList.count > 0) {
-        CGFloat imageHeight = ceilf([FHHouseDetailRGCMultiImageView viewHeightForCount:3 width:CGRectGetWidth(self.contentView.bounds) - 15 * 2]);
+        CGFloat imageHeight = ceilf([FHHouseDetailRGCMultiImageView viewHeightForCount:3 width:CGRectGetWidth(self.contentView.bounds) - 12 * 2]);
         [self.multiImageView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(imageHeight);
         }];

@@ -9,6 +9,9 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+CGFloat const FHNewHouseDetailSectionLeftMargin = 9;
+CGFloat const FHNewHouseDetailSectionItemSpace = 9;
+
 @class FHNewHouseDetailSectionModel,FHNewHouseDetailViewController;
 
 @interface FHNewHouseDetailSectionController : IGListSectionController

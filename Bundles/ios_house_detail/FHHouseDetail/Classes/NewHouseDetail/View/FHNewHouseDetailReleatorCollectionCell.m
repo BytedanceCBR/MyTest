@@ -38,7 +38,7 @@
         [self.contentView addSubview:self.avatorView];
         [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.width.mas_equalTo(50);
-            make.left.mas_equalTo(16);
+            make.left.mas_equalTo(14);
             make.centerY.mas_equalTo(self.contentView);
         }];
         
@@ -180,9 +180,8 @@
         //3行全有
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
-//            make.top.mas_equalTo(self.avatorView).mas_offset(-6);
             make.height.mas_equalTo(16);
-            make.bottom.mas_equalTo(self.scoreLabel.mas_top).offset(-6);
+            make.bottom.mas_equalTo(self.scoreLabel.mas_top).offset(-8);
         }];
         [self.scoreLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(self.avatorView);
@@ -192,7 +191,7 @@
             make.left.mas_equalTo(self.nameLabel.mas_left);
             make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).mas_offset(-10);
             make.height.mas_equalTo(18);
-            make.top.mas_equalTo(self.scoreLabel.mas_bottom).mas_offset(6);
+            make.top.mas_equalTo(self.scoreLabel.mas_bottom).mas_offset(8);
         }];
     } else if (model.agencyDescription.length || model.realtorScoreDisplay.length) {
         //2行

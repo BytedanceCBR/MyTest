@@ -32,13 +32,13 @@
             height += 40; //banner height
         }
         
-        height += 16; //title margin
+        height += 12; //title margin
         
-        float tt = [model.titleStr btd_sizeWithFont:[UIFont themeFontRegular:24] width:width - 15 * 2 maxLine:2].height;
+        float tt = [model.titleStr btd_sizeWithFont:[UIFont themeFontRegular:24] width:width - 12 * 2 maxLine:2].height;
         
         height += tt;
         
-        height += 15; //tag margin
+        height += 12; //tag margin
         NSArray *tags = model.tags;
         CGFloat tagHeight = tags.count > 0 ? 20 : 0.01;
         
@@ -46,7 +46,7 @@
         
         height += 4;
         if(model.aliasName.length >0){
-        height += 8;
+            height += 8;
         }
         
         return CGSizeMake(width, height);
@@ -82,9 +82,9 @@
         [self addSubview:nameLabel];
         self.nameLabel = nameLabel;
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(15);
-            make.right.mas_equalTo(self).offset(-15);
-            make.top.mas_equalTo(self.topBanner.mas_bottom).offset(20);
+            make.left.mas_equalTo(self).offset(12);
+            make.right.mas_equalTo(self).offset(-12);
+            make.top.mas_equalTo(self.topBanner.mas_bottom).offset(12);
         }];
         
         UILabel *aliasNameLabel = [UILabel createLabel:@"" textColor:@"#aeadad" fontSize:12];
@@ -92,8 +92,8 @@
         [self addSubview:aliasNameLabel];
         self.aliasNameLabel = aliasNameLabel;
         [self.aliasNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(15);
-            make.right.mas_equalTo(self).offset(-15);
+            make.left.mas_equalTo(self).offset(12);
+            make.right.mas_equalTo(self).offset(-12);
             make.top.mas_equalTo(self.nameLabel.mas_bottom).offset(1);
         }];
         
@@ -102,8 +102,8 @@
         [self addSubview:tagBacView];
         self.tagBacView = tagBacView;
         [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self).offset(15);
-            make.right.mas_equalTo(self).offset(-15);
+            make.left.mas_equalTo(self).offset(12);
+            make.right.mas_equalTo(self).offset(-12);
             make.top.mas_equalTo(self.aliasNameLabel.mas_bottom).offset(10);
             make.height.mas_offset(0);
             make.bottom.mas_equalTo(self);

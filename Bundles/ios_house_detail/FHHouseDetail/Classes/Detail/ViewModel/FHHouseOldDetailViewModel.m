@@ -1031,10 +1031,9 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             [FHUserInfoManager savePhoneNumber:phoneNum];
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
             [subscribeHouseCache setObject:@"1" forKey:weakSelf.houseId];
-            
             [weakSelf.items removeObject:subscribeModel];
             [weakSelf reloadData];
-        }else {
+        } else {
             [[ToastManager manager] showToast:[NSString stringWithFormat:@"%@%@",model.message.length ? @"" : @"提交失败 ", model.message]];
         }
     }];

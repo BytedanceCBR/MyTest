@@ -51,14 +51,7 @@
 }
 
 - (instancetype)init {
-    self = [super init];
-    if (self) {
-        self.leftMargin = 15;
-        self.rightMargin = 15;
-        [self setupUI];
-        [self setupConstraints];
-    }
-    return self;
+    return [self initWithLeftMargin:15 rightMargin:15];
 }
 
 - (void)setupUI {

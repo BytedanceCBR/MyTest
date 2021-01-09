@@ -152,7 +152,7 @@
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index
 {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     FHNewHouseDetailRGCListSM *model = (FHNewHouseDetailRGCListSM *)self.sectionModel;
     FHFeedUGCCellModel *cellModel = model.items[index];
     CGSize size = CGSizeZero;
@@ -227,8 +227,7 @@
                                                                  atIndex:(NSInteger)index
 {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
+    [titleView setupNewHouseDetailStyle];
     __weak typeof(self) weakSelf = self;
     titleView.arrowsImg.hidden = NO;
     titleView.userInteractionEnabled = YES;
@@ -245,7 +244,7 @@
                                  atIndex:(NSInteger)index
 {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2, 46);
     }
     return CGSizeZero;
 }
