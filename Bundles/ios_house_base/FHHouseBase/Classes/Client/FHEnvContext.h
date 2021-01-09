@@ -352,6 +352,7 @@ static NSString *const kFHUGCPromotionUser = @"is_promotion_user";
 //房源卡片已读功能客户端实验， 默认关闭
 + (BOOL)houseCardReadAbTestEnable;
 
++ (BOOL)purelyCanOpenURL:(NSURL *)url;
 
 @end
 
