@@ -124,6 +124,11 @@
         make.left.top.mas_equalTo(12);
         make.height.mas_equalTo(22);
     }];
+    [self.arrowsImg mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(self).offset(-14);
+        make.height.width.mas_equalTo(12);
+        make.centerY.mas_equalTo(self.label.mas_centerY);
+    }];
 }
 
 - (void)removeSubTitleWithTitle { //移除setSubTitleWithTitle的影响
