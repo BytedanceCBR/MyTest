@@ -43,7 +43,7 @@
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
+    
     // Configure the view for the selected state
 }
 
@@ -154,11 +154,7 @@
         legalAnnouncement.textAlignment = NSTextAlignmentLeft;
         NSDictionary *dic = @{NSKernAttributeName:@1.5f};
         NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:@"点击订阅即视为同意《个人信息保护声明》" attributes:dic];
-          [attrStr addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(10, @"个人信息保护声明".length)];
-//        // 下划线
-//        NSDictionary *attribtDic = @{NSUnderlineStyleAttributeName: [NSNumber numberWithInteger:NSUnderlineStyleSingle]};
-//        NSMutableAttributedString *attribtStr = [[NSMutableAttributedString alloc]initWithString:textStr attributes:attribtDic];
-//         NSMutableAttributedString *attribtStr = [[NSMutableAttributedString alloc]init];
+        [attrStr addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle) range:NSMakeRange(10, @"个人信息保护声明".length)];
         legalAnnouncement.attributedText = [attrStr copy];
         legalAnnouncement.font = [UIFont themeFontRegular:10];
         UITapGestureRecognizer *tipTap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(legalAnnouncementClick)];
@@ -173,18 +169,18 @@
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.contentView);
         make.right.mas_equalTo(self.contentView);
-        make.top.mas_equalTo(self.contentView).mas_offset(-4.5);
+        make.top.mas_equalTo(self.contentView).mas_offset(-30);
         make.bottom.mas_equalTo(self.contentView).mas_offset(4.5);
     }];
-    
-    if ([SSCommonLogic isEnableVerifyFormAssociate]) {
+    BOOL isEnableVerifyFormAssociate = [SSCommonLogic isEnableVerifyFormAssociate];
+    // 表单线索提交优化
+    if (isEnableVerifyFormAssociate) {
         self.bacIma.image = [UIImage imageNamed:@"houseSubscribeBac_new"];
-        
         [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.contentView).offset(9);
-            make.right.mas_equalTo(self.contentView).offset(-9);
-            make.top.mas_equalTo(self.shadowImage).offset(9);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-9);
+            make.left.mas_equalTo(self.contentView).offset(21);
+            make.right.mas_equalTo(self.contentView).offset(-21);
+            make.top.mas_equalTo(self.contentView).offset(12);
+            make.bottom.mas_equalTo(self.contentView).offset(-12 - 4.5);
             make.height.mas_equalTo(46);
         }];
         
@@ -218,12 +214,14 @@
             make.centerY.mas_equalTo(self.bacIma);
             make.height.mas_equalTo(20);
         }];
-    } else {
+    }
+    // 表单线索提交未优化
+    else {
         [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.contentView).offset(9);
-            make.right.mas_equalTo(self.contentView).offset(-9);
-            make.top.mas_equalTo(self.shadowImage).offset(8.9);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-9);
+            make.left.mas_equalTo(self.contentView).offset(21);
+            make.right.mas_equalTo(self.contentView).offset(-21);
+            make.top.mas_equalTo(self.contentView).offset(12);
+            make.bottom.mas_equalTo(self.contentView).offset(-12-4.5);
         }];
         
         [self.titleImage mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -260,10 +258,7 @@
             make.left.mas_equalTo(self.textField);
             make.bottom.mas_equalTo(self.bacIma).offset(-20);
         }];
-        
     }
-    
-
 }
 
 - (void)setPhoneNumber {
@@ -301,7 +296,7 @@
 }
 
 - (void)subscribe {
-
+    
     if ([SSCommonLogic isEnableVerifyFormAssociate]) {
         if (self.subscribeBlock) {
             self.subscribeBlock(nil);
@@ -311,7 +306,7 @@
     }
     NSString *phoneNum = self.phoneNum;
     if (phoneNum.length == 11 && [phoneNum hasPrefix:@"1"] && [FHUserInfoManager checkPureIntFormatted:phoneNum]) {
-
+        
         FHDetailHouseSubscribeCorrectingModel *model = (FHDetailHouseSubscribeCorrectingModel *)self.currentData;
         NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
         tracerDic[@"log_pb"] = self.baseViewModel.listLogPB ? self.baseViewModel.listLogPB : @"be_null";
@@ -416,7 +411,5 @@
 
 @end
 
-
 @implementation FHDetailHouseSubscribeCorrectingModel
-
 @end
