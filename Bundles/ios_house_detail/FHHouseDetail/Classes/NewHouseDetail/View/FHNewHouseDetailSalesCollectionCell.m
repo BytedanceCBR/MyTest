@@ -72,7 +72,7 @@
         _tagView.layer.borderWidth = 0.5;
         _tagView.layer.masksToBounds = YES;
         [_tagView setBackgroundImage:[UIImage btd_imageWithColor:[UIColor colorWithHexString:@"#ffefec"]] forState:UIControlStateNormal];
-        _tagView.titleLabel.font = [UIFont themeFontMedium:AdaptFont(10)];
+        _tagView.titleLabel.font = [UIFont themeFontMedium:10];
     }
     return _tagView;
 }
@@ -104,12 +104,12 @@
 - (UIButton *)submitBtn
 {
     if (!_submitBtn) {
-        _submitBtn = [[UIButton alloc]init];
-        [_submitBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
-        [_submitBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateHighlighted];
-        _submitBtn.layer.cornerRadius = 15;
+        _submitBtn = [[UIButton alloc] init];
+        _submitBtn.backgroundColor = [UIColor colorWithHexString:@"#f7f7f7"];
+        [_submitBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+        _submitBtn.layer.cornerRadius = 1;
         _submitBtn.layer.masksToBounds = YES;
-        _submitBtn.titleLabel.font = [UIFont themeFontMedium:AdaptFont(16)];
+        _submitBtn.titleLabel.font = [UIFont themeFontMedium:14];
     }
     return _submitBtn;
 }
@@ -205,10 +205,7 @@
             [itemView.tagView setTitle:item.itemDesc forState:UIControlStateHighlighted];
             itemView.titleLabel.text = item.discountContent;
             itemView.subtitleLabel.text = item.discountSubContent;
-            [itemView.submitBtn setBackgroundImage:[UIImage btd_imageWithColor:[UIColor colorWithHexString:@"#ffefec"]] forState:UIControlStateNormal];
-            [itemView.submitBtn setBackgroundImage:[UIImage btd_imageWithColor:[UIColor colorWithHexString:@"#ffefec"]] forState:UIControlStateHighlighted];
             [itemView.submitBtn setTitle:item.actionDesc forState:UIControlStateNormal];
-            [itemView.submitBtn setTitle:item.actionDesc forState:UIControlStateHighlighted];
             [itemView.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
             [self.containerView addSubview:itemView];
             [itemView.tagView sizeToFit];
@@ -251,8 +248,8 @@
                 }else {
                     make.top.mas_equalTo(-1);
                 }
-                make.left.mas_equalTo(15);
-                make.right.mas_equalTo(-15);
+                make.left.mas_equalTo(12);
+                make.right.mas_equalTo(-12);
                 make.height.mas_equalTo(vHeight);
             }];
             lastView = itemView;

@@ -10,6 +10,7 @@
 #import <FHHouseBase/FHHouseIMClueHelper.h>
 #import <BDWebImage/BDWebImage.h>
 #import "FHDetailTagBackgroundView.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 // 楼盘item
 @interface FHDetailNewMutiFloorPanCollectionCell : FHDetailBaseCollectionCell
 
@@ -89,9 +90,9 @@
 - (void)setupUI {
     
     _iconView = [[UIView alloc]init];
-    _iconView.layer.borderWidth = 0.5;
+    _iconView.layer.borderWidth = [UIDevice btd_onePixel];
     _iconView.layer.borderColor = [[UIColor themeGray6] CGColor];
-    _iconView.layer.cornerRadius = 10.0;
+    _iconView.layer.cornerRadius = 1.0;
     _iconView.layer.masksToBounds = YES;
     self.iconView.backgroundColor = [UIColor whiteColor];
     [self addSubview:_iconView];
@@ -120,24 +121,23 @@
     }];
     
     
-    _titleLabel = [[UILabel alloc] init];
-    _titleLabel.font = [UIFont themeFontMedium:14];
-    _titleLabel.textColor = [UIColor themeGray1];
-    [_titleLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
-    [self addSubview:_titleLabel];
-    
-    _spaceLabel = [[UILabel alloc] init];;
-    _spaceLabel.font = [UIFont themeFontMedium:14];
-    _spaceLabel.textColor = [UIColor themeGray1];
-    [_spaceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [self addSubview:_spaceLabel];
-    
+    self.titleLabel = [[UILabel alloc] init];
+    self.titleLabel.font = [UIFont themeFontMedium:14];
+    self.titleLabel.textColor = [UIColor themeGray1];
+    [self.titleLabel setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
+    [self addSubview:self.titleLabel];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.iconView.mas_bottom).mas_offset(8);
         make.left.equalTo(self.contentView);
         make.height.mas_equalTo(19);
 //        make.width.mas_equalTo(0);
     }];
+    
+    _spaceLabel = [[UILabel alloc] init];;
+    _spaceLabel.font = [UIFont themeFontMedium:14];
+    _spaceLabel.textColor = [UIColor themeGray1];
+    [_spaceLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self addSubview:_spaceLabel];
     
     [self.spaceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.titleLabel.mas_top);
@@ -169,18 +169,18 @@
     
     _consultDetailButton = [[UIButton alloc] init];
     [_consultDetailButton setTitle:@"咨询户型" forState:UIControlStateNormal];
-    [_consultDetailButton setTitleColor:[UIColor colorWithHexString:@"ff9629"] forState:UIControlStateNormal];
-    _consultDetailButton.titleLabel.font = [UIFont themeFontMedium:12];
-    _consultDetailButton.backgroundColor = [UIColor colorWithHexString:@"#fff8ef"];
+    [_consultDetailButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    _consultDetailButton.titleLabel.font = [UIFont themeFontMedium:14];
+    _consultDetailButton.backgroundColor = [UIColor colorWithHexString:@"#f7f7f7"];
     _consultDetailButton.layer.masksToBounds = YES;
-    _consultDetailButton.layer.cornerRadius = 14;
+    _consultDetailButton.layer.cornerRadius = 1;
     [_consultDetailButton addTarget:self action:@selector(consultDetailButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_consultDetailButton];
     _consultDetailButton.hidden = YES;
     [self.consultDetailButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.priceLabel.mas_bottom).offset(12);
         make.left.right.equalTo(self.contentView);
-        make.height.mas_equalTo(28);
+        make.height.mas_equalTo(32);
     }];
 }
 
@@ -203,8 +203,7 @@
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
     if (data && [data isKindOfClass:[FHNewHouseDetailMultiFloorpanCellModel class]]) {
-        CGFloat height = 46 - 37;
-        height += 190;
+        CGFloat height = 120 + 60;
         FHNewHouseDetailMultiFloorpanCellModel *model = (FHNewHouseDetailMultiFloorpanCellModel *)data;
         BOOL hasIM = NO;
         for (NSInteger i = 0; i < model.floorPanList.list.count; i++) {
@@ -216,7 +215,7 @@
             }
         }
         if (hasIM) {
-            height += 30;
+            height += 44;
         }
         return CGSizeMake(width, height);
     }
@@ -231,9 +230,9 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
-        self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 16, 0, 16);
-        self.flowLayout.itemSize = CGSizeMake(120, 190);
-        self.flowLayout.minimumLineSpacing = 16;
+        self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 12, 0, 12);
+        self.flowLayout.itemSize = CGSizeMake(120, 120 + 105);
+        self.flowLayout.minimumLineSpacing = 12;
         self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), CGRectGetHeight(self.contentView.bounds)) collectionViewLayout:self.flowLayout];
         self.collectionView.backgroundColor = [UIColor clearColor];
@@ -246,7 +245,7 @@
         [self.collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
             make.left.right.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(self.contentView).mas_offset(-9);
+            make.bottom.mas_equalTo(0);
         }];
         
     }

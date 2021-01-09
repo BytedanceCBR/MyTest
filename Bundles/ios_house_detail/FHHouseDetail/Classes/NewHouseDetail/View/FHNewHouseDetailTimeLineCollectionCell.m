@@ -49,7 +49,7 @@
 
     self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
     self.flowLayout.itemSize = CGSizeMake(99, 56);
-    self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 0);
+    self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 12, 0, 0);
     self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.flowLayout];
     self.collectionView.showsHorizontalScrollIndicator = NO;
@@ -100,8 +100,8 @@
     [self.containerView addSubview:self.contentLabel];
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.collectionView.mas_bottom).offset(12);
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
+        make.left.mas_equalTo(12);
+        make.right.mas_equalTo(-12);
     }];
     
     self.contentBtn = [[UIControl alloc] init];

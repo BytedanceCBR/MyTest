@@ -36,7 +36,7 @@
 
 - (void)createUI {
     [self.avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self).offset(15);
+        make.left.equalTo(self).offset(12);
         make.centerY.equalTo(self);
         make.size.mas_equalTo(CGSizeMake(34, 34));
     }];

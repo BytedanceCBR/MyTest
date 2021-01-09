@@ -33,7 +33,7 @@
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 30;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     FHNewHouseDetailRecommendSM *model = (FHNewHouseDetailRecommendSM *)self.sectionModel;
     if (index >= 0 && index < model.items.count) {
         return [FHNewHouseDetailRelatedCollectionCell cellSizeWithData:model.items[index] width:width];
@@ -168,7 +168,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61 - 15);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 46);
     }
     return CGSizeZero;
 }

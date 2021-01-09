@@ -85,8 +85,8 @@
         [self.contentView addSubview:self.contentLabel];
         [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.userInfoView.mas_bottom).mas_offset(10);
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
             make.height.mas_equalTo(0);
         }];
         
@@ -98,7 +98,7 @@
         [self.contentView addSubview:self.videoImageView];
         [self.videoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.contentLabel.mas_bottom).mas_offset(10);
-            make.left.mas_equalTo(15);
+            make.left.mas_equalTo(12);
             make.width.mas_equalTo(150);
             make.height.mas_equalTo(200);
         }];
@@ -135,13 +135,13 @@
             make.right.mas_equalTo(-6);
         }];
         
-         self.lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds) - 15 * 2, .5)];
+         self.lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds) - 12 * 2, .5)];
          self.lineView.backgroundColor = [UIColor themeGray6];
          [self.contentView addSubview:self.lineView];
          [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
              make.top.mas_equalTo(self.videoImageView.mas_bottom).mas_offset(16);
-             make.left.mas_equalTo(15);
-             make.right.mas_equalTo(-15);
+             make.left.mas_equalTo(12);
+             make.right.mas_equalTo(-12);
              make.height.mas_equalTo(0.5);
          }];
     }
