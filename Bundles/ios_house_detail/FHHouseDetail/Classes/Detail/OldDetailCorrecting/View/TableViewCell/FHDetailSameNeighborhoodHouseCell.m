@@ -83,7 +83,7 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
 
 - (void)initCollectionView {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 12, 0, 0);
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
     flowLayout.minimumInteritemSpacing = 12;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
@@ -100,7 +100,7 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
     
     [collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.containerView).offset(0);
-        make.left.mas_equalTo(self.containerView).offset(9);
+        make.left.mas_equalTo(self.containerView).offset(21);
         make.right.mas_equalTo(self.containerView).offset(-9);
         make.bottom.mas_equalTo(self.containerView).offset(0);
         make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight() + 80);

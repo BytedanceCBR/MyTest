@@ -84,7 +84,7 @@
 - (void)setupUI {
     
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-30, 0, -4.5, 0));
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-26, 0, -4.5, 0));
     }];
     
     [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {

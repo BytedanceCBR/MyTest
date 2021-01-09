@@ -97,8 +97,7 @@
     
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom).offset(9);
-        make.left.mas_equalTo(self.containerView).offset(9);
-        make.right.mas_equalTo(self.containerView).offset(-9);
+        make.left.right.mas_equalTo(self.containerView);
         make.height.mas_equalTo(0);
         make.bottom.mas_equalTo(self.containerView).offset(-12);
     }];
