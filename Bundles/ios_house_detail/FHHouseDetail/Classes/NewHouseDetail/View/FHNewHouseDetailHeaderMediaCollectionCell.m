@@ -41,7 +41,7 @@
 @implementation FHNewHouseDetailHeaderMediaCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    CGFloat photoCellHeight = 281;
+    CGFloat photoCellHeight = 260;
     photoCellHeight = round(width / 375.0f * photoCellHeight + 0.5);
     return CGSizeMake(width, photoCellHeight);
 }

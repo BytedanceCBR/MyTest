@@ -6,6 +6,7 @@
 //
 
 #import "FHDetailNewMediaHeaderScrollView.h"
+#import <Masonry/Masonry.h>
 #import "FHCommonDefines.h"
 #import "FHMultiMediaImageCell.h"
 #import "FHMultiMediaPanoramaCell.h"
@@ -43,24 +44,30 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
         layout.minimumLineSpacing = 0;
         layout.minimumInteritemSpacing = 0;
 
-        _colletionView = [[FHBaseCollectionView alloc] initWithFrame:frame collectionViewLayout:layout];
-        _colletionView.backgroundColor = [UIColor whiteColor];
-        _colletionView.pagingEnabled = YES;
-        _colletionView.showsHorizontalScrollIndicator = NO;
+        self.colletionView = [[FHBaseCollectionView alloc] initWithFrame:self.bounds collectionViewLayout:layout];
+        self.colletionView.backgroundColor = [UIColor whiteColor];
+        self.colletionView.pagingEnabled = YES;
+        self.colletionView.showsHorizontalScrollIndicator = NO;
 
-        [_colletionView registerClass:[FHMultiMediaImageCell class] forCellWithReuseIdentifier:k_IMAGECELLID];
-        [_colletionView registerClass:[FHMultiMediaVideoCell class] forCellWithReuseIdentifier:k_VIDEOCELLID];
-        [_colletionView registerClass:[FHMultiMediaVRImageCell class] forCellWithReuseIdentifier:k_VRELLID];
-        [_colletionView registerClass:[FHMultiMediaPanoramaCell class] forCellWithReuseIdentifier:k_PANORAMACELLID];
+        [self.colletionView registerClass:[FHMultiMediaImageCell class] forCellWithReuseIdentifier:k_IMAGECELLID];
+        [self.colletionView registerClass:[FHMultiMediaVideoCell class] forCellWithReuseIdentifier:k_VIDEOCELLID];
+        [self.colletionView registerClass:[FHMultiMediaVRImageCell class] forCellWithReuseIdentifier:k_VRELLID];
+        [self.colletionView registerClass:[FHMultiMediaPanoramaCell class] forCellWithReuseIdentifier:k_PANORAMACELLID];
 
-        _colletionView.delegate = self;
-        _colletionView.dataSource = self;
+        self.colletionView.delegate = self;
+        self.colletionView.dataSource = self;
 
-        [self addSubview:_colletionView];
+        [self addSubview:self.colletionView];
+        [self.colletionView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsZero);
+        }];
 
-        _noDataImageView = [[UIImageView alloc] initWithFrame:frame];
-        [self addSubview:_noDataImageView];
-        _noDataImageView.hidden = YES;
+        self.noDataImageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        [self addSubview:self.noDataImageView];
+        self.noDataImageView.hidden = YES;
+        [self.noDataImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.edges.mas_equalTo(UIEdgeInsetsZero);
+        }];
     }
     return self;
 }
@@ -142,6 +149,10 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
         [cell updateViewModel:model];
     }
     return cell;
+}
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+    return self.colletionView.frame.size;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {

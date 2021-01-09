@@ -33,33 +33,33 @@
         }];
         
         self.nameLablel = [[UILabel alloc] init];
-        self.nameLablel.font = [UIFont themeFontRegular:14];
+        self.nameLablel.font = [UIFont themeFontRegular:16];
         self.nameLablel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
         [self.containerView addSubview:self.nameLablel];
         [self.nameLablel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(self.containerView);
-            make.left.mas_equalTo(15);
-            make.width.mas_equalTo(28);
+            make.left.mas_equalTo(12);
+            make.width.mas_equalTo(32);
         }];
         
         UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeGray3]); //@"detail_entrance_arrow"
         self.rightArrow = [[UIImageView alloc] initWithImage:img];
         [self.containerView addSubview:self.rightArrow];
         [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self.containerView).mas_offset(-15);
+            make.right.mas_equalTo(self.containerView).mas_offset(-12);
             make.width.height.mas_equalTo(18);
             make.centerY.equalTo(self.containerView);
         }];
         
         self.titleLabel = [[UILabel alloc] init];
-        self.titleLabel.font = [UIFont themeFontMedium:14];
+        self.titleLabel.font = [UIFont themeFontMedium:16];
         self.titleLabel.textColor = [UIColor themeGray2];
         self.titleLabel.numberOfLines = 1;
         self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.containerView addSubview:self.titleLabel];
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.nameLablel.mas_right).mas_offset(10);
-            make.right.mas_equalTo(self.rightArrow.mas_left).mas_offset(-15);
+            make.left.mas_equalTo(12 + 42);
+            make.right.mas_equalTo(self.rightArrow.mas_left).mas_offset(-4);
             make.centerY.mas_equalTo(self.containerView);
         }];
 
@@ -73,7 +73,7 @@
         }];
         self.detailBtn = [[UIButton alloc] init];
         self.detailBtn.backgroundColor = [UIColor colorWithHexString:@"#f7f7f7"];
-        self.detailBtn.layer.cornerRadius = 4;
+        self.detailBtn.layer.cornerRadius = 1;
         self.detailBtn.layer.masksToBounds = YES;
         [self.detailBtn setTitle:@"更多详细信息" forState:UIControlStateNormal];
         self.detailBtn.titleLabel.numberOfLines = 0;
@@ -83,8 +83,8 @@
         [self.detailBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView.mas_bottom).offset(12);
             make.height.mas_equalTo(30);
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
         }];
         [self.detailBtn addTarget:self action:@selector(clickMoreDetailAction:) forControlEvents:UIControlEventTouchUpInside];
     }

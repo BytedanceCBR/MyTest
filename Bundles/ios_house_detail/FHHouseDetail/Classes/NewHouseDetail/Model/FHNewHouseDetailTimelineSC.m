@@ -33,7 +33,7 @@
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 30;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     FHNewHouseDetailTimelineSM *model = (FHNewHouseDetailTimelineSM *)self.sectionModel;
     return [FHNewHouseDetailTimeLineCollectionCell cellSizeWithData:model.newsCellModel width:width];
 }
@@ -60,8 +60,7 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:18];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
+    [titleView setupNewHouseDetailStyle];
     FHNewHouseDetailTimelineSM *model = (FHNewHouseDetailTimelineSM *)self.sectionModel;
     titleView.titleLabel.text = model.newsCellModel.timeLineModel.totalCount.length ? model.newsCellModel.timeLineModel.totalCount : @"楼盘动态";
     titleView.arrowsImg.hidden = NO;
@@ -92,7 +91,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2, 46);
     }
     return CGSizeZero;
 }

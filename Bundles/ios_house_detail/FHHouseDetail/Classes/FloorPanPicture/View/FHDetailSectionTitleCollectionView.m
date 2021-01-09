@@ -108,8 +108,8 @@
 
 - (void)setSubTagView{
     [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.top.mas_offset(20);
+        make.left.mas_equalTo(12);
+        make.top.mas_offset(12);
     }];
     if(_tagViews && _tagViews.subviews.count){
         self.tagViews.hidden = NO;
@@ -135,6 +135,10 @@
     }];
     self.subTitleLabel.textColor = [UIColor themeGray1];
     self.arrowsImg.image = [UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"];
+}
+
+- (void)setupNewHouseDetailStyle {
+    [self setupNeighborhoodDetailStyle];
 }
 
 - (void)moreAction:(UITapGestureRecognizer *)tapGesture {

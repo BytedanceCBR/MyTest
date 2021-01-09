@@ -39,7 +39,7 @@
     FHNewHouseDetailDisclaimerModel *model = (FHNewHouseDetailDisclaimerModel *)data;
     CGFloat height = 0;
     if (model.disclaimer && model.disclaimer.text.length > 0) {
-        height += [model.disclaimer.text btd_heightWithFont:[UIFont themeFontRegular:11] width:width];
+        height += [model.disclaimer.text btd_heightWithFont:[UIFont themeFontRegular:12] width:width];
         height += 25;
     }
     if (model.contact.realtorName.length > 0 || model.contact.agencyName.length > 0) {
@@ -57,7 +57,7 @@
     if (model.disclaimer && model.disclaimer.text.length > 0) {
         NSString *text = model.disclaimer.text;
         NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text];
-        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:11],NSForegroundColorAttributeName:[UIColor themeGray4]};
+        NSDictionary *attr = @{NSFontAttributeName:[UIFont themeFontRegular:12],NSForegroundColorAttributeName:[UIColor themeGray4]};
         [attrText addAttributes:attr range:NSMakeRange(0, attrText.length)];
         __weak typeof(self)wSelf = self;
         [model.disclaimer.richText enumerateObjectsUsingBlock:^(FHDisclaimerModelDisclaimerRichTextModel *  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -161,7 +161,7 @@
     _disclaimerContent = [[YYLabel alloc] init];
     _disclaimerContent.numberOfLines = 0;
     _disclaimerContent.textColor = [UIColor themeGray4];
-    _disclaimerContent.font = [UIFont themeFontRegular:11];
+    _disclaimerContent.font = [UIFont themeFontRegular:12];
     _disclaimerContent.preferredMaxLayoutWidth = self.frame.size.width;
 
     [self.contentView addSubview:_disclaimerContent];

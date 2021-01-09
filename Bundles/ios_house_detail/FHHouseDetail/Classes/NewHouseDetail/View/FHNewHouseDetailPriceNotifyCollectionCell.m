@@ -18,7 +18,7 @@
 @implementation FHNewHouseDetailPriceNotifyCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, 65);
+    return CGSizeMake(width, 45 + 12);
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -26,15 +26,12 @@
         
         self.priceBgView = [[UIView alloc] init];
         self.priceBgView.backgroundColor = [UIColor colorWithHexString:@"#fffaf0"];
-        self.priceBgView.layer.cornerRadius = 25;
-        self.priceBgView.layer.masksToBounds = YES;
         [self.contentView addSubview:self.priceBgView];
         [self.priceBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
             make.height.mas_equalTo(45);
             make.top.equalTo(0);
-            make.bottom.mas_equalTo(-20);
         }];
         
         _priceChangedNotify = [UIButton buttonWithType:UIButtonTypeCustom];
