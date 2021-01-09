@@ -223,8 +223,6 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(topOffset);
     }];
-    
-//    [self layoutIfNeeded];
 }
 
 - (NSArray *)elementTypeStringArray:(FHHouseType)houseType
@@ -263,19 +261,12 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-18);
-        make.bottom.equalTo(self.contentView).offset(18);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     _containerView = [[UIView alloc] init];
-    _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.contentView);
-        make.left.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.contentView);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(0, 0, 3+4.5, 0));
     }];
 }
 
@@ -549,7 +540,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     _nameLabel.text = budgetmodel.baseTitle;
     
     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
-    UIColor *infoColor = [UIColor colorWithHexStr:@"#ff9629"];
+    UIColor *infoColor = [UIColor themeGray1];
     if (!IS_EMPTY_STRING(budgetmodel.baseContent)) {
         // 支持贷款及展示
         if (!budgetmodel.canLoan) {
