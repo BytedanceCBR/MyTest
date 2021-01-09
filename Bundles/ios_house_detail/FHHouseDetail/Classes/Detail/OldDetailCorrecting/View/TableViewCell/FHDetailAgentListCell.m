@@ -68,8 +68,8 @@
     
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeDefault){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView);
-            make.bottom.equalTo(self.contentView);
+            make.top.equalTo(self.contentView).offset(-4.5);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
     
@@ -311,9 +311,9 @@
     _headerView.label.text = @"推荐经纪人";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(9);
-        make.right.mas_equalTo(self.shadowImage).offset(-9);
-        make.left.mas_equalTo(self.shadowImage).offset(9);
+        make.top.mas_equalTo(self.contentView).offset(4.5);
+        make.right.mas_equalTo(self.contentView).offset(-9);
+        make.left.mas_equalTo(self.contentView).offset(9);
         make.height.mas_equalTo(32);
     }];
     _containerView = [[UIView alloc] init];
