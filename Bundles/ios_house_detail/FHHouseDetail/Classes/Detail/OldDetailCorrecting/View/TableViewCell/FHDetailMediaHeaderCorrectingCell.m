@@ -20,7 +20,7 @@
 #import "FHCommonDefines.h"
 #import "FHDetailNewModel.h"
 #import <FHVRDetailWebViewController.h>
-//#import "FHVRCacheManager.h"
+#import <ByteDanceKit.h>
 #import "TTSettingsManager.h"
 #import "NSDictionary+TTAdditions.h"
 #import "FHFloorPanPicShowViewController.h"
@@ -29,6 +29,7 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import "TTReachability.h"
 #import "ToastManager.h"
+#import "FHDetailHeaderTitleView.h"
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
 
@@ -80,7 +81,7 @@
 }
 
 + (CGFloat)cellHeight {
-    CGFloat photoCellHeight = 281;
+    CGFloat photoCellHeight = 261;
     photoCellHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight + 0.5);
     return photoCellHeight;
 }
@@ -123,31 +124,41 @@
 }
 
 - (void)reckoncollectionHeightWithData:(id)data {
-    FHDetailHouseTitleModel *titleModel =  ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel;
+    // 头图高度
     _photoCellHeight = [FHDetailMediaHeaderCorrectingCell cellHeight];
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont themeFontMedium:24]};
-    CGRect rect = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH-66, CGFLOAT_MAX)
-                                              options:NSStringDrawingUsesLineFragmentOrigin
-                                           attributes:attributes
-                                              context:nil];                     //算出标题的高度
+    _photoCellHeight += 9; // 头图与卡片垂直间距
+    
+    // 加上企业担保banner的高度
+    FHDetailHouseTitleModel *titleModel =  ((FHDetailMediaHeaderCorrectingModel *)self.currentData).titleDataModel;
     if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) { //如果头图下面有横幅那么高度增加40
         _photoCellHeight += 40;
     }
     
-    CGFloat rectHeight = rect.size.height;
-    if (rectHeight > [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood || titleModel.isFloorPan)? 1: 2)){          //如果超过两行，只显示两行，小区只显示一行，需要特判
-        rectHeight = [UIFont themeFontMedium:24].lineHeight * ((titleModel.housetype == FHHouseTypeNeighborhood || titleModel.isFloorPan)? 1: 2);
-    }
-    
-    _photoCellHeight += 20 + rectHeight - 21;//20是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
-    
-    if (titleModel.tags.count>0) {
-        //这里分别加上标签高度20，标签间隔20
-        if (!titleModel.isFloorPan) { //因为户型详情页的标签和标题在同一行所以这里特判户型详情页不加上这部分高度
-            _photoCellHeight += 20 + 20;
+    // 标签高度
+    if (titleModel.tags.count > 0) {
+        if (!titleModel.isFloorPan) {
+            _photoCellHeight += 12; // 标签顶部间距
+            _photoCellHeight += 16; // 标签高度
         }
     }
-    if (titleModel.isFloorPan) {    //户型详情页特有的总价Label
+    
+    // 房源名称标签的高度
+    NSDictionary *attributes = [FHDetailHeaderTitleView nameLabelAttributes];
+    CGSize nameLableSize = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 42, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
+    CGFloat nameLabelHeight = nameLableSize.height;
+    // 限制最多两行高度
+    NSParagraphStyle *paragraphStyle = (NSParagraphStyle *)[attributes btd_objectForKey:NSParagraphStyleAttributeName default:nil];
+    if(paragraphStyle) {
+        CGFloat maxHeight = 2 * paragraphStyle.minimumLineHeight;
+        nameLabelHeight = MIN(nameLabelHeight, maxHeight);
+    }
+    
+    _photoCellHeight += 12; // 房源名称标签上边距
+    _photoCellHeight += nameLabelHeight; // 房源名称标签高度
+    
+    
+    //户型详情页特有的总价Label
+    if (titleModel.isFloorPan) {
         if (titleModel.tags && titleModel.tags.count > 1) {
            _photoCellHeight += 20 + 20 + 24;
         } else {
@@ -155,10 +166,12 @@
         }
     }
     
+    //小区详情页的地址Label高度
     if (((FHDetailMediaHeaderCorrectingModel *)self.currentData).vedioModel.cellHouseType == FHMultiMediaCellHouseNeiborhood) {
-        _photoCellHeight = _photoCellHeight +22;       //小区的地址Label高度
+        _photoCellHeight = _photoCellHeight + 22;
     }
     
+    // 计算高度完成后，更新约束高度
     [self.mediaView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_offset(self.photoCellHeight);
     }];

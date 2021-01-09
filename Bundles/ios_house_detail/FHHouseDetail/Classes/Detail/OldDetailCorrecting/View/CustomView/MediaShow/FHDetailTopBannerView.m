@@ -41,7 +41,6 @@
 
 - (void)setupUI
 {
-//    [self addSubview:self.shadowImage];
     [self addSubview:self.containerView];
     [self.containerView addSubview:self.leftView];
     [self.containerView addSubview:self.rightView];
@@ -53,16 +52,10 @@
     UITapGestureRecognizer* singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToJump)];
     [self.containerView addGestureRecognizer:singleTap];
 
-//    [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-//        make.left.right.top.mas_equalTo(self);
-//        make.bottom.mas_equalTo(self);
-//        make.height.mas_equalTo(self);
-//    }];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.bottom.mas_equalTo(0);
-        make.left.mas_equalTo(self).mas_offset(15);
-        make.right.mas_equalTo(self).mas_offset(-15);
-//        make.height.mas_equalTo(40);
+        make.left.mas_equalTo(self).mas_offset(9);
+        make.right.mas_equalTo(self).mas_offset(-9);
     }];
     [self.leftView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.bottom.mas_equalTo(0);
@@ -104,20 +97,6 @@
 
 - (void)updateWithTitle:(NSString *)title content:(NSString *)content isCanClick:(BOOL)isCanClick clickUrl:(nonnull NSString *)clickUrl
 {
-//    switch (self.housetype) {
-//        case FHHouseTypeSecondHandHouse:
-//            [self.leftIcon mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.left.mas_equalTo(11);
-//                make.width.height.mas_equalTo(24);
-//            }];
-//            break;
-//        default:
-//            [self.leftIcon mas_updateConstraints:^(MASConstraintMaker *make) {
-//                make.left.mas_equalTo(12);
-//                make.width.height.mas_equalTo(18);
-//            }];
-//            break;
-//    }
     self.leftLabel.text = title;
     self.rightLabel.text = content;
     
@@ -125,8 +104,8 @@
     self.clickUrl = clickUrl;
     
     if (!_maskLayer) {
-        CGRect rect = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, 40);
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(10, 10)];
+        CGRect rect = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 18, 40);
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(9, 9)];
         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
 //        maskLayer.frame = self.containerView.bounds;
         maskLayer.frame = rect;
@@ -146,7 +125,6 @@
         gradientLayer.endPoint = CGPointMake(1, 1);
         
         gradientLayer.frame = CGRectMake(0, 0, 114, 40);
-//        gradientlayer.cornerRadius = 4.0;
         [self.leftView.layer insertSublayer:gradientLayer atIndex:0];
         _gradientLayer = gradientLayer;
     }
@@ -165,7 +143,6 @@
 {
     if (!_containerView) {
         _containerView = [[UIView alloc]init];
-//        _containerView.layer.cornerRadius = 10;
         _containerView.clipsToBounds = YES;
     }
     return _containerView;
@@ -214,8 +191,6 @@
         _rightLabel = [[UILabel alloc]init];
         _rightLabel.textColor = [UIColor colorWithHexString:@"#b53d00"];
         _rightLabel.font = [UIDevice btd_deviceWidthType] == BTDDeviceWidthMode320 ? [UIFont themeFontRegular:12] : [UIFont themeFontRegular:14];
-//        _rightLabel.minimumScaleFactor = 0.5;
-//        _rightLabel.adjustsFontSizeToFitWidth = YES;
         _rightLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         _rightLabel.numberOfLines = 1;
     }

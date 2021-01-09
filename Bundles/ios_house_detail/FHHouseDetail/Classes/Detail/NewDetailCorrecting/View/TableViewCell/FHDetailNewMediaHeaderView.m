@@ -109,11 +109,13 @@
     [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self.scrollView);
         make.bottom.equalTo(self.scrollView);
-        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
+        // MARK: 隐藏渐变浮屋
+        make.height.mas_equalTo(0);
+//        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
     }];
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
-        make.top.equalTo(self.scrollView.mas_bottom).offset(-40);
+        make.top.equalTo(self.scrollView.mas_bottom).offset(9);
         make.height.mas_offset(40);
     }];
 
