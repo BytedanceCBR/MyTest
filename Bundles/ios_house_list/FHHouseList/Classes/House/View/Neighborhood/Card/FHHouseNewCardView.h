@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseNewCardView : FHHouseNewComponentView
 
-- (instancetype)initWithLeftMargin:(CGFloat)left rightMargin:(CGFloat)right;
+- (instancetype)initWithFrame:(CGRect)frame leftMargin:(CGFloat)left rightMargin:(CGFloat)right;
 
 - (void)resumeVRIcon;
 

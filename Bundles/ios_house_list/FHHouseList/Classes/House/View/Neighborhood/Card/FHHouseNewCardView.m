@@ -38,17 +38,16 @@
 
 @implementation FHHouseNewCardView
 
-- (instancetype)initWithLeftMargin:(CGFloat)left rightMargin:(CGFloat)right {
-    self = [super init];
+- (instancetype)initWithFrame:(CGRect)frame leftMargin:(CGFloat)left rightMargin:(CGFloat)right {
+    self = [super initWithFrame:frame];
     if (self) {
-        self.leftMargin = 12;
-        self.rightMargin = 12;
+        self.leftMargin = left;
+        self.rightMargin = right;
         [self setupUI];
         [self setupConstraints];
     }
     return self;
 }
-
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];

@@ -53,7 +53,7 @@
     [self.contentView addSubview:self.backView];
     self.backView.backgroundColor = [UIColor whiteColor];
     
-    self.cardView = [[FHHouseNewCardView alloc] initWithLeftMargin:12 rightMargin:12];
+    self.cardView = [[FHHouseNewCardView alloc] initWithFrame:self.contentView.bounds leftMargin:12 rightMargin:12];
     [self.contentView addSubview:self.cardView];
     
     self.line = [[UIView alloc] init];
