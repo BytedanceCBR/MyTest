@@ -25,7 +25,7 @@
         [self addSubview:shadowImageView];
         self.shadowImageView = shadowImageView;
         [shadowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsZero);
+            make.edges.mas_equalTo(UIEdgeInsetsMake(-5, 0, 0, 0));
         }];
     }
     return self;

@@ -756,16 +756,18 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         priceTrendModel.tableView = self.tableView;
         [self.items addObject:priceTrendModel];
     }
-    // 均价对比
-    if(model.data.neighborhoodPriceRange && model.data.priceAnalyze){
-        FHDetailAveragePriceComparisonModel *infoModel = [[FHDetailAveragePriceComparisonModel alloc] init];
-        infoModel.houseModelType =  FHHouseModelTypeLocationPeriphery;
-        infoModel.neighborhoodId = model.data.neighborhoodInfo.id;
-        infoModel.neighborhoodName = model.data.neighborhoodInfo.name;
-        infoModel.analyzeModel = model.data.priceAnalyze;
-        infoModel.rangeModel = model.data.neighborhoodPriceRange;
-        [self.items addObject:infoModel];
-    }
+    
+// MARK: 不展示均价对比模块
+//    // 均价对比
+//    if(model.data.neighborhoodPriceRange && model.data.priceAnalyze){
+//        FHDetailAveragePriceComparisonModel *infoModel = [[FHDetailAveragePriceComparisonModel alloc] init];
+//        infoModel.houseModelType =  FHHouseModelTypeLocationPeriphery;
+//        infoModel.neighborhoodId = model.data.neighborhoodInfo.id;
+//        infoModel.neighborhoodName = model.data.neighborhoodInfo.name;
+//        infoModel.analyzeModel = model.data.priceAnalyze;
+//        infoModel.rangeModel = model.data.neighborhoodPriceRange;
+//        [self.items addObject:infoModel];
+//    }
     
     //芜湖交换ab实验
     if([[FHEnvContext getCurrentSelectCityIdFromLocal] isEqual:@"10416"] && [[BDABTestManager getExperimentValueForKey:@"f_wuhu_detail_card_order" withExposure:YES] intValue]){
@@ -781,6 +783,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             [self.items exchangeObjectAtIndex:FHhouseDetailRGCListCellIndex withObjectAtIndex:FHDetailAgentListIndex];
         }
     }
+    
     //帮我卖房数据
     self.saleHouseEntranceData = model.data.saleHouseEntrance;
    
@@ -886,16 +889,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             infoModel.relatedHouseData = self.relatedHouseData;
             [self.items addObject:infoModel];
         }
-        //帮我卖房入口
-        FHDetailOldSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;
-        if(saleHouseEntrance.title.length > 0 && saleHouseEntrance.subtitle.length > 0 && saleHouseEntrance.buttonText.length > 0 && saleHouseEntrance.openUrl.length > 0) {
-            FHOldDetailOwnerSellHouseModel *ownerSellHouseModel = [[FHOldDetailOwnerSellHouseModel alloc] init];
-            ownerSellHouseModel.questionText = saleHouseEntrance.title;
-            ownerSellHouseModel.hintText = saleHouseEntrance.subtitle;
-            ownerSellHouseModel.helpMeSellHouseText = saleHouseEntrance.buttonText;
-            ownerSellHouseModel.helpMeSellHouseOpenUrl = saleHouseEntrance.openUrl;
-            [self.items addObject:ownerSellHouseModel];
-        }
+// MARK: 不展示帮我卖房入口
+//        FHDetailOldSaleHouseEntranceModel *saleHouseEntrance = model.data.saleHouseEntrance;
+//        if(saleHouseEntrance.title.length > 0 && saleHouseEntrance.subtitle.length > 0 && saleHouseEntrance.buttonText.length > 0 && saleHouseEntrance.openUrl.length > 0) {
+//            FHOldDetailOwnerSellHouseModel *ownerSellHouseModel = [[FHOldDetailOwnerSellHouseModel alloc] init];
+//            ownerSellHouseModel.questionText = saleHouseEntrance.title;
+//            ownerSellHouseModel.hintText = saleHouseEntrance.subtitle;
+//            ownerSellHouseModel.helpMeSellHouseText = saleHouseEntrance.buttonText;
+//            ownerSellHouseModel.helpMeSellHouseOpenUrl = saleHouseEntrance.openUrl;
+//            [self.items addObject:ownerSellHouseModel];
+//        }
         // 免责声明
         if (model.data.contact || model.data.disclaimer) {
             FHOldDetailDisclaimerModel *infoModel = [[FHOldDetailDisclaimerModel alloc] init];

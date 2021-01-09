@@ -17,9 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailHouseCoreInfoItemView : UIView
 @property (nonatomic, strong)   UIView       *lineView;
-@property (nonatomic, strong)   UILabel       *keyLabel;
-@property (nonatomic, strong)   UILabel       *valueLabel;
-
+@property (nonatomic, strong)   UILabel      *keyLabel;
+@property (nonatomic, strong)   UILabel      *valueLabel;
+@property (nonatomic, assign)   CGFloat      leftPadding;
 @end
 
 

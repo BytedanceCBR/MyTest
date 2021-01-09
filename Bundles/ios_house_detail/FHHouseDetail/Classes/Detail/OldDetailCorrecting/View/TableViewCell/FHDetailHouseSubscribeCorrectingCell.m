@@ -185,36 +185,38 @@
             make.right.mas_equalTo(self.contentView).offset(-9);
             make.top.mas_equalTo(self.shadowImage).offset(9);
             make.bottom.mas_equalTo(self.shadowImage).offset(-9);
-            make.height.mas_equalTo(60);
+            make.height.mas_equalTo(46);
         }];
         
         UIButton *subscribeBtn = [[UIButton alloc] init];
-        [subscribeBtn setTitle:@"立即订阅" forState:UIControlStateNormal];
-        [subscribeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        subscribeBtn.titleLabel.font = [UIFont themeFontSemibold:14];
-        subscribeBtn.layer.cornerRadius = 16;
-        subscribeBtn.backgroundColor = [UIColor colorWithHexString:@"d4b382"];
+        [subscribeBtn setTitle:@"去订阅" forState:UIControlStateNormal];
+        [subscribeBtn setTitleColor:[UIColor colorWithHexStr:@"#9c6d43"] forState:UIControlStateNormal];
+        subscribeBtn.titleLabel.font = [UIFont themeFontMedium:12];
+        subscribeBtn.layer.cornerRadius = 1;
+        subscribeBtn.layer.borderWidth = 0.5;
+        subscribeBtn.layer.borderColor = [[UIColor colorWithHexStr:@"#9c6d43"] CGColor];
+        subscribeBtn.backgroundColor = [UIColor colorWithHexString:@"fffaf0"];
         [subscribeBtn addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
         [self.bacIma addSubview:subscribeBtn];
         self.subscribeBtn = subscribeBtn;
         [self.subscribeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.mas_equalTo(self.bacIma);
-            make.right.mas_equalTo(self.bacIma).offset(-15);
-            make.width.mas_equalTo(86);
-            make.height.mas_equalTo(32);
+            make.right.mas_equalTo(self.bacIma).offset(-9);
+            make.width.mas_equalTo(54);
+            make.height.mas_equalTo(24);
         }];
         
         self.tipNameLabel = [[UILabel alloc] init];
         self.tipNameLabel.textAlignment = NSTextAlignmentLeft;
-        self.tipNameLabel.textColor = [UIColor colorWithHexString:@"a57d59"];
-        self.tipNameLabel.font = [UIFont themeFontSemibold:16];
+        self.tipNameLabel.textColor = [UIColor colorWithHexString:@"9c6d43"];
+        self.tipNameLabel.font = [UIFont themeFontMedium:14];
         self.tipNameLabel.text = @"订阅房源动态，掌握一手信息";
         [self.bacIma addSubview:self.tipNameLabel];
         [self.tipNameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.bacIma).offset(15);
-            make.right.mas_equalTo(self.subscribeBtn.mas_left).offset(-15);
+            make.left.mas_equalTo(self.bacIma).offset(9);
+            make.right.mas_equalTo(self.subscribeBtn.mas_left).offset(-9);
             make.centerY.mas_equalTo(self.bacIma);
-            make.height.mas_equalTo(22);
+            make.height.mas_equalTo(20);
         }];
     } else {
         [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
