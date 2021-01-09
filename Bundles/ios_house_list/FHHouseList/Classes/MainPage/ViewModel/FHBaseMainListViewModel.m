@@ -2037,7 +2037,7 @@ extern NSString *const INSTANT_DATA_KEY;
             [cell performSelector:@selector(restoreWithAnimation)];
         }
         self.selectCell = nil;
-        if (gesture.state == UIGestureRecognizerStateEnded && !self.pageIsDragging) {
+        if (gesture.state == UIGestureRecognizerStateEnded && !self.pageIsDragging && cell && indexPath) {
             WeakSelf;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 StrongSelf;
@@ -2054,6 +2054,16 @@ extern NSString *const INSTANT_DATA_KEY;
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    CGPoint point = [touch locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if (!cell || ![cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)]) {
+        return NO;
+    }
     return YES;
 }
 
