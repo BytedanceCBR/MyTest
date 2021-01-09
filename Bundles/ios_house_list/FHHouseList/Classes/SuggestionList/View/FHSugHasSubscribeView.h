@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 typedef void(^FHSugHasSubscribeItemClick)(FHSugSubscribeDataDataItemsModel *model);
 
 
-// 已订阅搜索
+// 订阅记录
 @interface FHSugHasSubscribeView : UIView
 
 @property (nonatomic, assign)     FHHouseType       houseType;
