@@ -6,7 +6,7 @@
 //
 
 #import "FHOldHouseDeatilRGCImageCell.h"
-#import "FHHouseDeatilRGCCellHeader.h"
+#import "FHOldHouseDeatilRGCCellHeader.h"
 #import "FHHouseDetailRGCMultiImageView.h"
 #import "FHUGCCellBottomView.h"
 #import "UIImageView+BDWebImage.h"
@@ -29,7 +29,7 @@
 @property (strong, nonatomic) TTUGCAsyncLabel *contentLabel;
 @property (strong, nonatomic) FHHouseDetailRGCMultiImageView *multiImageView;
 @property (strong, nonatomic) FHUGCCellBottomView *bottomView;
-@property (strong, nonatomic) FHHouseDeatilRGCCellHeader *headerView;
+@property (strong, nonatomic) FHOldHouseDeatilRGCCellHeader *headerView;
 @property (strong ,nonatomic) FHUGCCellUserInfoView *userInfoView;
 @property (nonatomic ,assign) CGFloat imageViewheight;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
@@ -65,7 +65,7 @@
     self.userInfoView.hidden = YES;
     [self.contentContainer addSubview:_userInfoView];
     
-    self.headerView = [[FHHouseDeatilRGCCellHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
+    self.headerView = [[FHOldHouseDeatilRGCCellHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     self.headerView.hidden = YES;
     __weak typeof(self) weakSelf = self;
     self.headerView.imClick = ^{

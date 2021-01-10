@@ -6,7 +6,7 @@
 //
 
 #import "FHOldHouseDeatilRGCVideoCell.h"
-#import "FHHouseDeatilRGCCellHeader.h"
+#import "FHOldHouseDeatilRGCCellHeader.h"
 #import "FHUGCCellBottomView.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
@@ -24,7 +24,7 @@
 @property(nonatomic ,strong) UIView *contentContainer;
 @property (strong, nonatomic) TTUGCAsyncLabel *contentLabel;
 @property (strong, nonatomic) FHUGCCellBottomView *bottomView;
-@property (strong, nonatomic) FHHouseDeatilRGCCellHeader *headerView;
+@property (strong, nonatomic) FHOldHouseDeatilRGCCellHeader *headerView;
 @property (strong ,nonatomic) FHUGCCellUserInfoView *userInfoView;
 @property (strong ,nonatomic) FHUGCCellUserInfoView *lineView;
 @property(nonatomic ,strong) TTImageView *videoImageView;
@@ -66,7 +66,7 @@
     self.userInfoView.hidden = YES;
     [self.contentContainer addSubview:_userInfoView];
     
-    self.headerView = [[FHHouseDeatilRGCCellHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
+    self.headerView = [[FHOldHouseDeatilRGCCellHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     self.headerView.hidden = YES;
     __weak typeof(self) weakSelf = self;
     self.headerView.imClick = ^{
