@@ -452,7 +452,7 @@
         }];
     }else {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
-            *titleScrollViewColorKey  = @"Background21";
+            *titleScrollViewColorKey  = @"Background3";
             *norColorKey = @"grey1";
             *selColorKey = @"grey1";
             *titleFont = [UIFont themeFontRegular:16];
