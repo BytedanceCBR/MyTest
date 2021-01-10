@@ -148,7 +148,7 @@
     self.bottomView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin ;
     self.bottomView.height = bottomViewHeight;
     
-    self.lineView.top = self.multiImageView.bottom + 16;
+    self.lineView.top = self.multiImageView.bottom + 11;
     self.lineView.left = leftMargin;
     self.lineView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin - cellOuterMargin;
     self.lineView.height = 0.5;
@@ -170,7 +170,7 @@
     UIView *lastView = cellModel.imageList.count == 0?self.contentLabel:self.multiImageView;
     CGFloat topOffset = 12;
     self.bottomView.top = lastView.bottom + topOffset;
-    self.lineView.top = lastView.bottom + 16;
+    self.lineView.top = lastView.bottom + 11;
     //
     //    self.originView.top = self.multiImageView.bottom + 10;
     //    self.originView.left = leftMargin;
