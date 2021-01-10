@@ -88,12 +88,12 @@
 
 - (void)collectionDataCrate:(NSArray *)array {
     if (array.count>0) {
-        NSDictionary *indexZeroData = array[array.count>[self.currentMainTabIndex intValue]?:0];
-        self.mainIndex = array.count>[self.currentMainTabIndex intValue]?:0;
+        NSDictionary *indexZeroData = array[array.count>[self.currentMainTabIndex intValue]?[self.currentMainTabIndex intValue]:0];
+        self.mainIndex = array.count>[self.currentMainTabIndex intValue]?[self.currentMainTabIndex intValue]:0;
         if ([indexZeroData.allKeys containsObject:@"options"]) {
             NSArray *headerTagArr = indexZeroData[@"options"];
-            self.currentHeaderDic = headerTagArr[headerTagArr.count>[self.currentSubTabIndex intValue]?:0];
-            self.subIndex = headerTagArr.count>[self.currentSubTabIndex intValue]?:0;
+            self.currentHeaderDic = headerTagArr[headerTagArr.count>[self.currentSubTabIndex intValue]?[self.currentSubTabIndex intValue]:0];
+            self.subIndex = headerTagArr.count>[self.currentSubTabIndex intValue]?[self.currentMainTabIndex intValue]:0;
         }
     }
     [self.dataList addObjectsFromArray:array];
