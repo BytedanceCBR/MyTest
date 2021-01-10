@@ -39,7 +39,7 @@
     [self addSubview:_arrowsImg];
     [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(self).offset(AdaptOffset(-12));
-        make.height.width.mas_equalTo(AdaptOffset(20));
+        make.height.width.mas_equalTo(AdaptOffset(14));
         make.centerY.mas_equalTo(self.label.mas_centerY);
     }];
 }

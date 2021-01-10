@@ -14,6 +14,7 @@ const float FHHouseCardShrinkRate = 0.9;  //触摸动效卡片缩小率
 
 NS_ASSUME_NONNULL_BEGIN
 
+//已读未读功能协议
 @protocol FHHouseCardReadStateProtocol <NSObject>
 
 @required
@@ -23,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+//触摸动效协议
 @protocol FHHouseCardTouchAnimationProtocol <NSObject>
 
 @required
@@ -39,8 +41,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)sharedInstance;
 
+//把阅读的房源卡片记录到内存
 - (void)readHouseId:(NSString *)houseId withHouseType:(NSInteger)houseType;
 
+//判断是否阅读过该房源卡片
 - (BOOL)isReadHouseId:(NSString *)houseId withHouseType:(NSInteger)houseType;
 
 @end

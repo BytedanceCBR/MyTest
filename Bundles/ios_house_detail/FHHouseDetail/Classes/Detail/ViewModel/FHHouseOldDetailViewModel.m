@@ -633,11 +633,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         //ugc 圈子入口,写在这儿是因为如果小区模块移除，那么圈子入口也不展示
         FHDetailNeighborhoodInfoCorrectingModel *infoModel = [[FHDetailNeighborhoodInfoCorrectingModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
-        if(hasOtherNeighborhoodInfo){
-            infoModel.houseModelType = FHHouseModelTypeNeighborhoodInfo;
-        }else{
-            infoModel.houseModelType = FHHouseModelTypeLocationPeriphery;
-        }
+        infoModel.houseModelType = FHHouseModelTypeNeighborhoodInfo;
         infoModel.tableView = self.tableView;
         infoModel.contactViewModel = self.contactViewModel;
         [self.items addObject:infoModel];
@@ -1005,8 +1001,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:formReportModel completion:^{
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
             [subscribeHouseCache setObject:@"1" forKey:weakSelf.houseId];
-            [weakSelf.items removeObject:subscribeModel];
-            [weakSelf reloadData];
+            [weakSelf subscribeFormFinishedWithModel:subscribeModel];
         }];
         return;
     }
@@ -1031,12 +1026,16 @@ extern NSString *const kFHSubscribeHouseCacheKey;
             [FHUserInfoManager savePhoneNumber:phoneNum];
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];
             [subscribeHouseCache setObject:@"1" forKey:weakSelf.houseId];
-            [weakSelf.items removeObject:subscribeModel];
-            [weakSelf reloadData];
+            [weakSelf subscribeFormFinishedWithModel:subscribeModel];
         } else {
             [[ToastManager manager] showToast:[NSString stringWithFormat:@"%@%@",model.message.length ? @"" : @"提交失败 ", model.message]];
         }
     }];
+}
+
+- (void)subscribeFormFinishedWithModel:(FHDetailHouseSubscribeCorrectingModel *)subscribeModel {
+    [self.items removeObject:subscribeModel];
+    [self reloadData];
 }
 
 - (BOOL)isShowSubscribe {

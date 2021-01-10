@@ -896,8 +896,15 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                 }
             }];
             double progress = ABS(currentPoint.x - self.interactivePanInitialPoint.x)/CGRectGetWidth(self.contentView.bounds);
+            double value = progress;
+            CGFloat distance = currentPoint.x - self.interactivePanInitialPoint.x;
+            if (distance > 0 && self.segmentedControl.selectedSegmentIndex == 0) {
+                value = 0;
+            } else if (distance < 0 && self.segmentedControl.selectedSegmentIndex == 1) {
+                value = 0;
+            }
 
-            [self.segmentedControl updateIndicatorProgress:progress isDirectionLeft:!(self.interactivePanDirection == FHSegmentedControllerAnimatedTransitionDirectionFromLeftToRight) duration:0];
+            [self.segmentedControl updateIndicatorProgress:value isDirectionLeft:!(self.interactivePanDirection == FHSegmentedControllerAnimatedTransitionDirectionFromLeftToRight) duration:0];
             [self.interactiveTransitionAnimator updateInteractiveTransition:progress];
         }break;
         default:{
