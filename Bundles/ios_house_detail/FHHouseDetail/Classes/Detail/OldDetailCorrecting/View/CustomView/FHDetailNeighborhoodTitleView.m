@@ -4,6 +4,8 @@
 #import "UIFont+House.h"
 #import "UIColor+Theme.h"
 #import "Masonry.h"
+#import "UIImage+FIconFont.h"
+#import "FHDetailMoreView.h"
 
 @interface FHDetailNeighborhoodTitleView ()
 @property (nonatomic, strong) UILabel *loadMore;
@@ -34,7 +36,7 @@
         make.top.bottom.mas_equalTo(self);
     }];
     
-    _arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
+    _arrowsImg = [[UIImageView alloc] initWithImage:[FHDetailMoreView moreArrowImage]];
     _arrowsImg.hidden = YES;
     [self addSubview:_arrowsImg];
     [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
