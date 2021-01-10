@@ -60,17 +60,18 @@
     self.shadowImage.image = model.shadowImage;
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView);
+            make.top.equalTo(self.contentView).offset(-4.5);
         }];
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.equalTo(self.contentView);
+            make.top.equalTo(self.contentView).offset(-4.5);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeDefault){
@@ -145,7 +146,7 @@
             make.left.right.mas_equalTo(self.contentView);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.shadowImage).offset(-58 - 4.5);
+            make.bottom.mas_equalTo(self.contentView).offset(-58 - 4.5);
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -285,9 +286,9 @@
     _headerView.label.text = @"实勘经纪人";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(4.5);
-        make.right.mas_equalTo(self.shadowImage).offset(-9);
-        make.left.mas_equalTo(self.shadowImage).offset(9);
+        make.top.mas_equalTo(self.contentView).offset(4.5);
+        make.right.mas_equalTo(self.contentView).offset(-9);
+        make.left.mas_equalTo(self.contentView).offset(9);
         make.height.mas_equalTo(32);
     }];
     _containerView = [[UIView alloc] init];

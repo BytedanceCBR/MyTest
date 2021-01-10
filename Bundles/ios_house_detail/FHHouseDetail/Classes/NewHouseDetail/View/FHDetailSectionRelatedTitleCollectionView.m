@@ -16,12 +16,12 @@
     if (self = [super initWithFrame:frame]) {
         self.titleLabel = [[UILabel alloc] init];
         self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        self.titleLabel.font = [UIFont themeFontRegular:14];
-        self.titleLabel.textColor = [UIColor colorWithHexStr:@"#6d7278"];
+        self.titleLabel.font = [UIFont themeFontSemibold:16];
+        self.titleLabel.textColor = [UIColor themeGray1];
         [self addSubview:self.titleLabel];
         [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(15);
-            make.top.mas_equalTo(20);
+            make.left.mas_equalTo(12);
+            make.bottom.mas_equalTo(0);
         }];
         
         self.arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];

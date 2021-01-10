@@ -13,7 +13,7 @@
 @implementation FHNewHouseDetailMapResultCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    return CGSizeMake(width, 36);
+    return CGSizeMake(width, 32);
 }
 
 - (void)prepareForReuse {

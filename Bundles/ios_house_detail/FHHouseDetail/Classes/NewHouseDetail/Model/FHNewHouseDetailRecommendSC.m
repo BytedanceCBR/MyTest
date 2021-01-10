@@ -157,8 +157,6 @@
                                                                  atIndex:(NSInteger)index {
     FHDetailSectionRelatedTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionRelatedTitleCollectionView class] atIndex:index];
     FHNewHouseDetailRecommendSM *model = (FHNewHouseDetailRecommendSM *)self.sectionModel;
-    titleView.titleLabel.font = [UIFont themeFontMedium:18];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
     titleView.titleLabel.text = model.title;
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
@@ -168,7 +166,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 46);
+        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 35);
     }
     return CGSizeZero;
 }
