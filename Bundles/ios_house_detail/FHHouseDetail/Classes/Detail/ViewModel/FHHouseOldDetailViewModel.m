@@ -633,11 +633,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         //ugc 圈子入口,写在这儿是因为如果小区模块移除，那么圈子入口也不展示
         FHDetailNeighborhoodInfoCorrectingModel *infoModel = [[FHDetailNeighborhoodInfoCorrectingModel alloc] init];
         infoModel.neighborhoodInfo = model.data.neighborhoodInfo;
-        if(hasOtherNeighborhoodInfo){
-            infoModel.houseModelType = FHHouseModelTypeNeighborhoodInfo;
-        }else{
-            infoModel.houseModelType = FHHouseModelTypeLocationPeriphery;
-        }
+        infoModel.houseModelType = FHHouseModelTypeNeighborhoodInfo;
         infoModel.tableView = self.tableView;
         infoModel.contactViewModel = self.contactViewModel;
         [self.items addObject:infoModel];
