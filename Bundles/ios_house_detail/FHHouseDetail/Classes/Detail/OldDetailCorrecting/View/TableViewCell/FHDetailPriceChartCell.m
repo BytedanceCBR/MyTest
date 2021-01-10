@@ -14,6 +14,7 @@
 #import "UIView+House.h"
 #import "FHDetailHeaderStarTitleView.h"
 #import <FHHouseBase/FHUtils.h>
+#import <BytedanceKit.h>
 
 @interface FHDetailPriceChartCell () <PNChartDelegate>
 
@@ -67,7 +68,8 @@
     if (priceTrends.count < 1) {
         return;
     }
-    CGFloat trailing = [UIScreen mainScreen].bounds.size.width - 50 - 70;
+    
+    CGFloat trailing = [UIScreen mainScreen].bounds.size.width - 42 - ([self.priceLabel.text btd_sizeWithFont:self.priceLabel.font width:SCREEN_WIDTH - 42 maxLine:1].width + 12);
     CGFloat fontSize = [TTDeviceHelper isScreenWidthLarge320] ? 14 : 12;
     for (UIView *subview in self.titleView.subviews) {
         [subview removeFromSuperview];
@@ -102,9 +104,9 @@
         
         [label sizeToFit];
         label.left = trailing - label.width;
-        label.height = 20;
+        label.height = 16;
         label.top = 0;
-        trailing = label.left - 5;
+        trailing = label.left - 8;
         
         icon.left = trailing - icon.width;
         icon.centerY = label.centerY;
@@ -617,10 +619,10 @@
 - (PNLineChart *)chartView
 {
     if (!_chartView) {
-        PNLineChart *chartView = [[PNLineChart alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH-30, 207.0)];
+        PNLineChart *chartView = [[PNLineChart alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH-42, 207.0)];
         chartView.yLabelNum = 4; // 4 lines
-        chartView.chartMarginLeft = 17;
-        chartView.chartMarginRight = 17;
+        chartView.chartMarginLeft = 0;
+        chartView.chartMarginRight = 0;
         chartView.backgroundColor = [UIColor clearColor];
         chartView.yGridLinesColor = [[UIColor themeGray6] colorWithAlphaComponent:0.57];;
         chartView.showYGridLines = YES; // 横着的虚线
