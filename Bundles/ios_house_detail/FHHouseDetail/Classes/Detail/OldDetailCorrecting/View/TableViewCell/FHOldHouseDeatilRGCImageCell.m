@@ -1,12 +1,12 @@
 //
-//  FHHouseDeatilRGCImageCell.m
+//  FHOldHouseDeatilRGCImageCell.m
 //  FHHouseDetail
 //
-//  Created by liuyu on 2020/6/15.
+//  Created by wangxinyu on 2021/1/10.
 //
 
-#import "FHHouseDeatilRGCImageCell.h"
-#import "FHHouseDeatilRGCCellHeader.h"
+#import "FHOldHouseDeatilRGCImageCell.h"
+#import "FHOldHouseDeatilRGCCellHeader.h"
 #import "FHHouseDetailRGCMultiImageView.h"
 #import "FHUGCCellBottomView.h"
 #import "UIImageView+BDWebImage.h"
@@ -15,27 +15,28 @@
 #import "UIViewAdditions.h"
 #import "TTBusinessManager+StringUtils.h"
 
-#define leftMargin 20
-#define rightMargin 20
+#define leftMargin 12
+#define rightMargin 12
 #define topMargin 5
 #define maxLines 3
+#define cellOuterMargin 18  ///卡片距离tableview边距调整为9，左右两侧一共是18
 
 #define userInfoViewHeight 40
 #define bottomViewHeight 70
 
-@interface FHHouseDeatilRGCImageCell ()<TTUGCAsyncLabelDelegate>
+@interface FHOldHouseDeatilRGCImageCell ()<TTUGCAsyncLabelDelegate>
 @property(nonatomic ,strong) UIView *contentContainer;
 @property (strong, nonatomic) TTUGCAsyncLabel *contentLabel;
 @property (strong, nonatomic) FHHouseDetailRGCMultiImageView *multiImageView;
 @property (strong, nonatomic) FHUGCCellBottomView *bottomView;
-@property (strong, nonatomic) FHHouseDeatilRGCCellHeader *headerView;
+@property (strong, nonatomic) FHOldHouseDeatilRGCCellHeader *headerView;
 @property (strong ,nonatomic) FHUGCCellUserInfoView *userInfoView;
 @property (nonatomic ,assign) CGFloat imageViewheight;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property (strong ,nonatomic) FHUGCCellUserInfoView *lineView;
 
 @end
-@implementation FHHouseDeatilRGCImageCell
+@implementation FHOldHouseDeatilRGCImageCell
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style
@@ -64,7 +65,7 @@
     self.userInfoView.hidden = YES;
     [self.contentContainer addSubview:_userInfoView];
     
-    self.headerView = [[FHHouseDeatilRGCCellHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
+    self.headerView = [[FHOldHouseDeatilRGCCellHeader alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     self.headerView.hidden = YES;
     __weak typeof(self) weakSelf = self;
     self.headerView.imClick = ^{
@@ -81,7 +82,7 @@
     };
     [self.contentContainer addSubview:_headerView];
     
-    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 30, 0)];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - cellOuterMargin, 0)];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.font = [UIFont themeFontRegular:14];
     _contentLabel.layer.masksToBounds = YES;
@@ -89,9 +90,9 @@
     _contentLabel.delegate = self;
     [self.contentContainer addSubview:_contentLabel];
     
-    self.multiImageView = [[FHHouseDetailRGCMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30, 0) count:3];
+    self.multiImageView = [[FHHouseDetailRGCMultiImageView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - cellOuterMargin, 0) count:3];
     [self.contentContainer addSubview:_multiImageView];
-    self.imageViewheight = [FHHouseDetailRGCMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30];
+    self.imageViewheight = [FHHouseDetailRGCMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - cellOuterMargin];
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin , bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
@@ -101,7 +102,7 @@
     _bottomView.paddingLike = 30;
     [self.contentContainer addSubview:_bottomView];
     
-    self.lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin -30, .5)];
+    self.lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin - cellOuterMargin, .5)];
     self.lineView.backgroundColor = [UIColor themeGray6];
     [self.contentContainer addSubview:self.lineView];
 }
@@ -116,40 +117,40 @@
     };
     
     [self.contentContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?15:0);
+        make.left.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?9:0);
         make.top.equalTo(self.contentView);
-        make.right.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?-15:0);
+        make.right.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?-9:0);
         make.bottom.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?-16:0);
     }];
     
-    self.userInfoView.top =cellModel.isInRealtorEvaluationList?18:topMargin;
+    self.userInfoView.top =cellModel.isInRealtorEvaluationList?18:0;
     self.userInfoView.left = 0;
     self.userInfoView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.userInfoView.height = userInfoViewHeight;
     
-    self.headerView.top = cellModel.isInRealtorEvaluationList?18:topMargin;
+    self.headerView.top = cellModel.isInRealtorEvaluationList?18:0;
     self.headerView.left = 0;
-    self.headerView.width = [UIScreen mainScreen].bounds.size.width - 15 * 2;
+    self.headerView.width = [UIScreen mainScreen].bounds.size.width - 9 * 2;
     self.headerView.height = userInfoViewHeight;
     
-    self.contentLabel.top = self.userInfoView.bottom + 10;
+    self.contentLabel.top = self.userInfoView.bottom + 12;
     self.contentLabel.left = leftMargin;
-    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30;
+    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - cellOuterMargin;
     self.contentLabel.height = 0;
     
-    self.multiImageView.top = self.userInfoView.bottom + 7;
+    self.multiImageView.top = self.userInfoView.bottom + 9;
     self.multiImageView.left = leftMargin;
-    self.multiImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30;
+    self.multiImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - cellOuterMargin;
     self.multiImageView.height = self.imageViewheight;
     
-    self.bottomView.top = self.multiImageView.bottom + 15;
+    self.bottomView.top = self.multiImageView.bottom + 12;
     self.bottomView.left = 0;
     self.bottomView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin ;
     self.bottomView.height = bottomViewHeight;
     
     self.lineView.top = self.multiImageView.bottom + 16;
     self.lineView.left = leftMargin;
-    self.lineView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin -30 ;
+    self.lineView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin - cellOuterMargin;
     self.lineView.height = 0.5;
     
     if(isEmptyString(cellModel.content)){
@@ -167,7 +168,7 @@
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     
     UIView *lastView = cellModel.imageList.count == 0?self.contentLabel:self.multiImageView;
-    CGFloat topOffset = 15;
+    CGFloat topOffset = 12;
     self.bottomView.top = lastView.bottom + topOffset;
     self.lineView.top = lastView.bottom + 16;
     //
@@ -279,9 +280,9 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height;
         if (cellModel.isInRealtorEvaluationList) {
-            height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?15:75+ 22)  + 50 + 85;
+            height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?12:75+ 22)  + 50 + 85;
         }else {
-            height =  cellModel.contentHeight + 10  +(cellModel.imageList.count == 0?0:[FHHouseDetailRGCMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30 ]+ 16)  + 50 + 16;
+            height =  cellModel.contentHeight + 10  +(cellModel.imageList.count == 0?0:[FHHouseDetailRGCMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - cellOuterMargin]+ 16)  + 45;
         }
         return height;
     }

@@ -37,7 +37,6 @@
 @property (nonatomic, strong) UILabel *infoLabel;
 @property (nonatomic, strong) UIButton *actionBtn;
 @property (nonatomic, copy) void (^actionBlock)(void);
-
 @end
 
 @implementation FHDetailNeighborhoodConsultCorrectingView
@@ -49,7 +48,6 @@
     }
     return self;
 }
-
 
 - (void)setupUI {
     _nameLabel = [[UILabel alloc]init];
@@ -104,10 +102,18 @@
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowCache; // 埋点缓存
 @property (nonatomic, weak) UILabel *schoolNameLabel;
 @property (nonatomic, weak) UIButton *foldBtn;
-
+@property (nonatomic, strong) UIView *bottomLine;
 @end
 
 @implementation FHDetailNeighborhoodInfoCorrectingCell
+
+- (UIView *)bottomLine {
+    if(!_bottomLine) {
+        _bottomLine = [UIView new];
+        _bottomLine.backgroundColor = [UIColor themeGray6];
+    }
+    return _bottomLine;
+}
 
 - (void)refreshWithData:(id)data
 {
@@ -494,6 +500,14 @@
         make.top.mas_equalTo(self.topView.mas_bottom).mas_offset(9);
         make.height.mas_equalTo(16);
         make.bottom.mas_equalTo(-12);
+    }];
+    
+    [self.contentView addSubview:self.bottomLine];
+    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.contentView);
+        make.height.mas_offset(0.5);
+        make.left.equalTo(self.contentView).offset(21);
+        make.right.equalTo(self.contentView).offset(-21);
     }];
 }
 

@@ -60,23 +60,24 @@
     self.shadowImage.image = model.shadowImage;
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView);
+            make.top.equalTo(self.contentView).offset(-4.5);
         }];
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.equalTo(self.contentView);
+            make.top.equalTo(self.contentView).offset(-4.5);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeDefault){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView).offset(-14);
-            make.bottom.equalTo(self.contentView).offset(14);
+            make.top.equalTo(self.contentView).offset(-4.5);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
 
@@ -96,16 +97,16 @@
     WeakSelf;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
-        __block CGFloat vHeight = 74;
+        __block CGFloat vHeight = 68;
         __block CGFloat marginTop = 0;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             StrongSelf;
             if (obj.realtorScoreDisplay.length > 0 && obj.realtorTags.count > 0) {
-                vHeight = 86;
+                vHeight = 80;
             }else {
-                vHeight = 74;
+                vHeight = 68;
             }
-            FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj topMargin:12 frame:CGRectMake(0, marginTop, CGRectGetWidth(self.containerView.bounds), vHeight)];
+            FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj topMargin:9 leftMargin:12 rightMargin:12 frame:CGRectMake(0, marginTop, CGRectGetWidth(self.containerView.bounds), vHeight)];
             // 添加事件
             itemView.tag = idx;
             itemView.licenseButton.tag = idx;
@@ -145,7 +146,7 @@
             make.left.right.mas_equalTo(self.contentView);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.shadowImage).offset(-78);
+            make.bottom.mas_equalTo(self.contentView).offset(-58 - 4.5);
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -278,29 +279,23 @@
 - (void)setupUI {
     _tracerDicCache = [NSMutableDictionary new];
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
+    [_headerView updateLayoutWithOldDetail];
     _headerView.label.text = @"实勘经纪人";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(20);
-        make.right.mas_equalTo(self.shadowImage).offset(-15);
-        make.left.mas_equalTo(self.shadowImage).offset(15);
-        make.height.mas_equalTo(46);
+        make.top.mas_equalTo(self.contentView).offset(4.5);
+        make.right.mas_equalTo(self.contentView).offset(-9);
+        make.left.mas_equalTo(self.contentView).offset(9);
+        make.height.mas_equalTo(32);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.mas_equalTo(self.shadowImage).mas_offset(15);
-        make.right.mas_equalTo(self.shadowImage).mas_offset(-15);
-        make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-40);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(32 + 4.5, 9, 4.5, 9));
     }];
 }
 
@@ -325,9 +320,9 @@
             for (int i = 0; i<3; i++) {
                 FHDetailContactModel *showModel = (FHDetailContactModel*) model.recommendedRealtors[i];
                 if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
-                    showHeight = showHeight + 86;
+                    showHeight = showHeight + 80;
                 }else {
-                    showHeight = showHeight + 74;
+                    showHeight = showHeight + 68;
                 };
             }
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -339,9 +334,9 @@
             [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailContactModel *showModel = obj;
             if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
-                     showHeight = showHeight + 86;
+                     showHeight = showHeight + 80;
                  }else {
-                     showHeight = showHeight + 74;
+                     showHeight = showHeight + 68;
                  };
             }];
             [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -360,13 +355,13 @@
              FHDetailContactModel *showModel = obj;
          if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
              //二手房的经纪人一般会展示tag，新房顾问没有
-                  showHeight = showHeight + 86;
+                  showHeight = showHeight + 80;
               }else {
-                  showHeight = showHeight + 74;
+                  showHeight = showHeight + 68;
               };
          }];
          [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-             make.height.mas_equalTo(showHeight);
+             make.height.mas_equalTo(showHeight + 12);
          }];
          realtorShowCount = model.recommendedRealtors.count;
     } else {
@@ -392,9 +387,9 @@
     for (int m = 0; m <model.recommendedRealtors.count; m++) {
         FHDetailContactModel *showModel = model.recommendedRealtors[m];
         if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
-            showHeight = showHeight + 86;
+            showHeight = showHeight + 80;
         }else {
-            showHeight = showHeight + 74;
+            showHeight = showHeight + 68;
         };
         if (UIScreen.mainScreen.bounds.size.height - point.y > showHeight) {
             NSInteger showCount = model.isFold ? MIN(m, 2):MIN(model.recommendedRealtors.count, m);

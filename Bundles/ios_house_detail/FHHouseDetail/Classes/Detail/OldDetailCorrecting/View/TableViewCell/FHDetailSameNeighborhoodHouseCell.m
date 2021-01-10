@@ -72,6 +72,28 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
         if (model.sameNeighborhoodHouseData.hasMore) {
             FHDetailSameNeighborhoodHouseSaleMoreItemModel *moreItem = [[FHDetailSameNeighborhoodHouseSaleMoreItemModel alloc] init];
             [dataArr addObject:moreItem];
+            UIImageView *arrowView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"setting-arrow-1"]];
+            UILabel *moreLabel = [[UILabel alloc] init];
+            moreLabel.font = [UIFont themeFontRegular:14];
+            moreLabel.textColor = [UIColor themeGray1];
+            moreLabel.text = @"查看全部";
+            [self.headerView addSubview:moreLabel];
+            [self.headerView addSubview:arrowView];
+            [arrowView mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.headerView).offset(16);
+                make.right.equalTo(self.headerView).offset(-12);
+                make.width.height.mas_equalTo(14);
+            }];
+            [moreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.headerView).offset(16);
+                make.right.equalTo(self.headerView).offset(-28);
+                make.height.mas_equalTo(14);
+                make.width.mas_equalTo(56);
+            }];
+            moreLabel.userInteractionEnabled = YES;
+            arrowView.userInteractionEnabled = YES;
+            [moreLabel addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moreButtonClick)]];
+            [arrowView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(moreButtonClick)]];
         }
         self.dataList = dataArr;
         self.houseShowCache = [NSMutableDictionary dictionary];
