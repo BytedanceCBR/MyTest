@@ -214,7 +214,7 @@
             }
         }
         if (hasIM) {
-            height += 44;
+            height += 45;
         }
         return CGSizeMake(width, height);
     }
@@ -270,11 +270,7 @@
             }
         }
 
-        CGFloat itemHeight = 121 + 60;
-        if (hasIM) {
-            itemHeight += 44;
-        }
-        self.flowLayout.itemSize = CGSizeMake(120, itemHeight);
+        self.flowLayout.itemSize = CGSizeMake(120, CGRectGetHeight(self.collectionView.frame));
         
         [self.collectionView reloadData];
     }

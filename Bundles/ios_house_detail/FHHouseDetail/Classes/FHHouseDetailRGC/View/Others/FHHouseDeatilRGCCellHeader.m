@@ -38,7 +38,7 @@
     [self.avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self).offset(12);
         make.centerY.equalTo(self);
-        make.size.mas_equalTo(CGSizeMake(34, 34));
+        make.size.mas_equalTo(CGSizeMake(36, 36));
     }];
     [self.nameLab mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.avatarView.mas_right).offset(10);
@@ -61,7 +61,7 @@
         make.height.width.mas_offset(20);
     }];
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.mas_right).offset(-14);
+        make.right.equalTo(self.mas_right).offset(-12);
         make.centerY.equalTo(self.avatarView);
         make.size.mas_equalTo(CGSizeMake(36, 36));
     }];

@@ -79,20 +79,20 @@
     [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:@"sslocal://map_detail"] userInfo:info];
 }
 
-- (void)baiduPanoramaAction {
-    NSMutableDictionary *param = [NSMutableDictionary new];
-    FHNewHouseDetailSurroundingSM *model = (FHNewHouseDetailSurroundingSM *)self.sectionModel;
-    FHNewHouseDetailMapCellModel *dataModel = [(FHNewHouseDetailSurroundingSM *)model mapCellModel];
-    NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
-    tracerDict[@"element_from"] = @"map";
-    tracerDict[@"enter_from"] = @"new_detail";
-    param[TRACER_KEY] = tracerDict.copy;
-    if (dataModel.gaodeLat.length && dataModel.gaodeLng.length) {
-        param[@"gaodeLat"] = dataModel.gaodeLat;
-        param[@"gaodeLon"] = dataModel.gaodeLng;
-        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
-    }
-}
+//- (void)baiduPanoramaAction {
+//    NSMutableDictionary *param = [NSMutableDictionary new];
+//    FHNewHouseDetailSurroundingSM *model = (FHNewHouseDetailSurroundingSM *)self.sectionModel;
+//    FHNewHouseDetailMapCellModel *dataModel = [(FHNewHouseDetailSurroundingSM *)model mapCellModel];
+//    NSMutableDictionary *tracerDict = self.detailTracerDict.mutableCopy;
+//    tracerDict[@"element_from"] = @"map";
+//    tracerDict[@"enter_from"] = @"new_detail";
+//    param[TRACER_KEY] = tracerDict.copy;
+//    if (dataModel.gaodeLat.length && dataModel.gaodeLng.length) {
+//        param[@"gaodeLat"] = dataModel.gaodeLat;
+//        param[@"gaodeLon"] = dataModel.gaodeLng;
+//        [[TTRoute sharedRoute] openURLByPushViewController:[NSURL URLWithString:[NSString stringWithFormat:@"sslocal://baidu_panorama_detail"]] userInfo:TTRouteUserInfoWithDict(param)];
+//    }
+//}
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
     FHNewHouseDetailSurroundingSM *model = (FHNewHouseDetailSurroundingSM *)self.sectionModel;
@@ -184,9 +184,9 @@
             }];
 //            [weakSelf.detailViewController refreshSectionModel:weakSelf.sectionModel animated:YES];
         }];
-        [cell setBaiduPanoramaBlock:^{
-            [weakSelf baiduPanoramaAction];
-        }];
+//        [cell setBaiduPanoramaBlock:^{
+//            [weakSelf baiduPanoramaAction];
+//        }];
         [cell setClickFacilitiesBlock:^(NSString * _Nonnull position) {
             NSMutableDictionary *tracerDic = weakSelf.detailTracerDict.mutableCopy;
             tracerDic[@"element_type"] = @"map";
@@ -265,7 +265,7 @@
         if (emptyString && emptyString.length) {
             return [FHNewHouseDetailMapResultCollectionCell cellSizeWithData:model.dataItems[index] width:width];
         } else {
-            return CGSizeMake(width, 20);
+            return CGSizeMake(width, 6);
         }
     }
     

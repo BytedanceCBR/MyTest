@@ -115,7 +115,7 @@
         CGFloat width = (self.bounds.size.width - 32 - 16)/4;
         [[self getTagName] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [[self getTagViewWithName:idx] mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(self).offset(width*idx + 16);
+                make.left.mas_equalTo(self).offset(width*idx + 11);
                 make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
             }];
         }];

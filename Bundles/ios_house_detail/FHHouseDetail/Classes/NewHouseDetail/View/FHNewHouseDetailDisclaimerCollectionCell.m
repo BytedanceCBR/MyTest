@@ -40,7 +40,6 @@
     CGFloat height = 0;
     if (model.disclaimer && model.disclaimer.text.length > 0) {
         height += [model.disclaimer.text btd_heightWithFont:[UIFont themeFontRegular:12] width:width];
-        height += 25;
     }
     if (model.contact.realtorName.length > 0 || model.contact.agencyName.length > 0) {
         height += 14 + 2;
@@ -169,6 +168,7 @@
     [self.ownerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
         make.top.mas_equalTo(0);
+        
         make.height.mas_equalTo(14);
         make.right.mas_equalTo(self.contactIcon.mas_left).offset(-6);
     }];
@@ -262,7 +262,6 @@
         make.left.mas_equalTo(0);
         make.right.mas_equalTo(0);
         make.top.mas_equalTo(self.contentView);
-         make.bottom.mas_equalTo(-25);
     }];
 }
 
@@ -273,7 +272,6 @@
         make.left.mas_equalTo(0);
         make.right.mas_equalTo(0);
         make.top.mas_equalTo(self.ownerLabel.mas_bottom).offset(2);
-        make.bottom.mas_equalTo(-25);
     }];
 }
 
@@ -284,7 +282,6 @@
             make.left.mas_equalTo(0);
             make.right.mas_equalTo(0);
             make.top.mas_equalTo(0);
-            make.bottom.mas_equalTo(-25);
         }];
         [self.contentView setNeedsLayout];
     }

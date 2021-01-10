@@ -104,16 +104,16 @@
             make.right.mas_lessThanOrEqualTo(-30);;
         }];
         
-        self.consultImageView = [[UIImageView alloc] init];
-        self.consultImageView.image = [UIImage imageNamed:@"plot__message"];
-        self.consultImageView.contentMode = UIViewContentModeScaleAspectFit;
-        [self.consultContentView addSubview:self.consultImageView];
-        [self.consultImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.consultValueLabel.mas_right).offset(3);
-            make.centerY.mas_equalTo(self.consultContentView).offset(-1);
-            make.height.mas_equalTo(15);
-            make.width.mas_equalTo(16);
-        }];
+//        self.consultImageView = [[UIImageView alloc] init];
+//        self.consultImageView.image = [UIImage imageNamed:@"plot__message"];
+//        self.consultImageView.contentMode = UIViewContentModeScaleAspectFit;
+//        [self.consultContentView addSubview:self.consultImageView];
+//        [self.consultImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(self.consultValueLabel.mas_right).offset(3);
+//            make.centerY.mas_equalTo(self.consultContentView).offset(-1);
+//            make.height.mas_equalTo(15);
+//            make.width.mas_equalTo(16);
+//        }];
         
         __weak typeof(self) weakSelf = self;
         self.actionBtn = [[UIButton alloc]init];
