@@ -40,9 +40,9 @@
     }
     height += 16;
     if (model.buildingInfo.list) {
-        height += (model.buildingInfo.list.count * (15 + 16 + 15 + 1));
+        height += (model.buildingInfo.list.count * (12 + 16 + 12 + 1));
     }
-    height += 15 + 40 + 12;
+    height += 40 + 12;
     return CGSizeMake(width, height);
 }
 
@@ -150,7 +150,7 @@
     }];
     
     if (model.buildingInfo.list.count) {
-        stackViewHeight += (model.buildingInfo.list.count * (15 + 16 + 15 + 1));
+        stackViewHeight += (model.buildingInfo.list.count * (12 + 16 + 12 + 1));
         for (NSUInteger index = 0; index < model.buildingInfo.list.count; index ++) {
             FHDetailNewBuildingListItem *item = model.buildingInfo.list[index];
             
@@ -161,7 +161,7 @@
             itemView.backgroundColor = [UIColor whiteColor];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(self.stackView);
-                make.height.mas_equalTo(15 + 16 + 15 + 1);
+                make.height.mas_equalTo(12 + 16 + 12 + 1);
             }];
             [self.stackView addArrangedSubview:itemView];
             
@@ -170,7 +170,7 @@
             [itemView addSubview:nameValueLabel];
             [nameValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(0);
-                make.top.mas_equalTo(15);
+                make.top.mas_equalTo(12);
                 make.width.mas_equalTo(itemView.mas_width).multipliedBy(0.33);
             }];
             
@@ -179,7 +179,7 @@
             [itemView addSubview:layerValueLabel];
             [layerValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.centerX.mas_equalTo(topView);
-                make.top.mas_equalTo(15);
+                make.top.mas_equalTo(12);
                 make.width.mas_equalTo(itemWidth);
             }];
             
@@ -188,7 +188,7 @@
             [itemView addSubview:familyValueLabel];
             [familyValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.right.mas_equalTo(0);
-                make.top.mas_equalTo(15);
+                make.top.mas_equalTo(12);
                 make.width.mas_equalTo(itemWidth);
             }];
             
@@ -209,10 +209,10 @@
     UIView *bottomView = [[UIView alloc] init];
     bottomView.backgroundColor = [UIColor whiteColor];
     [self.stackView addArrangedSubview:bottomView];
-    stackViewHeight += (15 + 40 + 12);
+    stackViewHeight += (40 + 12);
     [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(15 + 40 + 12);
+        make.height.mas_equalTo(40 + 12);
     }];
     
     UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -227,7 +227,7 @@
     [bottomView addSubview:moreButton];
     [moreButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo(15);
+        make.top.mas_equalTo(0);
         make.height.mas_equalTo(40);
     }];
     

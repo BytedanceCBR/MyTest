@@ -162,7 +162,7 @@
         size = [FHNewHouseDetailRGCVideoCollectionCell cellSizeWithData:cellModel width:width];
     }
     if (index < model.items.count - 1) {
-        size.height += 10;
+        size.height += 12;
     }
     return size;
 }

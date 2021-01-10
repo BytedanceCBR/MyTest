@@ -360,12 +360,12 @@
         model.isShowLineView = m < _contentModel.data.count -1;
         switch (model.cellType) {
             case FHUGCFeedListCellTypeUGC:
-                model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
+                model.cellSubType = FHUGCFeedListCellSubTypeOldHouseUGCBrokerImage;
                 ///图片cell高度
                 contentHeight = contentHeight + [FHHouseDeatilRGCImageCell heightForData:model];
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
-                model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
+                model.cellSubType = FHUGCFeedListCellSubTypeOldHouseUGCBrokerVideo;
                 ///内容高度 + 视频高度 + 距离顶部高度 + 底部高度
                 contentHeight = contentHeight + model.contentHeight + 150 + 10 + 50 + 90 - 20 - 3;
                 break;
