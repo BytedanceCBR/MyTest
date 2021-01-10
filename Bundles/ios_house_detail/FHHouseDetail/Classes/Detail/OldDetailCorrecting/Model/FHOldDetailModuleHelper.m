@@ -215,15 +215,15 @@
                 previousModel.shdowImageScopeType = FHHouseShdowImageScopeTypeBottomAll;
                 
                 //设置title
-                NSString *currentModelTitle = nil;
-                if (currentModel.houseModelType == FHHouseModelTypeLocationPeriphery) {
-                    if(neighborhoodInfos.count > 0){
-                        currentModelTitle = @"周边配套";
-                    }else{
-                        currentModelTitle = @"位置及周边配套";
-                    }
-                }
-                [FHOldDetailModuleHelper moduleInsertSectionTitle:moduleArr beforeModel:currentModel title:currentModelTitle];
+//                NSString *currentModelTitle = nil;
+//                if (currentModel.houseModelType == FHHouseModelTypeLocationPeriphery) {
+//                    if(neighborhoodInfos.count > 0){
+//                        currentModelTitle = @"周边配套";
+//                    }else{
+//                        currentModelTitle = @"位置及周边配套";
+//                    }
+//                }
+//                [FHOldDetailModuleHelper moduleInsertSectionTitle:moduleArr beforeModel:currentModel title:currentModelTitle];
             }
         }
     }];
