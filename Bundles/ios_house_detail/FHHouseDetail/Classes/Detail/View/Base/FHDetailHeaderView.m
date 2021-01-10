@@ -15,6 +15,7 @@
 #import "FHHouseDetailViewController.h"
 #import "FHHouseOldDetailViewModel.h"
 #import "UIView+BTDAdditions.h"
+#import "FHDetailMoreView.h"
 
 @interface FHDetailHeaderView ()
 @property (nonatomic, strong)   UIImageView       *arrowsImg;
@@ -50,7 +51,7 @@
     _loadMore.hidden = YES;
     [self addSubview:_loadMore];
     
-    _arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
+    _arrowsImg = [[UIImageView alloc] initWithImage:[FHDetailMoreView moreArrowImage]];
     _arrowsImg.hidden = YES;
     [self addSubview:_arrowsImg];
     
@@ -81,15 +82,22 @@
         make.width.mas_equalTo(80);
         make.right.mas_equalTo(self.arrowsImg.mas_left);
     }];
-    [self.showTipButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.width.height.mas_equalTo(16);
-        make.left.equalTo(self).offset(120);
-        make.centerY.equalTo(self.label);
-    }];
-    
-    
 }
 
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    
+    CGRect showTipButtonFrame  = self.showTipButton.frame;
+    if(!self.showTipButton.hidden) {
+        showTipButtonFrame.origin.x =  self.label.bounds.size.width + self.label.bounds.origin.x;
+        showTipButtonFrame.origin.y = (self.label.bounds.size.height - showTipButtonFrame.size.height) / 2.0;
+    }
+    else {
+        showTipButtonFrame.size.width = 0;
+    }
+    
+    self.showTipButton.frame = showTipButtonFrame;
+}
 - (void)setIsShowLoadMore:(BOOL)isShowLoadMore {
     _isShowLoadMore = isShowLoadMore;
 //    _loadMore.hidden = !isShowLoadMore;

@@ -218,6 +218,7 @@
         case FHNeighborListVCTypeNeighborErshou:
         case FHNeighborListVCTypeErshouSameNeighbor:
             self.tableView.backgroundColor = [UIColor themeGray7];
+            self.tableView.contentInset = UIEdgeInsetsMake(top + 5, 0, bottom, 0);
             self.bottomLine.hidden = YES;
             break;
         default:
@@ -232,6 +233,17 @@
     [_refreshFooter setUpNoMoreDataText:@"没有更多信息了" offsetY:-3];
     
     _refreshFooter.hidden = YES;
+}
+
+- (BOOL)isNewLayout {
+    switch (self.neighborListVCType) {
+        case FHNeighborListVCTypeErshouNearBy:
+        case FHNeighborListVCTypeNeighborErshou:
+        case FHNeighborListVCTypeErshouSameNeighbor:
+            return YES;
+        default:
+            return NO;
+    }
 }
 
 - (void)setupData {
