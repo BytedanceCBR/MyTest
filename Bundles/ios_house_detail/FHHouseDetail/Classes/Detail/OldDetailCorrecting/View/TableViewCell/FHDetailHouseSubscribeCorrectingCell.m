@@ -55,6 +55,7 @@
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
+        self.clipsToBounds = NO;
         [self setupUI];
     }
     return self;
@@ -83,17 +84,11 @@
 - (void)setupUI {
     
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView);
-        make.top.mas_equalTo(self.contentView).mas_offset(-30);
-        make.bottom.mas_equalTo(self.contentView).mas_offset(4.5);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-26, 0, -4.5, 0));
     }];
     
     [self.bacIma mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).offset(21);
-        make.right.mas_equalTo(self.contentView).offset(-21);
-        make.top.mas_equalTo(self.contentView).offset(12);
-        make.bottom.mas_equalTo(self.contentView).offset(-12 - 4.5);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-2.5, 21, 12 + 4.5, 21));
         make.height.mas_equalTo(46);
     }];
     

@@ -35,74 +35,70 @@
 
 @implementation FHDetailAgentListCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
-
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailAgentListModel class]]) {
         return;
     }
     self.currentData = data;
-    //
+
     for (UIView *v in self.containerView.subviews) {
         [v removeFromSuperview];
     }
     FHDetailAgentListModel *model = (FHDetailAgentListModel *)data;
     
     self.shadowImage.image = model.shadowImage;
+    
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
+    
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView);
+            make.top.equalTo(self.contentView).offset(-4.5);
         }];
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.equalTo(self.contentView);
+            make.top.equalTo(self.contentView).offset(-4.5);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
+    
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeDefault){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.contentView).offset(-4.5);
             make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
-
+    
     // 设置下发标题
     if(model.recommendedRealtorsTitle.length > 0) {
         self.headerView.label.text = model.recommendedRealtorsTitle;
-    }else {
+    }
+    else {
         self.headerView.label.text = (model.houseType == FHHouseTypeNewHouse) ? @"优选顾问" : @"推荐经纪人";
     }
-//    if ((model.houseType == FHHouseTypeNewHouse)) {
-//        [self.headerView setSubTitleWithTitle:model.recommendedRealtorsSubTitle];
-//    }else{
-//        [self.headerView removeSubTitleWithTitle];
-//    }
+    
     WeakSelf;
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         __block CGFloat vHeight = 68;
-        __block CGFloat marginTop = 0;
+        __block CGFloat marginTop = 9;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             StrongSelf;
+            
             if (obj.realtorScoreDisplay.length > 0 && obj.realtorTags.count > 0) {
+                // 有服务分且有服务标签
                 vHeight = 80;
-            }else {
+            }
+            else {
+                // 只有服务分，没有服务标签
                 vHeight = 68;
             }
+            
+            // 经纪人视图
             FHDetailAgentItemView *itemView = [[FHDetailAgentItemView alloc] initWithModel:obj topMargin:9 leftMargin:12 rightMargin:12 frame:CGRectMake(0, marginTop, CGRectGetWidth(self.containerView.bounds), vHeight)];
             
             // 添加事件
@@ -121,10 +117,11 @@
                 make.height.mas_equalTo(vHeight);
             }];
             marginTop = marginTop +vHeight;
-
+            
             itemsCount += 1;
         }];
     }
+    
     if (_foldButton) {
         [_foldButton removeFromSuperview];
         _foldButton = nil;
@@ -135,7 +132,7 @@
         _foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
         _foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];
         _foldButton.keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
-         _foldButton.keyLabel.font = [UIFont themeFontRegular:14];
+        _foldButton.keyLabel.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:_foldButton];
         [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView.mas_bottom);
@@ -143,7 +140,7 @@
             make.left.right.mas_equalTo(self.contentView);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.shadowImage).offset(-67);
+            make.bottom.mas_equalTo(self.contentView).offset(-58-4.5);
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -199,7 +196,7 @@
         associatePhone.realtorId = contact.realtorId;
         associatePhone.searchId = model.searchId;
         associatePhone.imprId = model.imprId;
-
+        
         associatePhone.houseType = self.baseViewModel.houseType;
         associatePhone.houseId = self.baseViewModel.houseId;
         associatePhone.showLoading = NO;
@@ -207,25 +204,9 @@
         if (contact.bizTrace) {
             associatePhone.extraDict = @{@"biz_trace":contact.bizTrace};
         }
-        
-        //        FHHouseContactConfigModel *contactConfig = [[FHHouseContactConfigModel alloc]initWithDictionary:extraDict error:nil];
-//        contactConfig.houseType = self.baseViewModel.houseType;
-//        contactConfig.houseId = self.baseViewModel.houseId;
-//        contactConfig.phone = contact.phone;
-//        contactConfig.realtorId = contact.realtorId;
-//        contactConfig.searchId = model.searchId;
-//        contactConfig.imprId = model.imprId;
-//        contactConfig.realtorType = contact.realtorType;
-//        if (self.baseViewModel.houseType == FHHouseTypeNeighborhood) {
-//            contactConfig.cluePage = @(FHClueCallPageTypeCNeighborhoodMulrealtor);
-//        }else if (self.baseViewModel.houseType == FHHouseTypeNewHouse) {
-//            contactConfig.cluePage = @(FHClueCallPageTypeCNewHouseMulrealtor);
-//        }else {
-//            contactConfig.from = contact.realtorType == FHRealtorTypeNormal ? @"app_oldhouse_mulrealtor" : @"app_oldhouse_expert_mid";
-//        }
-        
+                
         [FHHousePhoneCallUtils callWithAssociatePhoneModel:associatePhone completion:^(BOOL success, NSError * _Nonnull error, FHDetailVirtualNumModel * _Nonnull virtualPhoneNumberModel) {
-
+            
             if(success && [model.belongsVC isKindOfClass:[FHHouseDetailViewController class]]){
                 FHHouseDetailViewController *vc = (FHHouseDetailViewController *)model.belongsVC;
                 vc.isPhoneCallShow = YES;
@@ -311,8 +292,7 @@
     return result;
 }
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
@@ -324,30 +304,23 @@
 - (void)setupUI {
     _tracerDicCache = [NSMutableDictionary new];
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-4.5);
-        make.bottom.equalTo(self.contentView).offset(4.5);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
     [_headerView updateLayoutWithOldDetail];
     _headerView.label.text = @"推荐经纪人";
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(9);
-        make.right.mas_equalTo(self.shadowImage).offset(-15);
-        make.left.mas_equalTo(self.shadowImage).offset(9);
-        make.height.mas_equalTo(41);
+        make.top.mas_equalTo(self.contentView).offset(4.5);
+        make.right.mas_equalTo(self.contentView).offset(-9);
+        make.left.mas_equalTo(self.contentView).offset(9);
+        make.height.mas_equalTo(32);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.mas_equalTo(self.shadowImage).mas_offset(9);
-        make.right.mas_equalTo(self.shadowImage).mas_offset(-9);
-        make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-12);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(32 + 4.5, 9, 4.5, 9));
     }];
 }
 
@@ -382,7 +355,7 @@
             }];
             realtorShowCount = 3;
         } else {
-           __block CGFloat showHeight = 0;
+            __block CGFloat showHeight = 0;
             [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailContactModel *showModel = obj;
                 if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
@@ -403,31 +376,26 @@
         }
     } else if (model.recommendedRealtors.count > 0) {
         __block CGFloat showHeight = 0;
-         [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-             FHDetailContactModel *showModel = obj;
-         if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
-             //二手房的经纪人一般会展示tag，新房顾问没有
-                  showHeight = showHeight + 80;
-              }else {
-                  showHeight = showHeight + 68;
-              };
-         }];
-         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-             make.height.mas_equalTo(showHeight);
-         }];
-         realtorShowCount = model.recommendedRealtors.count;
+        [model.recommendedRealtors enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            FHDetailContactModel *showModel = obj;
+            if (showModel.realtorScoreDisplay.length > 0 && showModel.realtorScoreDescription.length > 0 && showModel.realtorTags.count > 0) {
+                //二手房的经纪人一般会展示tag，新房顾问没有
+                showHeight = showHeight + 80;
+            }else {
+                showHeight = showHeight + 68;
+            };
+        }];
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(showHeight + 12);
+        }];
+        realtorShowCount = model.recommendedRealtors.count;
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(0);
         }];
         realtorShowCount = 0;
     }
-//    [self tracerRealtorShowToIndex:realtorShowCount];
 }
-
-//- (void)fh_willDisplayCell;{
-//    [self addRealtorShowLog];
-//}
 
 #pragma mark - FHDetailScrollViewDidScrollProtocol
 
@@ -519,7 +487,7 @@
         case FHHouseTypeNeighborhood:
             return @"neighborhood_detail_related";
         case FHHouseTypeNewHouse:
-               return @"new_detail_related";
+            return @"new_detail_related";
         default:
             break;
     }

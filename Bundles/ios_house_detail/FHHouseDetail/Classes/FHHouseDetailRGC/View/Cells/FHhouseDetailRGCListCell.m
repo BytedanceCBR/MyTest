@@ -21,8 +21,6 @@
 @property (nonatomic , strong) UITableView *tableView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, weak) UIImageView *shadowImage;
-@property (nonatomic , strong) UIView *titleView;
-@property (nonatomic , strong) UILabel *titleLabel;
 @property (nonatomic , strong) FHUGCCellManager *cellManager;
 @property (nonatomic, strong) FHDetailHeaderView *headerView;
 @property(nonatomic, strong) FHUGCBaseCell *currentCell;
@@ -49,14 +47,11 @@
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-4.5);
-        make.bottom.equalTo(self.contentView).offset(4.5);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
-    //    self.contentView.backgroundColor = [UIColor themeGray7];
     self.tableView = [[UITableView alloc] init];
     _tableView.layer.masksToBounds = YES;
     _tableView.delegate = self;
@@ -87,34 +82,25 @@
 }
 
 - (void)initConstaints {
+    
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(20);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+        make.top.mas_equalTo(self.contentView).offset(4.5);
+        make.left.equalTo(self.contentView).offset(9);
+        make.right.equalTo(self.contentView).offset(-9);
+        make.bottom.mas_equalTo(self.contentView).offset(-4.5);
     }];
     
     [_headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.containerView).offset(-12);
-        make.left.mas_equalTo(self.containerView).offset(9);
-        make.right.mas_equalTo(self.containerView).offset(-9);
-        make.height.mas_equalTo(47);
+        make.top.left.right.equalTo(self.containerView);
+        make.height.mas_equalTo(32);
     }];
     
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.mas_equalTo(self.containerView).offset(9);
-        make.right.mas_equalTo(self.containerView).offset(-9);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(9);
+        make.left.right.mas_equalTo(self.containerView);
         make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.containerView);
+        make.bottom.mas_equalTo(self.containerView).offset(-12);
     }];
-    
-    [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(30);
-        make.left.mas_equalTo(self.titleView).offset(16);
-        make.right.mas_equalTo(self.titleView.mas_left).offset(-10);
-        make.height.mas_equalTo(25);
-    }];
-    
 }
 
 - (UIImageView *)shadowImage {
@@ -158,28 +144,19 @@
         }];
     }
     FHDetailBrokerContentModel *contentModel = cellModel.contentModel;
-    //    _titleView.height = cellModel.headerViewHeight;
-    //    self.tableView.tableHeaderView = _titleView;
     
-    //    [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-    //        make.top.mas_equalTo(self.titleView).offset(cellModel.topMargin);
-    //    }];
-    //
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(cellModel.cellHeight);
     }];
     if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll) {
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
-    _titleLabel.text = cellModel.title;
-    //    [_questionBtn setTitle:cellModel.askTitle forState:UIControlStateNormal];
-    
+
     self.dataList = [[NSMutableArray alloc] init];
     [_dataList addObjectsFromArray:contentModel.fHFeedUGCCellModelDataArr];
     [self.tableView reloadData];
-    
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -390,7 +367,7 @@
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
                 ///内容高度 + 视频高度 + 距离顶部高度 + 底部高度
-                contentHeight = contentHeight + model.contentHeight  +150 + 10 + 50 + 90 - 20;
+                contentHeight = contentHeight + model.contentHeight + 150 + 10 + 50 + 90 - 20;
                 break;
             default:
                 break;
