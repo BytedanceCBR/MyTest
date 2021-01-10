@@ -52,8 +52,8 @@
         }];
         
         self.titleLabel = [[UILabel alloc] init];
-        self.titleLabel.font = [UIFont themeFontMedium:16];
-        self.titleLabel.textColor = [UIColor themeGray2];
+        self.titleLabel.font = [UIFont themeFontRegular:16];
+        self.titleLabel.textColor = [UIColor themeGray1];
         self.titleLabel.numberOfLines = 1;
         self.titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.containerView addSubview:self.titleLabel];

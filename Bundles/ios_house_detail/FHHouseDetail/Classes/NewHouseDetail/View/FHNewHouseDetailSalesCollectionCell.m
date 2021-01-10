@@ -144,10 +144,21 @@
                 itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
                 [itemView.titleLabel sizeToFit];
                 CGFloat titleHeight  = floor(itemView.titleLabel.height);
-                height += 44 + titleHeight;
-                if (item.discountSubContent.length == 0) {
-                    height -= 18;
+                
+                CGFloat vHeight = 0;
+                if (!item.discountSubContent.length) {
+                    if (titleHeight < 28) {
+                        vHeight = 28;
+                    } else {
+                        vHeight = titleHeight;
+                    }
+                    vHeight += 12;
+                } else {
+                    vHeight = titleHeight;
+                    vHeight += 24;
+                    vHeight += 12;
                 }
+                height += vHeight;
             }
             return CGSizeMake(width, height);
         }
@@ -191,7 +202,6 @@
 
     if (model.discountInfo.count > 0) {
         NSInteger itemsCount = model.discountInfo.count;
-        CGFloat vHeight = 66;
         CGFloat totalHeight = 0;
         UIView *lastView = nil;
         for (NSInteger idx = 0; idx < itemsCount; idx++) {
@@ -217,11 +227,19 @@
             itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
             [itemView.titleLabel sizeToFit];
             CGFloat titleHeight  = floor(itemView.titleLabel.height);
-            vHeight = 44 + titleHeight ;
-            if (!item.discountSubContent || item.discountSubContent.length == 0) {
-                vHeight -= 18;
+            CGFloat vHeight = 0;
+            if (!item.discountSubContent.length) {
+                if (titleHeight < 28) {
+                    vHeight = 28;
+                } else {
+                    vHeight = titleHeight;
+                }
+                vHeight += 12;
                 itemView.subtitleLabel.hidden = YES;
             } else {
+                vHeight = titleHeight;
+                vHeight += 24;
+                vHeight += 12;
                 totalTitleHeight += 24;
                 itemView.subtitleLabel.hidden = NO;
             }
