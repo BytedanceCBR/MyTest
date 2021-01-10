@@ -60,6 +60,7 @@
         __weak typeof(self) weakSelf = self;
         self.headerView
             = [[FHHouseDeatilRGCCellHeader alloc] init];
+        [self.headerView setupNewHouseStyle];
         self.headerView.hidden = YES;
         self.headerView.imClick = ^{
             [weakSelf clickImAction];

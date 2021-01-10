@@ -25,7 +25,7 @@
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
     if (data && [data isKindOfClass:[FHNewHouseDetailTimeLineCellModel class]]) {
-        return CGSizeMake(width, 133);
+        return CGSizeMake(width, 125);
     }
     return CGSizeZero;
 }
@@ -150,7 +150,7 @@
     FHNewHouseDetailTimeLineItemCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHNewHouseDetailTimeLineItemCollectionCell class]) forIndexPath:indexPath];
     if (indexPath.row < model.timeLineModel.list.count) {
         if (indexPath.row == self.selectedRow) {
-            [cell updateTitleColor:[UIColor themeOrange1] timeColor:[UIColor themeOrange1] dotColor:[UIColor themeOrange1] backgroundColor:[UIColor colorWithHexStr:@"#fefaf4"]];
+            [cell updateTitleColor:[UIColor colorWithHexString:@"#9c6d43"] timeColor:[UIColor colorWithHexString:@"#9c6d43"] dotColor:[UIColor colorWithHexString:@"#9c6d43"] backgroundColor:[UIColor colorWithHexStr:@"#fefaf4"]];
         } else {
             [cell updateTitleColor:[UIColor themeGray1] timeColor:[UIColor themeGray3] dotColor:[UIColor themeGray2] backgroundColor:[UIColor themeGray7]];
         }

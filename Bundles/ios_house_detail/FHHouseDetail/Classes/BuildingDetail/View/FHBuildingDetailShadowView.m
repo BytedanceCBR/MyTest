@@ -20,13 +20,14 @@
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
+        UIImage *cornerImage = [UIImage fh_outerRoundRectMaskImageWithCornerRadius:10 color:[UIColor whiteColor] size:CGSizeMake(50, 50)];
         UIImageView *shadowImageView = [[UIImageView alloc] init];
-        shadowImageView.image = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,30,25) resizingMode:UIImageResizingModeStretch];
+        shadowImageView.image = [cornerImage resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)];
         [self addSubview:shadowImageView];
-        self.shadowImageView = shadowImageView;
         [shadowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(-5, 0, 0, 0));
+            make.edges.mas_equalTo(UIEdgeInsetsZero);
         }];
+        self.backgroundColor = [UIColor clearColor];
     }
     return self;
 }

@@ -27,7 +27,7 @@
         _tableView = [[FHHorizontalTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
         _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
         _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        _tableView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
+        _tableView.backgroundColor = [UIColor themeGray7];
         if (@available(iOS 11.0 , *)) {
             _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
             _tableView.estimatedRowHeight = 0;

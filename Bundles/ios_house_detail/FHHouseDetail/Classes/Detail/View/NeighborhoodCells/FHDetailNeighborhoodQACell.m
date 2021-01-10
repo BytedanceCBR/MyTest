@@ -19,6 +19,7 @@
 #import "FHUGCCellManager.h"
 #import "FHUtils.h"
 #import "FHUGCFeedDetailJumpManager.h"
+#import "FHDetailMoreView.h"
 
 #define cellId @"cellId"
 
@@ -30,7 +31,7 @@
 @property (nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic , strong) UIView *titleView;
 @property(nonatomic , strong) UILabel *titleLabel;
-@property(nonatomic , strong) UIButton *questionBtn;
+@property(nonatomic , strong) FHDetailMoreView *moreView;
 @property(nonatomic , strong) FHUGCCellManager *cellManager;
 @property(nonatomic , strong) NSMutableDictionary *clientShowDict;
 @property(nonatomic , strong) FHUGCFeedDetailJumpManager *detailJumpManager;
@@ -39,15 +40,11 @@
 
 @implementation FHDetailNeighborhoodQACell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-    
-    // Configure the view for the selected state
+- (FHDetailMoreView *)moreView {
+    if(!_moreView) {
+        _moreView = [FHDetailMoreView new];
+    }
+    return _moreView;
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -61,14 +58,12 @@
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
-//    self.contentView.backgroundColor = [UIColor themeGray7];
+    //    self.contentView.backgroundColor = [UIColor themeGray7];
     self.tableView = [[UITableView alloc] init];
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.layer.masksToBounds = YES;
@@ -99,24 +94,14 @@
     self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
     self.detailJumpManager.refer = 1;
     
-    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 65)];
+    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 42, 34)];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontSemibold:16] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"小区问答";
     [self.titleView addSubview:_titleLabel];
-    
-    self.questionBtn = [[UIButton alloc] init];
-    [_questionBtn setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [_questionBtn setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    _questionBtn.imageView.contentMode = UIViewContentModeCenter;
-    [_questionBtn setImage:[UIImage imageNamed:@"detail_questiom_ask"] forState:UIControlStateNormal];
-    [_questionBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
-    _questionBtn.titleLabel.font = [UIFont themeFontRegular:14];
-    [_questionBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
-    [_questionBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
-    [_questionBtn setTitle:@"我要提问" forState:UIControlStateNormal];
-    [_questionBtn addTarget:self action:@selector(gotoWendaPublish) forControlEvents:UIControlEventTouchUpInside];
-    [self.titleView addSubview:_questionBtn];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoMore)];
+    [self.titleView addGestureRecognizer:tap];
+    [self.titleView addSubview:self.moreView];
     
     _tableView.tableHeaderView = self.titleView;
 }
@@ -124,7 +109,6 @@
 - (UIImageView *)shadowImage {
     if (!_shadowImage) {
         UIImageView *shadowImage = [[UIImageView alloc]init];
-//        shadowImage.backgroundColor = [UIColor redColor];
         [self.contentView addSubview:shadowImage];
         _shadowImage = shadowImage;
     }
@@ -132,32 +116,30 @@
 }
 
 - (void)initConstaints {
-
+    
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(20);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(4.5, 9, 4.5, 9));
     }];
     
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.containerView);
-        make.left.mas_equalTo(self.containerView).offset(15);
-        make.right.mas_equalTo(self.containerView).offset(-15);
+        make.left.mas_equalTo(self.containerView);
+        make.right.mas_equalTo(self.containerView);
         make.height.mas_equalTo(300);
-        make.bottom.mas_equalTo(self.containerView).offset(-10);
+        make.bottom.mas_equalTo(self.containerView).offset(-9);
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(20);
-        make.left.mas_equalTo(self.titleView).offset(16);
-        make.right.mas_equalTo(self.questionBtn.mas_left).offset(-10);
-        make.height.mas_equalTo(25);
+        make.top.mas_equalTo(self.titleView).offset(12);
+        make.left.mas_equalTo(self.titleView).offset(12);
+        make.right.mas_equalTo(self.moreView.mas_left).offset(-12);
+        make.height.mas_equalTo(22);
     }];
-
-    [_questionBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    
+    [self.moreView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.titleView).offset(-16);
-        make.height.mas_equalTo(25);
+        make.right.mas_equalTo(self.titleView).offset(-12);
+        make.height.equalTo(self.titleLabel);
     }];
 }
 
@@ -168,118 +150,31 @@
     self.currentData = data;
     FHDetailQACellModel *cellModel = (FHDetailQACellModel *)data;
     self.shadowImage.image = cellModel.shadowImage;
-    
-    _titleView.height = cellModel.headerViewHeight;
-    self.tableView.tableHeaderView = _titleView;
-    
-    [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(cellModel.topMargin == 30?20:cellModel.topMargin);
-    }];
-    
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(cellModel.viewHeight);
     }];
     if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll) {
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
-        }];
-    }
-    //业主问答在不单独为卡片的时候重新布局
-    if(cellModel.shadowImageType == FHHouseShdowImageTypeLR || cellModel.shadowImageType == FHHouseShdowImageTypeLBR){
-        [_containerView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.shadowImage).offset(14);
-            make.left.right.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
     
     _titleLabel.text = cellModel.title;
-    [_questionBtn setTitle:cellModel.askTitle forState:UIControlStateNormal];
     
     self.dataList = [[NSMutableArray alloc] init];
     [_dataList addObjectsFromArray:cellModel.dataList];
     [self.tableView reloadData];
     
-    if(self.dataList.count > 0){
-        self.questionBtn.hidden = NO;
-    }else{
-        self.questionBtn.hidden = YES;
-    }
+    self.moreView.hidden = (self.dataList.count <= 0);
 }
 
 #pragma mark delegate
-//- (void)addClickPriceTrendLog
-//{
-//    NSMutableDictionary *params = @{}.mutableCopy;
-//    NSDictionary *traceDict = [self.baseViewModel detailTracerDic];
-//
-//    //    1. event_type：house_app2c_v2
-//    //    2. page_type：页面类型,{'新房详情页': 'new_detail', '二手房详情页': 'old_detail', '小区详情页': 'neighborhood_detail'}
-//    //    3. rank
-//    //    4. origin_from
-//    //    5. origin_search_id
-//    //    6.log_pb
-//
-//    params[@"page_type"] = traceDict[@"page_type"] ? : @"be_null";
-//    params[@"rank"] = traceDict[@"rank"] ? : @"be_null";
-//    params[@"origin_from"] = traceDict[@"origin_from"] ? : @"be_null";
-//    params[@"origin_search_id"] = traceDict[@"origin_search_id"] ? : @"be_null";
-//    params[@"log_pb"] = traceDict[@"log_pb"] ? : @"be_null";
-//    [FHUserTracker writeEvent:@"click_price_trend" params:params];
-//}
-//
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
     UILabel *label = [[UILabel alloc] init];
     label.font = font;
     label.textColor = textColor;
     return label;
-}
-
-- (void)gotoWendaPublish {
-    if ([TTAccountManager isLogin]) {
-        [self gotoWendaVC];
-    } else {
-        [self gotoLogin];
-    }
-}
-
-- (void)gotoWendaVC {
-    FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
-    if(!isEmptyString(cellModel.askSchema)){
-        NSURLComponents *components = [[NSURLComponents alloc] initWithString:cellModel.askSchema];
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        NSMutableDictionary *tracerDict = @{}.mutableCopy;
-        tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"page_type"];
-        tracerDict[UT_LOG_PB] = cellModel.tracerDict[@"log_pb"] ?: @"be_null";
-        tracerDict[UT_ELEMENT_FROM] = [self elementTypeString:FHHouseTypeNeighborhood] ?: @"be_null";
-        dict[TRACER_KEY] = tracerDict;
-        dict[@"neighborhood_id"] = cellModel.neighborhoodId;
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
-    }
-}
-
-- (void)gotoLogin {
-    FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    NSString *page_type = cellModel.tracerDict[@"page_type"] ?: @"be_null";
-    [params setObject:page_type forKey:@"enter_from"];
-    [params setObject:@"click_publisher" forKey:@"enter_type"];
-    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
-    [params setObject:@(YES) forKey:@"need_pop_vc"];
-    params[@"from_ugc"] = @(YES);
-    __weak typeof(self) wSelf = self;
-    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-        if (type == TTAccountAlertCompletionEventTypeDone) {
-            // 登录成功
-            if ([TTAccountManager isLogin]) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [wSelf gotoWendaVC];
-                });
-            }
-        }
-    }];
 }
 
 - (void)gotoMore {
@@ -379,65 +274,13 @@
             cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
             cell.selectionStyle = UITableViewCellSelectionStyleNone;
         }
-
+        
         if(indexPath.row < self.dataList.count){
             [cell refreshWithData:cellModel];
         }
         return cell;
     }
     return [[FHUGCBaseCell alloc] init];
-}
-
-- (UIButton *)lookAllBtn {
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(15, 10, [UIScreen mainScreen].bounds.size.width - 60, 40)];
-    button.backgroundColor = [UIColor themeGray7];
-    button.imageView.contentMode = UIViewContentModeCenter;
-    [button setTitle:@"查看全部" forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"] forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont themeFontRegular:14];
-    [button setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
-    [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
-    button.layer.masksToBounds = YES;
-    button.layer.cornerRadius = 20;
-    [button setTitleEdgeInsets:UIEdgeInsetsMake(0, -
-                                                    button.imageView.frame.size.width, 0, button.imageView.frame.size.width)];
-    [button setImageEdgeInsets:UIEdgeInsetsMake(0, button.titleLabel.bounds.size.width, 0, - button.titleLabel.bounds.size.width)];
-    [button addTarget:self action:@selector(gotoMore) forControlEvents:UIControlEventTouchUpInside];
-    return button;
-}
-
-- (UIButton *)writeAnswerBtn {
-    FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(15, 10, [UIScreen mainScreen].bounds.size.width - 60, 40)];
-    button.backgroundColor = [UIColor themeGray7];
-    button.imageView.contentMode = UIViewContentModeCenter;
-    [button setTitle:cellModel.contentEmptyTitle forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"detail_questiom_ask"] forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont themeFontRegular:14];
-    [button setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
-    [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
-    button.layer.masksToBounds = YES;
-    button.layer.cornerRadius = 20;
-    [button addTarget:self action:@selector(gotoWendaPublish) forControlEvents:UIControlEventTouchUpInside];
-    return button;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
-    UIView *footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, cellModel.footerViewHeight)];
-    if(cellModel.totalCount > 2 && self.dataList.count > 0){
-        [footView addSubview:[self lookAllBtn]];
-    }else if(cellModel.dataList.count <= 0){
-        [footView addSubview:[self writeAnswerBtn]];
-    }
-    return footView;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    FHDetailQACellModel *cellModel = (FHDetailQACellModel *)self.currentData;
-    return cellModel.footerViewHeight;
 }
 
 #pragma mark - UITableViewDelegate
@@ -454,9 +297,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
-    
+    [self gotoMore];
 }
 
 @end
