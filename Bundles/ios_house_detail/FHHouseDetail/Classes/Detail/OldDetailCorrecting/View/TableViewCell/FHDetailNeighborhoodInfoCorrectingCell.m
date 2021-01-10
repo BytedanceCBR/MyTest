@@ -150,6 +150,8 @@
     if (model.neighborhoodInfo) {
         [self updateErshouCellData];
     }
+    
+    self.bottomLine.hidden = !(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll);
 }
 
 - (UIImageView *)shadowImage {
