@@ -13,8 +13,8 @@
 #import "FHUGCCellUserInfoView.h"
 #import "UIViewAdditions.h"
 #import "TTBusinessManager+StringUtils.h"
-#define leftMargin 20
-#define rightMargin 20
+#define leftMargin 12
+#define rightMargin 12
 #define topMargin 5
 #define maxLines 3
 
@@ -83,7 +83,7 @@
     };
     [self.contentContainer addSubview:_headerView];
     
-    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 30, 0)];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 18, 0)];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.font = [UIFont themeFontRegular:14];
     _contentLabel.layer.masksToBounds = YES;
@@ -127,7 +127,7 @@
     [self.bottomView.positionView addGestureRecognizer:tap];
     [self.contentContainer addSubview:_bottomView];
     
-    self.lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin -30, .5)];
+    self.lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin - 18, .5)];
     self.lineView.backgroundColor = [UIColor themeGray6];
     [self.contentContainer addSubview:self.lineView];
     
@@ -170,9 +170,9 @@
     };
     
     [self.contentContainer mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?15:0);
+        make.left.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?9:0);
         make.top.equalTo(self.contentView);
-        make.right.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?-15:0);
+        make.right.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?-9:0);
         make.bottom.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?-16:0);
     }];
     
@@ -183,12 +183,12 @@
     
     self.headerView.top = cellModel.isInRealtorEvaluationList?18:topMargin;
     self.headerView.left = 0;
-    self.headerView.width = [UIScreen mainScreen].bounds.size.width - 15 * 2;
+    self.headerView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.headerView.height = userInfoViewHeight;
     
-    self.contentLabel.top = self.userInfoView.bottom + 7;
+    self.contentLabel.top = self.userInfoView.bottom + 10;
     self.contentLabel.left = leftMargin;
-    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin -30;
+    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 18;
     self.contentLabel.height = 0;
     
     self.videoImageView.top = 0;
@@ -203,7 +203,7 @@
     
     self.lineView.top = self.videoImageView.bottom + 16;
     self.lineView.left = leftMargin;
-    self.lineView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin -30 ;
+    self.lineView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin - 18;
     self.lineView.height = 0.5;
     
     if(isEmptyString(cellModel.content)){
@@ -313,9 +313,9 @@
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height;
         if (cellModel.isInRealtorEvaluationList) {
-            height = cellModel.contentHeight  +150 + 22 + 50 + 130;
+            height = cellModel.contentHeight  +150 + 22 + 50 + 130 - 3;
         }else {
-            height = cellModel.contentHeight  +150 + 10 + 50 + 90 - 20;
+            height = cellModel.contentHeight  +150 + 10 + 50 + 90 - 20 - 3;
         }
         return height;
     }

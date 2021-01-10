@@ -35,7 +35,6 @@
 @property(nonatomic, strong) UIButton *mapMaskBtnLocation;
 @property(nonatomic, strong) UIView *backView;
 @property(nonatomic, weak) UIImageView *shadowImage;
-@property(nonatomic, strong) UIView *bottomGradientView;
 
 @property (nonatomic, strong) UIButton *baiduPanoButton;
 
@@ -55,20 +54,14 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.cellWidth = MAIN_SCREEN_WIDTH - 30;
+        self.cellWidth = MAIN_SCREEN_WIDTH - 18;
         self.curCategory = @"交通";
         self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
         
-        [self setupShadowView];
-        
         _backView = [[UIView alloc] init];
         [self.contentView addSubview:_backView];
-        
         [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.shadowImage).offset(20);
-            make.left.right.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-2);
-            make.height.mas_equalTo(0);
+            make.edges.equalTo(self.contentView).insets(UIEdgeInsetsZero);
         }];
         
         _centerAnnotation = [[FHStaticMapAnnotation alloc] init];
@@ -103,34 +96,17 @@
 
 - (void)setupShadowView {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.contentView);
-        make.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
-}
-
--(UIView *)bottomGradientView {
-    if(!_bottomGradientView){
-        CGRect frame = CGRectMake(0, 0, self.cellWidth, 29);
-        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-        gradientLayer.frame = frame;
-        gradientLayer.colors = @[
-            (__bridge id)[UIColor colorWithWhite:1 alpha:1].CGColor,
-            (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor
-        ];
-        gradientLayer.startPoint = CGPointMake(0.5, 0.2);
-        gradientLayer.endPoint = CGPointMake(0.5, 1);
-        
-        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
-        [_bottomGradientView.layer addSublayer:gradientLayer];
-    }
-    return _bottomGradientView;
 }
 
 - (void)setupViews:(BOOL)useNativeMap {
     
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
+    
+    // 设置背景图层
+    [self setupShadowView];
+
     //初始化Header
     [self setUpHeaderView];
     
@@ -143,18 +119,17 @@
     //初始化poi信息列表
     [self setUpLocationListTableView];
    
-    CGFloat headerTop = (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 16 : dataModel.topMargin;
-    CGFloat headerHeight = (dataModel.houseType.integerValue == FHHouseTypeSecondHandHouse || dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 38 : 0;
-    
-    self.headerView.frame = CGRectMake(15, headerTop, self.cellWidth, headerHeight);
-    self.segmentedControl.frame = CGRectMake(15 + 16, self.headerView.bottom + 6, self.cellWidth - 32, 33);//往上11
+    CGFloat headerTop = 4.5;
+    CGFloat headerHeight = (dataModel.houseType.integerValue == FHHouseTypeSecondHandHouse || dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 40 : 0;
+    self.headerView.frame = CGRectMake(9, headerTop, self.cellWidth, headerHeight);
+    self.segmentedControl.frame = CGRectMake(9 + 12, self.headerView.bottom, self.cellWidth - 24, 33);//往上11
     self.headerView.hidden = (headerHeight == 0);
     CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
-    CGRect mapFrame = CGRectMake(15, self.segmentedControl.bottom, self.cellWidth, mapHeight);
+    CGRect mapFrame = CGRectMake(9, self.segmentedControl.bottom, self.cellWidth, mapHeight);
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
     self.mapMaskBtn.frame = mapFrame;
-    self.locationList.frame = CGRectMake(15, self.mapMaskBtn.bottom + 10, self.cellWidth, 40);
+    self.locationList.frame = CGRectMake(9, self.mapMaskBtn.bottom + 10, self.cellWidth, 40);
     self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
     [self.baiduPanoButton mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -198,7 +173,9 @@
 - (void)setUpHeaderView {
     _headerView = [[FHDetailHeaderStarTitleView alloc] init];
     [self.contentView addSubview:_headerView];
-    [_headerView updateTitle:@"便捷指数"];
+    [_headerView updateTitle:@"周边配套"];
+    [_headerView hiddenStarNum];
+    [_headerView hiddenStarImage];
     [self.contentView sendSubviewToBack:_headerView];
 }
 
@@ -207,9 +184,9 @@
     _segmentedControl.sectionTitles = @[@"交通", @"教育", @"医疗", @"生活"];
 //    _segmentedControl.selectionIndicatorSize = CGSizeMake(12, 3);
 //    _segmentedControl.selectionIndicatorCornerRadius = 1.5;
-//    _segmentedControl.selectionIndicatorColor = [UIColor themeGray1];
+//    _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#4a4a4a"];
     NSDictionary *attributeNormal = @{NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor themeGray3]};
-    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontMedium:16], NSForegroundColorAttributeName: [UIColor themeRed4]};
+    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontMedium:16], NSForegroundColorAttributeName: [UIColor colorWithHexStr:@"#4a4a4a"]};
     _segmentedControl.backgroundColor = [UIColor whiteColor];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
@@ -227,7 +204,7 @@
 
 - (void)setUpMapView:(BOOL)useNativeMap {
     CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
-    CGRect mapRect = CGRectMake(15, 0, self.cellWidth, mapHeight);
+    CGRect mapRect = CGRectMake(9, 0, self.cellWidth, mapHeight);
     
     if (useNativeMap) {
         _nativeMapImageView = [[UIImageView alloc] initWithFrame:mapRect];
@@ -242,11 +219,9 @@
     }
     
     _mapMaskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.contentView addSubview:_mapMaskBtn];
-    [self.mapMaskBtn addSubview:self.bottomGradientView];
-    
     [_mapMaskBtn setBackgroundColor:[UIColor clearColor]];
     [_mapMaskBtn addTarget:self action:@selector(mapMaskBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:_mapMaskBtn];
     
     if (!self.baiduPanoButton) {
         self.baiduPanoButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -263,7 +238,7 @@
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
     CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
-    CGRect frame = CGRectMake(15, 0, self.cellWidth, mapHeight);
+    CGRect frame = CGRectMake(9, 0, self.cellWidth, mapHeight);
     WeakSelf;
     [[FHDetailMapViewSnapService sharedInstance] takeSnapWith:self.centerPoint frame:frame targetRect:frame annotations:annotations delegate:self block:^(FHDetailMapSnapTask *task, UIImage *image, BOOL success) {
         StrongSelf;
@@ -301,7 +276,6 @@
     [_mapMaskBtnLocation setBackgroundColor:[UIColor clearColor]];
     [_mapMaskBtnLocation addTarget:self action:@selector(mapMaskBtnClick:) forControlEvents:UIControlEventTouchUpInside];
 }
-
 
 - (void)mapMaskBtnClick:(UIButton *)sender {
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
@@ -371,18 +345,7 @@
     }
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) data;
     adjustImageScopeType(dataModel)
-    if (self.currentData == data) {
-        return;
-    }
-    self.currentData = data;
-    if (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) {
-                [self.headerView hiddenStarImage];
-    };
-    [self.headerView hiddenStarImage];
-    [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.shadowImage).offset(-dataModel.bottomMargin);
-    }];
-    
+    self.currentData = data;    
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
     
     NSDictionary *fhSettings = [self fhSettings];
@@ -390,8 +353,6 @@
     
     [self cleanSubViews];
     [self setupViews:dataModel.useNativeMap];
-    
-
     [self refreshWithDataPoiDetail];
 }
 
@@ -407,15 +368,6 @@
         }
         [self.mapView loadMap:dataModel.staticImage.url center:self.centerPoint latRatio:[dataModel.staticImage.latRatio floatValue] lngRatio:[dataModel.staticImage.lngRatio floatValue]];
     }
-    
-    if (dataModel.title.length > 0) {
-        [self.headerView updateTitle:dataModel.title];
-    }
-    [self.headerView updateStarsCount:[dataModel.score integerValue]];
-    if (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) {
-        [self.headerView hiddenStarImage];
-    }
-    
     if ([self isPoiSearchDone:self.curCategory]) {
         [self showPoiResultInfo];
     } else {
@@ -674,7 +626,7 @@
     
     NSInteger poiCount = [self.countCategoryDict[category] integerValue];
     NSInteger height = poiCount > 0 ? (poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 35 : 40;
-    self.locationList.frame = CGRectMake(15, self.mapMaskBtn.bottom + 10, self.cellWidth, height);
+    self.locationList.frame = CGRectMake(9, self.mapMaskBtn.bottom + 10, self.cellWidth, height);
     self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
     CGFloat cellHeight = self.locationList.bottom;

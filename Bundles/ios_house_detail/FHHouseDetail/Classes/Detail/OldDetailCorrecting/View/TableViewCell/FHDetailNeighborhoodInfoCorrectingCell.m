@@ -37,7 +37,6 @@
 @property (nonatomic, strong) UILabel *infoLabel;
 @property (nonatomic, strong) UIButton *actionBtn;
 @property (nonatomic, copy) void (^actionBlock)(void);
-
 @end
 
 @implementation FHDetailNeighborhoodConsultCorrectingView
@@ -49,7 +48,6 @@
     }
     return self;
 }
-
 
 - (void)setupUI {
     _nameLabel = [[UILabel alloc]init];
@@ -104,10 +102,18 @@
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowCache; // 埋点缓存
 @property (nonatomic, weak) UILabel *schoolNameLabel;
 @property (nonatomic, weak) UIButton *foldBtn;
-
+@property (nonatomic, strong) UIView *bottomLine;
 @end
 
 @implementation FHDetailNeighborhoodInfoCorrectingCell
+
+- (UIView *)bottomLine {
+    if(!_bottomLine) {
+        _bottomLine = [UIView new];
+        _bottomLine.backgroundColor = [UIColor themeGray6];
+    }
+    return _bottomLine;
+}
 
 - (void)refreshWithData:(id)data
 {
@@ -127,17 +133,18 @@
     self.shadowImage.image = model.shadowImage;
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(self.contentView);
+            make.top.equalTo(self.contentView).offset(-4.5);
         }];
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.top.bottom.equalTo(self.contentView);
+            make.top.equalTo(self.contentView).offset(-4.5);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
     if (model.neighborhoodInfo) {
@@ -441,8 +448,6 @@
     }];
     
     UIView *containerView = [[UIView alloc]init];
-    containerView.clipsToBounds = YES;
-    containerView.layer.cornerRadius = 10;
     [containerView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoNeighborhood)]];
     [self.contentView addSubview:containerView];
     self.containerView = containerView;
@@ -460,10 +465,8 @@
     [self.containerView addSubview:coverImageView];
     self.coverImageView = coverImageView;
     [self.coverImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.containerView).mas_offset(12);
-        make.top.equalTo(self.containerView).mas_offset(12);
-        make.width.mas_equalTo(72);
-        make.height.mas_equalTo(72);
+        make.top.left.equalTo(self.containerView).offset(12);
+        make.width.height.mas_equalTo(72);
     }];
     
     FHDetailNeighborhoodTitleView *headerView = [[FHDetailNeighborhoodTitleView alloc] init];
@@ -497,6 +500,14 @@
         make.top.mas_equalTo(self.topView.mas_bottom).mas_offset(9);
         make.height.mas_equalTo(16);
         make.bottom.mas_equalTo(-12);
+    }];
+    
+    [self.contentView addSubview:self.bottomLine];
+    [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.bottom.equalTo(self.contentView);
+        make.height.mas_offset(0.5);
+        make.left.equalTo(self.contentView).offset(21);
+        make.right.equalTo(self.contentView).offset(-21);
     }];
 }
 
