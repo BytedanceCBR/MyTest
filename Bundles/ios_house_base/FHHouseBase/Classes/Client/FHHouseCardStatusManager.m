@@ -33,6 +33,7 @@
     return _dict;
 }
 
+//已读未读生成identifier规则：https://bytedance.feishu.cn/docs/doccnukA59OFkEYnIGHrQt6uoab
 - (void)readHouseId:(NSString *)houseId withHouseType:(NSInteger)houseType {
     if (!houseId || [houseId isEqualToString:@""] || houseType > 4 || houseType < 1) {
         return;

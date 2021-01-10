@@ -144,9 +144,9 @@ extern NSString *const INSTANT_DATA_KEY;
 
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
 
-@property (nonatomic, strong) UILongPressGestureRecognizer *gesture;
-@property (nonatomic, strong) UITableViewCell *selectCell;
-@property (nonatomic, assign) BOOL pageIsDragging;
+@property (nonatomic, strong) UILongPressGestureRecognizer *gesture; //长按手势
+@property (nonatomic, strong) UITableViewCell *selectCell; //长按选择的cell
+@property (nonatomic, assign) BOOL pageIsDragging; //当前页面是否处于滑动中
 
 @end
 
@@ -2078,11 +2078,15 @@ extern NSString *const INSTANT_DATA_KEY;
     self.gesture.enabled = YES;
 }
 
+//长按手势触摸动效
 - (void)longPressAction:(UILongPressGestureRecognizer *)gesture {
     CGPoint point = [gesture locationInView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    if (self.selectCell && cell && self.selectCell != cell) {
+    if (!indexPath || !cell) {
+        return;
+    }
+    if (self.selectCell && self.selectCell != cell) {
         if ([ self.selectCell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [ self.selectCell respondsToSelector:@selector(restoreWithAnimation)]) {
             [ self.selectCell performSelector:@selector(restoreWithAnimation)];
         }
@@ -2098,14 +2102,13 @@ extern NSString *const INSTANT_DATA_KEY;
             [cell performSelector:@selector(restoreWithAnimation)];
         }
         self.selectCell = nil;
+        //滑动状态不进入详情页，非滑动状态长按结束进入详情页
         if (gesture.state == UIGestureRecognizerStateEnded && !self.pageIsDragging) {
             WeakSelf;
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                StrongSelf;
-                if ([self.tableView isKindOfClass:[FHHouseTableView class]]) {
-                    [((id<UITableViewDelegate>)self.tableView) tableView:self.tableView didSelectRowAtIndexPath:indexPath];
-                } else {
-                    [self tableView:self.tableView didSelectRowAtIndexPath:indexPath];
+                __strong typeof(wself) strongSelf = wself;
+                if ([strongSelf.tableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
+                    [strongSelf.tableView.delegate tableView:strongSelf.tableView didSelectRowAtIndexPath:indexPath];
                 }
             });
         }
@@ -2115,6 +2118,18 @@ extern NSString *const INSTANT_DATA_KEY;
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    //支持多手势，滑动时按停触发长按手势
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    //只有实现触摸动效协议才触发长按手势
+    CGPoint point = [touch locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if (!cell || ![cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)]) {
+        return NO;
+    }
     return YES;
 }
 
