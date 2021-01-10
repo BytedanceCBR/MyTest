@@ -261,7 +261,7 @@
             [cell hiddenCloseBtn];
         }
         [cell refreshIndexCorner:(indexPath.row == 0) withLast:(indexPath.row == (self.dataList.count))];
-        [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
+        [cell.contentView setBackgroundColor:[UIColor themeGray7]];
         return cell;
 }
 
@@ -277,7 +277,7 @@
     if(!_errorView){
         __weak typeof(self)ws = self;
         _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(10, 0, [UIScreen mainScreen].bounds.size.width, 500)];
-        _errorView.backgroundColor = [UIColor colorWithHexStr:@"f8f8f8"];
+        _errorView.backgroundColor = [UIColor themeGray7];
         _errorView.retryBlock = ^{
             [ws requestData:YES first:YES];
         };

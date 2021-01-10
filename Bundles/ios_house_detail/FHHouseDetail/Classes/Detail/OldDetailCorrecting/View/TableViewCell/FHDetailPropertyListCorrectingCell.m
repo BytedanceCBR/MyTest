@@ -17,6 +17,7 @@
 #import "FHHouseDetailContactViewModel.h"
 #import <FHHouseBase/FHHouseContactDefines.h>
 #import "FHPropertyListCorrectingRowView.h"
+#import "FHDetailMoreView.h"
 
 extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 @interface FHDetailPropertyListCorrectingCell()
@@ -412,7 +413,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     [self addSubview:_infoLabel];
     _infoLabel.textAlignment = NSTextAlignmentLeft;
     
-    UIImage *img = ICON_FONT_IMG(14, @"\U0000e670", [UIColor themeGray1]); //@"detail_entrance_arrow"
+    UIImage *img = [FHDetailMoreView moreArrowImage];
 
     _logoImageView = [[UIImageView alloc] init];
     _logoImageView.image = img;

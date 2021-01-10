@@ -52,16 +52,8 @@
             self.title = [NSString stringWithFormat:@"%@（%li）",self.title,(long)self.totalCount];
         }
     }
-    
-    //总数
-    if(self.totalCount > 2 || self.dataList.count <= 0){
-        self.footerViewHeight = 60;
-    }else{
-        self.footerViewHeight = 10;
-    }
-    
-    self.headerViewHeight = _topMargin + 21;
-    
+    self.footerViewHeight = 0;
+    self.headerViewHeight = _topMargin + 34;
     if(self.dataList.count > 0){
         self.viewHeight = self.headerViewHeight + self.footerViewHeight;
         for (FHFeedUGCCellModel *cellModel in self.dataList) {

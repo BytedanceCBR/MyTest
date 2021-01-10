@@ -68,6 +68,7 @@
 @property (nonatomic, assign) CGFloat placeHolderCellHeight;
 @property (nonatomic) BOOL shouldShowUGcGuide;
 @property (nonatomic, strong) FHHorizontalPagingView *pageView;
+@property (nonatomic, strong) UIView *headerView;
 @end
 @implementation FHHouseRealtorDetailVM
 - (instancetype)initWithController:(FHHouseRealtorDetailVC *)viewController tracerDict:(NSDictionary*)tracerDict realtorInfo:(NSDictionary *)realtorInfo bottomBar:(FHRealtorDetailBottomBar *)bottomBar {
@@ -236,10 +237,23 @@
     self.viewController.segmentView.height = kSegmentViewHeight;
     if(self.subVCs.count < 2) {
         self.viewController.segmentView = nil;
+        self.headerView = self.viewController.headerView;
+    } else {
+        self.headerView = [[UIView alloc] init];
+        self.headerView.backgroundColor = [UIColor themeGray7];
+        self.headerView.height = self.viewController.headerView.height + 10;
+        [self.headerView addSubview:self.viewController.headerView];
     }
-    [self.pageView updateWithHeaderView:self.viewController.headerView segmentedView:self.viewController.segmentView navBar:self.viewController.customNavBarView tableViewArray:tableViewArray];
+    [self.pageView updateWithHeaderView:self.headerView segmentedView:self.viewController.segmentView navBar:self.viewController.customNavBarView tableViewArray:tableViewArray];
     [self.viewController.segmentView setNeedsLayout];
     [self.viewController.segmentView layoutIfNeeded];
+    
+    if(self.subVCs.count > 1) {
+        for(FHHouseRealtorDetailBaseViewController *vc in self.subVCs) {
+            vc.tableView.tableHeaderView.height = self.pageView.moveView.height + 10;
+            vc.tableView.tableHeaderView.backgroundColor = [UIColor themeGray7];
+        }
+    }
     if(!(self.currentIndex >= 0 && self.currentIndex < self.subVCs.count)) {
         self.currentIndex = 0;
     }
@@ -428,7 +442,7 @@
 -(void)contentViewDidScroll:(CGFloat)offset {
     CGFloat delta = offset;
     CGFloat navBarH = self.viewController.customNavBarView.height;
-    if ((delta + navBarH) >self.viewController.headerView.height || (delta + navBarH) == self.viewController.headerView.height) {
+    if ((delta + navBarH) > self.headerView.height || (delta + navBarH) == self.headerView.height) {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
             *titleScrollViewColorKey  = @"Background4";
             *norColorKey = @"grey1";
@@ -438,7 +452,7 @@
         }];
     }else {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
-            *titleScrollViewColorKey  = @"Background21";
+            *titleScrollViewColorKey  = @"Background3";
             *norColorKey = @"grey1";
             *selColorKey = @"grey1";
             *titleFont = [UIFont themeFontRegular:16];

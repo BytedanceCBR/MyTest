@@ -44,7 +44,7 @@
         self.navHeight =   ((![[UIApplication sharedApplication] isStatusBarHidden]) ? [[UIApplication sharedApplication] statusBarFrame].size.height : ([UIDevice btd_isIPhoneXSeries]?44.f:20.f));
         self.isHeightScoreRealtor = NO;
         [self createUI];
-        self.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
+        self.backgroundColor = [UIColor themeGray7];
     }
     return self;
 }
