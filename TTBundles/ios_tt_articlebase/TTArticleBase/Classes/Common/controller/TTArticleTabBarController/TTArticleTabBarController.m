@@ -653,6 +653,11 @@ typedef NS_ENUM(NSUInteger,TTTabbarTipViewType){
 
         [logv3Dic setValue:[FHEnvContext sharedInstance].enterChannel forKey:@"enter_channel"];
         [FHEnvContext recordEvent:logv3Dic andEventKey:@"enter_tab"];
+        if(![FHEnvContext isCurrentCityNormalOpen] && [selectedTabName isEqualToString:@"main"]) {
+            NSMutableDictionary *discoverStreamDict = [logv3Dic mutableCopy];
+            [discoverStreamDict setValue:@"discover_stream" forKey:@"tab_name"];
+            [FHEnvContext recordEvent:discoverStreamDict andEventKey:@"enter_tab"];
+        }
     }
     
     [[TTLaunchTracer shareInstance] writeEvent];
