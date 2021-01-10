@@ -52,7 +52,7 @@
     _tableView = [[FHBaseTableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
     _tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeOnDrag;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableView.backgroundColor = [UIColor colorWithHexStr:@"#f8f8f8"];
+    _tableView.backgroundColor = [UIColor themeGray7];
     _tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
     if (@available(iOS 11.0 , *)) {
         _tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

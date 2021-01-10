@@ -154,6 +154,7 @@
     }
     self.dataList = dataList;
     self.segmentedControl.sectionTitles = titleArray;
+    self.segmentedControl.selectedSegmentIndex = 0;
 }
 
 - (void)updateSelectCell:(NSInteger)index {
