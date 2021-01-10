@@ -150,6 +150,8 @@
     if (model.neighborhoodInfo) {
         [self updateErshouCellData];
     }
+    
+    self.bottomLine.hidden = !(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll);
 }
 
 - (UIImageView *)shadowImage {
@@ -214,9 +216,6 @@
                 [self.contentView removeFromSuperview];
             }
             self.schoolView.hidden = NO;
-            if (model.neighborhoodInfo.schoolDictList.count < 1) {
-                topMargin = 8 + 26; // TODO: Check逻辑
-            }
             [self updateSchoolView:model.neighborhoodInfo.schoolDictList];
         }
         [self.headerView mas_updateConstraints:^(MASConstraintMaker *make) {

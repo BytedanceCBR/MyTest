@@ -41,7 +41,7 @@
             imageHeight = 200;
         }
         height += imageHeight;
-        height += 16;
+        height += 12;
         return CGSizeMake(width, height);
     }
     return CGSizeZero;
@@ -73,8 +73,8 @@
         [self.contentView addSubview:_headerView];
         [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.left.mas_equalTo(0);
-            make.height.mas_equalTo(40);
-            make.right.mas_equalTo(-10);
+            make.height.mas_equalTo(36);
+            make.right.mas_equalTo(0);
         }];
 
         self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), 0)];
@@ -139,7 +139,7 @@
          self.lineView.backgroundColor = [UIColor themeGray6];
          [self.contentView addSubview:self.lineView];
          [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
-             make.top.mas_equalTo(self.videoImageView.mas_bottom).mas_offset(16);
+             make.top.mas_equalTo(self.videoImageView.mas_bottom).mas_offset(12);
              make.left.mas_equalTo(12);
              make.right.mas_equalTo(-12);
              make.height.mas_equalTo(0.5);

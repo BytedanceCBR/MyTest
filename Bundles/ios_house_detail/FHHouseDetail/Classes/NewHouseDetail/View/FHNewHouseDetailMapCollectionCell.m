@@ -24,7 +24,7 @@
 @property(nonatomic, weak) UIImageView *shadowImage;
 @property(nonatomic, strong) UIView *bottomGradientView;
 
-@property (nonatomic, strong) UIButton *baiduPanoButton;
+//@property (nonatomic, strong) UIButton *baiduPanoButton;
 
 //data
 @property(nonatomic, assign) NSString *curCategory;
@@ -46,7 +46,7 @@
 //        FHNewHouseDetailMapCellModel *cellModel = (FHNewHouseDetailMapCellModel *)data;
         CGFloat mapHeight = width * kStaticMapHWRatio;
         mapHeight += 33;
-        mapHeight += 10;
+        mapHeight += 6;
         return CGSizeMake(width, mapHeight);
     }
     return CGSizeZero;
@@ -124,9 +124,9 @@
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
     self.mapMaskBtn.frame = mapFrame;
-    [self.baiduPanoButton mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(CGRectGetMinY(mapFrame) + mapHeight - 40 - 8);
-    }];
+//    [self.baiduPanoButton mas_updateConstraints:^(MASConstraintMaker *make) {
+//        make.top.mas_equalTo(CGRectGetMinY(mapFrame) + mapHeight - 40 - 8);
+//    }];
 }
 
 - (void)cleanSubViews {
@@ -144,13 +144,13 @@
 }
 
 - (void)setUpSegmentedControl {
-    _segmentedControl = [FHSegmentControl new];
+    _segmentedControl = [[FHSegmentControl alloc] init];
     _segmentedControl.sectionTitles = @[@"交通", @"教育", @"医疗", @"生活"];
 //    _segmentedControl.selectionIndicatorSize = CGSizeMake(12, 3);
 //    _segmentedControl.selectionIndicatorCornerRadius = 1.5;
 //    _segmentedControl.selectionIndicatorColor = [UIColor themeGray1];
     NSDictionary *attributeNormal = @{NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor themeGray3]};
-    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontMedium:16], NSForegroundColorAttributeName: [UIColor themeRed4]};
+    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontMedium:16], NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentedControl.backgroundColor = [UIColor whiteColor];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
@@ -189,17 +189,17 @@
     [_mapMaskBtn setBackgroundColor:[UIColor clearColor]];
     [_mapMaskBtn addTarget:self action:@selector(mapMaskBtnClick:) forControlEvents:UIControlEventTouchUpInside];
     
-    if (!self.baiduPanoButton) {
-        self.baiduPanoButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.baiduPanoButton setImage:[UIImage imageNamed:@"baidu_panorama_entrance_icon"] forState:UIControlStateNormal];
-        [self.baiduPanoButton addTarget:self action:@selector(baiduPanoButtonAction) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:self.baiduPanoButton];
-        [self.baiduPanoButton mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.size.mas_equalTo(CGSizeMake(40, 40));
-            make.right.mas_equalTo(-23);
-            make.top.mas_equalTo(0);
-        }];
-    }
+//    if (!self.baiduPanoButton) {
+//        self.baiduPanoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        [self.baiduPanoButton setImage:[UIImage imageNamed:@"baidu_panorama_entrance_icon"] forState:UIControlStateNormal];
+//        [self.baiduPanoButton addTarget:self action:@selector(baiduPanoButtonAction) forControlEvents:UIControlEventTouchUpInside];
+//        [self.contentView addSubview:self.baiduPanoButton];
+//        [self.baiduPanoButton mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.size.mas_equalTo(CGSizeMake(40, 40));
+//            make.right.mas_equalTo(-23);
+//            make.top.mas_equalTo(0);
+//        }];
+//    }
 }
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
@@ -225,15 +225,15 @@
     }
 }
 
-- (void)baiduPanoButtonAction {
-    if (![TTReachability isNetworkConnected]) {
-        [[ToastManager manager] showToast:@"网络异常"];
-        return;
-    }
-    if (self.baiduPanoramaBlock) {
-        self.baiduPanoramaBlock();
-    }
-}
+//- (void)baiduPanoButtonAction {
+//    if (![TTReachability isNetworkConnected]) {
+//        [[ToastManager manager] showToast:@"网络异常"];
+//        return;
+//    }
+//    if (self.baiduPanoramaBlock) {
+//        self.baiduPanoramaBlock();
+//    }
+//}
 
 - (void)bindViewModel:(id)viewModel {
     [self refreshWithData:viewModel];
@@ -264,7 +264,7 @@
 - (void)refreshWithDataPoiDetail {
     FHNewHouseDetailMapCellModel *dataModel = (FHNewHouseDetailMapCellModel *) self.currentData;
     
-    self.baiduPanoButton.hidden = !dataModel.baiduPanoramaUrl.length;
+//    self.baiduPanoButton.hidden = !dataModel.baiduPanoramaUrl.length;
     if (!dataModel.useNativeMap) {
         if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
             NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";

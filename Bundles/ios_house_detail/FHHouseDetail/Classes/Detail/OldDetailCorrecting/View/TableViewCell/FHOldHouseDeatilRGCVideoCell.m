@@ -201,7 +201,7 @@
     self.bottomView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin ;
     self.bottomView.height = bottomViewHeight;
     
-    self.lineView.top = self.videoImageView.bottom + 16;
+    self.lineView.top = self.videoImageView.bottom + 11;
     self.lineView.left = leftMargin;
     self.lineView.width = [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin - 18;
     self.lineView.height = 0.5;
@@ -216,7 +216,7 @@
         self.videoImageView.top = self.contentLabel.bottom + 10 ;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
-    self.lineView.top = self.videoImageView.bottom + 16;
+    self.lineView.top = self.videoImageView.bottom + 11;
     self.bottomView.top = self.videoImageView.bottom + 10;
 }
 - (void)refreshWithData:(id)data {

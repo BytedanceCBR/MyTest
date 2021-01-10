@@ -214,7 +214,7 @@
     }];
     FHNewHouseDetailMultiFloorpanCellModel *cellModel = [(FHNewHouseDetailFloorpanSM *)self.sectionModel floorpanCellModel];
     if (cellModel.floorPanList.totalNumber.length > 0) {
-        titleView.titleLabel.text = [NSString stringWithFormat:@"户型介绍（%@）",cellModel.floorPanList.totalNumber];
+        titleView.titleLabel.text = [NSString stringWithFormat:@"户型介绍 (%@)",cellModel.floorPanList.totalNumber];
         if (cellModel.floorPanList.totalNumber.integerValue >= 3) {
             titleView.arrowsImg.hidden = NO;
             titleView.userInteractionEnabled = YES;

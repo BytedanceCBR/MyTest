@@ -362,12 +362,12 @@
             case FHUGCFeedListCellTypeUGC:
                 model.cellSubType = FHUGCFeedListCellSubTypeOldHouseUGCBrokerImage;
                 ///图片cell高度
-                contentHeight = contentHeight + [FHHouseDeatilRGCImageCell heightForData:model];
+                contentHeight = contentHeight + [FHHouseDeatilRGCImageCell heightForData:model] - 12;
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeOldHouseUGCBrokerVideo;
                 ///内容高度 + 视频高度 + 距离顶部高度 + 底部高度
-                contentHeight = contentHeight + model.contentHeight + 150 + 10 + 50 + 90 - 20 - 3;
+                contentHeight = contentHeight + model.contentHeight + 150 + 10 + 50 + 90 - 20 - 5;
                 break;
             default:
                 break;

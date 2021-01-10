@@ -89,15 +89,15 @@
 - (void)setupUI {
     
     _iconView = [[UIView alloc]init];
-    _iconView.layer.borderWidth = [UIDevice btd_onePixel];
+    _iconView.layer.borderWidth = 1;
     _iconView.layer.borderColor = [[UIColor themeGray6] CGColor];
     _iconView.layer.cornerRadius = 1.0;
     _iconView.layer.masksToBounds = YES;
     self.iconView.backgroundColor = [UIColor whiteColor];
     [self addSubview:_iconView];
     [self.iconView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.contentView);
-        make.left.right.equalTo(self.contentView);
+        make.top.mas_equalTo(1);
+        make.left.right.mas_equalTo(self.contentView);
         make.width.height.mas_equalTo(120);
     }];
     
@@ -106,8 +106,8 @@
     [_iconView addSubview:_icon];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     [self.icon mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(self.iconView);
-        make.width.height.equalTo(self.iconView);
+        make.center.mas_equalTo(self.iconView);
+        make.width.height.mas_equalTo(self.iconView);
     }];
     
     _vrImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"detail_vr_movie_icon"]];
@@ -191,7 +191,7 @@
 }
 @end
 
-@interface FHNewHouseDetailMultiFloorpanCollectionCell ()<UICollectionViewDelegate,UICollectionViewDataSource,FHDetailBaseCollectionCellDelegate>
+@interface FHNewHouseDetailMultiFloorpanCollectionCell ()<UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,FHDetailBaseCollectionCellDelegate>
 
 @property (strong, nonatomic) UICollectionView *collectionView;
 @property (strong, nonatomic) UICollectionViewFlowLayout *flowLayout;
@@ -202,7 +202,7 @@
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
     if (data && [data isKindOfClass:[FHNewHouseDetailMultiFloorpanCellModel class]]) {
-        CGFloat height = 120 + 60;
+        CGFloat height = 121 + 60;
         FHNewHouseDetailMultiFloorpanCellModel *model = (FHNewHouseDetailMultiFloorpanCellModel *)data;
         BOOL hasIM = NO;
         for (NSInteger i = 0; i < model.floorPanList.list.count; i++) {
@@ -214,7 +214,7 @@
             }
         }
         if (hasIM) {
-            height += 44;
+            height += 45;
         }
         return CGSizeMake(width, height);
     }
@@ -270,11 +270,7 @@
             }
         }
 
-        CGFloat itemHeight = 190;
-        if (hasIM) {
-            itemHeight = 190 + 30;
-        }
-        self.flowLayout.itemSize = CGSizeMake(120, itemHeight);
+        self.flowLayout.itemSize = CGSizeMake(120, CGRectGetHeight(self.collectionView.frame));
         
         [self.collectionView reloadData];
     }

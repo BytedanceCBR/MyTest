@@ -78,7 +78,7 @@
                 rowView.keyLabel.text = obj.attr;
                 rowView.valueLabel.text = obj.value;
                 rowView.keyLabel.font = [UIFont themeFontRegular:16];
-                rowView.valueLabel.font = [UIFont themeFontMedium:16];
+                rowView.valueLabel.font = [UIFont themeFontRegular:16];
                 rowView.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
                 lastView = rowView;
                 lastTopOffset = topOffset;
@@ -122,7 +122,7 @@
                 rowView.keyLabel.text = obj.attr;
                 rowView.valueLabel.text = obj.value;
                 rowView.keyLabel.font = [UIFont themeFontRegular:16];
-                rowView.valueLabel.font = [UIFont themeFontMedium:16];
+                rowView.valueLabel.font = [UIFont themeFontRegular:16];
                 rowView.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
                 lastView = rowView;
                 lastTopOffset = topOffset;

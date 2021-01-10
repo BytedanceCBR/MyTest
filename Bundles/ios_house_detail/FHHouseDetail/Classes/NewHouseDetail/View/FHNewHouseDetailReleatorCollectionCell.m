@@ -76,7 +76,7 @@
         [self.contentView addSubview:self.callBtn];
         [self.callBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.height.mas_equalTo(phoneButtonWidth);
-            make.right.mas_equalTo(-16);
+            make.right.mas_equalTo(-12);
             make.centerY.mas_equalTo(self.avatorView.mas_centerY);
         }];
         
