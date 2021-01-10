@@ -37,12 +37,10 @@
         }];
         
         self.arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
-        self.arrowsImg.contentMode = UIViewContentModeCenter;
         self.arrowsImg.hidden = YES;
         [self addSubview:self.arrowsImg];
         [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self).offset(-16);
-            make.height.width.mas_equalTo(20);
+            make.right.mas_equalTo(self).offset(-12);
             make.centerY.mas_equalTo(self.titleLabel);
         }];
         
