@@ -1,11 +1,11 @@
 //
-//  FHHouseDeatilRGCCellHeader.m
+//  FHOldHouseDeatilRGCCellHeader.m
 //  FHHouseDetail
 //
-//  Created by liuyu on 2020/6/15.
+//  Created by wangxinyu on 2021/1/10.
 //
 
-#import "FHHouseDeatilRGCCellHeader.h"
+#import "FHOldHouseDeatilRGCCellHeader.h"
 #import "UIColor+Theme.h"
 #import "UIFont+House.h"
 #import "UIImageView+BDWebImage.h"
@@ -14,7 +14,7 @@
 #import <FHHouseBase/FHCommonDefines.h>
 #import "FHUGCAvatarView.h"
 
-@interface FHHouseDeatilRGCCellHeader ()
+@interface FHOldHouseDeatilRGCCellHeader ()
 @property (strong, nonatomic) FHUGCAvatarView *avatarView;
 @property (weak, nonatomic) UILabel *nameLab;
 @property (weak, nonatomic) UIImageView *companyBac;
@@ -24,7 +24,7 @@
 @property (weak, nonatomic) UIButton *phoneBtn;
 @property(nonatomic , strong) UIButton *licenceIcon;
 @end
-@implementation FHHouseDeatilRGCCellHeader
+@implementation FHOldHouseDeatilRGCCellHeader
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -36,7 +36,7 @@
 
 - (void)createUI {
     [self.avatarView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self).offset(15);
+        make.left.equalTo(self).offset(12);
         make.centerY.equalTo(self);
         make.size.mas_equalTo(CGSizeMake(34, 34));
     }];
@@ -61,7 +61,7 @@
         make.height.width.mas_offset(20);
     }];
     [self.phoneBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(self.mas_right).offset(-16);
+        make.right.equalTo(self.mas_right).offset(-14);
         make.centerY.equalTo(self.avatarView);
         make.size.mas_equalTo(CGSizeMake(36, 36));
     }];
