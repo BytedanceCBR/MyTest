@@ -14,6 +14,10 @@
 @implementation TTStartupUITask (LarkSSO)
 
 + (void)checkLarkSSOIfNeeded {
+    if ([BDFBLarkSSOManager sharedManager].checkStatus == BDFBLarkSSOSuccess) {
+        [self setRootViewControllerWithStoryboard];
+        return;
+    }
     __block void(^ssoBlock)() = ^{
         [self setRootViewControllerWithStoryboard];
     };
