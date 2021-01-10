@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "TTTabBarController.h"
-
+#import <TTUIWidget/UITabBarController+VisibleStatus.h>
 //typedef NS_ENUM(NSUInteger, TTTabbarIndex) {
 //    TTTabbarIndexNews = 0,
 //    TTTabbarIndexVideo = 1,
