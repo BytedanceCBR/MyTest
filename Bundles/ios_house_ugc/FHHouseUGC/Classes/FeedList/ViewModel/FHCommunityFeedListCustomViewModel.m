@@ -261,7 +261,6 @@
         wself.viewController.isLoadingData = NO;
 
         [wself.tableView finishPullDownWithSuccess:YES];
-
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         wself.feedListModel = feedListModel;
 
@@ -338,7 +337,7 @@
                         wself.refreshFooter.hidden = YES;
                     }
                     [wself.tableView reloadData];
-                    
+                    [wself.viewController hideIfNeeds];
                     if(wself.viewController.requestSuccess){
                         wself.viewController.requestSuccess(wself.viewController.hasValidateData);
                     }
