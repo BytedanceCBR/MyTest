@@ -538,6 +538,15 @@
     return NO;
 }
 
+- (void)startLoading {
+    [super startLoading];
+    self.emptyView.hidden = YES;
+}
+
+- (void)endLoading {
+    [super endLoading];
+}
+ 
 #pragma mark - dealloc
 
 - (void)dealloc
