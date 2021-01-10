@@ -58,13 +58,10 @@
         self.curCategory = @"交通";
         self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
         
-        [self setupShadowView];
-        
         _backView = [[UIView alloc] init];
         [self.contentView addSubview:_backView];
-        
         [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(4.5, 0, 4.5, 0));
+            make.edges.equalTo(self.contentView).insets(UIEdgeInsetsZero);
         }];
         
         _centerAnnotation = [[FHStaticMapAnnotation alloc] init];
@@ -106,6 +103,10 @@
 - (void)setupViews:(BOOL)useNativeMap {
     
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
+    
+    // 设置背景图层
+    [self setupShadowView];
+
     //初始化Header
     [self setUpHeaderView];
     
@@ -344,14 +345,7 @@
     }
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) data;
     adjustImageScopeType(dataModel)
-    if (self.currentData == data) {
-        return;
-    }
-    self.currentData = data;
-    [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.bottom.mas_equalTo(self.shadowImage).offset(-dataModel.bottomMargin);
-    }];
-    
+    self.currentData = data;    
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
     
     NSDictionary *fhSettings = [self fhSettings];
@@ -359,8 +353,6 @@
     
     [self cleanSubViews];
     [self setupViews:dataModel.useNativeMap];
-    
-
     [self refreshWithDataPoiDetail];
 }
 
