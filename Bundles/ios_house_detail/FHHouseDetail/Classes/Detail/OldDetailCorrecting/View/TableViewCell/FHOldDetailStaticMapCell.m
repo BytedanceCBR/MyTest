@@ -55,7 +55,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.cellWidth = MAIN_SCREEN_WIDTH - 30;
+        self.cellWidth = MAIN_SCREEN_WIDTH - 18;
         self.curCategory = @"交通";
         self.centerPoint = CLLocationCoordinate2DMake(39.98269504123264, 116.3078908962674);
         
@@ -146,15 +146,15 @@
     CGFloat headerTop = (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 16 : dataModel.topMargin;
     CGFloat headerHeight = (dataModel.houseType.integerValue == FHHouseTypeSecondHandHouse || dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 38 : 0;
     
-    self.headerView.frame = CGRectMake(15, headerTop, self.cellWidth, headerHeight);
-    self.segmentedControl.frame = CGRectMake(15 + 16, self.headerView.bottom + 6, self.cellWidth - 32, 33);//往上11
+    self.headerView.frame = CGRectMake(9, headerTop, self.cellWidth, headerHeight);
+    self.segmentedControl.frame = CGRectMake(9 + 12, self.headerView.bottom + 6, self.cellWidth - 24, 33);//往上11
     self.headerView.hidden = (headerHeight == 0);
     CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
-    CGRect mapFrame = CGRectMake(15, self.segmentedControl.bottom, self.cellWidth, mapHeight);
+    CGRect mapFrame = CGRectMake(9, self.segmentedControl.bottom, self.cellWidth, mapHeight);
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
     self.mapMaskBtn.frame = mapFrame;
-    self.locationList.frame = CGRectMake(15, self.mapMaskBtn.bottom + 10, self.cellWidth, 40);
+    self.locationList.frame = CGRectMake(9, self.mapMaskBtn.bottom + 10, self.cellWidth, 40);
     self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
     [self.baiduPanoButton mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -205,11 +205,11 @@
 - (void)setUpSegmentedControl {
     _segmentedControl = [FHSegmentControl new];
     _segmentedControl.sectionTitles = @[@"交通", @"教育", @"医疗", @"生活"];
-//    _segmentedControl.selectionIndicatorSize = CGSizeMake(12, 3);
-//    _segmentedControl.selectionIndicatorCornerRadius = 1.5;
-//    _segmentedControl.selectionIndicatorColor = [UIColor themeGray1];
+    _segmentedControl.selectionIndicatorSize = CGSizeMake(12, 3);
+    _segmentedControl.selectionIndicatorCornerRadius = 1.5;
+    _segmentedControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#4a4a4a"];
     NSDictionary *attributeNormal = @{NSFontAttributeName: [UIFont themeFontRegular:16], NSForegroundColorAttributeName: [UIColor themeGray3]};
-    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontMedium:16], NSForegroundColorAttributeName: [UIColor themeRed4]};
+    NSDictionary *attributeSelect = @{NSFontAttributeName: [UIFont themeFontMedium:16], NSForegroundColorAttributeName: [UIColor colorWithHexStr:@"#4a4a4a"]};
     _segmentedControl.backgroundColor = [UIColor whiteColor];
     _segmentedControl.titleTextAttributes = attributeNormal;
     _segmentedControl.selectedTitleTextAttributes = attributeSelect;
@@ -227,7 +227,7 @@
 
 - (void)setUpMapView:(BOOL)useNativeMap {
     CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
-    CGRect mapRect = CGRectMake(15, 0, self.cellWidth, mapHeight);
+    CGRect mapRect = CGRectMake(9, 0, self.cellWidth, mapHeight);
     
     if (useNativeMap) {
         _nativeMapImageView = [[UIImageView alloc] initWithFrame:mapRect];
@@ -263,7 +263,7 @@
 
 - (void)takeSnapWith:(NSString *)category annotations:(NSArray<id <MAAnnotation>> *)annotations {
     CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
-    CGRect frame = CGRectMake(15, 0, self.cellWidth, mapHeight);
+    CGRect frame = CGRectMake(9, 0, self.cellWidth, mapHeight);
     WeakSelf;
     [[FHDetailMapViewSnapService sharedInstance] takeSnapWith:self.centerPoint frame:frame targetRect:frame annotations:annotations delegate:self block:^(FHDetailMapSnapTask *task, UIImage *image, BOOL success) {
         StrongSelf;
@@ -301,7 +301,6 @@
     [_mapMaskBtnLocation setBackgroundColor:[UIColor clearColor]];
     [_mapMaskBtnLocation addTarget:self action:@selector(mapMaskBtnClick:) forControlEvents:UIControlEventTouchUpInside];
 }
-
 
 - (void)mapMaskBtnClick:(UIButton *)sender {
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
@@ -376,7 +375,7 @@
     }
     self.currentData = data;
     if (dataModel.houseType.integerValue == FHHouseTypeNeighborhood) {
-                [self.headerView hiddenStarImage];
+        [self.headerView hiddenStarImage];
     };
     [self.headerView hiddenStarImage];
     [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
@@ -674,7 +673,7 @@
     
     NSInteger poiCount = [self.countCategoryDict[category] integerValue];
     NSInteger height = poiCount > 0 ? (poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 35 : 40;
-    self.locationList.frame = CGRectMake(15, self.mapMaskBtn.bottom + 10, self.cellWidth, height);
+    self.locationList.frame = CGRectMake(9, self.mapMaskBtn.bottom + 10, self.cellWidth, height);
     self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
     CGFloat cellHeight = self.locationList.bottom;
