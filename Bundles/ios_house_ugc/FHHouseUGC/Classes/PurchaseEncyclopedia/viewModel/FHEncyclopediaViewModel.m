@@ -42,6 +42,7 @@
         self.tracerModel = tracerModel;
         self.categoryId = @"f_house_encyclopedia";
         [self requestHeaderConfig];
+        [self.tracerHelper trackEnterCategary];
     }
     return self;
 }
