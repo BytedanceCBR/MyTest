@@ -9,12 +9,13 @@
 #import "FHDetailHouseTitleModel.h"
 NS_ASSUME_NONNULL_BEGIN
 @class FHHouseDetailBaseViewModel;
-@interface FHDetailHeaderTitleView : UIView
+@interface FHOldDetailHeaderTitleView : UIView
 @property (nonatomic, strong) NSArray *tags;// FHHouseTagsModel item类型
 @property (nonatomic, copy) NSString *titleStr;
 @property (strong, nonatomic) FHDetailHouseTitleModel *model;
 // 详情页baseViewModel，可以从中拿到需要的数据(高效但是不美观)
 @property (nonatomic, weak)  FHHouseDetailBaseViewModel *baseViewModel;
++ (NSDictionary *)nameLabelAttributes;
 @end
 
 

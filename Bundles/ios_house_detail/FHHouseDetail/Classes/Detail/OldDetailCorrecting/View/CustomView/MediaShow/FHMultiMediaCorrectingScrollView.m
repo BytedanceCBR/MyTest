@@ -16,7 +16,7 @@
 #import "FHVideoModel.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "FHMultiMediaVRImageCell.h"
-#import "FHDetailHeaderTitleView.h"
+#import "FHOldDetailHeaderTitleView.h"
 #import "UIViewAdditions.h"
 #import "FHHouseDetailHeaderMoreStateView.h"
 #import "FHMultiMediaPanoramaCell.h"
@@ -37,7 +37,7 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
 @property(nonatomic, strong) UIImage *placeHolder;
 @property(nonatomic, strong) NSArray *medias;
 @property(nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;   //图片户型的标签
-@property(nonatomic, strong) FHDetailHeaderTitleView *titleView;            //头图下面的标题栏
+@property(nonatomic, strong) FHOldDetailHeaderTitleView *titleView;            //头图下面的标题栏
 @property(nonatomic, strong) NSMutableArray *itemIndexArray;
 @property(nonatomic, strong) NSMutableArray *itemArray;
 @property(nonatomic, strong) UICollectionViewCell *lastCell;
@@ -95,7 +95,7 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
     [self addSubview:_noDataImageView];
     _noDataImageView.hidden = YES;
         
-    _titleView = [[FHDetailHeaderTitleView alloc]init];
+    _titleView = [[FHOldDetailHeaderTitleView alloc]init];
     [self addSubview:_titleView];
     
     __weak typeof(self) wself = self;
