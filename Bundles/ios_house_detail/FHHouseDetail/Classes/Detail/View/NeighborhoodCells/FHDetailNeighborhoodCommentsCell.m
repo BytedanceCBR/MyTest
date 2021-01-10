@@ -50,12 +50,9 @@
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     _containerView = [[UIView alloc] init];
-//    _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     self.tableView = [[UITableView alloc] init];
     _tableView.backgroundColor = [UIColor clearColor];
@@ -87,9 +84,9 @@
     self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
     self.detailJumpManager.refer = 1;
     
-    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 50)];
+    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 42, 34)];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontSemibold:16] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"小区点评";
     [self.titleView addSubview:_titleLabel];
     
@@ -112,7 +109,6 @@
 - (UIImageView *)shadowImage {
     if (!_shadowImage) {
         UIImageView *shadowImage = [[UIImageView alloc]init];
-//        shadowImage.backgroundColor = [UIColor redColor];
         [self.contentView addSubview:shadowImage];
         _shadowImage = shadowImage;
     }
@@ -122,29 +118,28 @@
 - (void)initConstaints {
     
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(20);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(4.5, 0, 4.5, 0));
     }];
+    
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.containerView);
-        make.left.mas_equalTo(self.containerView).offset(15);
-        make.right.mas_equalTo(self.containerView).offset(-15);
+        make.left.mas_equalTo(self.containerView).offset(9);
+        make.right.mas_equalTo(self.containerView).offset(-9);
         make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.containerView).mas_offset(-10);
+        make.bottom.mas_equalTo(self.containerView);
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(20);
-        make.left.mas_equalTo(self.titleView).offset(16);
-        make.right.mas_equalTo(self.commentBtn.mas_left).offset(-10);
-        make.height.mas_equalTo(25);
+        make.top.mas_equalTo(self.titleView).offset(12);
+        make.left.mas_equalTo(self.titleView).offset(12);
+        make.right.mas_equalTo(self.commentBtn.mas_left).offset(-12);
+        make.height.mas_equalTo(22);
     }];
 
     [_commentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.titleView).offset(-16);
-        make.height.mas_equalTo(25);
+        make.right.mas_equalTo(self.titleView).offset(-12);
+        make.height.equalTo(self.titleLabel);
     }];
 }
 
@@ -155,28 +150,14 @@
     self.currentData = data;
     FHDetailCommentsCellModel *cellModel = (FHDetailCommentsCellModel *)data;
     self.shadowImage.image = cellModel.shadowImage;
-    
-    _titleView.height = cellModel.headerViewHeight;
-    self.tableView.tableHeaderView = _titleView;
-    
-    [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(cellModel.topMargin == 30?20:cellModel.topMargin);
-    }];
-    
+            
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(cellModel.viewHeight);
     }];
+    
     if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll) {
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
-        }];
-    }
-    //业主点评在不单独为卡片的时候重新布局
-    if(cellModel.shadowImageType == FHHouseShdowImageTypeLR || cellModel.shadowImageType == FHHouseShdowImageTypeLBR){
-        [_containerView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.shadowImage).offset(14);
-            make.left.right.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
     _titleLabel.text = cellModel.title;
