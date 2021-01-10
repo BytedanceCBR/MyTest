@@ -196,10 +196,10 @@ static NSString* const kFHSuggestionSubscribeNotificationKey = @"kFHSuggestionSu
 - (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
     FHSugSubscribeDataDataItemsModel *model = [self.subscribeItems btd_objectAtIndex:indexPath.row];
     NSString *subscribeID = model.subscribeId;
-    NSString *text = model.text;
+    NSString *subscribeText = model.text;
     __weak typeof(self) weakSelf = self;
     UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"删除" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
-        [weakSelf determineToDeleteSubscriptionWithsubscribeID:subscribeID text:text];
+        [weakSelf determineToDeleteSubscriptionWithsubscribeID:subscribeID text:subscribeText];
     }];
 
     action.backgroundColor = [UIColor themeOrange1];

@@ -1582,6 +1582,7 @@ TTEditUserProfileViewControllerDelegate
 {
     //点击后switch的状态变为NO
     if([FHEnvContext getPersonalRecommend] == YES){
+        __weak typeof(self) weakSelf = self;
         TTThemedAlertController *alert = [[TTThemedAlertController alloc] initWithTitle:nil message:NSLocalizedString(@"关闭后您将无法接收到幸福里专属推荐的精选房源内容", nil) preferredType:TTThemedAlertControllerTypeAlert];
         [alert addActionWithGrayTitle:NSLocalizedString(@"坚持关闭", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
             NSMutableDictionary *param = [NSMutableDictionary new];
@@ -1590,10 +1591,10 @@ TTEditUserProfileViewControllerDelegate
             param[@"click_position"] = @"close";
             param[@"event_tracking_id"] = @"107644";
             TRACK_EVENT(@"popup_click", param);
-            [self setPersonalizedStatus:0];//0表示关闭个性化推荐
+            [weakSelf setPersonalizedStatus:0];//0表示关闭个性化推荐
         }];
         [alert addActionWithTitle:NSLocalizedString(@"我再想想", nil) actionType:TTThemedAlertActionTypeNormal actionBlock:^{
-            [_personalRecommendSwitch setOn:[FHEnvContext getPersonalRecommend]];
+            [weakSelf.personalRecommendSwitch setOn:[FHEnvContext getPersonalRecommend]];
             NSMutableDictionary *param = [NSMutableDictionary new];
             param[@"popup_name"] = @"personal_recommend_settings";
             param[@"page_type"] = @"setting";
