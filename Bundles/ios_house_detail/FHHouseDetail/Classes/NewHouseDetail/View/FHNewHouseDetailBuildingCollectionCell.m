@@ -74,9 +74,9 @@
         UIView *containView = [[UIView alloc] init];
         [containView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(self.stackView);
-            make.height.mas_equalTo(size.height + 20);
+            make.height.mas_equalTo(size.height + 12);
         }];
-        stackViewHeight += size.height + 20;
+        stackViewHeight += size.height + 12;
 
         [self.stackView addArrangedSubview:containView];
         UIView *image = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];

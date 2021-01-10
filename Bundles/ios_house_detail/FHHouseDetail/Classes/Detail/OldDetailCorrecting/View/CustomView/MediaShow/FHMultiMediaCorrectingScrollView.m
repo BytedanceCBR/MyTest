@@ -561,8 +561,8 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
             self.headerMoreStateView = [[FHHouseDetailHeaderMoreStateView alloc] init];
             self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateBegin;
             [self.colletionView addSubview:self.headerMoreStateView];
-            self.headerMoreStateView.frame = CGRectMake(CGRectGetMaxX(self.colletionView.frame) * self.medias.count, 0, 52, CGRectGetHeight(self.colletionView.frame));
         }
+        self.headerMoreStateView.frame = CGRectMake(CGRectGetMaxX(self.colletionView.frame) * self.medias.count, 0, 52, CGRectGetHeight(self.colletionView.frame));
         [self.colletionView reloadData];
     } else if (_medias.count > 0) {
         [self.colletionView reloadData];

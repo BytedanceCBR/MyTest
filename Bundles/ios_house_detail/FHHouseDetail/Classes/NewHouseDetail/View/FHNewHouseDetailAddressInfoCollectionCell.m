@@ -42,12 +42,11 @@
             make.width.mas_equalTo(32);
         }];
         
-        UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeGray3]); //@"detail_entrance_arrow"
-        self.rightArrow = [[UIImageView alloc] initWithImage:img];
+//        UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeGray3]); //@"detail_entrance_arrow"
+        self.rightArrow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"]];
         [self.containerView addSubview:self.rightArrow];
         [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(self.containerView).mas_offset(-12);
-            make.width.height.mas_equalTo(18);
             make.centerY.equalTo(self.containerView);
         }];
         

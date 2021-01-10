@@ -167,7 +167,7 @@
 
 - (void)initConstraints {
     self.avatarView.top = 0;
-    self.avatarView.left = 20;
+    self.avatarView.left = 12;
     self.avatarView.width = 40;
     self.avatarView.height = 40;
     self.userName.top = 0;

@@ -50,7 +50,7 @@
         make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-12);
     }];
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(8);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(6);
         make.height.mas_equalTo(16);
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-12);
@@ -155,10 +155,14 @@
                     vHeight += 12;
                 } else {
                     vHeight = titleHeight;
-                    vHeight += 24;
+                    vHeight += 22;
                     vHeight += 12;
                 }
                 height += vHeight;
+                if (item.discountSubContent.length && idx == model.discountInfo.count - 1) {
+                    //最后一个的情况
+                    height += 12;
+                }
             }
             return CGSizeMake(width, height);
         }
@@ -182,11 +186,7 @@
     _containerView = [[UIView alloc] init];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(0);
-        make.right.mas_equalTo(0);
-        make.top.mas_equalTo(0);
-        make.bottom.mas_equalTo(-20);
-        make.height.mas_equalTo(0);
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
 }
 
@@ -240,7 +240,7 @@
                 vHeight = titleHeight;
                 vHeight += 24;
                 vHeight += 12;
-                totalTitleHeight += 24;
+                totalTitleHeight += 22;
                 itemView.subtitleLabel.hidden = NO;
             }
             totalHeight += vHeight;
@@ -272,9 +272,6 @@
             }];
             lastView = itemView;
         }
-        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(totalHeight);
-        }];
     }
 }
 
