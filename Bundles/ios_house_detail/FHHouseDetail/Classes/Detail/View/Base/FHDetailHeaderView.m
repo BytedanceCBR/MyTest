@@ -15,6 +15,7 @@
 #import "FHHouseDetailViewController.h"
 #import "FHHouseOldDetailViewModel.h"
 #import "UIView+BTDAdditions.h"
+#import "FHDetailMoreView.h"
 
 @interface FHDetailHeaderView ()
 @property (nonatomic, strong)   UIImageView       *arrowsImg;
@@ -50,7 +51,7 @@
     _loadMore.hidden = YES;
     [self addSubview:_loadMore];
     
-    _arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
+    _arrowsImg = [[UIImageView alloc] initWithImage:[FHDetailMoreView moreArrowImage]];
     _arrowsImg.hidden = YES;
     [self addSubview:_arrowsImg];
     
