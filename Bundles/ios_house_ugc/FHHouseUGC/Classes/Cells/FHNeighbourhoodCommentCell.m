@@ -55,6 +55,7 @@
 
     // 用户信息区
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
+    [self.userInfoView updateFrameFromNeighborhoodDetail];
     [self.contentContainer addSubview:self.userInfoView];
     
     // 文本区
@@ -104,9 +105,9 @@
         CGFloat rightMargin = 0;
         CGFloat topMargin = 0;
         
-        CGFloat leftPadding = 16;
-        CGFloat rightPadding = 16;
-        CGFloat topPadding = 15;
+        CGFloat leftPadding = 12;
+        CGFloat rightPadding = 12;
+        CGFloat topPadding = 12;
         
         CGFloat elementMargin = 10; //元素之间的间距
         
@@ -151,13 +152,13 @@
     CGFloat rightMargin = 0;
     CGFloat topMargin = 0;
     
-    CGFloat leftPadding = 16;
-    CGFloat rightPadding = 16;
-    CGFloat topPadding = 15;//往上10个像素剩余10+6
+    CGFloat leftPadding = 12;
+    CGFloat rightPadding = 12;
+    CGFloat topPadding = 12;//往上10个像素剩余10+6
     
     CGFloat elementMargin = 10; //元素之间的间距
     
-    CGFloat cellWidth = [UIScreen mainScreen].bounds.size.width - 30;
+    CGFloat cellWidth = [UIScreen mainScreen].bounds.size.width - 18;
     if(self.cellModel.isInNeighbourhoodCommentsList) {
         topMargin = 15;
         leftMargin = 15;

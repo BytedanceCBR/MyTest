@@ -674,8 +674,8 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         }
         paramsDict[@"page_type"] = [self pageTypeString];
         commentsModel.tracerDict = paramsDict;
-        commentsModel.topMargin = 30;
-        commentsModel.bottomMargin = 35.0f;
+        commentsModel.topMargin = 0;
+        commentsModel.bottomMargin = .0f;
         commentsModel.comments = model.data.comments;
         commentsModel.houseModelType = FHPlotHouseModelTypeNeighborhoodComment;
         [self.items addObject:commentsModel];
