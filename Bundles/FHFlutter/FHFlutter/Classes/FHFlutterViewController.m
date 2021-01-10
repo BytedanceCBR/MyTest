@@ -186,9 +186,18 @@
     }
     NSString *reportStr = resultPrams[@"report_params"];
 
+    //处理客户端透传的origin_from字段
     if ([reportStr isKindOfClass:[NSString class]]) {
         reportStr = [reportStr btd_stringByURLDecode];
         resultPrams[@"report_params"] = reportStr;
+        NSMutableDictionary *reportDict = [NSMutableDictionary dictionaryWithDictionary:[reportStr btd_jsonDictionary]];
+        if(![reportDict.allKeys containsObject:@"origin_from"]){
+            NSString *originStr = paramObj.allParams[@"origin_from"];
+            if([originStr isKindOfClass:[NSString class]]){
+                reportDict[@"origin_from"] = originStr;
+                resultPrams[@"report_params"] = [reportDict btd_jsonStringEncoded];
+            }
+        }
     }
     
     if (![resultPrams.allKeys containsObject:kFHFlutterchemaViewTokenKey]) {
