@@ -60,9 +60,8 @@
         
         _backView = [[UIView alloc] init];
         [self.contentView addSubview:_backView];
-        
         [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(4.5, 0, 4.5, 0));
+            make.edges.equalTo(self.contentView).insets(UIEdgeInsetsZero);
         }];
         
         _centerAnnotation = [[FHStaticMapAnnotation alloc] init];
@@ -103,9 +102,11 @@
 
 - (void)setupViews:(BOOL)useNativeMap {
     
-    [self setupShadowView];
-    
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
+    
+    // 设置背景图层
+    [self setupShadowView];
+
     //初始化Header
     [self setUpHeaderView];
     
@@ -344,9 +345,6 @@
     }
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) data;
     adjustImageScopeType(dataModel)
-    if (self.currentData == data) {
-        return;
-    }
     self.currentData = data;    
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
     
