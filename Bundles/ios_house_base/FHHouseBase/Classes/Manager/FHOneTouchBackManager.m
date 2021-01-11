@@ -47,7 +47,7 @@
     
     self.backUrl = backUrl;
     NSString *title = [NSString stringWithFormat:@"%@ ",[self.params.copy btd_stringValueForKey:@"btn_name" default:@""]];
-    self.button.frame = CGRectMake(0, [self activeVC].view.bounds.size.height/3, (title.length) * 12 + 8, 21);
+    self.button.frame = CGRectMake(0, [self activeVC].view.bounds.size.height*4/5, (title.length) * 12 + 8, 21);
     [self.button setImage:[UIImage themedImageNamed:@"arrow_down_black_line"] forState:UIControlStateNormal];
     self.button.backgroundColor = [UIColor colorWithRed:0 / 255.0 green:0 / 255.0 blue:0 / 255.0 alpha:0.3];
     [self.button setTitle:title forState:UIControlStateNormal];
