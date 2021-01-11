@@ -134,7 +134,9 @@
     CGFloat headerTop = 4.5;
     CGFloat headerHeight = (dataModel.houseType.integerValue == FHHouseTypeSecondHandHouse || dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 40 : 0;
     self.headerView.frame = CGRectMake(9, headerTop, self.cellWidth, headerHeight);
-    self.segmentedControl.frame = CGRectMake(9 + 12, self.headerView.bottom, self.cellWidth - 24, 33);//往上11
+    CGFloat segmentedWidth = 32 * 4 + 38 * 3;
+    CGFloat segmentedLeftMargin = ([UIScreen mainScreen].bounds.size.width - segmentedWidth) / 2;
+    self.segmentedControl.frame = CGRectMake(segmentedLeftMargin, self.headerView.bottom, segmentedWidth, 33);//往上11
     self.headerView.hidden = (headerHeight == 0);
     CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
     CGRect mapFrame = CGRectMake(9, self.segmentedControl.bottom, self.cellWidth, mapHeight);
@@ -372,7 +374,7 @@
 - (void)refreshWithDataPoiDetail {
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) self.currentData;
     
-    self.baiduPanoButton.hidden = !dataModel.baiduPanoramaUrl.length;
+    //self.baiduPanoButton.hidden = !dataModel.baiduPanoramaUrl.length;
     if (!dataModel.useNativeMap) {
         if (!dataModel.staticImage || isEmptyString(dataModel.staticImage.url) || isEmptyString(dataModel.staticImage.latRatio) || isEmptyString(dataModel.staticImage.lngRatio)) {
             NSString *message = !dataModel.staticImage ? @"static_image_null" : @"bad_static_image";
@@ -639,7 +641,7 @@
     
     NSInteger poiCount = [self.countCategoryDict[category] integerValue];
     NSInteger height = poiCount > 0 ? (poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 29 : 40;
-    self.locationList.frame = CGRectMake(9, self.mapMaskBtn.bottom + 10, self.cellWidth, height);
+    self.locationList.frame = CGRectMake(9, self.mapMaskBtn.bottom + 5.5, self.cellWidth, height);
     self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
     CGFloat cellHeight = self.locationList.bottom;

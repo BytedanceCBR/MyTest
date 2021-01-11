@@ -154,11 +154,16 @@
         make.height.mas_equalTo(cellModel.viewHeight);
     }];
     
-    if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll) {
+    if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll || cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeAll) {
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.contentView).offset(4.5);
         }];
+    } else {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(0);
+        }];
     }
+    
     _titleLabel.text = cellModel.title;
 
     self.dataList = [[NSMutableArray alloc] init];

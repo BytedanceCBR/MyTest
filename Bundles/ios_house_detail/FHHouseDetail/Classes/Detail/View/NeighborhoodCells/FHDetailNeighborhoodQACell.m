@@ -35,6 +35,7 @@
 @property(nonatomic , strong) FHUGCCellManager *cellManager;
 @property(nonatomic , strong) NSMutableDictionary *clientShowDict;
 @property(nonatomic , strong) FHUGCFeedDetailJumpManager *detailJumpManager;
+@property (nonatomic, strong) UIView *topLine;
 
 @end
 
@@ -104,6 +105,11 @@
     [self.titleView addSubview:self.moreView];
     
     _tableView.tableHeaderView = self.titleView;
+    
+    self.topLine = [[UIView alloc] init];
+    self.topLine.backgroundColor = [UIColor themeGray6];
+    [self.contentView addSubview:self.topLine];
+    self.topLine.hidden = YES;
 }
 
 - (UIImageView *)shadowImage {
@@ -141,6 +147,12 @@
         make.right.mas_equalTo(self.titleView).offset(-12);
         make.height.equalTo(self.titleLabel);
     }];
+    [self.topLine mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(0);
+        make.height.mas_equalTo(0.5);
+        make.left.mas_equalTo(21);
+        make.right.mas_equalTo(-21);
+    }];
 }
 
 - (void)refreshWithData:(id)data {
@@ -153,12 +165,19 @@
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(cellModel.viewHeight);
     }];
+    
     if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll) {
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.contentView);
             make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
-    
+    if (cellModel.shdowImageScopeType != FHHouseShdowImageScopeTypeTopAll && cellModel.shdowImageScopeType != FHHouseShdowImageScopeTypeAll) {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(0);
+        }];
+        self.topLine.hidden = NO;
+    }
     _titleLabel.text = cellModel.title;
     
     self.dataList = [[NSMutableArray alloc] init];
