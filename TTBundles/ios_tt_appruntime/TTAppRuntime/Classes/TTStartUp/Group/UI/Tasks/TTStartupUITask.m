@@ -111,10 +111,10 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
 
 + (void)setPhoneLaunchViewController
 {
-    [self setRootViewControllerWithStoryboard];
     if ([self respondsToSelector:@selector(checkLarkSSOIfNeeded)]) {
         [self performSelector:@selector(checkLarkSSOIfNeeded)];
     } else {
+        [self setRootViewControllerWithStoryboard];
         [[FHEnvContext sharedInstance] onStartApp];
     }
 }
@@ -127,7 +127,6 @@ DEC_TASK_N(TTStartupUITask,FHTaskTypeUI,TASK_PRIORITY_HIGH);
         SharedAppDelegate.window.rootViewController = [[UIStoryboard storyboardWithName:@"RootTab" bundle:nil] instantiateInitialViewController];
     }
     [SharedAppDelegate.window makeKeyAndVisible];
-    
     
     [[FHPopupViewManager shared].delegate bindTabControllerTabBarHidden];
 }

@@ -16,6 +16,7 @@
 
 + (void)checkLarkSSOIfNeeded {
     __block void(^ssoBlock)() = ^{
+        [self setRootViewControllerWithStoryboard];
         [[FHEnvContext sharedInstance] onStartApp];
     };
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -25,8 +26,8 @@
     
 
 // 采用条件宏，只在内测版，非 DEBUG，非模拟器条件下，要求通过 SSO 认证
-#if INHOUSE && !TARGET_IPHONE_SIMULATOR
-//#if INHOUSE && !DEBUG && !TARGET_IPHONE_SIMULATOR
+//#if INHOUSE && !TARGET_IPHONE_SIMULATOR
+#if INHOUSE && !DEBUG && !TARGET_IPHONE_SIMULATOR
     // 内测版要求通过 SSO 认证 @shengxuanwei
     BOOL ssoEnabled = [[[NSBundle mainBundle] infoDictionary] btd_boolValueForKey:@"SSO_ENABLED"];
     if (ssoEnabled) { // Info.plist 开关，用于自动化测试绕过 SSO 认证
@@ -42,10 +43,12 @@
         injectInfo.channel = @"local_test"; // 必填，渠道
         
         //测试调试使用 打包应注释
-        [[BDFBLarkSSOManager sharedManager] enableSSO];
-        ssoManager.overrideBundleId = @"com.bytedance.fp1";
+//        [[BDFBLarkSSOManager sharedManager] enableSSO];
+//        ssoManager.overrideBundleId = @"com.bytedance.fp1";
         
         [[BDFBLarkSSOManager sharedManager] startVerification];
+        
+        [self setRootViewControllerWithStoryboard];
     } else {
         ssoBlock();
     }
