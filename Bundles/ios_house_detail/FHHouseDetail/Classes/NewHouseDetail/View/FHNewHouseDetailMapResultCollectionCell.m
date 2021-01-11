@@ -21,7 +21,7 @@
     self.titleLabel.textAlignment = NSTextAlignmentLeft;
     self.titleLabel.font = [UIFont themeFontRegular:14];
     self.titleLabel.textColor = [UIColor themeGray1];
-    self.subTitleLabel.font = [UIFont themeFontRegular:12];
+    self.subTitleLabel.font = [UIFont themeFontRegular:14];
     self.subTitleLabel.textColor = [UIColor themeGray3];
 }
 
@@ -39,7 +39,7 @@
         }];
         
         self.subTitleLabel = [[UILabel alloc] init];
-        self.subTitleLabel.font = [UIFont themeFontRegular:12];
+        self.subTitleLabel.font = [UIFont themeFontRegular:14];
         self.subTitleLabel.textColor = [UIColor themeGray3];
         self.subTitleLabel.textAlignment = NSTextAlignmentRight;
         self.subTitleLabel.hidden = YES;

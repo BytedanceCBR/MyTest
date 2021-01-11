@@ -141,6 +141,7 @@ extern NSString *const kFHToastCountKey;
                     __block NSMutableDictionary *popupDict = associateReport.reportParams.mutableCopy;
                     popupDict[@"popup_name"] = @"inform_sucess";
                     popupDict[UT_ELEMENT_TYPE] = @"inform_sucess";
+                    popupDict[@"assocaite_info"] = associateReport.associateInfo ?: @"be_null";
                     [FHUserTracker writeEvent:@"popup_show" params:popupDict.copy];
                     __weak FHDetailNoticeAlertView *weakAlertView = alertView;
                     [alertView setRevokeAssociateDistributionBlock:^{
@@ -216,6 +217,7 @@ extern NSString *const kFHToastCountKey;
         params[@"picture_type"] = reportParams[@"picture_type"];
     }
     params[@"element_type"] = @"inform_popup";
+    params[@"assocaite_info"] = associateReport.associateInfo ?: @"be_null";
 
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
@@ -245,6 +247,7 @@ extern NSString *const kFHToastCountKey;
     if (reportParams[@"event_tracking_id"]) {
         params[@"event_tracking_id"] = reportParams[@"event_tracking_id"];
     }
+    params[@"assocaite_info"] = associateReport.associateInfo ?: @"be_null";
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
 

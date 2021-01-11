@@ -105,7 +105,12 @@
     
     if (!_maskLayer) {
         CGRect rect = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 18, 40);
-        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(9, 9)];
+        
+        CGFloat cornerRadii = 9;
+        if (self.isUsedInNewHouse) {
+            cornerRadii = 6;
+        }
+        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:rect byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(cornerRadii, cornerRadii)];
         CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
 //        maskLayer.frame = self.containerView.bounds;
         maskLayer.frame = rect;
