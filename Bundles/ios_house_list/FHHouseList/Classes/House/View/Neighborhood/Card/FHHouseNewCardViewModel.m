@@ -22,6 +22,7 @@
 #import "FHHouseNeighborAgencyViewModel.h"
 #import "FHHouseReserveAdviserViewModel.h"
 #import "FHHouseCardStatusManager.h"
+#import "FHEnvContext.h"
 
 @interface FHHouseNewCardViewModel()
 
@@ -92,7 +93,8 @@
 - (CGFloat)opacity {
     CGFloat opacity = 1;
     if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:self.houseId withHouseType:FHHouseTypeNewHouse]) {
-        opacity = FHHouseCardReadOpacity;
+        opacity = [FHEnvContext FHHouseCardReadOpacity];
+        //FHHouseCardReadOpacity;
     }
     return opacity;
 }
