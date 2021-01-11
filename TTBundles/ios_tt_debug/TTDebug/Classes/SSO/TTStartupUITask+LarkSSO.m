@@ -10,16 +10,13 @@
 #import <BDFeedBack/BDFBInjectedInfo.h>          // 配置信息
 #import <BDFeedBack/BDFBLarkSSOManager.h>        // Lark授权
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "FHEnvContext.h"
 
 @implementation TTStartupUITask (LarkSSO)
 
 + (void)checkLarkSSOIfNeeded {
-    if ([BDFBLarkSSOManager sharedManager].checkStatus == BDFBLarkSSOSuccess) {
-        [self setRootViewControllerWithStoryboard];
-        return;
-    }
     __block void(^ssoBlock)() = ^{
-        [self setRootViewControllerWithStoryboard];
+        [[FHEnvContext sharedInstance] onStartApp];
     };
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveStatusUpdate)
@@ -45,8 +42,8 @@
         injectInfo.channel = @"local_test"; // 必填，渠道
         
         //测试调试使用 打包应注释
-//        [[BDFBLarkSSOManager sharedManager] enableSSO];
-//        ssoManager.overrideBundleId = @"com.bytedance.fp1";
+        [[BDFBLarkSSOManager sharedManager] enableSSO];
+        ssoManager.overrideBundleId = @"com.bytedance.fp1";
         
         [[BDFBLarkSSOManager sharedManager] startVerification];
     } else {
@@ -71,7 +68,7 @@
         // 成功了之后移除通知，同时隐藏本弹窗
         [[NSNotificationCenter defaultCenter] removeObserver:self];
         btd_dispatch_async_on_main_queue(^{
-            [self setRootViewControllerWithStoryboard];
+            [[FHEnvContext sharedInstance] onStartApp];
         });
     }
 }
