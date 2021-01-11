@@ -15,7 +15,6 @@
 #import "TTRoute.h"
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
-#import "FHDetailBottomOpenAllView.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 #import <FHCommonUI/UIView+House.h>

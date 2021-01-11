@@ -116,6 +116,9 @@
     if (model.relatedHouseData.hasMore) {
         // 添加查看更多
         self.openAllView = [[FHDetailBottomOpenAllView alloc] init];
+        [self.openAllView.settingArrowImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.width.mas_equalTo(14);
+        }];
         self.openAllView.layer.cornerRadius = 4;
         self.openAllView.title.font = [UIFont themeFontRegular:16];
         self.openAllView.title.textColor = [UIColor themeGray1];
@@ -123,7 +126,7 @@
         self.openAllView.title.backgroundColor = [UIColor colorWithHexStr:@"#fafafa"];
         self.openAllView.topBorderView.hidden = YES;
         self.openAllView.backgroundColor = [UIColor colorWithHexStr:@"#fafafa"];
-        self.openAllView.settingArrowImageView.image = [UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"];
+        self.openAllView.settingArrowImageView.image = [UIImage imageNamed:@"setting-arrow-1"];
         [self.containerView addSubview:self.openAllView];
         // 查看更多按钮点击
         __weak typeof(self) wSelf = self;

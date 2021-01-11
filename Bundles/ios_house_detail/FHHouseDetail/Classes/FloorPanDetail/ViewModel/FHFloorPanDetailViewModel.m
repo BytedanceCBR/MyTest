@@ -19,7 +19,6 @@
 #import "FHFloorPanDetailMutiFloorPanCell.h"
 #import "FHHouseDetailSubPageViewController.h"
 #import "FHDetailBottomBar.h"
-#import "FHDetailPropertyListCorrectingCell.h"
 #import "FHFloorPanDetailModuleHelper.h"
 #import "FHOldDetailDisclaimerCell.h"
 #import "FHDetailListSectionTitleCell.h"
