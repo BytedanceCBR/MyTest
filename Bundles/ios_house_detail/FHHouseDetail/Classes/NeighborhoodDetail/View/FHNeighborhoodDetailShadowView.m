@@ -15,7 +15,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         
-        UIImage *cornerImage = [UIImage fh_outerRoundRectMaskImageWithCornerRadius:10 color:[UIColor whiteColor] size:CGSizeMake(50, 50)];
+        UIImage *cornerImage = [UIImage fh_outerRoundRectMaskImageWithCornerRadius:6 color:[UIColor whiteColor] size:CGSizeMake(50, 50)];
         UIImageView *shadowImageView = [[UIImageView alloc] init];
         shadowImageView.image = [cornerImage resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)];
         [self addSubview:shadowImageView];

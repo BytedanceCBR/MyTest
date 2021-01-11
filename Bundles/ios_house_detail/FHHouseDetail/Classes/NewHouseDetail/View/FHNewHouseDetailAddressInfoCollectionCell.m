@@ -48,6 +48,7 @@
         [self.rightArrow mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.mas_equalTo(self.containerView).mas_offset(-12);
             make.centerY.equalTo(self.containerView);
+            make.size.mas_equalTo(CGSizeMake(12, 12));
         }];
         
         self.titleLabel = [[UILabel alloc] init];
