@@ -11,6 +11,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHDetailNearbyMapItemCell : FHDetailBaseCell
 
+@property (nonatomic , strong) UILabel *labelLeft;
+@property (nonatomic , strong) UILabel *labelRight;
+
 - (void)updateText:(NSString *)name andDistance:(NSString *)distance;
 
 @end

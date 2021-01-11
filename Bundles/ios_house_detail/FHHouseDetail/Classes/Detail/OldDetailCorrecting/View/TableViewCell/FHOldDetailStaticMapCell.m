@@ -36,6 +36,8 @@
 @property(nonatomic, strong) UIView *backView;
 @property(nonatomic, weak) UIImageView *shadowImage;
 
+@property (nonatomic, strong) UIView *bottomLine;
+
 @property (nonatomic, strong) UIButton *baiduPanoButton;
 
 //data
@@ -61,7 +63,7 @@
         _backView = [[UIView alloc] init];
         [self.contentView addSubview:_backView];
         [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.equalTo(self.contentView).insets(UIEdgeInsetsZero);
+            make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(0, 0, 7.5, 0));
         }];
         
         _centerAnnotation = [[FHStaticMapAnnotation alloc] init];
@@ -81,6 +83,16 @@
         //初始化poi搜索器
         self.searchApi = [[AMapSearchAPI alloc] init];
         self.searchApi.delegate = self;
+        
+        self.bottomLine = [[UIView alloc] init];
+        self.bottomLine.backgroundColor = [UIColor themeGray6];
+        [self.contentView addSubview:self.bottomLine];
+        [self.bottomLine mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(0);
+            make.height.mas_equalTo(0.5);
+            make.left.mas_equalTo(21);
+            make.right.mas_equalTo(-21);
+        }];
     }
     return self;
 }
@@ -233,6 +245,7 @@
             make.right.mas_equalTo(-23);
             make.top.mas_equalTo(0);
         }];
+        self.baiduPanoButton.hidden = YES;
     }
 }
 
@@ -625,7 +638,7 @@
     //底部列表
     
     NSInteger poiCount = [self.countCategoryDict[category] integerValue];
-    NSInteger height = poiCount > 0 ? (poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 35 : 40;
+    NSInteger height = poiCount > 0 ? (poiCount > 3 ? 3 : (poiCount == 0 ? 2 : poiCount)) * 29 : 40;
     self.locationList.frame = CGRectMake(9, self.mapMaskBtn.bottom + 10, self.cellWidth, height);
     self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
@@ -656,7 +669,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 35;
+    return 29;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -664,7 +677,14 @@
     if (!cell) {
         cell = [[FHDetailNearbyMapItemCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"item"];
     }
-    
+    cell.labelLeft.font = [UIFont themeFontRegular:14];
+    cell.labelRight.font = [UIFont themeFontRegular:14];
+    [cell.labelLeft mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(12);
+    }];
+    [cell.labelRight mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.right.mas_equalTo(-12);
+    }];
     NSArray<FHStaticMapAnnotation *> *annotations = self.poiAnnotations[self.curCategory];
     FHStaticMapAnnotation *annotation = nil;
     if (indexPath.row < annotations.count) {
