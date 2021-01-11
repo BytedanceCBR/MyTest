@@ -125,7 +125,7 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
         make.left.mas_equalTo(self.containerView).offset(21);
         make.right.mas_equalTo(self.containerView).offset(-9);
         make.bottom.mas_equalTo(self.containerView).offset(0);
-        make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight() + 80);
+        make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight() + 72);
     }];
     [collectionView reloadData];
 }
@@ -176,9 +176,9 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     id data = self.dataList[indexPath.row];
     if ([data isKindOfClass:[FHDetailSameNeighborhoodHouseSaleMoreItemModel class]]) {
-        return CGSizeMake(94, getSameNeighborhoodHouseImageHeight() + 60);
+        return CGSizeMake(94, getSameNeighborhoodHouseImageHeight() + 52);
     }
-    return CGSizeMake(getSameNeighborhoodHouseImageWidth(), getSameNeighborhoodHouseImageHeight() + 60);
+    return CGSizeMake(getSameNeighborhoodHouseImageWidth(), getSameNeighborhoodHouseImageHeight() + 52);
 }
 
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -349,7 +349,7 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
 
 -(void)initView {
     self.houseImageView = [[UIImageView alloc] init];
-    self.houseImageView.layer.cornerRadius = 10;
+    self.houseImageView.layer.cornerRadius = 4;
     self.houseImageView.layer.masksToBounds = YES;
     self.houseImageView.layer.borderWidth = 1;
     self.houseImageView.layer.borderColor = [UIColor themeGray6].CGColor;
@@ -388,19 +388,19 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
         make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight());
     }];
     [self.descriptionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.houseImageView.mas_bottom).mas_offset(12);
+        make.top.equalTo(self.houseImageView.mas_bottom).mas_offset(6);
         make.left.right.equalTo(self.contentView);
         make.height.mas_equalTo(22);
     }];
     [self.totalPriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.descriptionLabel.mas_bottom).offset(6);
         make.left.equalTo(self.contentView);
-        make.height.mas_equalTo(21);
+        make.height.mas_equalTo(19);
     }];
     [self.pricePerUnitLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.descriptionLabel.mas_bottom).offset(10);
+        make.centerY.mas_equalTo(self.totalPriceLabel);
         make.left.equalTo(self.totalPriceLabel.mas_right).offset(4);
-        make.height.mas_equalTo(14);
+        make.height.mas_equalTo(17);
     }];
     [self.tagImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.top.equalTo(self.contentView);
