@@ -529,6 +529,7 @@ typedef NS_ENUM(NSUInteger, FHHouseDetailReportItemType) {
         [_tableView addGestureRecognizer:tap];
         
         _tableView.contentInset = UIEdgeInsetsMake(0, 0, 10, 0);
+        _tableView.estimatedRowHeight = 200;
     }
     return _tableView;
 }

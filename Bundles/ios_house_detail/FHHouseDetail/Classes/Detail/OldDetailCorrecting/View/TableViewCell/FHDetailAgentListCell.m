@@ -129,8 +129,8 @@
     // > 3 添加折叠展开
     if (model.recommendedRealtors.count > 3) {
         _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部" upText:@"收起" isFold:YES];
-        _foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
-        _foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];
+        _foldButton.openImage = [UIImage imageNamed:@"setting_arrow_bottom"];
+        _foldButton.foldImage = [UIImage imageNamed:@"setting_arrow_top"];
         _foldButton.keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
         _foldButton.keyLabel.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:_foldButton];

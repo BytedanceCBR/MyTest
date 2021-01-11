@@ -8,8 +8,6 @@
 #import "FHDetailNearbyMapItemCell.h"
 
 @interface FHDetailNearbyMapItemCell()
-@property (nonatomic , strong) UILabel *labelLeft;
-@property (nonatomic , strong) UILabel *labelRight;
 @end
 
 @implementation FHDetailNearbyMapItemCell

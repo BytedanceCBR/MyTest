@@ -490,7 +490,7 @@
     [tags enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         FHHouseTagsModel *tagModel = obj;
         CGSize itemSize = [tagModel.content sizeWithAttributes:@{
-                                                                 NSFontAttributeName: [UIFont themeFontRegular:12]
+                                                                 NSFontAttributeName: [UIFont themeFontRegular:10]
                                                                  }];
         UILabel *label = nil;
         UIColor *tagBacColor = idx == 0 ?[UIColor colorWithHexString:@"#ffeee5"]:[UIColor colorWithHexString:@"#f5f5f5"];

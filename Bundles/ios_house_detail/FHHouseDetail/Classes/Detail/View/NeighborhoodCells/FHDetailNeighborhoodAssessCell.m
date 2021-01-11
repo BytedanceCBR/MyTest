@@ -65,7 +65,7 @@
 
 - (void)initConstaints {
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(4.5, 9, 4.5, 9));
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(0, 9, 4.5, 9));
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -98,7 +98,14 @@
     self.currentData = data;
     FHDetailAccessCellModel *cellModel = (FHDetailAccessCellModel *)data;
     self.shadowImage.image = cellModel.shadowImage;
-    
+    if (cellModel.shdowImageScopeType != FHHouseShdowImageScopeTypeAll && cellModel.shdowImageScopeType != FHHouseShdowImageScopeTypeBottomAll) {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(0);
+        }];
+        [self.cardSliderView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(0);
+        }];
+    }
     FHDetailNeighborhoodDataStrategyModel *strategy = cellModel.strategy;
     _titleLabel.text = strategy.title.length > 0 ? strategy.title : @"小区攻略";
     
