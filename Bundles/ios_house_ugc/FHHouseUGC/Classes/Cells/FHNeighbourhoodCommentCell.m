@@ -13,6 +13,7 @@
 #import "TTRoute.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "UIViewAdditions.h"
+#import "FHCommonDefines.h"
 
 #define maxLines 3
 #define userInfoViewHeight 40
@@ -129,11 +130,10 @@
         height += (isContentEmpty ? 0 : cellModel.contentHeight);
 //        height += vGap;
         if(cellModel.imageList.count > 0) {
-            if(cellModel.isInNeighbourhoodCommentsList){
-                height += elementMargin;
-            }
+            height += elementMargin;
             NSInteger count = (cellModel.imageList.count == 1) ? 1 : 3;
-            CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:count width:[UIScreen mainScreen].bounds.size.width - leftMargin - leftPadding - rightMargin - rightPadding];
+            CGFloat cellWidth = [self cellWidth:cellModel.isInNeighbourhoodCommentsList];
+            CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:count width:cellWidth - leftMargin - leftPadding - rightMargin - rightPadding];
             height += imageViewheight;
         }
         
@@ -144,6 +144,14 @@
         return height;
     }
     return 44;
+}
+
++ (CGFloat)cellWidth:(BOOL)isInList {
+    CGFloat ret = SCREEN_WIDTH - 18;
+    if(isInList) {
+        SCREEN_WIDTH;
+    }
+    return ret;
 }
 
 - (void)layoutViews {
@@ -158,7 +166,7 @@
     
     CGFloat elementMargin = 10; //元素之间的间距
     
-    CGFloat cellWidth = [UIScreen mainScreen].bounds.size.width - 18;
+    CGFloat cellWidth = [self.class cellWidth:self.cellModel.isInNeighbourhoodCommentsList];
     if(self.cellModel.isInNeighbourhoodCommentsList) {
         topMargin = 15;
         leftMargin = 15;
@@ -166,8 +174,6 @@
         
         leftPadding = 20;
         rightPadding = 20;
-        
-        cellWidth = [UIScreen mainScreen].bounds.size.width;
         
         elementMargin = 20;
     }
