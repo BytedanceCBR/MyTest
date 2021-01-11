@@ -34,13 +34,13 @@
     return self;
 }
 
-- (void)setFocusConut:(NSString *)focusConut {
-    _focusConut = focusConut;
-    if ([focusConut isEqual:@""]) {
-        focusConut = @"*";
-    }
-    [(UILabel *)self.iconView setText:focusConut];
-}
+//- (void)setFocusConut:(NSString *)focusConut {
+//    _focusConut = focusConut;
+//    if ([focusConut isEqual:@""]) {
+//        focusConut = @"*";
+//    }
+//    [(UILabel *)self.iconView setText:focusConut];
+//}
 
 - (void)setupUI {
     [self initView];
@@ -52,42 +52,42 @@
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewClicked)];
     [self addGestureRecognizer:tapGesture];
     
-    self.nameLabel = [self LabelWithFont:[UIFont themeFontRegular:labelFontSize] textColor:[UIColor themeGray1]];
+    self.nameLabel = [self LabelWithFont:[UIFont themeFontRegular:labelFontSize] textColor:[UIColor themeGray2]];
     _nameLabel.text = self.name;
     [self addSubview:_nameLabel];
-    
-    if (self.moduleType == FHMineModuleTypeHouseFocus) {
-        self.iconView = [[UILabel alloc] init];
-        [(UILabel *)_iconView setText:self.focusConut];
-        [(UILabel *)_iconView setFont:[UIFont fontWithName:@"DINAlternate-Bold" size:24]];
-        [(UILabel *)_iconView setTextAlignment:NSTextAlignmentCenter];
-        
-    } else {
+    //改版
+//    if (self.moduleType == FHMineModuleTypeHouseFocus) {
+//        self.iconView = [[UILabel alloc] init];
+//        [(UILabel *)_iconView setText:self.focusConut];
+//        [(UILabel *)_iconView setFont:[UIFont fontWithName:@"DINAlternate-Bold" size:24]];
+//        [(UILabel *)_iconView setTextAlignment:NSTextAlignmentCenter];
+//
+//    } else {
         self.iconView = [[UIImageView alloc] init];
         _iconView.backgroundColor = [UIColor clearColor];
         [(UIImageView *)self.iconView bd_setImageWithURL:[NSURL URLWithString:_imageName] placeholder:nil];
         _iconView.contentMode = UIViewContentModeScaleAspectFit;
 
-    }
+//    }
     [self addSubview:_iconView];
 
 }
 
 - (void)initConstaints {
-    CGFloat H = _moduleType == FHMineModuleTypeHouseFocus?35:24;
-    CGFloat W = 24;
+    CGFloat H = _moduleType == FHMineModuleTypeHouseFocus?56:34;
+//    CGFloat W = 24;
     [_iconView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.top.mas_equalTo(15);
-        make.height.mas_equalTo(H*(UIScreen.mainScreen.bounds.size.width/375));
-        make.width.mas_equalTo(W*(UIScreen.mainScreen.bounds.size.width/375));
+        make.top.mas_equalTo(8);
+        make.height.width.mas_equalTo(H*(UIScreen.mainScreen.bounds.size.width/375));
+//        make.width.mas_equalTo(W*(UIScreen.mainScreen.bounds.size.width/375));
     }];
 
     [_nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.iconView.mas_bottom).offset(_moduleType == FHMineModuleTypeHouseFocus ? 0 : 6);
+        make.top.mas_equalTo(self.iconView.mas_bottom).offset(-2);
         make.centerX.mas_equalTo(self.iconView);
         make.height.mas_equalTo(20);
-        make.bottom.equalTo(self).offset(-12);
+        make.bottom.equalTo(self).offset(-10);
     }];
 }
 

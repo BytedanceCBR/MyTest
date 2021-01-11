@@ -183,8 +183,8 @@
             [self.viewController.headerView setUserInfoState:state];
             self.viewController.headerView.userNameLabel.text = name?:@"";
             
-//            self.viewController.headerView.descLabel.text = userInfo.userDescription.length > 0 ? userInfo.userDescription : @"查看并编辑个人信息";
-            self.viewController.headerView.descLabel.attributedText = [self descLabelWithUserInfo:userInfo];
+            self.viewController.headerView.descLabel.text = userInfo.userDescription.length > 0 ? userInfo.userDescription : @"查看并编辑个人信息";
+//            self.viewController.headerView.descLabel.attributedText = [self descLabelWithUserInfo:userInfo];
             if(state != 0){
                 self.viewController.headerView.editIcon.hidden = NO;
             }
