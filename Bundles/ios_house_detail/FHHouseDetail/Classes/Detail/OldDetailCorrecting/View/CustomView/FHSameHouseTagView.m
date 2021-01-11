@@ -12,7 +12,7 @@
 - (void)layoutSubviews {
     
     [super layoutSubviews];
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(10, 10)];
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(4, 4)];
     CAShapeLayer *layer = [[CAShapeLayer alloc]init];
     layer.frame = self.bounds;
     layer.path = maskPath.CGPath;
