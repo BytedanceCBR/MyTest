@@ -61,6 +61,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.topBanner = [[FHDetailTopBannerView alloc] init];
+        self.topBanner.isUsedInNewHouse = YES;
         [self addSubview:self.topBanner];
         [self.topBanner mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.right.equalTo(self);

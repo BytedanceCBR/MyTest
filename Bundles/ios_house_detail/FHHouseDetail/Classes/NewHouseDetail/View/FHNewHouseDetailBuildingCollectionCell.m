@@ -8,6 +8,7 @@
 #import "FHNewHouseDetailBuildingCollectionCell.h"
 #import "FHBuildingDetailTopImageView.h"
 #import "FHDetailNewModel.h"
+#import <TTBaseLib/UIButton+TTAdditions.h>
 
 @interface FHNewHouseDetailBuildingCollectionCell ()
 
@@ -229,8 +230,14 @@
     [moreButton setTitle:title forState:UIControlStateNormal];
     [moreButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
     moreButton.titleLabel.font = [UIFont themeFontRegular:16];
+    [moreButton setImage:[UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"] forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(clickMoreButton:) forControlEvents:UIControlEventTouchUpInside];
     [bottomView addSubview:moreButton];
+    
+    [moreButton sizeToFit];
+    moreButton.titleEdgeInsets = UIEdgeInsetsMake(0, -moreButton.imageView.bounds.size.width, 0, moreButton.imageView.bounds.size.width);
+    moreButton.imageEdgeInsets = UIEdgeInsetsMake(0, moreButton.titleLabel.bounds.size.width + 2, 0, -moreButton.titleLabel.bounds.size.width);
+    
     [moreButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(0);
