@@ -134,9 +134,7 @@
     CGFloat headerTop = 4.5;
     CGFloat headerHeight = (dataModel.houseType.integerValue == FHHouseTypeSecondHandHouse || dataModel.houseType.integerValue == FHHouseTypeNeighborhood) ? 40 : 0;
     self.headerView.frame = CGRectMake(9, headerTop, self.cellWidth, headerHeight);
-    CGFloat segmentedWidth = 32 * 4 + 38 * 3;
-    CGFloat segmentedLeftMargin = ([UIScreen mainScreen].bounds.size.width - segmentedWidth) / 2;
-    self.segmentedControl.frame = CGRectMake(segmentedLeftMargin, self.headerView.bottom, segmentedWidth, 33);//往上11
+    self.segmentedControl.frame = CGRectMake(9 + 12, self.headerView.bottom, self.cellWidth - 24, 33);//往上11
     self.headerView.hidden = (headerHeight == 0);
     CGFloat mapHeight = self.cellWidth * kStaticMapHWRatio;
     CGRect mapFrame = CGRectMake(9, self.segmentedControl.bottom, self.cellWidth, mapHeight);

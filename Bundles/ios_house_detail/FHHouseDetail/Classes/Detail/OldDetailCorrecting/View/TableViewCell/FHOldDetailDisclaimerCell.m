@@ -114,6 +114,12 @@
     [self layoutIfNeeded];
 }
 
+- (void)updateLayoutWithOldDetail {
+    [self.disclaimerContent mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.bottom.mas_equalTo(-9);
+    }];
+}
+
 -(void)clickFeedbackLog{
     NSMutableDictionary *tracerDic = self.baseViewModel.detailTracerDic.mutableCopy;
     [tracerDic removeObjectsForKeys:@[@"card_type"]];

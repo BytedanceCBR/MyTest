@@ -24,6 +24,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import "SSCommonLogic.h"
 #import <Heimdallr/HeimdallrUtilities.h>
+#import "FHOldDetailDisclaimerCell.h"
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -300,6 +301,9 @@
                 cell.baseViewModel = self;
                 [cell refreshWithData:data];
                 self.isRefreshData = true;
+                if ([cell isKindOfClass:[FHOldDetailDisclaimerCell class]] && self.houseType == FHHouseTypeSecondHandHouse) {
+                    [(FHOldDetailDisclaimerCell *)cell updateLayoutWithOldDetail];
+                }
                 return cell;
             }else{
                 NSLog(@"nil cell for data: %@",data);
