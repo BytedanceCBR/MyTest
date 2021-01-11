@@ -27,7 +27,6 @@
 #import "PackageRouteManager.h"
 #import <TTBaseMacro.h>
 #import "RouteAppFileUtil.h"
-#import "TTSandBoxHelper.h"
 #import "RouteAppPackagePackageInfo.h"
 
 @interface FHFlutterViewController()
@@ -102,9 +101,9 @@
     [self sendLoadingFinishLog];
     // Do any additional setup after loading the view, typically from a nib.
 }
+ 
 
-
-- (void)didMoveToParentViewController:(UIViewController*)parent{
+- (void)willMoveToParentViewController:(UIViewController *)parent{
     [super didMoveToParentViewController:parent];
     if(!parent){
         [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
@@ -155,24 +154,22 @@
     
     
     
-//    if ([TTSandBoxHelper isInHouseApp]) {
-        NSString *packageFilePath = [RouteAppFileUtil getDebugPackagePathForPackageName:pluginName];
+    NSString *packageFilePath = [RouteAppFileUtil getDebugPackagePathForPackageName:pluginName];
 
-        if ([RouteAppFileUtil checkFileExist:packageFilePath]) {
-            RouteAppPackagePackageInfo *package = [[RouteAppPackagePackageInfo alloc] init];
-            package.name = pluginName;
-            package.zipPackagePath = packageFilePath;
-            NSString *flutterUrl = [NSString stringWithFormat:@"local-flutter://%@%@",pluginName,[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"]];
+    if ([RouteAppFileUtil checkFileExist:packageFilePath]) {
+        RouteAppPackagePackageInfo *package = [[RouteAppPackagePackageInfo alloc] init];
+        package.name = pluginName;
+        package.zipPackagePath = packageFilePath;
+        NSString *flutterUrl = [NSString stringWithFormat:@"local-flutter://%@%@",pluginName,[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"]];
             
-            NSMutableDictionary *pageParams = @{
+        NSMutableDictionary *pageParams = @{
                 @"url":[NSString stringWithFormat:@"local-flutter://%@%@", pluginName, flutterUrl],@"packageInfo": package
             };
-            if (resultPrams) {
-                [resultPrams addEntriesFromDictionary:pageParams];
-                [resultPrams setValue:flutterUrl forKey:@"url"];
-            }
+        if (resultPrams) {
+            [resultPrams addEntriesFromDictionary:pageParams];
+            [resultPrams setValue:flutterUrl forKey:@"url"];
         }
-//    }
+    }
 
     
     NSString * paramsStr = [paramObj.allParams btd_objectForKey:kFHFlutterchemaParamsKey default:@""];
