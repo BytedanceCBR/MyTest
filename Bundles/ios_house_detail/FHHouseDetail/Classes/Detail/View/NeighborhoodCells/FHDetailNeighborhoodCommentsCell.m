@@ -154,6 +154,12 @@
         make.height.mas_equalTo(cellModel.viewHeight);
     }];
     
+    if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll || cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeDefault) {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(0);
+        }];
+    }
+    
     if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll || cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeAll) {
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.contentView).offset(4.5);

@@ -105,7 +105,7 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
 
 - (void)initCollectionView {
     UICollectionViewFlowLayout *flowLayout = [[UICollectionViewFlowLayout alloc] init];
-    flowLayout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    flowLayout.sectionInset = UIEdgeInsetsMake(0, 12, 0, 12);
     flowLayout.minimumInteritemSpacing = 12;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:flowLayout];
@@ -122,7 +122,7 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
     
     [collectionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.containerView).offset(0);
-        make.left.mas_equalTo(self.containerView).offset(21);
+        make.left.mas_equalTo(self.containerView).offset(9);
         make.right.mas_equalTo(self.containerView).offset(-9);
         make.bottom.mas_equalTo(self.containerView).offset(0);
         make.height.mas_equalTo(getSameNeighborhoodHouseImageHeight() + 72);
@@ -479,7 +479,7 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
     self.moreLabel = [[UILabel alloc] init];
     
     self.shadowView.backgroundColor = [UIColor themeGray7];
-    self.shadowView.layer.cornerRadius  = 10;
+    self.shadowView.layer.cornerRadius  = 4;
     self.moreImageView.image = [UIImage imageNamed:@"more_house"];
     self.moreLabel.font = [UIFont themeFontRegular:14];
     self.moreLabel.textColor = [UIColor colorWithHexStr:@"#aeadad"];
@@ -512,7 +512,7 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(10, 10)];
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomRight cornerRadii:CGSizeMake(4, 4)];
     CAShapeLayer *layer = [[CAShapeLayer alloc] init];
     layer.frame = self.bounds;
     layer.path = maskPath.CGPath;

@@ -18,6 +18,10 @@
     return self;
 }
 
+- (void)setTitle:(NSString *)title {
+    _title = title;
+}
+
 - (void)setQuestion:(FHDetailNeighborhoodDataQuestionModel *)question {
     _question = question;
     
@@ -49,7 +53,7 @@
     if(!isEmptyString(question.content.count)){
         self.totalCount = [question.content.count integerValue];
         if(self.totalCount > 0 && self.dataList.count > 0){
-            self.title = [NSString stringWithFormat:@"%@（%li）",self.title,(long)self.totalCount];
+            self.title = [NSString stringWithFormat:@"%@ (%li)",self.title,(long)self.totalCount];
         }
     }
     self.footerViewHeight = 0;
