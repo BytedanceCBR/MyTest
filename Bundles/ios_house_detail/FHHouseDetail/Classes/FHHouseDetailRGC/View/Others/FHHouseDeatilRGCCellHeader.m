@@ -221,7 +221,7 @@
 //        self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];
 //    }
     
-    if (cellModel.realtor.desc) {
+    if (cellModel.realtor.desc.length) {
         self.infoLab.text = [NSString stringWithFormat:@"%@ %@",cellModel.realtor.desc,cellModel.createTime]; ;
     }else {
         self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];
