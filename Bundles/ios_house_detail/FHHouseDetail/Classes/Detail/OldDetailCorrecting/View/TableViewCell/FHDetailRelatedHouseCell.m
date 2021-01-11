@@ -67,7 +67,7 @@
     }
     CGFloat cellHeight = 0;
     BOOL hasMore = model.relatedHouseData.hasMore;
-    CGFloat bottomOffset = 20;
+    CGFloat bottomOffset = 0;
     if (hasMore) {
         bottomOffset = 52;
     }
