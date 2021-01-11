@@ -50,7 +50,7 @@
         make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-12);
     }];
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(6);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(3);
         make.height.mas_equalTo(16);
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-12);
@@ -155,7 +155,7 @@
                     vHeight += 12;
                 } else {
                     vHeight = titleHeight;
-                    vHeight += 22;
+                    vHeight += 19;
                     vHeight += 12;
                 }
                 height += vHeight;
@@ -240,7 +240,7 @@
                 vHeight = titleHeight;
                 vHeight += 24;
                 vHeight += 12;
-                totalTitleHeight += 22;
+                totalTitleHeight += 19;
                 itemView.subtitleLabel.hidden = NO;
             }
             totalHeight += vHeight;

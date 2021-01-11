@@ -81,7 +81,7 @@
         [self.stackView addArrangedSubview:containView];
         UIView *image = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
         image.clipsToBounds = YES;
-        image.layer.cornerRadius = 10;
+        image.layer.cornerRadius = 3;
         image.contentMode = UIViewContentModeCenter;
         CGSize imageSize = [FHBuildingDetailUtils getDetailBuildingImageViewSize];
         FHBuildingDetailTopImageView *imageView = [[FHBuildingDetailTopImageView alloc] initWithFrame:CGRectMake(0, 0, imageSize.width, imageSize.height)];
@@ -170,7 +170,7 @@
             [itemView addSubview:nameValueLabel];
             [nameValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(0);
-                make.top.mas_equalTo(12);
+                make.centerY.mas_equalTo(itemView);
                 make.width.mas_equalTo(itemView.mas_width).multipliedBy(0.33);
             }];
             
@@ -179,7 +179,7 @@
             [itemView addSubview:layerValueLabel];
             [layerValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.centerX.mas_equalTo(topView);
-                make.top.mas_equalTo(12);
+                make.centerY.mas_equalTo(itemView);
                 make.width.mas_equalTo(itemWidth);
             }];
             
@@ -188,7 +188,7 @@
             [itemView addSubview:familyValueLabel];
             [familyValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.right.mas_equalTo(0);
-                make.top.mas_equalTo(12);
+                make.centerY.mas_equalTo(itemView);
                 make.width.mas_equalTo(itemWidth);
             }];
             
