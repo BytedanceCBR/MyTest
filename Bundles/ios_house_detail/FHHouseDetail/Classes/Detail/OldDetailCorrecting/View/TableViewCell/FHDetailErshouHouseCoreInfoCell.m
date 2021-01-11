@@ -19,17 +19,6 @@
 @end
 @implementation FHDetailErshouHouseCoreInfoCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
-
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailErshouHouseCoreInfoModel class]]) {
         return;
@@ -158,13 +147,13 @@
         make.left.mas_equalTo(self.leftPadding);
         make.top.mas_equalTo(0);
         make.height.mas_equalTo(26);
-        make.right.mas_equalTo(self).offset(-10);
+        make.right.mas_equalTo(self);
     }];
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftPadding);
         make.top.mas_equalTo(self.keyLabel.mas_bottom).offset(6);
         make.height.mas_equalTo(14);
-        make.right.mas_equalTo(self).offset(-10);
+        make.right.mas_equalTo(self);
         make.bottom.mas_equalTo(self).offset(0);
     }];
     [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
