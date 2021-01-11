@@ -139,10 +139,12 @@ static NSString * const WukongListTipsHasShown = @"kWukongListTipsHasShown";
     }
     
     self.adjustPosition = ([[paramObj.allParams objectForKey:@"isLargeVideo"] boolValue] && [[paramObj.allParams objectForKey:@"video_auto_play"] boolValue]);
-    NSDictionary *apiParam = [WDParseHelper apiParamFromBaseCondition:paramObj.allParams];
+    NSMutableDictionary *apiParam = [[WDParseHelper apiParamFromBaseCondition:paramObj.allParams] mutableCopy];
     NSDictionary *extraDicts = [WDParseHelper gdExtJsonFromBaseCondition:paramObj.allParams];
     NSMutableDictionary *extraDictsAdd = [NSMutableDictionary dictionaryWithDictionary:extraDicts];
-    NSDictionary *tracer = paramObj.allParams[@"tracer"];
+    NSMutableDictionary *tracer = [paramObj.allParams[@"tracer"] mutableCopy];
+    [tracer setValue:@"question" forKey:@"page_type"];
+    apiParam[@"tracer"] = tracer;
     if(tracer && tracer.count > 0){
         [extraDictsAdd addEntriesFromDictionary:tracer];
     }
