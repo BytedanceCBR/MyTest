@@ -58,7 +58,7 @@
     [[self activeVC].view addSubview:self.button];
     [[self activeVC].view bringSubviewToFront:self.button];
     self.tracerDic = [[self.params btd_stringValueForKey:@"ext_growth"] btd_jsonDictionary].mutableCopy;
-    self.tracerDic[@"button_name"] = @"return_button;
+    self.tracerDic[@"button_name"] = @"return_button";
     
     [FHUserTracker writeEvent:@"botton_show" params:self.tracerDic];
 }
