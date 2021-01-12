@@ -421,7 +421,9 @@
         self.noDataImageView.hidden = YES;
         if (_medias.count > 1) {
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
-            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            UICollectionViewLayoutAttributes *cellAttributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
+            [self.colletionView setContentOffset:CGPointMake(cellAttributes.frame.origin.x, 0) animated:NO];
+//            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
         [self.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self).offset(-10);

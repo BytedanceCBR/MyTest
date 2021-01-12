@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorPanListCollectionCell : UICollectionViewCell
--(void)refreshDataWithItemArray:(NSArray *)itemArray subPageParams:(NSDictionary *)subPageParams;
+-(void)refreshDataWithItemArray:(NSArray *)itemArray subPageParams:(NSDictionary *)subPageParams elementShowCache:(NSMutableDictionary *)elementShowCache;
 @end
 
 NS_ASSUME_NONNULL_END

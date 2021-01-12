@@ -87,7 +87,7 @@
 #pragma mark - UI
 - (void)createUI {
     self.pictureShowDict = [NSMutableDictionary dictionary];
-    self.headerView = [[FHFloorPanDetailMediaHeaderView alloc] init];
+    self.headerView = [[FHFloorPanDetailMediaHeaderView alloc] initWithFrame:self.contentView.bounds];
     [self.contentView addSubview:self.headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.contentView);

@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHFloorPanListDetailViewModel : NSObject
 
--(instancetype)initWithTableView:(UITableView *)tableView itemArray:(NSArray *)itemArray subPageParams:(NSDictionary *)subPageParams;
+-(instancetype)initWithTableView:(UITableView *)tableView itemArray:(NSArray *)itemArray subPageParams:(NSDictionary *)subPageParams elementShowCache:(NSMutableDictionary *)elementShowCache;
 
 @end
 

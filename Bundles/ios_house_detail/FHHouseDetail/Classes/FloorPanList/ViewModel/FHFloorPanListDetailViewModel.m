@@ -16,17 +16,18 @@
 @property(nonatomic,weak) UITableView *tableView;
 @property(nonatomic,weak) NSArray *itemArray;
 @property(nonatomic,weak) NSDictionary *subPageParams;
-@property (nonatomic,strong) NSMutableDictionary *elementShowCaches;
+@property (nonatomic,weak) NSMutableDictionary *elementShowCache;
 @end
 
 
 @implementation FHFloorPanListDetailViewModel
 
--(instancetype)initWithTableView:(UITableView *)tableView itemArray:(NSArray *)itemArray subPageParams:(NSDictionary *)subPageParams {
+- (instancetype)initWithTableView:(UITableView *)tableView itemArray:(NSArray *)itemArray subPageParams:(NSDictionary *)subPageParams elementShowCache:(NSMutableDictionary *)elementShowCache {
     if(self = [super init]) {
         self.tableView = tableView;
         self.itemArray = itemArray;
         self.subPageParams = subPageParams;
+        self.elementShowCache = elementShowCache;
         [self processDataToShow];
     }
     return self;
@@ -41,28 +42,12 @@
         [[ToastManager manager] showToast:@"暂无相关房型~"];
     }
     [self.tableView reloadData];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    if ([self.tableView numberOfSections] && [self.tableView numberOfRowsInSection:0]) {
-        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:NO];
-    }
     self.tableView.contentOffset = CGPointMake(0, -20);
 }
 
 // 注册cell类型
 - (void)registerCellClasses {
     [self.tableView registerClass:[FHFloorPanListCell class] forCellReuseIdentifier:NSStringFromClass([FHFloorPanListCell class])];
-}
-// cell class
-- (Class)cellClassForEntity:(id)model {
-    if ([model isKindOfClass:[FHDetailNewDataFloorpanListListModel class]]) {
-        return [FHFloorPanListCell class];
-    }
-    return [FHDetailBaseCell class];
-}
-// cell identifier
-- (NSString *)cellIdentifierForEntity:(id)model {
-    Class cls = [self cellClassForEntity:model];
-    return NSStringFromClass(cls);
 }
 
 #pragma UITableViewDelegate
@@ -76,7 +61,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewAutomaticDimension;
+    return 106;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -145,31 +130,30 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger index = indexPath.row;
-    NSString *tempKey = [NSString stringWithFormat:@"%ld_%ld",indexPath.section,indexPath.row];
-    // 添加element_show埋点
-    if (!self.elementShowCaches[tempKey]) {
-        self.elementShowCaches[tempKey] = @(YES);
-        
-        NSDictionary *subPageParams = self.subPageParams;
-        NSDictionary *tracer = subPageParams[@"tracer"];
-        NSMutableDictionary *traceParam = [NSMutableDictionary new];
-        if ([tracer isKindOfClass:[NSDictionary class]]) {
-            [traceParam addEntriesFromDictionary:tracer];
-        }
-        traceParam[@"card_type"] = @"left_pic";
-        traceParam[@"rank"] = @(indexPath.row);
-        traceParam[@"element_type"] = @"house_model";
-        traceParam[@"page_type"] = @"house_model_list";
-        traceParam[@"house_type"] = @"house_model";
-        //[traceParam removeObjectForKey:@"enter_from"];
-        [traceParam removeObjectForKey:@"element_from"];
-        
-        if ([tracer isKindOfClass:[NSDictionary class]] && [tracer[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
-            [traceParam addEntriesFromDictionary:tracer[@"log_pb"]];
-        }
-        
-        if (index >= 0 && index < self.itemArray.count) {
-            FHDetailNewDataFloorpanListListModel *itemModel = [self.itemArray objectAtIndex:index];
+    if (index >= 0 && index < self.itemArray.count) {
+        FHDetailNewDataFloorpanListListModel *itemModel = [self.itemArray objectAtIndex:index];
+        NSString *groupId =  itemModel.groupId ?: itemModel.id;
+        // 添加element_show埋点
+        if (groupId && !self.elementShowCache[groupId]) {
+            self.elementShowCache[groupId] = @(YES);
+            
+            NSDictionary *subPageParams = self.subPageParams;
+            NSDictionary *tracer = subPageParams[@"tracer"];
+            NSMutableDictionary *traceParam = [NSMutableDictionary new];
+            if ([tracer isKindOfClass:[NSDictionary class]]) {
+                [traceParam addEntriesFromDictionary:tracer];
+            }
+            traceParam[@"card_type"] = @"left_pic";
+            traceParam[@"rank"] = @(indexPath.row);
+            traceParam[@"element_type"] = @"house_model";
+            traceParam[@"page_type"] = @"house_model_list";
+            traceParam[@"house_type"] = @"house_model";
+            //[traceParam removeObjectForKey:@"enter_from"];
+            [traceParam removeObjectForKey:@"element_from"];
+            
+            if ([tracer isKindOfClass:[NSDictionary class]] && [tracer[@"log_pb"] isKindOfClass:[NSDictionary class]]) {
+                [traceParam addEntriesFromDictionary:tracer[@"log_pb"]];
+            }
             
             if (itemModel.logPb) {
                 [traceParam setValue:itemModel.logPb forKey:@"log_pb"];
@@ -189,9 +173,9 @@
             if (itemModel.imprId) {
                 [traceParam setValue:itemModel.imprId forKey:@"impr_id"];
             }
+            
+            [FHEnvContext recordEvent:traceParam andEventKey:@"house_show"];
         }
-        
-        [FHEnvContext recordEvent:traceParam andEventKey:@"house_show"];
     }
 }
 
