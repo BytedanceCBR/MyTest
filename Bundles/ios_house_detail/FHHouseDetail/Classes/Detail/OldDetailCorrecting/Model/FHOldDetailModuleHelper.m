@@ -25,7 +25,8 @@
     
     for (FHDetailBaseModel *model in moduleArr) {
         model.shdowImageScopeType = FHHouseShdowImageScopeTypeDefault;
-        model.shadowImageType = FHHouseShdowImageTypeLR;
+        [model setOldDetailShadowImageType:FHHouseShdowImageTypeLR];
+        //model.shadowImageType = FHHouseShdowImageTypeLR;
     }
     
     NSMutableArray *coreInfos = [[NSMutableArray alloc]init];
@@ -175,7 +176,8 @@
            || [[obj allKeys] containsObject:@"advisoryLoans"] || [[obj allKeys] containsObject:@"recommendedCourt"]) {
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
-                model.shadowImageType = FHHouseShdowImageTypeRound;;
+                [model setOldDetailShadowImageType:FHHouseShdowImageTypeRound];
+                //model.shadowImageType = FHHouseShdowImageTypeRound;
             }];
         }
         //        多个cell模块
@@ -183,13 +185,17 @@
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 if (idx == currentItemArr.count-1 && currentItemArr.count != 1) {
-                    model.shadowImageType = FHHouseShdowImageTypeLBR;
+                    [model setOldDetailShadowImageType:FHHouseShdowImageTypeLBR];
+                    //model.shadowImageType = FHHouseShdowImageTypeLBR;
                 }else if(idx == 0 && currentItemArr.count == 1)  {
-                    model.shadowImageType = FHHouseShdowImageTypeRound;
+                    [model setOldDetailShadowImageType:(FHHouseShdowImageType)FHHouseShdowImageTypeRound];
+                    //model.shadowImageType = FHHouseShdowImageTypeRound;
                 }else if (idx == 0 && currentItemArr.count != 1) {
-                    model.shadowImageType = FHHouseShdowImageTypeLTR;
+                    [model setOldDetailShadowImageType:FHHouseShdowImageTypeLTR];
+                    //model.shadowImageType = FHHouseShdowImageTypeLTR;
                 }else {
-                    model.shadowImageType = FHHouseShdowImageTypeLR;
+                    [model setOldDetailShadowImageType:FHHouseShdowImageTypeLR];
+                    //model.shadowImageType = FHHouseShdowImageTypeLR;
                 }
             }];
         }
@@ -197,9 +203,11 @@
             [currentItemArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHDetailBaseModel *model = (FHDetailBaseModel *)obj;
                 if (idx == currentItemArr.count-1 && currentItemArr.count != 1) {
-                    model.shadowImageType = FHHouseShdowImageTypeLBR;
+                    [model setOldDetailShadowImageType:FHHouseShdowImageTypeLBR];
+                    //model.shadowImageType = FHHouseShdowImageTypeLBR;
                 }else {
-                    model.shadowImageType = FHHouseShdowImageTypeLR;
+                    [model setOldDetailShadowImageType:FHHouseShdowImageTypeLR];
+                    //model.shadowImageType = FHHouseShdowImageTypeLR;
                 }
             }];
         }

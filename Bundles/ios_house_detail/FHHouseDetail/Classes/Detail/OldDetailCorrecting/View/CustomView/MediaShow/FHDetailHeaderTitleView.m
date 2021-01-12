@@ -40,14 +40,13 @@
 }
 - (void)initUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
+        make.left.right.top.equalTo(self);
+        make.height.equalTo(self);
     }];
-    
-    // 企业担保顶部banner位
     [self addSubview:self.topBanner];
     [self.topBanner mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self);
-        make.top.equalTo(self).mas_equalTo(9);
+        make.top.mas_equalTo(20);
         make.height.mas_equalTo(0);
     }];
     self.topBanner.hidden = YES;
@@ -63,12 +62,14 @@
     return  _shadowImage;
 }
 
-- (FHDetailTopBannerView *)topBanner {
+- (FHDetailTopBannerView *)topBanner
+{
     if (!_topBanner) {
         _topBanner = [[FHDetailTopBannerView alloc]init];
     }
     return _topBanner;
 }
+
 
 - (UIView *)tagBacView {
     if (!_tagBacView) {
@@ -136,7 +137,7 @@
     return _totalPirce;
 }
 
-- (UILabel *)createLabelWithText:(NSString *)text bacColor:(UIColor *)bacColor textColor:(UIColor *)textColor {
+- (UILabel *)createLabelWithText:(NSString *)text bacColor:(UIColor *)bacColor textColor:(UIColor *)textColor{
     UILabel *label = [[UILabel alloc]init];
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = bacColor;
@@ -148,7 +149,7 @@
     return label;
 }
 
-- (UILabel *)createLabelWithTextForSecondHouse:(NSString *)text bacColor:(UIColor *)bacColor textColor:(UIColor *)textColor {
+- (UILabel *)createLabelWithTextForSecondHouse:(NSString *)text bacColor:(UIColor *)bacColor textColor:(UIColor *)textColor{
     UILabel *label = [[UILabel alloc]init];
     label.textAlignment = NSTextAlignmentCenter;
     label.backgroundColor = bacColor;
@@ -156,7 +157,7 @@
     label.layer.cornerRadius = 2;
     label.layer.masksToBounds = YES;
     label.text = text;
-    label.font = [UIFont themeFontRegular:10];
+    label.font = [UIFont themeFontRegular:12];
     return label;
 }
 
@@ -192,13 +193,14 @@
 }
 
 - (void)setTags:(NSArray *)tags {
+  
     _tags = tags;
 }
 - (void)setTitleStr:(NSString *)titleStr {
    
 }
 
-- (void)setFloorPanModel {
+- (void)setFloorPanModel{
     NSArray *tags = _model.tags;
     CGFloat tagHeight = tags.count > 1 ? 20 : 0.01;
     CGFloat tagTop = tags.count > 1 ? 20 : 2;
@@ -321,39 +323,23 @@
     }
 }
 
-+ (NSDictionary *)nameLabelAttributes {
-    
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.minimumLineHeight = 28;
-    paragraphStyle.maximumLineHeight = 28;
-    paragraphStyle.lineSpacing = 0;
-    
-    return @{
-        NSFontAttributeName: [UIFont themeFontMedium:24],
-        NSForegroundColorAttributeName: [UIColor themeGray1],
-        NSParagraphStyleAttributeName: paragraphStyle
-    };
-}
-
-- (NSAttributedString *)nameLabelAttributeText:(NSString *)text {
-    return [[NSAttributedString alloc] initWithString:text attributes:[self.class nameLabelAttributes]];
-}
-
 - (void)setModel:(FHDetailHouseTitleModel *)model {
     _model = model;
     NSArray *tags = model.tags;
     self.mapBtn.hidden = !model.showMapBtn;
-    self.nameLabel.attributedText = [self nameLabelAttributeText:model.titleStr];
-    CGFloat tagHeight = tags.count > 0 ? 16 : 0.01;
+    self.nameLabel.text = model.titleStr;
+    CGFloat tagHeight = tags.count > 0 ? 20 : 0.01;
     
     CGFloat topHeight = 0;
-    CGFloat tagTop = tags.count > 0 ? 12 : 0;
+    CGFloat tagTop = tags.count > 0 ? 16 : 0;//在没有tagtop的时候更向下
+//    CGFloat tagBottom = tags.count > 0 ? 16 : 0;
     
     if (model.isFloorPan) {
         [self setFloorPanModel];
         return;
     }
-    
+//    self.topBanner.housetype = model.housetype;
+    //housetype if 改 switch
     switch (model.housetype) {
         case FHHouseTypeNewHouse:{
             if (model.businessTag.length > 0 && model.advantage.length > 0) {
@@ -427,7 +413,6 @@
             break;
         }
         case FHHouseTypeSecondHandHouse:{
-            // 企业担保数据展示
             if (model.businessTag.length > 0 && model.advantage.length > 0) {
                 topHeight = 40;
                 [self.topBanner updateWithTitle:model.businessTag content:model.advantage isCanClick:model.isCanClick clickUrl:model.clickUrl];
@@ -437,29 +422,25 @@
                 make.height.mas_equalTo(topHeight);
             }];
             
-            // 标签背景视图
             [self.tagBacView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(self).offset(9);
-                make.right.mas_equalTo(self).offset(-9);
-                make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(12);
+                make.left.mas_equalTo(self).offset(15);
+                make.right.mas_equalTo(self).offset(-15);
+                make.top.mas_equalTo(self.topBanner.mas_bottom).mas_offset(20);
                 make.height.mas_offset(tagHeight);
             }];
-            
-            // 反馈按钮展示
+            //1.0.3把反馈按钮移到此处
             [self.feedbackButton mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.mas_equalTo(self.tagBacView);
                 make.height.mas_equalTo(16);
-                make.right.mas_equalTo(-21);
+                make.right.mas_equalTo(-31);
                 make.width.mas_equalTo(46);
             }];
-            // 反馈带入信息数据获取
             FHDetailOldDataModel *ershouData = [(FHDetailOldModel *)self.baseViewModel.detailData data];
             [self.feedbackButton updateWithDetailTracerDic:self.baseViewModel.detailTracerDic.copy listLogPB:self.baseViewModel.listLogPB houseData:ershouData houseType:model.housetype reportUrl:model.reportUrl];
             
-            // 房源名称标签展示
             [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(self).offset(21);
-                make.right.mas_equalTo(self).offset(-21);
+                make.left.mas_equalTo(self).offset(31);
+                make.right.mas_equalTo(self).offset(-35);
                 make.top.mas_equalTo(self.tagBacView.mas_bottom).offset(tagTop);
                 make.bottom.mas_equalTo(self);
             }];
@@ -497,14 +478,14 @@
         UIColor *tagTextColor = idx == 0 ?[UIColor colorWithHexString:@"#fe5500"]:[UIColor colorWithHexString:@"#333333"];
         label = [self createLabelWithTextForSecondHouse:tagModel.content bacColor:tagBacColor  textColor:tagTextColor];
 
-        // 标签间距
-        CGFloat inset = 6;
+                
+        CGFloat inset = 10;
         if (self.model.housetype == FHHouseTypeNewHouse) {
             inset = 4;
         }
         CGFloat itemWidth = itemSize.width + 10;
         maxWidth += itemWidth + inset;
-        CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 18;
+        CGFloat tagWidth = [UIScreen mainScreen].bounds.size.width - 30;
         if (model.housetype == FHHouseTypeSecondHandHouse) {
             tagWidth -= 46;
         }
@@ -514,7 +495,7 @@
             [self.tagBacView addSubview:label];
             [label mas_makeConstraints:^(MASConstraintMaker *make) {
                 if (idx == 0) {
-                    make.left.equalTo(lastView).offset(12);
+                    make.left.equalTo(lastView).offset(16);
                 }else {
                     make.left.equalTo(lastView.mas_right).offset(inset);
                 }

@@ -57,7 +57,7 @@
     if(!isEmptyString(comments.content.count)){
         self.totalCount = [comments.content.count integerValue];
         if(self.totalCount > 0 && self.dataList.count > 0){
-            self.title = [NSString stringWithFormat:@"%@（%li）",self.title,(long)self.totalCount];
+            self.title = [NSString stringWithFormat:@"%@ (%li)",self.title,(long)self.totalCount];
         }
     }
     

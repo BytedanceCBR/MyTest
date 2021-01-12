@@ -35,7 +35,7 @@
     self.shadowImage.image = model.shadowImage;
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll){
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
+            make.bottom.equalTo(self.contentView).offset(4.5);
         }];
     }
     if(model.shdowImageScopeType == FHHouseShdowImageScopeTypeTopAll){
@@ -99,7 +99,7 @@
     subscribeBtn.layer.cornerRadius = 1;
     subscribeBtn.layer.borderWidth = 0.5;
     subscribeBtn.layer.borderColor = [[UIColor colorWithHexStr:@"#9c6d43"] CGColor];
-    subscribeBtn.backgroundColor = [UIColor colorWithHexString:@"fffaf0"];
+    subscribeBtn.backgroundColor = [UIColor colorWithHexString:@"#ffffff"];
     [subscribeBtn addTarget:self action:@selector(subscribe) forControlEvents:UIControlEventTouchUpInside];
     [self.bacIma addSubview:subscribeBtn];
     self.subscribeBtn = subscribeBtn;

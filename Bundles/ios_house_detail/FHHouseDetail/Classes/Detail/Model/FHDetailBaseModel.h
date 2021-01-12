@@ -50,6 +50,9 @@ NS_ASSUME_NONNULL_BEGIN
 //根据houseModelType将多个cell分为一个模块
 @property (nonatomic, assign)FHHouseModelType houseModelType;
 @property (nonatomic, strong) UIImage *shadowImage;
+
+- (void)setOldDetailShadowImageType:(FHHouseShdowImageType)shadowImageType;
+
 @end
 
 @interface FHDetailPhotoHeaderModel : FHDetailBaseModel

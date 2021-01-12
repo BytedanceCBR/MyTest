@@ -28,6 +28,26 @@
     }
 }
 
+- (void)setOldDetailShadowImageType:(FHHouseShdowImageType)shadowImageType {
+    _shadowImageType = shadowImageType;
+    switch (shadowImageType) {
+        case FHHouseShdowImageTypeLR:
+            _shadowImage = [[UIImage imageNamed:@"left_right_1"]resizableImageWithCapInsets:UIEdgeInsetsMake(0,25,0,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        case FHHouseShdowImageTypeLTR:
+            _shadowImage = [[UIImage imageNamed:@"left_top_right_1"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,0,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        case FHHouseShdowImageTypeLBR:
+            _shadowImage = [[UIImage imageNamed:@"left_bottom_right_1"] resizableImageWithCapInsets:UIEdgeInsetsMake(0,25,30,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        case FHHouseShdowImageTypeRound:
+            _shadowImage = [[UIImage imageNamed:@"top_left_right_bottom_1"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,30,25) resizingMode:UIImageResizingModeStretch];
+            break;
+        default:
+            break;
+    }
+}
+
 - (void)setShdowImageScopeType:(FHHouseShdowImageScopeType)shdowImageScopeType {
     if (_shdowImageScopeType ==  FHHouseShdowImageScopeTypeDefault || _shdowImageScopeType ==  FHHouseShdowImageScopeTypeAll) {
                _shdowImageScopeType = shdowImageScopeType;

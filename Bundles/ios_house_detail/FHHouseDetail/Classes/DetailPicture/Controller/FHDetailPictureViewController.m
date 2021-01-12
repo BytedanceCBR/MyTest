@@ -963,6 +963,13 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
     CGFloat topMargin = kFHDPTopBarHeight + topInset + 42;
     CGFloat botttomMargin = 76 + bottomInset;
+    if (self.detailPictureModel.itemList.count) {
+        FHDetailPictureItemModel *itemModel = self.detailPictureModel.itemList.firstObject;
+        if (itemModel.desc.length) {
+            botttomMargin += 40;
+        }
+    }
+
     return CGRectMake(0, topMargin, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - topMargin - botttomMargin);
 //    return self.view.bounds;
 }

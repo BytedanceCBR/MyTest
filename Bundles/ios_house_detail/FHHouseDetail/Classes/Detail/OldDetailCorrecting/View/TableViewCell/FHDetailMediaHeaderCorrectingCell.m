@@ -27,7 +27,7 @@
 #import <TTUIWidget/TTNavigationController.h>
 #import "TTReachability.h"
 #import "ToastManager.h"
-#import "FHDetailHeaderTitleView.h"
+#import "FHOldDetailHeaderTitleView.h"
 #import <ByteDanceKit/ByteDanceKit.h>
 
 @interface FHDetailMediaHeaderCorrectingCell ()<FHMultiMediaCorrectingScrollViewDelegate,FHDetailScrollViewDidScrollProtocol,FHDetailVCViewLifeCycleProtocol>
@@ -142,7 +142,7 @@
     }
     
     // 房源名称标签的高度
-    NSDictionary *attributes = [FHDetailHeaderTitleView nameLabelAttributes];
+    NSDictionary *attributes = [FHOldDetailHeaderTitleView nameLabelAttributes];
     CGSize nameLableSize = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 42, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:attributes context:nil].size;
     CGFloat nameLabelHeight = nameLableSize.height;
     // 限制最多两行高度

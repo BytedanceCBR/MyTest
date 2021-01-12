@@ -21,8 +21,6 @@
 @property(nonatomic, strong) FHDetailStaticMap *mapView;
 @property(nonatomic, strong) UIImageView *nativeMapImageView;
 @property(nonatomic, strong) UIButton *mapMaskBtn;
-@property(nonatomic, weak) UIImageView *shadowImage;
-@property(nonatomic, strong) UIView *bottomGradientView;
 
 //@property (nonatomic, strong) UIButton *baiduPanoButton;
 
@@ -83,24 +81,6 @@
         self.searchApi.delegate = self;
     }
     return self;
-}
-
-- (UIView *)bottomGradientView {
-    if(!_bottomGradientView){
-        CGRect frame = CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), 29);
-        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-        gradientLayer.frame = frame;
-        gradientLayer.colors = @[
-            (__bridge id)[UIColor colorWithWhite:1 alpha:1].CGColor,
-            (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor
-        ];
-        gradientLayer.startPoint = CGPointMake(0.5, 0.2);
-        gradientLayer.endPoint = CGPointMake(0.5, 1);
-        
-        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
-        [_bottomGradientView.layer addSublayer:gradientLayer];
-    }
-    return _bottomGradientView;
 }
 
 - (void)setupViews:(BOOL)useNativeMap {
@@ -184,7 +164,6 @@
     
     _mapMaskBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.contentView addSubview:_mapMaskBtn];
-    [self.mapMaskBtn addSubview:self.bottomGradientView];
     
     [_mapMaskBtn setBackgroundColor:[UIColor clearColor]];
     [_mapMaskBtn addTarget:self action:@selector(mapMaskBtnClick:) forControlEvents:UIControlEventTouchUpInside];

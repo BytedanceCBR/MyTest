@@ -376,7 +376,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         self.questionBtn.hidden = NO;
         [self.questionBtn updateTitle:model.data.quickQuestion.buttonContent];
     }
-    // 添加core info
+    // 添加core info ✅
     if (model.data.coreInfo) {
         FHDetailErshouHouseCoreInfoModel *coreInfoModel = [[FHDetailErshouHouseCoreInfoModel alloc] init];
         coreInfoModel.coreInfo = model.data.coreInfo;
@@ -402,7 +402,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         priceChangeNoticeModel.contactModel = self.contactViewModel;
         [self.items addObject:priceChangeNoticeModel];
     }
-    // 添加属性列表
+    // 添加属性列表 ✅
     if (model.data.baseInfo || model.data.certificate || model.data.baseExtra) {
         FHDetailPropertyListCorrectingModel *propertyModel = [[FHDetailPropertyListCorrectingModel alloc] init];
         propertyModel.baseInfo = (NSArray<FHHouseCoreInfoModel> *)model.data.baseInfo;
@@ -412,7 +412,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         propertyModel.contactViewModel = self.contactViewModel;
         [self.items addObject:propertyModel];
     }
-    // 首付及月供模块
+    // 首付及月供模块 ✅
     if (model.data.downPaymentInfo) {
         FHDetailAdvisoryLoanModel *advisoryLoanModel = [[FHDetailAdvisoryLoanModel alloc]init];
         advisoryLoanModel.houseModelType = FHHouseModelTypeAdvisoryLoan;
@@ -421,7 +421,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         advisoryLoanModel.baseViewModel = self;
          [self.items addObject:advisoryLoanModel];
     }
-    //添加订阅房源动态卡片
+    //添加订阅房源动态卡片 ✅
     if(([self isShowSubscribe]) && !model.data.downPaymentInfo){
         FHDetailHouseSubscribeCorrectingModel *subscribeModel = [[FHDetailHouseSubscribeCorrectingModel alloc] init];
         subscribeModel.tableView = self.tableView;
@@ -492,7 +492,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:entranceModel];
     }
     
-    // 推荐经纪人
+    // 推荐经纪人 ✅
     FHDetailAgentListModel *agentListModels = nil;
     if (model.data.recommendedRealtors.count > 0) {
         agentListModels = [[FHDetailAgentListModel alloc] init];
@@ -522,7 +522,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
     }
     
     
-    //实勘经纪人
+    //实勘经纪人 ✅
     FHDetailSurveyAgentListModel *surveyAgentListModel = nil;
     if (model.data.surveyedRealtorInfo.items.count > 0) {
         surveyAgentListModel = [[FHDetailSurveyAgentListModel alloc] init];
@@ -599,7 +599,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:userHouseCommentModel];
     }
     
-    //经纪人评测
+    //经纪人评测 ✅
     if (model.data.realtorContent.content.data.count > 0) {
         FHhouseDetailRGCListCellModel *detailRGCListCellModel = [[FHhouseDetailRGCListCellModel alloc] init];
         detailRGCListCellModel.detailTracerDic = self.detailTracerDic;
@@ -640,7 +640,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         //这个功能不要了 by xsm
     }
     
-    // 小区评测
+    // 小区评测 ✅
     if (model.data.strategy && model.data.strategy.articleList.count > 0) {
         
         FHDetailAccessCellModel *cellModel = [[FHDetailAccessCellModel alloc] init];
@@ -663,7 +663,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:cellModel];
     }
     
-    // 小区点评
+    // 小区点评 ✅
     if(model.data.comments) {
         FHDetailCommentsCellModel *commentsModel = [[FHDetailCommentsCellModel alloc] init];
         commentsModel.neighborhoodId = model.data.neighborhoodInfo.id;
@@ -681,7 +681,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:commentsModel];
     }
     
-    // 小区问答
+    // 小区问答 ✅
     if (model.data.question) {
         // 添加分割线--当存在某个数据的时候在顶部添加分割线
         FHDetailQACellModel *qaModel = [[FHDetailQACellModel alloc] init];
@@ -692,14 +692,14 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         }
         paramsDict[@"page_type"] = [self pageTypeString];
         qaModel.tracerDict = paramsDict;
-        qaModel.topMargin = 30.f;
+        qaModel.topMargin = 0;
         qaModel.question = model.data.question;
         qaModel.houseModelType = FHPlotHouseModelTypeNeighborhoodQA;
         [self.items addObject:qaModel];
     }
     
 
-    //地图
+    //地图 ✅
     if(model.data.neighborhoodInfo.gaodeLat.length > 0 && model.data.neighborhoodInfo.gaodeLng.length > 0){
         FHDetailStaticMapCellModel *staticMapModel = [[FHDetailStaticMapCellModel alloc] init];
         staticMapModel.baiduPanoramaUrl = model.data.neighborhoodInfo.baiduPanoramaUrl;
@@ -735,7 +735,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
 
         [[HMDTTMonitor defaultManager] hmdTrackService:eventName metric:nil category:cat extra:params];
     }
-    // 均价走势
+    // 均价走势 ✅
     if (model.data.priceTrend.count > 0) {
         FHDetailPriceTrendCellModel *priceTrendModel = [[FHDetailPriceTrendCellModel alloc] init];
         priceTrendModel.housetype = self.houseType;
@@ -753,7 +753,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         [self.items addObject:priceTrendModel];
     }
     
-// MARK: 不展示均价对比模块
+// MARK: 不展示均价对比模块 ✅
 //    // 均价对比
 //    if(model.data.neighborhoodPriceRange && model.data.priceAnalyze){
 //        FHDetailAveragePriceComparisonModel *infoModel = [[FHDetailAveragePriceComparisonModel alloc] init];
@@ -780,7 +780,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         }
     }
     
-    //帮我卖房数据
+    //帮我卖房数据 ✅
     self.saleHouseEntranceData = model.data.saleHouseEntrance;
    
     self.items = [FHOldDetailModuleHelper moduleClassificationMethod:self.items];

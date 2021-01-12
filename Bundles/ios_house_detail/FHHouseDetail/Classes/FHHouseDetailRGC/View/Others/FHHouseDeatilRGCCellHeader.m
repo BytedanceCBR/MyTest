@@ -78,6 +78,26 @@
     }];
 }
 
+- (void)setupNewHouseStyle {
+    
+    [self.avatarView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self).offset(12);
+        make.centerY.equalTo(self);
+        make.size.mas_equalTo(CGSizeMake(36, 36));
+    }];
+    
+    [self.phoneBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.mas_right).offset(-12);
+        make.centerY.equalTo(self.avatarView);
+        make.size.mas_equalTo(CGSizeMake(36, 36));
+    }];
+    [self.iMBtn mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.phoneBtn.mas_left).offset(-16);
+        make.centerY.equalTo(self.avatarView);
+        make.size.mas_equalTo(CGSizeMake(36, 36));
+    }];
+}
+
 - (FHUGCAvatarView *)avatarView {
     if (!_avatarView) {
         _avatarView = [[FHUGCAvatarView alloc] init];
@@ -201,7 +221,7 @@
 //        self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];
 //    }
     
-    if (cellModel.realtor.desc) {
+    if (cellModel.realtor.desc.length) {
         self.infoLab.text = [NSString stringWithFormat:@"%@ %@",cellModel.realtor.desc,cellModel.createTime]; ;
     }else {
         self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];

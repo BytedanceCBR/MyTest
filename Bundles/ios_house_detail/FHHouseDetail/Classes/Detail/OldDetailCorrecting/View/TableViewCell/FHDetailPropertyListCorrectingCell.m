@@ -94,7 +94,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                     v.keyLabel.font = [UIFont themeFontRegular:16];
                     v.keyLabel.textColor = [UIColor themeGray3];
-                    v.valueLabel.font = [UIFont themeFontMedium:16];
+                    v.valueLabel.font = [UIFont themeFontRegular:16];
                     v.valueLabel.textColor = [UIColor themeGray1];
                     [self.containerView addSubview:v];
                     [self.itemArray addObject:v];
@@ -112,7 +112,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                     v.keyLabel.font = [UIFont themeFontRegular:16];
                     v.keyLabel.textColor = [UIColor themeGray3];
-                    v.valueLabel.font = [UIFont themeFontMedium:16];
+                    v.valueLabel.font = [UIFont themeFontRegular:16];
                     v.valueLabel.textColor = [UIColor themeGray1];
                     [self.containerView addSubview:v];
                     [self.itemArray addObject:v];
@@ -135,7 +135,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
                 FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
                 v.keyLabel.font = [UIFont themeFontRegular:16];
                 v.keyLabel.textColor = [UIColor themeGray3];
-                v.valueLabel.font = [UIFont themeFontMedium:16];
+                v.valueLabel.font = [UIFont themeFontRegular:16];
                 v.valueLabel.textColor = [UIColor themeGray1];
                 [self.containerView addSubview:v];
                 [self.itemArray addObject:v];
@@ -408,7 +408,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
     
     _infoLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
-    _infoLabel.font = [UIFont themeFontMedium:16];
+    _infoLabel.font = [UIFont themeFontRegular:16];
     _infoLabel.textColor = [UIColor themeGray1];
     [self addSubview:_infoLabel];
     _infoLabel.textAlignment = NSTextAlignmentLeft;
@@ -420,7 +420,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     _logoImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     _indicatorLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _indicatorLabel.font = [UIFont themeFontMedium:14];
+    _indicatorLabel.font = [UIFont themeFontRegular:16];
     _indicatorLabel.textColor = [UIColor colorWithHexStr:@"#9c6d43"];
     
     _indicator = [[UIImageView alloc]initWithImage:img];
@@ -526,7 +526,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
     if (!IS_EMPTY_STRING(neighborModel.subName)) {
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:neighborModel.subName attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontMedium:16]}];
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:neighborModel.subName attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:16]}];
         [minfoAttrStr appendAttributedString:infoStr];
     }
     _infoLabel.attributedText = minfoAttrStr;
@@ -547,7 +547,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         if (!budgetmodel.canLoan) {
             infoColor = [UIColor themeGray2];
         }
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:budgetmodel.baseContent attributes:@{NSForegroundColorAttributeName:infoColor,NSFontAttributeName:[UIFont themeFontMedium:16]}];
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:budgetmodel.baseContent attributes:@{NSForegroundColorAttributeName:infoColor,NSFontAttributeName:[UIFont themeFontRegular:16]}];
         [minfoAttrStr appendAttributedString:infoStr];
     }
     _infoLabel.attributedText = minfoAttrStr;
@@ -577,7 +577,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
      _nameLabel.text = floorInfo.baseTitle;
     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
     if (!IS_EMPTY_STRING(floorInfo.baseContent)) {
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:floorInfo.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontMedium:16]}];
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:floorInfo.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:16]}];
         [minfoAttrStr appendAttributedString:infoStr];
     }
     _infoLabel.attributedText = minfoAttrStr;
@@ -607,7 +607,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
       _nameLabel.text = houseCertificationInfo.baseTitle;
      NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
      if (!IS_EMPTY_STRING(houseCertificationInfo.subName)) {
-         NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:houseCertificationInfo.subName attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontMedium:16]}];
+         NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:houseCertificationInfo.subName attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:16]}];
          [minfoAttrStr appendAttributedString:infoStr];
      }
      _infoLabel.attributedText = minfoAttrStr;

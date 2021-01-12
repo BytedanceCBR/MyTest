@@ -129,18 +129,18 @@
     // > 3 添加折叠展开
     if (model.recommendedRealtors.count > 3) {
         _foldButton = [[FHDetailFoldViewButton alloc] initWithDownText:@"查看全部" upText:@"收起" isFold:YES];
-        _foldButton.openImage = [UIImage imageNamed:@"message_more_arrow"];
-        _foldButton.foldImage = [UIImage imageNamed:@"message_flod_arrow"];
+        _foldButton.openImage = [UIImage imageNamed:@"setting_arrow_bottom"];
+        _foldButton.foldImage = [UIImage imageNamed:@"setting_arrow_top"];
         _foldButton.keyLabel.textColor = [UIColor colorWithHexStr:@"#4a4a4a"];
         _foldButton.keyLabel.font = [UIFont themeFontRegular:14];
         [self.contentView addSubview:_foldButton];
         [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView.mas_bottom);
-            make.height.mas_equalTo(58);
+            make.height.mas_equalTo(42);
             make.left.right.mas_equalTo(self.contentView);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.contentView).offset(-58 - 4.5);
+            make.bottom.mas_equalTo(self.contentView).offset(-42 - 4.5);
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }

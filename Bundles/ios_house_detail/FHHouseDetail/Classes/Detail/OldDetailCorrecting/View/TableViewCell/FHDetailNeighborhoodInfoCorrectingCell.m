@@ -15,7 +15,6 @@
 #import "TTRoute.h"
 #import "FHDetailFoldViewButton.h"
 #import "UILabel+House.h"
-#import "FHDetailBottomOpenAllView.h"
 #import "UILabel+House.h"
 #import "UIColor+Theme.h"
 #import <FHCommonUI/UIView+House.h>
@@ -51,12 +50,12 @@
 
 - (void)setupUI {
     _nameLabel = [[UILabel alloc]init];
-    _nameLabel.font = [UIFont themeFontRegular:AdaptFont(14)];
+    _nameLabel.font = [UIFont themeFontRegular:14];
     _nameLabel.textColor = [UIColor themeGray3];
     [self addSubview:_nameLabel];
     
     _infoLabel = [[UILabel alloc]init];
-    _infoLabel.font = [UIFont themeFontMedium:AdaptFont(14)];
+    _infoLabel.font = [UIFont themeFontMedium:14];
     _infoLabel.textColor = [UIColor colorWithHexStr:@"#9c6d43"];
     [self addSubview:_infoLabel];
     _infoLabel.textAlignment = NSTextAlignmentLeft;
@@ -204,7 +203,7 @@
                 [self.consultView mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.left.right.mas_equalTo(self.headerView);
                     make.top.equalTo(self.topView.mas_bottom).mas_offset(10);
-                    make.height.mas_equalTo(16);
+                    make.height.mas_equalTo(20);
                     make.bottom.mas_equalTo(self.containerView).mas_offset(-10);
                 }];
             }
@@ -303,7 +302,8 @@
     }
 
     if (schoolNameComponents.length) {
-        CGFloat width = CGRectGetWidth(self.bounds) - 15 * 2 - 16 - 72 - 52 - 37;
+        // 没有折叠按钮展示时的标签宽度计算
+        CGFloat width = [self schoolNameLabelWidth:NO];
         UILabel *nameKey = [UILabel createLabel:@"学校:" textColor:@"" fontSize:14];
         nameKey.textColor = [UIColor themeGray3];
         UILabel *nameValue = [UILabel createLabel:schoolNameComponents.copy textColor:@"" fontSize:14];
@@ -316,16 +316,21 @@
         [nameKey mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.schoolView);
             make.top.mas_equalTo(self.schoolView);
+            make.height.mas_equalTo(20);
         }];
+        
         [nameValue mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.schoolView).mas_offset(42);
             make.width.mas_equalTo(width);
-            make.top.mas_equalTo(0);
+            make.top.bottom.equalTo(self.schoolView);
+            make.height.mas_equalTo([nameValue.text btd_heightWithFont:nameValue.font width:CGFLOAT_MAX]);
         }];
         
-        if ([schoolNameComponents btd_widthWithFont:self.schoolNameLabel.font height:16] > width) {
+        // 如果一行显示不完整，则计算多行展示的高度，并添加折叠按钮
+        if ([schoolNameComponents btd_widthWithFont:self.schoolNameLabel.font height:20] > width) {
+            // 添加折叠按钮
             UIButton *foldBtn = [[UIButton alloc] init];
-            UIImage *img = ICON_FONT_IMG(16, @"\U0000e672", nil);
+            UIImage *img = ICON_FONT_IMG(14, @"\U0000e672", nil);
             [foldBtn setImage:img forState:UIControlStateNormal];
             [foldBtn setImage:img forState:UIControlStateHighlighted];
             [foldBtn setHitTestEdgeInsets:UIEdgeInsetsMake(-10, -20, -20, -10)];
@@ -334,34 +339,57 @@
             self.foldBtn = foldBtn;
             [self.foldBtn mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.centerY.mas_equalTo(nameKey.mas_centerY);
-                make.right.mas_equalTo(-12);
-                make.size.mas_equalTo(CGSizeMake(16, 16));
+                make.right.mas_equalTo(0);
+                make.height.width.mas_equalTo(14);
             }];
+            
+            // 计算折叠按钮显示的场景下的标签尺寸
+            self.schoolNameLabel.numberOfLines = 0;
+            CGSize schoolNameComponentsSize = [schoolNameComponents btd_sizeWithFont:self.schoolNameLabel.font width:(width - 14)];
+            [nameValue mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.size.mas_equalTo(schoolNameComponentsSize);
+            }];
+
         }
     }
 }
-
+- (CGFloat)schoolNameLabelWidth:(BOOL)isShowFold {
+    CGFloat ret = SCREEN_WIDTH;
+    ret -= 21 * 2;  // 左右边距(卡片外边距+内容内边距)
+    ret -= 72;      // 图片宽度
+    ret -= 12;      // 图片与文字区域的水平间距
+    ret -= 42;      // 文字区域第二个标签的左边距
+    if(isShowFold) {
+        ret -= 14;  // 折叠按钮显示时，减去按钮宽度
+    }
+    return ret;
+}
 - (void)foldBtnDidClick {
     [UIView performWithoutAnimation:^{
         FHDetailNeighborhoodInfoCorrectingModel *model = (FHDetailNeighborhoodInfoCorrectingModel *)self.currentData;
         [model.tableView beginUpdates];
-        
-        CGFloat width = CGRectGetWidth(self.bounds) - 15 * 2 - 16 - 72 - 52 - 37;
+        // 折叠按钮展示时的标签宽度计算
+        CGFloat width = [self schoolNameLabelWidth:YES];
         self.foldBtn.selected = !self.foldBtn.selected;
         UIImage *img = nil;
         if (self.foldBtn.selected) {
-            img = ICON_FONT_IMG(16, @"\U0000e65f", nil);
+            img = ICON_FONT_IMG(14, @"\U0000e65f", nil);
             self.schoolNameLabel.numberOfLines = 0;
-            //        [self.schoolNameLabel btd_SetText:self.schoolNameLabel.text lineHeight:10];
             [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo([self.schoolNameLabel btd_heightWithWidth:width]);
             }];
-        }else {
-            img = ICON_FONT_IMG(16, @"\U0000e672", nil);
+            
+            [self.schoolNameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.schoolView).offset(-0.5);
+            }];
+        } else {
+            img = ICON_FONT_IMG(14, @"\U0000e672", nil);
             self.schoolNameLabel.numberOfLines = 1;
-            //        [self.schoolNameLabel btd_SetText:self.schoolNameLabel.text lineHeight:10];
             [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.height.mas_equalTo(16);
+                make.height.mas_equalTo([self.schoolNameLabel.text btd_heightWithFont:self.schoolNameLabel.font width:CGFLOAT_MAX]);
+            }];
+            [self.schoolNameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+                make.top.equalTo(self.schoolView).offset(0);
             }];
         }
         [self.foldBtn setImage:img forState:UIControlStateNormal];
@@ -475,7 +503,7 @@
     self.headerView = headerView;
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.coverImageView.mas_right).mas_offset(12);
-        make.right.mas_equalTo(self.containerView);
+        make.right.mas_equalTo(self.containerView).offset(-12);
         make.height.mas_equalTo(20);
         make.top.equalTo(self.containerView).mas_equalTo(12);
     }];
@@ -485,9 +513,10 @@
     [self.containerView addSubview:topView];
     self.topView = topView;
     [self.topView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.headerView);
+        make.left.equalTo(self.headerView);
+        make.right.equalTo(self.containerView).offset(-12);
         make.height.mas_equalTo(16);
-        make.top.mas_equalTo(self.headerView.mas_bottom).mas_offset(9);
+        make.top.equalTo(self.headerView.mas_bottom).mas_offset(9);
     }];
     
     UIView *schoolView = [[UIView alloc]init];
@@ -495,10 +524,10 @@
     [self.containerView addSubview:schoolView];
     self.schoolView = schoolView;
     [self.schoolView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.mas_equalTo(self.headerView);
-        make.top.mas_equalTo(self.topView.mas_bottom).mas_offset(9);
-        make.height.mas_equalTo(16);
-        make.bottom.mas_equalTo(-12);
+        make.left.right.equalTo(self.headerView);
+        make.top.equalTo(self.topView.mas_bottom).mas_offset(9);
+        make.height.mas_equalTo(20);
+        make.bottom.equalTo(self.containerView).offset(-12);
     }];
     
     [self.contentView addSubview:self.bottomLine];
