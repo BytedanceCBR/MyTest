@@ -356,9 +356,6 @@
     replyManager.ansid = self.ansid;
     replyManager.qid = self.qid;
     NSMutableDictionary *extraDic = [self.extraDic mutableCopy];
-    if ([self.extraDic.allKeys containsObject:@"page_type"]) {
-        extraDic[@"enter_from"] = self.extraDic[@"page_type"];
-    }
     replyManager.extraDic = extraDic;
     
     replyManager.serviceID = self.pageState.serviceID;

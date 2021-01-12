@@ -1997,6 +1997,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
         [params setValue:model.commentID.stringValue forKey:@"comment_id"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"group_id"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"page_type"]  forKey:@"page_type"];
         [params setValue:@"comment" forKey:@"click_position"];
         [TTTrackerWrapper eventV3:@"click_dislike" params:params];
     } else {
@@ -2009,6 +2010,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"page_type"]  forKey:@"page_type"];
         [params setValue:model.commentID.stringValue forKey:@"comment_id"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"group_id"];
         [params setValue:@"comment" forKey:@"click_position"];

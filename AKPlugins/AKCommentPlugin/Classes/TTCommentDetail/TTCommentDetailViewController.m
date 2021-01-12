@@ -99,7 +99,13 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     self.pageState.uniqueID = [baseCondition tt_stringValueForKey:@"uniqueID"];
     self.pageState.serviceID = [baseCondition tt_stringValueForKey:@"serviceID"];
     self.fromUGC = [baseCondition tt_boolValueForKey:@"fromUGC"];
-    self.extraDic = [baseCondition tt_objectForKey:@"extraDic"];
+//    self.extraDic = [baseCondition tt_objectForKey:@"extraDic"];
+    NSMutableDictionary *extraDic = [[baseCondition tt_objectForKey:@"extraDic"] mutableCopy];
+    if ([extraDic.allKeys containsObject:@"page_type"]) {
+        extraDic[@"enter_from"] = extraDic[@"page_type"];
+    }
+    extraDic[@"page_type"] = @"comment_detail";
+    self.extraDic = extraDic;
     //从消息进入, 或者从置顶评论进入 都算isFromMessage
     self.pageState.isFromMessage = [baseCondition tt_boolValueForKey:@"from_message"] || !isEmptyString(self.pageState.stickID);
     //TODO: 后续各种id迁到 pageState中
