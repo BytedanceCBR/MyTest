@@ -58,7 +58,7 @@
     [[self activeVC].view addSubview:self.button];
     [[self activeVC].view bringSubviewToFront:self.button];
     self.tracerDic = [[self.params btd_stringValueForKey:@"ext_growth"] btd_jsonDictionary].mutableCopy;
-    self.tracerDic[@"button_name"] = @"click_position";
+    self.tracerDic[@"button_name"] = @"return_button;
     
     [FHUserTracker writeEvent:@"botton_show" params:self.tracerDic];
 }
@@ -83,7 +83,7 @@
 
 - (void)liveApp{
     [self.button removeFromSuperview];
-    self.tracerDic[@"click_position"] = @"click_position";
+    self.tracerDic[@"click_position"] = @"return_button";
     [self.tracerDic removeObjectForKey:@"button_name"];
     [FHUserTracker writeEvent:@"click_options" params:self.tracerDic];
     if (@available(iOS 10.0, *)) {
