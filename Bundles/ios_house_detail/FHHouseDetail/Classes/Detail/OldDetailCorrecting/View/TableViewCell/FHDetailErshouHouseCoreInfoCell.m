@@ -64,10 +64,10 @@
                         
             // 设置布局
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.top.mas_equalTo(self.contentView).offset(10);
+                make.top.mas_equalTo(self.contentView).offset(7);
                 make.bottom.mas_equalTo(self.contentView).offset(-5);
                 make.width.mas_equalTo(itemWidth);
-                make.height.mas_equalTo(46);
+                make.height.mas_equalTo(42);
                 make.left.mas_equalTo(self.contentView).offset(leftOffset);
             }];
             
@@ -129,9 +129,9 @@
 }
 
 - (void)setupUI {
-    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:24];
+    _keyLabel = [UILabel createLabel:@"" textColor:@"" fontSize:20];
     _keyLabel.textColor = [UIColor colorWithHexStr:@"#FE5500"];
-    _keyLabel.font = [UIFont themeFontMedium:24];
+    _keyLabel.font = [UIFont themeFontMedium:20];
     [self addSubview:_keyLabel];
     
     _valueLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
@@ -151,7 +151,7 @@
     }];
     [self.valueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.leftPadding);
-        make.top.mas_equalTo(self.keyLabel.mas_bottom).offset(6);
+        make.top.mas_equalTo(self.keyLabel.mas_bottom).offset(2);
         make.height.mas_equalTo(14);
         make.right.mas_equalTo(self);
         make.bottom.mas_equalTo(self).offset(0);
