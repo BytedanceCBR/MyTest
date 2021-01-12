@@ -39,11 +39,11 @@
     
     NSURL *backUrl = [NSURL URLWithString:[self.params.copy btd_stringValueForKey:@"backurl" default:@""]];
     
-//    if(![[UIApplication sharedApplication] canOpenURL:backUrl]){
-//        return ;
-//    }else if(![self.params.copy btd_stringValueForKey:@"btn_name"]){
-//        self.params[@"btn_name"] = [self getbtnNameWithUrl:[self.params.copy btd_stringValueForKey:@"backurl" default:@""]];
-//    }
+    if(![[UIApplication sharedApplication] canOpenURL:backUrl]){
+        return ;
+    }else if(![self.params.copy btd_stringValueForKey:@"btn_name"]){
+        self.params[@"btn_name"] = [self getbtnNameWithUrl:[self.params.copy btd_stringValueForKey:@"backurl" default:@""]];
+    }
     
     self.backUrl = backUrl;
     NSString *title = [NSString stringWithFormat:@"%@ ",[self.params.copy btd_stringValueForKey:@"btn_name" default:@""]];
