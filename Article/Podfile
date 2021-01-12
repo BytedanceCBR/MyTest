@@ -680,8 +680,6 @@ target 'f100InHouse' do
     fhPods
     appPods
     appDevelopPods
-    script_phase :name => 'sgmpreaction', :script => '${PODS_ROOT}/SecGuard/IESSafeGuardDev/Assets/Resources/sgmpre.sh', :execution_position  => :before_compile
-
 end
 
 target 'f100' do
