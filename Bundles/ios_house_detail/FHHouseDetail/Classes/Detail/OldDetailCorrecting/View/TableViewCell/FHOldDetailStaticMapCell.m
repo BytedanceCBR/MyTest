@@ -141,7 +141,7 @@
     self.mapView.frame = mapFrame;
     self.nativeMapImageView.frame = mapFrame;
     self.mapMaskBtn.frame = mapFrame;
-    self.locationList.frame = CGRectMake(9, self.mapMaskBtn.bottom + 10, self.cellWidth, 40);
+    self.locationList.frame = CGRectMake(9, self.mapMaskBtn.bottom + 5.5, self.cellWidth, 40);
     self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
     [self.baiduPanoButton mas_updateConstraints:^(MASConstraintMaker *make) {

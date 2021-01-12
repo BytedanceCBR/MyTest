@@ -393,7 +393,7 @@ CGFloat getSameNeighborhoodHouseImageHeight(void);
         make.height.mas_equalTo(22);
     }];
     [self.totalPriceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.descriptionLabel.mas_bottom).offset(6);
+        make.top.equalTo(self.descriptionLabel.mas_bottom).offset(5);
         make.left.equalTo(self.contentView);
         make.height.mas_equalTo(19);
     }];

@@ -7,6 +7,7 @@
 
 #import "FHDetailQACellModel.h"
 #import "FHFeedUGCCellModel.h"
+#import "FHDetailHouseNeighborhoodQuestionCell.h"
 
 @implementation FHDetailQACellModel
 
@@ -61,7 +62,7 @@
     if(self.dataList.count > 0){
         self.viewHeight = self.headerViewHeight + self.footerViewHeight;
         for (FHFeedUGCCellModel *cellModel in self.dataList) {
-            CGFloat cellHeight = [FHNeighbourhoodQuestionCell heightForData:cellModel];
+            CGFloat cellHeight = [FHDetailHouseNeighborhoodQuestionCell heightForData:cellModel];
             self.viewHeight += cellHeight;
         }
     }else{

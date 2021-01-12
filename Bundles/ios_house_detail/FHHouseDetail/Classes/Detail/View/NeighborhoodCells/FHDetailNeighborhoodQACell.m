@@ -20,6 +20,7 @@
 #import "FHUtils.h"
 #import "FHUGCFeedDetailJumpManager.h"
 #import "FHDetailMoreView.h"
+#import "FHDetailHouseNeighborhoodQuestionCell.h"
 
 #define cellId @"cellId"
 
@@ -32,7 +33,6 @@
 @property(nonatomic , strong) UIView *titleView;
 @property(nonatomic , strong) UILabel *titleLabel;
 @property(nonatomic , strong) FHDetailMoreView *moreView;
-@property(nonatomic , strong) FHUGCCellManager *cellManager;
 @property(nonatomic , strong) NSMutableDictionary *clientShowDict;
 @property(nonatomic , strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 @property (nonatomic, strong) UIView *topLine;
@@ -64,8 +64,11 @@
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
-    //    self.contentView.backgroundColor = [UIColor themeGray7];
+
     self.tableView = [[UITableView alloc] init];
+    // 注册Cell
+    [_tableView registerClass:FHDetailHouseNeighborhoodQuestionCell.class forCellReuseIdentifier:NSStringFromClass(FHDetailHouseNeighborhoodQuestionCell.class)];
+    
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.layer.masksToBounds = YES;
     _tableView.delegate = self;
@@ -88,9 +91,6 @@
     }
     
     [self.containerView addSubview:_tableView];
-    
-    self.cellManager = [[FHUGCCellManager alloc] init];
-    [self.cellManager registerAllCell:_tableView];
     
     self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
     self.detailJumpManager.refer = 1;
@@ -132,7 +132,7 @@
         make.left.mas_equalTo(self.containerView);
         make.right.mas_equalTo(self.containerView);
         make.height.mas_equalTo(300);
-        make.bottom.mas_equalTo(self.containerView).offset(-9);
+        make.bottom.mas_equalTo(self.containerView);
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -285,18 +285,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        NSString *cellIdentifier = NSStringFromClass([self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil]);
+        NSString *cellIdentifier = NSStringFromClass(FHDetailHouseNeighborhoodQuestionCell.class);
         FHUGCBaseCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        
-        if (cell == nil) {
-            Class cellClass = NSClassFromString(cellIdentifier);
-            cell = [[cellClass alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        }
-        
         if(indexPath.row < self.dataList.count){
             [cell refreshWithData:cellModel];
         }
+        cell.backgroundColor = [UIColor clearColor];
         return cell;
     }
     return [[FHUGCBaseCell alloc] init];
@@ -307,10 +301,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.row < self.dataList.count){
         FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-        Class cellClass = [self.cellManager cellClassFromCellViewType:cellModel.cellSubType data:nil];
-        if([cellClass isSubclassOfClass:[FHUGCBaseCell class]]) {
-            return [cellClass heightForData:cellModel];
-        }
+        return [FHDetailHouseNeighborhoodQuestionCell heightForData:cellModel];
     }
     return 100;
 }

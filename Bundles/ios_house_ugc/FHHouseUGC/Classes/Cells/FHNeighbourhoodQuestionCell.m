@@ -297,6 +297,13 @@
             make.width.height.mas_equalTo(18);
         }];
         
+    
+        [self.answerIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.questionLabel.mas_bottom).offset(11);
+            make.left.mas_equalTo(self.bgView).offset(16);
+            make.width.height.mas_equalTo(18);
+        }];
+        
         [self.answerLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.answerIcon.mas_top).offset(-1);
             make.left.mas_equalTo(self.answerIcon.mas_right).offset(10);
