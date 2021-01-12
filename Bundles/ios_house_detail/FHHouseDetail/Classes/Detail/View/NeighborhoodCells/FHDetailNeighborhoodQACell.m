@@ -290,6 +290,7 @@
         if(indexPath.row < self.dataList.count){
             [cell refreshWithData:cellModel];
         }
+        cell.backgroundColor = [UIColor clearColor];
         return cell;
     }
     return [[FHUGCBaseCell alloc] init];
