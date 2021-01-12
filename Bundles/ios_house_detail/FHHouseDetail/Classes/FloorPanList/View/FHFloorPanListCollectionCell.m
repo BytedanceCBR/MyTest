@@ -29,7 +29,7 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     if (@available(iOS 11.0 , *)) {
         self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
-        self.tableView.estimatedRowHeight = UITableViewAutomaticDimension;
+        self.tableView.estimatedRowHeight = 0;
         self.tableView.estimatedSectionFooterHeight = 0;
         self.tableView.estimatedSectionHeaderHeight = 0;
     }
@@ -42,8 +42,9 @@
     [self.tableView setBackgroundColor:[UIColor themeGray7]];
 }
 
--(void)refreshDataWithItemArray:(NSArray *)itemArray subPageParams:(NSDictionary *)subPageParams {
-    self.viewModel = [[FHFloorPanListDetailViewModel alloc] initWithTableView:self.tableView itemArray:itemArray subPageParams:subPageParams];
+
+- (void)refreshDataWithItemArray:(NSArray *)itemArray subPageParams:(NSDictionary *)subPageParams elementShowCache:(NSMutableDictionary *)elementShowCache {
+    self.viewModel = [[FHFloorPanListDetailViewModel alloc] initWithTableView:self.tableView itemArray:itemArray subPageParams:subPageParams elementShowCache:elementShowCache];
 }
 
 @end

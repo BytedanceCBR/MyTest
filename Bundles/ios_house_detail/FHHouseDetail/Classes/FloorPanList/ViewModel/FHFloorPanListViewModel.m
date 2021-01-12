@@ -21,6 +21,7 @@
 @property(nonatomic,assign) CGFloat beginOffset;
 @property(nonatomic,assign) CGFloat lastOffset;
 @property(nonatomic,assign) NSInteger currentIndex;
+@property (nonatomic,strong) NSMutableDictionary *elementShowCache;
 @end
 
 @implementation FHFloorPanListViewModel
@@ -34,6 +35,7 @@
         self.contactViewModel = [viewController getContactViewModel];
         self.bottomBar.hidden = YES;
         self.currentCourtId = courtId;
+        self.elementShowCache = [NSMutableDictionary dictionary];
         [self startLoadData];
     }
     return self;
@@ -85,6 +87,9 @@
         [self.collectionView registerClass:[FHFloorPanListCollectionCell class] forCellWithReuseIdentifier:identifier];
     }
     [self.collectionView reloadData];
+    self.currentIndex = 0;
+    self.segmentedControl.selectedSegmentIndex = self.currentIndex;
+    [self updateSelectCell:self.currentIndex];
 }
 
 - (void)updateContactModel:(FHDetailFloorPanListResponseModel *)model {
@@ -154,7 +159,6 @@
     }
     self.dataList = dataList;
     self.segmentedControl.sectionTitles = titleArray;
-    self.segmentedControl.selectedSegmentIndex = 0;
 }
 
 - (void)updateSelectCell:(NSInteger)index {
@@ -179,7 +183,7 @@
     if([cell isKindOfClass:[FHFloorPanListCollectionCell class]]) {
         FHFloorPanListCollectionCell *detailCell = (FHFloorPanListCollectionCell *)cell;
         if(index >= 0 && index < self.dataList.count) {
-            [detailCell refreshDataWithItemArray:[self.dataList objectAtIndex:index] subPageParams:self.subPageParams];
+            [detailCell refreshDataWithItemArray:[self.dataList objectAtIndex:index] subPageParams:self.subPageParams elementShowCache:self.elementShowCache];
         }
     }
     return cell;
