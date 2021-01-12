@@ -35,6 +35,8 @@ NS_ASSUME_NONNULL_BEGIN
 -(NSArray<FHFilterNodeModel *> *)selectedNodes;
 
 -(void)onReset:(id)sender;
+-(void)willDisplay;
+-(void)willDismiss;
 @end
 
 NS_ASSUME_NONNULL_END

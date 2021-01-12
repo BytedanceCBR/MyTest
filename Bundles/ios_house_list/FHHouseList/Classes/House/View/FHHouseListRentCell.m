@@ -10,6 +10,7 @@
 #import "FHCommonDefines.h"
 #import <UIDevice+BTDAdditions.h>
 #import "FHHouseCardStatusManager.h"
+#import "FHEnvContext.h"
 
 @interface FHHouseListRentCell()
 
@@ -65,7 +66,8 @@
     FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
     CGFloat opacity = 1;
     if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
-        opacity = FHHouseCardReadOpacity;
+        opacity = [FHEnvContext FHHouseCardReadOpacity];
+        //FHHouseCardReadOpacity;
     }
     self.mainTitleLabel.layer.opacity = opacity;
     self.subTitleLabel.layer.opacity = opacity;
