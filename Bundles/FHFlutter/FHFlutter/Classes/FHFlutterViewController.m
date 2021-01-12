@@ -26,6 +26,8 @@
 #import <UIColor+Theme.h>
 #import "PackageRouteManager.h"
 #import <TTBaseMacro.h>
+#import "RouteAppFileUtil.h"
+#import "RouteAppPackagePackageInfo.h"
 
 @interface FHFlutterViewController()
 
@@ -99,9 +101,9 @@
     [self sendLoadingFinishLog];
     // Do any additional setup after loading the view, typically from a nib.
 }
+ 
 
-
-- (void)didMoveToParentViewController:(UIViewController*)parent{
+- (void)willMoveToParentViewController:(UIViewController *)parent{
     [super didMoveToParentViewController:parent];
     if(!parent){
         [[[UIApplication sharedApplication] keyWindow] endEditing:YES];
@@ -127,6 +129,8 @@
     BOOL canFlutterDynamicart =  [FHFlutterManager isCanFlutterDynamicart];
 
     _loadDynamicartNoPackage = NO;
+    
+    
 
     if(hasLocalPackage && canFlutterDynamicart && !isEmptyString(pluginName)){
         NSString *flutterUrl = [NSString stringWithFormat:@"local-flutter://%@%@",pluginName,[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"]];
@@ -148,6 +152,26 @@
         }
     }
     
+    
+    
+    NSString *packageFilePath = [RouteAppFileUtil getDebugPackagePathForPackageName:pluginName];
+
+    if ([RouteAppFileUtil checkFileExist:packageFilePath]) {
+        RouteAppPackagePackageInfo *package = [[RouteAppPackagePackageInfo alloc] init];
+        package.name = pluginName;
+        package.zipPackagePath = packageFilePath;
+        NSString *flutterUrl = [NSString stringWithFormat:@"local-flutter://%@%@",pluginName,[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"]];
+            
+        NSMutableDictionary *pageParams = @{
+                @"url":[NSString stringWithFormat:@"local-flutter://%@%@", pluginName, flutterUrl],@"packageInfo": package
+            };
+        if (resultPrams) {
+            [resultPrams addEntriesFromDictionary:pageParams];
+            [resultPrams setValue:flutterUrl forKey:@"url"];
+        }
+    }
+
+    
     NSString * paramsStr = [paramObj.allParams btd_objectForKey:kFHFlutterchemaParamsKey default:@""];
     if ([paramsStr isKindOfClass:[NSString class]]) {
        NSDictionary * paramsDict = [paramsStr btd_jsonDictionary];
@@ -159,9 +183,18 @@
     }
     NSString *reportStr = resultPrams[@"report_params"];
 
+    //处理客户端透传的origin_from字段
     if ([reportStr isKindOfClass:[NSString class]]) {
         reportStr = [reportStr btd_stringByURLDecode];
         resultPrams[@"report_params"] = reportStr;
+        NSMutableDictionary *reportDict = [NSMutableDictionary dictionaryWithDictionary:[reportStr btd_jsonDictionary]];
+        if(![reportDict.allKeys containsObject:@"origin_from"]){
+            NSString *originStr = paramObj.allParams[@"origin_from"];
+            if([originStr isKindOfClass:[NSString class]]){
+                reportDict[@"origin_from"] = originStr;
+                resultPrams[@"report_params"] = [reportDict btd_jsonStringEncoded];
+            }
+        }
     }
     
     if (![resultPrams.allKeys containsObject:kFHFlutterchemaViewTokenKey]) {
