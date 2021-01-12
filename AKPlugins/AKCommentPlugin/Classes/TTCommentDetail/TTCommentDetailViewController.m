@@ -104,7 +104,9 @@ NSString *const kTTCommentDetailForwardCommentNotification = @"kTTCommentDetailF
     if ([extraDic.allKeys containsObject:@"page_type"]) {
         extraDic[@"enter_from"] = extraDic[@"page_type"];
     }
+    
     extraDic[@"page_type"] = @"comment_detail";
+    extraDic[@"group_id"] = [baseCondition tt_stringValueForKey:@"groupId"];;
     self.extraDic = extraDic;
     //从消息进入, 或者从置顶评论进入 都算isFromMessage
     self.pageState.isFromMessage = [baseCondition tt_boolValueForKey:@"from_message"] || !isEmptyString(self.pageState.stickID);
