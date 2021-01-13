@@ -345,7 +345,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 - (void)loadView {
-    self.view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.applicationFrame];
+    self.view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
     UIView *contentView = [[UIView alloc] initWithFrame:self.view.bounds];
     contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:contentView];
@@ -455,19 +455,15 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     [self.view addSubview:_notNetHeader];
     if ([TTReachability isNetworkConnected]) {
         [_notNetHeader setHidden:YES];
+        self.notNetHeaderHeight = 0;
     } else {
         [_notNetHeader setHidden:NO];
+        self.notNetHeaderHeight = 36;
     }
     [self.notNetHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(self.customNavBarView.mas_bottom);
-        if ([TTReachability isNetworkConnected]) {
-            make.height.mas_equalTo(0);
-            _notNetHeaderHeight = 0;
-        }else {
-            make.height.mas_equalTo(36);
-            _notNetHeaderHeight = 36;
-        }
+        make.height.mas_equalTo(self.notNetHeaderHeight);
     }];
     __weak typeof(self)wself = self;
     _pushTipView = [[FHPushMessageTipView alloc] initAuthorizeTipWithCompleted:^(FHPushMessageTipCompleteType type) {
