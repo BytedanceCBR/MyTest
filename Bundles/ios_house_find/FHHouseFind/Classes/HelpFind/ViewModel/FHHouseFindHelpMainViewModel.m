@@ -9,6 +9,7 @@
 #import "FHMainApi+HouseFind.h"
 #import "FHHouseFindMainViewController.h"
 #import "FHHouseType.h"
+#import "FHOneTouchBackManager.h"
 
 @interface FHHouseFindHelpMainViewModel ()
 
@@ -62,6 +63,7 @@
             wSelf.viewController.hasValidateData = NO;
             [wSelf.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNoData];
         }
+        [[FHOneTouchBackManager sharedInstance] updateButton];
     }];
     
 }

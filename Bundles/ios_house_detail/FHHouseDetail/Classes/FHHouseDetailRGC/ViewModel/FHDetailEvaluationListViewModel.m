@@ -16,7 +16,6 @@
 #import "TTHttpTask.h"
 #import "FHRefreshCustomFooter.h"
 #import "ToastManager.h"
-
 #import "FHFeedListModel.h"
 #import "FHRealtorEvaluatingTracerHelper.h"
 #import "FHUGCFeedDetailJumpManager.h"
@@ -460,6 +459,12 @@
     //    9.log_pb
     NSMutableDictionary *params = self.tracerDic.mutableCopy;
     [FHUserTracker writeEvent:@"go_detail" params:params];
+}
+
+- (void)addStayPageTracerWithTimer:(NSNumber *)duration {
+    NSMutableDictionary *params = self.tracerDic.mutableCopy;
+    params[@"stay_time"] = duration;
+    [FHUserTracker writeEvent:@"stay_page" params:params];
 }
 
 - (void)addTabClickOptionTracer {
