@@ -85,7 +85,7 @@
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         __block CGFloat vHeight = 68;
-        __block CGFloat marginTop = 9;
+        __block CGFloat marginTop = 3;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             StrongSelf;
             
@@ -386,7 +386,7 @@
             };
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(showHeight + 12);
+            make.height.mas_equalTo(showHeight + 6);
         }];
         realtorShowCount = model.recommendedRealtors.count;
     } else {
