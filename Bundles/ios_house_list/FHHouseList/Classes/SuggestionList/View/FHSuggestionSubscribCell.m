@@ -145,7 +145,7 @@
             self.currentModel.isSubscribe = YES;
             _subscribeBtn.layer.borderColor = [UIColor themeGray6].CGColor;
             [_subscribeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-            [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
+            [_subscribeBtn setTitle:@"取消订阅" forState:UIControlStateNormal];
         }else if (status && [status isEqualToString:@"0"])
         {
             self.currentModel.isSubscribe = NO;
@@ -183,7 +183,7 @@
         if (model.isSubscribe) {
             _subscribeBtn.layer.borderColor = [UIColor themeGray6].CGColor;
             [_subscribeBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-            [_subscribeBtn setTitle:@"已订阅" forState:UIControlStateNormal];
+            [_subscribeBtn setTitle:@"取消订阅" forState:UIControlStateNormal];
         }else
         {
             _subscribeBtn.layer.borderColor = [UIColor themeOrange1].CGColor;

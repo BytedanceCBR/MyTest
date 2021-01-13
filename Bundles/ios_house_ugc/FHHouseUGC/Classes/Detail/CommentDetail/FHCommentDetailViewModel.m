@@ -7,7 +7,6 @@
 
 #import "FHCommentDetailViewModel.h"
 #import "FHHouseListAPI.h"
-#import "FHSugSubscribeItemCell.h"
 #import "FHCommentDetailViewController.h"
 #import "FHUserTracker.h"
 #import "FHUGCBaseCell.h"

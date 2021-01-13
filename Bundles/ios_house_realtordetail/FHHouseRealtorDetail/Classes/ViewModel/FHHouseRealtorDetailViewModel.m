@@ -351,7 +351,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(self.showPlaceHolder) {
+    if (self.showPlaceHolder) {
         return;
     }
     FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];

@@ -10,8 +10,10 @@
 #import "FHSugSubscribeItemCell.h"
 #import "FHSugSubscribeListViewController.h"
 #import "FHUserTracker.h"
+#import "NSArray+BTDAdditions.h"
 
 #define kFHSugSubscribeNotificationName @"kFHSugSubscribeNotificationName"
+static NSString* const kFHSuggestionSubscribeNotificationKey = @"kFHSuggestionSubscribeNotificationKey";
 
 @interface FHSugSubscribeListViewModel ()<UITableViewDelegate,UITableViewDataSource>
 
@@ -21,6 +23,7 @@
 @property (nonatomic, strong , nullable) NSMutableArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
 @property (nonatomic, assign)   NSInteger       totalCount; // 订阅搜索总个数
 @property (nonatomic, strong)   NSMutableDictionary *tracerCacheDic;// 埋点
+@property (nonatomic, strong) TTHttpTask *requestTask;
 
 @end
 
@@ -152,7 +155,6 @@
             cell.titleLabel.text = model.title;
             cell.sugLabel.text = model.text; 
             cell.isValid = model.status;
-            cell.selectionStyle = UITableViewCellSelectionStyleNone;
             [cell updateConstraintsIfNeeded];
             return cell;
         }
@@ -166,6 +168,45 @@
         FHSugSubscribeDataDataItemsModel *model = self.subscribeItems[indexPath.row];
         [self addItemShowTracer:model index:indexPath.row];
     }
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    FHSugSubscribeDataDataItemsModel *model = [self.subscribeItems btd_objectAtIndex:indexPath.row];
+    if (!model) {
+        return;
+    }
+    
+    NSString *subscribeID = model.subscribeId;
+    NSString *text = model.text;
+    __weak typeof(self) weakSelf = self;
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [weakSelf determineToDeleteSubscriptionWithsubscribeID:subscribeID text:text];
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return @"删除";
+}
+
+///iOS11以上系统使用方法修改删除按钮样式
+- (UISwipeActionsConfiguration *)tableView:(UITableView *)tableView trailingSwipeActionsConfigurationForRowAtIndexPath:(NSIndexPath *)indexPath {
+    FHSugSubscribeDataDataItemsModel *model = [self.subscribeItems btd_objectAtIndex:indexPath.row];
+    NSString *subscribeID = model.subscribeId;
+    NSString *subscribeText = model.text;
+    __weak typeof(self) weakSelf = self;
+    UIContextualAction *action = [UIContextualAction contextualActionWithStyle:UIContextualActionStyleNormal title:@"删除" handler:^(UIContextualAction * _Nonnull action, __kindof UIView * _Nonnull sourceView, void (^ _Nonnull completionHandler)(BOOL)) {
+        [weakSelf determineToDeleteSubscriptionWithsubscribeID:subscribeID text:subscribeText];
+    }];
+
+    action.backgroundColor = [UIColor themeOrange1];
+    UISwipeActionsConfiguration *config = [UISwipeActionsConfiguration configurationWithActions:@[action]];
+    config.performsFirstActionWithFullSwipe = NO;
+
+    return config;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -267,6 +308,46 @@
             [FHUserTracker writeEvent:@"subscribe_card_click" params:tracerDic];
         }
     }
+}
+
+- (void)determineToDeleteSubscriptionWithsubscribeID:(NSString *)subscribeID text:(NSString *)text {
+    __weak typeof(self) weakSelf = self;
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"确认取消订阅？" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"我再想想" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    }];
+    UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"删除" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [weakSelf requestDeleteSubScribe:subscribeID andText:text];
+    }];
+    [alertController addAction:cancelAction];
+    [alertController addAction:confirmAction];
+    
+    [self.listController presentViewController:alertController animated:YES completion:nil];
+}
+
+- (void)requestDeleteSubScribe:(NSString *)subscribeId andText:(NSString *)text {
+    if (!subscribeId || !text) {
+        return;
+    }
+    
+    [self.requestTask cancel];
+    TTHttpTask *task = [FHHouseListAPI requestDeleteSugSubscribe:subscribeId class:nil completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+        if (!error) {
+            NSMutableDictionary *dict = [NSMutableDictionary new];
+            if (text.length > 0) {
+                [dict setValue:text forKey:@"text"];
+            }
+            [dict setValue:@"0" forKey:@"status"];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFHSuggestionSubscribeNotificationKey object:nil userInfo:dict];
+            
+            NSMutableDictionary *uiDict = [NSMutableDictionary new];
+            [uiDict setValue:@(NO) forKey:@"subscribe_state"];
+            [uiDict setValue:subscribeId forKey:@"subscribe_id"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHSugSubscribeNotificationName" object:uiDict];
+        }
+    }];
+    
+    self.requestTask = task;
 }
 
 @end
