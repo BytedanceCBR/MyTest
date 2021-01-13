@@ -12,6 +12,7 @@
 #import <FHFeedUGCCellModel.h>
 #import <TTShortVideoModel.h>
 #import <FHCommonDefines.h>
+#import "UIViewAdditions.h"
 
 @interface FHUGCAvatarView ()
 
@@ -26,9 +27,10 @@
         _avatarImageView = [[FHUGCCommonAvatar alloc] init];
         _placeHoldName = @"detail_default_avatar";
         [self addSubview:_avatarImageView];
-        [self.avatarImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(self);
-        }];
+        _avatarImageView.top = 0;
+        _avatarImageView.left = 0;
+        _avatarImageView.width = self.width;
+        _avatarImageView.height = self.height;
     }
     return self;
 }
@@ -39,6 +41,10 @@
         _identifyImageView.contentMode = UIViewContentModeScaleAspectFill;
         _identifyImageView.hidden = YES;
         [self addSubview:_identifyImageView];
+
+        _identifyImageView.left = 0;
+        _identifyImageView.width = self.width;
+        _identifyImageView.height = 0;
     }
     return _identifyImageView;
 }
@@ -68,10 +74,10 @@
                 if (image.size.height > 0 && image.size.width) {
                     ratio = image.size.height / image.size.width;
                 }
-                [self.identifyImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-                    make.left.bottom.right.mas_equalTo(self);
-                    make.height.mas_equalTo(self.avatarImageView.mas_width).multipliedBy(ratio);
-                }];
+  
+                CGFloat height = ceil(self.identifyImageView.width * ratio);
+                self.identifyImageView.height = height;
+                self.identifyImageView.top = self.avatarImageView.height - height;
             }
         }];
     } else {

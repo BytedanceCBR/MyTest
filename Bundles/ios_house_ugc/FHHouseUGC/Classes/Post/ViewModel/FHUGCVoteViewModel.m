@@ -91,12 +91,12 @@
         UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
         [self.voteOptionsTableView addGestureRecognizer:pan];
       
-    // 可见范围
-    self.scopeView = [[FHUGCVotePublishScopeView alloc] initWithFrame:CGRectMake(0, self.voteOptionsTableView.bottom + SECTION_VGAP, self.voteOptionsTableView.frame.size.width, CELL_HEIGHT)];
-    self.scopeView.delegate = self;
+//    // 可见范围
+//    self.scopeView = [[FHUGCVotePublishScopeView alloc] initWithFrame:CGRectMake(0, self.voteOptionsTableView.bottom + SECTION_VGAP, self.voteOptionsTableView.frame.size.width, CELL_HEIGHT)];
+//    self.scopeView.delegate = self;
     
     // 投票类型
-    self.typeView = [[FHUGCVotePublishVoteTypeView alloc] initWithFrame:CGRectMake(0, self.scopeView.bottom, self.scopeView.frame.size.width, CELL_HEIGHT)];
+    self.typeView = [[FHUGCVotePublishVoteTypeView alloc] initWithFrame:CGRectMake(0, self.voteOptionsTableView.bottom + SECTION_VGAP, self.voteOptionsTableView.frame.size.width, CELL_HEIGHT)];
     self.typeView.delegate = self;
     
     // 投票截止日期
@@ -112,7 +112,7 @@
     [self.scrollView addSubview:self.voteOptionsTableView];
 
     // 下半截
-    [self.scrollView addSubview:self.scopeView];
+//    [self.scrollView addSubview:self.scopeView];
     [self.scrollView addSubview:self.typeView];
     [self.scrollView addSubview:self.deadlineDateView];
 
@@ -291,9 +291,9 @@
 
 // MARK: FHUGCVotePublishBaseViewDelegate
 
-- (void)voteScopeView:(FHUGCVotePublishScopeView *)scopeView tapAction:(UITapGestureRecognizer *)tap {
-    [self gotoVoteVisibleScopePage];
-}
+//- (void)voteScopeView:(FHUGCVotePublishScopeView *)scopeView tapAction:(UITapGestureRecognizer *)tap {
+//    [self gotoVoteVisibleScopePage];
+//}
 
 - (void)voteTypeView:(FHUGCVotePublishVoteTypeView *)scopeView tapAction:(UITapGestureRecognizer *)tap {
     [self gotoVoteTypeSelectPage];
@@ -520,8 +520,8 @@
 }
 
 - (void)updateBottomViewsLocation {
-    self.scopeView.top = self.voteOptionsTableView.bottom + SECTION_VGAP;
-    self.typeView.top = self.scopeView.bottom;
+//    self.scopeView.top = self.voteOptionsTableView.bottom + SECTION_VGAP;
+    self.typeView.top = self.voteOptionsTableView.bottom + SECTION_VGAP;
     self.deadlineDateView.top = self.typeView.bottom;
 }
 

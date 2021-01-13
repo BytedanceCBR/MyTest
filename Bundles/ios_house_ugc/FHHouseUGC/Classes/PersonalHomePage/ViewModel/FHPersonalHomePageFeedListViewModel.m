@@ -277,11 +277,6 @@ typedef NS_ENUM(NSInteger,FHPersonalHomePageFeedListType){
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
-
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    [self.detailJumpManager goToCommunityDetail:cellModel];
-}
-
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
     NSMutableDictionary *dict = @{}.mutableCopy;
     // 埋点

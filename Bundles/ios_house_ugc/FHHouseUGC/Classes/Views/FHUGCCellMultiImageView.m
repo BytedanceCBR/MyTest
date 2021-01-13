@@ -16,6 +16,7 @@
 #import "FHUGCCellHelper.h"
 #import "UIViewAdditions.h"
 #import "UIImageView+fhUgcImage.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 #define itemPadding 4
 #define kMaxCount 9
@@ -57,7 +58,7 @@
         imageView.contentMode = UIViewContentModeScaleAspectFill;
         imageView.backgroundColor = [UIColor themeGray6];
         imageView.layer.borderColor = [[UIColor themeGray6] CGColor];
-        imageView.layer.borderWidth = 0.5;
+        imageView.layer.borderWidth = [UIDevice btd_onePixel];
         imageView.layer.masksToBounds = YES;
         imageView.layer.cornerRadius = 4;
         imageView.hidden = YES;
@@ -115,7 +116,6 @@
         _imageHeight = _imageWidth;
         _viewHeight = ceil(_imageWidth * 2 + itemPadding);
         
-        UIView *topView = self;
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
             UIImageView *imageView = self.imageViewList[i];
             NSInteger row = i/2; // 0,1,2
@@ -134,7 +134,6 @@
         NSInteger row = (self.count - 1)/3;
         _viewHeight = ceil(_imageWidth * (row + 1) + itemPadding * row);
         
-        UIView *topView = self;
         for (NSInteger i = 0; i < self.imageViewList.count; i++) {
             UIImageView *imageView = self.imageViewList[i];
             NSInteger row = i/3; // 0,1,2
@@ -185,8 +184,6 @@
             if (imageModel) {
                 NSArray *urls = [FHUGCCellHelper convertToImageUrls:imageModel];
                 [imageView fh_setImageWithURLs:urls placeholder:nil reSize:imageView.size];
-//                [imageView fh_setImageWithURL:imageModel.url placeholder:nil reSize:imageView.size];
-                
             }
         }else{
             imageView.hidden = YES;
@@ -207,7 +204,7 @@
     
     if(imageList.count > self.count){
         self.infoLabel.hidden = NO;
-        self.infoLabel.text = [NSString stringWithFormat:@"共%i张",imageList.count];
+        self.infoLabel.text = [NSString stringWithFormat:@"共%lu张",(unsigned long)imageList.count];
     }else{
         self.infoLabel.hidden = YES;
     }
