@@ -356,8 +356,12 @@
     if (![data isKindOfClass:[FHDetailStaticMapCellModel class]]) {
         return;
     }
+    if (self.currentData == data) {
+        return;
+    }
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) data;
     adjustImageScopeType(dataModel)
+
     self.currentData = data;    
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
     
