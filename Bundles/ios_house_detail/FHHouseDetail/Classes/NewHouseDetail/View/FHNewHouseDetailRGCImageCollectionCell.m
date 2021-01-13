@@ -31,7 +31,12 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height = 0;
-        height += 50;
+        if (cellModel.realtor) {
+            height += 48;
+        } else {
+            height += 52;
+        }
+        
         height += 10;
         height += cellModel.contentHeight;
         height += 10;
@@ -123,13 +128,17 @@
     }
     self.currentData = data;
     
+    CGFloat contentLabelTopMargin = 50;
+    CGFloat contentLabelHeight = 0;
     if (cellModel.realtor) {
         self.userInfoView.hidden = YES;
         self.headerView.hidden = NO;
+        contentLabelTopMargin = 36 + 12;
         [self.headerView refreshWithData:cellModel];
     }else {
         self.userInfoView.hidden = NO;
         self.headerView.hidden = YES;
+        contentLabelTopMargin = 40 + 12;
         [self.userInfoView refreshWithData:cellModel];
     }
     
@@ -137,16 +146,17 @@
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if (cellModel.content.length) {
         self.contentLabel.hidden = NO;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(cellModel.contentHeight);
-        }];
+        contentLabelHeight = cellModel.contentHeight;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }else {
         self.contentLabel.hidden = YES;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
+        contentLabelHeight = 0;
     }
+    
+    [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(contentLabelTopMargin);
+        make.height.mas_equalTo(contentLabelHeight);
+    }];
         
     self.lineView.hidden = !cellModel.isShowLineView;
     [self.headerView hiddenConnectBtn:cellModel.isHiddenConnectBtn];
