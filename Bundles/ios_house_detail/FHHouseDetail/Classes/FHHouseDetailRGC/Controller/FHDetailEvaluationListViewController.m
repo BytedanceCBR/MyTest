@@ -11,6 +11,7 @@
 #import "UIDevice+BTDAdditions.h"
 #import "FHDetailEvaluationListViewModel.h"
 #import "UIImage+FIconFont.h"
+#import "UIViewController+Track.h"
 @interface FHDetailEvaluationListViewController ()
 @property (weak, nonatomic) UITableView *mainTable;
 @property (strong, nonatomic) FHDetailEvaluationListViewModel *viewModel;
@@ -34,6 +35,7 @@
         _channelId = allParams[@"category_name"];
         _tabsInfo = [self arrayWithJsonString:allParams[@"tab_list"]];
         _vcTitle = allParams[@"title"];
+        self.ttTrackStayEnable = YES;
         self.tracerDict = allParams [@"tracer"];
     }
     return self;
@@ -46,6 +48,26 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [_viewModel addGoDtailTracer];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    NSTimeInterval duration = self.ttTrackStayTime * 1000.0;
+    if (duration == 0) {//当前页面没有在展示过
+        return;
+    }
+    [_viewModel addStayPageTracerWithTimer:[NSNumber numberWithInteger:duration]];
+}
+
+
+- (void)trackEndedByAppWillEnterBackground {
+    
+    [self.viewModel addStayPageTracerWithTimer:[NSNumber numberWithInteger:self.ttTrackStayTime * 1000.0]];
+}
+
+- (void)trackStartedByAppWillEnterForground {
+    [self tt_resetStayTime];
+    self.ttTrackStartTime = [[NSDate date] timeIntervalSince1970];
 }
 // 重新加载
 - (void)retryLoadData {
