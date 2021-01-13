@@ -29,6 +29,8 @@
         UIImageView *coverImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 140, 120)];
         coverImageView.layer.masksToBounds = YES;
         coverImageView.layer.cornerRadius = 4.0;
+        coverImageView.layer.borderWidth = 1;
+        coverImageView.layer.borderColor = [UIColor themeGray6].CGColor;
         [self.contentView addSubview:coverImageView];
         self.coverImageView = coverImageView;
         [self.coverImageView mas_makeConstraints:^(MASConstraintMaker *make) {

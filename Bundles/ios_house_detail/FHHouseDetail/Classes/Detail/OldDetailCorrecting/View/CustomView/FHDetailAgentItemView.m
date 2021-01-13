@@ -127,7 +127,7 @@
 @property (nonatomic, assign) CGFloat rightMargin;
 @property (nonatomic, strong) FHDetailContactModel *model;
 @property (nonatomic, strong) UICollectionView *tagsView;
-
+@property (nonatomic, assign) CGFloat agencyMaxWidth;
 @end
 
 @implementation FHDetailAgentItemView
@@ -216,7 +216,8 @@
         make.centerY.equalTo(self.nameLabel);
         make.height.mas_equalTo(16);
         make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
-        make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+        make.width.mas_equalTo(0);
+        //make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
     }];
     
     self.agencyLabel = [[UILabel alloc] init];
@@ -225,8 +226,8 @@
     self.agencyLabel.textAlignment = NSTextAlignmentCenter;
     [self.agencyBac addSubview:self.agencyLabel];
     [self.agencyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(5);
-        make.right.mas_equalTo(-5);
+        make.left.mas_equalTo(2);
+        make.right.mas_equalTo(-2);
         make.centerY.mas_equalTo(self.agencyBac);
 //        make.edges.mas_equalTo(UIEdgeInsetsMake(3, 5, 3, 5));
     }];
@@ -242,6 +243,7 @@
         make.left.equalTo(self.nameLabel);
         make.top.equalTo(self.nameLabel.mas_bottom).offset(8);
         make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).mas_offset(0);
+        make.height.mas_equalTo(12);
     }];
     
 //    self.scoreDescription = [UILabel createLabel:@"" textColor:@"" fontSize:14];
@@ -279,6 +281,8 @@
     self.agencyLabel.text = model.agencyName;
     self.agencyBac.hidden = !model.agencyName.length;
     [self.avatorView updateAvatarWithModel:model];
+    CGFloat agencyWidth = [model.agencyName btd_widthWithFont:self.agencyLabel.font height:self.agencyLabel.frame.size.height] + 4;
+    
     
     if (model.realtorScoreDisplay.length && model.realtorTags.count) {
         //3行全有
@@ -375,14 +379,16 @@
             make.centerY.equalTo(self.nameLabel);
             make.height.mas_equalTo(16);
             make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
-            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+            make.width.mas_equalTo(agencyWidth);
+            //make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
         }];
     } else {
         [self.agencyBac mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.nameLabel);
             make.height.mas_equalTo(16);
             make.left.mas_equalTo(self.licenseButton.mas_right).offset(4);
-            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+            make.width.mas_equalTo(agencyWidth);
+           // make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
         }];
     }
     
@@ -403,9 +409,13 @@
     [super layoutSubviews];
     
     if (CGRectGetWidth(self.bounds) > 0) {
-        FHDetailContactModel *model = self.model;
-        CGFloat agencyWidth = [model.agencyName btd_widthWithFont:self.agencyLabel.font height:self.agencyLabel.frame.size.height];
-        if (!self.agencyBac.hidden && self.agencyBac.frame.size.width > 0 && agencyWidth > (CGRectGetWidth(self.agencyBac.bounds) - 10)) {
+//        FHDetailContactModel *model = self.model;
+//        CGFloat agencyWidth = [model.agencyName btd_widthWithFont:self.agencyLabel.font height:self.agencyLabel.frame.size.height];
+//        if (!self.agencyBac.hidden && self.agencyBac.frame.size.width > 0 && agencyWidth > (CGRectGetWidth(self.agencyBac.bounds) - 4)) {
+//            self.agencyBac.hidden = YES;
+//        }
+        if (!self.agencyBac.hidden && self.agencyBac.frame.origin.x + self.agencyBac.frame.size
+            .width > self.imBtn.frame.origin.x) {
             self.agencyBac.hidden = YES;
         }
     }
