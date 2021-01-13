@@ -87,7 +87,7 @@
     if (model.recommendedRealtors.count > 0) {
         __block NSInteger itemsCount = 0;
         __block CGFloat vHeight = 68;
-        __block CGFloat marginTop = 0;
+        __block CGFloat marginTop = 9;
         [model.recommendedRealtors enumerateObjectsUsingBlock:^(FHDetailContactModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             StrongSelf;
             if (obj.realtorScoreDisplay.length > 0 && obj.realtorTags.count > 0) {
@@ -131,11 +131,11 @@
         [self.contentView addSubview:_foldButton];
         [_foldButton mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.containerView.mas_bottom);
-            make.height.mas_equalTo(58);
+            make.height.mas_equalTo(42);
             make.left.right.mas_equalTo(self.contentView);
         }];
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.contentView).offset(-58 - 4.5);
+            make.bottom.mas_equalTo(self.contentView).offset(-42 - 4.5);
         }];
         [self.foldButton addTarget:self action:@selector(foldButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     }
