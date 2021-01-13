@@ -41,6 +41,7 @@
 #import "ExploreMomentDefine.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTBusinessManager+StringUtils.h"
+#import "FHUserTracker.h"
 
 static const CGFloat kBarHeight = 49;
 #define kDeleteCommentActionSheetTag 10
@@ -431,7 +432,7 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
 }
 
 - (void)p_replyCommentWithModel:(id <TTVReplyModelProtocol>)model switchToEmojiInput:(BOOL)switchToEmojiInput {
-
+    [self p_sendClickComment];
     BOOL (^handleBlock)(BOOL, BOOL) = ^(BOOL isBlocking, BOOL isBlocked){
         NSString * description = nil;
         if (isBlocked) {
@@ -496,7 +497,10 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     replyManager.enterFrom = self.enterFromStr;
     replyManager.categoryID = self.categoryID;
     replyManager.logPb = self.logPb;
-    replyManager.extraDic = self.extraDic;
+    NSMutableDictionary *extraDic = [self.extraDic mutableCopy];
+    extraDic[@"enter_from"] = @"video_detail";
+    replyManager.extraDic = extraDic;
+    
 
     self.replyWriteView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];
 
@@ -510,6 +514,24 @@ extern BOOL ttvs_isShareIndividuatioEnable(void);
     [self.replyWriteView showInView:self.view animated:YES];
 
 }
+- (void)p_sendClickComment {
+    NSMutableDictionary *dic = [self.extraDic mutableCopy];
+    [dic setValue:self.viewModel.commentModel.groupModel.groupID forKey:@"group_id"];
+    [dic setValue:_needDeleteCommentModel.commentID forKey:@"comment_id"];
+    [dic setValue:@"video_detail" forKey:@"page_type"];
+    [dic setValue:@(1) forKey:@"is_reply"];
+    [dic setValue:@"reply" forKey:@"click_position"];
+    [dic setValue:@(1) forKey:@"is_following"];
+    if ([self.logPb.allKeys containsObject:@"group_source"]) {
+        [dic setValue:self.logPb[@"group_source"] forKey:@"group_source"];
+    }
+    if ([self.logPb.allKeys containsObject:@"impr_id"]) {
+        [dic setValue:self.logPb[@"impr_id"] forKey:@"impr_id"];
+    }
+    [dic setValue:self.categoryID forKey:@"category_name"];
+    [FHUserTracker writeEvent:@"click_comment" params:dic];
+}
+
 
 - (void)p_deleteReplyComment {
     BOOL deleteSelfComment = NO;

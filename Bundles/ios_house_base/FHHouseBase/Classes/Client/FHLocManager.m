@@ -339,7 +339,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
     [AMapServices sharedServices].apiKey = [FHLocManager amapAPIKey];
     [BDUGAmapGeocoder sharedGeocoder].apiKey = [FHLocManager amapAPIKey];
     [AMapServices sharedServices].enableHTTPS = YES;
-    [AMapServices sharedServices].crashReportEnabled = false;
+//    [AMapServices sharedServices].crashReportEnabled = false;
 }
 
 - (void)configLocationManager

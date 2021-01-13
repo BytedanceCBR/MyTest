@@ -622,7 +622,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([self.showComment integerValue] == ShowCommentModal) {
         [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopByClick];
     } else if ([self.showComment integerValue] == ShowKeyboardOnly) {
-        [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
+        [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil podition:@"detail_comment"];
     }
 }
 
@@ -764,15 +764,14 @@ static const CGFloat kFloatingViewOriginY = 230;
         //滑出过一次不再出引导
         [TSVSlideUpPromptViewController setSlideUpPromotionShown];
     }
-
-    [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:0 eventPosition:@"feed_comment"];
     self.commentView.hidden = NO;
 
     [UIView animateWithDuration:.2 customTimingFunction:CustomTimingFunctionCubicOut animation:^{
         self.commentView.frame = CGRectMake(0, kFloatingViewOriginY, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - kFloatingViewOriginY);
     } completion:^(BOOL finished) {
         if ([self.model.commentCount intValue] == 0) {
-            [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
+            [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:0 eventPosition:@"feed_comment"];
+            [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil podition:@"feed_comment"];
         };
     }];
     [self showCommentViewMaskView:YES];
@@ -1059,7 +1058,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([self alertIfNotValid]) {
         return;
     }
-    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
+    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil podition:@"feed_comment"];
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
@@ -1118,8 +1117,19 @@ static const CGFloat kFloatingViewOriginY = 230;
         [self.commentWriteView clearInputBar];
         return;
     }
-    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:commentModel.id.stringValue];
-    [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:indexPath.row eventPosition:@"comment_reply"];
+
+//    if (commentModel.userId && ![self.inputBar.targetCommentModel.userId isEqualToNumber: commentModel.userId]) {
+//         草稿是回复视频或回复A，现在要回复B
+//        [self.inputBar clearInputBar];
+//    }
+
+//    self.inputBar.targetCommentModel = commentModel;
+//    self.inputBar.inputTextView.internalGrowingTextView.placeholder = [NSString stringWithFormat:@"@%@：", commentModel.userName];
+
+//    [self.inputBar becomeActive];
+    
+    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:commentModel.id.stringValue podition:@"reply"];
+    [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:indexPath.row eventPosition:@"reply"];
     [self.commentWriteView setTextViewPlaceholder:[NSString stringWithFormat:@"@%@：", commentModel.userName]];
 }
 
@@ -1259,7 +1269,15 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([self alertIfNotValid]) {
         return;
     }
-    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
+
+//    if (self.inputBar.targetCommentModel) {
+//        // 草稿是回复A，现在要回复视频
+//        [self.inputBar clearInputBar];
+//    }
+//
+//    self.inputBar.params[@"source"] = @"video_play";
+//    [self.inputBar becomeActive];
+    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil podition:@"detail_comment"];
 }
 
 - (void)playView:(AWEVideoPlayView *)view didClickCommentWithModel:(FHFeedUGCCellModel *)model
@@ -1487,7 +1505,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     [TSVVideoShareManager synchronizeUserDefaultsWithAvtivityType:activity.contentItemType];
 }
 
-- (void)p_willOpenWriteCommentViewWithReservedText:(NSString *)reservedText switchToEmojiInput:(BOOL)switchToEmojiInput replyToCommentID:(NSString *)replyToCommentID {
+- (void)p_willOpenWriteCommentViewWithReservedText:(NSString *)reservedText switchToEmojiInput:(BOOL)switchToEmojiInput replyToCommentID:(NSString *)replyToCommentID podition:(NSString *)position {
     
     NSMutableDictionary *condition = [NSMutableDictionary dictionaryWithCapacity:10];
     [condition setValue:self.groupModel forKey:kQuickInputViewConditionGroupModel];
@@ -1509,7 +1527,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     
     TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:condition commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         *willRepostFwID = fwID;
-        [wSelf clickSubmitComment];
+        [wSelf clickSubmitComment:position];
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:nil];
     commentManager.enterFrom = @"feed_detail";
     commentManager.enter_type = @"submit_comment";
@@ -1522,9 +1540,9 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.commentWriteView showInView:self.view animated:YES];
 }
 
-- (void)clickSubmitComment {
+- (void)clickSubmitComment:(NSString *)position {
     NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
-     [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:rank];
+     [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:rank eventPosition:position];
 }
 
 #pragma mark - TTWriteCommentViewDelegate

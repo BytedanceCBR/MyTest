@@ -371,7 +371,8 @@
 // 点击回复
 - (void)clickSubmitComment {
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"submit_comment";
+    tracerDict[@"click_position"] = @"reply";
+    tracerDict[@"is_reply"] = @(1);
     [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
 }
 

@@ -12,7 +12,7 @@
 #import "FHEncyclopediaListViewModel.h"
 #import "FHBaseTableView.h"
 #import "UIScrollView+Refresh.h"
-#import "TTReachability.h""
+#import "TTReachability.h"
 #import "UIDevice+BTDAdditions.h"
 #import <TTUIWidget/ArticleListNotifyBarView.h>
 #import "UIViewAdditions.h"

@@ -8,6 +8,8 @@
 
 #import "TTStartupTask.h"
 
-@interface TTStartupUITask : TTStartupTask
+@interface TTStartupUITask : TTStartupTask<UIApplicationDelegate>
+
++ (void)setRootViewControllerWithStoryboard;
 
 @end

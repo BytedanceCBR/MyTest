@@ -133,10 +133,15 @@
     [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"impr_id"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
     [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
+    if ([position isEqualToString:@"reply"]) {
+        [dic setObject:@(1) forKey:@"is_reply"];
+    }else {
+        [dic setObject:@(0) forKey:@"is_reply"];
+    }
     [FHUserTracker writeEvent:@"click_comment" params:dic];
 }
 
-+ (void)clickCommentSubmitWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index {
++ (void)clickCommentSubmitWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index eventPosition:(NSString *)position {
     NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
     NSDictionary *logPb = [model.logPb copy];
     [dic setObject:model.groupId?:@"" forKey:@"group_id"];
@@ -149,6 +154,12 @@
     [dic setObject:logPb[@"impr_id"]?:@"be_null" forKey:@"impr_id"];
     [dic setObject:model.tracerDic[@"origin_from"]?:@"be_null" forKey:@"origin_from"];
     [dic setObject:model.tracerDic[@"enter_from"]?:@"be_null" forKey:@"enter_from"];
+    [dic setObject:position forKey:@"click_position"];
+    if ([position isEqualToString:@"reply"]) {
+        [dic setObject:@(1) forKey:@"is_reply"];
+    }else {
+        [dic setObject:@(0) forKey:@"is_reply"];
+    }
     [FHUserTracker writeEvent:@"click_submit_comment" params:dic];
 }
 + (void)clickshareBtn:(FHFeedUGCCellModel *)model {

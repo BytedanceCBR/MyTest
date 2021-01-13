@@ -12,8 +12,9 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHEncyclopediaViewModel : NSObject
-- (instancetype)initWithWithController:(FHEncyclopediaViewController *)viewController collectionView:(UICollectionView *)collectionView headerView:(FHEncyclopediaHeader *)header tracerModel:(FHTracerModel *)tracerModel;
-@property(nonatomic , assign) NSInteger currentTabIndex;
+- (instancetype)initWithWithController:(FHEncyclopediaViewController *)viewController collectionView:(UICollectionView *)collectionView headerView:(FHEncyclopediaHeader *)header tracerModel:(FHTracerModel *)tracerModel lynxBaseIndexParam:(NSDictionary *)lynxBaseIndexParam;
+@property(nonatomic , strong) NSNumber *currentSubTabIndex;
+@property(nonatomic , strong) NSNumber *currentMainTabIndex;
 @property(nonatomic, strong) FHTracerModel *tracerModel;
 - (void)requestHeaderConfig;
 @end
