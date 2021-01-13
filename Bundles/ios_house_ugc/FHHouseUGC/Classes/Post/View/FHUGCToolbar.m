@@ -105,11 +105,11 @@
 
 
 + (CGFloat)toolbarHeightWithTags:(NSArray *)tags hasSelected:(BOOL)isSelected {
-    if(isSelected) {
+//    if(isSelected) {
         return FHUGCToolbarHeight + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom;
-    } else {
-        return FHUGCToolbarHeight + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom + SELECT_ENTRY_HEIGHT + (tags.count > 0 ? TAGS_VIEW_HEIGHT : 0);
-    }
+//    } else {
+//        return FHUGCToolbarHeight + [TTUIResponderHelper mainWindow].tt_safeAreaInsets.bottom + SELECT_ENTRY_HEIGHT + (tags.count > 0 ? TAGS_VIEW_HEIGHT : 0);
+//    }
 }
 
 - (instancetype)initWithFrame:(CGRect)frame type:(FHPostUGCMainViewType)type {
@@ -190,7 +190,8 @@
 
 - (void)layoutTagSelectCollectionViewWithTags:(NSMutableArray<FHUGCToolBarTag *> *)tags hasSelected:(BOOL)isSelected{
     self.tags = tags;
-    self.isSelected = isSelected;
+//    self.isSelected = isSelected;
+    self.isSelected = YES;
     
     [self relayoutSelctCollectionView];
 }
@@ -368,6 +369,7 @@
 }
 
 - (BOOL)endEditing:(BOOL)animated {
+    self.bordIsShow = NO;
     
     void (^animations)(void) = ^{
         self.top = self.toolbarViewOrigin.y;

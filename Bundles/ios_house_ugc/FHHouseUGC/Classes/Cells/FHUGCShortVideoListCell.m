@@ -61,7 +61,7 @@
     
     self.bottomSepView.left = 20;
     self.bottomSepView.top = self.mainCollection.bottom + 20;
-    self.bottomSepView.height = 1.2;
+    self.bottomSepView.height = 1;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
 }
 
@@ -162,7 +162,12 @@
     if (![data isKindOfClass:[FHFeedUGCCellModel class]] || !data) {
         return;
     }
+
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
+    if (self.currentModel != cellModel) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        [self.mainCollection scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+    }
     self.currentModel = cellModel;
     self.datas = [cellModel.videoList mutableCopy];
     [self.mainCollection reloadData];

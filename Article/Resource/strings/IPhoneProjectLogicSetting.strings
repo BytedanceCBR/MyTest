@@ -254,6 +254,8 @@
 
 //小视频页面
 "small_video_detail" = "FHUGCShortVideoDetailController";
+"awemevideo" = "FHUGCShortVideoDetailController";
+
 
 // linkChat客服页面
 "link_chat" = "FHCustomerServicePage";

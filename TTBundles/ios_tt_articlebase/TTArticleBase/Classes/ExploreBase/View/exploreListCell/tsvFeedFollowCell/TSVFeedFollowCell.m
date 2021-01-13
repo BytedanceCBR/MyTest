@@ -354,7 +354,7 @@ static NSString * const kTSVOpenTabHost = @"ugc_video_tab";
         
         if([self.cell.delegate isKindOfClass:[TTFavoriteViewController class]]){
             NSDictionary *extraDic = @{@"origin_from":@"click_favorite",@"enter_from":@"favorite"};
-            [info setValue:extraDic forKey:@"extraDic"];
+            [info setValue:extraDic forKey:@"tracer"];
         }
         
         NSMutableDictionary *tracerDic = @[].mutableCopy;

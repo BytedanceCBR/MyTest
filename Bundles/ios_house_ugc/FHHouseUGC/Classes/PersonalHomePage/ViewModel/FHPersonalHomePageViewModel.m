@@ -82,7 +82,6 @@
         }
         dispatch_group_leave(self.personalHomePageGroup);
     }];
-
 }
 
 -(void)requestProfileInfoAfterChange {

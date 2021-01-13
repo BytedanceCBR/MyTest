@@ -6,7 +6,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "FHUGCMessageView.h"
 #import "FHUGCSearchView.h"
 
 NS_ASSUME_NONNULL_BEGIN
@@ -20,7 +19,6 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHMyJoinNeighbourhoodView : UIView
 
 @property(nonatomic, strong) UICollectionView *collectionView;
-@property(nonatomic, strong) FHUGCMessageView *messageView;
 @property(nonatomic, strong) FHUGCSearchView *searchView;
 @property(nonatomic , weak) id<FHMyJoinNeighbourhoodViewDelegate> delegate;
 

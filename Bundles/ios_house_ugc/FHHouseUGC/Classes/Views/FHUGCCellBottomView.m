@@ -22,11 +22,12 @@
 #import "TTVideoArticleServiceMessage.h"
 #import "TTVFeedUserOpDataSyncMessage.h"
 #import "UIButton+FHUGCMultiDigg.h"
+#import "FHUGCFeedDetailJumpManager.h"
 
 @interface FHUGCCellBottomView ()
 
-@property (nonatomic, copy)  NSString *saveDiggGroupId;
-@property (nonatomic, assign)   FHDetailDiggType       diggType;
+@property(nonatomic, copy) NSString *saveDiggGroupId;
+@property(nonatomic, assign) FHDetailDiggType diggType;
 
 @end
 
@@ -53,7 +54,6 @@
 }
 
 - (void)initViews {
-    
     self.positionView = [[UIView alloc] init];
     _positionView.backgroundColor = [UIColor themeOrange2];
     _positionView.layer.masksToBounds= YES;
@@ -61,6 +61,9 @@
     _positionView.userInteractionEnabled = YES;
     _positionView.hidden = YES;
     [self addSubview:_positionView];
+    
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
+    [self.positionView addGestureRecognizer:tap];
     
     self.position = [self LabelWithFont:[UIFont themeFontRegular:13] textColor:[UIColor themeOrange1]];
     _position.layer.masksToBounds = YES;
@@ -104,14 +107,6 @@
     self.diggType = FHDetailDiggTypeTHREAD;
 }
 
-- (FHUGCFeedGuideView *)guideView {
-    if(!_guideView){
-        _guideView = [[FHUGCFeedGuideView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 42)];
-        [self addSubview:_guideView];
-    }
-    return _guideView;
-}
-
 - (void)initConstraints {
     self.positionView.top = 0;
     self.positionView.left = 20;
@@ -130,6 +125,22 @@
     self.bottomSepView.top = self.positionView.bottom + 20;
     self.bottomSepView.height = 1;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
+}
+
+- (void)refreshWithData:(FHFeedUGCCellModel *)cellModel {
+    self.cellModel = cellModel;
+    
+    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
+    self.position.text = cellModel.community.name;
+    [self showPositionView:showCommunity];
+    
+    NSInteger commentCount = [cellModel.commentCount integerValue];
+    if(commentCount == 0){
+        [self.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
+    }else{
+        [self.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
+    }
+    [self updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
 }
 
 - (void)setCellModel:(FHFeedUGCCellModel *)cellModel {
@@ -169,21 +180,11 @@
                 break;
         }
     }
-    //设置是否显示引导
-    if(cellModel.isInsertGuideCell){
-        self.guideView.hidden = NO;
-        self.guideView.top = self.positionView.bottom;
-        self.guideView.left = 0;
-        self.guideView.width = self.bounds.size.width;
-        self.guideView.height = 42;
-    }else{
-        self.guideView.hidden = YES;
-    }
     
     self.bottomSepView.left = cellModel.bottomLineLeftMargin;
-    self.bottomSepView.top = self.positionView.bottom + 20;
+    self.bottomSepView.top = self.height - cellModel.bottomLineHeight;
     self.bottomSepView.height = cellModel.bottomLineHeight;
-    self.bottomSepView.width = self.bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
+    self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - cellModel.bottomLineLeftMargin - cellModel.bottomLineRightMargin;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -219,8 +220,6 @@
        self.commentBtn.left = self.width - 20 - self.likeBtn.width - 20 - self.commentBtn.width;
         self.likeBtn.left = self.commentBtn.right + 20;
     }
-    
-    
 }
 
 - (void)updateLikeState:(NSString *)diggCount userDigg:(NSString *)userDigg {
@@ -363,6 +362,11 @@
     }else{
         TRACK_EVENT(@"click_like", dict);
     }
+}
+
+//进入圈子详情
+- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
+    [FHUGCFeedDetailJumpManager goToCommunityDetail:self.cellModel];
 }
 
 @end

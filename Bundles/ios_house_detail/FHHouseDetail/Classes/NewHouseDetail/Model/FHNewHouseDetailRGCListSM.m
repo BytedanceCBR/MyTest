@@ -7,6 +7,8 @@
 
 #import "FHNewHouseDetailRGCListSM.h"
 #import "FHFeedUGCCellModel.h"
+#import <FHUGCCellHelper.h>
+#import <UIFont+House.h>
 
 @implementation FHNewHouseDetailRGCListSM
 
@@ -29,6 +31,7 @@
             default:
                 break;
         }
+        [FHUGCCellHelper setRichContentWithModel:model width:(screenWidth - 20 - 20 - 30) numberOfLines:model.numberOfLines font:[UIFont themeFontRegular:14]];
         //        model.tracerDic = self.detailTracerDic;
         NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
         tracerDic[@"rank"] = @(m);

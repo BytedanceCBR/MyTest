@@ -264,7 +264,6 @@
                     if(wself.dataList.count > 0){
                         [wself updateTableViewWithMoreData:wself.tableView.hasMore];
                         [wself.viewController.emptyView hideEmptyView];
-                        [wself insertGuideCell];
                     }else{
                         [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:YES];
                         wself.viewController.showenRetryButton = NO;
@@ -330,42 +329,6 @@
         if([groupId isEqualToString:itemModel.groupId]){
             [self.dataList removeObject:itemModel];
             break;
-        }
-    }
-}
-
-- (void)insertGuideCell {
-    if([FHUGCGuideHelper shouldShowFeedGuide] && !self.alreadShowFeedGuide){
-        //符合引导页显示条件时
-        for (NSInteger i = 0; i < self.dataList.count; i++) {
-            FHFeedUGCCellModel *cellModel = self.dataList[i];
-            if(cellModel.cellType != FHUGCFeedListCellTypeUGCRecommend && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner && cellModel.cellType != FHUGCFeedListCellTypeUGCBanner2 && cellModel.showCommunity) {
-                if(self.guideCellModel){
-                    self.guideCellModel.isInsertGuideCell = NO;
-                    self.guideCellModel.ischanged = YES;
-                }
-                cellModel.isInsertGuideCell = YES;
-                cellModel.ischanged = YES;
-                self.guideCellModel = cellModel;
-                //显示以后次数加1
-                if(![FHUGCConfig sharedInstance].isAlreadyShowFeedGuide){
-                    [FHUGCConfig sharedInstance].isAlreadyShowFeedGuide = YES;
-                    [FHUGCGuideHelper addFeedGuideCount];
-                }
-                return;
-            }
-        }
-    }
-}
-
-- (void)closeGuideView {
-    if(self.guideCellModel.isInsertGuideCell){
-        NSInteger row = [self.dataList indexOfObject:self.guideCellModel];
-        if(row < self.dataList.count && row >= 0){
-            self.guideCellModel.isInsertGuideCell = NO;
-            
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
         }
     }
 }
@@ -601,13 +564,6 @@
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    //关闭引导cell
-    [self closeGuideView];
-    [FHUGCGuideHelper hideFeedGuide];
-    [self.detailJumpManager goToCommunityDetail:cellModel];
-}
-
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     self.currentCellModel = cellModel;
     self.currentCell = cell;
@@ -728,15 +684,6 @@
     
     if(cellModel.attachCardInfo){
         [self trackCardShow:cellModel rank:rank];
-    }
-
-    if(cellModel.isInsertGuideCell){
-        NSMutableDictionary *guideDict = [NSMutableDictionary dictionary];
-        guideDict[@"element_type"] = @"feed_community_guide_notice";
-        guideDict[@"page_type"] = [self pageType];
-        guideDict[@"category_name"] = [self pageType];
-        guideDict[@"enter_from"] = @"neighborhood_tab";
-        TRACK_EVENT(@"element_show", guideDict);
     }
     
     if(cellModel.cellType == FHUGCFeedListCellTypeUGCRecommend){

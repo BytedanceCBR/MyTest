@@ -8,7 +8,6 @@
 #import "FHNewHouseDetailRGCImageCollectionCell.h"
 #import "FHHouseDeatilRGCCellHeader.h"
 #import "FHHouseDetailRGCMultiImageView.h"
-#import "FHUGCCellBottomView.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHUGCCellHelper.h"
 #import "FHUGCCellUserInfoView.h"
@@ -84,6 +83,7 @@
         }];
 
         self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), 0)];
+        self.contentLabel.font = [UIFont themeFontRegular:14];
         self.contentLabel.numberOfLines = 3;
         self.contentLabel.layer.masksToBounds = YES;
         self.contentLabel.backgroundColor = [UIColor whiteColor];

@@ -323,7 +323,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             [self imAction:budgetModel.openUrl isFloorAction:NO];
             positionStr = @"loan";
         }else {
-            NSDictionary *userInfoDict = @{@"tracer":@{}};
+            NSDictionary *userInfoDict = self.baseViewModel.detailTracerDic.mutableCopy;
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
             NSString *openUrl = budgetModel.openUrl;
             if (openUrl.length > 0) {
