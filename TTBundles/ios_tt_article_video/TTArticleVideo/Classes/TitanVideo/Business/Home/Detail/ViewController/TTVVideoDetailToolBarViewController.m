@@ -414,6 +414,7 @@ extern NSInteger ttvs_isShareTimelineOptimize(void);
     dict[@"group_id"] = self.detailModel.uniqueID;
     dict[@"page_type"] = @"video_detail";
     dict[@"click_position"] = @"detail_comment";
+    dict[@"is_reply"] = @(0);
     
     [dict setValue:self.detailModel.categoryID forKey:@"category_id"];
 

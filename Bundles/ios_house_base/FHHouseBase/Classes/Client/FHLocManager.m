@@ -339,7 +339,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
     [AMapServices sharedServices].apiKey = [FHLocManager amapAPIKey];
     [BDUGAmapGeocoder sharedGeocoder].apiKey = [FHLocManager amapAPIKey];
     [AMapServices sharedServices].enableHTTPS = YES;
-    [AMapServices sharedServices].crashReportEnabled = false;
+//    [AMapServices sharedServices].crashReportEnabled = false;
 }
 
 - (void)configLocationManager
@@ -517,7 +517,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                     }
                 }else
                 {
-                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && hasSelectedCity && [self isTopCitySwitchTimeCompare] &&(![FHEnvContext canShowLoginTip] || [TTAccount sharedAccount].isLogin)) {
+                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && hasSelectedCity && [self isTopCitySwitchTimeCompare]) {
                         NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
                         [FHUtils setContent:stringCurrentDate forKey:kFHTopSwitchCityLocalKey];
                         
@@ -692,7 +692,7 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
                      }
                 }else
                 {
-                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && [self isTopCitySwitchTimeCompare] && (![FHEnvContext canShowLoginTip] || [TTAccount sharedAccount].isLogin)) {
+                    if ([model.data.citySwitch.enable respondsToSelector:@selector(boolValue)] && [model.data.citySwitch.enable boolValue] && [self isTopCitySwitchTimeCompare]) {
                         NSString *stringCurrentDate = [FHUtils stringFromNSDate:[NSDate date]];
                         [FHUtils setContent:stringCurrentDate forKey:kFHTopSwitchCityLocalKey];
                         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeInitSwitchCityTopView" object:nil];

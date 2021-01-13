@@ -1888,8 +1888,6 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     [paramsDict setValue:[self categoryName] forKey:@"category_name"];
     [paramsDict setValue:@"reply_button" forKey:@"enter_type"];
     [TTTrackerWrapper eventV3:@"reply_comment" params:paramsDict];
-    
-    [self p_sendDetailTTLogV2WithEvent:@"click_reply" eventContext:@{@"comment_id":model.commentIDNum.stringValue} referContext:nil];
 }
 
 - (void)p_enterProfileWithUserID:(NSString *)userID {
@@ -1943,6 +1941,13 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
                         eventContext:(NSDictionary *)eventContext
                         referContext:(NSDictionary *)referContext
 {
+    NSMutableDictionary *paramsDict = [self.detailModel.reportParams mutableCopy];
+    [paramsDict setValue:eventContext[@"comment_id"] forKey:@"comment_id"];
+    [paramsDict setValue:[self categoryName] forKey:@"category_name"];
+    [paramsDict setValue:@(1) forKey:@"is_reply"];
+    [paramsDict setValue:@"reply" forKey:@"click_position"];
+    [paramsDict setValue:@"video_detail" forKey:@"page_type"];
+    [TTTrackerWrapper eventV3:event params:paramsDict];
 
 }
 

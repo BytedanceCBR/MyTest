@@ -41,7 +41,7 @@
 
 @property (nonatomic, copy)     NSString       *highlightedText;
 @property (nonatomic, strong)   FHHistoryView *historyView;
-@property (nonatomic, strong)   FHSugHasSubscribeView *subscribeView;// 已订阅搜索
+@property (nonatomic, strong)   FHSugHasSubscribeView *subscribeView;// 订阅记录
 @property (nonatomic, strong)   UIView       *sectionHeaderView;
 @property (nonatomic, assign)   NSInteger       totalCount; // 订阅搜索总个数
 @property (nonatomic, strong , nullable) NSMutableArray<FHSugSubscribeDataDataItemsModel> *subscribeItems;
@@ -919,7 +919,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (tableView.tag == 1) {
-        // 历史记录 & 已订阅搜索
+        // 历史记录 & 订阅记录
         if (self.historyData.count > 0 || self.subscribeItems.count > 0) {
             return self.sectionHeaderView;
         }
