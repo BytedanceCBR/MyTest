@@ -587,7 +587,8 @@ typedef void (^TTCommentLoginPipelineCompletion)(TTCommentLoginState state);
                 }
                 [paramsDict setValue:[self categoryName] forKey:@"category_name"];
                 [paramsDict setValue:@"house_app2c_v2"  forKey:@"event_type"];
-                [paramsDict setValue:@"submit_comment"  forKey:@"click_position"];
+                [paramsDict setValue:@"detail_comment"  forKey:@"click_position"];
+                [paramsDict setValue:@(0)  forKey:@"is_reply"];
                 
                 if (self.enterFrom.length > 0 || self.reportParams) {
                     if([self.reportParams isKindOfClass:[NSDictionary class]]){

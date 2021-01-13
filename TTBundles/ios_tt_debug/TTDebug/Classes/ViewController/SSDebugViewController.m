@@ -71,7 +71,6 @@
 //#import "TTFDashboardViewController.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTArticleBase/ExploreLogicSetting.h>
-#import "BDSSOAuthManager.h"
 #import "ToastManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
@@ -101,7 +100,7 @@
 #import <TTTracker/TTTracker.h>
 #import <FlutterPackagesDebugViewController.h>
 #import <FHHouseBase/FHEnvContext.h>
-
+#import <BDFeedBack/BDFBLarkSSOManager.h>        // Lark授权
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
@@ -986,8 +985,10 @@ extern NSString *const PPE_OPEN_KEY;
 }
 
 - (void)_ssoDebugClick {
-#if !DEBUG && !TARGET_IPHONE_SIMULATOR
-    [[BDSSOAuthManager sharedInstance] resetAuthInfo];
+    
+#if !TARGET_IPHONE_SIMULATOR
+//#if !DEBUG && !TARGET_IPHONE_SIMULATOR
+    [[BDFBLarkSSOManager sharedManager] resetAuthInfo];
     [[ToastManager manager] showToast:@"SSO缓存已清除，请重进App"];
 #endif
 }

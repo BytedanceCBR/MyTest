@@ -50,7 +50,7 @@ def fhPods
 
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
 #    pod 'ios_house_filter' , '1.0.3-rc.0', :inhibit_warnings => false
-    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => 'dd745d24f1435bf439cb2e073e06b73deb26ad29'
+    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '1571044d8d1af0b2e0dee7ba8d0aac748f62e650'
 #    pod 'ios_house_filter' , :path => '../../ios_house_filter'
 
 
@@ -59,15 +59,15 @@ def fhPods
 #    pod 'FHCommonUI','0.9.0.10'
     pod 'FHCommonUI','0.9.0.12'
 
-    pod 'FHPopupViewCenter', '0.0.3-rc.4', :inhibit_warnings => false, :subspecs => [
-    'Core',
-    'DelegateForC'
-    ], :inhibit_warnings => false
-#    pod 'FHPopupViewCenter', :path => '../../../../FHPopupViewCenter', :subspecs => [
+     pod 'FHPopupViewCenter', '0.0.3', :inhibit_warnings => false, :subspecs => [
+     'Core',
+     'DelegateForC'
+     ], :inhibit_warnings => false
+#    pod 'FHPopupViewCenter', :path => '../../../FHPopupViewCenter', :subspecs => [
 #    'Core',
 #    'DelegateForC'
 #    ], :inhibit_warnings => false
-#    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => 'd571d9ddc2dd98f424eb6834b7bc5966074a7f9a', :subspecs => [
+#    pod 'FHPopupViewCenter', :git => 'git@code.byted.org:fproject/FHPopupViewCenter.git', :commit => 'c88b6f93182c06bee410732adfdbe14f7e354eea', :subspecs => [
 #    'Core',
 #    'DelegateForC'
 #    ]
@@ -299,7 +299,7 @@ def appPods
     pod_binary 'TTThemed','0.1.36'
 
     #-----头条UI组件库-----
-    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => 'd7466aa3ddf29a7d2a47a51489f5e49a5ebd2286'
+    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :commit => '41e62696886d85569b0670c01b743f5651b98530'
 #    pod 'TTUIWidget', git:'git@code.byted.org:TTIOS/tt_pods_ui.git', :com => 'fproject'
 #    pod 'TTUIWidget', :path => '../../tt_pods_ui'
     
@@ -645,7 +645,10 @@ end
 
 
 def testPods
-    pod 'BDSSOAuthSDK' ,  '1.1.1-alpha.6'
+#    pod 'BDSSOAuthSDK' ,  '1.1.1-alpha.6'
+    pod_binary 'BDFeedBack', '1.2.5'
+    pod_binary 'LarkSSO', '0.1.6'
+    pod 'TZImagePickerController', '3.4.5'
     
     pod_binary 'TTDebugAssistant', '0.2.33'
     

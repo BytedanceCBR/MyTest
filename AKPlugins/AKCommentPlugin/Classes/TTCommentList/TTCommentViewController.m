@@ -431,6 +431,28 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
     [FHUserTracker writeEvent:@"go_detail" params:dic];
 }
 
+- (void)p_sendClickComment:(id<TTCommentModelProtocol>)model {
+    NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+    [dic setValue:model.groupModel.itemID forKey:@"item_id"];
+    [dic setValue:model.groupModel.groupID forKey:@"group_id"];
+    [dic setValue:model.userID forKey:@"to_user_id"];
+    [dic setValue:model.commentID forKey:@"comment_id"];
+    [dic setValue:@"comment_detail" forKey:@"page_type"];
+    [dic setValue:@(1) forKey:@"is_reply"];
+    [dic setValue:@"reply" forKey:@"click_position"];
+    if (self.enter_from.length > 0) {
+        [dic setValue:self.enter_from forKey:@"enter_from"];
+    }
+    if ([self.tracerDict isKindOfClass:[NSDictionary class]]) {
+        dic[@"enter_from"] = self.tracerDict[@"page_type"] ?: @"be_null";
+        dic[@"group_source"] = self.tracerDict[@"group_source"];
+        dic[@"origin_from"] = self.tracerDict[@"origin_from"];
+        dic[@"category_name"] = self.tracerDict[@"category_name"];
+        dic[@"group_source"] = self.tracerDict[@"group_source"];
+    }
+    [FHUserTracker writeEvent:@"click_comment" params:dic];
+}
+
 - (void)p_profileFillAction {
     if (![TTProfileFillManager manager].isShowProfileFill) {
         return;
@@ -829,6 +851,11 @@ static NSInteger kDeleteCommentActionSheetTag = 10;
                 if (!_delegate || ![_delegate respondsToSelector:@selector(tt_commentViewController:shouldPresentCommentDetailViewControllerWithCommentModel:indexPath:showKeyBoard:)] || ![_delegate tt_commentViewController:self shouldPresentCommentDetailViewControllerWithCommentModel:comment indexPath:indexPath showKeyBoard:NO]) {
                     //置顶评论 强制弹键盘, 其他 0评时才弹
                     [self showMomentDetailViewWithComment:comment atIndexPath:indexPath showWriteComment:comment.isStick];
+                    BOOL shouldShow = !comment.replyCount.intValue || comment.isStick;
+                    shouldShow = !comment.replyCount.intValue; //
+                    if (shouldShow) {
+                        [self p_sendClickComment:model];
+                    }
                 } else {
                     self.selectedCommentIndexPath = indexPath;
                 }
