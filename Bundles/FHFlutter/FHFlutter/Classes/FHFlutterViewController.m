@@ -28,6 +28,7 @@
 #import <TTBaseMacro.h>
 #import "RouteAppFileUtil.h"
 #import "RouteAppPackagePackageInfo.h"
+#import "TTSandBoxHelper+House.h"
 
 @interface FHFlutterViewController()
 
@@ -152,11 +153,11 @@
         }
     }
     
-    
-    
+        
     NSString *packageFilePath = [RouteAppFileUtil getDebugPackagePathForPackageName:pluginName];
 
-    if ([RouteAppFileUtil checkFileExist:packageFilePath]) {
+    //inhouse 或者debug进入
+    if (([TTSandBoxHelper fh_isInHouseApp] || [self isDebug]) && [RouteAppFileUtil checkFileExist:packageFilePath]) {
         RouteAppPackagePackageInfo *package = [[RouteAppPackagePackageInfo alloc] init];
         package.name = pluginName;
         package.zipPackagePath = packageFilePath;
@@ -218,6 +219,13 @@
     return resultPrams;
 }
 
+- (BOOL)isDebug {
+#if DEBUG
+    return YES;
+#else
+    return NO;
+#endif
+}
 
 - (void)sendLoadingFinishLog
 {
