@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong) NSMutableDictionary *tracerDic; // 基础埋点数据
 - (void)reloadData;
 - (void)addGoDtailTracer;
+- (void)addStayPageTracerWithTimer:(NSNumber *)duration;
+
 @end
 
 NS_ASSUME_NONNULL_END
