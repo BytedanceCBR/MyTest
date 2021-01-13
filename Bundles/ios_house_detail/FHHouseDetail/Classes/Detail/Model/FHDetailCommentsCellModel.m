@@ -61,14 +61,8 @@
         }
     }
     
-    //总数
-    if(self.totalCount > 2 || self.dataList.count <= 0){
-        self.footerViewHeight = _bottomMargin + 25;
-    }else{
-        self.footerViewHeight = 0;
-    }
-    
-    self.headerViewHeight = _topMargin + 20  ;
+    self.headerViewHeight = _topMargin + 34  ;
+    self.footerViewHeight = _bottomMargin + 12;
     
     if(self.dataList.count > 0){
         self.viewHeight = self.headerViewHeight + self.footerViewHeight;
