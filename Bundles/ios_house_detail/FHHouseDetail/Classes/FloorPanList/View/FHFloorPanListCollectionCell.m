@@ -13,6 +13,7 @@
 @interface FHFloorPanListCollectionCell ()
 @property(nonatomic,strong) UITableView *tableView;
 @property(nonatomic,strong) FHFloorPanListDetailViewModel *viewModel;
+@property(nonatomic,assign) BOOL isFirst;
 @end
 
 @implementation FHFloorPanListCollectionCell
@@ -20,6 +21,7 @@
 - (instancetype)initWithFrame:(CGRect)frame {
     if(self = [super initWithFrame:frame]) {
         [self initTableView];
+        self.isFirst = YES;
     }
     return self;
 }
@@ -44,7 +46,10 @@
 
 
 - (void)refreshDataWithItemArray:(NSArray *)itemArray subPageParams:(NSDictionary *)subPageParams elementShowCache:(NSMutableDictionary *)elementShowCache {
-    self.viewModel = [[FHFloorPanListDetailViewModel alloc] initWithTableView:self.tableView itemArray:itemArray subPageParams:subPageParams elementShowCache:elementShowCache];
+    if(self.isFirst) {
+        self.isFirst = NO;
+        self.viewModel = [[FHFloorPanListDetailViewModel alloc] initWithTableView:self.tableView itemArray:itemArray subPageParams:subPageParams elementShowCache:elementShowCache];
+    }
 }
 
 @end
