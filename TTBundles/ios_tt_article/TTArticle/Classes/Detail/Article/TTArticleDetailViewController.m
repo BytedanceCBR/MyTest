@@ -1677,7 +1677,7 @@
             return;
         }
         [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
-        [self writeButtonClickLog];
+        [self writeButtonClickLog:@"detail_comment"];
         TLS_LOG(@"write_button");
     }
     else if (sender == self.toolbarView.emojiButton) {
@@ -1718,6 +1718,7 @@
                         if (type == TTAccountAlertCompletionEventTypeDone) {
                             if ([TTAccountManager isLogin]) {
                                 [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
+                                [self writeButtonClickLog:@"detail_comment"];
                             }
                         } else if (type == TTAccountAlertCompletionEventTypeTip) {
                             [TTAccountManager presentQuickLoginFromVC:[TTUIResponderHelper topNavigationControllerFor:self] type:TTAccountLoginDialogTitleTypeDefault source:nil completion:^(TTAccountLoginState state) {
@@ -1733,6 +1734,7 @@
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(([self.detailView.detailWebView isNewWebviewContainer]? 0.6: 0.3) * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if (!self.detailModel.article.commentCount) {
                     [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
+                    [self writeButtonClickLog:@"detail_comment"];
                 }
             });
             
@@ -1745,11 +1747,12 @@
     }
 }
 
-- (void)writeButtonClickLog {
+- (void)writeButtonClickLog:(NSString *)position {
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.reportParams];
     dict[@"group_id"] = self.detailModel.uniqueID;
     dict[@"page_type"] = @"article_detail";
-    dict[@"click_position"] = @"detail_comment";
+    dict[@"click_position"] = position;
+    dict[@"is_reply"] = @(0);
     TRACK_EVENT(@"click_comment", dict);
 }
 

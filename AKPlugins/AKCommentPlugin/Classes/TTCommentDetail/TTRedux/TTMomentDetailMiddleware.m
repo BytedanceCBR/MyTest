@@ -355,7 +355,8 @@
     replyManager.element_from = self.element_from;
     replyManager.ansid = self.ansid;
     replyManager.qid = self.qid;
-    replyManager.extraDic = self.extraDic;
+    NSMutableDictionary *extraDic = [self.extraDic mutableCopy];
+    replyManager.extraDic = extraDic;
     
     replyManager.serviceID = self.pageState.serviceID;
     TTCommentWriteView *replyView = [[TTCommentWriteView alloc] initWithCommentManager:replyManager];
