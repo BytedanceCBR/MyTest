@@ -90,10 +90,10 @@
     self.collectionView.width = [UIScreen mainScreen].bounds.size.width;
     self.collectionView.height = 188;
     
-    self.bottomSepView.top = 223 - 1.2;
+    self.bottomSepView.top = 223 - 1;
     self.bottomSepView.left = 20;
     self.bottomSepView.width = [UIScreen mainScreen].bounds.size.width - 40;
-    self.bottomSepView.height = 1.2;
+    self.bottomSepView.height = 1;
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -120,7 +120,7 @@
     FHFeedUGCCellModel *model = (FHFeedUGCCellModel *)data;
     self.cellModel = model;
     self.dataList = [model.hotCellList mutableCopy];
-    self.flowLayout.dataList = _dataList;
+    self.flowLayout.dataList = model.hotCellList;
     
     [self.collectionView reloadData];
 }

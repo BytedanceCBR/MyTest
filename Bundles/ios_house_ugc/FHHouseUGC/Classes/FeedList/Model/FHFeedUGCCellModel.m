@@ -21,6 +21,7 @@
 #import "FHUtils.h"
 #import "UIFont+House.h"
 #import <ByteDanceKit/ByteDanceKit.h>
+#import "FHUGCCellManager.h"
 
 #define kRecommendSocialGroupListNil @"kRecommendSocialGroupListNil"
 #define kHotTopicListNil @"kHotTopicListNil"
@@ -57,8 +58,8 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _showCommunity = YES;
-        _bottomLineHeight = 1.2;
+        _showCommunity = NO;
+        _bottomLineHeight = 1;
         _bottomLineLeftMargin = 20;
         _bottomLineRightMargin = 20;
     }
@@ -117,7 +118,7 @@
         if (![NSJSONSerialization isValidJSONObject:dic]) {
             return nil;
         }
-        jsonStr = [dic tt_JSONRepresentation];
+        jsonStr = [dic btd_jsonStringEncoded];
         jsonData = [jsonStr dataUsingEncoding:NSUTF8StringEncoding];
     }else{
         return cellModel;
@@ -225,7 +226,7 @@
         logPbDic = [FHUtils dictionaryWithJsonString:logPb];
     }
     cellModel.logPb = logPbDic;
-    
+    cellModel.cellLayoutStyle = model.cellCtrls.cellLayoutStyle;
     cellModel.aggrType = model.aggrType;
     cellModel.needLinkSpan = YES;
     cellModel.behotTime = model.behotTime;
@@ -252,11 +253,11 @@
     }
     cellModel.community = community;
     
-    if(cellModel.community && ![cellModel.community.showStatus isEqualToString:@"1"]){
-        cellModel.showCommunity = YES;
-    }else{
-        cellModel.showCommunity = NO;
-    }
+//    if(cellModel.community && ![cellModel.community.showStatus isEqualToString:@"1"]){
+//        cellModel.showCommunity = YES;
+//    }else{
+//        cellModel.showCommunity = NO;
+//    }
     
     //处理其他数据
     if(cellModel.cellType == FHUGCFeedListCellTypeArticle){
@@ -273,10 +274,6 @@
                 cellModel.numberOfLines = 3;
             }
             
-            if (model.isFromDetail) {
-                cellModel.numberOfLines = 0;
-            }
-            
             FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
             user.name = model.userInfo.name;
             user.avatarUrl = model.userInfo.avatarUrl;
@@ -285,12 +282,6 @@
             user.fverifyShow = model.userInfo.fverifyShow;
             user.verifiedContent = model.userInfo.verifiedContent;
             cellModel.user = user;
-            
-            if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
-                [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 30) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontMedium:16]];
-            }else{
-                [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:16]];
-            }
             
             cellModel.desc = [self generateUGCDescWithCreateTime:model.publishTime readCount:model.readCount distanceInfo:nil];
             
@@ -327,10 +318,6 @@
             cellModel.openUrl = model.openUrl;
             cellModel.numberOfLines = 3;
             
-            if (model.isFromDetail) {
-                cellModel.numberOfLines = 0;
-            }
-            
             cellModel.desc = [self generateArticleDesc:model];
             if(model.openUrl){
                 cellModel.openUrl = model.openUrl;
@@ -352,12 +339,6 @@
             }
             //处理大图
             cellModel.largeImageList = model.largeImageList;
-            
-            if(cellModel.imageList.count == 1){
-                [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:(screenWidth - 40 - 120 - 15)];
-            }else{
-                [FHUGCCellHelper setArticleRichContentWithModel:cellModel width:(screenWidth - 40)];
-            }
         }
     }
     else if(cellModel.cellType == FHUGCFeedListCellTypeQuestion){
@@ -386,10 +367,6 @@
         cellModel.imageList = model.rawData.content.question.content.thumbImageList;
         //处理大图
         cellModel.largeImageList = model.rawData.content.question.content.largeImageList;
-        
-        if (model.isFromDetail) {
-            cellModel.numberOfLines = 0;
-        }
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
         if (cellModel.title) {
@@ -453,21 +430,9 @@
         cellModel.user = user;
         
         FHFeedUGCOriginItemModel *originItemModel = [[FHFeedUGCOriginItemModel alloc] init];
-        originItemModel.type = @"[问答]";
         originItemModel.content = model.rawData.content.question.title;
         originItemModel.openUrl = model.rawData.content.question.questionListSchema;
         cellModel.originItemModel = originItemModel;
-        
-        if(cellModel.originItemModel.imageModel){
-            cellModel.originItemHeight = 80;
-        }else{
-            [FHUGCCellHelper setOriginContentAttributeString:cellModel width:(screenWidth - 60) numberOfLines:2];
-        }
-        
-        if (model.isFromDetail) {
-            cellModel.numberOfLines = 0;
-        }
-        [FHUGCCellHelper setRichContentImageWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         
         //小区问答数据处理
         if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
@@ -726,7 +691,26 @@
         } else {
             cellModel.videoDuration = 0;
         }
-        
+        // 时间
+        NSString *timeStr = @"00:00";
+        if (cellModel.videoDuration > 0) {
+            NSInteger minute = cellModel.videoDuration / 60;
+            NSInteger second = cellModel.videoDuration % 60;
+            NSString *mStr = @"00";
+            if (minute < 10) {
+                mStr = [NSString stringWithFormat:@"%02ld",minute];
+            } else {
+                mStr = [NSString stringWithFormat:@"%ld",minute];
+            }
+            NSString *sStr = @"00";
+            if (second < 10) {
+                sStr = [NSString stringWithFormat:@"%02ld",second];
+            } else {
+                sStr = [NSString stringWithFormat:@"%ld",second];
+            }
+            timeStr = [NSString stringWithFormat:@"%@:%@",mStr,sStr];
+        }
+        cellModel.videoDurationStr = timeStr;
         
         FHFeedUGCCellRealtorModel *realtor = [[FHFeedUGCCellRealtorModel alloc] init];
         realtor.agencyName = model.rawData.realtor.agencyName;
@@ -778,10 +762,8 @@
         cellModel.animatedImageList = model.rawData.animatedImageList;
         cellModel.imageList = model.rawData.firstFrameImageList;
         cellModel.largeImageList = model.rawData.detailCoverImageModel;
-        if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+        if([cellModel.cellLayoutStyle isEqualToString:@"10001"]){
             [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 60) numberOfLines:3 font:[UIFont themeFontRegular:14]];
-        }else {
-            [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
         }
     } else if(cellModel.cellType == FHUGCFeedListCellTypeUGCSmallVideoList){
         cellModel.cellSubType = FHUGCFeedListCellSubTypeSmallVideoList;
@@ -841,6 +823,14 @@
             [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40 - 120 - 15) numberOfLines:cellModel.numberOfLines];
         }
     }
+    
+    //计算layout
+    Class layout = [FHUGCCellManager cellLayoutClassFromCellViewType:cellModel.cellSubType cellModel:cellModel];
+    if(layout){
+        cellModel.layout = [[layout alloc] init];
+        [cellModel.layout updateLayoutWithData:cellModel];
+    }
+    
     return cellModel;
 }
 
@@ -851,6 +841,7 @@
     cellModel.cellSubType = FHUGCFeedListCellSubTypePost;
     cellModel.title = model.title;
     cellModel.behotTime = model.behotTime;
+    cellModel.cellLayoutStyle = model.cellCtrls.cellLayoutStyle;
     
     if(model.attachCardInfo && model.attachCardInfo.title.length > 0){
         cellModel.attachCardInfo = model.attachCardInfo;
@@ -922,11 +913,11 @@
         community.showStatus = model.rawData.community.showStatus;
     }
     cellModel.community = community;
-    if(cellModel.community && ![cellModel.community.showStatus isEqualToString:@"1"]){
-        cellModel.showCommunity = YES;
-    }else{
-        cellModel.showCommunity = NO;
-    }
+//    if(cellModel.community && ![cellModel.community.showStatus isEqualToString:@"1"]){
+//        cellModel.showCommunity = YES;
+//    }else{
+//        cellModel.showCommunity = NO;
+//    }
     
     FHFeedUGCCellUserModel *user = [[FHFeedUGCCellUserModel alloc] init];
     if(model.user) {
@@ -1032,12 +1023,18 @@
     } else if(model.rawData.largeImageList.count > 0) {
         cellModel.largeImageList = model.rawData.largeImageList;
     }
-    if([model.cellCtrls.cellLayoutStyle isEqualToString:@"10001"]){
+    
+    if([cellModel.cellLayoutStyle isEqualToString:@"10001"]){
+        //小区点评，经纪人主页
         [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 42) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:14]];
-    }else {
-        [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 40) numberOfLines:cellModel.numberOfLines];
     }
-
+    
+    //计算layout
+    Class layout = [FHUGCCellManager cellLayoutClassFromCellViewType:cellModel.cellSubType cellModel:cellModel];
+    if(layout){
+        cellModel.layout = [[layout alloc] init];
+        [cellModel.layout updateLayoutWithData:cellModel];
+    }
     
     return cellModel;
 }
@@ -1057,7 +1054,6 @@
 + (NSAttributedString *)generateUGCDescWithCreateTime:(NSString *)createTime readCount:(NSString *)readCount distanceInfo:(NSString *)distanceInfo realtorDesc:(NSString *)realtorDesc {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
     double time = [createTime doubleValue];
-    
     
     if (!isEmptyString(realtorDesc)) {
         NSAttributedString *descStr = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ ",realtorDesc]];
@@ -1098,14 +1094,7 @@
 
 + (NSAttributedString *)generateArticleDesc:(FHFeedContentModel *)model {
     NSMutableAttributedString *desc = [[NSMutableAttributedString alloc] initWithString:@""];
-    
-//    if(!isEmptyString(model.readCount) && [model.readCount integerValue] != 0){
-//        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
-//        NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:read];
-//        [desc appendAttributedString:readAStr];
-//    }
     if(!isEmptyString(model.userInfo.name) ){
-//        NSString *read = [NSString stringWithFormat:@"浏览%@",[TTBusinessManager formatCommentCount:[model.readCount longLongValue]]];
         NSAttributedString *readAStr = [[NSAttributedString alloc] initWithString:model.userInfo.name];
         [desc appendAttributedString:readAStr];
     }
@@ -1180,28 +1169,6 @@
     [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:(screenWidth - 100) numberOfLines:0];
     [FHUGCCellHelper setAnswerRichContentWithModel:cellModel width:(screenWidth - 100) numberOfLines:1];
     
-    
-    return cellModel;
-}
-
-+ (FHFeedUGCCellModel *)modelFromFake2 {
-    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
-    cellModel.groupId = @"1000061";
-    cellModel.cellType = FHUGCFeedListCellTypeUGCSmallVideo;
-    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCSmallVideo;
-    
-    return cellModel;
-}
-
-+ (FHFeedUGCCellModel *)modelFromFake3:(BOOL)isList {
-    FHFeedUGCCellModel *cellModel = [[FHFeedUGCCellModel alloc] init];
-    cellModel.isInNeighbourhoodQAList = isList;
-    cellModel.groupId = @"1000051";
-    cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion;
-    cellModel.questionStr = @"语雀是一款优雅高效的在线文档编辑";
-    cellModel.answerStr = @"AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代AntV 是蚂蚁金服全新一代";
-    [FHUGCCellHelper setQuestionRichContentWithModel:cellModel width:(screenWidth - 100) numberOfLines:0];
-    [FHUGCCellHelper setAnswerRichContentWithModel:cellModel width:(screenWidth - 100) numberOfLines:(cellModel.isInNeighbourhoodQAList ? 3 : 1)];
     
     return cellModel;
 }

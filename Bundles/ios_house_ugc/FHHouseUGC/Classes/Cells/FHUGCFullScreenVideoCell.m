@@ -33,6 +33,7 @@
 #import "UIViewController+TTMovieUtil.h"
 #import "FHUserTracker.h"
 #import "FHUGCCommonAvatar.h"
+#import "FHFullScreenVideoLayout.h"
 
 #define leftMargin 15
 #define rightMargin 15
@@ -90,7 +91,6 @@
     [self initNotification];
     self.isStartPlaying = NO;
     [self initViews];
-    [self initConstraints];
 }
 
 - (void)initViews {
@@ -161,45 +161,21 @@
     [self.mutedBgView addSubview:_videoLeftTime];
 }
 
-- (void)initConstraints {
-    self.icon.left = leftMargin;
-    self.icon.top = topMargin;
-    self.icon.width = 20;
-    self.icon.height = 20;
+- (void)updateConstraints:(FHBaseLayout *)layout {
+    if (![layout isKindOfClass:[FHFullScreenVideoLayout class]]) {
+        return;
+    }
     
-    self.userName.left = self.icon.right + 8;
-    self.userName.top = self.icon.top + 1;
-    self.userName.height = 18;
+    FHFullScreenVideoLayout *cellLayout = (FHFullScreenVideoLayout *)layout;
     
-    self.contentLabel.top = self.icon.bottom + 8;
-    self.contentLabel.left = leftMargin;
-    self.contentLabel.width = screenWidth - 30;
-    self.contentLabel.height = 0;
-    
-    self.videoView.top = self.icon.bottom + 10;
-    self.videoView.left = 0;
-    self.videoView.width = screenWidth;
-    self.videoView.height = ceil(screenWidth * 211.0/375.0);
-    
-    self.bottomView.left = 0;
-    self.bottomView.top = self.videoView.bottom;
-    self.bottomView.width = screenWidth;
-    self.bottomView.height = bottomViewHeight;
-    
-    self.mutedBgView.left = 0;
-    self.mutedBgView.top = self.bottomView.top - 34;
-    self.mutedBgView.width = screenWidth;
-    self.mutedBgView.height = 34;
-    
-    self.muteBtn.left = 15;
-    self.muteBtn.top = 5;
-    self.muteBtn.width = 24;
-    self.muteBtn.height = 24;
-    
-    self.videoLeftTime.left = screenWidth - 42;
-    self.videoLeftTime.top = 10;
-    self.videoLeftTime.width = 42;
-    self.videoLeftTime.height = 14;
+    [FHLayoutItem updateView:self.icon withLayout:cellLayout.iconLayout];
+    [FHLayoutItem updateView:self.userName withLayout:cellLayout.userNameLayout];
+    [FHLayoutItem updateView:self.contentLabel withLayout:cellLayout.contentLabelLayout];
+    [FHLayoutItem updateView:self.videoView withLayout:cellLayout.videoViewLayout];
+    [FHLayoutItem updateView:self.bottomView withLayout:cellLayout.bottomViewLayout];
+    [FHLayoutItem updateView:self.mutedBgView withLayout:cellLayout.mutedBgViewLayout];
+    [FHLayoutItem updateView:self.muteBtn withLayout:cellLayout.muteBtnLayout];
+    [FHLayoutItem updateView:self.videoLeftTime withLayout:cellLayout.videoLeftTimeLayout];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -227,24 +203,18 @@
     self.icon.userId = cellModel.user.userId;
     
     self.userName.text = !isEmptyString(cellModel.user.name) ? cellModel.user.name : @"用户";
-    [self.userName sizeToFit];
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
-        self.contentLabel.height = 0;
-        self.videoView.top = self.icon.bottom + 8;
     }else{
         self.contentLabel.hidden = NO;
-        self.contentLabel.height = cellModel.contentHeight;
-        self.videoView.top = self.icon.bottom + 16 + cellModel.contentHeight;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     //处理视频
     [self reset];
     self.videoItem = cellModel.videoItem;
     self.videoView.cellEntity = self.videoItem;
-//    self.videoView.forbidVideoClick = cellModel.forbidVideoClick;
     WeakSelf;
     if(cellModel.isVideoJumpDetail){
         _videoView.userInteractionEnabled = YES;
@@ -264,32 +234,17 @@
     //设置底部
     [self.bottomView refreshWithdata:self.cellModel];
     
-    self.bottomView.top = self.videoView.bottom;
-    self.mutedBgView.top = self.bottomView.top - 34;
     [self updateVideoLeftTime:self.cellModel.videoItem.durationTimeString];
     self.videoLeftTime.hidden = self.cellModel.videoItem.durationTimeString ? NO : YES;
     [self updateMutedBtn];
+    
+    [self updateConstraints:cellModel.layout];
 }
 
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = userInfoViewHeight + topMargin;
-        
-        if(!isEmptyString(cellModel.content)){
-            height += (cellModel.contentHeight + 8);
-        }
-        
-        CGFloat videoViewheight = ceil(screenWidth * 211.0/375.0);
-        height += (videoViewheight + 8);
-        
-        height += bottomViewHeight;
-        
-        if(cellModel.isInsertGuideCell){
-            height += guideViewHeight;
-        }
-        
-        return height;
+        return cellModel.layout.height;
     }
     return 44;
 }
@@ -304,13 +259,6 @@
 - (void)commentBtnClick {
     if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:cell:)]){
         [self.delegate commentClicked:self.cellModel cell:self];
-    }
-}
-
-//进入圈子详情
-- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
-        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 
@@ -469,7 +417,7 @@
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:2];
     [parameters setValue:adid forKey:SSViewControllerBaseConditionADIDKey];
     [parameters setValue:logExtra forKey:@"log_extra"];
-    ssOpenWebView([TTStringHelper URLWithURLString:article.articleURL], nil, topController.navigationController, !!(adid), parameters);
+    ssOpenWebView([NSURL btd_URLWithString:article.articleURL], nil, topController.navigationController, !!(adid), parameters);
 }
 
 - (void)openVideoDetailWithItem:(TTVFeedListItem *)item context:(TTVFeedCellSelectContext *)context {
@@ -498,7 +446,7 @@
     [statParams setValue:item_id forKey:@"item_id"];
     [statParams setValue:@(aggrType) forKey:@"aggr_type"];
     [statParams setValue:item.originData.logPbDic forKey:@"log_pb"];
-    [statParams setValue:[article.rawAdDataString tt_JSONValue] forKey:@"raw_ad_data"];
+    [statParams setValue:[article.rawAdDataString btd_jsonValueDecoded] forKey:@"raw_ad_data"];
     [statParams setValue:logExtra forKey:@"log_extra"];
     [statParams setValue:item.originData forKey:@"video_feed"];
     [statParams setValue:context.feedListViewController forKey:@"video_feedListViewController"];
@@ -511,7 +459,7 @@
     if(context.enterFrom){
         tracerDic[@"enter_from"] = context.enterFrom;
     }
-    NSString *reportParams = [tracerDic tt_JSONRepresentation];
+    NSString *reportParams = [tracerDic btd_jsonStringEncoded];
     if(reportParams){
         [statParams setValue:reportParams forKey:@"report_params"];
     }
@@ -549,7 +497,7 @@
         }
         
         if (detailURL) {
-            [[TTRoute sharedRoute] openURLByPushViewController:[TTStringHelper URLWithURLString:detailURL] userInfo:TTRouteUserInfoWithDict(statParams)];
+            [[TTRoute sharedRoute] openURLByPushViewController:[NSURL btd_URLWithString:detailURL] userInfo:TTRouteUserInfoWithDict(statParams)];
         }
     }
 }
@@ -563,7 +511,7 @@
     [applinkParams setValue:logExtra forKey:@"log_extra"];
     
     if (!canOpenURL && !isEmptyString(openUrl)) {
-        NSURL *url = [TTStringHelper URLWithURLString:openUrl];
+        NSURL *url = [NSURL btd_URLWithString:openUrl];
         
         if ([[UIApplication sharedApplication] canOpenURL:url]) {
             canOpenURL = YES;
