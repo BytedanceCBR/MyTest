@@ -61,6 +61,7 @@
         make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     _containerView = [[UIView alloc] init];
+    _containerView.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:_containerView];
     
     self.tableView = [[UITableView alloc] init];
@@ -164,6 +165,7 @@
         [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.equalTo(self.contentView).offset(4.5);
         }];
+
     } else {
         [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.bottom.mas_equalTo(0);
