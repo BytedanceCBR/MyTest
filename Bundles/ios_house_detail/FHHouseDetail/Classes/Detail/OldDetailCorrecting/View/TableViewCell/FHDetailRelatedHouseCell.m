@@ -76,7 +76,7 @@
         id obj = [FHHouseCardUtils getDetailEntityFromModel:item];
         if (obj && [obj isKindOfClass:[FHHouseSecondCardViewModel class]]) {
             FHHouseSecondCardViewModel *model = (FHHouseSecondCardViewModel *)obj;
-            [model setTitleMaxWidth:SCREEN_WIDTH - 30 * 2 - 84 - 8];
+            [model setTitleMaxWidth:SCREEN_WIDTH - 21 * 2 - 84 - 8];
             cellHeight += [FHOldHouseDetailRelatedSecondCell heightForData:obj];
             [self.dataList addObject:obj];
         }
