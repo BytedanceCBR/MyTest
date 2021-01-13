@@ -41,15 +41,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 //- (void)replaceDataFetchManager:(id<TSVShortVideoDataFetchManagerProtocol>)dataFetchManager;
 - (void)refreshCurrentModel;
-
 - (void)refresh;
 - (BOOL)canPullToClose;
-
 - (void)playCurrentVideo;
 - (void)pauseCurrentVideo;
-
 - (UIView *)exitScreenshotView;
-
 - (void)videoOverTracer;
 
 @end

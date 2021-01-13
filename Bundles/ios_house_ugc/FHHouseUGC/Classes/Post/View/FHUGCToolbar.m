@@ -369,6 +369,7 @@
 }
 
 - (BOOL)endEditing:(BOOL)animated {
+    self.bordIsShow = NO;
     
     void (^animations)(void) = ^{
         self.top = self.toolbarViewOrigin.y;

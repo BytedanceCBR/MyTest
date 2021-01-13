@@ -382,8 +382,20 @@
         }
         [info setValue:tracerDic forKey:@"tracer"];
     }
+//    if ([cellModel.openUrl containsString:@"awemevideo"]) {
+//        <#statements#>
+//    }else {
+//
+//    }
+//    NSString *strUrl = [cellModel.openUrl stringByReplacingOccurrencesOfString:@"awemevideo" withString:@"small_video_detail"];
+
+    
+    
     
     NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+    
+    
+    
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
 }
 
