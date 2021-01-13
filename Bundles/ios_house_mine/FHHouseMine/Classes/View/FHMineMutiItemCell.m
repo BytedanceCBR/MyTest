@@ -202,7 +202,7 @@
         NSString *key = itemModel.id;
         FHMineFavoriteItemView *view = self.items[i];
         NSInteger num = [itemDic[key] integerValue];
-        NSString *numStr = [NSString stringWithFormat:@"%li",(long)[itemDic[key] integerValue]];
+        NSString *numStr = [NSString stringWithFormat:@"%li",(long)num];
         if(num >= 99){
             numStr = @"99+";
         }
