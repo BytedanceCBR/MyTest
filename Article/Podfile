@@ -645,7 +645,10 @@ end
 
 
 def testPods
-    pod 'BDSSOAuthSDK' ,  '1.1.1-alpha.6'
+#    pod 'BDSSOAuthSDK' ,  '1.1.1-alpha.6'
+    pod_binary 'BDFeedBack', '1.2.5'
+    pod_binary 'LarkSSO', '0.1.6'
+    pod 'TZImagePickerController', '3.4.5'
     
     pod_binary 'TTDebugAssistant', '0.2.33'
     

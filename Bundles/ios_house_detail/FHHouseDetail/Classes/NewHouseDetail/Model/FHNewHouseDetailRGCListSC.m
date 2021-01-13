@@ -127,6 +127,7 @@
     [tracer addEntriesFromDictionary:sectionModel.detailTracerDic];
     [tracer setValue:houseInfo[@"houseId"] forKey:@"from_gid"];
     [tracer setValue:tracer[@"page_type"] forKey:@"enter_from"];
+    [tracer setValue:@"realtor_evaluate" forKey:@"element_from"];
     NSDictionary *dict = @{@"tracer":tracer};
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openURL = [NSURL URLWithString:sectionModel.contentModel.schema];

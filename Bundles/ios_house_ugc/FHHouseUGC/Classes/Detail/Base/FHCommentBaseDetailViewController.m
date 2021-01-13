@@ -411,6 +411,7 @@
 - (void)writeButtonClickLog {
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.tracerDict];
     dict[@"click_position"] = @"detail_comment";
+    dict[@"is_reply"] = @(0);
     TRACK_EVENT(@"click_comment", dict);
 }
 
@@ -796,7 +797,7 @@
     
     TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:condition commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         *willRepostFwID = fwID;
-        [wSelf clickSubmitComment];
+//        [wSelf clickSubmitComment];
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:qualityModel];
     commentManager.enterFrom = @"feed_detail";
     commentManager.enter_type = @"submit_comment";
@@ -949,13 +950,6 @@
     NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
     tracerDict[@"click_position"] = @"comment_field";
     [FHUserTracker writeEvent:@"click_comment_field" params:tracerDict];
-}
-
-// 点击回复
-- (void)clickSubmitComment {
-    NSMutableDictionary *tracerDict = self.tracerDict.mutableCopy;
-    tracerDict[@"click_position"] = @"submit_comment";
-    [FHUserTracker writeEvent:@"click_submit_comment" params:tracerDict];
 }
 
 // 点击回复他人的评论中的“回复”按钮
