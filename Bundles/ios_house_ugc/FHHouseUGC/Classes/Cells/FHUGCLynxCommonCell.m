@@ -61,7 +61,6 @@
             
            if (templateData) {
                 if (templateData != self.currentTemData) {
-                   NSNumber *costTime = @(0);
                    _loadTime = [[NSDate date] timeIntervalSince1970];
                     self.currentTemData = templateData;
                     self.currentReuseIdentifier = reuseIdentifier;
@@ -92,7 +91,6 @@
             return;
         }
         self.currentTemData = templateData;
-        NSNumber *costTime = @(0);
         _loadTime = [[NSDate date] timeIntervalSince1970];
     
         [self.lynxView loadTemplate:templateData withURL:@"local"];
@@ -226,7 +224,7 @@
 //这里接收TTLynxViewClient抛上来的sizeChange事件
 - (void)lynxViewDidChangeIntrinsicContentSize:(LynxView*)view {
     
-    self.bottomSepView.frame = CGRectMake(20.0f,self.lynxView.frame.origin.y + view.frame.size.height, [UIScreen mainScreen].bounds.size.height - 40, 1.2);
+    self.bottomSepView.frame = CGRectMake(20.0f,self.lynxView.frame.origin.y + view.frame.size.height, [UIScreen mainScreen].bounds.size.height - 40, 1);
     
     if (CGSizeEqualToSize(self.cacheSize, view.frame.size)) {
         return;

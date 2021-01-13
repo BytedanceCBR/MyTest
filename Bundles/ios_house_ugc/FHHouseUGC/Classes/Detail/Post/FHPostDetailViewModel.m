@@ -82,6 +82,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
     // 编辑成功
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postEditNoti:) name:@"kTTForumPostEditedThreadSuccessNotification" object:nil]; // 编辑发送成功
+    // 删帖成功
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
     return self;
 }
 
@@ -191,10 +193,19 @@
     }
 }
 
+- (void)postDeleteSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        if ([cellModel.groupId isEqualToString:self.detailData.groupId]) {
+            [self.detailController goBack];
+        }
+    }
+}
+
 // 关注状态改变
 - (void)followStateChanged:(NSNotification *)notification {
     if (notification) {
-        NSDictionary *userInfo = notification.userInfo;
         BOOL followed = [notification.userInfo[@"followStatus"] boolValue];
         NSString *groupId = notification.userInfo[@"social_group_id"];
         NSString *currentGroupId = self.social_group_id;
@@ -256,26 +267,26 @@
         cellModel.tracerDic = [self.detailController.tracerDict copy];
         if (socialGroupModel && ![socialGroupModel.hasFollow boolValue] && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
             // 未关注
-            FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
-            headerModel.socialGroupModel = socialGroupModel;
-            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
-            self.social_group_id = socialGroupModel.socialGroupId;
-            [self.items addObject:headerModel];
-            self.detailHeaderModel = headerModel;
-            [self.detailController headerInfoChanged];
-            //
-            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
+//            FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
+//            headerModel.socialGroupModel = socialGroupModel;
+//            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
+//            self.social_group_id = socialGroupModel.socialGroupId;
+//            [self.items addObject:headerModel];
+//            self.detailHeaderModel = headerModel;
+//            [self.detailController headerInfoChanged];
+//            //
+//            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
+//            [self.items addObject:grayLine];
             cellModel.showCommunity = NO;
         } else {
             if (cellModel.community && cellModel.community.name.length > 0 && cellModel.community.socialGroupId.length > 0 && ![cellModel.community.showStatus isEqualToString:@"1"]) {
-                cellModel.showCommunity = YES;
+                cellModel.showCommunity = NO;
             } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0 && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
                 // 挽救一下 balabala
                 cellModel.community = [[FHFeedUGCCellCommunityModel alloc] init];
                 cellModel.community.name = socialGroupModel.socialGroupName;
                 cellModel.community.socialGroupId = socialGroupModel.socialGroupId;
-                cellModel.showCommunity = YES;
+                cellModel.showCommunity = NO;
             } else {
                 cellModel.showCommunity = NO;
             }

@@ -500,7 +500,7 @@
         }
         if(cellModel){
             dispatch_async(dispatch_get_main_queue(), ^{
-                cellModel.showCommunity = YES;
+                cellModel.showCommunity = NO;
                 NSArray <TTRichSpanLink *> *richSpanLinks = [cellModel.richContent richSpanLinksOfAttributedString];
                 for (TTRichSpanLink *richSpanLink in richSpanLinks) {
                     if (richSpanLink.type == TTRichSpanLinkTypeHashtag) {
@@ -586,10 +586,6 @@
     self.currentCell = cell;
     self.detailJumpManager.currentCell = self.currentCell;
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
-}
-
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    [self.detailJumpManager goToCommunityDetail:cellModel];
 }
 
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {

@@ -25,6 +25,7 @@
 #import "FHHouseRealtorDetailPlaceCell.h"
 #import "FHUtils.h"
 #import "FHHouseRealtorDetailPlaceHolderCell.h"
+#import "FHUGCCellHelper.h"
 
 @interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
 @property(nonatomic , weak) UITableView *tableView;
@@ -185,9 +186,11 @@
         switch (cellModel.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
+                [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 20 - 20 - 30) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:14]];
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
+                [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 20 - 20 - 30) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:14]];
                 break;
             default:
                 break;
@@ -371,11 +374,6 @@
     self.currentCell = cell;
     self.detailJumpManager.currentCell = self.currentCell;
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
-}
-
-
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    [self.detailJumpManager goToCommunityDetail:cellModel];
 }
 
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {

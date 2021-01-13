@@ -134,7 +134,11 @@
     }
     
     if (!self.atButton.hidden) {
-        self.atButton.left = self.hashtagButton.right - 5;
+        if(!self.hashtagButton.hidden){
+            self.atButton.left = self.hashtagButton.right - 5;
+        }else{
+            self.atButton.left = self.picButton.right - 5;
+        }
     } else {
         self.atButton.right = 0;
     }

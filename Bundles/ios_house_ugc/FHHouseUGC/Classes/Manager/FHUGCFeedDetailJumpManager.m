@@ -426,7 +426,7 @@
 }
 
 //圈子详情页
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
++ (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
     if(cellModel.community.socialGroupId){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = cellModel.community.socialGroupId;

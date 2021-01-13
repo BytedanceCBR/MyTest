@@ -11,11 +11,15 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FHFeedUGCCellModel;
+
 @interface FHUGCCellManager : NSObject
 
 - (void)registerAllCell:(UITableView *)tableView;
 
 - (Class)cellClassFromCellViewType:(FHUGCFeedListCellSubType)cellType data:(nullable id)data;
+
++ (Class)cellLayoutClassFromCellViewType:(FHUGCFeedListCellSubType)cellType cellModel:(FHFeedUGCCellModel *)cellModel;
 
 + (SSImpressionModelType)impressModelTypeWithCellType:(FHUGCFeedListCellType)cellType;
 

@@ -30,7 +30,7 @@
 #define kFHMaxLines 0
 
 #define userInfoViewHeight 40
-#define bottomViewHeight 46
+#define bottomViewHeight 45
 #define guideViewHeight 17
 #define topMargin 20
 #define originViewHeight 80
@@ -78,8 +78,6 @@
 
 - (void)voteCompleteNoti:(NSNotification *)notification {
     if (notification) {
-        NSDictionary *userInfo = notification.userInfo;
-        
         FHUGCVoteInfoVoteInfoModel *voteInfo = notification.userInfo[@"vote_info"];
         if (voteInfo) {
             // 完成(或者过期) 或者 取消投票
@@ -116,8 +114,6 @@
 }
 
 - (void)setupViews {
-    __weak typeof(self) wself = self;
-    
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
     
@@ -148,16 +144,12 @@
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
     
     self.bottomLine = [[UIView alloc] initWithFrame:CGRectMake(20, 0, [UIScreen mainScreen].bounds.size.width - 40, 0.5)];
     self.bottomLine.backgroundColor = [UIColor themeGray6];
     self.bottomLine.hidden = YES;
     [self.contentView addSubview:self.bottomLine];
-    
-    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-    [self.bottomView.positionView addGestureRecognizer:tap];
 }
 
 - (void)setupUIFrames {
@@ -235,28 +227,6 @@
     return label;
 }
 
-- (void)gotoCommunityDetail {
-    FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)self.currentData;
-    if (cellModel) {
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        NSDictionary *log_pb = cellModel.tracerDic[@"log_pb"];
-        dict[@"community_id"] = cellModel.community.socialGroupId;
-        NSString *enter_from = cellModel.tracerDic[@"page_type"] ?: @"be_null";
-        NSString *originFrom = cellModel.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
-        dict[@"tracer"] = @{
-            @"origin_from":originFrom,
-            @"enter_from":enter_from,
-            @"enter_type":@"click",
-            @"group_id":cellModel.groupId ?: @"be_null",
-            @"log_pb":log_pb ?: @"be_null"
-        };
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        // 跳转到圈子详情页
-        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }
-}
-
 - (void)refreshWithData:(id)data {
     if (![data isKindOfClass:[FHFeedUGCCellModel class]]) {
         return;
@@ -272,25 +242,8 @@
     self.cellModel = data;
     //设置userInfo
     [self.userInfoView refreshWithData:cellModel];
-    __weak typeof(self) weakSelf = self;
-    self.userInfoView.deleteCellBlock = ^{
-        FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
-        [viewModel.detailController goBack];
-    };
     //设置底部
-    self.bottomView.cellModel = self.cellModel;
-    
-    BOOL showCommunity = self.cellModel.showCommunity && !isEmptyString(self.cellModel.community.name);
-    self.bottomView.position.text = self.cellModel.community.name;
-    [self.bottomView showPositionView:showCommunity];
-    
-    NSInteger commentCount = [self.cellModel.commentCount integerValue];
-    if(commentCount == 0){
-        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
-    }else{
-        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
-    }
-    [self.bottomView updateLikeState:self.cellModel.diggCount userDigg:self.cellModel.userDigg];
+    [self.bottomView refreshWithData:cellModel];
     //内容
     self.contentLabel.numberOfLines = self.cellModel.numberOfLines;
     if(isEmptyString(self.cellModel.voteInfo.title)){
@@ -371,8 +324,6 @@
     self.voteView.height = voteInfo.voteHeight;
     // 更新布局
     [self setupUIFrames];
-    
-    [self showGuideView];
 }
 
 + (CGFloat)heightForData:(id)data {
@@ -423,11 +374,7 @@
                 height += 1;
             }
         } else {
-            height += (24 + 25);
-        }
-        
-        if(cellModel.isInsertGuideCell){
-            height += guideViewHeight;
+            height += bottomViewHeight;
         }
         
         return height;
@@ -446,13 +393,6 @@
 - (void)commentBtnClick {
     if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:cell:)]){
         [self.delegate commentClicked:self.cellModel cell:self];
-    }
-}
-
-// 进入圈子详情
-- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
-        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 
@@ -495,30 +435,6 @@
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = text;
     [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"拷贝成功" indicatorImage:nil autoDismiss:YES dismissHandler:nil];
-}
-
-- (void)showGuideView {
-    if(_cellModel.isInsertGuideCell){
-        self.bottomView.height = bottomViewHeight + guideViewHeight;
-    }else{
-        self.bottomView.height = bottomViewHeight;
-    }
-}
-
-- (void)closeGuideView {
-    self.cellModel.isInsertGuideCell = NO;
-    [self.cellModel.tableView beginUpdates];
-    
-    [self showGuideView];
-    self.bottomView.cellModel = self.cellModel;
-    
-    [self setNeedsUpdateConstraints];
-    
-    [self.cellModel.tableView endUpdates];
-    
-    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
-        [self.delegate closeFeedGuide:self.cellModel];
-    }
 }
 
 @end
@@ -744,10 +660,10 @@
     }];
 }
 
-- (BOOL)isChinese:(NSString *)str {
-    NSString *match = @"(^[\u4e00-\u9fa5]+$)";
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF matches %@", match];
-    return [predicate evaluateWithObject:str];
+- (BOOL)isChinese:(NSString *)str {
+    NSString *match = @"(^[\u4e00-\u9fa5]+$)";
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF matches %@", match];
+    return [predicate evaluateWithObject:str];
 }
 
 // 编辑按钮点击
@@ -875,7 +791,6 @@
     }];
     // 计算百分比
     [self.optionsViewArray enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        FHUGCOptionView *optionV = obj;
         if (idx < self.voteInfo.items.count) {
             FHUGCVoteInfoVoteInfoItemsModel *item = self.voteInfo.items[idx];
             if (totalCount <= 0) {
@@ -1050,7 +965,6 @@
     // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
     [params setObject:@(YES) forKey:@"need_pop_vc"];
     params[@"from_ugc"] = @(YES);
-    __weak typeof(self) wSelf = self;
     [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
         if (type == TTAccountAlertCompletionEventTypeDone) {
             // 登录成功

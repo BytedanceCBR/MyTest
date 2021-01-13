@@ -17,6 +17,7 @@
 #import "FHDetailBaseModel.h"
 #import "FHUGCFeedListProtocol.h"
 #import "FHBaseViewController.h"
+#import "FHBaseLayout.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -164,8 +165,6 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *originGroupId;
 //频道Id
 @property (nonatomic, copy , nullable) NSString *categoryId;
-//是否需要插入了引导页
-@property (nonatomic, assign) BOOL isInsertGuideCell;
 //圈子相关
 @property (nonatomic, strong , nullable) FHFeedUGCCellCommunityModel *community;
 //是否显示圈子名称，默认为YES
@@ -184,6 +183,7 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, strong , nullable) TTVFeedItem *videoFeedItem;
 @property (nonatomic, strong , nullable) TTVFeedListItem *videoItem;
 @property (nonatomic, assign) NSInteger videoDuration;
+@property (nonatomic, copy) NSString *videoDurationStr;
 @property (nonatomic, strong , nullable) FHFeedContentVideoDetailInfoModel *videoDetailInfo ;
 //埋点相关
 @property (nonatomic, strong , nullable) NSDictionary *logPb;
@@ -280,23 +280,20 @@ typedef NS_ENUM(NSUInteger, FHFeedUGCDiggType) {
 @property (nonatomic, copy , nullable) NSString *itemId;
 @property (nonatomic, assign ) BOOL userRepin;
 @property (nonatomic, copy, nullable) NSString *videoSourceIcon;
+//标记同一个celltype的其他可能的样式
+@property (nonatomic, copy , nullable) NSString *cellLayoutStyle;
+@property (nonatomic, strong, nullable) FHBaseLayout *layout;
 
 
 + (FHFeedContentModel *)contentModelFromFeedContent:(NSString *)content;
 
 + (FHFeedUGCCellModel *)modelFromFeed:(id)content;
 
-+ (FHFeedUGCCellModel *)modelFromFeedWithDict:(NSDictionary *)content;
-
 + (FHFeedUGCCellModel *)modelFromFeedUGCContent:(FHFeedUGCContentModel *)model;
 
 + (FHFeedUGCCellModel *)modelFromFeedContent:(FHFeedContentModel *)model;
 
 + (FHFeedUGCCellModel *)modelFromFake;
-
-+ (FHFeedUGCCellModel *)modelFromFake2;
-
-+ (FHFeedUGCCellModel *)modelFromFake3:(BOOL)isList;
 
 + (FHFeedUGCCellModel *)copyFromModel:(FHFeedUGCCellModel *)oldCellModel;
 

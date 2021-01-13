@@ -224,7 +224,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         _userInfoContainerView = [[UIView alloc] init];
         _userInfoContainerView.backgroundColor = [UIColor clearColor];
 
-        _avatarView = [[FHUGCAvatarView alloc] init];
+        _avatarView = [[FHUGCAvatarView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
         _avatarView.userInteractionEnabled = YES;
         
         _nameLabel = [[UILabel alloc] init];

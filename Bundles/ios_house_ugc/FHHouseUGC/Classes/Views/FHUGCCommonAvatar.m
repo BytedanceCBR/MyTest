@@ -10,14 +10,18 @@
 #import "UIViewAdditions.h"
 #import "FHEnvContext.h"
 #import "UIColor+Theme.h"
+#import <ByteDanceKit/ByteDanceKit.h>
+
 @interface FHUGCCommonAvatar ()
-@property (strong , nonatomic) UIImageView *tagView;
+
+@property (strong, nonatomic) UIImageView *tagView;
 @property (nonatomic, copy) NSString *placeHoldName;
+
 @end
+
 @implementation FHUGCCommonAvatar
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
+- (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         [self initViews];
@@ -41,7 +45,7 @@
 
 - (void)initViews {
     _avatar = [[UIImageView alloc]init];
-    _avatar.layer.borderWidth = 1;
+    _avatar.layer.borderWidth = [UIDevice btd_onePixel];
     _avatar.layer.borderColor = [UIColor themeGray6].CGColor;
     [self addSubview:_avatar];
     _tagView = [[UIImageView alloc]init];
@@ -64,15 +68,6 @@
     self.tagView.hidden = !_showTag;
 }
 
-//- (void)setUserId:(NSString *)userId {
-//    NSArray *vwhiteList =  [FHEnvContext getUGCUserVWhiteList];
-//    if ([vwhiteList containsObject:userId]) {
-//        self.tagView.hidden = NO;
-//    }else {
-//        self.tagView.hidden = YES;
-//    }
-//}
-
 - (void)setUserId:(id)userId {
     NSString *uid = @"";
     if ([userId isKindOfClass:[NSNumber class]]) {
@@ -88,4 +83,5 @@
         self.tagView.hidden = YES;
     }
 }
+
 @end
