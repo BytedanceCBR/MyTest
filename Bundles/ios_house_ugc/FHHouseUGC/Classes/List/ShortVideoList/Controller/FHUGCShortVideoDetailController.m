@@ -197,6 +197,8 @@ static const CGFloat kFloatingViewOriginY = 230;
         self.dataFetchManager.topID = self.topID;
         self.dataFetchManager.canLoadMore = self.canLoadMore;
         FHFeedUGCCellModel *currentShortVideoModel = extraParams[@"current_video"];
+        TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.groupID itemID:self.groupID impressionID:nil aggrType:1];
+        self.groupModel = groupModel;
         if (!currentShortVideoModel) {
             [self startLoading];
         }
@@ -219,11 +221,11 @@ static const CGFloat kFloatingViewOriginY = 230;
                 };
             }
         }];
-        
-        TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.groupID itemID:self.groupID impressionID:nil aggrType:1];
-        self.groupModel = groupModel;
     }
     return self;
+}
+- (void)setGroupID:(NSString *)groupID {
+    _groupID = groupID;
 }
 
 - (void)initReportOptions
