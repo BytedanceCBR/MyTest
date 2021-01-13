@@ -27,17 +27,6 @@
 
 @implementation FHDetailNeighborhoodAssessCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-    
-    // Configure the view for the selected state
-}
-
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
@@ -49,16 +38,14 @@
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:20] textColor:[UIColor themeGray1]];
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontSemibold:16] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"小区攻略";
     [self.containerView addSubview:_titleLabel];
 
@@ -78,25 +65,22 @@
 
 - (void)initConstaints {
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(20);
-        make.left.mas_equalTo(self.contentView).offset(16);
-        make.right.mas_equalTo(self.contentView).offset(-16);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(0, 9, 4.5, 9));
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.containerView).offset(20);
-        make.left.mas_equalTo(self.containerView).offset(16);
-        make.right.mas_equalTo(self.containerView).offset(-16);
-        make.height.mas_equalTo(25);
+        make.top.mas_equalTo(self.containerView).offset(12);
+        make.left.mas_equalTo(self.containerView).offset(12);
+        make.right.mas_equalTo(self.containerView).offset(-12);
+        make.height.mas_equalTo(22);
     }];
     
     [_cardSliderView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(16);
-        make.left.mas_equalTo(self.containerView).offset(16);
-        make.right.mas_equalTo(self.containerView).offset(-16);
+        make.top.equalTo(self.titleLabel.mas_bottom).offset(12);
+        make.left.mas_equalTo(self.containerView).offset(12);
+        make.right.mas_equalTo(self.containerView).offset(-12);
         make.height.mas_equalTo([FHCardSliderView getViewHeight]);
-        make.bottom.mas_equalTo(self.containerView).offset(-20);
+        make.bottom.mas_equalTo(self.containerView).offset(-12);
     }];
 }
 
@@ -114,29 +98,19 @@
     self.currentData = data;
     FHDetailAccessCellModel *cellModel = (FHDetailAccessCellModel *)data;
     self.shadowImage.image = cellModel.shadowImage;
-    
-    [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.containerView).offset(cellModel.topMargin == 30?20:cellModel.topMargin);
-    }];
-    
-    if (cellModel.bottomMargin) {
-        [_cardSliderView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.mas_equalTo(self.containerView).offset(-cellModel.bottomMargin);
+    if (cellModel.shdowImageScopeType != FHHouseShdowImageScopeTypeAll && cellModel.shdowImageScopeType != FHHouseShdowImageScopeTypeBottomAll) {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(0);
+        }];
+        [self.cardSliderView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(0);
         }];
     }
-    
     FHDetailNeighborhoodDataStrategyModel *strategy = cellModel.strategy;
-    
     _titleLabel.text = strategy.title.length > 0 ? strategy.title : @"小区攻略";
     
     _cardSliderView.tracerDic = cellModel.tracerDic;
     [_cardSliderView setCardListData:cellModel.cards];
-    
-    if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll) {
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
-        }];
-    }
 }
 
 - (NSString *)elementTypeString:(FHHouseType)houseType {

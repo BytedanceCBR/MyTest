@@ -7,6 +7,7 @@
 
 #import "FHDetailQACellModel.h"
 #import "FHFeedUGCCellModel.h"
+#import "FHDetailHouseNeighborhoodQuestionCell.h"
 
 @implementation FHDetailQACellModel
 
@@ -16,6 +17,10 @@
         _topMargin = 30.0f;
     }
     return self;
+}
+
+- (void)setTitle:(NSString *)title {
+    _title = title;
 }
 
 - (void)setQuestion:(FHDetailNeighborhoodDataQuestionModel *)question {
@@ -49,23 +54,15 @@
     if(!isEmptyString(question.content.count)){
         self.totalCount = [question.content.count integerValue];
         if(self.totalCount > 0 && self.dataList.count > 0){
-            self.title = [NSString stringWithFormat:@"%@（%li）",self.title,(long)self.totalCount];
+            self.title = [NSString stringWithFormat:@"%@ (%li)",self.title,(long)self.totalCount];
         }
     }
-    
-    //总数
-    if(self.totalCount > 2 || self.dataList.count <= 0){
-        self.footerViewHeight = 60;
-    }else{
-        self.footerViewHeight = 10;
-    }
-    
-    self.headerViewHeight = _topMargin + 21;
-    
+    self.footerViewHeight = 0;
+    self.headerViewHeight = _topMargin + 34;
     if(self.dataList.count > 0){
         self.viewHeight = self.headerViewHeight + self.footerViewHeight;
         for (FHFeedUGCCellModel *cellModel in self.dataList) {
-            CGFloat cellHeight = [FHNeighbourhoodQuestionCell heightForData:cellModel];
+            CGFloat cellHeight = [FHDetailHouseNeighborhoodQuestionCell heightForData:cellModel];
             self.viewHeight += cellHeight;
         }
     }else{

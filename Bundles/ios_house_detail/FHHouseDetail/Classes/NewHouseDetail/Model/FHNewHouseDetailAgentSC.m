@@ -100,14 +100,6 @@
 //                vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
 //            }
         }];
-
-        FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:extraDict error:nil];
-        configModel.houseType = FHHouseTypeNewHouse;
-        configModel.followId = self.detailViewController.viewModel.houseId;
-        configModel.actionType = FHHouseTypeNewHouse;
-        
-        // 静默关注功能
-        [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
     }
 
 }
@@ -232,16 +224,19 @@
     DataInfo[@"recommended_realtors_title"] = self.sectionModel.detailModel.data.recommendedRealtorsTitle;
     if(self.sectionModel.detailModel.fhOriginDictData){
         NSDictionary *dataInfo = self.sectionModel.detailModel.fhOriginDictData;
-        if(self.sectionModel.detailModel.data.recommendedRealtors){
-            DataInfo[@"recommended_realtors"] = dataInfo[@"data"][@"recommended_realtors"] ;
+        if([dataInfo isKindOfClass:[NSDictionary class]]){
+            NSDictionary *dic = dataInfo[@"data"];
+            BOOL dicIsDictionary = [dic isKindOfClass:[NSDictionary class]];
+            if(self.sectionModel.detailModel.data.recommendedRealtors && dicIsDictionary){
+                DataInfo[@"recommended_realtors"] = dic[@"recommended_realtors"] ;
+            }
+            if(self.sectionModel.detailModel.data.recommendRealtorsAssociateInfo && dicIsDictionary ){
+                DataInfo[@"recommended_realtors_associate_info"] = dic[@"recommend_realtors_associate_info"];
+            }
+            if(self.sectionModel.detailModel.data.logPb && dicIsDictionary){
+                DataInfo[@"log_pb"] = dic[@"log_pb"];
+            }
         }
-        if(self.sectionModel.detailModel.data.recommendRealtorsAssociateInfo){
-            DataInfo[@"recommended_realtors_associate_info"] = dataInfo[@"data"][@"recommend_realtors_associate_info"];
-        }
-        if(self.sectionModel.detailModel.data.logPb){
-            DataInfo[@"log_pb"] = dataInfo[@"data"][@"log_pb"];
-        }
-
     }
 
     params[@"recommended_realtors_info"] = [DataInfo btd_jsonStringEncoded];
@@ -263,8 +258,7 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
+    [titleView setupNewHouseDetailStyle];
     FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
 
     // 设置下发标题
@@ -290,7 +284,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 74);
+        return CGSizeMake(self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2, 64);
     }
     return CGSizeZero;
 }
@@ -322,10 +316,7 @@
         tracerDic[@"enter_from"] = @"new_detail";
         tracerDic[@"page_type"] = @"realtor_list";
         tracerDic[@"element_from"] = @"new_detail_related";
-        tracerDic[@"search_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"search_id"] ?: @"be_null";
-        tracerDic[@"impr_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"impr_id"] ?: @"be_null";
-        tracerDic[@"group_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"group_id"] ?: @"be_null";
-        
+        tracerDic[@"group_id"] = self.detailViewController.viewModel.houseId ?: @"be_null";
         [tracerDic removeObjectsForKeys:@[@"card_type",@"rank",@"origin_search_id",@"app_house_tags",@"log_pb"]];
         [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
     }
@@ -403,12 +394,12 @@
                     atIndex:(NSInteger)index {
     FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
     
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     CGFloat height = 74;
     if (index < agentSM.recommendedRealtors.count) {
         FHDetailContactModel *model = agentSM.recommendedRealtors[index];
         if (model.agencyDescription.length && model.realtorScoreDisplay.length) {
-            height = 86;
+            height = 80;
         }
     }
     if(index == agentSM.recommendedRealtors.count - 1){

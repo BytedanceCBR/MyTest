@@ -85,6 +85,8 @@
 #import <FHHouseBase/FHEnvContext.h>
 
 #import <FHCHousePush/TTPushServiceDelegate.h>
+#import <BDTrackerProtocol/BDTrackerProtocol.h>
+#import <BDTrackerProtocol/BDTrackerProtocol+ABTest.h>
 
 #if INHOUSE
 #import "TTStartupDebugGroup.h"
@@ -183,6 +185,7 @@ static NSTimeInterval lastTime;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
+    [BDTrackerProtocol setBDTrackerEnabled];
     [GAIAEngine appDidFinishLaunching];
     // add by zjing 这行代码要保留，为了解决启动时addObserver引起的死锁crash问题，我只是代码的搬运工，有问题找谷妈妈
     [self _syncToGetCurrentNetWorkStatus];
@@ -421,10 +424,18 @@ static NSTimeInterval lastTime;
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
+#if INHOUSE
+    if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol] && ![url.absoluteString containsString:@"lk9c5i482wynhkzx8l://"]) {
+        [[FHEnvContext sharedInstance] addOpenUrlItem:application openURL:url sourceApplication:sourceApplication annotation:annotation];
+        return YES;
+    }
+#else
     if (![[FHEnvContext sharedInstance] hasConfirmPermssionProtocol]) {
         [[FHEnvContext sharedInstance] addOpenUrlItem:application openURL:url sourceApplication:sourceApplication annotation:annotation];
         return YES;
     }
+#endif
+
     
     WeakSelf;
     [TTLaunchOrientationHelper executeBlockAfterStatusbarOrientationNormal:^{

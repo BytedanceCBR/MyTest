@@ -15,7 +15,6 @@
 #import "FHHomeRequestAPI.h"
 #import "FHHomePlaceHolderCell.h"
 #import "FHhomeHouseTypeBannerCell.h"
-#import "TTDeviceHelper.h"
 #import "FHHouseBaseItemCell.h"
 #import "FHHomeCellHelper.h"
 #import "FHPlaceHolderCell.h"
@@ -44,6 +43,7 @@
 #import "FHHomeRenderFlow.h"
 #import "FHHouseCardStatusManager.h"
 #import "FHHomeItemRequestManager.h"
+#import <UIDevice+BTDAdditions.h>
 
 
 @interface FHHomeErrorTableViewCell : UITableViewCell
@@ -60,7 +60,7 @@ NSString const * kCellSmallItemImageId = @"FHHomeSmallImageItemCell";
 NSString const * kCellNewHouseItemImageId = @"FHHouseBaseNewHouseCell";
 NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
-@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate, FHHouseSearchSecondHouseCellDelegate, FHHomeRentCellDelegate>
+@interface FHHomeItemViewController ()<UITableViewDataSource,UITableViewDelegate,FHHouseBaseItemCellDelegate, FHHouseSearchSecondHouseCellDelegate, FHHomeRentCellDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic , strong) FHRefreshCustomFooter *refreshFooter;
 @property (nonatomic , assign) NSInteger itemCount;
@@ -84,6 +84,9 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 @property (nonatomic, strong) NSMutableDictionary *cahceHouseRankidsDict;
 @property (nonatomic, strong) NSMutableDictionary *similarTraceParam;
 @property (nonatomic, assign) NSTimeInterval startMonitorTime;
+@property (nonatomic, strong) UILongPressGestureRecognizer *gesture; //长按手势
+@property (nonatomic, strong) UITableViewCell *selectCell; //长按选择的cell
+@property (nonatomic, assign) BOOL pageIsDragging; //当前页面是否处于滑动中
 
 @end
 
@@ -158,7 +161,10 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES isInit:YES];
     
     self.tableView.scrollsToTop = NO;
-    
+    self.gesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressAction:)];
+    self.gesture.delegate = self;
+    self.gesture.minimumPressDuration = 0.05;
+    [self.tableView addGestureRecognizer:self.gesture];
 }
 
 - (void)initNotifications {
@@ -170,6 +176,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(longPressCancel) name:@"FHHomeViewBeginDragging" object:nil];
 }
 
 #pragma mark  埋点
@@ -771,7 +778,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
 
 - (CGFloat)getHeightShowNoData
 {
-    if([TTDeviceHelper isScreenWidthLarge320])
+    if([UIDevice btd_isScreenWidthLarge320])
     {
         return [UIScreen mainScreen].bounds.size.height * 0.45;
     }else
@@ -787,7 +794,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     if (self.scrollDidBegin) {
         self.scrollDidBegin();
     }
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:nil];
 }
 
@@ -827,6 +833,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             }
         }
     }
+    [self longPressCancel];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -1193,10 +1200,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     
     if (!self.showPlaceHolder && indexPath.section == 1) {
         [self jumpToDetailPage:indexPath];
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        if ([cell conformsToProtocol:@protocol(FHHouseCardReadStateProtocol)]) {
-            [((id<FHHouseCardReadStateProtocol>)cell) refreshOpacityWithData: self.houseDataItemsModel[indexPath.row]];
-        }
         if(self.houseDataItemsModel.count > indexPath.row){
             FHHomeHouseDataItemsModel *theModel = self.houseDataItemsModel[indexPath.row];
             if (self.houseType == FHHouseTypeSecondHandHouse &&theModel.houseType.integerValue != FHHouseTypeNewHouse && [theModel.cardType integerValue] != kFHHomeAgentCardType) {
@@ -1205,6 +1208,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         }
     }
 }
+
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -1224,7 +1228,6 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         if ([theModel.cardType integerValue] == kFHHomeAgentCardType) {
             return;
         }
-        [[FHHouseCardStatusManager sharedInstance] readHouseId:theModel.id withHouseType:[theModel.houseType integerValue]];
         
         NSMutableDictionary *traceParam = [NSMutableDictionary new];
         traceParam[@"enter_from"] = [self pageTypeString];
@@ -1320,6 +1323,78 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
         }
     }
     return _tableView;
+}
+
+//长按手势优先级最低，触摸动效复原
+- (void)longPressCancel {
+    self.gesture.enabled = NO;
+    self.gesture.enabled = YES;
+}
+
+//长按触发动效
+- (void)longPressAction:(UILongPressGestureRecognizer *)gesture {
+    CGPoint point = [gesture locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if (!indexPath || !cell) {
+        return;
+    }
+    if (self.selectCell && self.selectCell != cell) {
+        if ([ self.selectCell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [ self.selectCell respondsToSelector:@selector(restoreWithAnimation)]) {
+            [ self.selectCell performSelector:@selector(restoreWithAnimation)];
+        }
+    }
+    self.selectCell = cell;
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        self.pageIsDragging = [self currentPageIsDragging];
+        if ([cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [cell respondsToSelector:@selector(shrinkWithAnimation)]) {
+            [cell performSelector:@selector(shrinkWithAnimation)];
+        }
+    } else if (gesture.state == UIGestureRecognizerStateEnded || gesture.state == UIGestureRecognizerStateCancelled) {
+        if ([cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] && [cell respondsToSelector:@selector(restoreWithAnimation)]) {
+            [cell performSelector:@selector(restoreWithAnimation)];
+        }
+        self.selectCell = nil;
+        //滑动状态不进入详情页，非滑动状态长按结束进入详情页
+        if (gesture.state == UIGestureRecognizerStateEnded && !self.pageIsDragging) {
+            WeakSelf;
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                __strong typeof(wself) strongSelf = wself;
+                if ([strongSelf.tableView.delegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)]) {
+                    [strongSelf.tableView.delegate tableView:strongSelf.tableView didSelectRowAtIndexPath:indexPath];
+                }
+            });
+        }
+    }
+}
+
+//当前页面是否处于滑动状态
+- (BOOL)currentPageIsDragging {
+    BOOL isDragging = self.tableView.isDragging;
+    UIView *view = self.view.superview;
+    if ([view isKindOfClass:[UIScrollView class]]) {
+        isDragging |= ((UIScrollView *)view).isDragging;
+    }
+    isDragging |= self.superTableView.isDragging;
+    return isDragging;
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    //支持多手势，滑动时按停触发长按手势
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
+    //只有实现触摸动效协议才触发长按手势
+    CGPoint point = [touch locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if (!cell || ![cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)]) {
+        return NO;
+    }
+    return YES;
 }
 
 - (void)dealloc {

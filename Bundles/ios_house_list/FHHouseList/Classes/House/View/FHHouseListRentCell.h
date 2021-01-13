@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface FHHouseListRentCell : FHHouseBaseCommonCell<FHHouseCardReadStateProtocol>
+@interface FHHouseListRentCell : FHHouseBaseCommonCell<FHHouseCardReadStateProtocol, FHHouseCardTouchAnimationProtocol>
 
 @property (nonatomic, strong) id model;
 

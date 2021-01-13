@@ -70,7 +70,7 @@
         
         UICollectionViewLayoutAttributes *attrsFirst = [self layoutAttributesForItemAtIndexPath:indexPathFirst];
         UICollectionViewLayoutAttributes *attrsLast = [self layoutAttributesForItemAtIndexPath:indexPathLast];
-        newDecorationAttributes.frame = CGRectMake(attrsFirst.frame.origin.x - 15, attrsFirst.frame.origin.y - 20, self.collectionView.frame.size.width, attrsLast.frame.origin.y-attrsFirst.frame.origin.y + 40);
+        newDecorationAttributes.frame = CGRectMake(9, attrsFirst.frame.origin.y, self.collectionView.frame.size.width - 9 * 2, attrsLast.frame.origin.y-attrsFirst.frame.origin.y);
         // 想要作为背景图像，就一定要将其 zIndex 设置为 -1
         newDecorationAttributes.zIndex = -1;
         return newDecorationAttributes;

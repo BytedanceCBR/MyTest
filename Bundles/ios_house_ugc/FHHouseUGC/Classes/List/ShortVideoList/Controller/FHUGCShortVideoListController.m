@@ -240,16 +240,8 @@
 }
 
 - (void)hideIfNeeds {
-    [UIView animateWithDuration:0.3 animations:^{
         self.collectionView.contentInset = self.originContentInset;
         self.collectionView.originContentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
-        
-    }completion:^(BOOL finished) {
-        self.collectionView.originContentInset = self.originContentInset;
-        if (self.notifyCompletionBlock) {
-            self.notifyCompletionBlock();
-        }
-    }];
 }
 
 

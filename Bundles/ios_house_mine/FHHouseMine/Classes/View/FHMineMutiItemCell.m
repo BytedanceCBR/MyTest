@@ -14,7 +14,8 @@
 
 #define itemPadding ((CGRectGetWidth([UIScreen mainScreen].bounds) > 320) ? 10 : 7)
 #define eachRowCount 4
-#define bgPadding ((CGRectGetWidth([UIScreen mainScreen].bounds) > 320) ? 20 : 15)
+//#define bgPadding ((CGRectGetWidth([UIScreen mainScreen].bounds) > 320) ? 20 : 15)
+#define bgPadding 9
 
 @interface FHMineMutiItemCell()
 
@@ -59,10 +60,10 @@
 
 - (void)initConstraints {
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.bgView).offset(15);
-        make.right.mas_equalTo(self.bgView).offset(-15);
-        make.top.mas_equalTo(self.bgView).offset(15);
-        make.height.mas_equalTo(22);
+        make.left.mas_equalTo(self.bgView).offset(12);
+        make.right.mas_equalTo(self.bgView).offset(-12);
+        make.top.mas_equalTo(self.bgView).offset(12);
+        make.height.mas_equalTo(19);
     }];
     
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -74,7 +75,7 @@
         make.top.mas_equalTo(self.contentView);
         make.left.mas_equalTo(self.contentView).offset(bgPadding);
         make.right.mas_equalTo(self.contentView).offset(-bgPadding);
-        make.bottom.mas_equalTo(self.contentView).offset(-10);
+        make.bottom.mas_equalTo(self.contentView).offset(-bgPadding);
     }];
 }
 
@@ -119,9 +120,15 @@
         NSString *title = itemModel.title;
         if([self.model.myIconId integerValue] == FHMineModuleTypeHouseFocus){
             title = [self getFocusItemTitle:itemModel.title];
+
         }
         NSString *imageUrl = ((FHMineConfigDataIconOpDataMyIconItemsImageModel *)[itemModel.image firstObject]).url;
         FHMineFavoriteItemView *view = [[FHMineFavoriteItemView alloc] initWithName:title imageName:imageUrl moduletype:self.model.myIconId.integerValue];
+//        if ([self.model.myIconId integerValue] == FHMineModuleTypeHouseFocus) {
+////            [self updateFocusTitles];
+//            view.focusConut = @"*";
+//        }
+        
         view.itemClickBlock = ^{
             [wself didItemClick:itemModel];
         };
@@ -153,12 +160,12 @@
                 if(topView == self.titleLabel){
                     make.top.mas_equalTo(topView.mas_bottom).offset(3);
                 }else{
-                    make.top.mas_equalTo(topView.mas_bottom).offset(-10);
+                    make.top.mas_equalTo(topView.mas_bottom).offset(-5);
                 }
                 make.left.mas_equalTo(self.bgView).offset((width + itemPadding) * column);
                 make.width.mas_equalTo(width);
                 if(i == items.count - 1){
-                    make.bottom.mas_equalTo(self.bgView).offset(-10);
+                    make.bottom.mas_equalTo(self.bgView);
                 }
             }];
             
@@ -178,6 +185,7 @@
         FHMineConfigDataIconOpDataMyIconItemsModel *itemModel = self.model.myIcon.items[i];
         FHMineFavoriteItemView *view = self.items[i];
         view.nameLabel.text = [NSString stringWithFormat:@"%@ (*)",itemModel.title];
+//        view.focusConut = @"*";
     }
 }
 
@@ -194,11 +202,12 @@
         NSString *key = itemModel.id;
         FHMineFavoriteItemView *view = self.items[i];
         NSInteger num = [itemDic[key] integerValue];
-        NSString *numStr = [NSString stringWithFormat:@"%i",[itemDic[key] integerValue]];
-        if(num > 99){
+        NSString *numStr = [NSString stringWithFormat:@"%li",(long)num];
+        if(num >= 99){
             numStr = @"99+";
         }
-        view.nameLabel.text = [NSString stringWithFormat:@"%@ (%@)",itemModel.title,numStr];
+        view.nameLabel.text = [NSString stringWithFormat:@"%@ (%@)",itemModel.title, numStr];
+//        view.focusConut = numStr;
     }
 }
 

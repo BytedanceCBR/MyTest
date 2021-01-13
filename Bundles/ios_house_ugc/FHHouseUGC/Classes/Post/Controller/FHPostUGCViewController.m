@@ -60,15 +60,15 @@ static CGFloat const kLeftPadding = 20.f;
 static CGFloat const kRightPadding = 20.f;
 static CGFloat const kMidPadding = 10.f;
 static CGFloat const kInputViewTopPadding = 10.f;
-static CGFloat const kRateMovieViewHeight = 100.f;
+//static CGFloat const kRateMovieViewHeight = 100.f;
 static CGFloat const kTextViewHeight = 100.f;
-static CGFloat const kUserInfoViewHeight = 44.f;
+//static CGFloat const kUserInfoViewHeight = 44.f;
 static CGFloat const kAddImagesViewTopPadding = 10.f;
 static CGFloat const kAddImagesViewBottomPadding = 18.f;
 
 static NSString * const kPostTopicEventName = @"topic_post";
 static NSString * const kUserInputTelephoneKey = @"userInputTelephoneKey";
-static NSInteger const kTitleCharactersLimit = 20;
+//static NSInteger const kTitleCharactersLimit = 20;
 
 static NSInteger const kMaxPostImageCount = 9;
 
@@ -614,7 +614,7 @@ static NSInteger const kMaxPostImageCount = 9;
 
 - (void)configTopicBtnOnToolBar {
     
-    BOOL isShowHashTagBtn = YES;
+    BOOL isShowHashTagBtn = NO;
     self.toolbar.banHashtagInput = !isShowHashTagBtn;
     self.inputTextView.isBanHashtag = self.toolbar.banHashtagInput;
     if(isShowHashTagBtn) {
@@ -626,8 +626,8 @@ static NSInteger const kMaxPostImageCount = 9;
             [self endEditing];
             
             NSURLComponents *components = [NSURLComponents componentsWithString:@"sslocal://ugc_post_topic_list"];
-            NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.toolbar.socialGroupSelectEntry.groupId;
-            NSURLQueryItem *groudIPItem = [NSURLQueryItem queryItemWithName:@"groupId" value:groupId];
+//            NSString *groupId = self.hasSocialGroup ? self.selectGroupId : self.toolbar.socialGroupSelectEntry.groupId;
+//            NSURLQueryItem *groudIPItem = [NSURLQueryItem queryItemWithName:@"groupId" value:groupId];
             
             NSURL *url = components.URL;
             NSMutableDictionary *param = [NSMutableDictionary dictionary];

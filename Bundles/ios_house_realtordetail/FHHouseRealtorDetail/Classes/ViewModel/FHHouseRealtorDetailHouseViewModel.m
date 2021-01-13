@@ -20,7 +20,7 @@
 #import "FHRealtorSecondCell.h"
 #import "FHPlaceHolderCell.h"
 
-@interface FHHouseRealtorDetailHouseViewModel ()<UITableViewDelegate,UITableViewDataSource>
+@interface FHHouseRealtorDetailHouseViewModel ()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>
 @property(nonatomic, weak)TTHttpTask *requestTask;
 @property(nonatomic,strong)NSDictionary *tracerDic;
 @property(nonatomic, strong)FHRefreshCustomFooter *refreshFooter;
@@ -261,7 +261,7 @@
             [cell hiddenCloseBtn];
         }
         [cell refreshIndexCorner:(indexPath.row == 0) withLast:(indexPath.row == (self.dataList.count))];
-        [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
+        [cell.contentView setBackgroundColor:[UIColor themeGray7]];
         return cell;
 }
 
@@ -277,7 +277,7 @@
     if(!_errorView){
         __weak typeof(self)ws = self;
         _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(10, 0, [UIScreen mainScreen].bounds.size.width, 500)];
-        _errorView.backgroundColor = [UIColor colorWithHexStr:@"f8f8f8"];
+        _errorView.backgroundColor = [UIColor themeGray7];
         _errorView.retryBlock = ^{
             [ws requestData:YES first:YES];
         };
@@ -312,10 +312,6 @@
         }
     }
 }
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
-}
-
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([cell isKindOfClass:[FHHouseBaseItemCell class]]) {
         FHHomeHouseDataItemsModel *model = self.dataList[indexPath.row];
@@ -344,4 +340,19 @@
     tracerDic[@"group_id"] = model.id;
     TRACK_EVENT(@"house_show", tracerDic);
 }
+
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.detailController.pageView tableViewWillBeginDragging:scrollView];
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.detailController.pageView tableViewDidScroll:scrollView];
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [self.detailController.pageView tableViewDidEndDragging:scrollView];
+}
+
+
 @end

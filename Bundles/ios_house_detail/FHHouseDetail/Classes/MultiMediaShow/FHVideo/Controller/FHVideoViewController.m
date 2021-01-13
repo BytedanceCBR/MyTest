@@ -216,10 +216,10 @@
     CGFloat vWidth = [self videoWidth];
     CGFloat vHeight = [self videoHeight];
     // 目前只处理origin.y 为0 的数据
-    if (self.playState == TTVPlaybackState_Stopped) {
-        self.videoFrame = self.firstVideoFrame;
-        return;
-    }
+//    if (self.playState == TTVPlaybackState_Stopped) {
+//        self.videoFrame = self.firstVideoFrame;
+//        return;
+//    }
     if (vFrame.origin.y > 0) {
         vFrame = self.firstVideoFrame;
     }

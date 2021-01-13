@@ -53,7 +53,7 @@
     [self.contentView addSubview:self.backView];
     self.backView.backgroundColor = [UIColor whiteColor];
     
-    self.cardView = [[FHHouseNewCardView alloc] init];
+    self.cardView = [[FHHouseNewCardView alloc] initWithFrame:self.contentView.bounds leftMargin:12 rightMargin:12];
     [self.contentView addSubview:self.cardView];
     
     self.line = [[UIView alloc] init];
@@ -72,8 +72,8 @@
     }];
     
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
+        make.left.mas_equalTo(12);
+        make.right.mas_equalTo(-12);
         make.height.mas_equalTo(1);
         make.bottom.mas_equalTo(0);
     }];

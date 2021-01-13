@@ -127,16 +127,13 @@
     [tracer addEntriesFromDictionary:sectionModel.detailTracerDic];
     [tracer setValue:houseInfo[@"houseId"] forKey:@"from_gid"];
     [tracer setValue:tracer[@"page_type"] forKey:@"enter_from"];
+    [tracer setValue:@"realtor_evaluate" forKey:@"element_from"];
     NSDictionary *dict = @{@"tracer":tracer};
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openURL = [NSURL URLWithString:sectionModel.contentModel.schema];
     if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
         [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
     }
-}
-
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    [self.detailJumpManager goToCommunityDetail:cellModel];
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
@@ -152,7 +149,7 @@
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index
 {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     FHNewHouseDetailRGCListSM *model = (FHNewHouseDetailRGCListSM *)self.sectionModel;
     FHFeedUGCCellModel *cellModel = model.items[index];
     CGSize size = CGSizeZero;
@@ -162,7 +159,7 @@
         size = [FHNewHouseDetailRGCVideoCollectionCell cellSizeWithData:cellModel width:width];
     }
     if (index < model.items.count - 1) {
-        size.height += 10;
+        size.height += 12;
     }
     return size;
 }
@@ -227,8 +224,7 @@
                                                                  atIndex:(NSInteger)index
 {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
+    [titleView setupNewHouseDetailStyle];
     __weak typeof(self) weakSelf = self;
     titleView.arrowsImg.hidden = NO;
     titleView.userInteractionEnabled = YES;
@@ -245,7 +241,7 @@
                                  atIndex:(NSInteger)index
 {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2, 46);
     }
     return CGSizeZero;
 }

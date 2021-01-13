@@ -7,41 +7,20 @@
 //
 
 #import "AWEVideoContainerViewController.h"
-#import "AWEVideoPlayView.h"
-#import "EXTKeyPathCoding.h"
-#import "BTDNetworkUtilities.h"
-#import "TTNavigationController.h"
-#import "AWEVideoLoadingCollectionViewCell.h"
-#import "TTIndicatorView.h"
-#import "TTThemedAlertController.h"
-#import "EXTScope.h"
 #import "AWEVideoDetailFirstUsePromptViewController.h"
-#import "extobjc.h"
-#import "AWEVideoPlayTrackerBridge.h"
 #import <SSImpressionManager.h>
 #import "AWEVideoDetailScrollConfig.h"
 #import "TTFlowStatisticsManager+Helper.h"
-#import "TSVVideoDetailControlOverlayUITypeConfig.h"
-#import "TTImageInfosModel.h"
-#import "SDWebImagePrefetcher.h"
-#import "AWEVideoDetailFirstFrameConfig.h"
 #import "TSVVideoDetailPromptManager.h"
-#import "AWEVideoDetailSecondUsePromptViewController.h"
 #import "TSVSlideUpPromptViewController.h"
 #import "TSVSlideLeftEnterProfilePromptViewController.h"
-//#import "TSVProfileConfig.h"
-#import "TSVDetailViewModel.h"
 #import "TSVMonitorManager.h"
 #import <ReactiveObjC/ReactiveObjC.h>
 #import "TTRelevantDurationTracker.h"
 #import "AWEVideoDetailControlOverlayViewController.h"
-#import "TSVPrefetchImageManager.h"
-//#import "TSVNewControlOverlayViewController.h"
 #import "TSVPrefetchVideoManager.h"
-#import "TTSettingsManager.h"
 #import "TTFFantasyTracker.h"
 #import "FHFeedUGCCellModel.h"
-// TTAd
 #import "AWEVideoContainerAdCollectionViewCell.h"
 #import "AWEVideoDetailControlAdOverlayViewController.h"
 #import "TTShortVideoModel+TTAdFactory.h"
@@ -102,9 +81,7 @@
 
 @implementation AWEVideoContainerViewController
 
-static NSString *videoCellReuseIdentifier = @"AWEVideoContainerCollectionViewCell";
-static NSString *loadingCellReuseIdentifier = @"AWEVideoLoadingCollectionViewCell";
-static NSString *adVideoCellReuseIdentifier = @"AWEVideoContainerAdCollectionViewCell";
+static NSString *videoCellReuseIdentifier = @"FHUGCShortVideoFullScreenCell";
 
 const static CGFloat kAWEVideoContainerSpacing = 2;
 
@@ -191,6 +168,9 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         layout.minimumInteritemSpacing = 0;
         CGRect collectionFrame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height);
         AWEVideoContainerCollectionView *view = [[AWEVideoContainerCollectionView alloc] initWithFrame:collectionFrame collectionViewLayout:layout];
+        if (!self.dataFetchManager.canLoadMore) {
+            view.bounces = NO;
+        }
         CGRect frame = collectionFrame;
         switch ([AWEVideoDetailScrollConfig direction]) {
             case AWEVideoDetailScrollDirectionHorizontal:
@@ -216,8 +196,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         view.scrollsToTop = NO;
         view.backgroundColor = [UIColor clearColor];
         [view registerClass:[FHUGCShortVideoFullScreenCell class] forCellWithReuseIdentifier:videoCellReuseIdentifier];
-        [view registerClass:[AWEVideoLoadingCollectionViewCell class] forCellWithReuseIdentifier:loadingCellReuseIdentifier];
-        [view registerClass:[AWEVideoContainerAdCollectionViewCell class] forCellWithReuseIdentifier:adVideoCellReuseIdentifier];
         view;
     });
     [self.view addSubview:self.collectionView];
@@ -374,15 +352,10 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     if (indexPath.section == 0) {
         FHFeedUGCCellModel *model = [self.dataFetchManager itemAtIndex:indexPath.row];
         FHUGCShortVideoFullScreenCell *cell = nil;
-//        AWEVideoContainerCollectionViewCell
         cell = [collectionView dequeueReusableCellWithReuseIdentifier:videoCellReuseIdentifier forIndexPath:indexPath];
             if (!cell.overlayViewController) {
                 UIViewController<TSVControlOverlayViewController> *viewController;
-//                if ([TSVVideoDetailControlOverlayUITypeConfig overlayUIType] > 1) {
-//                    viewController = [[TSVNewControlOverlayViewController alloc] init];
-//                } else {
                     viewController = [[AWEVideoDetailControlOverlayViewController alloc] init];
-//                }
                 cell.overlayViewController = viewController;
                 if (self.configureOverlayViewController) {
                     self.configureOverlayViewController(cell.overlayViewController);
@@ -395,22 +368,16 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
                 }];
                 [cell.overlayViewController didMoveToParentViewController:self];
             }
-//        cell.overlayViewController.playerStateStore = cell.playerView.player.controlView.playerStateStore;
-
         cell.overlayViewController.viewModel.model = [self.dataFetchManager itemAtIndex:indexPath.item];
-
         [cell setNeedsLayout];
         cell.commonTrackingParameter = self.commonTrackingParameter;
         [cell updateWithModel:[self.dataFetchManager itemAtIndex:indexPath.item]];
-//        [cell updateWithModel:[self.dataFetchManager itemAtIndex:indexPath.item] usingFirstFrameCover:YES];
-//        cell.spacingMargin = kAWEVideoContainerSpacing;
-      
         BOOL forward = !self.currentIndexPath || self.currentIndexPath.item < indexPath.item;
         
         @weakify(self);
         cell.videoDidStartPlay = ^{
             @strongify(self);
-            [TSVPrefetchImageManager prefetchDetailImageWithDataFetchManager:self.dataFetchManager forward:forward];
+//            [TSVPrefetchImageManager prefetchDetailImageWithDataFetchManager:self.dataFetchManager forward:forward];
             // 预加载视频
 //            [TSVPrefetchVideoManager startPrefetchShortVideoInDetailWithDataFetchManager:self.dataFetchManager];
             [FHShortVideoPerLoaderManager startPrefetchShortVideoInDetailWithDataFetchManager:self.dataFetchManager];
@@ -424,39 +391,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
             self.detailPromptManager.commonTrackingParameter = self.commonTrackingParameter;
             [self.detailPromptManager videoDidPlayOneLoop];
         };
-
-        return cell;
-    } else {
-        AWEVideoLoadingCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:loadingCellReuseIdentifier forIndexPath:indexPath];
-        cell.dataFetchManager = self.dataFetchManager;
-        @weakify(self);
-        cell.retryBlock = ^{
-            @strongify(self);
-            NSMutableDictionary *params = [NSMutableDictionary dictionary];
-            if (self.commonTrackingParameter[@"enter_from"]) {
-                [params setValue:self.commonTrackingParameter[@"enter_from"] forKey:@"enter_from"];
-            }
-            if (self.commonTrackingParameter[@"category_name"]) {
-                [params setValue:self.commonTrackingParameter[@"category_name"] forKey:@"category_name"];
-            }
-            if ([self.dataFetchManager numberOfShortVideoItems]) {
-                FHFeedUGCCellModel *videoDetail = [self.dataFetchManager itemAtIndex:[self.dataFetchManager numberOfShortVideoItems] - 1];//取最后一个
-//                [params setValue:videoDetail.listEntrance forKey:@"list_entrance"];
-                [params setValue:videoDetail.groupId forKey:@"from_group_id"];
-                [params setValue:videoDetail.groupSource forKey:@"from_group_source"];
-                if (videoDetail.categoryId) {
-                    [params setValue:videoDetail.categoryId forKey:@"category_name"];
-                }
-                if (videoDetail.enterFrom) {
-                    [params setValue:videoDetail.enterFrom forKey:@"enter_from"];
-                }
-            }
-            [AWEVideoPlayTrackerBridge trackEvent : @"video_draw_retry"
-                                           params : params];
-            
-            self.loadMoreBlock(NO);
-        };
-        cell.closeButtonDidClick = self.wantToClosePage;
 
         return cell;
     }
@@ -495,15 +429,11 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
         [self sendVideoOverTracking];
         [cell stop];
         [cell reset];
-//        [cell resetPlayerModel];
-
         if (cell.overlayViewController) {
             [cell.overlayViewController stopTimers];
             [cell.overlayViewController.miniSlider setWatchedProgress:0];
             [cell.overlayViewController.miniSlider setCacheProgress:0];
         }
-
-        NSLog(@"666");
     }
 }
 
@@ -684,12 +614,6 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
     NSMutableDictionary *paramters = @{}.mutableCopy;
 //    paramters[@"user_id"] = self.currentVideoCell.videoDetail.author.userID;
     paramters[@"stay_time"] = stayTime;
-//
-//
-//    [AWEVideoDetailTracker trackEvent:eventName
-//                                model:self.currentVideoCell.videoDetail
-//                      commonParameter:self.commonTrackingParameter
-//                       extraParameter:paramters];
     NSInteger rank = [self.currentVideoCell.cellModel.tracerDic btd_integerValueForKey:@"rank" default:0];
     [FHShortVideoTracerUtil stayPageWithModel:self.currentVideoCell.cellModel eventIndex:rank forStayTime:stayTime];
     FHFeedUGCCellModel *video = self.currentVideoCell.cellModel;
@@ -899,12 +823,5 @@ const static CGFloat kAWEVideoContainerSpacing = 2;
 //    }
 }
 
-- (UIView *)exitScreenshotView
-{
-//    if (!self.currentVideoCell.videoPlayView) {
-//        return self.view;
-//    }
-//    return self.currentVideoCell.videoPlayView;
-}
 
 @end

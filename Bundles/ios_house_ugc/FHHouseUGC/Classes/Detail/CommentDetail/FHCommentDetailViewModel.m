@@ -7,7 +7,6 @@
 
 #import "FHCommentDetailViewModel.h"
 #import "FHHouseListAPI.h"
-#import "FHSugSubscribeItemCell.h"
 #import "FHCommentDetailViewController.h"
 #import "FHUserTracker.h"
 #import "FHUGCBaseCell.h"
@@ -221,26 +220,26 @@
         }
         if (socialGroupModel && ![socialGroupModel.hasFollow boolValue]) {
             // 未关注
-            FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
-            headerModel.socialGroupModel = socialGroupModel;
-            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
-            self.social_group_id = socialGroupModel.socialGroupId;
-            [self.detailItems addObject:headerModel];
-            self.detailHeaderModel = headerModel;
-            CGFloat headerHeight = [FHPostDetailHeaderCell heightForData:headerModel];
-            [self.detailHeights addObject:@(headerHeight)];// 高度提前计算
-            [self.detailController headerInfoChanged];
-            //
-            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
-            [self.detailItems addObject:grayLine];
-            [self.detailHeights addObject:@(5)];// 高度提前计算
+//            FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
+//            headerModel.socialGroupModel = socialGroupModel;
+//            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
+//            self.social_group_id = socialGroupModel.socialGroupId;
+//            [self.detailItems addObject:headerModel];
+//            self.detailHeaderModel = headerModel;
+//            CGFloat headerHeight = [FHPostDetailHeaderCell heightForData:headerModel];
+//            [self.detailHeights addObject:@(headerHeight)];// 高度提前计算
+//            [self.detailController headerInfoChanged];
+//            //
+//            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
+//            [self.detailItems addObject:grayLine];
+//            [self.detailHeights addObject:@(5)];// 高度提前计算
             cellModel.showCommunity = NO;
         } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0) {
             // 挽救一下 balabala
             cellModel.community = [[FHFeedUGCCellCommunityModel alloc] init];
             cellModel.community.name = socialGroupModel.socialGroupName;
             cellModel.community.socialGroupId = socialGroupModel.socialGroupId;
-            cellModel.showCommunity = YES;
+            cellModel.showCommunity = NO;
         } else {
             cellModel.showCommunity = NO;
         }

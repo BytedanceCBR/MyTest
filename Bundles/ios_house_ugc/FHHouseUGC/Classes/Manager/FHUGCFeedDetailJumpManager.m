@@ -382,8 +382,20 @@
         }
         [info setValue:tracerDic forKey:@"tracer"];
     }
+//    if ([cellModel.openUrl containsString:@"awemevideo"]) {
+//        <#statements#>
+//    }else {
+//
+//    }
+//    NSString *strUrl = [cellModel.openUrl stringByReplacingOccurrencesOfString:@"awemevideo" withString:@"small_video_detail"];
+
+    
+    
     
     NSURL *openUrl = [NSURL URLWithString:cellModel.openUrl];
+    
+    
+    
     [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:TTRouteUserInfoWithDict(info)];
 }
 
@@ -414,7 +426,7 @@
 }
 
 //圈子详情页
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
++ (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
     if(cellModel.community.socialGroupId){
         NSMutableDictionary *dict = @{}.mutableCopy;
         dict[@"community_id"] = cellModel.community.socialGroupId;

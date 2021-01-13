@@ -185,6 +185,8 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
 @interface FHSegmentedControllerAnimatedTransition :  NSObject <UIViewControllerAnimatedTransitioning>
 
+@property (nonatomic, copy) void (^updateProgress)(CGFloat progress, NSTimeInterval duration);
+
 @end
 
 @implementation FHSegmentedControllerAnimatedTransition
@@ -193,7 +195,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     CGRect initalFrameOfToView = [transitionContext initialFrameForViewController:[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey]];
     CGRect finalFrameOfToView = [transitionContext finalFrameForViewController:[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey]];
     CGFloat movingDistance = ABS(CGRectGetMinX(initalFrameOfToView) - CGRectGetMinX(finalFrameOfToView));
-    return 0.3 * (movingDistance/CGRectGetWidth([UIScreen mainScreen].bounds));
+    return 0.5 * (movingDistance/CGRectGetWidth([UIScreen mainScreen].bounds));
 }
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
@@ -205,24 +207,34 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
         fromViewController.view.frame = [transitionContext finalFrameForViewController:fromViewController];
         toViewController.view.frame = [transitionContext finalFrameForViewController:toViewController];
         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-    }
-    else if ([transitionContext transitionWasCancelled]) {
-        [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            fromViewController.view.frame = [transitionContext initialFrameForViewController:fromViewController];
-            toViewController.view.frame = [transitionContext initialFrameForViewController:toViewController];
-        } completion:^(BOOL finished) {
-            [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-        }];
+        if (self.updateProgress) {
+            self.updateProgress([transitionContext transitionWasCancelled] ? 0 : 1.0, 0);
+        }
     } else {
-        toViewController.view.frame = [transitionContext initialFrameForViewController:toViewController];
-        fromViewController.view.frame = [transitionContext initialFrameForViewController:fromViewController];
+        if (self.updateProgress) {
+            self.updateProgress([transitionContext transitionWasCancelled] ? 0 : 1.0, [self transitionDuration:transitionContext]);
+        }
+        if ([transitionContext transitionWasCancelled]) {
+            [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                fromViewController.view.frame = [transitionContext initialFrameForViewController:fromViewController];
+                toViewController.view.frame = [transitionContext initialFrameForViewController:toViewController];
+                
 
-        [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-            fromViewController.view.frame = [transitionContext finalFrameForViewController:fromViewController];
-            toViewController.view.frame = [transitionContext finalFrameForViewController:toViewController];
-        } completion:^(BOOL finished) {
-            [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-        }];
+            } completion:^(BOOL finished) {
+                [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+            }];
+        } else {
+            toViewController.view.frame = [transitionContext initialFrameForViewController:toViewController];
+            fromViewController.view.frame = [transitionContext initialFrameForViewController:fromViewController];
+
+            [UIView animateWithDuration:[self transitionDuration:transitionContext] delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+                fromViewController.view.frame = [transitionContext finalFrameForViewController:fromViewController];
+                toViewController.view.frame = [transitionContext finalFrameForViewController:toViewController];
+            } completion:^(BOOL finished) {
+                [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+            }];
+        }
+        
     }
 }
 
@@ -245,7 +257,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 
 - (void)updateInteractiveTransition:(CGFloat)percentComplete {
     self.percentComplete = percentComplete;
-    
     [self.transitionContext updateInteractiveTransition:percentComplete];
     UIViewController* fromViewController = [self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     UIViewController* toViewController = [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
@@ -334,7 +345,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 - (void)loadView {
-    self.view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.applicationFrame];
+    self.view = [[UIView alloc] initWithFrame:UIScreen.mainScreen.bounds];
     UIView *contentView = [[UIView alloc] initWithFrame:self.view.bounds];
     contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.view addSubview:contentView];
@@ -444,19 +455,15 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     [self.view addSubview:_notNetHeader];
     if ([TTReachability isNetworkConnected]) {
         [_notNetHeader setHidden:YES];
+        self.notNetHeaderHeight = 0;
     } else {
         [_notNetHeader setHidden:NO];
+        self.notNetHeaderHeight = 36;
     }
     [self.notNetHeader mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
         make.top.mas_equalTo(self.customNavBarView.mas_bottom);
-        if ([TTReachability isNetworkConnected]) {
-            make.height.mas_equalTo(0);
-            _notNetHeaderHeight = 0;
-        }else {
-            make.height.mas_equalTo(36);
-            _notNetHeaderHeight = 36;
-        }
+        make.height.mas_equalTo(self.notNetHeaderHeight);
     }];
     __weak typeof(self)wself = self;
     _pushTipView = [[FHPushMessageTipView alloc] initAuthorizeTipWithCompleted:^(FHPushMessageTipCompleteType type) {
@@ -681,7 +688,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 - (void)startLoadData {
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     if (vc) {
         [vc startLoadData];
     }
@@ -715,7 +722,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 - (void)reloadData {
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     if (vc && vc.viewModel) {
         [vc.viewModel reloadData];
     }
@@ -724,7 +731,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)refreshConversationList {
     NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
     [_combiner resetConversations:allConversations];
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     if (vc && vc.viewModel) {
         [vc.viewModel reloadData];
     }
@@ -733,7 +740,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 - (void)refreshConversationListDisplayEmptyMaskViewIfNeed {
     NSArray<IMConversation *> *allConversations = [[IMManager shareInstance].chatService allConversations];
     [_combiner resetConversations:allConversations];
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     if (vc && vc.viewModel) {
         [vc.viewModel checkShouldShowEmptyMaskView];
     }
@@ -806,7 +813,6 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
             }
             
             self.segmentedControl.userInteractionEnabled = YES;
-            
             self.segmentedControl.selectedSegmentIndex = [self.viewControllers indexOfObject:self.activeViewController];
         };
         
@@ -834,6 +840,10 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
         viewControllerTransitionPrepare();
         
         id<UIViewControllerAnimatedTransitioning>animator = [[FHSegmentedControllerAnimatedTransition alloc] init];
+        __weak typeof(self) weakSelf = self;
+        [(FHSegmentedControllerAnimatedTransition *)animator setUpdateProgress:^(CGFloat progress, NSTimeInterval duration) {
+            [weakSelf.segmentedControl updateIndicatorProgress:progress isDirectionLeft:!(self.interactivePanDirection == FHSegmentedControllerAnimatedTransitionDirectionFromLeftToRight) duration:duration];
+        }];
         id<UIViewControllerInteractiveTransitioning>interactiveAnimator = [[FHSegmentedControllerInteractiveTransition alloc] init];
         FHSegmentedControllerAnimatedTransitionContext *transitionContext = [[FHSegmentedControllerAnimatedTransitionContext alloc] initWithFromViewController:fromViewController toViewController:toViewController direction:interactivePanDirection];
         
@@ -882,6 +892,15 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
                 }
             }];
             double progress = ABS(currentPoint.x - self.interactivePanInitialPoint.x)/CGRectGetWidth(self.contentView.bounds);
+            double value = progress;
+            CGFloat distance = currentPoint.x - self.interactivePanInitialPoint.x;
+            if (distance > 0 && self.segmentedControl.selectedSegmentIndex == 0) {
+                value = 0;
+            } else if (distance < 0 && self.segmentedControl.selectedSegmentIndex == 1) {
+                value = 0;
+            }
+
+            [self.segmentedControl updateIndicatorProgress:value isDirectionLeft:!(self.interactivePanDirection == FHSegmentedControllerAnimatedTransitionDirectionFromLeftToRight) duration:0];
             [self.interactiveTransitionAnimator updateInteractiveTransition:progress];
         }break;
         default:{
@@ -918,7 +937,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
     if (!self.activeViewController) {
         return;
     }
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     [vc addEnterCategoryLogWithType: enterType];
 }
 
@@ -1030,7 +1049,7 @@ typedef NS_ENUM(NSInteger, FHSegmentedControllerAnimatedTransitionDirection) {
 }
 
 -(NSDictionary *)categoryLogDict {
-    FHMessageViewController *vc = self.activeViewController;
+    FHMessageViewController *vc = (FHMessageViewController *)self.activeViewController;
     NSInteger badgeNumber = [[vc.viewModel messageBridgeInstance] getMessageTabBarBadgeNumber];
     
     NSMutableDictionary *tracerDict = @{}.mutableCopy;

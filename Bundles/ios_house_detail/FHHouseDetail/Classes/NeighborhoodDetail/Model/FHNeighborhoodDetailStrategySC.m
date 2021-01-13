@@ -8,7 +8,6 @@
 #import "FHNeighborhoodDetailStrategySC.h"
 #import "FHNeighborhoodDetailStrategySM.h"
 #import "FHDetailSectionTitleCollectionView.h"
-#import "FHNeighborhoodDetailCommentHeaderCell.h"
 #import "FHNeighborhoodDetailQuestionHeaderCell.h"
 #import "FHRealtorEvaluatingPhoneCallModel.h"
 #import "FHNeighborhoodDetailQuestionCell.h"

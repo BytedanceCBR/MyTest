@@ -10,7 +10,7 @@
 #import "FHVideoViewController.h"
 #import "FHMultiMediaVideoCell.h"
 #import "FHDetailHouseTitleModel.h"
-
+#import "FHHouseDetailBaseViewModel.h"
 NS_ASSUME_NONNULL_BEGIN
 
 @protocol FHMultiMediaCorrectingScrollViewDelegate <NSObject>

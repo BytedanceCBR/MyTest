@@ -28,7 +28,7 @@
 #import "UIImage+FIconFont.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import "TTReachability.h"
-#import "FHOldDetailStaticMapCell.h"
+#import "FHDetailStaticMapCell.h"
 #import "FHMyItemAnnView.h"
 #import <UIDevice+BTDAdditions.h>
 #import "YYText.h"

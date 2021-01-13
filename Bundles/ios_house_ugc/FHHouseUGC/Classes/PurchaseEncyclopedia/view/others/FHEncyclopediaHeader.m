@@ -73,6 +73,8 @@
 }
 
 - (void)updateModel:(EncyclopediaConfigDataModel *)model {
+    model.currentSelectedSubIndex = self.lynxBaseParam[@"currentSelectedSubIndex"];
+    model.currentSelectedMainIndex = self.lynxBaseParam[@"currentSelectedMainIndex"];
     NSString *lynxData = [model yy_modelToJSONString];
     NSData *templateData =  [[FHLynxManager sharedInstance] lynxDataForChannel:@"ugc_encyclopedia_lynx_header" templateKey:[FHLynxManager defaultJSFileName] version:0];
     LynxTemplateData *data = [[LynxTemplateData alloc]initWithJson:lynxData];

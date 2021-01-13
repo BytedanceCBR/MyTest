@@ -35,10 +35,10 @@
 
 - (void)refreshWithData:(id)data index:(NSInteger)index {
     if([data isKindOfClass:[FHFeedContentRawDataHotTopicListModel class]]){
-        FHFeedContentRawDataHotTopicListModel *model = (FHUGCScialGroupDataModel *)data;
+        FHFeedContentRawDataHotTopicListModel *model = (FHFeedContentRawDataHotTopicListModel *)data;
         _titleLabel.text = model.forumName;
         _descLabel.text = model.talkCountStr;
-        _rankLabel.text = [NSString stringWithFormat:@"%i",index + 1];
+        _rankLabel.text = [NSString stringWithFormat:@"%li",index + 1];
 
         if(index < 3){
             _rankLabel.textColor = [UIColor themeOrange1];

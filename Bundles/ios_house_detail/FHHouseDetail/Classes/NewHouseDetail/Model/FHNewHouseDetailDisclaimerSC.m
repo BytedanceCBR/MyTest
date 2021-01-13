@@ -25,7 +25,7 @@
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     FHNewHouseDetailDisclaimerSM *model = (FHNewHouseDetailDisclaimerSM *)self.sectionModel;
     return [FHNewHouseDetailDisclaimerCollectionCell cellSizeWithData:model.disclaimerModel width:width];
 }

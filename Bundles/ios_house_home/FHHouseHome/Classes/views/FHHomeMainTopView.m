@@ -122,8 +122,11 @@ static const float kMapSearchBtnRightPading = 50;
         _mapSearchLabel.text = @"地图";
         _mapSearchLabel.textColor = [UIColor themeGray1];
         _mapSearchLabel.font = [UIFont themeFontMedium:14];
+        _mapSearchLabel.userInteractionEnabled = YES;
         [self addSubview:_mapSearchLabel];
-        
+        ///增大地图找房icon点击区域
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickMapSearch)];
+        [self.mapSearchLabel addGestureRecognizer:tapGesture];
         
         [_mapSearchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.right.equalTo(self).offset(-kMapSearchBtnRightPading);
@@ -222,7 +225,6 @@ static const float kMapSearchBtnRightPading = 50;
     
     if ([houstTypeList containsObject:userSelectType]) {
         indexValue = [houstTypeList indexOfObject:userSelectType];
-        NSNumber *numberType = [houstTypeList objectAtIndex:indexValue];
     }
     
     _houseSegmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:titlesArray];
@@ -230,7 +232,7 @@ static const float kMapSearchBtnRightPading = 50;
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
                                           NSForegroundColorAttributeName: [UIColor themeGray1]};
     _houseSegmentControl.titleTextAttributes = titleTextAttributes;
-    
+    _houseSegmentControl.shouldFixedSelectPosition = YES;
     NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
     _houseSegmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;

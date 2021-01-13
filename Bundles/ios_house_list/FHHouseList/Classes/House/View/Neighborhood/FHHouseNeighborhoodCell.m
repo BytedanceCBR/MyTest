@@ -12,7 +12,10 @@
 #import "UIColor+Theme.h"
 
 @interface FHHouseNeighborhoodCell ()
+
 @property (nonatomic, strong) FHHouseNeighborhoodCardView *cardView;
+@property (nonatomic, strong) UIView *backView;
+
 @end
 
 @implementation FHHouseNeighborhoodCell
@@ -29,10 +32,25 @@
 }
 
 - (void)setupUI {
+    
+    self.backView = [[UIView alloc] init];
+    self.backView.layer.cornerRadius = 10;
+    self.backView.layer.masksToBounds = YES;
+    self.backView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:self.backView];
+    
     [self.contentView addSubview:self.cardView];
 }
 
 - (void)setupConstraints {
+    
+    [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.bottom.mas_equalTo(-5);
+        make.top.mas_equalTo(5);
+    }];
+    
     [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
         make.right.mas_equalTo(-15);
@@ -44,9 +62,7 @@
 - (FHHouseNeighborhoodCardView *)cardView {
     if (!_cardView) {
         _cardView = [[FHHouseNeighborhoodCardView alloc] init];
-        _cardView.layer.cornerRadius = 10;
-        _cardView.layer.masksToBounds = YES;
-        _cardView.backgroundColor = [UIColor whiteColor];
+        _cardView.backgroundColor = [UIColor clearColor];
     }
     return _cardView;
 }
@@ -73,6 +89,20 @@
     }
     
     return 0.0f;
+}
+
+#pragma  mark - FHHouseCardTouchAnimationProtocol
+
+- (void)shrinkWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.cardView.transform = CGAffineTransformMakeScale(FHHouseCardShrinkRate, FHHouseCardShrinkRate);
+    }];
+}
+
+- (void)restoreWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.cardView.transform = CGAffineTransformMakeScale(1, 1);
+    }];
 }
 
 @end

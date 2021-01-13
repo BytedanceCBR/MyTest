@@ -11,7 +11,6 @@
 
 CGFloat const FHBuildingDetailInfoListCellMinimumLineSpacing = 25 + 12;
 NSInteger const FHBuildingDetailInfoListCellPageMultiple = 99;
-CGFloat const FHBuildingDetailInfoListCellShadowImageViewSpacingTop = 20.0;
 
 @interface FHBuildingDetailInfoCollectionViewCell ()<UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -21,8 +20,6 @@ CGFloat const FHBuildingDetailInfoListCellShadowImageViewSpacingTop = 20.0;
 @end
 
 @implementation FHBuildingDetailInfoCollectionViewCell
-
-//[[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,30,25) resizingMode:UIImageResizingModeStretch];
 
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -196,7 +193,7 @@ CGFloat const FHBuildingDetailInfoListCellShadowImageViewSpacingTop = 20.0;
 }
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
-    if (point.y <= FHBuildingDetailInfoListCellShadowImageViewSpacingTop) {
+    if (point.y <= 20) {
         return nil;
     }
     return [super hitTest:point withEvent:event];
@@ -209,12 +206,13 @@ CGFloat const FHBuildingDetailInfoListCellShadowImageViewSpacingTop = 20.0;
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.backgroundColor = [UIColor clearColor];
+        UIImage *cornerImage = [UIImage fh_outerRoundRectMaskImageWithCornerRadius:10 color:[UIColor whiteColor] size:CGSizeMake(50, 50)];
         self.contentView.backgroundColor = [UIColor clearColor];
         UIImageView *shadowImageView = [[UIImageView alloc] init];
-        shadowImageView.image = [[UIImage imageNamed:@"top_left_right_bottom"] resizableImageWithCapInsets:UIEdgeInsetsMake(30,25,30,25) resizingMode:UIImageResizingModeStretch];
+        shadowImageView.image =[cornerImage resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)];
         [self.contentView addSubview:shadowImageView];
         [shadowImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.edges.mas_equalTo(UIEdgeInsetsMake(-FHBuildingDetailInfoListCellShadowImageViewSpacingTop, -15, -20, -15));
+            make.edges.mas_equalTo(UIEdgeInsetsMake(0, 0, 0, 0));
         }];
         
         self.stackView = [[UIStackView alloc] init];

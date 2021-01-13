@@ -46,8 +46,8 @@
         [self.locationContentView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(0);
             make.height.mas_equalTo(20);
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
         }];
         
         self.locationTitleLabel = [[UILabel alloc] init];
@@ -76,8 +76,8 @@
         self.consultContentView = [[UIView alloc] init];
         [self.contentView addSubview:self.consultContentView];
         [self.consultContentView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(15);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(12);
             make.height.mas_equalTo(20);
             make.top.mas_equalTo(self.locationContentView.mas_bottom).mas_offset(10);
         }];
@@ -93,9 +93,9 @@
         }];
         
         self.consultValueLabel = [[UILabel alloc] init];
-        self.consultValueLabel.font = self.consultValueLabel.font;
+        self.consultValueLabel.font = [UIFont themeFontMedium:16];
         self.consultValueLabel.numberOfLines = 1;
-        self.consultValueLabel.textColor = [UIColor colorWithHexStr:@"#ff9629"];
+        self.consultValueLabel.textColor = [UIColor colorWithHexStr:@"#9c6d43"];
         self.consultValueLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         [self.consultContentView addSubview:self.consultValueLabel];
         [self.consultValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -104,16 +104,16 @@
             make.right.mas_lessThanOrEqualTo(-30);;
         }];
         
-        self.consultImageView = [[UIImageView alloc] init];
-        self.consultImageView.image = [UIImage imageNamed:@"plot__message"];
-        self.consultImageView.contentMode = UIViewContentModeScaleAspectFit;
-        [self.consultContentView addSubview:self.consultImageView];
-        [self.consultImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.mas_equalTo(self.consultValueLabel.mas_right).offset(3);
-            make.centerY.mas_equalTo(self.consultContentView).offset(-1);
-            make.height.mas_equalTo(15);
-            make.width.mas_equalTo(16);
-        }];
+//        self.consultImageView = [[UIImageView alloc] init];
+//        self.consultImageView.image = [UIImage imageNamed:@"plot__message"];
+//        self.consultImageView.contentMode = UIViewContentModeScaleAspectFit;
+//        [self.consultContentView addSubview:self.consultImageView];
+//        [self.consultImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+//            make.left.mas_equalTo(self.consultValueLabel.mas_right).offset(3);
+//            make.centerY.mas_equalTo(self.consultContentView).offset(-1);
+//            make.height.mas_equalTo(15);
+//            make.width.mas_equalTo(16);
+//        }];
         
         __weak typeof(self) weakSelf = self;
         self.actionBtn = [[UIButton alloc]init];
