@@ -182,7 +182,9 @@
             NSInteger state = [fhSettings tt_integerValueForKey:@"f_is_show_profile_edit_entry"];
             [self.viewController.headerView setUserInfoState:state];
             self.viewController.headerView.userNameLabel.text = name?:@"";
-            self.viewController.headerView.descLabel.text = userInfo.userDescription.length > 0 ? userInfo.userDescription : @"暂无介绍，简单介绍一下自己吧";
+            
+            self.viewController.headerView.descLabel.text = userInfo.userDescription.length > 0 ? userInfo.userDescription : @"查看并编辑个人信息";
+//            self.viewController.headerView.descLabel.attributedText = [self descLabelWithUserInfo:userInfo];
             if(state != 0){
                 self.viewController.headerView.editIcon.hidden = NO;
             }
@@ -219,6 +221,22 @@
         [self.viewController.headerView sethomePageWithModel:self.configModel.data.homePage];
     }
     self.viewController.headerView.editIcon.hidden = YES;
+}
+
+- (NSAttributedString *)descLabelWithUserInfo:(TTAccountUserEntity *)userInfo {
+    
+    if (userInfo.userDescription.length > 0) {
+        return [[NSAttributedString alloc] initWithString:userInfo.userDescription];
+    } else {
+        NSString *descString = @"查看并编辑个人信息  ";
+        NSTextAttachment *attach = [[NSTextAttachment alloc] init];
+        attach.image = [UIImage imageNamed:@"pencil-simple-line-icons"];
+        attach.bounds = CGRectMake(0, -3, 16, 16);
+        NSAttributedString *imageStr = [NSAttributedString attributedStringWithAttachment:attach];
+        NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:descString];
+        [string appendAttributedString:imageStr];
+        return string.copy;
+    }
 }
 
 - (NSDictionary *)fhSettings {
