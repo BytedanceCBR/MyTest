@@ -154,21 +154,23 @@
     }
     
         
-    NSString *packageFilePath = [RouteAppFileUtil getDebugPackagePathForPackageName:pluginName];
 
     //inhouse 或者debug进入
-    if (([TTSandBoxHelper fh_isInHouseApp] || [self isDebug]) && [RouteAppFileUtil checkFileExist:packageFilePath]) {
-        RouteAppPackagePackageInfo *package = [[RouteAppPackagePackageInfo alloc] init];
-        package.name = pluginName;
-        package.zipPackagePath = packageFilePath;
-        NSString *flutterUrl = [NSString stringWithFormat:@"local-flutter://%@%@",pluginName,[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"]];
-            
-        NSMutableDictionary *pageParams = @{
-                @"url":[NSString stringWithFormat:@"local-flutter://%@%@", pluginName, flutterUrl],@"packageInfo": package
-            };
-        if (resultPrams) {
-            [resultPrams addEntriesFromDictionary:pageParams];
-            [resultPrams setValue:flutterUrl forKey:@"url"];
+    if (([TTSandBoxHelper fh_isInHouseApp] || [self isDebug])) {
+        NSString *packageFilePath = [RouteAppFileUtil getDebugPackagePathForPackageName:pluginName];
+        if([RouteAppFileUtil checkFileExist:packageFilePath]){
+            RouteAppPackagePackageInfo *package = [[RouteAppPackagePackageInfo alloc] init];
+            package.name = pluginName;
+            package.zipPackagePath = packageFilePath;
+            NSString *flutterUrl = [NSString stringWithFormat:@"local-flutter://%@%@",pluginName,[paramObj.allParams btd_objectForKey:kFHFlutterchemaRouteSKey default:@"/"]];
+                
+            NSMutableDictionary *pageParams = @{
+                    @"url":[NSString stringWithFormat:@"local-flutter://%@%@", pluginName, flutterUrl],@"packageInfo": package
+                };
+            if (resultPrams) {
+                [resultPrams addEntriesFromDictionary:pageParams];
+                [resultPrams setValue:flutterUrl forKey:@"url"];
+            }
         }
     }
 
