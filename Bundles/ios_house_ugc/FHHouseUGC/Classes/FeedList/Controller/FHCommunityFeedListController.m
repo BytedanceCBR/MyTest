@@ -290,16 +290,16 @@
 }
 
 - (void)hideIfNeeds {
-    [UIView animateWithDuration:0.3 animations:^{
-        self.tableView.contentInset = self.originContentInset;
+//    [UIView animateWithDuration:0.3 animations:^{
+//        self.tableView.contentInset = self.originContentInset;
         self.tableView.originContentInset = UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f);
         
-    }completion:^(BOOL finished) {
-        self.tableView.originContentInset = self.originContentInset;
-        if (self.notifyCompletionBlock) {
-            self.notifyCompletionBlock();
-        }
-    }];
+//    }completion:^(BOOL finished) {
+//        self.tableView.originContentInset = self.originContentInset;
+//        if (self.notifyCompletionBlock) {
+//            self.notifyCompletionBlock();
+//        }
+//    }];
 }
 
 - (NSArray *)dataList {

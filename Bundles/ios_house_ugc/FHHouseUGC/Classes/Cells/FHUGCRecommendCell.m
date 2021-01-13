@@ -123,7 +123,7 @@
         make.bottom.mas_equalTo(self.contentView);
         make.left.mas_equalTo(self.contentView).offset(20);
         make.right.mas_equalTo(self.contentView).offset(-20);
-        make.height.mas_equalTo(1.2);
+        make.height.mas_equalTo(1);
     }];
 }
 
@@ -150,7 +150,7 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = headerViewHeight + 1.2 + 20;
+        CGFloat height = headerViewHeight + 1 + 20;
         
         if(cellModel.recommendSocialGroupList.count > 0){
             CGFloat tableViewHeight = cellModel.recommendSocialGroupList.count < 3 ? 60 * cellModel.recommendSocialGroupList.count : 180;
@@ -174,17 +174,17 @@
 
 - (void)reloadNewData {
     if(self.isReplace){
-        if(_joinedCellRow >= 0){
+        if(self.joinedCellRow >= 0){
             NSIndexPath *indexPath = [NSIndexPath indexPathForRow:_joinedCellRow inSection:0];
-            _joinedCell.hidden = YES;
+            self.joinedCell.hidden = YES;
             
             [_model.tableView beginUpdates];
             
             [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-            _joinedCell.hidden = NO;
+            self.joinedCell.hidden = NO;
             //如果不重置，在某些特殊情况下新出的cell并没有被系统还原正确大小
             dispatch_async(dispatch_get_main_queue(), ^{
-                _joinedCell.transform = CGAffineTransformIdentity;
+                self.joinedCell.transform = CGAffineTransformIdentity;
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.4f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     [self.tableView.visibleCells enumerateObjectsUsingBlock:^(__kindof UITableViewCell * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                         obj.transform = CGAffineTransformIdentity;
@@ -268,7 +268,7 @@
 }
 
 - (void)traceChangeData {
-    NSMutableDictionary *dict = [self tracerDic];
+    NSMutableDictionary *dict = [self.tracerDic mutableCopy];
     dict[@"click_position"] = @"change_list";
     TRACK_EVENT(@"click_change", dict);
 }
@@ -311,7 +311,6 @@
         _clientShowDict = [NSMutableDictionary new];
     }
     
-    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
     NSString *socialGroupId = model.socialGroupId;
     if(socialGroupId){
         if (_clientShowDict[socialGroupId]) {
@@ -324,14 +323,14 @@
 }
 
 - (void)trackGroupShow:(FHFeedContentRecommendSocialGroupListModel *)model rank:(NSInteger)rank {
-    NSMutableDictionary *dict = [self tracerDic];
+    NSMutableDictionary *dict = [self.tracerDic mutableCopy];
     dict[@"log_pb"] = model.logPb;
     dict[@"rank"] = @(rank);
     TRACK_EVENT(@"community_group_show", dict);
 }
 
 - (void)trackClickMore {
-    NSMutableDictionary *dict = [self tracerDic];
+    NSMutableDictionary *dict = [self.tracerDic mutableCopy];
     dict[@"element_type"] = @"like_neighborhood";
     [dict removeObjectsForKeys:@[@"card_type"]];
     TRACK_EVENT(@"click_more", dict);
@@ -393,7 +392,7 @@
         dict[@"community_id"] = model.socialGroupId;
         NSString *originFrom = self.model.tracerDic[UT_ORIGIN_FROM] ?: @"be_null";
         dict[@"tracer"] = @{
-            @"origin_from":@"originFrom",
+            @"origin_from":originFrom,
             @"enter_from":@"like_neighborhood",
             @"enter_type":@"click",
             @"group_id":self.model.groupId ?: @"be_null",
@@ -417,7 +416,6 @@
     _joinedCellRow = [self getCellIndex:model sourceList:self.dataList];
     //加入成功后
     if(_sourceList.count > 3){
-        NSInteger current1 = [_sourceList indexOfObject:model];
         NSInteger current = [self getCellIndex:model sourceList:self.sourceList];
         if(current >= 0){
             NSInteger next = self.currentIndex + 3;

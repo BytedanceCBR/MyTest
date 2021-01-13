@@ -109,6 +109,7 @@
                            @"setHistory":@"set_history",
                            @"newtip":@"new_tip",
                            @"isNewStyle":@"is_new_style",
+                           @"propertyManagementType":@"property_management_type",
                            };
     return [[JSONKeyMapper alloc]initWithModelToJSONBlock:^NSString *(NSString *keyName) {
         return dict[keyName]?:keyName;
