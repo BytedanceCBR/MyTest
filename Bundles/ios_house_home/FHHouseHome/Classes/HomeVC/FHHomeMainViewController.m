@@ -119,6 +119,11 @@ static NSString * const kFUGCPrefixStr = @"fugc";
         
         if (((int)duration) > 0) {
             [FHEnvContext recordEvent:tracerDict andEventKey:@"stay_tab"];
+            if(![FHEnvContext isCurrentCityNormalOpen]) {
+                NSMutableDictionary *discoverStreamDict = [tracerDict mutableCopy];
+                [discoverStreamDict setValue:@"discover_stream" forKey:@"tab_name"];
+                [FHEnvContext recordEvent:discoverStreamDict andEventKey:@"stay_tab"];
+            }
         }
     }
 }
