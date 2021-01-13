@@ -80,7 +80,7 @@
 
 - (FHUGCAvatarView *)avatarView {
     if (!_avatarView) {
-        _avatarView = [[FHUGCAvatarView alloc] init];
+        _avatarView = [[FHUGCAvatarView alloc] initWithFrame:CGRectMake(0, 0, 34, 34)];
         _avatarView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
         [_avatarView addGestureRecognizer:tapGesture];
@@ -201,7 +201,7 @@
 //        self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];
 //    }
     
-    if (cellModel.realtor.desc) {
+    if (cellModel.realtor.desc.length) {
         self.infoLab.text = [NSString stringWithFormat:@"%@ %@",cellModel.realtor.desc,cellModel.createTime]; ;
     }else {
         self.infoLab.text = [NSString stringWithFormat:@"%@",cellModel.createTime];
