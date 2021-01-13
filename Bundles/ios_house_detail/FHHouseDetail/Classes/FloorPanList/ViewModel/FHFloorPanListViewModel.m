@@ -22,6 +22,7 @@
 @property(nonatomic,assign) CGFloat lastOffset;
 @property(nonatomic,assign) NSInteger currentIndex;
 @property (nonatomic,strong) NSMutableDictionary *elementShowCache;
+@property(nonatomic,strong) NSMutableArray *cellArray;
 @end
 
 @implementation FHFloorPanListViewModel
@@ -36,6 +37,7 @@
         self.bottomBar.hidden = YES;
         self.currentCourtId = courtId;
         self.elementShowCache = [NSMutableDictionary dictionary];
+        self.cellArray = [NSMutableArray array];
         [self startLoadData];
     }
     return self;
@@ -85,6 +87,7 @@
     for (NSInteger i = 0;i < self.dataList.count; i++) {
         NSString *identifier = [NSString stringWithFormat:@"%@_%zd",NSStringFromClass([FHFloorPanListCollectionCell class]),i];
         [self.collectionView registerClass:[FHFloorPanListCollectionCell class] forCellWithReuseIdentifier:identifier];
+        [self.cellArray addObject:[NSNull null]];
     }
     [self.collectionView reloadData];
     self.currentIndex = 0;
@@ -183,11 +186,20 @@
     if([cell isKindOfClass:[FHFloorPanListCollectionCell class]]) {
         FHFloorPanListCollectionCell *detailCell = (FHFloorPanListCollectionCell *)cell;
         if(index >= 0 && index < self.dataList.count) {
-            [detailCell refreshDataWithItemArray:[self.dataList objectAtIndex:index] subPageParams:self.subPageParams elementShowCache:self.elementShowCache];
+            self.cellArray[index] = detailCell;
         }
     }
     return cell;
 }
+
+-(void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger index = indexPath.row;
+    if(index >= 0 && index < self.dataList.count) {
+        FHFloorPanListCollectionCell *detailCell = [self.cellArray objectAtIndex:index];
+        [detailCell refreshDataWithItemArray:[self.dataList objectAtIndex:index] subPageParams:self.subPageParams elementShowCache:self.elementShowCache];
+    }
+}
+
 -(CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     CGSize cellSize = self.collectionView.bounds.size;
     return cellSize;
