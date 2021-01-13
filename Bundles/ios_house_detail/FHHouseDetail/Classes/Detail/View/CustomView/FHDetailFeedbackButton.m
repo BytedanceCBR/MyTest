@@ -21,6 +21,8 @@
 #import "SSCommonLogic.h"
 #import "FHBaseViewController.h"
 
+#define FH_FEEDBACK_BTN_TITLE       @"反馈"
+
 @interface FHDetailFeedbackButton ()
 
 @property (nonatomic, strong) NSDictionary *detailTracerDic;
@@ -44,8 +46,8 @@
 
 - (void)setupUI {
     [self setImage:[UIImage imageNamed:@"reportimage"] forState:UIControlStateNormal];
-    [self setTitle:@"举报" forState:UIControlStateNormal];
-    NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc] initWithString:@"举报" attributes:@{
+    [self setTitle:FH_FEEDBACK_BTN_TITLE forState:UIControlStateNormal];
+    NSMutableAttributedString *attriStr = [[NSMutableAttributedString alloc] initWithString:FH_FEEDBACK_BTN_TITLE attributes:@{
                                         NSFontAttributeName: [UIFont themeFontRegular:12],
                                         NSForegroundColorAttributeName: [UIColor themeGray3],
     }];

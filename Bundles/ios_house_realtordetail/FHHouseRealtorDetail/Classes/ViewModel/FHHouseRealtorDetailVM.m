@@ -42,14 +42,14 @@
 #import "NSObject+YYModel.h"
 #import "NSDictionary+BTDAdditions.h"
 #import <ios_house_im/IMManager.h>
+#import "FHHorizontalPagingView.h"
 #import "UIViewController+Refresh_ErrorHandler.h"
 
 #define kSegmentViewHeight 44
-@interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate,TTHorizontalPagingSegmentViewDelegate>
+@interface FHHouseRealtorDetailVM () <TTHorizontalPagingViewDelegate,FHHorizontalPagingViewDelegate>
 
 @property (nonatomic, weak) FHHouseRealtorDetailVC *viewController;
 @property (nonatomic, strong) FHHouseRealtorDetailBaseViewController *feedListController; //当前显示的feedVC
-@property (nonatomic, strong) TTHorizontalPagingView *pagingView;
 @property (nonatomic, strong) FHHouseRealtorDetailDataModel *data;
 @property (nonatomic, strong) FHRealtorDetailBottomBar *bottomBar;
 @property(nonatomic, strong) FHRealtorEvaluatingPhoneCallModel *realtorPhoneCallModel;
@@ -67,6 +67,8 @@
 @property (nonatomic, assign) BOOL isHeightScoreRealtor;
 @property (nonatomic, assign) CGFloat placeHolderCellHeight;
 @property (nonatomic) BOOL shouldShowUGcGuide;
+@property (nonatomic, strong) FHHorizontalPagingView *pageView;
+@property (nonatomic, strong) UIView *headerView;
 @end
 @implementation FHHouseRealtorDetailVM
 - (instancetype)initWithController:(FHHouseRealtorDetailVC *)viewController tracerDict:(NSDictionary*)tracerDict realtorInfo:(NSDictionary *)realtorInfo bottomBar:(FHRealtorDetailBottomBar *)bottomBar {
@@ -90,6 +92,8 @@
             [ws phoneAction];
         };
         self.subVCs = [NSMutableArray array];
+        self.pageView = [[FHHorizontalPagingView alloc] initWithFrame:self.viewController.view.bounds];
+        self.pageView.delegate = self;
     }
     return self;
 }
@@ -210,7 +214,52 @@
         [self initSegmentWithTabInfoArr:self.ugcTabList];
         //初始化vc
         [self initSubVCinitWithTabInfoArr:self.ugcTabList];
+        [self updatePageView];
     }
+}
+
+- (void)updatePageView {
+    [self.viewController.view insertSubview:self.pageView atIndex:0];
+    if(self.viewController.blackmailReatorBottomBar.hidden == NO) {
+        self.pageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.viewController.blackmailReatorBottomBar.top);
+        self.pageView.scrollView.frame = self.pageView.frame;
+    }
+    else {
+        self.pageView.frame = CGRectMake(0, 0, SCREEN_WIDTH, self.viewController.bottomBar.top);
+        self.pageView.scrollView.frame = self.pageView.frame;
+    }
+    
+    NSMutableArray *tableViewArray = [NSMutableArray array];
+    for(FHHouseRealtorDetailBaseViewController *vc in self.subVCs) {
+        [vc view];
+        [tableViewArray addObject:vc.tableView];
+    }
+    self.viewController.segmentView.height = kSegmentViewHeight;
+    if(self.subVCs.count < 2) {
+        self.viewController.segmentView = nil;
+        self.headerView = self.viewController.headerView;
+    } else {
+        self.headerView = [[UIView alloc] init];
+        self.headerView.backgroundColor = [UIColor themeGray7];
+        self.headerView.height = self.viewController.headerView.height + 10;
+        [self.headerView addSubview:self.viewController.headerView];
+    }
+    [self.pageView updateWithHeaderView:self.headerView segmentedView:self.viewController.segmentView navBar:self.viewController.customNavBarView tableViewArray:tableViewArray];
+    [self.viewController.segmentView setNeedsLayout];
+    [self.viewController.segmentView layoutIfNeeded];
+    
+    if(self.subVCs.count > 1) {
+        for(FHHouseRealtorDetailBaseViewController *vc in self.subVCs) {
+            vc.tableView.tableHeaderView.height = self.pageView.moveView.height + 10;
+            vc.tableView.tableHeaderView.backgroundColor = [UIColor themeGray7];
+        }
+    }
+    if(!(self.currentIndex >= 0 && self.currentIndex < self.subVCs.count)) {
+        self.currentIndex = 0;
+    }
+    [self scrollToIndex:self.currentIndex];
+    self.pageView.scrollView.backgroundColor = [UIColor themeGray7];
+    
 }
 
 -(void)onNetworError:(BOOL)showEmpty showToast:(BOOL)showToast{
@@ -267,19 +316,6 @@
     }else{
         [self createFeedListController:nil requestName:nil];
     }
-    
-    self.pagingView.delegate = self;
-    //放到最下面
-    [self.viewController.view insertSubview:self.pagingView atIndex:0];
-    [self.pagingView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.right.left.equalTo(self.viewController.view);
-        if(self.viewController.blackmailReatorBottomBar.hidden == NO) {
-            make.bottom.equalTo(self.viewController.blackmailReatorBottomBar.mas_top);
-        }
-        else {
-            make.bottom.equalTo(self.viewController.bottomBar.mas_top);
-        }
-    }];
 }
 
 - (void)createFeedListController:(NSString *)tabName requestName:(NSString *)name {
@@ -295,6 +331,7 @@
             errorViewHeight -= kSegmentViewHeight;
             realtorDetailController.errorViewHeight = errorViewHeight;
         }
+        realtorDetailController.pageView = self.pageView;
         [self.subVCs addObject:realtorDetailController];
     }else {
         FHHouseRealtorDetailHouseVC *realtorDetailController =  [[FHHouseRealtorDetailHouseVC alloc]init];
@@ -308,6 +345,7 @@
             errorViewHeight -= kSegmentViewHeight;
             realtorDetailController.errorViewHeight = errorViewHeight;
         }
+        realtorDetailController.pageView = self.pageView;
         [self.subVCs addObject:realtorDetailController];
     }
 }
@@ -401,89 +439,24 @@
     [FHUserTracker writeEvent:@"click_options" params:params];
 }
 
-
-
-#pragma mark - lazy load
-
-- (TTHorizontalPagingView *)pagingView {
-    if(!_pagingView) {
-        _pagingView = [[TTHorizontalPagingView alloc] init];
-        _pagingView.delegate = self;
-        _pagingView.frame = self.viewController.view.bounds;
-        _pagingView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        _pagingView.segmentTopSpace = CGRectGetMaxY(self.viewController.customNavBarView.frame);
-        _pagingView.horizontalCollectionView.scrollEnabled = NO;
-        _pagingView.clipsToBounds = YES;
-    }
-    return _pagingView;
-}
-
-#pragma mark - pagingView 代理
-
-- (NSInteger)numberOfSectionsInPagingView:(TTHorizontalPagingView *)pagingView {
-    return self.subVCs.count;
-}
-
-- (UIScrollView *)pagingView:(TTHorizontalPagingView *)pagingView viewAtIndex:(NSInteger)index {
-    FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[index];
-    if(!feedVC.tableView){
-        [feedVC viewDidLoad];
-    }
-    return feedVC.tableView;
-}
-
-- (void)pagingView:(TTHorizontalPagingView *)pagingView didSwitchIndex:(NSInteger)aIndex to:(NSInteger)toIndex {
-    //前面的消失
-    if(aIndex < self.subVCs.count && !self.isFirstEnter){
-        //        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[aIndex];
-    }
-    //新的展现
-    if(toIndex < self.subVCs.count){
-        FHHouseRealtorDetailBaseViewController *feedVC = self.subVCs[toIndex];
-        [self.viewController addChildViewController:feedVC];
-        [feedVC didMoveToParentViewController:self.viewController];
-    }
-}
-
-- (UIView *)viewForHeaderInPagingView {
-    return self.viewController.headerView;
-}
-
-- (CGFloat)heightForHeaderInPagingView {
-    return self.viewController.headerView.height;
-}
-
-- (UIView *)viewForSegmentInPagingView {
-    return self.viewController.segmentView;
-}
-
-- (CGFloat)heightForSegmentInPagingView {
-    NSMutableArray *tabArray = [self.ugcTabList mutableCopy];
-    if(tabArray && tabArray.count > 1) {
-        return kSegmentViewHeight;
-    }else{
-        return 0;
-    }
-}
-
-- (void)pagingView:(TTHorizontalPagingView *)pagingView scrollTopOffset:(CGFloat)offset {
-    CGFloat delta = self.pagingView.currentContentViewTopInset + offset;
-    CGFloat navBarH = [UIDevice btd_isIPhoneXSeries]?84:64;
-    if ((delta + navBarH) >self.pagingView.headerViewHeight || (delta + navBarH) == self.pagingView.headerViewHeight) {
+-(void)contentViewDidScroll:(CGFloat)offset {
+    CGFloat delta = offset;
+    CGFloat navBarH = self.viewController.customNavBarView.height;
+    if ((delta + navBarH) > self.headerView.height || (delta + navBarH) == self.headerView.height) {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
             *titleScrollViewColorKey  = @"Background4";
-            *norColorKey = @"grey3";
-            *selColorKey = @"red4";
+            *norColorKey = @"grey1";
+            *selColorKey = @"grey1";
             *titleFont = [UIFont themeFontRegular:16];
-            *selectedTitleFont = [UIFont themeFontSemibold:16];
+            *selectedTitleFont = [UIFont themeFontMedium:18];
         }];
     }else {
         [self.viewController.segmentView setUpTitleEffect:^(NSString *__autoreleasing *titleScrollViewColorKey, NSString *__autoreleasing *norColorKey, NSString *__autoreleasing *selColorKey, UIFont *__autoreleasing *titleFont, UIFont *__autoreleasing *selectedTitleFont) {
-            *titleScrollViewColorKey  = @"Background21";
-            *norColorKey = @"grey3";
-            *selColorKey = @"red4";
+            *titleScrollViewColorKey  = @"Background3";
+            *norColorKey = @"grey1";
+            *selColorKey = @"grey1";
             *titleFont = [UIFont themeFontRegular:16];
-            *selectedTitleFont = [UIFont themeFontSemibold:16];
+            *selectedTitleFont = [UIFont themeFontMedium:18];
         }];
     }
     [self refreshContentOffset:delta];
@@ -491,39 +464,44 @@
         self.viewController.customNavBarView.title.hidden = delta<0;
         self.viewController.customNavBarView.leftBtn.hidden = delta<0;
     }
-    [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:pagingView.currentContentView];
+    [self.viewController.headerView updateWhenScrolledWithContentOffset:delta isScrollTop:NO scrollView:nil];
 }
 
 
 #pragma mark - segmentView 代理
 - (void)segmentView:(TTHorizontalPagingSegmentView *)segmentView didSelectedItemAtIndex:(NSInteger)index toIndex:(NSInteger)toIndex {
+    [self.pageView updateSelectIndex:toIndex];
+    if(toIndex >= 0 && toIndex < self.subVCs.count) {
+        UIViewController *vc = [self.subVCs objectAtIndex:toIndex];
+        [vc viewWillAppear:NO];
+    }
+}
+
+-(void)scrollToIndex:(NSInteger)index {
     
-    //点击同一个不做处理
-    if(index == toIndex && !self.isFirstEnter){
+//    //点击同一个不做处理
+    if(index == self.currentIndex && !self.isFirstEnter){
         return;
     }
-    
-    if(toIndex < self.subVCs.count){
-        self.selectedIndex = toIndex;
-        self.feedListController = self.subVCs[toIndex];
-        self.pagingView.headerView = self.viewController.headerView;
-        self.pagingView.segmentView = self.viewController.segmentView;
-    }
-    
+    self.currentIndex = index;
     if(self.isFirstEnter) {
-        [self.pagingView scrollToIndex:toIndex withAnimation:NO];
         self.isFirstEnter = NO;
+        [self.pageView updateSelectIndex:index];
     } else {
         //上报埋点
         NSString *position = @"be_null";
-        if(toIndex < self.ugcTabList.count){
-            FHHouseRealtorDetailRgcTabModel *tabModel = self.ugcTabList[toIndex];
+        if(index < self.ugcTabList.count){
+            FHHouseRealtorDetailRgcTabModel *tabModel = self.ugcTabList[index];
             if(tabModel.tabName){
                 position = [NSString stringWithFormat:@"%@",tabModel.tabName];
             }
         }
         [self addEnterCategoryLog:position];
-        [self.pagingView scrollToIndex:toIndex withAnimation:NO];
+    }
+    [self.viewController.segmentView setSelectedIndexNoEvent:index];
+    if(index >= 0 && index < self.subVCs.count) {
+        UIViewController *vc = [self.subVCs objectAtIndex:index];
+        [vc viewWillAppear:NO];
     }
 }
 

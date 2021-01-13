@@ -30,7 +30,7 @@ typedef void(^FHDetailNewMediaHeaderViewEventByString)(NSString *name);
 - (void)updateModel:(FHMultiMediaModel *)model;
 
 //移动到某个Cell
-- (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath atScrollPosition:(UICollectionViewScrollPosition)scrollPosition animated:(BOOL)animated;
+- (void)scrollToItemAtIndexPath:(NSIndexPath *)indexPath animated:(BOOL)animated;
 - (NSInteger)getCurPagae;
 @end
 

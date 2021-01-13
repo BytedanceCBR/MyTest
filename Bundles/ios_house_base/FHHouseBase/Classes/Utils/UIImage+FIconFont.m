@@ -148,7 +148,7 @@
     return _appImageGeneratorCache;
 }
 
-+ (UIImage *)fh_roundRectMaskImageWithCornerRadius:(CGFloat)cornerRadius color:(UIColor *)color size:(CGSize)size {
++ (UIImage *)fh_interRoundRectMaskImageWithCornerRadius:(CGFloat)cornerRadius color:(UIColor *)color size:(CGSize)size {
     NSString *cacheKey = [NSString stringWithFormat:@"radius:%@,color:%@,size:%@",@(cornerRadius).stringValue,@(color.hash).stringValue,NSStringFromCGSize(size)];
     UIImage *image = [[self fh_appImageGeneratorCache] objectForKey:cacheKey];
     if (!image) {
@@ -163,6 +163,22 @@
         [path fill];
         image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
+        [[self fh_appImageGeneratorCache] setObject:image forKey:cacheKey];
+    }
+    return image;
+}
+
++ (UIImage *)fh_outerRoundRectMaskImageWithCornerRadius:(CGFloat)cornerRadius color:(UIColor *)color size:(CGSize)size {
+    NSString *cacheKey = [NSString stringWithFormat:@"radius:%@,color:%@,size:%@",@(cornerRadius).stringValue,@(color.hash).stringValue,NSStringFromCGSize(size)];
+    UIImage *image = [[self fh_appImageGeneratorCache] objectForKey:cacheKey];
+    if (!image) {
+        CGRect frame = CGRectMake(0, 0, size.width, size.height);
+        UIView *roundCornerView = [[UIView alloc] initWithFrame:frame];
+        roundCornerView.layer.masksToBounds = YES;
+        roundCornerView.layer.cornerRadius = cornerRadius;
+        roundCornerView.backgroundColor = color;
+        roundCornerView.opaque = NO;
+        image = [roundCornerView btd_snapshotImage];
         [[self fh_appImageGeneratorCache] setObject:image forKey:cacheKey];
     }
     return image;

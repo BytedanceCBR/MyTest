@@ -9,7 +9,6 @@
 #import "FHVideoModel.h"
 #import "UIImageView+BDWebImage.h"
 #import "FHVideoCoverView.h"
-#import "FHDetailMediaHeaderCell.h"
 
 @interface FHMultiMediaVideoCell ()
 
@@ -55,7 +54,9 @@
     } else {
 
         self.coverView = [[FHVideoCoverView alloc] init];
-        [self.coverView setFrame:CGRectMake(0.0, 0.0, [UIScreen mainScreen].bounds.size.width, [FHDetailMediaHeaderCell cellHeight])];
+        CGFloat photoCellHeight = 281.0;
+        photoCellHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight + 0.5);
+        [self.coverView setFrame:CGRectMake(0.0, 0.0, [UIScreen mainScreen].bounds.size.width, photoCellHeight)];
         //    self.coverView.houseType = self.model.cellHouseType;
         [_coverView setBackgroundColor:[UIColor colorWithRed:1 green:1 blue:1 alpha:1]];
         _coverView.startBtn.userInteractionEnabled = NO;

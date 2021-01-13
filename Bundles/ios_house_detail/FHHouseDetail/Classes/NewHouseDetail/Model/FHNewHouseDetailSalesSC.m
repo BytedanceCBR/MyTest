@@ -35,7 +35,7 @@
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 30;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     FHNewHouseDetailSalesSM *model = (FHNewHouseDetailSalesSM *)self.sectionModel;
     return [FHNewHouseDetailSalesCollectionCell cellSizeWithData:model.salesCellModel width:width];
 }
@@ -131,8 +131,7 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
+    [titleView setupNewHouseDetailStyle];
     titleView.titleLabel.text = @"优惠信息";
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;
@@ -141,7 +140,7 @@
 
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2, 46);
     }
     return CGSizeZero;
 }

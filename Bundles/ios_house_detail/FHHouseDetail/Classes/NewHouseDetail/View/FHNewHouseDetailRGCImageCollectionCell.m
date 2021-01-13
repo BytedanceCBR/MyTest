@@ -30,7 +30,12 @@
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
         CGFloat height = 0;
-        height += 50;
+        if (cellModel.realtor) {
+            height += 48;
+        } else {
+            height += 52;
+        }
+        
         height += 10;
         height += cellModel.contentHeight;
         height += 10;
@@ -58,6 +63,7 @@
         __weak typeof(self) weakSelf = self;
         self.headerView
             = [[FHHouseDeatilRGCCellHeader alloc] init];
+        [self.headerView setupNewHouseStyle];
         self.headerView.hidden = YES;
         self.headerView.imClick = ^{
             [weakSelf clickImAction];
@@ -70,10 +76,10 @@
         };
         [self.contentView addSubview:_headerView];
         [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(5);
+            make.top.mas_equalTo(0);
             make.left.mas_equalTo(0);
-            make.height.mas_equalTo(40);
-            make.right.mas_equalTo(-10);
+            make.height.mas_equalTo(36);
+            make.right.mas_equalTo(0);
         }];
 
         self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), 0)];
@@ -85,27 +91,27 @@
         [self.contentView addSubview:self.contentLabel];
         [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.userInfoView.mas_bottom).mas_offset(10);
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
             make.height.mas_equalTo(0);
         }];
 
-        self.multiImageView = [[FHHouseDetailRGCMultiImageView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds) - 15*2, 0) count:3];
+        self.multiImageView = [[FHHouseDetailRGCMultiImageView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds) - 12*2, 0) count:3];
         [self.contentView addSubview:self.multiImageView];
         [self.multiImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.contentLabel.mas_bottom).mas_offset(10);
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
             make.height.mas_equalTo(0);
         }];
 
-        self.lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds) - 15 * 2, .5)];
+        self.lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds) - 12 * 2, .5)];
         self.lineView.backgroundColor = [UIColor themeGray6];
         [self.contentView addSubview:self.lineView];
         [self.lineView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.multiImageView.mas_bottom).mas_offset(16);
-            make.left.mas_equalTo(15);
-            make.right.mas_equalTo(-15);
+            make.top.mas_equalTo(self.multiImageView.mas_bottom).mas_offset(12);
+            make.left.mas_equalTo(12);
+            make.right.mas_equalTo(-12);
             make.height.mas_equalTo(0.5);
         }];
     }
@@ -122,13 +128,17 @@
     }
     self.currentData = data;
     
+    CGFloat contentLabelTopMargin = 50;
+    CGFloat contentLabelHeight = 0;
     if (cellModel.realtor) {
         self.userInfoView.hidden = YES;
         self.headerView.hidden = NO;
+        contentLabelTopMargin = 36 + 12;
         [self.headerView refreshWithData:cellModel];
     }else {
         self.userInfoView.hidden = NO;
         self.headerView.hidden = YES;
+        contentLabelTopMargin = 40 + 12;
         [self.userInfoView refreshWithData:cellModel];
     }
     
@@ -136,23 +146,24 @@
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if (cellModel.content.length) {
         self.contentLabel.hidden = NO;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(cellModel.contentHeight);
-        }];
+        contentLabelHeight = cellModel.contentHeight;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }else {
         self.contentLabel.hidden = YES;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
+        contentLabelHeight = 0;
     }
+    
+    [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(contentLabelTopMargin);
+        make.height.mas_equalTo(contentLabelHeight);
+    }];
         
     self.lineView.hidden = !cellModel.isShowLineView;
     [self.headerView hiddenConnectBtn:cellModel.isHiddenConnectBtn];
        //图片
     [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     if (cellModel.imageList.count > 0) {
-        CGFloat imageHeight = ceilf([FHHouseDetailRGCMultiImageView viewHeightForCount:3 width:CGRectGetWidth(self.contentView.bounds) - 15 * 2]);
+        CGFloat imageHeight = ceilf([FHHouseDetailRGCMultiImageView viewHeightForCount:3 width:CGRectGetWidth(self.contentView.bounds) - 12 * 2]);
         [self.multiImageView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(imageHeight);
         }];

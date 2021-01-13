@@ -172,7 +172,7 @@
     for (NSArray *buttonAry in self.saleStatusButtons) {
         for (FHBuildingDetailImageViewButton *button in buttonAry) {
             [button setHidden:NO];
-            button.isSelected = YES;
+            button.isSelected = NO;
         }
     }
 }

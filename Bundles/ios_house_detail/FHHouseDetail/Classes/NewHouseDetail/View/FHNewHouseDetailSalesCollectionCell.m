@@ -39,18 +39,18 @@
     
     [self.tagView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(3);
-        make.top.mas_equalTo(5);
+        make.top.mas_equalTo(2);
         make.width.mas_equalTo(30);
         make.height.mas_equalTo(18);
     }];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(3);
+        make.top.mas_equalTo(0);
         make.height.mas_equalTo(19);
         make.left.mas_equalTo(self.tagView.mas_right).mas_offset(12);
         make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-12);
     }];
     [self.subtitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(8);
+        make.top.mas_equalTo(self.titleLabel.mas_bottom).mas_offset(3);
         make.height.mas_equalTo(16);
         make.left.mas_equalTo(self.titleLabel);
         make.right.mas_equalTo(self.submitBtn.mas_left).mas_offset(-12);
@@ -72,7 +72,7 @@
         _tagView.layer.borderWidth = 0.5;
         _tagView.layer.masksToBounds = YES;
         [_tagView setBackgroundImage:[UIImage btd_imageWithColor:[UIColor colorWithHexString:@"#ffefec"]] forState:UIControlStateNormal];
-        _tagView.titleLabel.font = [UIFont themeFontMedium:AdaptFont(10)];
+        _tagView.titleLabel.font = [UIFont themeFontMedium:10];
     }
     return _tagView;
 }
@@ -104,12 +104,12 @@
 - (UIButton *)submitBtn
 {
     if (!_submitBtn) {
-        _submitBtn = [[UIButton alloc]init];
-        [_submitBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateNormal];
-        [_submitBtn setTitleColor:[UIColor themeOrange1] forState:UIControlStateHighlighted];
-        _submitBtn.layer.cornerRadius = 15;
+        _submitBtn = [[UIButton alloc] init];
+        _submitBtn.backgroundColor = [UIColor colorWithHexString:@"#f7f7f7"];
+        [_submitBtn setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+        _submitBtn.layer.cornerRadius = 1;
         _submitBtn.layer.masksToBounds = YES;
-        _submitBtn.titleLabel.font = [UIFont themeFontMedium:AdaptFont(16)];
+        _submitBtn.titleLabel.font = [UIFont themeFontMedium:14];
     }
     return _submitBtn;
 }
@@ -144,10 +144,25 @@
                 itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
                 [itemView.titleLabel sizeToFit];
                 CGFloat titleHeight  = floor(itemView.titleLabel.height);
-                height += 44 + titleHeight;
-                if (item.discountSubContent.length == 0) {
-                    height -= 18;
+                
+                CGFloat vHeight = 0;
+                if (!item.discountSubContent.length) {
+                    if (titleHeight < 28) {
+                        vHeight = 28;
+                    } else {
+                        vHeight = titleHeight;
+                    }
+                    vHeight += 12;
+                } else {
+                    vHeight = titleHeight;
+                    vHeight += 19;
+                    vHeight += 12;
                 }
+                height += vHeight;
+//                if (item.discountSubContent.length && idx == model.discountInfo.count - 1) {
+//                    //最后一个的情况
+//                    height += 12;
+//                }
             }
             return CGSizeMake(width, height);
         }
@@ -171,11 +186,7 @@
     _containerView = [[UIView alloc] init];
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(0);
-        make.right.mas_equalTo(0);
-        make.top.mas_equalTo(0);
-        make.bottom.mas_equalTo(-20);
-        make.height.mas_equalTo(0);
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
 }
 
@@ -191,7 +202,6 @@
 
     if (model.discountInfo.count > 0) {
         NSInteger itemsCount = model.discountInfo.count;
-        CGFloat vHeight = 66;
         CGFloat totalHeight = 0;
         UIView *lastView = nil;
         for (NSInteger idx = 0; idx < itemsCount; idx++) {
@@ -205,10 +215,7 @@
             [itemView.tagView setTitle:item.itemDesc forState:UIControlStateHighlighted];
             itemView.titleLabel.text = item.discountContent;
             itemView.subtitleLabel.text = item.discountSubContent;
-            [itemView.submitBtn setBackgroundImage:[UIImage btd_imageWithColor:[UIColor colorWithHexString:@"#ffefec"]] forState:UIControlStateNormal];
-            [itemView.submitBtn setBackgroundImage:[UIImage btd_imageWithColor:[UIColor colorWithHexString:@"#ffefec"]] forState:UIControlStateHighlighted];
             [itemView.submitBtn setTitle:item.actionDesc forState:UIControlStateNormal];
-            [itemView.submitBtn setTitle:item.actionDesc forState:UIControlStateHighlighted];
             [itemView.submitBtn addTarget:self action:@selector(submitBtnDidClick:) forControlEvents:UIControlEventTouchUpInside];
             [self.containerView addSubview:itemView];
             [itemView.tagView sizeToFit];
@@ -220,12 +227,20 @@
             itemView.titleLabel.width = [UIScreen mainScreen].bounds.size.width - btnWidth - iconWidth - 42 * 2;
             [itemView.titleLabel sizeToFit];
             CGFloat titleHeight  = floor(itemView.titleLabel.height);
-            vHeight = 44 + titleHeight ;
-            if (!item.discountSubContent || item.discountSubContent.length == 0) {
-                vHeight -= 18;
+            CGFloat vHeight = 0;
+            if (!item.discountSubContent.length) {
+                if (titleHeight < 28) {
+                    vHeight = 28;
+                } else {
+                    vHeight = titleHeight;
+                }
+                vHeight += 12;
                 itemView.subtitleLabel.hidden = YES;
             } else {
-                totalTitleHeight += 24;
+                vHeight = titleHeight;
+                vHeight += 19;
+                vHeight += 12;
+                totalTitleHeight += 19;
                 itemView.subtitleLabel.hidden = NO;
             }
             totalHeight += vHeight;
@@ -251,15 +266,12 @@
                 }else {
                     make.top.mas_equalTo(-1);
                 }
-                make.left.mas_equalTo(15);
-                make.right.mas_equalTo(-15);
+                make.left.mas_equalTo(12);
+                make.right.mas_equalTo(-12);
                 make.height.mas_equalTo(vHeight);
             }];
             lastView = itemView;
         }
-        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(totalHeight);
-        }];
     }
 }
 

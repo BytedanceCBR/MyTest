@@ -124,8 +124,8 @@
     self.editingLabel.hidden = YES;
     
     self.essenceIcon = [[UIImageView alloc] init];
-    _essenceIcon.image = [UIImage imageNamed:@"fh_ugc_wenda_essence_small_new"];
-    _essenceIcon.hidden = YES;
+    self.essenceIcon.image = [UIImage imageNamed:@"fh_ugc_wenda_essence_small_new"];
+    self.essenceIcon.hidden = YES;
     [self addSubview:_essenceIcon];
     
     self.moreBtn = [[UIButton alloc] init];
@@ -155,7 +155,7 @@
 
 - (void)initConstraints {
     self.avatarView.top = 0;
-    self.avatarView.left = 20;
+    self.avatarView.left = 12;
     self.avatarView.width = 40;
     self.avatarView.height = 40;
     self.userName.top = 0;

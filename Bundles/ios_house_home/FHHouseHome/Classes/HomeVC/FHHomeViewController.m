@@ -20,7 +20,6 @@
 #import "TTSandBoxHelper.h"
 #import "TTArticleCategoryManager.h"
 #import "FHHomeScrollBannerCell.h"
-#import "TTDeviceHelper.h"
 #import "TTAppUpdateHelper.h"
 #import "CommonURLSetting.h"
 #import "FHCommuteManager.h"
@@ -43,7 +42,8 @@
 #import "FHTrackingManager.h"
 #import "FHFirstPageManager.h"
 #import "ArticleListNotifyBarView.h"
-#import <BytedanceKit.h>
+#import <ByteDanceKit.h>
+#import <UIDevice+BTDAdditions.h>
 
 static CGFloat const kShowTipViewHeight = 32;
 
@@ -63,7 +63,6 @@ static CGFloat const kSectionHeaderHeight = 38;
 @property (nonatomic, assign) NSTimeInterval stayTime; //页面停留时间
 @property (nonatomic, assign) BOOL isShowing;
 @property (nonatomic, assign) BOOL initedViews;
-//@property (nonatomic, assign) NSInteger configTime;
 
 @end
 
@@ -74,7 +73,6 @@ static CGFloat const kSectionHeaderHeight = 38;
     self = [super init];
     if (self) {
         _isMainTabVC = YES;
-//        _configTime = 2;
         [[FHHomeRenderFlow sharedInstance] traceHomeInit];
         FHConfigDataModel *currentDataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
         [[FHFirstPageManager sharedInstance] addFirstPageModelWithPageType:@"maintab" withUrl:@"" withTabName:currentDataModel.jumpPageOnStartup withPriority:0];
@@ -124,10 +122,6 @@ static CGFloat const kSectionHeaderHeight = 38;
         if (currentDataModel.isFromLocalCache) {
             return;
         }
-//        self.configTime--;
-//        if (self.configTime != 0) {
-//            return;
-//        }
 
 //        if (!self.adColdHadJump) {
 //            self.adColdHadJump = YES;
@@ -253,7 +247,7 @@ static CGFloat const kSectionHeaderHeight = 38;
 
 - (void)setUpMainTableConstraints
 {
-    if ([TTDeviceHelper isIPhoneXSeries]) {
+    if ([UIDevice btd_isIPhoneXSeries]) {
         [self.mainTableView setFrame:CGRectMake(0.0f, 0, MAIN_SCREEN_WIDTH, MAIN_SCREENH_HEIGHT - 64 - 44 - 49)];
     }else
     {

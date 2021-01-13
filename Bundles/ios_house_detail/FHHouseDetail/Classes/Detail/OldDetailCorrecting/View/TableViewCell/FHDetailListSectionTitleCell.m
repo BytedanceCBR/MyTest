@@ -12,17 +12,6 @@
 
 @implementation FHDetailListSectionTitleCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-    
-    // Configure the view for the selected state
-}
-
 - (void)refreshWithData:(id)data
 {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailListSectionTitleModel class]]) {

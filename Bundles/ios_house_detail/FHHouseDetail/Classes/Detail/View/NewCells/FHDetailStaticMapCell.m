@@ -18,7 +18,6 @@
 #import "FHDetailMapViewSnapService.h"
 #import "HMDUserExceptionTracker.h"
 #import "TTReachability.h"
-#import "FHOldDetailStaticMapCell.h"
 
 @implementation FHDetailStaticMapCellModel
 

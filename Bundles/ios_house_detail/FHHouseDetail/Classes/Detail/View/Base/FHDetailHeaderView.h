@@ -26,6 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong) NSDictionary *tracerDict;
 -(void)setSubTitleWithTitle:(NSString *)subTitle;
 - (void)removeSubTitleWithTitle;
+- (void)updateLayoutWithOldDetail;
 @end
 
 NS_ASSUME_NONNULL_END

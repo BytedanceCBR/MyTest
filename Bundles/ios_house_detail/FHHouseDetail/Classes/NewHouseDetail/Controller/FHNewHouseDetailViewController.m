@@ -396,12 +396,12 @@
                 [titles addObject:@"户型"];
                 break;
             case FHNewHouseDetailSectionTypeSales:
-            case FHNewHouseDetailSectionTypeAgent:
                 if ([titles containsObject:@"优惠"]) {
                     continue;
                 }
                 [titles addObject:@"优惠"];
                 break;
+            case FHNewHouseDetailSectionTypeAgent:
             case FHNewHouseDetailSectionTypeTimeline:
             case FHNewHouseDetailSectionTypeAssess:
             case FHNewHouseDetailSectionTypeRGC:
@@ -459,13 +459,13 @@
             }
         }
         if ([title isEqualToString:@"优惠"]) {
-            if (model.sectionType == FHNewHouseDetailSectionTypeSales || model.sectionType == FHNewHouseDetailSectionTypeAgent) {
+            if (model.sectionType == FHNewHouseDetailSectionTypeSales) {
                 index = idx;
                 *stop = YES;
             }
         }
         if ([title isEqualToString:@"动态"]) {
-            if (model.sectionType == FHNewHouseDetailSectionTypeTimeline|| model.sectionType == FHNewHouseDetailSectionTypeAssess || model.sectionType == FHNewHouseDetailSectionTypeRGC) {
+            if (model.sectionType == FHNewHouseDetailSectionTypeAgent || model.sectionType == FHNewHouseDetailSectionTypeTimeline|| model.sectionType == FHNewHouseDetailSectionTypeAssess || model.sectionType == FHNewHouseDetailSectionTypeRGC) {
                 index = idx;
                 *stop = YES;
             }
@@ -892,8 +892,8 @@
         case FHNewHouseDetailSectionTypeFloorpan:
             return @"户型";
         case FHNewHouseDetailSectionTypeSales:
-        case FHNewHouseDetailSectionTypeAgent:
             return @"优惠";
+        case FHNewHouseDetailSectionTypeAgent:
         case FHNewHouseDetailSectionTypeTimeline:
         case FHNewHouseDetailSectionTypeAssess:
         case FHNewHouseDetailSectionTypeRGC:
@@ -944,9 +944,9 @@
                 title = @"户型";
                 break;
             case FHNewHouseDetailSectionTypeSales:
-            case FHNewHouseDetailSectionTypeAgent:
                 title = @"优惠";
                 break;
+            case FHNewHouseDetailSectionTypeAgent:
             case FHNewHouseDetailSectionTypeTimeline:
             case FHNewHouseDetailSectionTypeAssess:
             case FHNewHouseDetailSectionTypeRGC:

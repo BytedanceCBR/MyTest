@@ -12,9 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHDetailNewMediaHeaderView : UIView
 
 - (void)updateMultiMediaModel :(FHMultiMediaModel *)model;
-- (void)updateTitleModel: (FHDetailHouseTitleModel *)model;
 - (void)setTotalPagesLabelText:(NSString *)text;
-+ (CGFloat)cellHeight;
 
 //点击了某个Cell
 @property (nonatomic, copy) FHDetailNewMediaHeaderViewEventByIndex didSelectiItemAtIndex;

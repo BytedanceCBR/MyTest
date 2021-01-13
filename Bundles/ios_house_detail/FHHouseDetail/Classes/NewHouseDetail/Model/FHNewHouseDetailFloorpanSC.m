@@ -176,7 +176,7 @@
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     FHNewHouseDetailFloorpanSM *model = (FHNewHouseDetailFloorpanSM *)self.sectionModel;
     return [FHNewHouseDetailMultiFloorpanCollectionCell cellSizeWithData:model.floorpanCellModel width:width];
 }
@@ -207,15 +207,14 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
+    [titleView setupNewHouseDetailStyle];
     __weak typeof(self) weakSelf = self;
     [titleView setMoreActionBlock:^{
         [weakSelf moreButtonAction];
     }];
     FHNewHouseDetailMultiFloorpanCellModel *cellModel = [(FHNewHouseDetailFloorpanSM *)self.sectionModel floorpanCellModel];
     if (cellModel.floorPanList.totalNumber.length > 0) {
-        titleView.titleLabel.text = [NSString stringWithFormat:@"户型介绍（%@）",cellModel.floorPanList.totalNumber];
+        titleView.titleLabel.text = [NSString stringWithFormat:@"户型介绍 (%@)",cellModel.floorPanList.totalNumber];
         if (cellModel.floorPanList.totalNumber.integerValue >= 3) {
             titleView.arrowsImg.hidden = NO;
             titleView.userInteractionEnabled = YES;
@@ -234,7 +233,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2, 47);
     }
     return CGSizeZero;
 }

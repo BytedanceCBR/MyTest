@@ -13,6 +13,7 @@
 #import "TTRoute.h"
 #import "TTBusinessManager+StringUtils.h"
 #import "UIViewAdditions.h"
+#import "FHCommonDefines.h"
 
 #define maxLines 3
 #define userInfoViewHeight 40
@@ -55,6 +56,7 @@
 
     // 用户信息区
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
+    [self.userInfoView updateFrameFromNeighborhoodDetail];
     [self.contentContainer addSubview:self.userInfoView];
     
     // 文本区
@@ -104,9 +106,9 @@
         CGFloat rightMargin = 0;
         CGFloat topMargin = 0;
         
-        CGFloat leftPadding = 16;
-        CGFloat rightPadding = 16;
-        CGFloat topPadding = 15;
+        CGFloat leftPadding = 12;
+        CGFloat rightPadding = 12;
+        CGFloat topPadding = 12;
         
         CGFloat elementMargin = 10; //元素之间的间距
         
@@ -128,11 +130,10 @@
         height += (isContentEmpty ? 0 : cellModel.contentHeight);
 //        height += vGap;
         if(cellModel.imageList.count > 0) {
-            if(cellModel.isInNeighbourhoodCommentsList){
-                height += elementMargin;
-            }
+            height += elementMargin;
             NSInteger count = (cellModel.imageList.count == 1) ? 1 : 3;
-            CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:count width:[UIScreen mainScreen].bounds.size.width - leftMargin - leftPadding - rightMargin - rightPadding];
+            CGFloat cellWidth = [self cellWidth:cellModel.isInNeighbourhoodCommentsList];
+            CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:count width:cellWidth - leftMargin - leftPadding - rightMargin - rightPadding];
             height += imageViewheight;
         }
         
@@ -145,19 +146,27 @@
     return 44;
 }
 
++ (CGFloat)cellWidth:(BOOL)isInList {
+    CGFloat ret = SCREEN_WIDTH - 18;
+    if(isInList) {
+        SCREEN_WIDTH;
+    }
+    return ret;
+}
+
 - (void)layoutViews {
     
     CGFloat leftMargin = 0;
     CGFloat rightMargin = 0;
     CGFloat topMargin = 0;
     
-    CGFloat leftPadding = 16;
-    CGFloat rightPadding = 16;
-    CGFloat topPadding = 15;//往上10个像素剩余10+6
+    CGFloat leftPadding = 12;
+    CGFloat rightPadding = 12;
+    CGFloat topPadding = 12;//往上10个像素剩余10+6
     
     CGFloat elementMargin = 10; //元素之间的间距
     
-    CGFloat cellWidth = [UIScreen mainScreen].bounds.size.width - 30;
+    CGFloat cellWidth = [self.class cellWidth:self.cellModel.isInNeighbourhoodCommentsList];
     if(self.cellModel.isInNeighbourhoodCommentsList) {
         topMargin = 15;
         leftMargin = 15;
@@ -165,8 +174,6 @@
         
         leftPadding = 20;
         rightPadding = 20;
-        
-        cellWidth = [UIScreen mainScreen].bounds.size.width;
         
         elementMargin = 20;
     }
@@ -191,7 +198,8 @@
 //    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     
     [self.userInfoView refreshWithData:self.cellModel];
-    self.userInfoView.essenceIcon.hidden = YES;
+    [self.userInfoView showEssenceIcon];
+    //self.userInfoView.essenceIcon.hidden = YES;
     
     self.userInfoView.moreBtn.hidden = YES;
     
@@ -228,13 +236,13 @@
     //图片
     [self.multiImageView updateImageView:self.cellModel.imageList largeImageList:self.cellModel.largeImageList];
     
-    if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
-        self.decorationImageView.width = 42;
-        self.decorationImageView.height = 42;
-        self.decorationImageView.left = cellWidth - rightMargin - rightPadding - 42;
-        self.decorationImageView.top = self.contentContainer.top + topPadding - 1;
-        [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence_small"]];
-    }
+//    if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
+//        self.decorationImageView.width = 42;
+//        self.decorationImageView.height = 42;
+//        self.decorationImageView.left = cellWidth - rightMargin - rightPadding - 42;
+//        self.decorationImageView.top = self.contentContainer.top + topPadding - 1;
+//        [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence_small"]];
+//    }
 }
 
 - (void)deleteCell {

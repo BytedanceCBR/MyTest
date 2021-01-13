@@ -25,6 +25,7 @@
 #import "FHHouseNeighborhoodCardViewModel.h"
 #import "UITableView+FHHouseCard.h"
 #import <FHHouseBase/NSObject+FHOptimize.h>
+#import "FHHouseListRelatedNeighborhoodCell.h"
 
 #define kPlaceholderCellId @"placeholder_cell_id"
 #define kSingleImageCellId @"single_image_cell_id"
@@ -86,7 +87,7 @@
     self.tableView.mj_footer = self.refreshFooter;
     _refreshFooter.hidden = YES;
     [_tableView registerClass:[FHPlaceHolderCell class] forCellReuseIdentifier:kPlaceholderCellId];
-    [self.tableView fhHouseCard_registerCellStyles];
+    [self.tableView fhHouseCard_registerCellStylesWithDict:@{        NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHHouseListRelatedNeighborhoodCell.class),}];
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -257,7 +258,7 @@
     if (self.listController.hasValidateData == YES) {
         if (indexPath.row < self.houseList.count) {
             id model = self.houseList[indexPath.row];
-            UITableViewCell *cell = [tableView fhHouseCard_cellForEntity:model atIndexPath:indexPath];
+            UITableViewCell *cell = [tableView fhHouseCard_cellForEntity:model atIndexPath:indexPath withDict:@{NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHHouseListRelatedNeighborhoodCell.class),}];
             if (cell) return cell;
         }
     } else {
@@ -287,7 +288,7 @@
         
         if (indexPath.row < self.houseList.count) {
             id data = self.houseList[indexPath.row];
-            CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath];
+            CGFloat cellHeight = [tableView fhHouseCard_heightForEntity:data atIndexPath:indexPath withDict:@{NSStringFromClass(FHHouseNeighborhoodCardViewModel.class): NSStringFromClass(FHHouseListRelatedNeighborhoodCell.class),}];
             if (cellHeight > -0.001f) return cellHeight;
         }
         

@@ -30,7 +30,7 @@
         //设置默认值
         _btnArray = [NSMutableArray array];
         _itemWidth = 44.0f;
-        _itemHeight = 20.0f;
+        _itemHeight = 22.0f;
         _itemPadding = 0.0f;
         //有vr时多个视图间距
         _topMargin = 0;

@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface FHHomeRentCell : FHHouseBaseCommonCell<FHHouseCardReadStateProtocol>
+@interface FHHomeRentCell : FHHouseBaseCommonCell<FHHouseCardReadStateProtocol, FHHouseCardTouchAnimationProtocol>
 
 @property (nonatomic, weak) id<FHHomeRentCellDelegate> delegate;
 

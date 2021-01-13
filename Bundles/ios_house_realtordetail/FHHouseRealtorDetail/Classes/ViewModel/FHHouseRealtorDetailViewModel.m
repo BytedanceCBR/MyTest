@@ -27,7 +27,7 @@
 #import "FHHouseRealtorDetailPlaceHolderCell.h"
 #import "FHUGCCellHelper.h"
 
-@interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
+@interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseRealtorDetailController *detailController;
 @property(nonatomic, strong) FHErrorView *errorView;
@@ -218,10 +218,6 @@
     self.tableView.mj_footer.hidden = YES;
 }
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
-}
-
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
     self.tableView.mj_footer.hidden = NO;
     if (hasMore) {
@@ -260,7 +256,7 @@
     if (self.showPlaceHolder) {
         NSString *identifier = @"FHHouseRealtorDetailPlaceHolderCell";
         FHHouseRealtorDetailPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
+        [cell.contentView setBackgroundColor:[UIColor themeGray7]];
         return cell;
     }
     
@@ -347,7 +343,7 @@
     if(!_errorView){
         __weak typeof(self)ws = self;
         _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 500)];
-        _errorView.backgroundColor = [UIColor colorWithHexStr:@"f8f8f8"];
+        _errorView.backgroundColor = [UIColor themeGray7];
         _errorView.retryBlock = ^{
             ws.showPlaceHolder = YES;
             [ws.tableView reloadData];
@@ -479,4 +475,19 @@
     
     return str;
 }
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.detailController.pageView tableViewWillBeginDragging:scrollView];
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.detailController.pageView tableViewDidScroll:scrollView];
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [self.detailController.pageView tableViewDidEndDragging:scrollView];
+}
+
 @end
+
+

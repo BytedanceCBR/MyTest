@@ -100,14 +100,6 @@
 //                vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
 //            }
         }];
-
-        FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:extraDict error:nil];
-        configModel.houseType = FHHouseTypeNewHouse;
-        configModel.followId = self.detailViewController.viewModel.houseId;
-        configModel.actionType = FHHouseTypeNewHouse;
-        
-        // 静默关注功能
-        [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
     }
 
 }
@@ -266,8 +258,7 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
+    [titleView setupNewHouseDetailStyle];
     FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
 
     // 设置下发标题
@@ -293,7 +284,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 74);
+        return CGSizeMake(self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2, 64);
     }
     return CGSizeZero;
 }
@@ -403,12 +394,12 @@
                     atIndex:(NSInteger)index {
     FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
     
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     CGFloat height = 74;
     if (index < agentSM.recommendedRealtors.count) {
         FHDetailContactModel *model = agentSM.recommendedRealtors[index];
         if (model.agencyDescription.length && model.realtorScoreDisplay.length) {
-            height = 86;
+            height = 80;
         }
     }
     if(index == agentSM.recommendedRealtors.count - 1){

@@ -98,16 +98,7 @@ static NSInteger  const FHNeighborhoodDetailAgentLimit = 3;
                 vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
             }
         }];
-
-        FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:extraDict error:nil];
-        configModel.houseType = self.detailViewController.viewModel.houseType;
-        configModel.followId = self.detailViewController.viewModel.houseId;
-        configModel.actionType = self.detailViewController.viewModel.houseType;
-        
-        // 静默关注功能
-        [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
     }
-
 }
 
 // 点击会话
