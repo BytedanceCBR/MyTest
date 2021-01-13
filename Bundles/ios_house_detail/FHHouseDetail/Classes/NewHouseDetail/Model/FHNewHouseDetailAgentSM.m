@@ -19,9 +19,9 @@
     self.recommendedRealtors = model.data.recommendedRealtors;
     self.associateInfo = model.data.recommendRealtorsAssociateInfo;
 
-    self.isFold = YES;
+//    self.isFold = YES;
     
-    self.moreModel = [[FHNewHouseDetailReleatorMoreCellModel alloc] init];
+//    self.moreModel = [[FHNewHouseDetailReleatorMoreCellModel alloc] init];
     /******* 这里的 逻辑   ********/
 //    self.phoneCallViewModel = [[FHHouseDetailPhoneCallViewModel alloc] initWithHouseType:FHHouseTypeNewHouse houseId:model.da];
 //    NSMutableDictionary *paramsDict = @{}.mutableCopy;
