@@ -54,10 +54,18 @@
 #import <BDUGLocationKit/BDUGLocationManager.h>
 #import <ByteDanceKit/ByteDanceKit.h>
 #import <FHHouseBase/TTSandBoxHelper+House.h>
+#import "FHHouseCardStatusManager.h"
 
 #define kFHHouseMixedCategoryID   @"f_house_news" // 推荐频道
 
 static NSInteger kGetLightRequestRetryCount = 3;
+
+
+@interface TTRoute (fhCityList)
+
+- (BOOL)toSwizzled_canOpenURL:(NSURL *)url;
+
+@end
 
 @interface FHEnvContext ()
 @property (nonatomic, strong) TTReachability *reachability;
@@ -66,6 +74,7 @@ static NSInteger kGetLightRequestRetryCount = 3;
 @property (atomic,   assign) BOOL inPasueFOrPermission;
 @property (nonatomic, strong) FHStashModel *stashModel;
 @property (nonatomic, copy)   NSNumber *hasPermission;
+@property (nonatomic, assign) BOOL canOpenUrlSwizzled;
 @end
 
 @implementation FHEnvContext
@@ -692,6 +701,8 @@ static NSInteger kGetLightRequestRetryCount = 3;
         } else {
             method_exchangeImplementations(originalMethod, swizzledMethod);
         }
+        
+        self.canOpenUrlSwizzled = YES;
     }
 }
 
@@ -1140,6 +1151,20 @@ static NSInteger kGetLightRequestRetryCount = 3;
     return NewCardType;
 }
 
+//房源卡片已读未读开关
++ (BOOL)isHouseCanRead {
+    NSDictionary *fhSettings= [SSCommonLogic fhSettings];
+    BOOL isHouseCanRead = [fhSettings btd_boolValueForKey:@"f_house_read_enable" default:NO];
+    return isHouseCanRead;
+}
+
++ (CGFloat)FHHouseCardReadOpacity {
+    if ([self isHouseCanRead]) {
+        return FHHouseCardReadOpacity;
+    }
+    return 1;
+}
+
 //+ (BOOL)isIntroduceOpen {
 //    return YES;
 //}
@@ -1339,6 +1364,14 @@ static NSInteger kGetLightRequestRetryCount = 3;
 
 + (void)setLastSearchSugHouseType:(NSInteger)houseType {
     [FHUtils setContent:@(houseType) forKey:@"last_search_sug_house_type"];
+}
+
++ (BOOL)purelyCanOpenURL:(NSURL *)url {
+    if ([FHEnvContext sharedInstance].canOpenUrlSwizzled) {
+        return [[TTRoute sharedRoute] toSwizzled_canOpenURL:url];
+    } else {
+        return [[TTRoute sharedRoute] canOpenURL:url];
+    }
 }
 
 @end

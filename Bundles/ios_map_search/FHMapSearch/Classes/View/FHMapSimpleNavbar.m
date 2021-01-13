@@ -298,10 +298,11 @@
     bgImg = [bgImg resizableImageWithCapInsets:UIEdgeInsetsMake(5, 5, 5, 5) resizingMode:UIImageResizingModeStretch];
     _bgLayer.contents = (id)[bgImg CGImage];
     
+    ///地图找房返回图标相应区域增大20pt，对应调整布局
     [_backButton mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(left);
-        make.top.mas_equalTo(top);
-        make.size.mas_equalTo(CGSizeMake(BTN_WIDTH, BTN_WIDTH));
+        make.left.mas_equalTo(left-10);
+        make.top.mas_equalTo(top-10);
+        make.size.mas_equalTo(CGSizeMake(BTN_WIDTH+20, BTN_WIDTH+20));
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
