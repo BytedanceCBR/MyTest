@@ -1125,6 +1125,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
                     if (type == TTAccountAlertCompletionEventTypeDone) {
                         if ([TTAccountManager isLogin]) {
                             [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
+                            [self writeButtonClickLog:@"feed_comment"];
                         }
                     } else if (type == TTAccountAlertCompletionEventTypeTip) {
                         [TTAccountManager presentQuickLoginFromVC:self.navigationController type:TTAccountLoginDialogTitleTypeDefault source:@"post_comment" completion:^(TTAccountLoginState state) {
@@ -1147,6 +1148,8 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
                     if(!_isCommentViewWillShow){
                         _isCommentViewWillShow = YES;
                         [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO];
+                        [self writeButtonClickLog:@"detail_comment"];
+
                     }
                 }
             }
@@ -1268,9 +1271,6 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         stayPageDict[@"label"] = [self enterFrom];
         stayPageDict[@"value"] = self.detailModel.answerEntity.ansid;
         stayPageDict[@"ext_value"] = @((NSInteger)duration);
-        if (![TTTrackerWrapper isOnlyV3SendingEnable]) {
-            [BDTrackerProtocol eventData:stayPageDict];
-        }
         
         //Wenda_V3_DoubleSending
         NSMutableDictionary *v3Dic = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
@@ -1894,11 +1894,12 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     [BDTrackerProtocol eventData:dict];
 }
 
-- (void)writeButtonClickLog {
+- (void)writeButtonClickLog:(NSString *)position {
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:self.detailModel.gdExtJsonDict];
     dict[@"group_id"] = self.detailModel.answerEntity.ansid;
     dict[@"page_type"] = @"answer";
-    dict[@"click_position"] = @"detail_comment";
+    dict[@"click_position"] = position;
+    dict[@"is_reply"] = @(0);
     TRACK_EVENT(@"click_comment", dict);
 }
 
@@ -1911,7 +1912,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
     } else {
         [TTIndicatorView showWithIndicatorStyle:TTIndicatorViewStyleImage indicatorText:@"该回答禁止评论" indicatorImage:[UIImage themedImageNamed:@"close_popup_textpage"] autoDismiss:YES dismissHandler:nil];
     }
-    [self writeButtonClickLog];
+    [self writeButtonClickLog:@"detail_comment"];
 }
 
 - (void)bottomView:(WDBottomToolView *)bottomView commentButtonClicked:(SSThemedButton *)commentButton
@@ -1996,6 +1997,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
         [params setValue:model.commentID.stringValue forKey:@"comment_id"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"group_id"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"page_type"]  forKey:@"page_type"];
         [params setValue:@"comment" forKey:@"click_position"];
         [TTTrackerWrapper eventV3:@"click_dislike" params:params];
     } else {
@@ -2008,6 +2010,7 @@ static NSUInteger const kOldAnimationViewTag = 20161221;
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"qid"]  forKey:@"qid"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"log_pb"]  forKey:@"log_pb"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"group_id"]  forKey:@"group_id"];
+        [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"page_type"]  forKey:@"page_type"];
         [params setValue:model.commentID.stringValue forKey:@"comment_id"];
         [params setValue:[self.detailModel.gdExtJsonDict objectForKey:@"ansid"]  forKey:@"group_id"];
         [params setValue:@"comment" forKey:@"click_position"];
