@@ -50,7 +50,7 @@ def fhPods
 
 #    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '60e9866a118874a07ca697cfbc4155bfa6b3d72c' #:branch => 'feature/develop'filter-triangle-open-highlighted
 #    pod 'ios_house_filter' , '1.0.3-rc.0', :inhibit_warnings => false
-    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '1571044d8d1af0b2e0dee7ba8d0aac748f62e650'
+    pod 'ios_house_filter' , :git => 'git@code.byted.org:fproject/ios_house_filter.git', :commit => '0626baed97fb90b4948c17651ab86460667c3df2'
 #    pod 'ios_house_filter' , :path => '../../ios_house_filter'
 
 
@@ -204,8 +204,7 @@ def appPods
     pod_binary 'TTNetworkDownloader','1.0.5'
     pod 'TransBridge-iOS','0.1.6'
 #    pod 'FCFlutterShell' , :path => '../Bundles/f_c_flutter_shell', :inhibit_warnings => false
-    pod_binary 'FCFlutterShell','1.1.4-rc.1'
-    
+    pod_binary 'FCFlutterShell','1.1.5-rc.0'
     
     pod 'BDUGSettingsInterface' , '1.1.0'
     pod 'BDUGKit' , '1.3.3'

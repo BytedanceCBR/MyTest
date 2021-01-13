@@ -224,16 +224,19 @@
     DataInfo[@"recommended_realtors_title"] = self.sectionModel.detailModel.data.recommendedRealtorsTitle;
     if(self.sectionModel.detailModel.fhOriginDictData){
         NSDictionary *dataInfo = self.sectionModel.detailModel.fhOriginDictData;
-        if(self.sectionModel.detailModel.data.recommendedRealtors){
-            DataInfo[@"recommended_realtors"] = dataInfo[@"data"][@"recommended_realtors"] ;
+        if([dataInfo isKindOfClass:[NSDictionary class]]){
+            NSDictionary *dic = dataInfo[@"data"];
+            BOOL dicIsDictionary = [dic isKindOfClass:[NSDictionary class]];
+            if(self.sectionModel.detailModel.data.recommendedRealtors && dicIsDictionary){
+                DataInfo[@"recommended_realtors"] = dic[@"recommended_realtors"] ;
+            }
+            if(self.sectionModel.detailModel.data.recommendRealtorsAssociateInfo && dicIsDictionary ){
+                DataInfo[@"recommended_realtors_associate_info"] = dic[@"recommend_realtors_associate_info"];
+            }
+            if(self.sectionModel.detailModel.data.logPb && dicIsDictionary){
+                DataInfo[@"log_pb"] = dic[@"log_pb"];
+            }
         }
-        if(self.sectionModel.detailModel.data.recommendRealtorsAssociateInfo){
-            DataInfo[@"recommended_realtors_associate_info"] = dataInfo[@"data"][@"recommend_realtors_associate_info"];
-        }
-        if(self.sectionModel.detailModel.data.logPb){
-            DataInfo[@"log_pb"] = dataInfo[@"data"][@"log_pb"];
-        }
-
     }
 
     params[@"recommended_realtors_info"] = [DataInfo btd_jsonStringEncoded];
@@ -313,10 +316,7 @@
         tracerDic[@"enter_from"] = @"new_detail";
         tracerDic[@"page_type"] = @"realtor_list";
         tracerDic[@"element_from"] = @"new_detail_related";
-        tracerDic[@"search_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"search_id"] ?: @"be_null";
-        tracerDic[@"impr_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"impr_id"] ?: @"be_null";
-        tracerDic[@"group_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"group_id"] ?: @"be_null";
-        
+        tracerDic[@"group_id"] = self.detailViewController.viewModel.houseId ?: @"be_null";
         [tracerDic removeObjectsForKeys:@[@"card_type",@"rank",@"origin_search_id",@"app_house_tags",@"log_pb"]];
         [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
     }

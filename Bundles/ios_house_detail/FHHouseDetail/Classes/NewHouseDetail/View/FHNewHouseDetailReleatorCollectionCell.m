@@ -36,6 +36,7 @@
         self.avatorView.avatarImageView.layer.borderColor = [UIColor themeGray6].CGColor;
         self.avatorView.avatarImageView.layer.borderWidth = [UIDevice btd_onePixel];
         [self.contentView addSubview:self.avatorView];
+
         [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.width.mas_equalTo(50);
             make.left.mas_equalTo(14);

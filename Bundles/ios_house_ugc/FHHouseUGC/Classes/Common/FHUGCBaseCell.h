@@ -28,8 +28,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)commentClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
 
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel;
-
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell;
 
 - (void)closeFeedGuide:(FHFeedUGCCellModel *)cellModel;

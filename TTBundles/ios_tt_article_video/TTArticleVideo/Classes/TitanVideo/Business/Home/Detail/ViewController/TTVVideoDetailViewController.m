@@ -938,7 +938,7 @@ NSString *const assertDesc_articleType = @"protocoledArticle must be Article";
     [self.commentVC videoUpdateCommentWidth:_ttvContainerScrollView.width];
     //评论详情页
     CGSize movieSize = self.headerPosterVC.view.size;
-    _replyVC.viewFrame = CGRectMake(0, movieSize.height, movieSize.width, self.view.height - movieSize.height);
+//    _replyVC.viewFrame = CGRectMake(0, movieSize.height, movieSize.width, self.view.height - movieSize.height);
 }
 
 - (void)p_setupViewAfterLoadData {

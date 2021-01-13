@@ -378,7 +378,7 @@
         tracer[@"enter_type"] = @"click";
         dict[@"tracer"] = tracer;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *url = [TTStringHelper URLWithURLString:self.cellModel.writeAnswerSchema];
+        NSURL *url = [NSURL btd_URLWithString:self.cellModel.writeAnswerSchema];
         [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
     }
 }
@@ -406,7 +406,7 @@
 
 - (NSAttributedString *)convertDescToAttributeString:(NSString *)desc count:(NSInteger)count {
     if (!isEmptyString(desc)) {
-        NSString *countText = [NSString stringWithFormat:@"%i",count];
+        NSString *countText = [NSString stringWithFormat:@"%li",(long)count];
         NSRange range = [desc rangeOfString:countText];
         if (range.location >= 0 && range.length > 0) {
             NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] initWithString:desc];

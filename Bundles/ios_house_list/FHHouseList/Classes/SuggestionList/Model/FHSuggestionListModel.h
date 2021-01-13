@@ -82,6 +82,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy , nullable) NSString *tips;
 @property (nonatomic, copy , nullable) FHSuggestionNewtipModel *newtip;
 @property (nonatomic, copy , nullable) NSString *id;
+@property (nonatomic, copy , nullable) NSString *propertyManagementType;
 
 //XXX: 为了支持1.0.1版本帮我找房卡片临时加入几个字段，之后需要支持混排
 @property (nonatomic, assign) NSInteger cardType;

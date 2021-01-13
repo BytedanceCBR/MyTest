@@ -79,13 +79,14 @@
         }];
 
         self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.contentView.bounds), 0)];
+        self.contentLabel.font = [UIFont themeFontRegular:14];
         self.contentLabel.numberOfLines = 3;
         self.contentLabel.layer.masksToBounds = YES;
         self.contentLabel.backgroundColor = [UIColor whiteColor];
         self.contentLabel.delegate = self;
         [self.contentView addSubview:self.contentLabel];
         [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.userInfoView.mas_bottom).mas_offset(10);
+            make.top.mas_equalTo(50);
             make.left.mas_equalTo(12);
             make.right.mas_equalTo(-12);
             make.height.mas_equalTo(0);
@@ -159,13 +160,17 @@
     }
     self.currentData = data;
     
+    CGFloat contentLabelTopMargin = 50;
+    CGFloat contentLabelHeight = 0;
     if (cellModel.realtor) {
         self.userInfoView.hidden = YES;
         self.headerView.hidden = NO;
+        contentLabelTopMargin = 36 + 12;
         [self.headerView refreshWithData:cellModel];
     }else {
         self.userInfoView.hidden = NO;
         self.headerView.hidden = YES;
+        contentLabelTopMargin = 40 + 12;
         [self.userInfoView refreshWithData:cellModel];
     }
     
@@ -173,16 +178,17 @@
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if (cellModel.content.length) {
         self.contentLabel.hidden = NO;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(cellModel.contentHeight);
-        }];
+        contentLabelHeight = cellModel.contentHeight;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }else {
         self.contentLabel.hidden = YES;
-        [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(0);
-        }];
+        contentLabelHeight = 0;
     }
+    
+    [self.contentLabel mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(contentLabelTopMargin);
+        make.height.mas_equalTo(contentLabelHeight);
+    }];
         
     self.lineView.hidden = !cellModel.isShowLineView;
     [self.headerView hiddenConnectBtn:cellModel.isHiddenConnectBtn];

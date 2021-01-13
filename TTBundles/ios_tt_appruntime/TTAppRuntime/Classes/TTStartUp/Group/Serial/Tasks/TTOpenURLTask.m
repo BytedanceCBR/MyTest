@@ -13,6 +13,7 @@
 #import <TTPlatformBaseLib/TTTrackerWrapper.h>
 #import "FHEnvContext.h"
 #import "TTLaunchDefine.h"
+#import "FHOneTouchBackManager.h"
 
 DEC_TASK("TTOpenURLTask",FHTaskTypeOpenURL,TASK_PRIORITY_MEDIUM);
 
@@ -48,6 +49,7 @@ extern BOOL kFHInAppPushTipsHidden;
         }
     }
     
+    [[FHOneTouchBackManager sharedInstance] setButtonWithUrl:url];
     return ret;
 }
 
