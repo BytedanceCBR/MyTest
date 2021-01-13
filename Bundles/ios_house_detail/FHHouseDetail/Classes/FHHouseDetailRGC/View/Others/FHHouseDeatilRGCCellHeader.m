@@ -80,7 +80,7 @@
 
 - (FHUGCAvatarView *)avatarView {
     if (!_avatarView) {
-        _avatarView = [[FHUGCAvatarView alloc] init];
+        _avatarView = [[FHUGCAvatarView alloc] initWithFrame:CGRectMake(0, 0, 34, 34)];
         _avatarView.userInteractionEnabled = YES;
         UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clickImage)];
         [_avatarView addGestureRecognizer:tapGesture];

@@ -261,7 +261,6 @@
         wself.viewController.isLoadingData = NO;
 
         [wself.tableView finishPullDownWithSuccess:YES];
-
         FHFeedListModel *feedListModel = (FHFeedListModel *)model;
         wself.feedListModel = feedListModel;
 
@@ -338,7 +337,7 @@
                         wself.refreshFooter.hidden = YES;
                     }
                     [wself.tableView reloadData];
-                    
+                    [wself.viewController hideIfNeeds];
                     if(wself.viewController.requestSuccess){
                         wself.viewController.requestSuccess(wself.viewController.hasValidateData);
                     }
@@ -574,10 +573,6 @@
     self.currentCell = cell;
     self.detailJumpManager.currentCell = self.currentCell;
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
-}
-
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    [self.detailJumpManager goToCommunityDetail:cellModel];
 }
 
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {

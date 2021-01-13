@@ -71,7 +71,6 @@
 //#import "TTFDashboardViewController.h"
 #import <TTArticleBase/SSCommonLogic.h>
 #import <TTArticleBase/ExploreLogicSetting.h>
-#import "BDSSOAuthManager.h"
 #import "ToastManager.h"
 #import <ByteDanceKit/NSDictionary+BTDAdditions.h>
 #import <BDTrackerProtocol/BDTrackerProtocol.h>
@@ -100,8 +99,10 @@
 #import "FIMDebugManager.h"
 #import <TTTracker/TTTracker.h>
 #import <FlutterPackagesDebugViewController.h>
+#import <FHFlutter/FHQRCodeScanViewController.h>
 #import <FHHouseBase/FHEnvContext.h>
 
+#import <BDFeedBack/BDFBLarkSSOManager.h>        // Lark授权
 
 extern BOOL ttvs_isVideoNewRotateEnabled(void);
 extern void ttvs_setIsVideoNewRotateEnabled(BOOL enabled);
@@ -180,6 +181,10 @@ extern NSString *const PPE_OPEN_KEY;
         clientABDebugItem.switchStyle = NO;
         [itemArray addObject:clientABDebugItem];
         
+        
+        STTableViewCellItem *flutterQRDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Flutter扫一扫" target:self action:@selector(_showFlutterQRDebug)];
+        flutterQRDebugItem.switchStyle = NO;
+        [itemArray addObject:flutterQRDebugItem];
         
         STTableViewCellItem *flutterDebugItem = [[STTableViewCellItem alloc] initWithTitle:@"Flutter动态包" target:self action:@selector(_showFlutterDebug)];
         flutterDebugItem.switchStyle = NO;
@@ -981,13 +986,20 @@ extern NSString *const PPE_OPEN_KEY;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
+- (void)_showFlutterQRDebug{
+    FHQRCodeScanViewController *controller = [[FHQRCodeScanViewController alloc] init];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 - (void)_ugcDebugTest:(UISwitch *)uiswitch {
     [[NSUserDefaults standardUserDefaults] setBool:uiswitch.isOn forKey:@"kUGCDebugConfigKey"];
 }
 
 - (void)_ssoDebugClick {
-#if !DEBUG && !TARGET_IPHONE_SIMULATOR
-    [[BDSSOAuthManager sharedInstance] resetAuthInfo];
+    
+#if !TARGET_IPHONE_SIMULATOR
+//#if !DEBUG && !TARGET_IPHONE_SIMULATOR
+    [[BDFBLarkSSOManager sharedManager] resetAuthInfo];
     [[ToastManager manager] showToast:@"SSO缓存已清除，请重进App"];
 #endif
 }

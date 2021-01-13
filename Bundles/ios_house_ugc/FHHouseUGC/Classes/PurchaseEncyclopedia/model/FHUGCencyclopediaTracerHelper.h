@@ -23,6 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 ///购房百科头部segment点击事件click_options
 - (void)trackHeaderSegmentClickOptionsWithString:(NSString *)name;
 
+///enter_categary
+- (void)trackEnterCategary;
+
 
 @end
 

@@ -10,7 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "TTThemedAlertController.h"
 #import <UIViewAdditions.h>
-
+#import "DebugFlutterViewController.h"
 
 @interface FHQRCodeScanViewController () <AVCaptureMetadataOutputObjectsDelegate> {
     // 是否在向下扫描
@@ -196,6 +196,16 @@
     if (self.scanCompletionHandler) {
         self.scanCompletionHandler(self, stringValue, nil);
     }
+    
+    if(stringValue){
+        // 拦截到扫码内容， 判断是否是下载动态包的二维码
+        if ([DebugFlutterViewController checkIsDebugFlutterPackageInfo:stringValue]) {
+                // 如果是动态包下载二维码，进入下载页面
+                DebugFlutterViewController *debugVc = [[DebugFlutterViewController alloc] initWithQrCodeInfo:stringValue];
+                [self.navigationController pushViewController:debugVc animated:YES];
+         }
+    }
+
 }
 
 - (void)dismissAnimated:(BOOL)animated {

@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)clickCommentWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index eventPosition:(NSString *)position;
 
-+ (void)clickCommentSubmitWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index;
++ (void)clickCommentSubmitWithModel:(FHFeedUGCCellModel *)model eventIndex:(NSInteger)index eventPosition:(NSString *)position;
 
 + (void)clickshareBtn:(FHFeedUGCCellModel *)model;
 

@@ -23,6 +23,7 @@ typedef void(^DataDidChangeBlock)(void);
 @property (nonatomic, strong) NSDictionary *tracerDic;
 @property (nonatomic, assign) BOOL hasMoreToLoad;//是否还能loadmore
 @property (nonatomic, assign) BOOL isLoadingRequest;//是否正在加载中
+@property (nonatomic, assign) BOOL canLoadMore;//是否可以加载更多
 @property (nonatomic, assign) BOOL shouldShowNoMoreVideoToast;//是否需要弹没有更多视频的toast
 @property (nonatomic, copy) DataDidChangeBlock dataDidChangeBlock;
 - (FHFeedUGCCellModel *)itemAtIndex:(NSInteger)index;

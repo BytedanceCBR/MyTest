@@ -93,9 +93,17 @@
         return;
     }
     
-    [self click_comment];
     
-    NSDictionary *dict = @{@"is_jump_comment":@(YES)};
+    [self click_comment];
+    NSMutableDictionary *dict = @{@"is_jump_comment":@(YES)}.mutableCopy;
+      NSMutableDictionary *tracerDic = [NSMutableDictionary dictionary];
+    if ([self.apiParams.allKeys containsObject:@"tracer"]) {
+        tracerDic =[self.apiParams[@"tracer"] mutableCopy];
+    }
+    if ([tracerDic.allKeys containsObject:@"page_type"]) {
+        tracerDic[@"enter_from"] = tracerDic[@"page_type"];
+    }
+    dict[@"tracer"] = tracerDic;
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     [[TTRoute sharedRoute] openURLByViewController:[NSURL URLWithString:self.ansEntity.answerSchema] userInfo:userInfo];
 }

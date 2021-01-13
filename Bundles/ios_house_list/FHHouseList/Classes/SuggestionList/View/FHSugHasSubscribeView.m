@@ -51,7 +51,7 @@
     
     // label
     _label = [[UILabel alloc] init];
-    _label.text = @"已订阅搜索";
+    _label.text = @"订阅记录";
     _label.font = [UIFont themeFontMedium:16];
     _label.textColor = [UIColor themeGray1];
     [_label sizeToFit];

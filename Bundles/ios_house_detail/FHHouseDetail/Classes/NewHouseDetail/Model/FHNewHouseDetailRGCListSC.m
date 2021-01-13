@@ -127,16 +127,13 @@
     [tracer addEntriesFromDictionary:sectionModel.detailTracerDic];
     [tracer setValue:houseInfo[@"houseId"] forKey:@"from_gid"];
     [tracer setValue:tracer[@"page_type"] forKey:@"enter_from"];
+    [tracer setValue:@"realtor_evaluate" forKey:@"element_from"];
     NSDictionary *dict = @{@"tracer":tracer};
     TTRouteUserInfo* userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     NSURL *openURL = [NSURL URLWithString:sectionModel.contentModel.schema];
     if ([[TTRoute sharedRoute] canOpenURL:openURL]) {
         [[TTRoute sharedRoute] openURLByPushViewController:openURL userInfo:userInfo];
     }
-}
-
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    [self.detailJumpManager goToCommunityDetail:cellModel];
 }
 
 - (void)trackClickComment:(FHFeedUGCCellModel *)cellModel {
