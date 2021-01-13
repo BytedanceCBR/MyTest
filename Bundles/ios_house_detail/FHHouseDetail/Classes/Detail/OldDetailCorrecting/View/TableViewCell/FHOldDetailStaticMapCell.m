@@ -356,8 +356,12 @@
     if (![data isKindOfClass:[FHDetailStaticMapCellModel class]]) {
         return;
     }
+    if (self.currentData == data) {
+        return;
+    }    
     FHDetailStaticMapCellModel *dataModel = (FHDetailStaticMapCellModel *) data;
     adjustImageScopeType(dataModel)
+
     self.currentData = data;    
     self.centerPoint = CLLocationCoordinate2DMake([dataModel.gaodeLat floatValue], [dataModel.gaodeLng floatValue]);
     
@@ -643,13 +647,9 @@
     self.emptyInfoLabel.frame = CGRectMake(0, 10, self.locationList.width, 20);
     self.mapMaskBtnLocation.frame = self.locationList.frame;
     CGFloat cellHeight = self.locationList.bottom;
-    [UIView performWithoutAnimation:^{
-        [dataModel.tableView beginUpdates];
-        [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.height.mas_equalTo(cellHeight);
-        }];
-        [self.backView setNeedsUpdateConstraints];
-        [dataModel.tableView endUpdates];
+    
+    [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.height.mas_equalTo(cellHeight);
     }];
     
     self.emptyInfoLabel.text = [NSString stringWithFormat:@"附近没有%@信息", category];
