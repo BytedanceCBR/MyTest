@@ -14,7 +14,7 @@
 #import "TTRoute.h"
 #import "FHHomeCellHelper.h"
 #import <FHHouseBase/FHHomeScrollBannerView.h>
-
+#import "FHEnvContext.h"
 
 @interface FHHomeScrollBannerCell ()<FHBannerViewIndexProtocol>
 
@@ -82,7 +82,7 @@
     if (tModel.openUrl.length > 0 && tModel.image.count > 0 && tModel.id.length > 0) {
         NSURL *tUrl = [NSURL URLWithString:tModel.openUrl];
         // 是否有效的openUrl
-        if ([[TTRoute sharedRoute] canOpenURL:tUrl]) {
+        if ([FHEnvContext purelyCanOpenURL:tUrl]) {
             FHConfigDataRentOpDataItemsImageModel *imageModel = tModel.image[0];
             if (imageModel.url.length > 0) {
                 // 有图片url

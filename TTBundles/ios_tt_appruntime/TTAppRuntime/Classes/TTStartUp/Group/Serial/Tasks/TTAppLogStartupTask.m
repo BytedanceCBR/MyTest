@@ -13,7 +13,6 @@
 #import <TTImpression/SSImpressionManager.h>
 #import "ExploreExtenstionDataHelper.h"
 #import "NewsBaseDelegate.h"
-#import <BDTrackerProtocol/BDTrackerProtocol.h>
 #import "TTAccountBusiness.h"
 #import "SSImpressionManager.h"
 #import "SSLogDataManager.h"
@@ -82,17 +81,17 @@ DEC_TASK("TTAppLogStartupTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+7);
         useBDTracker = [settings btd_boolValueForKey:@"f_bdtracker_enabled"];
     }
     
-    if (useBDTracker) {
+//    if (useBDTracker) {
         [BDTrackerProtocol setBDTrackerEnabled];
-    } else {
-        [BDTrackerProtocol setTTTrackerEnabled];
-    }
+//    } else {
+//        [BDTrackerProtocol setTTTrackerEnabled];
+//    }
     ///这个条件判断不要跟上面的合并！
-    if ([BDTrackerProtocol isBDTrackerEnabled]) {
+//    if ([BDTrackerProtocol isBDTrackerEnabled]) {
         [self setupBDTracker];
-    } else {
-        [self setupTTTracker];
-    }
+//    } else {
+//        [self setupTTTracker];
+//    }
 }
 
 + (void)setupBDTracker {

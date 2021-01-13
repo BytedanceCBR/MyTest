@@ -39,7 +39,7 @@
         self.currentTabIndex = 0;
     }else{
         if([FHEnvContext isCurrentCityNormalOpen]){
-            self.currentTabIndex = 1;
+            self.currentTabIndex = [[FHUGCCategoryManager sharedManager] allCategories].count > 1 ? 1 : 0;
         }else{
             self.currentTabIndex = 0;
         }
