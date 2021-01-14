@@ -379,18 +379,11 @@
             [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo([self.schoolNameLabel btd_heightWithWidth:width]);
             }];
-            
-            [self.schoolNameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(self.schoolView).offset(-0.5);
-            }];
         } else {
             img = ICON_FONT_IMG(14, @"\U0000e672", nil);
             self.schoolNameLabel.numberOfLines = 1;
             [self.schoolView mas_updateConstraints:^(MASConstraintMaker *make) {
                 make.height.mas_equalTo([self.schoolNameLabel.text btd_heightWithFont:self.schoolNameLabel.font width:CGFLOAT_MAX]);
-            }];
-            [self.schoolNameLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.top.equalTo(self.schoolView).offset(0);
             }];
         }
         [self.foldBtn setImage:img forState:UIControlStateNormal];
