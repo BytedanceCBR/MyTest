@@ -290,14 +290,15 @@
         if (item.schoolList.count < 1) {
             continue;
         }
-        FHDetailDataNeighborhoodInfoSchoolInfoModel *school = item.schoolList[0];
-        if (!school.schoolName.length) {
-            continue;
-        }
-        if (schoolNameComponents.length) {
-            [schoolNameComponents appendFormat:@"、%@",school.schoolName];
-        } else {
-            [schoolNameComponents appendString:school.schoolName];
+        for (FHDetailDataNeighborhoodInfoSchoolInfoModel *school in item.schoolList) {
+            if (!school.schoolName.length) {
+                continue;
+            }
+            if (schoolNameComponents.length) {
+                [schoolNameComponents appendFormat:@"、%@",school.schoolName];
+            } else {
+                [schoolNameComponents appendString:school.schoolName];
+            }
         }
     }
 
