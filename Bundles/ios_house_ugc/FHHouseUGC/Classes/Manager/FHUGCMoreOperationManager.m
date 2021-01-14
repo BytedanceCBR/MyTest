@@ -264,6 +264,14 @@
                 dic[@"cellModel"] = self.cellModel;
             }
             dic[@"isTop"] = @(isTop);
+            
+            if(self.cellModel.isFromDetail){
+                if(isTop){
+                    [[ToastManager manager] showToast:@"置顶成功"];
+                }else{
+                    [[ToastManager manager] showToast:@"取消置顶成功"];
+                }
+            }
 
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCTopPostNotification object:nil userInfo:dic];
         }else{
@@ -297,6 +305,14 @@
                 dic[@"cellModel"] = self.cellModel;
             }
             dic[@"isGood"] = @(isGood);
+            
+            if(self.cellModel.isFromDetail){
+                if(isGood){
+                    [[ToastManager manager] showToast:@"加精成功"];
+                }else{
+                    [[ToastManager manager] showToast:@"取消加精成功"];
+                }
+            }
 
             [[NSNotificationCenter defaultCenter] postNotificationName:kFHUGCGoodPostNotification object:nil userInfo:dic];
         }else{
