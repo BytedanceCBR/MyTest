@@ -123,8 +123,6 @@
     _bottomView.bottomSepView.hidden = YES;
     _bottomView.marginRight = 8;
     _bottomView.paddingLike = 30;
-    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-    [self.bottomView.positionView addGestureRecognizer:tap];
     [self.contentContainer addSubview:_bottomView];
     
     self.lineView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width- leftMargin - rightMargin - 18, .5)];
@@ -350,13 +348,6 @@
 - (void)commentBtnClick {
     if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:cell:)]){
         [self.delegate commentClicked:self.cellModel cell:self];
-    }
-}
-
-//进入圈子详情
-- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
-        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 
