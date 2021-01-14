@@ -317,18 +317,19 @@
         [nameKey mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.schoolView);
             make.top.mas_equalTo(self.schoolView);
-            make.height.mas_equalTo(20);
         }];
         
+        BOOL isShowFoldBtn = ([schoolNameComponents btd_widthWithFont:self.schoolNameLabel.font height:20] > width);
         [nameValue mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.schoolView).mas_offset(42);
-            make.width.mas_equalTo(width);
-            make.top.bottom.equalTo(self.schoolView);
-            make.height.mas_equalTo([nameValue.text btd_heightWithFont:nameValue.font width:CGFLOAT_MAX]);
+            make.width.mas_equalTo([self schoolNameLabelWidth:isShowFoldBtn]);
+            make.top.equalTo(self.schoolView);
+            make.bottom.equalTo(self.schoolView);
         }];
         
         // 如果一行显示不完整，则计算多行展示的高度，并添加折叠按钮
-        if ([schoolNameComponents btd_widthWithFont:self.schoolNameLabel.font height:20] > width) {
+        if (isShowFoldBtn) {
+            self.schoolNameLabel.numberOfLines = 0;
             // 添加折叠按钮
             UIButton *foldBtn = [[UIButton alloc] init];
             UIImage *img = ICON_FONT_IMG(14, @"\U0000e672", nil);
@@ -343,17 +344,10 @@
                 make.right.mas_equalTo(0);
                 make.height.width.mas_equalTo(14);
             }];
-            
-            // 计算折叠按钮显示的场景下的标签尺寸
-            self.schoolNameLabel.numberOfLines = 0;
-            CGSize schoolNameComponentsSize = [schoolNameComponents btd_sizeWithFont:self.schoolNameLabel.font width:(width - 14)];
-            [nameValue mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.size.mas_equalTo(schoolNameComponentsSize);
-            }];
-
         }
     }
 }
+
 - (CGFloat)schoolNameLabelWidth:(BOOL)isShowFold {
     CGFloat ret = SCREEN_WIDTH;
     ret -= 21 * 2;  // 左右边距(卡片外边距+内容内边距)
