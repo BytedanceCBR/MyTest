@@ -707,8 +707,9 @@ extern NSString *const INSTANT_DATA_KEY;
     [self.tableView.mj_footer endRefreshing];
     
 }
-
-- (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRefresh:(BOOL)isRefresh isRecommendSearch:(BOOL)isRecommendSearch
+#define BETTER_PATCH(x) __attribute__((annotate("better_patch_"#x)))
+#define BDDynamicCopiedBlock(block) (__bridge id)_Block_copy((__bridge const void *)(block))
+- (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRefresh:(BOOL)isRefresh isRecommendSearch:(BOOL)isRecommendSearch  BETTER_PATCH(1.0.0)
 {    
     if (error) {
         if (self.houseType == FHHouseTypeNewHouse && isRefresh) {
@@ -2056,13 +2057,16 @@ extern NSString *const INSTANT_DATA_KEY;
 //
 //}
 //
--(void)configNotifyInfo:(CGFloat)topViewHeight isShow:(BOOL)isShow
+
+#define BETTER_PATCH(x) __attribute__((annotate("better_patch_"#x)))
+#define BDDynamicCopiedBlock(block) (__bridge id)_Block_copy((__bridge const void *)(block))
+-(void)configNotifyInfo:(CGFloat)topViewHeight isShow:(BOOL)isShow BETTER_PATCH(1.0.0)
 {
     UIEdgeInsets insets = self.tableView.contentInset;
     BOOL isTop = (fabs(self.tableView.contentOffset.y) < 0.1) || fabs(self.tableView.contentOffset.y + self.tableView.contentInset.top) < 0.1; //首次进入情况
     insets.top = topViewHeight;
     self.tableView.contentInset = insets;
-    _topView.frame = CGRectMake(0, -topViewHeight, _topView.width, topViewHeight);
+    self.topView.frame = CGRectMake(0, -topViewHeight, self.topView.width, topViewHeight);
 
     if (isShow) {
         if (isTop) {
@@ -2089,7 +2093,7 @@ extern NSString *const INSTANT_DATA_KEY;
         }
     }
 
-    if (_topView.superview == self.topContainerView) {
+    if (self.topView.superview == self.topContainerView) {
         self.topView.top = -[self.topView filterTop];
         [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
