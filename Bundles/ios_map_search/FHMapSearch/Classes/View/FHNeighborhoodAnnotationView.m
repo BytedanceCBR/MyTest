@@ -10,6 +10,7 @@
 #import "FHHouseAnnotation.h"
 #import "UIViewAdditions.h"
 
+CGFloat const FHNeighborhoodAnnotationViewLeftMargin = 22;
 
 @interface FHNeighborhoodAnnotationView ()
 
@@ -60,7 +61,7 @@
     
     CGFloat maxWidth = MIN(_contentLabel.width, 271);
     CGRect frame = self.frame;
-    frame.size = CGSizeMake(maxWidth+60, 37);
+    frame.size = CGSizeMake(maxWidth + FHNeighborhoodAnnotationViewLeftMargin * 2, 37);
     self.frame = frame;
     
     [self changeSelectMode:[(FHHouseAnnotation *)annotation type]];
@@ -123,7 +124,7 @@
     self.backgroundView.frame = self.bounds;
     CGFloat arrowWidth = 7;
     self.arrowView.frame = CGRectMake(self.width/2-arrowWidth/2, 32.5-arrowWidth/2, arrowWidth, arrowWidth);
-    self.contentLabel.frame = CGRectMake(30, 10, self.width-60, 17);
+    self.contentLabel.frame = CGRectMake(FHNeighborhoodAnnotationViewLeftMargin, 10, self.width - FHNeighborhoodAnnotationViewLeftMargin * 2, 17);
 }
 
 //-(void)willMoveToSuperview:(UIView *)newSuperview
