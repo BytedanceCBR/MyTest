@@ -1391,7 +1391,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     CGPoint point = [touch locationInView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    if (!cell || ![cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)]) {
+    if (!cell || ![cell conformsToProtocol:@protocol(FHHouseCardTouchAnimationProtocol)] || [touch.view isKindOfClass:[UIButton class]]) {
         return NO;
     }
     return YES;
