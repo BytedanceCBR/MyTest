@@ -630,7 +630,7 @@
         [chartView.chartData enumerateObjectsUsingBlock:^(PNLineChartData *obj, NSUInteger idx, BOOL *stop) {
             obj.pointLabelColor = [UIColor blackColor];
         }];
-        chartView.chartCavanWidth = SCREEN_WIDTH - 42 - 35;
+        chartView.chartCavanWidth = SCREEN_WIDTH - 42 - 40;
         chartView.showCoordinateAxis = YES;// 坐标轴的线
         chartView.yLabelColor = [UIColor themeGray2];
         chartView.yLabelFormat = @"%.2f";
