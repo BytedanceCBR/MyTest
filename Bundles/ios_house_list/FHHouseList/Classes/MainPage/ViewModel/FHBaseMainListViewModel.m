@@ -1052,7 +1052,7 @@ extern NSString *const INSTANT_DATA_KEY;
         
         if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
             CGFloat height = [self.topView filterBottom];
-            [self configNotifyInfo:height isShow:NO];
+            [self configNotifyInfo:height isShow:YES];
 //            if (!_showFilter && !hideRefreshTip) {
 //                [self showNotifyMessage:refreshTip];
 //            }else {
