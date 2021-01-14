@@ -138,7 +138,7 @@
     FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
     CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     if (index < agentSM.recommendedRealtors.count) {
-        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
+        FHDetailContactModel *model = [agentSM.recommendedRealtors btd_objectAtIndex:index];
         return [FHNewHouseDetailReleatorCollectionCell cellSizeWithData:model width:width];
     }
     return CGSizeZero;
@@ -149,9 +149,9 @@
     __weak typeof(self) weakSelf = self;
     FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
     if (index < agentSM.recommendedRealtors.count) {
-        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
+        FHDetailContactModel *realtorModel = [agentSM.recommendedRealtors btd_objectAtIndex:index];
         FHNewHouseDetailReleatorCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorCollectionCell class] forSectionController:self atIndex:index];
-        [cell refreshWithData:model];
+        [cell refreshWithData:realtorModel];
         [cell setImClickBlock:^(FHDetailContactModel * _Nonnull model) {
             [weakSelf imclick:model];
         }];
