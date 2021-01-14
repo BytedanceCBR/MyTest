@@ -96,7 +96,7 @@
     }];
     
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.headerView.mas_bottom).offset(9);
+        make.top.mas_equalTo(self.headerView.mas_bottom).offset(4);
         make.left.right.mas_equalTo(self.containerView);
         make.height.mas_equalTo(0);
         make.bottom.mas_equalTo(self.containerView).offset(-12);
@@ -340,6 +340,10 @@
 
 @implementation FHhouseDetailRGCListCellModel
 
+- (void)setCellHeight:(CGFloat)cellHeight {
+    _cellHeight = cellHeight;
+}
+
 - (void)setContentModel:(FHDetailBrokerContentModel *)contentModel {
     _contentModel = [contentModel copy];
     NSMutableArray *dataArr = [[NSMutableArray alloc]init];
@@ -359,12 +363,12 @@
             case FHUGCFeedListCellTypeUGC:
                 model.cellSubType = FHUGCFeedListCellSubTypeOldHouseUGCBrokerImage;
                 ///图片cell高度
-                contentHeight = contentHeight + [FHHouseDeatilRGCImageCell heightForData:model] - 12;
+                contentHeight = contentHeight + [FHHouseDeatilRGCImageCell heightForData:model] - 12 - 8 + 5;
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 model.cellSubType = FHUGCFeedListCellSubTypeOldHouseUGCBrokerVideo;
                 ///内容高度 + 视频高度 + 距离顶部高度 + 底部高度
-                contentHeight = contentHeight + model.contentHeight + 150 + 10 + 50 + 90 - 20 - 5;
+                contentHeight = contentHeight + model.contentHeight + 150 + 10 + 50 + 90 - 20 - 5 - 11 + 5;
                 break;
             default:
                 break;
