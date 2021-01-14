@@ -90,6 +90,23 @@
 
 @end
 
+@interface FHDetailNeighborhoodSchoolNameLabel: UILabel
+@end
+
+@implementation FHDetailNeighborhoodSchoolNameLabel
+
+- (CGRect)textRectForBounds:(CGRect)bounds limitedToNumberOfLines:(NSInteger)numberOfLines {
+    CGRect textRect = [super textRectForBounds:bounds limitedToNumberOfLines:numberOfLines];
+    textRect.origin.y = bounds.origin.y + 0.5;
+    return textRect;
+}
+-(void)drawTextInRect:(CGRect)requestedRect {
+    CGRect actualRect = [self textRectForBounds:requestedRect limitedToNumberOfLines:self.numberOfLines];
+    [super drawTextInRect:actualRect];
+}
+@end
+
+
 @interface FHDetailNeighborhoodInfoCorrectingCell ()
 @property (nonatomic, weak) UIImageView *coverImageView;
 @property (nonatomic, weak) FHDetailNeighborhoodTitleView *headerView;
@@ -99,7 +116,7 @@
 @property (nonatomic, weak) FHDetailNeighborhoodConsultCorrectingView *consultView;
 @property (nonatomic, weak) UIView *schoolView;
 @property (nonatomic, strong)   NSMutableDictionary       *houseShowCache; // 埋点缓存
-@property (nonatomic, weak) UILabel *schoolNameLabel;
+@property (nonatomic, weak) FHDetailNeighborhoodSchoolNameLabel *schoolNameLabel;
 @property (nonatomic, weak) UIButton *foldBtn;
 @property (nonatomic, strong) UIView *bottomLine;
 @end
@@ -307,7 +324,10 @@
         CGFloat width = [self schoolNameLabelWidth:NO];
         UILabel *nameKey = [UILabel createLabel:@"学校:" textColor:@"" fontSize:14];
         nameKey.textColor = [UIColor themeGray3];
-        UILabel *nameValue = [UILabel createLabel:schoolNameComponents.copy textColor:@"" fontSize:14];
+        NSString *schoolName = schoolNameComponents.copy;
+        FHDetailNeighborhoodSchoolNameLabel *nameValue = [[FHDetailNeighborhoodSchoolNameLabel alloc] init];
+        nameValue.text = schoolName;
+        nameValue.font = [UIFont themeFontRegular:14];
         nameValue.lineBreakMode = NSLineBreakByTruncatingTail;
         nameValue.numberOfLines = 1;
         nameValue.textColor = [UIColor themeGray1];
