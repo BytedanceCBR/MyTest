@@ -16,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHousePlaceholderStyle2ViewModel : FHHouseNewComponentViewModel
 
-- (CGFloat)topOffset;
+@property (nonatomic, assign) CGFloat topOffset;
 
 @end
 
