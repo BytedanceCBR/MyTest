@@ -165,7 +165,7 @@
     model.categoryName = self.cellModel.categoryId;
     model.authorId = self.cellModel.user.userId;
     model.extraDic = self.cellModel.tracerDic;
-    model.defaultResolutionType = TTVPlayerResolutionTypeFullHD;
+    model.defaultResolutionType = TTVPlayerResolutionType1080P;
     _playerModel = model;
     [_playerView setPlayerModel:_playerModel];
     // 滑动切换视频时，背景图使用首帧图
