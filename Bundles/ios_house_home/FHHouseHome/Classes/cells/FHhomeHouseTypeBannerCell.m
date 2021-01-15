@@ -202,8 +202,7 @@
     self.cuurentDataModel = dataModel;
     
 }
-#define BETTER_PATCH(x) __attribute__((annotate("better_patch_"#x)))
-- (void)houseTypeBannerClick:(id)sender BETTER_PATCH(1.0.0)
+- (void)houseTypeBannerClick:(id)sender
 {
     FHConfigDataModel *dataModel = self.cuurentDataModel;
     

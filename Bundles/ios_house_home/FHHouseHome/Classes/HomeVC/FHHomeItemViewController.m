@@ -101,9 +101,8 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     }
     return self;
 }
-#define BETTER_PATCH(x) __attribute__((annotate("better_patch_"#x)))
-#define BDDynamicCopiedBlock(block) (__bridge id)_Block_copy((__bridge const void *)(block))
-- (void)viewDidLoad BETTER_PATCH(1.0.0) {
+
+- (void)viewDidLoad {
     [super viewDidLoad];
     [self.renderFlow traceViewDidLoad];
     
@@ -131,7 +130,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     self.itemCount = 20;
     
     WeakSelf;
-    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:BDDynamicCopiedBlock(^{
+    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
         StrongSelf;
         if ([FHEnvContext isNetworkConnected]) {
             [self requestDataForRefresh:FHHomePullTriggerTypePullUp andIsFirst:NO];
@@ -145,7 +144,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [self.tableView.mj_footer endRefreshing];
             [[ToastManager manager] showToast:@"网络异常"];
         }
-    })];
+    }];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.tableView.mj_footer = self.refreshFooter;
@@ -164,10 +163,10 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     self.tableView.scrollsToTop = NO;
     
     @weakify(self);
-    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:BDDynamicCopiedBlock(^(id  _Nullable x) {
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:^(id  _Nullable x) {
         @strongify(self);
         [self.tableView reloadData];
-    })];
+    }];
 
     self.gesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressAction:)];
     self.gesture.delegate = self;

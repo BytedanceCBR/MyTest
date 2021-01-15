@@ -715,9 +715,8 @@ extern NSString *const INSTANT_DATA_KEY;
     [self.tableView.mj_footer endRefreshing];
     
 }
-#define BETTER_PATCH(x) __attribute__((annotate("better_patch_"#x)))
-#define BDDynamicCopiedBlock(block) (__bridge id)_Block_copy((__bridge const void *)(block))
-- (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRefresh:(BOOL)isRefresh isRecommendSearch:(BOOL)isRecommendSearch  BETTER_PATCH(1.0.0)
+
+- (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRefresh:(BOOL)isRefresh isRecommendSearch:(BOOL)isRecommendSearch
 {    
     if (error) {
         if (self.houseType == FHHouseTypeNewHouse && isRefresh) {
@@ -812,7 +811,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([self.viewController.tracerModel logDict]) {
             [traceDictParams addEntriesFromDictionary:[self.viewController.tracerModel logDict]];
         }
-        [items enumerateObjectsUsingBlock:BDDynamicCopiedBlock(^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        [items enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[self class] searchItemModelByDict:itemDict];
             if (idx == 0 && [theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
@@ -922,13 +921,13 @@ extern NSString *const INSTANT_DATA_KEY;
                     lastObj = theItemModel;
                 }
 //            }
-        })];
+        }];
         
         if ([FHEnvContext isHouseListComponentEnable]) {
             lastObj = nil;
         }
         
-        [recommendItems enumerateObjectsUsingBlock:BDDynamicCopiedBlock(^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        [recommendItems enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[wself class] searchItemModelByDict:itemDict];
                 if ([FHEnvContext isHouseListComponentEnable]) {
@@ -1011,7 +1010,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     [wself.sugesstHouseList addObject:theItemModel];
                 }
 //            }
-        })];
+        }];
         
         if(self.houseList.count == 1 && self.sugesstHouseList.count == 0){
             if ([FHEnvContext isHouseListComponentEnable]) {
@@ -2132,9 +2131,7 @@ extern NSString *const INSTANT_DATA_KEY;
 //}
 //
 
-#define BETTER_PATCH(x) __attribute__((annotate("better_patch_"#x)))
-#define BDDynamicCopiedBlock(block) (__bridge id)_Block_copy((__bridge const void *)(block))
--(void)configNotifyInfo:(CGFloat)topViewHeight isShow:(BOOL)isShow BETTER_PATCH(1.0.0)
+-(void)configNotifyInfo:(CGFloat)topViewHeight isShow:(BOOL)isShow
 {
     UIEdgeInsets insets = self.tableView.contentInset;
     BOOL isTop = (fabs(self.tableView.contentOffset.y) < 0.1) || fabs(self.tableView.contentOffset.y + self.tableView.contentInset.top) < 0.1; //首次进入情况
@@ -2169,9 +2166,9 @@ extern NSString *const INSTANT_DATA_KEY;
 
     if (self.topView.superview == self.topContainerView) {
         self.topView.top = -[self.topView filterTop];
-        [self.topContainerView mas_updateConstraints:BDDynamicCopiedBlock(^(MASConstraintMaker *make) {
+        [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
-        })];
+        }];
     }
 }
 
