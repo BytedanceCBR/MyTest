@@ -202,10 +202,10 @@
     self.cuurentDataModel = dataModel;
     
 }
-
-- (void)houseTypeBannerClick:(id)sender
+#define BETTER_PATCH(x) __attribute__((annotate("better_patch_"#x)))
+- (void)houseTypeBannerClick:(id)sender BETTER_PATCH(1.0.0)
 {
-    FHConfigDataModel *dataModel = [[FHEnvContext sharedInstance] getConfigFromCache];
+    FHConfigDataModel *dataModel = self.cuurentDataModel;
     
     if (!dataModel.opData2list || dataModel.opData2list.count == 0) {
         return;
@@ -251,8 +251,10 @@
                     [dictTrace setValue:@"school_operation" forKey:@"origin_from"];
                 }
                 
-                NSDictionary *userInfoDict = @{@"tracer":dictTrace};
-                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
+                NSMutableDictionary *userInfoDict = [NSMutableDictionary dictionary];
+                userInfoDict[@"tracer"] = dictTrace;
+                
+                TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict.copy];
                 
                 if (itemModel.openUrl) {
                     NSURL *url = [NSURL URLWithString:itemModel.openUrl];
