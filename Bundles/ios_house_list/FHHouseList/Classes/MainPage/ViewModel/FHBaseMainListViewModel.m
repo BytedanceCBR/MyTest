@@ -715,8 +715,9 @@ extern NSString *const INSTANT_DATA_KEY;
     [self.tableView.mj_footer endRefreshing];
     
 }
-
-- (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRefresh:(BOOL)isRefresh isRecommendSearch:(BOOL)isRecommendSearch
+#define BETTER_PATCH(x) __attribute__((annotate("better_patch_"#x)))
+#define BDDynamicCopiedBlock(block) (__bridge id)_Block_copy((__bridge const void *)(block))
+- (void)processData:(id<FHBaseModelProtocol>)model error: (NSError *)error isRefresh:(BOOL)isRefresh isRecommendSearch:(BOOL)isRecommendSearch  BETTER_PATCH(1.0.0)
 {    
     if (error) {
         if (self.houseType == FHHouseTypeNewHouse && isRefresh) {
@@ -737,7 +738,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
     if (model) {
         
-        NSMutableArray *items = @[].mutableCopy;
+        NSMutableArray *items = [[NSMutableArray alloc] init];
         NSArray *recommendItems = nil;
         BOOL hasMore = NO;
         NSString *refreshTip = nil;
@@ -786,7 +787,7 @@ extern NSString *const INSTANT_DATA_KEY;
             self.viewController.tracerModel.originSearchId = self.searchId;
             self.isFirstLoad = NO;
             if (self.searchId.length > 0 ) {
-                SETTRACERKV(UT_ORIGIN_SEARCH_ID, self.searchId);
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:self.searchId forKey:@"origin_search_id"];
             }
             [self tryAddCommuteShowLog];
         }
@@ -811,7 +812,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([self.viewController.tracerModel logDict]) {
             [traceDictParams addEntriesFromDictionary:[self.viewController.tracerModel logDict]];
         }
-        [items enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        [items enumerateObjectsUsingBlock:BDDynamicCopiedBlock(^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[self class] searchItemModelByDict:itemDict];
             if (idx == 0 && [theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
@@ -825,7 +826,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 
                 NSObject *entity = [self getEntityFromModel:theItemModel];
                 if (entity) {
-                    if ([entity conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)] && [entity respondsToSelector:@selector(adjustIfNeedWithPreviousViewModel:)]) {
+                    if ([entity conformsToProtocol:NSProtocolFromString(@"FHHouseCardCellViewModelProtocol")] && [entity respondsToSelector:NSSelectorFromString(@"adjustIfNeedWithPreviousViewModel:")]) {
                         NSObject<FHHouseCardCellViewModelProtocol> *viewModel = (NSObject<FHHouseCardCellViewModelProtocol> *)entity;
                         [viewModel adjustIfNeedWithPreviousViewModel:lastObj];
                     }
@@ -921,13 +922,13 @@ extern NSString *const INSTANT_DATA_KEY;
                     lastObj = theItemModel;
                 }
 //            }
-        }];
+        })];
         
         if ([FHEnvContext isHouseListComponentEnable]) {
             lastObj = nil;
         }
         
-        [recommendItems enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        [recommendItems enumerateObjectsUsingBlock:BDDynamicCopiedBlock(^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[wself class] searchItemModelByDict:itemDict];
                 if ([FHEnvContext isHouseListComponentEnable]) {
@@ -939,7 +940,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     if (entity) {
                         entity.fh_trackModel.searchId = self.recommendSearchId;
                         entity.fh_trackModel.elementType = @"search_related";
-                        if ([entity conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)] && [entity respondsToSelector:@selector(adjustIfNeedWithPreviousViewModel:)]) {
+                        if ([entity conformsToProtocol:NSProtocolFromString(@"FHHouseCardCellViewModelProtocol")] && [entity respondsToSelector:NSSelectorFromString(@"adjustIfNeedWithPreviousViewModel:")]) {
                             NSObject<FHHouseCardCellViewModelProtocol> *viewModel = (NSObject<FHHouseCardCellViewModelProtocol> *)entity;
                             [viewModel adjustIfNeedWithPreviousViewModel:lastObj];
                         }
@@ -1010,7 +1011,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     [wself.sugesstHouseList addObject:theItemModel];
                 }
 //            }
-        }];
+        })];
         
         if(self.houseList.count == 1 && self.sugesstHouseList.count == 0){
             if ([FHEnvContext isHouseListComponentEnable]) {
@@ -1032,7 +1033,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [self.tableView reloadData];
         
         if (isFirstLoadCopy) {
-            [FHMainApi addUserOpenVCDurationLog:@"pss_house_list_main" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
+            [FHMainApi addUserOpenVCDurationLog:@"pss_house_list_main" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - self.startMonitorTime];
         }
         
         if (self.houseList.count > 10 || self.sugesstHouseList.count > 10) {
@@ -1057,14 +1058,16 @@ extern NSString *const INSTANT_DATA_KEY;
             [self.houseNewTopViewModel loadFinishWithData:billboardModel];
         }
         
-//        if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
+        if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
+            CGFloat height = [self.topView filterBottom];
+            [self configNotifyInfo:height isShow:YES];
 //            if (!_showFilter && !hideRefreshTip) {
 //                [self showNotifyMessage:refreshTip];
 //            }else {
 //                [self showNotifyMessage:nil];
 //            }
-//        }
-//                
+        }
+//
         if (self.houseList.count == 0 && self.sugesstHouseList.count == 0) {
             [self showErrorMask:YES tip:FHEmptyMaskViewTypeNoDataForCondition enableTap:NO ];
         } else {
@@ -2128,46 +2131,49 @@ extern NSString *const INSTANT_DATA_KEY;
 //
 //}
 //
-//-(void)configNotifyInfo:(CGFloat)topViewHeight isShow:(BOOL)isShow
-//{
-//    UIEdgeInsets insets = self.tableView.contentInset;
-//    BOOL isTop = (fabs(self.tableView.contentOffset.y) < 0.1) || fabs(self.tableView.contentOffset.y + self.tableView.contentInset.top) < 0.1; //首次进入情况
-//    insets.top = topViewHeight;
-//    self.tableView.contentInset = insets;
-//    _topView.frame = CGRectMake(0, -topViewHeight, _topView.width, topViewHeight);
-//
-//    if (isShow) {
-//        if (isTop) {
-//            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
-//        }else{
-//            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
-//        }
-//    }else{
-//        if (isTop) {
-//            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
-//        } else {
-//            if (self.tableView.contentOffset.y >= -[self.topView filterBottom]) {
-//                if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
-//                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
-//                } else if (self.tableView.contentOffset.y < self.tableView.height){
-//
-//                    if (!self.tableView.isDragging || (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight))) {
-//                        //小于一屏再进行设置
-//                        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
-//
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    if (_topView.superview == self.topContainerView) {
-//        self.topView.top = -[self.topView filterTop];
-//        [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
-//            make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
-//        }];
-//    }
-//}
+
+#define BETTER_PATCH(x) __attribute__((annotate("better_patch_"#x)))
+#define BDDynamicCopiedBlock(block) (__bridge id)_Block_copy((__bridge const void *)(block))
+-(void)configNotifyInfo:(CGFloat)topViewHeight isShow:(BOOL)isShow BETTER_PATCH(1.0.0)
+{
+    UIEdgeInsets insets = self.tableView.contentInset;
+    BOOL isTop = (fabs(self.tableView.contentOffset.y) < 0.1) || fabs(self.tableView.contentOffset.y + self.tableView.contentInset.top) < 0.1; //首次进入情况
+    insets.top = topViewHeight;
+    self.tableView.contentInset = insets;
+    self.topView.frame = CGRectMake(0, -topViewHeight, self.topView.width, topViewHeight);
+
+    if (isShow) {
+        if (isTop) {
+            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
+        }else{
+            self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] -topViewHeight);
+        }
+    }else{
+        if (isTop) {
+            [self.tableView setContentOffset:CGPointMake(0, -topViewHeight) animated:NO];
+        } else {
+            if (self.tableView.contentOffset.y >= -[self.topView filterBottom]) {
+                if (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight - [self.topView notifyHeight])) {
+                    self.tableView.contentOffset = CGPointMake(0, self.tableView.contentOffset.y + [self.topView notifyHeight]);
+                } else if (self.tableView.contentOffset.y < self.tableView.height){
+
+                    if (!self.tableView.isDragging || (self.tableView.contentOffset.y < ([self.topView filterTop] - topViewHeight))) {
+                        //小于一屏再进行设置
+                        self.tableView.contentOffset = CGPointMake(0, [self.topView filterTop] - topViewHeight);
+
+                    }
+                }
+            }
+        }
+    }
+
+    if (self.topView.superview == self.topContainerView) {
+        self.topView.top = -[self.topView filterTop];
+        [self.topContainerView mas_updateConstraints:BDDynamicCopiedBlock(^(MASConstraintMaker *make) {
+            make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
+        })];
+    }
+}
 
 
 #pragma mark - goto detail

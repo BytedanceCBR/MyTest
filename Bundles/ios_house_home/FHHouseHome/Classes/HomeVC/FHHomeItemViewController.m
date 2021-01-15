@@ -101,8 +101,9 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     }
     return self;
 }
-
-- (void)viewDidLoad {
+#define BETTER_PATCH(x) __attribute__((annotate("better_patch_"#x)))
+#define BDDynamicCopiedBlock(block) (__bridge id)_Block_copy((__bridge const void *)(block))
+- (void)viewDidLoad BETTER_PATCH(1.0.0) {
     [super viewDidLoad];
     [self.renderFlow traceViewDidLoad];
     
@@ -120,17 +121,17 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     self.traceEnterCategoryCache = [NSMutableDictionary new];
     self.maxFirstScreenCount = 0;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(pageTitleViewToTop) name:@"headerViewToTop" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:NSSelectorFromString(@"pageTitleViewToTop") name:@"headerViewToTop" object:nil];
     
     [self.view addSubview:self.tableView];
     self.traceRecordDict = [NSMutableDictionary new];
     
     [FHHomeCellHelper registerCells:self.tableView];
     
-    _itemCount = 20;
+    self.itemCount = 20;
     
     WeakSelf;
-    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:^{
+    self.refreshFooter = [FHRefreshCustomFooter footerWithRefreshingBlock:BDDynamicCopiedBlock(^{
         StrongSelf;
         if ([FHEnvContext isNetworkConnected]) {
             [self requestDataForRefresh:FHHomePullTriggerTypePullUp andIsFirst:NO];
@@ -144,7 +145,7 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
             [self.tableView.mj_footer endRefreshing];
             [[ToastManager manager] showToast:@"网络异常"];
         }
-    }];
+    })];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.tableView.mj_footer = self.refreshFooter;
@@ -161,6 +162,13 @@ NSString const * kCellRentHouseItemImageId = @"FHHomeRentHouseItemCell";
     [self requestDataForRefresh:FHHomePullTriggerTypePullDown andIsFirst:YES isInit:YES];
     
     self.tableView.scrollsToTop = NO;
+    
+    @weakify(self);
+    [[FHEnvContext sharedInstance].configDataReplay subscribeNext:BDDynamicCopiedBlock(^(id  _Nullable x) {
+        @strongify(self);
+        [self.tableView reloadData];
+    })];
+
     self.gesture = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressAction:)];
     self.gesture.delegate = self;
     self.gesture.minimumPressDuration = 0.05;
