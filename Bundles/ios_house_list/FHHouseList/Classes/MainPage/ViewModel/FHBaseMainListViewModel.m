@@ -730,7 +730,7 @@ extern NSString *const INSTANT_DATA_KEY;
 
     if (model) {
         
-        NSMutableArray *items = @[].mutableCopy;
+        NSMutableArray *items = [[NSMutableArray alloc] init];
         NSArray *recommendItems = nil;
         BOOL hasMore = NO;
         NSString *refreshTip = nil;
@@ -779,7 +779,7 @@ extern NSString *const INSTANT_DATA_KEY;
             self.viewController.tracerModel.originSearchId = self.searchId;
             self.isFirstLoad = NO;
             if (self.searchId.length > 0 ) {
-                SETTRACERKV(UT_ORIGIN_SEARCH_ID, self.searchId);
+                [[[FHHouseBridgeManager sharedInstance] envContextBridge] setTraceValue:self.searchId forKey:@"origin_search_id"];
             }
             [self tryAddCommuteShowLog];
         }
@@ -804,7 +804,7 @@ extern NSString *const INSTANT_DATA_KEY;
         if ([self.viewController.tracerModel logDict]) {
             [traceDictParams addEntriesFromDictionary:[self.viewController.tracerModel logDict]];
         }
-        [items enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        [items enumerateObjectsUsingBlock:BDDynamicCopiedBlock(^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[self class] searchItemModelByDict:itemDict];
             if (idx == 0 && [theItemModel isKindOfClass:[FHSearchRealHouseAgencyInfo class]]) {
@@ -818,7 +818,7 @@ extern NSString *const INSTANT_DATA_KEY;
                 
                 NSObject *entity = [self getEntityFromModel:theItemModel];
                 if (entity) {
-                    if ([entity conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)] && [entity respondsToSelector:@selector(adjustIfNeedWithPreviousViewModel:)]) {
+                    if ([entity conformsToProtocol:NSProtocolFromString(@"FHHouseCardCellViewModelProtocol")] && [entity respondsToSelector:NSSelectorFromString(@"adjustIfNeedWithPreviousViewModel:")]) {
                         NSObject<FHHouseCardCellViewModelProtocol> *viewModel = (NSObject<FHHouseCardCellViewModelProtocol> *)entity;
                         [viewModel adjustIfNeedWithPreviousViewModel:lastObj];
                     }
@@ -914,13 +914,13 @@ extern NSString *const INSTANT_DATA_KEY;
                     lastObj = theItemModel;
                 }
 //            }
-        }];
+        })];
         
         if ([FHEnvContext isHouseListComponentEnable]) {
             lastObj = nil;
         }
         
-        [recommendItems enumerateObjectsUsingBlock:^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
+        [recommendItems enumerateObjectsUsingBlock:BDDynamicCopiedBlock(^(id  _Nonnull theItemModel, NSUInteger idx, BOOL * _Nonnull stop) {
 //            if ([itemDict isKindOfClass:[NSDictionary class]]) {
 //                id theItemModel = [[wself class] searchItemModelByDict:itemDict];
                 if ([FHEnvContext isHouseListComponentEnable]) {
@@ -932,7 +932,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     if (entity) {
                         entity.fh_trackModel.searchId = self.recommendSearchId;
                         entity.fh_trackModel.elementType = @"search_related";
-                        if ([entity conformsToProtocol:@protocol(FHHouseCardCellViewModelProtocol)] && [entity respondsToSelector:@selector(adjustIfNeedWithPreviousViewModel:)]) {
+                        if ([entity conformsToProtocol:NSProtocolFromString(@"FHHouseCardCellViewModelProtocol")] && [entity respondsToSelector:NSSelectorFromString(@"adjustIfNeedWithPreviousViewModel:")]) {
                             NSObject<FHHouseCardCellViewModelProtocol> *viewModel = (NSObject<FHHouseCardCellViewModelProtocol> *)entity;
                             [viewModel adjustIfNeedWithPreviousViewModel:lastObj];
                         }
@@ -1003,7 +1003,7 @@ extern NSString *const INSTANT_DATA_KEY;
                     [wself.sugesstHouseList addObject:theItemModel];
                 }
 //            }
-        }];
+        })];
         
         if(self.houseList.count == 1 && self.sugesstHouseList.count == 0){
             if ([FHEnvContext isHouseListComponentEnable]) {
@@ -1025,7 +1025,7 @@ extern NSString *const INSTANT_DATA_KEY;
         [self.tableView reloadData];
         
         if (isFirstLoadCopy) {
-            [FHMainApi addUserOpenVCDurationLog:@"pss_house_list_main" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - _startMonitorTime];
+            [FHMainApi addUserOpenVCDurationLog:@"pss_house_list_main" resultType:FHNetworkMonitorTypeSuccess duration:[[NSDate date] timeIntervalSince1970] - self.startMonitorTime];
         }
         
         if (self.houseList.count > 10 || self.sugesstHouseList.count > 10) {
@@ -1052,7 +1052,7 @@ extern NSString *const INSTANT_DATA_KEY;
         
         if (isRefresh && (items.count > 0 || recommendItems.count > 0)) {
             CGFloat height = [self.topView filterBottom];
-            [self configNotifyInfo:height isShow:NO];
+            [self configNotifyInfo:height isShow:YES];
 //            if (!_showFilter && !hideRefreshTip) {
 //                [self showNotifyMessage:refreshTip];
 //            }else {
@@ -2095,9 +2095,9 @@ extern NSString *const INSTANT_DATA_KEY;
 
     if (self.topView.superview == self.topContainerView) {
         self.topView.top = -[self.topView filterTop];
-        [self.topContainerView mas_updateConstraints:^(MASConstraintMaker *make) {
+        [self.topContainerView mas_updateConstraints:BDDynamicCopiedBlock(^(MASConstraintMaker *make) {
             make.height.mas_equalTo(self.topView.height - [self.topView filterTop]);
-        }];
+        })];
     }
 }
 
