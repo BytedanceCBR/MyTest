@@ -273,7 +273,7 @@
     }
     
     self.likeButton.selected = model.userDigg;
-    RAC(self.likeButton,selected) = RACObserve(model, userDigg);
+    RAC(self.likeButton,selected) = RACObserve(self.commentModel, userDigg);
     NSNumber *diggCount = @(model.diggCount.unsignedIntegerValue);
     [self.likeButton setTitle:[self showStringFromNumber:diggCount] forState:UIControlStateNormal];
     [self.likeButton setTitle:[self showStringFromNumber:diggCount] forState:UIControlStateSelected];
