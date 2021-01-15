@@ -23,7 +23,6 @@
 #import "FHHouseFollowUpHelper.h"
 #import "FHFillFormAgencyListItemModel.h"
 #import "FHHouseDetailViewController.h"
-#import "FHHouseNewDetailViewModel.h"
 #import <FHHouseBase/FHUserInfoManager.h>
 #import "SSCommonLogic.h"
 #import <TTAccountSDK/TTAccount.h>
@@ -142,6 +141,7 @@ extern NSString *const kFHToastCountKey;
                     __block NSMutableDictionary *popupDict = associateReport.reportParams.mutableCopy;
                     popupDict[@"popup_name"] = @"inform_sucess";
                     popupDict[UT_ELEMENT_TYPE] = @"inform_sucess";
+                    popupDict[@"assocaite_info"] = associateReport.associateInfo ?: @"be_null";
                     [FHUserTracker writeEvent:@"popup_show" params:popupDict.copy];
                     __weak FHDetailNoticeAlertView *weakAlertView = alertView;
                     [alertView setRevokeAssociateDistributionBlock:^{
@@ -178,16 +178,6 @@ extern NSString *const kFHToastCountKey;
             [[ToastManager manager] showToast:message];
         }
     }];
-    // 静默关注功能
-    NSMutableDictionary *params = @{}.mutableCopy;
-
-    FHHouseFollowUpConfigModel *followConfig = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:params error:nil];
-    followConfig.houseType = associateReport.houseType;
-    followConfig.followId = associateReport.houseId;
-    followConfig.actionType = associateReport.actionType;
-    followConfig.showTip = YES;
-    
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:followConfig];
 }
 
 + (void)revokeFillFormAssociate:(NSString *)associateId alertView:(FHDetailNoticeAlertView *)alertView{
@@ -227,6 +217,7 @@ extern NSString *const kFHToastCountKey;
         params[@"picture_type"] = reportParams[@"picture_type"];
     }
     params[@"element_type"] = @"inform_popup";
+    params[@"assocaite_info"] = associateReport.associateInfo ?: @"be_null";
 
     [FHUserTracker writeEvent:@"inform_show" params:params];
 }
@@ -256,6 +247,7 @@ extern NSString *const kFHToastCountKey;
     if (reportParams[@"event_tracking_id"]) {
         params[@"event_tracking_id"] = reportParams[@"event_tracking_id"];
     }
+    params[@"assocaite_info"] = associateReport.associateInfo ?: @"be_null";
     [FHUserTracker writeEvent:@"click_confirm" params:params];
 }
 

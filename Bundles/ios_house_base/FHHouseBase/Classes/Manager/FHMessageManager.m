@@ -13,6 +13,7 @@
 #import "IMManager.h"
 #import "FHMessageNotificationManager.h"
 #import "FHMessageNotificationTipsManager.h"
+#import "FHEnvContext.h"
 
 #define API_ERROR_CODE  1000
 #define GET @"GET"
@@ -33,6 +34,15 @@
         [self initNotification];
         self.unreadSystemMsgCount = 0;
         self.unreadChatMsgCount = 0;
+        
+        // 更新微聊消息未读数，最小间隔2秒
+        [[[[self rac_signalForSelector:@selector(onMessageUnreadCountChanged:)] deliverOnMainThread] throttle:2] subscribeNext:^(RACTuple * _Nullable x) {
+            RACTuple *unreadNumberTuple = [[IMManager shareInstance] unreadNumberTupleForConversations];
+            RACTupleUnpack(NSNumber *totalUnmuteUnreadNumber, NSNumber *totalMuteUnreadNumber) = unreadNumberTuple;
+            NSLog(@"%@",totalMuteUnreadNumber);
+            NSInteger chatNumber = totalUnmuteUnreadNumber.unsignedIntegerValue;
+            [[FHEnvContext sharedInstance].messageManager writeUnreadChatMsgCount:chatNumber];
+        }];
     }
     return self;
 }
@@ -140,11 +150,16 @@
 
 #pragma ugc
 -(void)onUgcMessageUnreadCountChanged{
+    [self postMessageUnreadChanged];
     [self refreshBadgeNumber];
 }
 
 -(void)writeUnreadSystemMsgCount:(NSUInteger) count {
+    BOOL isNeedSendNotification = self.unreadSystemMsgCount != count;
     self.unreadSystemMsgCount = count;
+    if(isNeedSendNotification) {
+        [self postMessageUnreadChanged];
+    }
     [self refreshBadgeNumber];
 }
 
@@ -152,8 +167,11 @@
     if (unreadCount < 0) {
         return;
     }
+    BOOL isNeedSendNotification = self.unreadChatMsgCount != unreadCount;
     self.unreadChatMsgCount = unreadCount;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHChatMessageUnreadChangedNotification" object:nil];
+    if(isNeedSendNotification) {
+        [self postChatMessageUnreadChangedNotification];
+    }
     [self refreshBadgeNumber];
 }
 #pragma -- IMChatMessageUnreadCountObserver --
@@ -161,7 +179,19 @@
     // 不使用SDK发过来的未读数,这个未读数据源有机率和所有会话未读数总和不一致，所有微聊未读数以所有会话未读数总和为准
     // 等SDK修复后，再使用，对接人 屈永播<quyongbo@bytedance.com>
     // [self writeUnreadSystemMsgCount:unreadCount];
+    // 触发RAC监听信号，更新微聊消息未读数
 }
+
+// 发送通知消息未读数变化
+- (void)postMessageUnreadChanged {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHMessageUnreadChangedNotification" object:nil];
+}
+
+// 发送微聊消息未读数变化通知
+- (void)postChatMessageUnreadChangedNotification {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHChatMessageUnreadChangedNotification" object:nil];
+}
+
 - (void)clearAllMessageUnreadCount {
     [self writeUnreadChatMsgCount:0];
 }

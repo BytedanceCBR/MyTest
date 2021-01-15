@@ -168,14 +168,47 @@
     }
     if (yFixedValueMax > 10000) {
         shouldUseTenThousandUnit = YES;
-    }
-    if (shouldUseTenThousandUnit) {
-        chartView.lineChart.yLabelFormat = @"%.2f";
         yFixedValueMax = yFixedValueMax / 10000;
         yFixedValueMin = yFixedValueMin / 10000;
+    }
+    
+    deltaValue = (yFixedValueMax - yFixedValueMin) / 4;
+    CGFloat midValue = yFixedValueMin + (yFixedValueMax - yFixedValueMin) / 2;
+    
+    if (deltaValue > 900) {
+        deltaValue = (int)((ceil(deltaValue/1000.0))*1000);
+        midValue = (int)(floor((yFixedValueMin + (yFixedValueMax - yFixedValueMin) / 2)/1000.0)*1000);
+    } else if (deltaValue > 90){
+        deltaValue = (int)((ceil(deltaValue/100.0))*100);
+        midValue = (int)(floor((yFixedValueMin + (yFixedValueMax - yFixedValueMin) / 2)/100.0)*100);
+    } else if (deltaValue < 0.9) {
+        deltaValue = (ceil(deltaValue * 10))/10.0;
+        if (deltaValue == 0.4 || deltaValue == 0.6) {
+            deltaValue = 0.5;
+        }
+        midValue = (floor((yFixedValueMin + (yFixedValueMax - yFixedValueMin) / 2) * 10))/10.0;
+    } else {
+        deltaValue = ceil(deltaValue);
+        midValue = floor((yFixedValueMin + (yFixedValueMax - yFixedValueMin) / 2));
+    }
+    
+    yFixedValueMin = midValue - deltaValue * 2;
+    if (yFixedValueMin < 0) {
+        yFixedValueMin = 0;
+    }
+    yFixedValueMax =  yFixedValueMin + deltaValue * 4;
+    if (yFixedValueMax > 10000) {
+        shouldUseTenThousandUnit = YES;
+        yFixedValueMax = yFixedValueMax / 10000;
+        yFixedValueMin = yFixedValueMin / 10000;
+    }
+    
+    if (shouldUseTenThousandUnit) {
+        chartView.lineChart.yLabelFormat = @"%.2f";
     } else {
         chartView.lineChart.yLabelFormat = @"%.0f";
     }
+        
     chartView.lineChart.yFixedValueMax = yFixedValueMax;
     chartView.lineChart.yFixedValueMin = yFixedValueMin;
     

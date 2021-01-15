@@ -6,9 +6,7 @@
 //
 
 #import "FHHouseDetailBaseViewModel.h"
-#import "FHHouseNeighborhoodDetailViewModel.h"
 #import "FHHouseOldDetailViewModel.h"
-#import "FHHouseNewDetailViewModel.h"
 #import "FHHouseRentDetailViewModel.h"
 #import "FHDetailBaseCell.h"
 #import "UITableView+FDTemplateLayoutCell.h"
@@ -26,6 +24,7 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import "SSCommonLogic.h"
 #import <Heimdallr/HeimdallrUtilities.h>
+#import "FHOldDetailDisclaimerCell.h"
 
 @interface FHHouseDetailBaseViewModel ()<UITableViewDelegate, UITableViewDataSource>
 
@@ -59,13 +58,11 @@
             viewModel = [[FHHouseOldDetailViewModel alloc] initWithController:viewController tableView:tableView houseType:houseType];
             break;
         case FHHouseTypeNewHouse:
-            viewModel = [[FHHouseNewDetailViewModel alloc] initWithController:viewController tableView:tableView houseType:houseType];
             break;
         case FHHouseTypeRentHouse:
             viewModel = [[FHHouseRentDetailViewModel alloc] initWithController:viewController tableView:tableView houseType:houseType];
             break;
         case FHHouseTypeNeighborhood:
-            viewModel = [[FHHouseNeighborhoodDetailViewModel alloc] initWithController:viewController tableView:tableView houseType:houseType];
             break;
         default:
             break;
@@ -304,6 +301,9 @@
                 cell.baseViewModel = self;
                 [cell refreshWithData:data];
                 self.isRefreshData = true;
+                if ([cell isKindOfClass:[FHOldDetailDisclaimerCell class]] && self.houseType == FHHouseTypeSecondHandHouse) {
+                    [(FHOldDetailDisclaimerCell *)cell updateLayoutWithOldDetail];
+                }
                 return cell;
             }else{
                 NSLog(@"nil cell for data: %@",data);

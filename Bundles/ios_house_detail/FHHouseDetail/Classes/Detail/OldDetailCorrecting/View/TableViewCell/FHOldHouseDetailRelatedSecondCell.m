@@ -30,21 +30,21 @@
 }
 
 - (void)initUI {
-    self.cardView = [[FHHouseSecondCardView alloc] init];
+    self.cardView = [[FHHouseSecondCardView alloc] initWithLeftMargin:12 rightMargin:12];
     [self.contentView addSubview:self.cardView];
     [self.cardView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(0);
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
-        make.bottom.mas_equalTo(-4);
+        make.left.mas_equalTo(9);
+        make.right.mas_equalTo(-9);
+        make.bottom.mas_equalTo(0);
     }];
     
     self.line = [[UIView alloc] init];
     self.line.backgroundColor = [UIColor themeGray6];
     [self.contentView addSubview:self.line];
     [self.line mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(30);
-        make.right.mas_equalTo(-30);
+        make.left.mas_equalTo(21);
+        make.right.mas_equalTo(-21);
         make.height.mas_equalTo(0.5);
         make.bottom.mas_equalTo(0);
     }];
@@ -59,7 +59,7 @@
 
 + (CGFloat)heightForData:(id)data {
     if ([data isKindOfClass:[FHHouseSecondCardViewModel class]]) {
-        return [FHHouseSecondCardView viewHeightWithViewModel:data] + 4;
+        return [FHHouseSecondCardView viewHeightWithViewModel:data];
     }
     return 0;
 }

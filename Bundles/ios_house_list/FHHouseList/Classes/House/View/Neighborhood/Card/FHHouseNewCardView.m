@@ -32,14 +32,28 @@
 @property (nonatomic, strong) LOTAnimationView *vrLoadingView;
 @property (nonatomic, strong) UIImageView *videoImageView;
 @property (nonatomic, strong) UIImageView *tagImage;
-
+@property (nonatomic, assign) CGFloat leftMargin;
+@property (nonatomic, assign) CGFloat rightMargin;
 @end
 
 @implementation FHHouseNewCardView
 
+- (instancetype)initWithFrame:(CGRect)frame leftMargin:(CGFloat)left rightMargin:(CGFloat)right {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.leftMargin = left;
+        self.rightMargin = right;
+        [self setupUI];
+        [self setupConstraints];
+    }
+    return self;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
+        self.leftMargin = 15;
+        self.rightMargin = 15;
         [self setupUI];
         [self setupConstraints];
     }
@@ -95,7 +109,8 @@
 
 - (void)setupConstraints {
     [self.leftImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.top.mas_equalTo(15);
+        make.top.mas_equalTo(15);
+        make.left.mas_equalTo(self.leftMargin);
         make.width.height.mas_equalTo(84);
     }];
     
@@ -123,7 +138,7 @@
     }];
     
     [self.propertyTagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-15);
+        make.right.mas_equalTo(-self.rightMargin);
         make.top.mas_equalTo(15);
         make.height.mas_equalTo(16);
         make.width.mas_equalTo(0);
@@ -131,7 +146,7 @@
     
     [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.mainTitleLabel);
-        make.right.mas_equalTo(-15);
+        make.right.mas_equalTo(-self.rightMargin);
         make.height.mas_equalTo(22);
         make.top.mas_equalTo(self.mainTitleLabel.mas_bottom).offset(1);
     }];
@@ -139,12 +154,12 @@
     [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.mainTitleLabel);
         make.top.mas_equalTo(self.priceLabel.mas_bottom).offset(2);
-        make.right.mas_equalTo(-15);
+        make.right.mas_equalTo(-self.rightMargin);
         make.height.mas_equalTo(18);
     }];
     
     [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-15);
+        make.right.mas_equalTo(-self.rightMargin);
         make.left.mas_equalTo(self.mainTitleLabel).offset(-2);
         make.top.mas_equalTo(self.subTitleLabel.mas_bottom).offset(4);
         make.height.mas_equalTo(18);

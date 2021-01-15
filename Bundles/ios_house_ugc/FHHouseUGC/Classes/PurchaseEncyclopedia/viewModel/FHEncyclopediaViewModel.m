@@ -29,7 +29,7 @@
 @end
 
 @implementation FHEncyclopediaViewModel
-- (instancetype)initWithWithController:(FHEncyclopediaViewController *)viewController collectionView:(UICollectionView *)collectionView headerView:(FHEncyclopediaHeader *)header tracerModel:(nonnull FHTracerModel *)tracerModel {
+- (instancetype)initWithWithController:(FHEncyclopediaViewController *)viewController collectionView:(UICollectionView *)collectionView headerView:(FHEncyclopediaHeader *)header tracerModel:(FHTracerModel *)tracerModel lynxBaseIndexParam:(NSDictionary *)lynxBaseIndexParam {
     self = [super init];
     if (self) {
          [self configTracerHelper];
@@ -37,10 +37,12 @@
         self.mainCollection = collectionView;
         self.encyclopediaHeader = header;
         self.encyclopediaHeader.delegate = self;
-        self.currentTabIndex = 0;
+        self.currentSubTabIndex = lynxBaseIndexParam[@"currentSelectedSubIndex"];
+        self.currentMainTabIndex = lynxBaseIndexParam[@"currentSelectedMainIndex"];
         self.tracerModel = tracerModel;
         self.categoryId = @"f_house_encyclopedia";
         [self requestHeaderConfig];
+        [self.tracerHelper trackEnterCategary];
     }
     return self;
 }
@@ -86,12 +88,12 @@
 
 - (void)collectionDataCrate:(NSArray *)array {
     if (array.count>0) {
-        NSDictionary *indexZeroData = array[0];
-        self.mainIndex = 0;
+        NSDictionary *indexZeroData = array[array.count>[self.currentMainTabIndex intValue]?[self.currentMainTabIndex intValue]:0];
+        self.mainIndex = array.count>[self.currentMainTabIndex intValue]?[self.currentMainTabIndex intValue]:0;
         if ([indexZeroData.allKeys containsObject:@"options"]) {
             NSArray *headerTagArr = indexZeroData[@"options"];
-            self.currentHeaderDic = headerTagArr[0];
-            self.subIndex = 0;
+            self.currentHeaderDic = headerTagArr[headerTagArr.count>[self.currentSubTabIndex intValue]?[self.currentSubTabIndex intValue]:0];
+            self.subIndex = headerTagArr.count>[self.currentSubTabIndex intValue]?[self.currentMainTabIndex intValue]:0;
         }
     }
     [self.dataList addObjectsFromArray:array];

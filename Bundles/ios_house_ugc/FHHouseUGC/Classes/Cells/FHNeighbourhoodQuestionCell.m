@@ -158,20 +158,20 @@
         
         [self.questionIcon mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.bgView).offset(12);
-            make.left.mas_equalTo(self.bgView).offset(16);
+            make.left.mas_equalTo(self.bgView).offset(12);
             make.width.height.mas_equalTo(18);
         }];
         
         [self.answerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.answerIcon.mas_top).offset(-1);
             make.left.mas_equalTo(self.answerIcon.mas_right).offset(10);
-            make.right.mas_equalTo(self.descLabel.mas_left).offset(-16);
+            make.right.mas_equalTo(self.descLabel.mas_left).offset(-12);
             make.height.mas_equalTo(20);
         }];
         
         [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.answerIcon.mas_top).offset(-1);
-            make.right.mas_equalTo(self.bgView).offset(-16);
+            make.right.mas_equalTo(self.bgView).offset(-12);
             make.height.mas_equalTo(20);
         }];
         
@@ -185,13 +185,13 @@
     [self.questionLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.questionIcon.mas_top).offset(-2);
         make.left.mas_equalTo(self.questionIcon.mas_right).offset(10);
-        make.right.mas_equalTo(self.bgView).offset(-16);
+        make.right.mas_equalTo(self.bgView).offset(-12);
         make.height.mas_equalTo(22);
     }];
     
     [self.answerIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.questionLabel.mas_bottom).offset(11);
-        make.left.mas_equalTo(self.bgView).offset(16);
+        make.left.mas_equalTo(self.bgView).offset(12);
         make.width.height.mas_equalTo(18);
     }];
     
@@ -297,6 +297,13 @@
             make.width.height.mas_equalTo(18);
         }];
         
+    
+        [self.answerIcon mas_remakeConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(self.questionLabel.mas_bottom).offset(11);
+            make.left.mas_equalTo(self.bgView).offset(16);
+            make.width.height.mas_equalTo(18);
+        }];
+        
         [self.answerLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.top.mas_equalTo(self.answerIcon.mas_top).offset(-1);
             make.left.mas_equalTo(self.answerIcon.mas_right).offset(10);
@@ -371,7 +378,7 @@
         tracer[@"enter_type"] = @"click";
         dict[@"tracer"] = tracer;
         TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        NSURL *url = [TTStringHelper URLWithURLString:self.cellModel.writeAnswerSchema];
+        NSURL *url = [NSURL btd_URLWithString:self.cellModel.writeAnswerSchema];
         [[TTRoute sharedRoute] openURLByPresentViewController:url userInfo:userInfo];
     }
 }
@@ -399,7 +406,7 @@
 
 - (NSAttributedString *)convertDescToAttributeString:(NSString *)desc count:(NSInteger)count {
     if (!isEmptyString(desc)) {
-        NSString *countText = [NSString stringWithFormat:@"%i",count];
+        NSString *countText = [NSString stringWithFormat:@"%li",(long)count];
         NSRange range = [desc rangeOfString:countText];
         if (range.location >= 0 && range.length > 0) {
             NSMutableAttributedString *mutableAttributedString = [[NSMutableAttributedString alloc] initWithString:desc];

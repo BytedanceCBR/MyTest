@@ -6,7 +6,7 @@
 //
 
 #import "FHDetailBaseCell.h"
-#import "FHDetailNewMutiFloorPanCell.h"
+#import "FHDetailNewModel.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -19,25 +19,33 @@
 #import "FHUGCCellManager.h"
 #import "FHUGCFeedDetailJumpManager.h"
 #import "FHUtils.h"
+#import "FHDetailMoreView.h"
 
 #define cellId @"cellId"
 
 @interface FHDetailNeighborhoodCommentsCell () <UITableViewDelegate,UITableViewDataSource, FHUGCBaseCellDelegate>
 
-@property(nonatomic , strong) NSMutableArray *dataList;
-@property(nonatomic , strong) UITableView *tableView;
-@property(nonatomic , strong) UIView *titleView;
-@property(nonatomic , strong) UILabel *titleLabel;
-@property(nonatomic , strong) UIButton *commentBtn;
-@property(nonatomic , strong) FHUGCCellManager *cellManager;
-@property(nonatomic , strong) FHUGCFeedDetailJumpManager *detailJumpManager;
+@property(nonatomic, strong) NSMutableArray *dataList;
+@property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, strong) UIView *titleView;
+@property(nonatomic, strong) UILabel *titleLabel;
+@property(nonatomic, strong) FHDetailMoreView *moreView;
+@property(nonatomic, strong) FHUGCCellManager *cellManager;
+@property(nonatomic, strong) FHUGCFeedDetailJumpManager *detailJumpManager;
 @property(nonatomic, strong) UIView *containerView;
-@property(nonatomic, weak) UIImageView *shadowImage;
-@property(nonatomic , strong) NSMutableDictionary *clientShowDict;
+@property(nonatomic, weak  ) UIImageView *shadowImage;
+@property(nonatomic, strong) NSMutableDictionary *clientShowDict;
 
 @end
 
 @implementation FHDetailNeighborhoodCommentsCell
+
+- (FHDetailMoreView *)moreView {
+    if(!_moreView) {
+        _moreView = [FHDetailMoreView new];
+    }
+    return _moreView;
+}
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -50,13 +58,12 @@
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     _containerView = [[UIView alloc] init];
-//    _containerView.clipsToBounds = YES;
+    _containerView.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:_containerView];
+    
     self.tableView = [[UITableView alloc] init];
     _tableView.backgroundColor = [UIColor clearColor];
     _tableView.layer.masksToBounds = YES;
@@ -87,32 +94,21 @@
     self.detailJumpManager = [[FHUGCFeedDetailJumpManager alloc] init];
     self.detailJumpManager.refer = 1;
     
-    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 60, 50)];
+    self.titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH - 42, 34)];
     
-    self.titleLabel = [self LabelWithFont:[UIFont themeFontMedium:18] textColor:[UIColor themeGray1]];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(gotoMore)];
+    [self.titleView addGestureRecognizer:tap];
+    
+    self.titleLabel = [self LabelWithFont:[UIFont themeFontSemibold:16] textColor:[UIColor themeGray1]];
     _titleLabel.text = @"小区点评";
     [self.titleView addSubview:_titleLabel];
-    
-    self.commentBtn = [[UIButton alloc] init];
-    [_commentBtn setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    [_commentBtn setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
-    _commentBtn.imageView.contentMode = UIViewContentModeCenter;
-    [_commentBtn setImage:[UIImage imageNamed:@"detail_questiom_ask"] forState:UIControlStateNormal];
-    [_commentBtn setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
-    _commentBtn.titleLabel.font = [UIFont themeFontRegular:14];
-    [_commentBtn setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
-    [_commentBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
-    [_commentBtn setTitle:@"我要点评" forState:UIControlStateNormal];
-    [_commentBtn addTarget:self action:@selector(gotoCommentPublish) forControlEvents:UIControlEventTouchUpInside];
-    [self.titleView addSubview:_commentBtn];
-    
+    [self.titleView addSubview:self.moreView];
     _tableView.tableHeaderView = self.titleView;
 }
 
 - (UIImageView *)shadowImage {
     if (!_shadowImage) {
         UIImageView *shadowImage = [[UIImageView alloc]init];
-//        shadowImage.backgroundColor = [UIColor redColor];
         [self.contentView addSubview:shadowImage];
         _shadowImage = shadowImage;
     }
@@ -122,29 +118,28 @@
 - (void)initConstaints {
     
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(20);
-        make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-20);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(4.5, 0, 4.5, 0));
     }];
+    
     [_tableView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.containerView);
-        make.left.mas_equalTo(self.containerView).offset(15);
-        make.right.mas_equalTo(self.containerView).offset(-15);
+        make.left.mas_equalTo(self.containerView).offset(9);
+        make.right.mas_equalTo(self.containerView).offset(-9);
         make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.containerView).mas_offset(-10);
+        make.bottom.mas_equalTo(self.containerView);
     }];
     
     [_titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(20);
-        make.left.mas_equalTo(self.titleView).offset(16);
-        make.right.mas_equalTo(self.commentBtn.mas_left).offset(-10);
-        make.height.mas_equalTo(25);
+        make.top.mas_equalTo(self.titleView).offset(12);
+        make.left.mas_equalTo(self.titleView).offset(12);
+        make.right.mas_equalTo(self.moreView.mas_left).offset(-12);
+        make.height.mas_equalTo(22);
     }];
 
-    [_commentBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+    [self.moreView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.mas_equalTo(self.titleLabel);
-        make.right.mas_equalTo(self.titleView).offset(-16);
-        make.height.mas_equalTo(25);
+        make.right.mas_equalTo(self.titleView).offset(-12);
+        make.height.equalTo(self.titleLabel);
     }];
 }
 
@@ -155,42 +150,34 @@
     self.currentData = data;
     FHDetailCommentsCellModel *cellModel = (FHDetailCommentsCellModel *)data;
     self.shadowImage.image = cellModel.shadowImage;
-    
-    _titleView.height = cellModel.headerViewHeight;
-    self.tableView.tableHeaderView = _titleView;
-    
-    [_titleLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleView).offset(cellModel.topMargin == 30?20:cellModel.topMargin);
-    }];
-    
+            
     [self.tableView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.mas_equalTo(cellModel.viewHeight);
     }];
-    if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll) {
-        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
-            make.bottom.equalTo(self.contentView);
-        }];
-    }
-    //业主点评在不单独为卡片的时候重新布局
-    if(cellModel.shadowImageType == FHHouseShdowImageTypeLR || cellModel.shadowImageType == FHHouseShdowImageTypeLBR){
-        [_containerView mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.top.mas_equalTo(self.shadowImage).offset(14);
-            make.left.right.mas_equalTo(self.contentView);
-            make.bottom.mas_equalTo(self.shadowImage).offset(-20);
-        }];
-    }
-    _titleLabel.text = cellModel.title;
-    [_commentBtn setTitle:cellModel.commentTitle forState:UIControlStateNormal];
     
+    if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll || cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeDefault) {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(0);
+        }];
+    }
+    
+    if (cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeBottomAll || cellModel.shdowImageScopeType == FHHouseShdowImageScopeTypeAll) {
+        [self.shadowImage mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.equalTo(self.contentView).offset(4.5);
+        }];
+
+    } else {
+        [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(0);
+        }];
+    }
+    
+    _titleLabel.text = cellModel.title;
+
     self.dataList = [[NSMutableArray alloc] init];
     [_dataList addObjectsFromArray:cellModel.dataList];
     [self.tableView reloadData];
-    
-    if(self.dataList.count > 0){
-        self.commentBtn.hidden = NO;
-    }else{
-        self.commentBtn.hidden = YES;
-    }
+    self.moreView.hidden = (self.dataList.count <= 0);
 }
 
 #pragma mark delegate
@@ -200,56 +187,6 @@
     label.font = font;
     label.textColor = textColor;
     return label;
-}
-
-- (void)gotoCommentPublish {
-
-    if ([TTAccountManager isLogin]) {
-        [self gotoCommentVC];
-    } else {
-        [self gotoLogin];
-    }
-}
-
-- (void)gotoCommentVC {
-    
-    FHDetailCommentsCellModel *cellModel = (FHDetailCommentsCellModel *)self.currentData;
-    if(!isEmptyString(cellModel.commentsSchema)){
-        NSURLComponents *components = [[NSURLComponents alloc] initWithString:cellModel.commentsSchema];
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        NSMutableDictionary *tracerDict = @{}.mutableCopy;
-        tracerDict[UT_ENTER_FROM] = cellModel.tracerDict[@"page_type"];
-        tracerDict[UT_LOG_PB] = cellModel.tracerDict[@"log_pb"] ?: @"be_null";
-        tracerDict[UT_ELEMENT_FROM] = [self elementTypeString:FHHouseTypeNeighborhood] ?: @"be_null";
-        dict[TRACER_KEY] = tracerDict;
-        dict[@"neighborhood_id"] = cellModel.neighborhoodId;
-        dict[@"post_content_hint"] = @"说说你对该小区的评价，小区物业、配套、停车、周边学校、邻居关系等方面都可以~最少要写10个字以上哦";
-        dict[@"title"] = @"发布点评";
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        [[TTRoute sharedRoute] openURLByPresentViewController:components.URL userInfo:userInfo];
-    }
-}
-
-- (void)gotoLogin {
-    FHDetailCommentsCellModel *cellModel = (FHDetailCommentsCellModel *)self.currentData;
-    NSMutableDictionary *params = [NSMutableDictionary dictionary];
-    NSString *page_type = cellModel.tracerDict[@"page_type"] ?: @"be_null";
-    [params setObject:page_type forKey:@"enter_from"];
-    [params setObject:@"click_publisher" forKey:@"enter_type"];
-    // 登录成功之后不自己Pop，先进行页面跳转逻辑，再pop
-    [params setObject:@(YES) forKey:@"need_pop_vc"];
-    params[@"from_ugc"] = @(YES);
-    __weak typeof(self) wSelf = self;
-    [TTAccountLoginManager showAlertFLoginVCWithParams:params completeBlock:^(TTAccountAlertCompletionEventType type, NSString * _Nullable phoneNum) {
-        if (type == TTAccountAlertCompletionEventTypeDone) {
-            // 登录成功
-            if ([TTAccountManager isLogin]) {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [wSelf gotoCommentVC];
-                });
-            }
-        }
-    }];
 }
 
 - (void)gotoMore {
@@ -360,58 +297,6 @@
     return [[FHUGCBaseCell alloc] init];
 }
 
-- (UIButton *)lookAllBtn {
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(15, 10, [UIScreen mainScreen].bounds.size.width - 60, 40)];
-    button.backgroundColor = [UIColor themeGray7];
-    button.imageView.contentMode = UIViewContentModeCenter;
-    [button setTitle:@"查看全部" forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"] forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont themeFontRegular:14];
-    [button setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
-    [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
-    button.layer.masksToBounds = YES;
-    button.layer.cornerRadius = 20;
-    [button setTitleEdgeInsets:UIEdgeInsetsMake(0, -
-                                                    button.imageView.frame.size.width, 0, button.imageView.frame.size.width)];
-    [button setImageEdgeInsets:UIEdgeInsetsMake(0, button.titleLabel.bounds.size.width, 0, - button.titleLabel.bounds.size.width)];
-    [button addTarget:self action:@selector(gotoMore) forControlEvents:UIControlEventTouchUpInside];
-    return button;
-}
-
-- (UIButton *)writeCommentBtn {
-    FHDetailCommentsCellModel *cellModel = (FHDetailCommentsCellModel *)self.currentData;
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(15, 10, [UIScreen mainScreen].bounds.size.width - 60, 40)];
-    button.backgroundColor = [UIColor themeGray7];
-    button.imageView.contentMode = UIViewContentModeCenter;
-    [button setTitle:cellModel.contentEmptyTitle forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"detail_questiom_ask"] forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor themeOrange4] forState:UIControlStateNormal];
-    button.titleLabel.font = [UIFont themeFontRegular:14];
-    [button setImageEdgeInsets:UIEdgeInsetsMake(0, -2, 0, 2)];
-    [button setTitleEdgeInsets:UIEdgeInsetsMake(0, 2, 0, -2)];
-    button.layer.masksToBounds = YES;
-    button.layer.cornerRadius = 20;
-    [button addTarget:self action:@selector(gotoCommentPublish) forControlEvents:UIControlEventTouchUpInside];
-    return button;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    FHDetailCommentsCellModel *cellModel = (FHDetailCommentsCellModel *)self.currentData;
-    UIView *footView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - 30, cellModel.footerViewHeight)];
-    if(cellModel.totalCount > 2 && self.dataList.count > 0){
-        [footView addSubview:[self lookAllBtn]];
-    }else if(cellModel.dataList.count <= 0){
-        [footView addSubview:[self writeCommentBtn]];
-    }
-    return footView;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    FHDetailCommentsCellModel *cellModel = (FHDetailCommentsCellModel *)self.currentData;
-    return cellModel.footerViewHeight;
-}
-
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -425,9 +310,12 @@
     return 100;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return CGFLOAT_MIN;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    FHFeedUGCCellModel *cellModel = self.dataList[indexPath.row];
-    [self lookAllLinkClicked:cellModel cell:nil];
+    [self gotoMore];
 }
 
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
@@ -435,7 +323,7 @@
     [self lookAllLinkClicked:cellModel cell:nil];
 }
 
-- (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
+- (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(FHUGCBaseCell *)cell {
     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
 }
 

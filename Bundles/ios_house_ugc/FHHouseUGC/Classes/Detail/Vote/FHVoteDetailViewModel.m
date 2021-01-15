@@ -79,6 +79,8 @@
     self.forumID = 0;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followStateChanged:) name:kFHUGCFollowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(followListDataChanged:) name:kFHUGCLoadFollowDataFinishedNotification object:nil];
+    // 删帖成功
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postDeleteSuccess:) name:kFHUGCDelPostNotification object:nil];
     return self;
 }
 
@@ -102,6 +104,16 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)postDeleteSuccess:(NSNotification *)noti {
+    if (noti && noti.userInfo) {
+        NSDictionary *userInfo = noti.userInfo;
+        FHFeedUGCCellModel *cellModel = userInfo[@"cellModel"];
+        if ([cellModel.groupId isEqualToString:self.detailData.groupId]) {
+            [self.detailController goBack];
+        }
+    }
 }
 
 // 关注列表改变
@@ -224,26 +236,26 @@
         cellModel.tracerDic = [self.detailController.tracerDict copy];
         if (socialGroupModel && ![socialGroupModel.hasFollow boolValue] && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
             // 未关注
-            FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
-            headerModel.socialGroupModel = socialGroupModel;
-            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
-            self.social_group_id = socialGroupModel.socialGroupId;
-            [self.items addObject:headerModel];
-            self.detailHeaderModel = headerModel;
-            [self.detailController headerInfoChanged];
-            //
-            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
-            [self.items addObject:grayLine];
+//            FHPostDetailHeaderModel *headerModel = [[FHPostDetailHeaderModel alloc] init];
+//            headerModel.socialGroupModel = socialGroupModel;
+//            headerModel.tracerDict = self.detailController.tracerDict.mutableCopy;
+//            self.social_group_id = socialGroupModel.socialGroupId;
+//            [self.items addObject:headerModel];
+//            self.detailHeaderModel = headerModel;
+//            [self.detailController headerInfoChanged];
+//            //
+//            FHUGCDetailGrayLineModel *grayLine = [[FHUGCDetailGrayLineModel alloc] init];
+//            [self.items addObject:grayLine];
             cellModel.showCommunity = NO;
         } else {
             if (cellModel.community && cellModel.community.name.length > 0 && cellModel.community.socialGroupId.length > 0 && ![cellModel.community.showStatus isEqualToString:@"1"]) {
-                cellModel.showCommunity = YES;
+                cellModel.showCommunity = NO;
             } else if (socialGroupModel && socialGroupModel.socialGroupId.length > 0 && socialGroupModel.socialGroupName.length > 0 && ![socialGroupModel.showStatus isEqualToString:@"1"]) {
                 // 挽救一下 balabala
                 cellModel.community = [[FHFeedUGCCellCommunityModel alloc] init];
                 cellModel.community.name = socialGroupModel.socialGroupName;
                 cellModel.community.socialGroupId = socialGroupModel.socialGroupId;
-                cellModel.showCommunity = YES;
+                cellModel.showCommunity = NO;
             } else {
                 cellModel.showCommunity = NO;
             }
@@ -361,25 +373,6 @@
 
 - (NSString *)pageType {
     return @"vote_detail";
-}
-
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    if(cellModel.community.socialGroupId){
-        NSMutableDictionary *dict = @{}.mutableCopy;
-        dict[@"community_id"] = cellModel.community.socialGroupId;
-        NSString *originFrom = cellModel.tracerDic[@"origin_from"] ?: @"be_null";
-        dict[@"tracer"] = @{
-            @"origin_from":originFrom,
-            @"enter_from":[self pageType],
-            @"enter_type":@"click",
-            @"group_id":cellModel.groupId ?: @"be_null",
-            @"rank":cellModel.tracerDic[@"rank"] ?: @"be_null",
-            @"log_pb":cellModel.logPb ?: @"be_null"};
-        TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
-        //跳转到圈子详情页
-        NSURL *openUrl = [NSURL URLWithString:@"sslocal://ugc_community_detail"];
-        [[TTRoute sharedRoute] openURLByPushViewController:openUrl userInfo:userInfo];
-    }
 }
 
 @end

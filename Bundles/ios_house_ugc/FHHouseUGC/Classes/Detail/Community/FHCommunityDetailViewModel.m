@@ -15,7 +15,6 @@
 #import "UILabel+House.h"
 #import "FHUGCFollowButton.h"
 #import "FHUGCFollowHelper.h"
-#import "FHUGCGuideView.h"
 #import "FHUGCGuideHelper.h"
 #import "FHUGCScialGroupModel.h"
 #import "FHUGCConfig.h"
@@ -59,8 +58,6 @@
 //精华tab的index，默认是-1
 @property (nonatomic, assign) NSInteger essenceIndex;
 @property (nonatomic, assign) BOOL isFirstEnter;
-
-//@property (nonatomic, strong) FHUGCGuideView *guideView;
 @property (nonatomic) BOOL shouldShowUGcGuide;
 @end
 
@@ -177,31 +174,6 @@
     [TTAccount removeMulticastDelegate:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
-//- (void)addUgcGuide {
-//    if ([FHUGCGuideHelper shouldShowUgcDetailGuide]) {
-//        [self.guideView show:self.viewController.view dismissDelayTime:0.0f completion:nil];
-//        [FHUGCGuideHelper hideUgcDetailGuide];
-//    }
-//}
-//
-//- (FHUGCGuideView *)guideView {
-//    if (!_guideView) {
-//        WeakSelf;
-//        _guideView = [[FHUGCGuideView alloc] initWithFrame:self.viewController.view.bounds andType:FHUGCGuideViewTypeDetail];
-//        [self.viewController.view layoutIfNeeded];
-//        CGRect rect = [self.viewController.headerView.followButton convertRect:self.viewController.headerView.followButton.bounds toView:[UIApplication sharedApplication].keyWindow];
-//        _guideView.focusBtnTopY = rect.origin.y;
-//        _guideView.clickBlock = ^{
-//            [wself hideGuideView];
-//        };
-//    }
-//    return _guideView;
-//}
-
-//- (void)hideGuideView {
-//    [self.guideView hide];
-//}
 
 - (void)viewWillAppear {
     [self.feedListController viewWillAppear];

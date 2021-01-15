@@ -21,6 +21,17 @@
     TRACK_EVENT(@"category_refresh", dict);
 }
 
+- (void)trackEnterCategary {
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    dict[@"origin_from"] = self.tracerModel.originFrom?: @"be_null";
+    dict[@"enter_from"] = self.tracerModel.enterFrom?: @"be_null";
+    dict[@"category_name"] = self.tracerModel.categoryName?:@"f_house_encyclopedia";
+    dict[@"element_from"] = self.tracerModel.elementFrom?:@"be_null";
+    dict[@"page_type"] = [self getPageType]?:@"be_null";
+    dict[@"event_type"] = [self eventType];
+    TRACK_EVENT(@"enter_category", dict);
+}
+
 - (void)trackClientShow:(NSDictionary *)itemData {
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     dict[@"origin_from"] = self.tracerModel.originFrom?: @"be_null";

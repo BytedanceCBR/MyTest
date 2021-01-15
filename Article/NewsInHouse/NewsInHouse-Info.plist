@@ -92,6 +92,16 @@
 				<string>awa2wr3xz81cwr2x</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>lark</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>lk9c5i482wynhkzx8l</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -183,6 +193,7 @@
 		<string>douyinopensdk</string>
 		<string>douyinv1opensdk</string>
 		<string>weixinULAPI</string>
+		<string>lark</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
@@ -264,6 +275,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UPDATE_VERSION_CODE</key>
-	<string>71401</string>
+	<string>71501</string>
 </dict>
 </plist>

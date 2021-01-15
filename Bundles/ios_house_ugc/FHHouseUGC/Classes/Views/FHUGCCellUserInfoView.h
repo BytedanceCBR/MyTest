@@ -26,8 +26,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic ,strong) UIImageView *essenceIcon;
 
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
-@property(nonatomic, copy) void(^deleteCellBlock)(void);
-@property(nonatomic, copy) void(^reportSuccessBlock)(void);
 
 - (void)updateDescLabel;
 - (void)updateEditState;

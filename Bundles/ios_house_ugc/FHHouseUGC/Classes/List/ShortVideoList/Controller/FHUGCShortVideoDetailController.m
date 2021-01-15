@@ -1,5 +1,5 @@
 //
-//  AWEVideoDetailViewController.m
+//  FHUGCShortVideoDetailController.m
 //  LiveStreaming
 //
 //  Created by 01 on 17/5/3.
@@ -12,119 +12,48 @@
 // View
 #import "AWEVideoPlayView.h"
 #import "AWEVideoCommentCell.h"
-//#import "AWECommentInputBar.h"
-// Model
-#import "TSVShortVideoOriginalData.h"
 #import "AWECommentModel.h"
-#import "AWEUserModel.h"
 // Bridge
 #import "AWEVideoPlayAccountBridge.h"
 #import "AWEVideoPlayShareBridge.h"
 #import "AWEVideoPlayTransitionBridge.h"
-#import "AWEVideoPlayTrackerBridge.h"
 // Manager
-#import "AWEVideoUserInfoManager.h"
-#import "AWEVideoDetailManager.h"
 #import "AWEVideoCommentDataManager.h"
-#import "HTSDeviceManager.h"
 // Util
-#import <Masonry/Masonry.h>
-//#import <AFNetworking/AFNetworking.h>
-#import <AssetsLibrary/AssetsLibrary.h>
 #import "UIScrollView+Refresh.h"
-#import "HTSVideoPlayToast.h"
-#import "BTDMacros.h"
-#import "BTDResponder.h"
-#import "BTDNetworkUtilities.h"
 #import "UIViewController+NavigationBarStyle.h"
-#import "UIButton+TTAdditions.h"
-#import "EXTKeyPathCoding.h"
-#import "TTURLUtils.h"
-#import <MBProgressHUD/MBProgressHUD.h>
-#import "TTNavigationController.h"
-#import "UIImage+TTThemeExtension.h"
-#import "TTDeviceHelper.h"
+
 #import "TTModuleBridge.h"
 #import "AWEVideoConstants.h"
 #import "AWEVideoContainerViewController.h"
 #import "AWEVideoDetailControlOverlayViewController.h"
-#import "TSVShortVideoDetailFetchManager.h"
-#import "TSVShortVideoCategoryFetchManager.h"
-#import "NSObject+FBKVOController.h"
-#import "EXTKeyPathCoding.h"
-#import "HTSVideoPageParamHeader.h"
-#import "TTImagePreviewAnimateManager.h"
-#import "TSVShortVideoDetailExitManager.h"
-#import "TTInteractExitHelper.h"
-#import <TTBaseLib/TTUIResponderHelper.h>
-#import "UIViewController+TabBarSnapShot.h"
-#import "UIImageView+WebCache.h"
-#import "AWEVideoDetailFirstUsePromptViewController.h"
 #import <TTReporter/TTReportManager.h>
-#import "TTMonitor.h"
 #import "TSVVideoDetailPromptManager.h"
 #import "AWEVideoShareModel.h"
 #import "TTShareManager.h"
 #import "TTServiceCenter.h"
-
 #import "TTAdManagerProtocol.h"
 #import "TTShortVideoModel+TTAdFactory.h"
-#import "TTAdShortVideoModel.h"
-
 #import "TTIndicatorView.h"
 #import <TTThemed/UIImage+TTThemeExtension.h>
 #import "DetailActionRequestManager.h"
-#import <TTBaseLib/NSDictionary+TTAdditions.h>
 #import <ReactiveObjC/ReactiveObjC.h>
-#import "TTDeviceHelper.h"
-//#import "TSVProfileViewController.h"
-//#import "TSVProfileViewModel.h"
-#import "TTSettingsManager.h"
-#import "TSVSlideUpPromptViewController.h"
-#import "TSVSlideLeftEnterProfilePromptViewController.h"
 #import <TTUIWidget/UIView+CustomTimingFunction.h>
-#import <TTBaseLib/UIViewAdditions.h>
-#import "TSVDownloadManager.h"
 #import "TSVSlideUpPromptViewController.h"
-//#import "TSVProfileConfig.h"
-#import "TSVDetailViewModel.h"
-#import "UIImageView+YYWebImage.h"
-#import "UIImage+YYWebImage.h"
-#import "SDWebImageManager.h"
-#import <TTBaseLib/TTStringHelper.h>
-#import "TTCustomAnimationDelegate.h"
 #import "TSVStartupTabManager.h"
 #import "TSVUIResponderHelper.h"
-#import "AWEVideoDetailScrollConfig.h"
-#import "TSVTransitionAnimationManager.h"
-#import <TTNetworkManager/TTNetworkManager.h>
 #import "CommonURLSetting.h"
-#import "TSVVideoDetailShareHelper.h"
 #import "TSVVideoShareManager.h"
-#import "TTTrackerWrapper.h"
-#import "TSVPrefetchImageManager.h"
-#import "TSVDetailRouteHelper.h"
-#import "TSVPrefetchVideoManager.h"
 #import "TTAudioSessionManager.h"
-
-#import "ExploreOrderedData.h"
-#import "TTBusinessManager+StringUtils.h"
-
 #import "FHPostDetailCommentWriteView.h"
-#import "SSCommonLogic.h"
 #import "SSCommentInputHeader.h"
-#import "FHUserTracker.h"
-
-
 #import "FHShortVideoDetailFetchManager.h"
-#import "TSVWriteCommentButton.h"
 #import "FHShortVideoTracerUtil.h"
 #import "TTReachability.h"
 #import "ToastManager.h"
 #import "TTAccountManager.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "HMDTTMonitor.h"
-
 #import "UIDevice+BTDAdditions.h"
 #import "NSDictionary+BTDAdditions.h"
 #import "FHShortVideoPerLoaderManager.h"
@@ -143,7 +72,7 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
     TSVDetailCommentViewStatusPopBySlideUp,
 };
 
-@interface FHUGCShortVideoDetailController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, AWEVideoCommentCellOperateDelegate, TTRouteInitializeProtocol, TTPreviewPanBackDelegate, TTShareManagerDelegate, TTInteractExitProtocol,TTCommentWriteManagerDelegate>
+@interface FHUGCShortVideoDetailController () <UITableViewDataSource, UITableViewDelegate, AWEVideoCommentCellOperateDelegate,UIGestureRecognizerDelegate, TTRouteInitializeProtocol, TTShareManagerDelegate,TTCommentWriteManagerDelegate>
 
 // View
 @property (nonatomic, strong) SSThemedView *commentView;
@@ -159,44 +88,27 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, strong) TSVDetailViewModel *viewModel;
 @property (nonatomic, strong) AWEVideoCommentDataManager *commentManager;
 @property (nonatomic, strong) FHShortVideoDetailFetchManager *dataFetchManager;
-@property (nonatomic, strong) id<TSVShortVideoDataFetchManagerProtocol> originalDataFetchManager;
 @property (nonatomic, copy) NSDictionary *pageParams;
 @property (nonnull, copy) NSString *groupID;
 @property (nonnull, copy) NSString *topID;
 @property (nonatomic, copy) NSString *groupSource;
 @property (nonatomic, copy) NSString *categoryName;
 @property (nonatomic, strong) NSNumber *showComment;//0不弹，1弹起评论浮层，2弹输入框
-@property (nonatomic, copy) NSDictionary *commonTrackingParameter;
 @property (nonatomic, copy) NSDictionary *initialLogPb;
 //外面传的埋点信息 by xsm
 @property (nonatomic, strong) NSDictionary *extraDic;
 // 状态
 @property (nonatomic, assign) BOOL firstLoadFinished;
-@property (nonatomic, assign) BOOL isFirstTimeShowCommentListOrKeyboard;
-
-@property (nonatomic, assign) BOOL isDisliked;
 @property (nonatomic, assign) BOOL hasMore;      // 还有没有评论数据可以拉取
 @property (nonatomic, assign) NSInteger offset;  // 请求新数据的时候，offet参数
-@property (nonatomic, assign) AWEVideoDetailCloseStyle closeStyle;
-@property (nonatomic, assign) NSTimeInterval totalDuration;
 // 详情页数据
 @property (nonatomic, strong) FHFeedUGCCellModel *model;
 @property (nonatomic, strong) NSArray<NSDictionary *> *userReportOptions;
 @property (nonatomic, strong) NSArray<NSDictionary *> *videoReportOptions;
-// 用于避免重复digg
-@property (nonatomic, strong) NSLock *diggLock;
-@property (nonatomic, strong) NSLock *commentDiggLock;
 // observers
 @property (nonatomic, strong) NSMutableArray *observerArray;
-
-///下拉关闭相关属性
-@property (nonatomic, strong) TTImagePreviewAnimateManager *animateManager;
-@property (nonatomic, strong) TSVShortVideoDetailExitManager *exitManager;
-@property (nonatomic, strong) UIView *finishBackView;
-@property (nonatomic, strong) SSThemedView *blackMaskView;
 @property (nonatomic, strong) UIView *popToView;
 @property (nonatomic, strong) UIView *bottomTabbarView;
-@property (nonatomic, strong) UIImage *fakeBackImage;
 
 @property (nonatomic, strong) TSVVideoDetailPromptManager *detailPromptManager;
 
@@ -207,19 +119,15 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, assign) TSVDetailSlideUpViewType slideUpViewType;
 ///下滑手势
 @property (nonatomic, strong) UIPanGestureRecognizer *commentSlideDownGesture;
-//@property (nonatomic, strong) UIPanGestureRecognizer *profileSlideDownGesture;
 ///浮层
 @property (nonatomic, assign) BOOL allowCommentSlideDown;
-@property (nonatomic, assign) BOOL allowProfileSlideDown;
 
 @property (nonatomic, assign) BOOL commentScrollEnable;
-@property (nonatomic, assign) BOOL profileScrollEnable;
 
 @property (nonatomic, strong) UIView *commentViewMaskView;
 @property (nonatomic, strong) UIView *profileViewMaskView;
 
 @property (nonatomic, assign) BOOL isCommentViewAnimating;
-@property (nonatomic, assign) BOOL isProfileViewAnimating;
 
 @property (nonatomic, assign) CGFloat commentBeginDragContentOffsetY;
 @property (nonatomic, assign) CGFloat profileBeginDragContentOffsetY;
@@ -229,20 +137,15 @@ typedef NS_ENUM(NSInteger, TSVDetailCommentViewStatus) {
 @property (nonatomic, assign) UIStatusBarStyle originalStatusBarStyle;
 
 @property (nonatomic, strong) TTShareManager *shareManager;
-///当前详情页是从个人作品浮层push进来的
-@property (nonatomic, assign) BOOL pushFromProfileVC;
 
-///左滑手势:进个人主页
-@property (nonatomic, strong) UIPanGestureRecognizer *slideLeftGesture;
 
-//push
-@property (nonatomic, copy) NSString *ruleID;   //推送gid对应的唯一标识
 @property (nonatomic, copy) NSString *originalGroupID;  //schema中的初始gid
 
-@property (nonatomic, strong) ExploreOrderedData            *orderedData;
 
 @property (nonatomic, assign) BOOL loadingShareImage;//加载分享图片时 点击分享按钮
 
+@property (nonatomic, assign) BOOL canLoadMore;//是否可以加载更多
+ 
 @property (nonatomic, strong) FHPostDetailCommentWriteView *commentWriteView;
 @property (nonatomic, strong) TTGroupModel *groupModel;
 
@@ -268,11 +171,10 @@ static const CGFloat kFloatingViewOriginY = 230;
         /// allParams 里是以上两个字典的并集，extra会覆盖 query
 //        _tracerDic = paramObj.userInfo.extra;
         _pageParams = paramObj.allParams.copy;
-
+        _canLoadMore = [paramObj.host isEqualToString:@"small_video_detail"];
         _groupID = [params[AWEVideoGroupId] copy] ?: @"";
         _topID =  [params[AWEVideocTopId] copy] ?: @"";
         _originalGroupID = [params[AWEVideoGroupId] copy] ?: @"";
-        _ruleID = [params[AWEVideoRuleId] copy];
         _groupSource = [params[VideoGroupSource] copy] ?: @"";
         _showComment = [params[AWEVideoShowComment] copy];
         
@@ -280,17 +182,6 @@ static const CGFloat kFloatingViewOriginY = 230;
             _showComment = [extraParams[AWEVideoShowComment] copy];
         }
         _categoryName = [params btd_stringValueForKey:AWEVideoCategoryName];
-        _commonTrackingParameter = @{
-                                     @"enter_from": [params[AWEVideoEnterFrom] copy] ?: @"",
-                                     @"category_name": [params[AWEVideoCategoryName] copy] ?: @""
-                                     };
-
-        if (params[@"log_pb"]) {
-            id logPb = [NSJSONSerialization JSONObjectWithData:[params[@"log_pb"] dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-            NSAssert(logPb, @"logPb must not be nil");
-            _initialLogPb = logPb?: @{};
-            NSAssert([_initialLogPb isKindOfClass:[NSDictionary class]], @"log_pb must be a dictionary");
-        }
         
         [self initReportOptions];
         [self initProperty];
@@ -304,6 +195,13 @@ static const CGFloat kFloatingViewOriginY = 230;
           }
         self.dataFetchManager.groupID = self.groupID;
         self.dataFetchManager.topID = self.topID;
+        self.dataFetchManager.canLoadMore = self.canLoadMore;
+        FHFeedUGCCellModel *currentShortVideoModel = extraParams[@"current_video"];
+        TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.groupID itemID:self.groupID impressionID:nil aggrType:1];
+        self.groupModel = groupModel;
+        if (!currentShortVideoModel) {
+            [self startLoading];
+        }
         self.dataFetchManager.currentShortVideoModel = extraParams[@"current_video"];
         self.dataFetchManager.otherShortVideoModels = extraParams[@"other_videos"];
         @weakify(self);
@@ -323,22 +221,11 @@ static const CGFloat kFloatingViewOriginY = 230;
                 };
             }
         }];
-
-        if (extraParams[HTSVideoDetailExitManager]) {
-            self.exitManager = extraParams[HTSVideoDetailExitManager];
-        }
-        if (extraParams[TSVDetailPushFromProfileVC]) {
-            self.pushFromProfileVC = [extraParams btd_boolValueForKey:TSVDetailPushFromProfileVC];
-        }
-        
-        if (extraParams[HTSVideoDetailOrderedData]) {
-            self.orderedData = extraParams[HTSVideoDetailOrderedData];
-        }
-        
-        TTGroupModel *groupModel = [[TTGroupModel alloc] initWithGroupID:self.groupID itemID:self.groupID impressionID:nil aggrType:1];
-        self.groupModel = groupModel;
     }
     return self;
+}
+- (void)setGroupID:(NSString *)groupID {
+    _groupID = groupID;
 }
 
 - (void)initReportOptions
@@ -358,18 +245,11 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)initProperty
 {
     _offset = 0;
-    _diggLock = [NSLock new];
-    _commentDiggLock = [NSLock new];
     _observerArray = [NSMutableArray array];
     _commentManager = [[AWEVideoCommentDataManager alloc] init];
-    _isFirstTimeShowCommentListOrKeyboard = YES;
     _isCommentViewAnimating = NO;
-    _isProfileViewAnimating = NO;
     _slideUpViewType = [TSVSlideUpPromptViewController slideUpViewType];
     self.ttHideNavigationBar = YES;
-    _isDisliked = NO;
-    _closeStyle = AWEVideoDetailCloseStyleNavigationPan;//默认为右滑
-
     self.detailPromptManager = [[TSVVideoDetailPromptManager alloc] init];
 }
 
@@ -402,14 +282,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    //黑色背景
-    self.blackMaskView = ({
-        SSThemedView *blackMaskView = [[SSThemedView alloc] initWithFrame:self.view.frame];
-        blackMaskView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        blackMaskView.backgroundColor = [UIColor colorWithHexString:@"#000000"];
-        blackMaskView;
-    });
     
     if (![AWEVideoPlayAccountBridge isLogin]) {
         [AWEVideoPlayAccountBridge fetchTTAccount];
@@ -429,7 +301,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     self.videoContainerViewController = ({
         AWEVideoContainerViewController *controller = [[AWEVideoContainerViewController alloc] init];
         controller.dataFetchManager = self.dataFetchManager;
-        controller.commonTrackingParameter = self.commonTrackingParameter;
         controller.extraDic = self.extraDic;
         controller.needCellularAlert = (self.pageParams[AWEVideoPageParamNonWiFiAlert] && [self.pageParams[AWEVideoPageParamNonWiFiAlert] isKindOfClass:[NSNumber class]]) ? [self.pageParams[AWEVideoPageParamNonWiFiAlert] boolValue] : YES;
         @weakify(self)
@@ -446,7 +317,6 @@ static const CGFloat kFloatingViewOriginY = 230;
             @strongify(self);
             viewController.viewModel = ({
                 TSVControlOverlayViewModel *viewModel = [[TSVControlOverlayViewModel alloc] init];
-                viewModel.commonTrackingParameter = self.commonTrackingParameter;
                 viewModel.listEntrance = [self entrance];
                 viewModel.writeCommentButtonDidClick = ^{
                             @strongify(self);
@@ -454,8 +324,6 @@ static const CGFloat kFloatingViewOriginY = 230;
                     [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:rank eventPosition:@"detail_comment"];
                             [self playView:nil didClickInputWithModel:self.model];
                         };
-                viewModel.showProfilePopupBlock = ^{
-                };
                 viewModel.showCommentPopupBlock = ^{
                     @strongify(self);
                     [self playView:nil didClickCommentWithModel:self.model];
@@ -511,7 +379,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     
     
     self.commentView = [[SSThemedView alloc] initWithFrame:CGRectMake(0, CGRectGetHeight([UIScreen mainScreen].bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight([UIScreen mainScreen].bounds) - kFloatingViewOriginY)];
-//    self.commentView.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     self.commentView.layer.cornerRadius = 6.0;
     self.commentView.backgroundColorThemeKey = kColorBackground4;
     self.commentView.hidden = YES;
@@ -630,18 +497,12 @@ static const CGFloat kFloatingViewOriginY = 230;
     } else {
         [self loadMoreAutomatically:YES showLoading:YES];
     }
-    
-//    }
-
     self.commentSlideDownGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleCommentSlideDownGesture:)];
     self.commentSlideDownGesture.delegate = self;
     [self.commentView addGestureRecognizer:self.commentSlideDownGesture];
 
     self.allowCommentSlideDown = YES;
-    self.allowProfileSlideDown = YES;
-
     self.commentScrollEnable = YES;
-    self.profileScrollEnable = YES;
 
     RACChannelTo(self, tableView.scrollEnabled) = RACChannelTo(self, commentScrollEnable);
     [RACObserve(self, dataFetchManager.currentIndex) subscribeNext:^(id x) {
@@ -649,8 +510,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         if ([self.dataFetchManager numberOfShortVideoItems] > 0){
             self.model = [self.dataFetchManager itemAtIndex:self.dataFetchManager.currentIndex];
             [self loadVideoDataIfNeeded];
-
-            [TSVDownloadManager preloadAppStoreForGroupSourceIfNeeded:self.model.groupSource];
         }
     }];
 
@@ -658,7 +517,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 
     self.viewModel = [[TSVDetailViewModel alloc] init];
     RAC(self, viewModel.dataFetchManager) = RACObserve(self, dataFetchManager);
-    RAC(self, viewModel.commonTrackingParameter) = RACObserve(self, commonTrackingParameter);
     RAC(self, videoContainerViewController.viewModel) = RACObserve(self, viewModel);
     
 }
@@ -692,32 +550,14 @@ static const CGFloat kFloatingViewOriginY = 230;
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     [UIApplication sharedApplication].statusBarStyle = self.originalStatusBarStyle;
-
-//    [self.inputBar resignActive];
-
     [[NSNotificationCenter defaultCenter] postNotificationName:@"kExploreMovieViewPlaybackFinishNotification" object:self];
-
     [self.detailPromptManager hidePrompt];
-    
     [TSVStartupTabManager sharedManager].detailViewControllerVisibility = NO;
-    
     if ([UIApplication sharedApplication].applicationState != UIApplicationStateBackground) {
         [[NSNotificationCenter defaultCenter] postNotificationName:TSVVideoDetailVisibilityDidChangeNotification object:nil userInfo:@{TSVVideoDetailVisibilityDidChangeNotificationVisibilityKey:@NO}];
     }
-
-    if ([self isBeingPopOrDismissed] && self.ruleID) {
-        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithCapacity:3];
-        [parameters setValue:self.ruleID forKey:@"rule_id"];
-        [parameters setValue:self.originalGroupID forKey:@"group_id"];
-        [parameters setValue:@"hotsoon" forKey:@"message_type"];
-        [TTTrackerWrapper eventV3:@"push_page_back_to_feed"
-                           params:[parameters copy]];
-    }
-    
-//    [self.commentWriteView.inputTextView resignFirstResponder];
     
     [self.commentWriteView dismissAnimated:YES];
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -729,56 +569,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self dismissCommentListWithCancelType:@"push"];
 }
 
-//- (void)viewDidDisappear:(BOOL)animated
-//{
-//    [super viewDidDisappear:animated];
-//}
-
-- (void)didMoveToParentViewController:(UIViewController *)parent
-{
-    if (!parent) {
-        for (UIViewController *viewController in self.childViewControllers) {
-            [viewController didMoveToParentViewController:nil];
-        }
-    }
-
-    if (!parent) {
-        //退出详情页时重置下替换的model和index
-//        [self.dataFetchManager replaceModel:nil atIndex:NSNotFound];
-        
-        NSString *backType = nil;
-        switch (self.closeStyle) {
-            case AWEVideoDetailCloseStyleNavigationPan:
-                backType = @"gesture";
-                break;
-            case AWEVideoDetailCloseStyleCloseButton:
-                backType = @"btn_close";
-                break;
-            case AWEVideoDetailCloseStylePullPanDown:
-                backType = @"pull";
-                break;
-            default:
-                break;
-        }
-    }
-}
-
-//确保没wifi的情况下流量弹框弹出后再根据feed页传入的参数显示keyboard或者评论列表
-- (void)firstShowCommentListOrKeyboard
-{
-    if(self.isFirstTimeShowCommentListOrKeyboard){
-        self.isFirstTimeShowCommentListOrKeyboard = NO;
-
-        if ([self.showComment integerValue] == ShowCommentModal){
-            [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopByClick];
-        } else if([self.showComment integerValue] == ShowKeyboardOnly){
-//            self.inputBar.params[@"source"] = @"video_play";
-//            [self.inputBar becomeActive];
-            [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
-        }
-    }
-}
-
 #pragma mark - getter & setter
 
 - (void)setModel:(FHFeedUGCCellModel *)model
@@ -786,18 +576,14 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([model isEqual:_model]) {
         return;
     }
-
     _model = model;
-
     if (self.model.logPb) {
         self.initialLogPb = nil;
     } else if (self.initialLogPb) {
         self.model.logPb = self.initialLogPb;
         self.initialLogPb = nil;
     }
-
     [self updateModel];
-
     self.commentManager = [[AWEVideoCommentDataManager alloc] init];
     self.offset = 0;
     [self.tableView reloadData];
@@ -824,7 +610,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)reloadCommentHeaderWithCount:(NSNumber *)commentCount
 {
-//    self.commentHeaderLabel.text = commentCount ? [NSString stringWithFormat:@"%@条回复", [TTBusinessManager formatCommentCount:commentCount.longLongValue]] : @"暂无回复";
     self.commentHeaderLabel.text  = @"评论";
 }
 
@@ -837,9 +622,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([self.showComment integerValue] == ShowCommentModal) {
         [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopByClick];
     } else if ([self.showComment integerValue] == ShowKeyboardOnly) {
-//        self.inputBar.params[@"source"] = @"video_play";
-//        [self.inputBar becomeActive];
-        [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
+        [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil podition:@"detail_comment"];
     }
 }
 
@@ -873,18 +656,10 @@ static const CGFloat kFloatingViewOriginY = 230;
         @strongify(self);
         [self endLoading];
         if (error || increaseCount == 0) {
-//
             return;
-        }else {
-//
         }
-
         [self updateData];
-
-//        [TSVPrefetchImageManager prefetchDetailImageWithDataFetchManager:self.dataFetchManager forward:YES];
-
         [FHShortVideoPerLoaderManager startPrefetchShortVideoInDetailWithDataFetchManager:self.dataFetchManager];
-
         if (!self.firstLoadFinished) {
             self.firstLoadFinished = YES;
             [self loadVideoDataIfNeeded];
@@ -900,18 +675,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     }
 }
 
-- (BOOL)isShowingOnTop
-{
-    return self.view.window != nil;
-}
-
-- (BOOL)isBeingPopOrDismissed
-{
-    if (self.isBeingDismissed) {
-        return YES;
-    }
-    return ![[self.navigationController viewControllers] containsObject:self];
-}
 
 - (void)updateViews
 {
@@ -943,24 +706,6 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 }
 
-//按照头条逻辑 在评论发布器出现的时候使用的方法
-- (BOOL)alertIfNotLoginWithCompletion:(void(^)(BOOL success))completion
-{
-    if (![AWEVideoPlayAccountBridge isLogin]) {
-        [AWEVideoPlayAccountBridge fetchTTAccount];
-        if (![AWEVideoPlayAccountBridge isLogin]) {
-            @weakify(self);
-            
-            [[TTModuleBridge sharedInstance_tt] removeListener:self forKey:@"HTSLoginResult"];
-            [[TTModuleBridge sharedInstance_tt] registerListener:self object:nil forKey:@"HTSLoginResult" withBlock:^(id  _Nullable params) {
-                completion([params[@"success"] boolValue]);
-            }];
-            [AWEVideoPlayAccountBridge showLoginView];
-            return YES;
-        }
-    }
-    return NO;
-}
 
 - (BOOL)alertIfNotLogin
 {
@@ -971,30 +716,9 @@ static const CGFloat kFloatingViewOriginY = 230;
     return NO;
 }
 
-- (BOOL)alertIfCanNotShare
-{
-//    if (!self.model.user.relation.allowShare) {
-//        [HTSVideoPlayToast show:@"视频正在审核中，暂时不能分享。"];
-//        return YES;
-//    }
-    return NO;
-}
-
-- (BOOL)alertIfCanNotComment
-{
-//    if (!self.model.allowComment) {
-//        [HTSVideoPlayToast show:@"视频正在审核中，暂时不能评论。"];
-//        return YES;
-//    }
-    return NO;
-}
 
 - (BOOL)alertIfNotValid
 {
-//    if (self.model.isDelete) {
-//        [HTSVideoPlayToast show:@"视频已被删除"];
-//        return YES;
-//    }
     return !self.model;
 }
 
@@ -1040,15 +764,14 @@ static const CGFloat kFloatingViewOriginY = 230;
         //滑出过一次不再出引导
         [TSVSlideUpPromptViewController setSlideUpPromotionShown];
     }
-
-    [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:0 eventPosition:@"feed_comment"];
     self.commentView.hidden = NO;
 
     [UIView animateWithDuration:.2 customTimingFunction:CustomTimingFunctionCubicOut animation:^{
         self.commentView.frame = CGRectMake(0, kFloatingViewOriginY, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - kFloatingViewOriginY);
     } completion:^(BOOL finished) {
         if ([self.model.commentCount intValue] == 0) {
-            [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
+            [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:0 eventPosition:@"feed_comment"];
+            [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil podition:@"feed_comment"];
         };
     }];
     [self showCommentViewMaskView:YES];
@@ -1128,8 +851,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         }];
         if (!error) {
             self.model.userRepin = !self.model.userRepin;
-//            [self.model save];
-            [self.orderedData setValue:@(self.model.userRepin) forKeyPath:@"originalData.userRepined"];
             
             contentItem.selected = self.model.userRepin;
             
@@ -1240,7 +961,6 @@ static const CGFloat kFloatingViewOriginY = 230;
             }
             [[ToastManager manager] showToast:@"将减少推荐类似内容"];
             
-            self.isDisliked = YES;
         } else {
             [[ToastManager manager] showToast:@"操作失败"];
         }
@@ -1268,12 +988,7 @@ static const CGFloat kFloatingViewOriginY = 230;
             
             /// 给混排列表发通知
             [[NSNotificationCenter defaultCenter] postNotificationName:kTSVShortVideoDeleteNotification object:nil userInfo:@{kTSVShortVideoDeleteUserInfoKeyGroupID : self.model.groupId? : @""}];
-            /// 标记下需要删除
-//            self.model.shouldDelete = YES;
-            /// 如果已收藏需要取消收藏
             self.model.userRepin = NO;
-            self.closeStyle = AWEVideoDetailCloseStyleNavigationPan;
-            self.blackMaskView.hidden = YES;
             [self.navigationController popViewControllerAnimated:YES];
         }
     }];
@@ -1304,7 +1019,6 @@ static const CGFloat kFloatingViewOriginY = 230;
             @strongify(self, model);
             if(response.totalNumber){
                 model.commentCount = [NSString stringWithFormat:@"%@",response.totalNumber] ;
-//                [model save];
                 [self reloadCommentHeaderWithCount:response.totalNumber];
             }
 
@@ -1335,10 +1049,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     }
 }
 
-- (void)handleDismissKeyboard
-{
-//    [self.inputBar resignActive];
-}
 
 - (void)handleFakeInputBarClick:(id)sender
 {
@@ -1348,8 +1058,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     if ([self alertIfNotValid]) {
         return;
     }
-//    [self.inputBar becomeActive];
-    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
+    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil podition:@"feed_comment"];
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
@@ -1401,10 +1110,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         return;
     }
 
-    if ([self alertIfCanNotComment]) {
-        return;
-    }
-
 
     // 自己评论不弹窗
     if ([AWEVideoPlayAccountBridge isCurrentLoginUser:[commentModel.userId stringValue]]) {
@@ -1423,8 +1128,8 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 //    [self.inputBar becomeActive];
     
-    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:commentModel.id.stringValue];
-    [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:indexPath.row eventPosition:@"comment_reply"];
+    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:commentModel.id.stringValue podition:@"reply"];
+    [FHShortVideoTracerUtil clickCommentWithModel:self.model eventIndex:indexPath.row eventPosition:@"reply"];
     [self.commentWriteView setTextViewPlaceholder:[NSString stringWithFormat:@"@%@：", commentModel.userName]];
 }
 
@@ -1438,10 +1143,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 
 - (void)dismissByClickingCloseButton
 {
-    self.closeStyle = AWEVideoDetailCloseStyleCloseButton;
-    self.blackMaskView.hidden = YES;
     [self.navigationController popViewControllerAnimated:YES];
-//    [self.animateManager dismissWithoutGesture];
 }
 
 - (void)topView:(UIViewController *)viewController didClickReportWithModel:(FHFeedUGCCellModel *)model
@@ -1568,10 +1270,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         return;
     }
 
-    if ([self alertIfCanNotComment]) {
-        return;
-    }
-
 //    if (self.inputBar.targetCommentModel) {
 //        // 草稿是回复A，现在要回复视频
 //        [self.inputBar clearInputBar];
@@ -1579,7 +1277,7 @@ static const CGFloat kFloatingViewOriginY = 230;
 //
 //    self.inputBar.params[@"source"] = @"video_play";
 //    [self.inputBar becomeActive];
-    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil];
+    [self p_willOpenWriteCommentViewWithReservedText:nil switchToEmojiInput:NO replyToCommentID:nil podition:@"detail_comment"];
 }
 
 - (void)playView:(AWEVideoPlayView *)view didClickCommentWithModel:(FHFeedUGCCellModel *)model
@@ -1737,116 +1435,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self loadVideoDataIfNeeded];
 }
 
-#pragma mark - handle slideGesture
-- (void)handleSlideLeftGesture:(UIPanGestureRecognizer *)gesture
-{
-    CGFloat progress = fabs([gesture translationInView:self.view].x / self.view.bounds.size.width);
-    if (gesture.state == UIGestureRecognizerStateBegan) {
-        [TSVTransitionAnimationManager sharedManager].enterProfilePercentDrivenTransition = [UIPercentDrivenInteractiveTransition new];
-        NSMutableDictionary *extraUserInfo = [NSMutableDictionary dictionary];
-        [extraUserInfo setValue:self.model.user.name forKey:@"username"];
-        [extraUserInfo setValue:self.model.user.avatarUrl forKey:@"avatar"];
-        [extraUserInfo setValue:self.model.user.userAuthInfo forKey:@"userAuthInfo"];
-        [extraUserInfo setValue:@([self.model.user.relation.isFollowing floatValue]) forKey:@"isFollowing"];
-        [extraUserInfo setValue:@([self.model.user.relation.isFollowed floatValue]) forKey:@"isFollowed"];
-        [extraUserInfo setValue:self.model.user.desc forKey:@"desc"];
-        [extraUserInfo setValue:@([self.model.user.relationCount.followingsCount floatValue]) forKey:@"followingCount"];
-        [extraUserInfo setValue:@([self.model.user.relationCount.followersCount floatValue]) forKey:@"followedCount"];
-        [AWEVideoPlayTransitionBridge openProfileViewWithUserId:self.model.user.userId params:nil userInfo:@{@"extra_user_info": extraUserInfo}];
-    } else if (gesture.state == UIGestureRecognizerStateChanged) {
-        [[TSVTransitionAnimationManager sharedManager].enterProfilePercentDrivenTransition updateInteractiveTransition:progress];
-    } else if (gesture.state == UIGestureRecognizerStateEnded ||
-               gesture.state == UIGestureRecognizerStateCancelled) {
-        CGPoint velocity = [gesture velocityInView:self.view];
-        if (progress > 0.3 || fabs(velocity.x) > 500) {
-            //用户左滑进过个人主页，标记下，之后不在出引导
-            [TSVSlideLeftEnterProfilePromptViewController setSlideLeftPromotionShown];
-            [[TSVTransitionAnimationManager sharedManager].enterProfilePercentDrivenTransition finishInteractiveTransition];
-        } else {
-            [[TSVTransitionAnimationManager sharedManager].enterProfilePercentDrivenTransition cancelInteractiveTransition];
-        }
-        [TSVTransitionAnimationManager sharedManager].enterProfilePercentDrivenTransition = nil;
-    }
-}
-
-//- (void)layoutProfileViewController
-//{
-//    if (!self.profileViewController.parentViewController) {
-//        self.profileViewController.view.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - kFloatingViewOriginY);
-//        self.profileViewController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-//
-//        UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.profileViewController.view.bounds byRoundingCorners:UIRectCornerTopLeft | UIRectCornerTopRight cornerRadii:CGSizeMake(6, 6)];
-//        CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-//        maskLayer.frame = self.profileViewController.view.bounds;
-//        maskLayer.path = maskPath.CGPath;
-//        self.profileViewController.view.layer.mask = maskLayer;
-//
-//        self.profileViewController.view.hidden = YES;
-//        self.profileSlideDownGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handleProfileSlideDownGesture:)];
-//        self.profileSlideDownGesture.delegate = self;
-//        [self.profileViewController.view addGestureRecognizer:self.profileSlideDownGesture];
-//        [self addChildViewController:self.profileViewController];
-//        [self.view addSubview:self.profileViewController.view];
-//    }
-//}
-//
-//- (void)updateProfileViewModelIfNeeded
-//{
-//    if ([self.profileViewController.viewModel.cellViewModelArray count] == 0 || ![self.profileViewController.viewModel.userID isEqualToString:self.model.author.userID]){
-//        ///如果uid不相同，需要拉取新的个人作品数据
-//        self.profileViewController.viewModel = [[TSVProfileViewModel alloc] initWithModel:self.model commonTrackingParameter:self.commonTrackingParameter dataFetchManager:nil];
-//    }
-//}
-
-- (void)handleSlideUpGesture:(UIPanGestureRecognizer *)gesture
-{
-    UIView *floatingView = nil;
-//    if (self.slideUpViewType == TSVDetailSlideUpViewTypeProfile) {
-//        [self layoutProfileViewController];
-//        floatingView = self.profileViewController.view;
-//    }
-    if (self.slideUpViewType == TSVDetailSlideUpViewTypeComment) {
-        floatingView = self.commentView;
-    }
-
-    if (!floatingView) {
-        return;
-    }
-
-    CGPoint transition = [gesture translationInView:self.view];
-    CGPoint velocity = [gesture velocityInView:self.view];
-
-    if (gesture.state == UIGestureRecognizerStateBegan) {
-//        if (self.slideUpViewType == TSVDetailSlideUpViewTypeProfile) {
-//            [self updateProfileViewModelIfNeeded];
-//        }
-    } else if (gesture.state == UIGestureRecognizerStateChanged) {
-        floatingView.hidden = NO;
-        floatingView.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds) - MIN(CGRectGetHeight(floatingView.bounds), MAX(- transition.y, 0)), CGRectGetWidth(self.view.bounds), CGRectGetHeight(floatingView.bounds));
-    } else if (gesture.state == UIGestureRecognizerStateEnded ||
-               gesture.state == UIGestureRecognizerStateCancelled) {
-        if (CGRectGetMaxY(floatingView.frame) - CGRectGetHeight(self.view.bounds) >= CGRectGetHeight(floatingView.bounds) * 2.0 / 3.0 && - velocity.y < 500) {
-//            if (self.slideUpViewType == TSVDetailSlideUpViewTypeProfile) {
-//                [self dismissProfileViewWithCancelType:@"gesture"];
-//            }
-            if (self.slideUpViewType == TSVDetailSlideUpViewTypeComment) {
-                [self dismissCommentListWithCancelType:@"gesture"];
-            }
-        } else {
-//            if (self.slideUpViewType == TSVDetailSlideUpViewTypeProfile) {
-//                //滑出过一次不再出引导
-//                [TSVSlideUpPromptViewController setSlideUpPromotionShown];
-//                [self showProfileView];
-//            }
-            if (self.slideUpViewType == TSVDetailSlideUpViewTypeComment) {
-
-
-                [self showCommentsListWithStatus:TSVDetailCommentViewStatusPopBySlideUp];
-            }
-        }
-    }
-}
-
 - (void)handleCommentSlideDownGesture:(UIPanGestureRecognizer *)gesture
 {
     UIView *floatingView = self.commentView;
@@ -1877,222 +1465,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     }
 }
 
-#pragma mark - UIGestureRecognizerDelegate
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
-{
-    if (gestureRecognizer == self.slideUpGesture) {
-        CGPoint velocity = [(UIPanGestureRecognizer *)gestureRecognizer velocityInView:self.view];
-        float x = velocity.x;
-        float y = velocity.y;
-        
-        double angle = atan2(x, y) * 180.0f / M_PI;
-        
-        if (angle < 0) {
-            angle += 360.f;
-        }
-        
-        if (angle > 225.f) {
-            return NO;
-        }
-        
-        if (self.slideUpViewType == TSVDetailSlideUpViewTypeComment) {
-            return y < 0 && self.commentView.hidden;
-        } else {
-            return NO;
-        }
-    }
-    if (gestureRecognizer == self.commentSlideDownGesture) {
-        return [self.commentSlideDownGesture translationInView:self.commentView].y > 0;
-    }
-//    if (gestureRecognizer == self.profileSlideDownGesture) {
-//        return [self.profileSlideDownGesture translationInView:self.profileViewController.view].y > 0;
-//    }
-    if (gestureRecognizer == self.slideLeftGesture) {
-        //限制左滑，且非个人主页进的详情页
-        BOOL enterFromProfile = ([self entrance] == TSVShortVideoListEntranceProfile);
-        return [self.slideLeftGesture translationInView:self.view].x < 0 && !enterFromProfile;
-    }
-
-    return YES;
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    if (gestureRecognizer == self.commentSlideDownGesture && [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
-        return YES;
-    }
-//    else if (gestureRecognizer == self.profileSlideDownGesture && [otherGestureRecognizer.view isKindOfClass:[UIScrollView class]]) {
-//        return YES;
-//    }
-    return NO;
-}
-#pragma mark - Orientation
-
-- (BOOL)shouldAutorotate
-{
-    return NO;
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations
-{
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-
-- (UIView *)finishBackView{
-    if (_finishBackView == nil){
-        _finishBackView = [TTInteractExitHelper getSuitableFinishBackViewInPreViewController];
-    }
-    return _finishBackView;
-}
-
-- (void)addPreviousVCToNaviView
-{
-    NSArray *VCs = [[self.navigationController.viewControllers reverseObjectEnumerator] allObjects];
-    if (VCs.count > 1){
-        UIViewController *VC = [VCs objectAtIndex:1];
-
-        _popToView = VC.view;
-        _popToView.frame = self.navigationController.view.bounds;
-        [self.navigationController.view addSubview:_popToView];
-        if ([VCs count] == 2 && VC.tabBarController) {
-            ///截图会触发列表页的collectionView的layoutSubviews,使得下拉退出时能回到正确的位置，修改时需要注意！！！
-            _bottomTabbarView = [UIViewController tabBarSnapShotView];
-        }
-        [self.navigationController.view addSubview:_bottomTabbarView];
-        [self.navigationController.view addSubview:_blackMaskView];
-    }
-}
-
-- (void)removePreviousVCFromNaviView
-{
-    [_popToView removeFromSuperview];
-    [_blackMaskView removeFromSuperview];
-    [_bottomTabbarView removeFromSuperview];
-}
-
-#pragma mark - TTPreviewPanBackDelegate
-- (BOOL)ttPreviewPanGestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer;
-{
-//    if ([gestureRecognizer isKindOfClass:[UIPanGestureRecognizer class]]) {
-//        return [self.videoContainerViewController canPullToClose];
-//    }
-    return NO;
-}
-
-//scale仅仅在 TTPreviewAnimateStateChange下 有正确的值，其他都为0
-- (void)ttPreviewPanBackStateChange:(TTPreviewAnimateState)currentState scale:(float)scale
-{
-    switch (currentState) {
-        case TTPreviewAnimateStateWillBegin:
-        {
-            FHFeedUGCCellModel *model = (FHFeedUGCCellModel*)[self.originalDataFetchManager itemAtIndex:self.originalDataFetchManager.currentIndex replaced:NO];
-
-            NSURL *URL = nil;
-//            URL = [NSURL URLWithString:[model.animatedImageModel.urlWithHeader firstObject][@"url"] ?:@""];
-            FHFeedContentImageListModel *imageModel = [model.animatedImageList firstObject];
-            URL = [NSURL URLWithString:imageModel.url?:@""];
-            NSString *cacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:URL];
-            if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:cacheKey]) {
-                self.fakeBackImage = [[[YYWebImageManager sharedManager] cache]  getImageForKey:cacheKey];
-            } else if (model.largeImageList.count>0) {
-                FHFeedContentImageListModel *largeImage = [model.animatedImageList firstObject];
-                NSURL *stillImageURL = [NSURL URLWithString:largeImage.url?:@""];
-                NSString *stillImageCacheKey = [[YYWebImageManager sharedManager] cacheKeyForURL:stillImageURL];
-                if ([[[YYWebImageManager sharedManager] cache] containsImageForKey:stillImageCacheKey]) {
-                   self.fakeBackImage = [[[YYWebImageManager sharedManager] cache]  getImageForKey:stillImageCacheKey];
-                } else {
-                    @weakify(self);
-                    [[SDWebImageManager sharedManager] loadImageWithURL:stillImageURL options:SDWebImageHighPriority progress:nil completed:^(UIImage * _Nullable image, NSData * _Nullable data, NSError * _Nullable error, SDImageCacheType cacheType, BOOL finished, NSURL * _Nullable imageURL) {
-                        @strongify(self);
-                        self.fakeBackImage = image;
-                    }];
-                }
-            }
-            [self removePreviousVCFromNaviView];
-            [self addPreviousVCToNaviView];
-            [self.videoContainerViewController pauseCurrentVideo];
-            [UIApplication sharedApplication].statusBarStyle = self.originalStatusBarStyle;
-        }
-            break;
-        case TTPreviewAnimateStateChange:
-        {
-            self.blackMaskView.alpha = MAX(0,(scale*14-13 - _animateManager.minScale)/(1 - _animateManager.minScale));
-        }
-            break;
-        case TTPreviewAnimateStateDidFinish:
-        {
-            [self removePreviousVCFromNaviView];
-            [self handleClose:NO];
-        }
-            break;
-        case TTPreviewAnimateStateWillCancel:
-        {
-            [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
-        }
-            break;
-        case TTPreviewAnimateStateDidCancel:
-        {
-            [self removePreviousVCFromNaviView];
-            [self.videoContainerViewController playCurrentVideo];
-        }
-            break;
-        default:
-            break;
-    }
-}
-
-- (UIView *)ttPreviewPanBackGetOriginView
-{
-    return [self.videoContainerViewController exitScreenshotView];
-}
-
-- (UIView *)ttPreviewPanBackGetBackMaskView
-{
-    if (self.exitManager.updateTargetViewBlock){
-        return self.exitManager.updateTargetViewBlock();
-    }
-    return self.finishBackView;
-}
-
-- (CGRect)ttPreviewPanBackTargetViewFrame;
-{
-    if (self.exitManager.updateImageFrameBlock) {
-        return self.exitManager.updateImageFrameBlock();
-    }
-    return CGRectZero;
-}
-
-//最终的画布，用于解决遮挡的问题，一个理想的view。- -!
-- (UIView *)ttPreviewPanBackGetFinishBackgroundView
-{
-    return self.finishBackView;
-}
-
-//可以在finish和cancel一起动画
-- (void)ttPreviewPanBackFinishAnimationCompletion{
-    self.blackMaskView.alpha = 0;
-
-    if (self.closeStyle == AWEVideoDetailCloseStyleNavigationPan) {
-        self.closeStyle = AWEVideoDetailCloseStylePullPanDown;
-    }
-}
-
-- (void)ttPreviewPanBackCancelAnimationCompletion{
-    self.blackMaskView.alpha = 1;
-}
-
-- (UIImage *)ttPreviewPanBackImageForSwitch;
-{
-    return _fakeBackImage;
-}
-
-- (TTImageViewContentMode)ttPreViewPanBackImageViewForSwitchContentMode
-{
-    if (self.exitManager.fakeImageContentMode) {
-        return self.exitManager.fakeImageContentMode;
-    }
-    return TTImageViewContentModeScaleAspectFillRemainTop;
-}
 
 #pragma TTShareManagerDelegate
 
@@ -2116,7 +1488,6 @@ static const CGFloat kFloatingViewOriginY = 230;
         [self handleDeleteVideo];
     } else if ([contentItem.contentItemType isEqualToString:TTActivityContentItemTypeForwardWeitoutiao]) {
         [FHShortVideoTracerUtil clicksharePlatForm:self.model eventPlantFrom:@"weitoutiao"];
-        [TSVVideoDetailShareHelper handleForwardUGCVideoWithModel:self.model];
     } else if (!isEmptyString(contentItem.contentItemType)){
         NSString *type = [AWEVideoShareModel labelForContentItemType:contentItem.contentItemType];
         NSAssert(type, @"Type should not be empty");
@@ -2134,7 +1505,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     [TSVVideoShareManager synchronizeUserDefaultsWithAvtivityType:activity.contentItemType];
 }
 
-- (void)p_willOpenWriteCommentViewWithReservedText:(NSString *)reservedText switchToEmojiInput:(BOOL)switchToEmojiInput replyToCommentID:(NSString *)replyToCommentID {
+- (void)p_willOpenWriteCommentViewWithReservedText:(NSString *)reservedText switchToEmojiInput:(BOOL)switchToEmojiInput replyToCommentID:(NSString *)replyToCommentID podition:(NSString *)position {
     
     NSMutableDictionary *condition = [NSMutableDictionary dictionaryWithCapacity:10];
     [condition setValue:self.groupModel forKey:kQuickInputViewConditionGroupModel];
@@ -2156,7 +1527,7 @@ static const CGFloat kFloatingViewOriginY = 230;
     
     TTCommentWriteManager *commentManager = [[TTCommentWriteManager alloc] initWithCommentCondition:condition commentViewDelegate:self commentRepostBlock:^(NSString *__autoreleasing *willRepostFwID) {
         *willRepostFwID = fwID;
-        [wSelf clickSubmitComment];
+        [wSelf clickSubmitComment:position];
     } extraTrackDict:nil bindVCTrackDict:nil commentRepostWithPreRichSpanText:nil readQuality:nil];
     commentManager.enterFrom = @"feed_detail";
     commentManager.enter_type = @"submit_comment";
@@ -2169,16 +1540,12 @@ static const CGFloat kFloatingViewOriginY = 230;
     [self.commentWriteView showInView:self.view animated:YES];
 }
 
-- (void)clickSubmitComment {
+- (void)clickSubmitComment:(NSString *)position {
     NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
-     [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:rank];
+     [FHShortVideoTracerUtil clickCommentSubmitWithModel:self.model eventIndex:rank eventPosition:position];
 }
 
 #pragma mark - TTWriteCommentViewDelegate
-
-- (void)commentView:(TTCommentWriteView *) commentView cancelledWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager {
-    // commentWriteManager.delegate = nil;
-}
 
 - (void)commentView:(TTCommentWriteView *) commentView sucessWithCommentWriteManager:(TTCommentWriteManager *)commentWriteManager responsedData:(NSDictionary *)responseData
 {
@@ -2233,18 +1600,6 @@ static const CGFloat kFloatingViewOriginY = 230;
     }
 }
 
-/// comment_bottom是为了和底部的“写评论”框区分，"写评论"的框和写评论相关的三个埋点 @马怡民
-- (NSDictionary *)writeCommentExtraPositionDict
-{
-    if (self.commentViewStatus == TSVDetailCommentViewStatusPopBySlideUp) {
-        return @{@"position": @"draw_bottom"};
-    } else if (self.commentViewStatus == TSVDetailCommentViewStatusPopByClick) {
-        return @{@"position": @"comment_bottom"};
-    } else {
-        return @{@"position": @"detail"};
-    }
-}
-
 #pragma mark -
 - (void)viewSafeAreaInsetsDidChange
 {
@@ -2259,22 +1614,12 @@ static const CGFloat kFloatingViewOriginY = 230;
     return ![UIDevice btd_isIPhoneXSeries];
 }
 
-#pragma mark -  InteractExitProtocol
-
-- (UIView *)suitableFinishBackView{
-//    return self.profileViewController.collectionView;
-    return nil;
-}
 
 #pragma mark - Entrance
 
 - (TSVShortVideoListEntrance)entrance
 {
     TSVShortVideoListEntrance ret = TSVShortVideoListEntranceOther;
-    
-//    if ([self.dataFetchManager respondsToSelector:@selector(entrance)]) {
-//        ret = self.dataFetchManager.entrance;
-//    }
     
     return ret;
 }

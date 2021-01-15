@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithName:(NSString *)name imageName:(NSString *)imageName  moduletype:(FHMineModuleType )moduleType;
 @property (nonatomic, strong) UILabel *nameLabel;
+//@property (nonatomic, copy) NSString *focusConut;
 @property(nonatomic, copy) void(^itemClickBlock)(void);
 
 @end

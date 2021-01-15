@@ -16,8 +16,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)refreshWithdata:(id)data;
 
-@property(nonatomic, copy) void(^goToLinkBlock)(FHFeedUGCCellModel *cellModel, NSURL *url);
-
 @end
 
 NS_ASSUME_NONNULL_END

@@ -98,8 +98,8 @@
 @property (nonatomic, strong) NSIndexPath *lastIndexPath;
 @property (nonatomic, assign) BOOL segmentViewChangedFlag;
 
-@property (nonatomic, strong) NSArray<NSString *> * names;
-@property (nonatomic, strong) NSArray<NSNumber *> * types;
+@property (nonatomic, strong) NSArray<NSString *> * sectionNames;
+@property (nonatomic, strong) NSArray<NSNumber *> * sectionTypes;
 @property (strong, nonatomic) FHDetailPlaceHolderView *placeHolderView;
 
 //是否显示
@@ -132,8 +132,8 @@
                       @(FHNeighborhoodDetailSectionTypeRecommend)
     ];
     
-    self.names = name.copy;
-    self.types = type.copy;
+    self.sectionNames = name.copy;
+    self.sectionTypes = type.copy;
 }
 
 - (NSString *)nameToEn:(NSString *)name {
@@ -162,18 +162,18 @@
 //这个只会是一对一
 - (NSString *)getTabNameBySectionType:(FHNeighborhoodDetailSectionType)sectionType {
     
-    NSInteger index = [self.types indexOfObject:@(sectionType)];
+    NSInteger index = [self.sectionTypes indexOfObject:@(sectionType)];
     
     NSString *name = @"be_null";
-    if (index >= 0 && index < self.names.count) {
-        name = [self.names btd_objectAtIndex:index class:[NSString class]];
+    if (index >= 0 && index < self.sectionNames.count) {
+        name = [self.sectionNames btd_objectAtIndex:index class:[NSString class]];
     }
     
     if (index < 0 ||
-        index >= self.names.count ||
-        index >= self.types.count ||
-        ! ([[self.names btd_objectAtIndex:index class:[NSString class]] isEqualToString:name]) ||
-        ! ([[self.types btd_objectAtIndex:index class:[NSNumber class]] isEqualToNumber:@(sectionType) ]) ) {
+        index >= self.sectionNames.count ||
+        index >= self.sectionTypes.count ||
+        ! ([[self.sectionNames btd_objectAtIndex:index class:[NSString class]] isEqualToString:name]) ||
+        ! ([[self.sectionTypes btd_objectAtIndex:index class:[NSNumber class]] isEqualToNumber:@(sectionType) ]) ) {
         name = @"be_null";
     }
     
@@ -189,10 +189,10 @@
     
     WeakSelf;
     
-    NSMutableArray *result = [NSMutableArray arrayWithCapacity:self.types.count];
-    [self.names enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+    NSMutableArray *result = [NSMutableArray arrayWithCapacity:self.sectionTypes.count];
+    [self.sectionNames enumerateObjectsUsingBlock:^(NSString *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isEqualToString:titleName]) {
-            NSNumber *number = [wself.types btd_objectAtIndex:idx class:[NSNumber class]];
+            NSNumber *number = [wself.sectionTypes btd_objectAtIndex:idx class:[NSNumber class]];
             if (number) {
                 [result addObject:number];
             }
@@ -959,7 +959,7 @@
 
 - (void)clickTabTrackWithEnterType:(NSString *)enterType sectionType:(FHNeighborhoodDetailSectionType)sectionType {
     
-    if( ![self.types containsObject:@(sectionType) ]) {
+    if( ![self.sectionTypes containsObject:@(sectionType) ]) {
         return;
     }
     

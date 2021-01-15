@@ -10,11 +10,13 @@
 #import <BDWebImage/SDWebImageAdapter.h>
 #import "TTDeviceHelper.h"
 #import "FHBlockTransformer.h"
+#import "UIDevice+BTDAdditions.h"
+#import <ByteDanceKit/ByteDanceKit.h>
 
 @implementation UIImageView (fhUgcImage)
 
 - (nullable BDWebImageRequest *)fh_setImageWithURL:(nonnull NSURL *)imageURL placeholder:(nullable UIImage *)placeholder {
-    [self.layer removeAnimationForKey:@"contents"];
+//    [self.layer removeAnimationForKey:@"contents"];
     WeakSelf;
     return [self bd_setImageWithURL:imageURL placeholder:placeholder options:BDImageRequestSetDelaySetImage completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
         StrongSelf;
@@ -22,7 +24,24 @@
         imageData[@"image"] = image;
         imageData[@"from"] = @(from);
         
-        if([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen] || ([TTDeviceHelper is667Screen] && [TTDeviceHelper OSVersionNumber] < 13.0)){
+        if([UIDevice btd_is568Screen] || [UIDevice btd_is480Screen] || ([UIDevice btd_is667Screen] && [UIDevice btd_OSVersionNumber] < 13.0)){
+            [self performSelector:@selector(setImageWithData:) withObject:imageData afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
+        }else{
+            [self setImageWithData:imageData];
+        }
+    }];
+}
+
+- (nullable BDWebImageRequest *)fh_setImageWithURLs:(nonnull NSArray *)imageURLs placeholder:(nullable UIImage *)placeholder {
+//    [self.layer removeAnimationForKey:@"contents"];
+    WeakSelf;
+    return [self bd_setImageWithURLs:imageURLs placeholder:placeholder options:BDImageRequestSetDelaySetImage transformer:nil progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+        StrongSelf;
+        NSMutableDictionary *imageData = [NSMutableDictionary dictionary];
+        imageData[@"image"] = image;
+        imageData[@"from"] = @(from);
+        
+        if([UIDevice btd_is568Screen] || [UIDevice btd_is480Screen] || ([UIDevice btd_is667Screen] && [UIDevice btd_OSVersionNumber] < 13.0)){
             [self performSelector:@selector(setImageWithData:) withObject:imageData afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
         }else{
             [self setImageWithData:imageData];
@@ -31,19 +50,26 @@
 }
 
 - (nullable BDWebImageRequest *)fh_setImageWithURLs:(nonnull NSArray *)imageURLs placeholder:(nullable UIImage *)placeholder reSize:(CGSize)reSize{
-    [self.layer removeAnimationForKey:@"contents"];
+//    [self.layer removeAnimationForKey:@"contents"];
     WeakSelf;
     FHBlockTransformer *transform = [FHBlockTransformer transformWithBlock:^UIImage * _Nullable(UIImage * _Nullable image) {
         StrongSelf;
-        return [self compressImage:image toSize:reSize];
+        UIImage *resultImage = [self compressImage:image toSize:reSize];
+        NSString *url = [imageURLs firstObject];
+        if(url.length > 0){
+            NSString *cacheKey = [[BDWebImageManager sharedManager] requestKeyWithURL:[NSURL URLWithString:[imageURLs firstObject]]];
+            [[BDWebImageManager sharedManager].imageCache setImage:resultImage imageData:nil forKey:cacheKey withType:BDImageCacheTypeAll callBack:nil];
+        }
+        return resultImage;
     }];
-    return [self bd_setImageWithURLs:imageURLs placeholder:placeholder options:BDImageRequestSetDelaySetImage transformer:transform progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+    return [self bd_setImageWithURLs:imageURLs placeholder:placeholder options:BDImageRequestSetDelaySetImage | BDImageRequestNotCacheToMemery | BDImageRequestNotCacheToDisk transformer:transform progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
         StrongSelf;
+        
         NSMutableDictionary *imageData = [NSMutableDictionary dictionary];
         imageData[@"image"] = image;
         imageData[@"from"] = @(from);
         
-        if([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen] || ([TTDeviceHelper is667Screen] && [TTDeviceHelper OSVersionNumber] < 13.0)){
+        if([UIDevice btd_is568Screen] || [UIDevice btd_is480Screen] || ([UIDevice btd_is667Screen] && [UIDevice btd_OSVersionNumber] < 13.0)){
             [self performSelector:@selector(setImageWithData:) withObject:imageData afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
         }else{
             [self setImageWithData:imageData];
@@ -52,20 +78,24 @@
 }
 
 - (nullable BDWebImageRequest *)fh_setImageWithURL:(nonnull NSURL *)imageURL placeholder:(nullable UIImage *)placeholder reSize:(CGSize)reSize {
-    [self.layer removeAnimationForKey:@"contents"];
+//    [self.layer removeAnimationForKey:@"contents"];
     WeakSelf;
     FHBlockTransformer *transform = [FHBlockTransformer transformWithBlock:^UIImage * _Nullable(UIImage * _Nullable image) {
-        StrongSelf;
-        return [self compressImage:image toSize:reSize];
-    }];
+            StrongSelf;
+            UIImage *resultImage = [self compressImage:image toSize:reSize];
+            NSString *cacheKey = [[BDWebImageManager sharedManager] requestKeyWithURL:imageURL];
+            [[BDWebImageManager sharedManager].imageCache setImage:resultImage imageData:nil forKey:cacheKey withType:BDImageCacheTypeAll callBack:nil];
+            
+            return resultImage;
+        }];
     
-    return [self bd_setImageWithURL:imageURL placeholder:placeholder options:BDImageRequestSetDelaySetImage transformer:transform progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
+    return [self bd_setImageWithURL:imageURL placeholder:placeholder options:BDImageRequestSetDelaySetImage | BDImageRequestNotCacheToMemery | BDImageRequestNotCacheToDisk  transformer:transform progress:nil completion:^(BDWebImageRequest *request, UIImage *image, NSData *data, NSError *error, BDWebImageResultFrom from) {
         StrongSelf;
         NSMutableDictionary *imageData = [NSMutableDictionary dictionary];
         imageData[@"image"] = image;
         imageData[@"from"] = @(from);
         
-        if([TTDeviceHelper is568Screen] || [TTDeviceHelper is480Screen] || ([TTDeviceHelper is667Screen] && [TTDeviceHelper OSVersionNumber] < 13.0)){
+        if([UIDevice btd_is568Screen] || [UIDevice btd_is480Screen] || ([UIDevice btd_is667Screen] && [UIDevice btd_OSVersionNumber] < 13.0)){
             [self performSelector:@selector(setImageWithData:) withObject:imageData afterDelay:0 inModes:@[NSDefaultRunLoopMode]];
         }else{
             [self setImageWithData:imageData];
@@ -75,41 +105,19 @@
 
 - (void)setImageWithData:(NSDictionary *)imageData {
     UIImage *image = imageData[@"image"];
-    BDWebImageResultFrom from = [imageData[@"from"] integerValue];
+//    BDWebImageResultFrom from = [imageData[@"from"] integerValue];
     
     if(image){
         self.image = image;
     }
     
-    if(image && from == BDWebImageResultFromDownloading){
-        CATransition *transition = [CATransition animation];
-        transition.duration = 0.2;
-        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-        transition.type = kCATransitionFade;
-        [self.layer addAnimation:transition forKey:@"contents"];
-    }
-}
-
-- (void)fh_setImageWithURLStringInTrafficSaveMode:(NSString *)URLString placeholder:(UIImage *)placeholder
-{
-    if ([ExploreCellHelper shouldDownloadImage]) {
-        [self fh_setImageWithURL:URLString placeholder:placeholder];
-    } else {
-        [self setImageFromCacheWithURLString:URLString atIndex:0 placeholder:placeholder];
-    }
-}
-
-- (void)setImageFromCacheWithURLString:(NSString *)URLString atIndex:(int)index placeholder:(UIImage *)placeholder
-{
-    NSString *url = URLString;
-    
-    [[SDWebImageAdapter sharedAdapter] diskImageExistsWithKey:url completion:^(BOOL isInCache) {
-        if (isInCache) {
-            [self fh_setImageWithURL:URLString placeholder:placeholder];
-        } else {
-            [self setImageFromCacheWithURLString:URLString atIndex:(index + 1) placeholder:placeholder];
-        }
-    }];
+//    if(image && from == BDWebImageResultFromDownloading){
+//        CATransition *transition = [CATransition animation];
+//        transition.duration = 0.15;
+//        transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//        transition.type = kCATransitionFade;
+//        [self.layer addAnimation:transition forKey:@"contents"];
+//    }
 }
 
 - (UIImage*)compressImage:(UIImage*)sourceImage toSize:(CGSize)size {
@@ -125,7 +133,7 @@
     }
     
     //开启图片上下文
-    UIGraphicsBeginImageContextWithOptions(size, NO, scale);
+    UIGraphicsBeginImageContextWithOptions(size, YES, scale);
     //根据目标图片的宽度计算目标图片的高度
     CGFloat targetWidth = size.width;
     CGFloat targetHeight = size.height;

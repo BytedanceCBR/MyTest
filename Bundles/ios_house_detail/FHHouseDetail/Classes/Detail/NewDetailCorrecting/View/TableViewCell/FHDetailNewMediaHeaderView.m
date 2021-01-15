@@ -6,15 +6,15 @@
 //
 
 #import "FHDetailNewMediaHeaderView.h"
-#import "FHDetailHeaderTitleView.h"
 #import "FHVideoAndImageItemCorrectingView.h"
 #import "FHCommonDefines.h"
 #import <ByteDanceKit/ByteDanceKit.h>
+#import <Masonry/Masonry.h>
+#import <FHCommonUI/UIColor+Theme.h>
+#import <FHCommonUI/UIFont+House.h>
 
 @interface FHDetailNewMediaHeaderView ()
 
-@property (nonatomic, strong) FHDetailHeaderTitleView *titleView;            //头图下面的标题栏
-@property (nonatomic, strong) UIView *bottomGradientView;
 @property (nonatomic, strong) UILabel *totalPagesLabel;
 @property (nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;   //图片户型的标签
 @property (nonatomic, strong) FHDetailNewMediaHeaderScrollView *scrollView;
@@ -41,20 +41,10 @@
 
 #pragma mark - UI
 
-
-+ (CGFloat)cellHeight {
-    CGFloat photoCellHeight = 281;
-    photoCellHeight = round([UIScreen mainScreen].bounds.size.width / 375.0f * photoCellHeight + 0.5);
-    return photoCellHeight;
-}
-
 - (void)createUI {
-    self.scrollView = [[FHDetailNewMediaHeaderScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [FHDetailNewMediaHeaderView cellHeight])];
+    self.scrollView = [[FHDetailNewMediaHeaderScrollView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.bounds), CGRectGetHeight(self.bounds))];
     self.scrollView.closeInfinite = YES;
     [self addSubview:self.scrollView];
-    [self addSubview:self.bottomGradientView];
-    self.titleView = [[FHDetailHeaderTitleView alloc]init];
-    [self addSubview:self.titleView];
 
     self.itemView = [[FHVideoAndImageItemCorrectingView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 20)];
     self.itemView.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
@@ -100,23 +90,12 @@
 
 - (void)initConstaints {
     [self.scrollView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.mas_equalTo(self);
-        make.height.mas_equalTo([FHDetailNewMediaHeaderView cellHeight]);
-    }];
-    [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.scrollView);
-        make.bottom.equalTo(self.scrollView);
-        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
-    }];
-    [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.bottom.equalTo(self);
-        make.top.equalTo(self.scrollView.mas_bottom).offset(-40);
-        make.height.mas_offset(40);
+        make.edges.mas_equalTo(UIEdgeInsetsZero);
     }];
 
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);//
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-15);
         make.width.mas_equalTo(0);
         make.height.mas_equalTo(20);
     }];
@@ -124,8 +103,8 @@
     [self.totalPagesLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(54);
         make.height.mas_equalTo(22);
-        make.right.mas_equalTo(self.scrollView.mas_right).offset(-15);
-        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-35);
+        make.right.mas_equalTo(self.scrollView.mas_right).offset(-9);
+        make.bottom.mas_equalTo(self.scrollView.mas_bottom).offset(-15);
     }];
     [self layoutIfNeeded];
 }
@@ -161,33 +140,6 @@
     }
 }
 
-- (void)updateTitleModel:(FHDetailHouseTitleModel *)model {
-    self.titleView.model = model;
-    [self reckoncollectionHeightWithData:model];
-}
-
-- (UIView *)bottomGradientView {
-    if (!_bottomGradientView) {
-        CGFloat aspect = 375.0 / 25;
-        CGFloat width = SCREEN_WIDTH;
-
-        CGFloat height = round(width / aspect + 0.5);
-        CGRect frame = CGRectMake(0, 0, width, height);
-        CAGradientLayer *gradientLayer = [CAGradientLayer layer];
-        gradientLayer.frame = frame;
-        gradientLayer.colors = @[
-            (__bridge id)[UIColor colorWithWhite:1 alpha:0].CGColor,
-            (__bridge id)[UIColor themeGray7].CGColor
-        ];
-        gradientLayer.startPoint = CGPointMake(0.5, 0);
-        gradientLayer.endPoint = CGPointMake(0.5, 0.9);
-
-        _bottomGradientView = [[UIView alloc] initWithFrame:frame];
-        [_bottomGradientView.layer addSublayer:gradientLayer];
-    }
-    return _bottomGradientView;
-}
-
 #pragma mark - operator
 - (void)setTotalPagesLabelText:(NSString *)text {
     self.totalPagesLabel.text = text;
@@ -201,13 +153,10 @@
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:0];
     
     self.segmentViewChangedFlag = YES;
-    [UIView animateWithDuration:0.3 animations:^{
-        [self.scrollView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:YES];
-    } completion:^(BOOL finished) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.segmentViewChangedFlag = NO;
-        });
-    }];
+    [self.scrollView scrollToItemAtIndexPath:indexPath animated:NO];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.segmentViewChangedFlag = NO;
+    });
 
     if (self.didClickItemViewName) {
         self.didClickItemViewName(self.itemArray[index]);
@@ -224,33 +173,6 @@
         NSString *groupType = itemModel.groupType;
         [self.itemView selectedItem:groupType];
     }
-}
-
-- (void)reckoncollectionHeightWithData:(FHDetailHouseTitleModel *)titleModel {
-    CGFloat titleHeight = 40;
-    NSDictionary *attributes = @{ NSFontAttributeName: [UIFont themeFontMedium:24] };
-    CGRect rect = [titleModel.titleStr boundingRectWithSize:CGSizeMake(SCREEN_WIDTH - 66, CGFLOAT_MAX)
-                                                    options:NSStringDrawingUsesLineFragmentOrigin
-                                                 attributes:attributes
-                                                    context:nil];          //算出标题的高度
-    if (titleModel.advantage.length > 0 && titleModel.businessTag.length > 0) { //如果头图下面有横幅那么高度增加40
-        titleHeight += 40;
-    }
-
-    CGFloat rectHeight = rect.size.height;
-    if (rectHeight > [UIFont themeFontMedium:24].lineHeight * 2) {         //如果超过两行，只显示两行，小区只显示一行，需要特判
-        rectHeight = [UIFont themeFontMedium:24].lineHeight * 2;
-    }
-
-    titleHeight += 20 + rectHeight - 21;//20是标题具体顶部的距离，21是重叠的41减去透明阴影的20 (21 = 41 - 20)
-
-    if (titleModel.tags.count > 0) {
-        //这里分别加上标签高度20，标签间隔20
-        titleHeight += 20 + 20;
-    }
-    [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_offset(titleHeight);
-    }];
 }
 
 @end

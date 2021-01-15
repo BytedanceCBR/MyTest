@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
             extraDic:(nullable NSDictionary *)extraDic;
 
 //进入圈子详情页
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel;
++ (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel;
 
 //进入视频详情页
 - (void)jumpToVideoDetail:(FHFeedUGCCellModel *)cellModel showComment:(BOOL)showComment enterType:(NSString *)enterType extraDic:(NSDictionary *)extraDic;

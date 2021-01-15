@@ -350,7 +350,7 @@
         self.pagingEnabled = YES;
         self.showsVerticalScrollIndicator = false;
         self.showsHorizontalScrollIndicator = false;
-        UIColor *color = [UIColor themeGray7];
+        UIColor *color = [UIColor themeWhite];
         self.placeholderImage = [FHUtils createImageWithColor:color];
         [self setupUI];
     }

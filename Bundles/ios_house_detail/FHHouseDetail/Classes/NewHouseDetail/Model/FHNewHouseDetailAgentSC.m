@@ -20,7 +20,7 @@
 #import "NSArray+BTDAdditions.h"
 #import "JSONModel+FHOriginDictData.h"
 
-@interface FHNewHouseDetailAgentSC ()<IGListSupplementaryViewSource,IGListDisplayDelegate,IGListBindingSectionControllerDataSource>
+@interface FHNewHouseDetailAgentSC ()<IGListSupplementaryViewSource,IGListDisplayDelegate>
 
 @property (nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 
@@ -33,7 +33,7 @@
 //        self.minimumLineSpacing = 20;
         self.supplementaryViewSource = self;
         self.displayDelegate = self;
-        self.dataSource = self;
+//        self.dataSource = self;
     }
     return self;
 }
@@ -100,14 +100,6 @@
 //                vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
 //            }
         }];
-
-        FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:extraDict error:nil];
-        configModel.houseType = FHHouseTypeNewHouse;
-        configModel.followId = self.detailViewController.viewModel.houseId;
-        configModel.actionType = FHHouseTypeNewHouse;
-        
-        // 静默关注功能
-        [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
     }
 
 }
@@ -134,80 +126,63 @@
     [FHUserTracker writeEvent:@"realtor_click_more" params:tracerDic];
 }
 
-//- (NSInteger)numberOfItems {
-//    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-//    if (agentSM.recommendedRealtors.count <= 3) {
-//        return agentSM.recommendedRealtors.count;
-//    }
-//    if (agentSM.isFold) {
-//        return 4;
-//    } else {
-//        return agentSM.recommendedRealtors.count + 1;
-//    }
-//    return 0;
-//}
+- (NSInteger)numberOfItems {
+    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
+    if (agentSM.recommendedRealtors.count <= 3) {
+        return agentSM.recommendedRealtors.count;
+    }
+    return 3;
+}
 
-//- (CGSize)sizeForItemAtIndex:(NSInteger)index {
-//    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-//    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
-//    CGFloat height = 65;
-//    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
-//        height = 44;
-//    }
-//    return CGSizeMake(width, height);
-//}
+- (CGSize)sizeForItemAtIndex:(NSInteger)index {
+    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
+    if (index < agentSM.recommendedRealtors.count) {
+        FHDetailContactModel *model = [agentSM.recommendedRealtors btd_objectAtIndex:index];
+        return [FHNewHouseDetailReleatorCollectionCell cellSizeWithData:model width:width];
+    }
+    return CGSizeZero;
+}
 
 
-//- (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
-//    __weak typeof(self) weakSelf = self;
-//    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-//    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
-//        //展开，收起
-//        FHNewHouseDetailReleatorMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorMoreCell class] forSectionController:self atIndex:index];
-//        __weak FHNewHouseDetailAgentSM *weakAgentSM = agentSM;
-//        [cell setFoldButtonActionBlock:^{
-//            weakAgentSM.isFold = !weakAgentSM.isFold;
-//            if (!weakAgentSM.isFold) {
-//                [weakSelf addRealtorClickMore];
-//            }
-//            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
-//        }];
-//        cell.foldButton.isFold = agentSM.isFold;
-//        return cell;
-//    } else {
-//        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
-//        FHNewHouseDetailReleatorCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorCollectionCell class] forSectionController:self atIndex:index];
-//        [cell refreshWithData:model];
-//        [cell setImClickBlock:^(FHDetailContactModel * _Nonnull model) {
-//            [weakSelf imclick:model];
-//        }];
-//        [cell setPhoneClickBlock:^(FHDetailContactModel * _Nonnull model) {
-//            [weakSelf phoneClick:model];
-//        }];
-//        [cell setLicenseClickBlock:^(FHDetailContactModel * _Nonnull model) {
-//            [weakSelf licenseClick:model];
-//        }];
-//        return cell;
-//    }
-//}
+- (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
+    __weak typeof(self) weakSelf = self;
+    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
+    if (index < agentSM.recommendedRealtors.count) {
+        FHDetailContactModel *realtorModel = [agentSM.recommendedRealtors btd_objectAtIndex:index];
+        FHNewHouseDetailReleatorCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorCollectionCell class] forSectionController:self atIndex:index];
+        [cell refreshWithData:realtorModel];
+        [cell setImClickBlock:^(FHDetailContactModel * _Nonnull model) {
+            [weakSelf imclick:model];
+        }];
+        [cell setPhoneClickBlock:^(FHDetailContactModel * _Nonnull model) {
+            [weakSelf phoneClick:model];
+        }];
+        [cell setLicenseClickBlock:^(FHDetailContactModel * _Nonnull model) {
+            [weakSelf licenseClick:model];
+        }];
+        return cell;
+    }
+    return [super defaultCellAtIndex:index];
+}
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
     //新房暂时不需要跳转
 //    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
 }
 
-- (void)foldAction {
-    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-    agentSM.isFold = !agentSM.isFold;
-    if (!agentSM.isFold) {
-        [self addRealtorClickMore];
-    }
-    agentSM.moreModel = [FHNewHouseDetailReleatorMoreCellModel modelWithFold:agentSM.isFold];
-    [self updateAnimated:YES completion:^(BOOL updated) {
-
-    }];
-//            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
-}
+//- (void)foldAction {
+//    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
+//    agentSM.isFold = !agentSM.isFold;
+//    if (!agentSM.isFold) {
+//        [self addRealtorClickMore];
+//    }
+//    agentSM.moreModel = [FHNewHouseDetailReleatorMoreCellModel modelWithFold:agentSM.isFold];
+//    [self updateAnimated:YES completion:^(BOOL updated) {
+//
+//    }];
+////            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
+//}
 
 - (void)pushMoreReleator{
     NSMutableDictionary *params = @{}.mutableCopy;
@@ -232,16 +207,19 @@
     DataInfo[@"recommended_realtors_title"] = self.sectionModel.detailModel.data.recommendedRealtorsTitle;
     if(self.sectionModel.detailModel.fhOriginDictData){
         NSDictionary *dataInfo = self.sectionModel.detailModel.fhOriginDictData;
-        if(self.sectionModel.detailModel.data.recommendedRealtors){
-            DataInfo[@"recommended_realtors"] = dataInfo[@"data"][@"recommended_realtors"] ;
+        if([dataInfo isKindOfClass:[NSDictionary class]]){
+            NSDictionary *dic = dataInfo[@"data"];
+            BOOL dicIsDictionary = [dic isKindOfClass:[NSDictionary class]];
+            if(self.sectionModel.detailModel.data.recommendedRealtors && dicIsDictionary){
+                DataInfo[@"recommended_realtors"] = dic[@"recommended_realtors"] ;
+            }
+            if(self.sectionModel.detailModel.data.recommendRealtorsAssociateInfo && dicIsDictionary ){
+                DataInfo[@"recommended_realtors_associate_info"] = dic[@"recommend_realtors_associate_info"];
+            }
+            if(self.sectionModel.detailModel.data.logPb && dicIsDictionary){
+                DataInfo[@"log_pb"] = dic[@"log_pb"];
+            }
         }
-        if(self.sectionModel.detailModel.data.recommendRealtorsAssociateInfo){
-            DataInfo[@"recommended_realtors_associate_info"] = dataInfo[@"data"][@"recommend_realtors_associate_info"];
-        }
-        if(self.sectionModel.detailModel.data.logPb){
-            DataInfo[@"log_pb"] = dataInfo[@"data"][@"log_pb"];
-        }
-
     }
 
     params[@"recommended_realtors_info"] = [DataInfo btd_jsonStringEncoded];
@@ -263,8 +241,7 @@
 - (__kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(NSString *)elementKind
                                                                  atIndex:(NSInteger)index {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
+    [titleView setupNewHouseDetailStyle];
     FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
 
     // 设置下发标题
@@ -290,7 +267,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 74);
+        return CGSizeMake(self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2, 66);
     }
     return CGSizeZero;
 }
@@ -322,10 +299,7 @@
         tracerDic[@"enter_from"] = @"new_detail";
         tracerDic[@"page_type"] = @"realtor_list";
         tracerDic[@"element_from"] = @"new_detail_related";
-        tracerDic[@"search_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"search_id"] ?: @"be_null";
-        tracerDic[@"impr_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"impr_id"] ?: @"be_null";
-        tracerDic[@"group_id"] =[tracerDic[@"log_pb"] btd_stringValueForKey:@"group_id"] ?: @"be_null";
-        
+        tracerDic[@"group_id"] = self.detailViewController.viewModel.houseId ?: @"be_null";
         [tracerDic removeObjectsForKeys:@[@"card_type",@"rank",@"origin_search_id",@"app_house_tags",@"log_pb"]];
         [FHUserTracker writeEvent:@"realtor_show" params:tracerDic];
     }
@@ -338,85 +312,4 @@
     
 }
 
-#pragma mark - IGListBindingSectionControllerDataSource
-- (NSArray<id<IGListDiffable>> *)sectionController:(IGListBindingSectionController *)sectionController
-                               viewModelsForObject:(id)object {
-    NSMutableArray *viewModels = [NSMutableArray array];
-    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-    if (agentSM.recommendedRealtors.count <= 3) {
-        return agentSM.recommendedRealtors;
-    }
-    if (agentSM.isFold) {
-        [viewModels addObjectsFromArray:[agentSM.recommendedRealtors subarrayWithRange:NSMakeRange(0, 3)]];
-    } else {
-        [viewModels addObjectsFromArray:agentSM.recommendedRealtors];
-    }
-    [viewModels addObject:agentSM.moreModel];
-    return viewModels.copy;
-}
-
-/**
- Return a dequeued cell for a given view model.
-
- @param sectionController The section controller requesting a cell.
- @param viewModel The view model for the cell.
- @param index The index of the view model.
- 
- @return A dequeued cell.
- 
- @note The section controller will call `-bindViewModel:` with the provided view model after the cell is dequeued. You
- should handle cell configuration using this method. However, you can do additional configuration at this stage as well.
- */
-- (UICollectionViewCell<IGListBindable> *)sectionController:(IGListBindingSectionController *)sectionController
-                                           cellForViewModel:(id)viewModel
-                                                    atIndex:(NSInteger)index {
-    __weak typeof(self) weakSelf = self;
-    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
-        //展开，收起
-        FHNewHouseDetailReleatorMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorMoreCell class] forSectionController:self atIndex:index];
-        [cell setFoldButtonActionBlock:^{
-            [weakSelf foldAction];
-        }];
-        cell.foldButton.isFold = agentSM.isFold;
-        return cell;
-    } else {
-        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
-        FHNewHouseDetailReleatorCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorCollectionCell class] forSectionController:self atIndex:index];
-        [cell refreshWithData:model];
-        [cell setImClickBlock:^(FHDetailContactModel * _Nonnull model) {
-            [weakSelf imclick:model];
-        }];
-        [cell setPhoneClickBlock:^(FHDetailContactModel * _Nonnull model) {
-            [weakSelf phoneClick:model];
-        }];
-        [cell setLicenseClickBlock:^(FHDetailContactModel * _Nonnull model) {
-            [weakSelf licenseClick:model];
-        }];
-        return cell;
-    }
-    return [super defaultCellAtIndex:index];
-}
-
-- (CGSize)sectionController:(IGListBindingSectionController *)sectionController
-           sizeForViewModel:(id)viewModel
-                    atIndex:(NSInteger)index {
-    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-    
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
-    CGFloat height = 74;
-    if (index < agentSM.recommendedRealtors.count) {
-        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
-        if (model.agencyDescription.length && model.realtorScoreDisplay.length) {
-            height = 86;
-        }
-    }
-    if(index == agentSM.recommendedRealtors.count - 1){
-        height += 10;
-    }
-    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
-        height = 10;
-    }
-    return CGSizeMake(width, height);
-}
 @end

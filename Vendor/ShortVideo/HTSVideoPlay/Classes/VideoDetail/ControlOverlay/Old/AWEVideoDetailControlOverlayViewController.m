@@ -224,7 +224,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         _userInfoContainerView = [[UIView alloc] init];
         _userInfoContainerView.backgroundColor = [UIColor clearColor];
 
-        _avatarView = [[FHUGCAvatarView alloc] init];
+        _avatarView = [[FHUGCAvatarView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
         _avatarView.userInteractionEnabled = YES;
         
         _nameLabel = [[UILabel alloc] init];
@@ -764,7 +764,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
         }];
         if(![self.model.userDigg boolValue]) {
             NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
-            [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:@"click_like" eventPosition:@"video" eventModel:self.model eventIndex:rank commentId:nil];
+            [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:@"click_like" eventPosition:@"detail_like" eventModel:self.model eventIndex:rank commentId:nil];
         }
     }
     if ([self alertIfNotValid]) {
@@ -832,7 +832,7 @@ static const CGFloat kCheckChallengeButtonLeftPadding = 28;
     //                                        @"position": @"feed_detail",
     //                                        }];
          NSInteger rank = [self.model.tracerDic btd_integerValueForKey:@"rank" default:0];
-            [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:@"video" eventModel:self.model eventIndex:rank commentId:nil];
+            [FHShortVideoTracerUtil clickLikeOrdisLikeWithWithName:eventName eventPosition:@"detail_like" eventModel:self.model eventIndex:rank commentId:nil];
         if (!userDigg) {
                 [self diggShowAnima:NO];
                 //point:视频点赞

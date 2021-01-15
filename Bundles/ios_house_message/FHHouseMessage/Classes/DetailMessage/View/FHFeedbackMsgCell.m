@@ -74,7 +74,7 @@
         self.contentView.backgroundColor = [UIColor themeGray7];
         self.backgroundColor = [UIColor themeGray7];
         
-        UIImage *cornerImage = [UIImage fh_roundRectMaskImageWithCornerRadius:10 color:[UIColor themeGray7] size:CGSizeMake(50, 50)];
+        UIImage *cornerImage = [UIImage fh_interRoundRectMaskImageWithCornerRadius:10 color:[UIColor themeGray7] size:CGSizeMake(50, 50)];
         self.bgImageView = [[UIImageView alloc] initWithImage:[cornerImage resizableImageWithCapInsets:UIEdgeInsetsMake(20, 20, 20, 20)]];
         self.bgImageView.backgroundColor = [UIColor whiteColor];
         self.bgImageView.userInteractionEnabled = YES;

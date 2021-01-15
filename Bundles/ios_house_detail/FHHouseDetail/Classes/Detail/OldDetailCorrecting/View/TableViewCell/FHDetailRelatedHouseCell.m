@@ -39,16 +39,6 @@
 
 @implementation FHDetailRelatedHouseCell
 
-- (void)awakeFromNib {
-    [super awakeFromNib];
-    // Initialization code
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
 - (void)refreshWithData:(id)data {
     if (self.currentData == data || ![data isKindOfClass:[FHDetailRelatedHouseModel class]]) {
         return;
@@ -77,16 +67,16 @@
     }
     CGFloat cellHeight = 0;
     BOOL hasMore = model.relatedHouseData.hasMore;
-    CGFloat bottomOffset = 20;
+    CGFloat bottomOffset = 0;
     if (hasMore) {
-        bottomOffset = 68;
+        bottomOffset = 52;
     }
     for (FHSearchHouseDataItemsModel *item in model.relatedHouseData.items) {
         item.advantageDescription = nil;
         id obj = [FHHouseCardUtils getDetailEntityFromModel:item];
         if (obj && [obj isKindOfClass:[FHHouseSecondCardViewModel class]]) {
             FHHouseSecondCardViewModel *model = (FHHouseSecondCardViewModel *)obj;
-            [model setTitleMaxWidth:SCREEN_WIDTH - 30 * 2 - 84 - 8];
+            [model setTitleMaxWidth:SCREEN_WIDTH - 21 * 2 - 84 - 8];
             cellHeight += [FHOldHouseDetailRelatedSecondCell heightForData:obj];
             [self.dataList addObject:obj];
         }
@@ -126,6 +116,9 @@
     if (model.relatedHouseData.hasMore) {
         // 添加查看更多
         self.openAllView = [[FHDetailBottomOpenAllView alloc] init];
+        [self.openAllView.settingArrowImageView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.height.width.mas_equalTo(14);
+        }];
         self.openAllView.layer.cornerRadius = 4;
         self.openAllView.title.font = [UIFont themeFontRegular:16];
         self.openAllView.title.textColor = [UIColor themeGray1];
@@ -133,7 +126,7 @@
         self.openAllView.title.backgroundColor = [UIColor colorWithHexStr:@"#fafafa"];
         self.openAllView.topBorderView.hidden = YES;
         self.openAllView.backgroundColor = [UIColor colorWithHexStr:@"#fafafa"];
-        self.openAllView.settingArrowImageView.image = [UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"];
+        self.openAllView.settingArrowImageView.image = [UIImage imageNamed:@"setting-arrow-1"];
         [self.containerView addSubview:self.openAllView];
         // 查看更多按钮点击
         __weak typeof(self) wSelf = self;
@@ -144,25 +137,24 @@
             // 查看更多相对tableView布局
             [self.openAllView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.tableView.mas_bottom);
-                make.left.mas_equalTo(30);
-                make.right.mas_equalTo(-30);
-                make.height.mas_equalTo(46);
+                make.left.mas_equalTo(21);
+                make.right.mas_equalTo(-21);
+                make.height.mas_equalTo(40);
             }];
         } else {
             // 查看更多自己布局
             [self.openAllView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.top.mas_equalTo(self.containerView).offset(16);
-                make.left.mas_equalTo(30);
-                make.right.mas_equalTo(-30);
-                make.height.mas_equalTo(46);
+                make.left.mas_equalTo(21);
+                make.right.mas_equalTo(-21);
+                make.height.mas_equalTo(40);
             }];
         }
     }
     [self layoutIfNeeded];
 }
 
--(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+-(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style
                 reuseIdentifier:reuseIdentifier];
     if (self) {
@@ -183,20 +175,18 @@
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     _houseShowCache = [NSMutableDictionary new];
     _headerView = [[FHDetailHeaderView alloc] init];
+    [_headerView updateLayoutWithOldDetail];
     _headerView.label.text = @"周边房源";
-    _headerView.label.font = [UIFont themeFontMedium:20];
     [self.contentView addSubview:_headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.contentView).offset(15);
-        make.right.mas_equalTo(self.contentView).offset(-11);
-        make.top.equalTo(self.shadowImage).offset(20);
-        make.height.mas_equalTo(50);
+        make.left.mas_equalTo(self.contentView).offset(9);
+        make.right.mas_equalTo(self.contentView).offset(-9);
+        make.top.equalTo(self.contentView).offset(4.5);
+        make.height.mas_equalTo(32);
     }];
     _containerView = [[UIView alloc] init];
     _containerView.clipsToBounds = YES;
@@ -204,7 +194,7 @@
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
         make.left.right.mas_equalTo(self.contentView);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-12);
+        make.bottom.mas_equalTo(self.shadowImage).offset(-9);
     }];
 }
 
