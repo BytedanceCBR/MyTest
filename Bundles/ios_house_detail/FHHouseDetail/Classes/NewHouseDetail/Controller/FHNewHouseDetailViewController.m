@@ -606,6 +606,10 @@
     }
 }
 
+- (void)refreshSocialInfo {
+    [self.viewModel refreshSocialInfo];
+}
+
 // 重新加载
 - (void)retryLoadData
 {
