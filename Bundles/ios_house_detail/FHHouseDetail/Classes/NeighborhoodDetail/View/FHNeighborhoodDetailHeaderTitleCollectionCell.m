@@ -107,7 +107,7 @@
     self.latitude = [model.gaodeLat doubleValue];
     self.longitude = [model.gaodeLng doubleValue];
     self.nameLabel.text = model.titleStr;
-    self.subnameLabel.text = [NSString stringWithFormat:@"%@  %@  %@",model.districtName?:@"",model.areaName?:@"",model.address?:@""];
+    self.subnameLabel.text = [NSString stringWithFormat:@"%@ %@ %@",model.districtName?:@"",model.areaName?:@"",model.address?:@""];
 }
 
 - (void)bindViewModel:(id)viewModel {

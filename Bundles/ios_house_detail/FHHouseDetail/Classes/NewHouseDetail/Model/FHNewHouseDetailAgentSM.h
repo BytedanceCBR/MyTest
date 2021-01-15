@@ -19,9 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong, nullable) NSArray<FHDetailContactModel> *recommendedRealtors;
 @property (nonatomic, strong, nullable) FHClueAssociateInfoModel *associateInfo;
 
-@property (nonatomic, assign) BOOL isFold; // 折叠
+//@property (nonatomic, assign) BOOL isFold; // 折叠
 
-@property (nonatomic, strong, nullable) FHNewHouseDetailReleatorMoreCellModel *moreModel;
+//@property (nonatomic, strong, nullable) FHNewHouseDetailReleatorMoreCellModel *moreModel;
 
 @end
 

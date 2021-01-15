@@ -20,7 +20,7 @@
 #import "NSArray+BTDAdditions.h"
 #import "JSONModel+FHOriginDictData.h"
 
-@interface FHNewHouseDetailAgentSC ()<IGListSupplementaryViewSource,IGListDisplayDelegate,IGListBindingSectionControllerDataSource>
+@interface FHNewHouseDetailAgentSC ()<IGListSupplementaryViewSource,IGListDisplayDelegate>
 
 @property (nonatomic, strong) FHHouseDetailPhoneCallViewModel *phoneCallViewModel;
 
@@ -33,7 +33,7 @@
 //        self.minimumLineSpacing = 20;
         self.supplementaryViewSource = self;
         self.displayDelegate = self;
-        self.dataSource = self;
+//        self.dataSource = self;
     }
     return self;
 }
@@ -126,80 +126,63 @@
     [FHUserTracker writeEvent:@"realtor_click_more" params:tracerDic];
 }
 
-//- (NSInteger)numberOfItems {
-//    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-//    if (agentSM.recommendedRealtors.count <= 3) {
-//        return agentSM.recommendedRealtors.count;
-//    }
-//    if (agentSM.isFold) {
-//        return 4;
-//    } else {
-//        return agentSM.recommendedRealtors.count + 1;
-//    }
-//    return 0;
-//}
+- (NSInteger)numberOfItems {
+    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
+    if (agentSM.recommendedRealtors.count <= 3) {
+        return agentSM.recommendedRealtors.count;
+    }
+    return 3;
+}
 
-//- (CGSize)sizeForItemAtIndex:(NSInteger)index {
-//    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-//    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
-//    CGFloat height = 65;
-//    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
-//        height = 44;
-//    }
-//    return CGSizeMake(width, height);
-//}
+- (CGSize)sizeForItemAtIndex:(NSInteger)index {
+    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
+    if (index < agentSM.recommendedRealtors.count) {
+        FHDetailContactModel *model = [agentSM.recommendedRealtors btd_objectAtIndex:index];
+        return [FHNewHouseDetailReleatorCollectionCell cellSizeWithData:model width:width];
+    }
+    return CGSizeZero;
+}
 
 
-//- (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
-//    __weak typeof(self) weakSelf = self;
-//    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-//    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
-//        //展开，收起
-//        FHNewHouseDetailReleatorMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorMoreCell class] forSectionController:self atIndex:index];
-//        __weak FHNewHouseDetailAgentSM *weakAgentSM = agentSM;
-//        [cell setFoldButtonActionBlock:^{
-//            weakAgentSM.isFold = !weakAgentSM.isFold;
-//            if (!weakAgentSM.isFold) {
-//                [weakSelf addRealtorClickMore];
-//            }
-//            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
-//        }];
-//        cell.foldButton.isFold = agentSM.isFold;
-//        return cell;
-//    } else {
-//        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
-//        FHNewHouseDetailReleatorCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorCollectionCell class] forSectionController:self atIndex:index];
-//        [cell refreshWithData:model];
-//        [cell setImClickBlock:^(FHDetailContactModel * _Nonnull model) {
-//            [weakSelf imclick:model];
-//        }];
-//        [cell setPhoneClickBlock:^(FHDetailContactModel * _Nonnull model) {
-//            [weakSelf phoneClick:model];
-//        }];
-//        [cell setLicenseClickBlock:^(FHDetailContactModel * _Nonnull model) {
-//            [weakSelf licenseClick:model];
-//        }];
-//        return cell;
-//    }
-//}
+- (__kindof UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
+    __weak typeof(self) weakSelf = self;
+    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
+    if (index < agentSM.recommendedRealtors.count) {
+        FHDetailContactModel *realtorModel = [agentSM.recommendedRealtors btd_objectAtIndex:index];
+        FHNewHouseDetailReleatorCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorCollectionCell class] forSectionController:self atIndex:index];
+        [cell refreshWithData:realtorModel];
+        [cell setImClickBlock:^(FHDetailContactModel * _Nonnull model) {
+            [weakSelf imclick:model];
+        }];
+        [cell setPhoneClickBlock:^(FHDetailContactModel * _Nonnull model) {
+            [weakSelf phoneClick:model];
+        }];
+        [cell setLicenseClickBlock:^(FHDetailContactModel * _Nonnull model) {
+            [weakSelf licenseClick:model];
+        }];
+        return cell;
+    }
+    return [super defaultCellAtIndex:index];
+}
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
     //新房暂时不需要跳转
 //    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
 }
 
-- (void)foldAction {
-    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-    agentSM.isFold = !agentSM.isFold;
-    if (!agentSM.isFold) {
-        [self addRealtorClickMore];
-    }
-    agentSM.moreModel = [FHNewHouseDetailReleatorMoreCellModel modelWithFold:agentSM.isFold];
-    [self updateAnimated:YES completion:^(BOOL updated) {
-
-    }];
-//            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
-}
+//- (void)foldAction {
+//    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
+//    agentSM.isFold = !agentSM.isFold;
+//    if (!agentSM.isFold) {
+//        [self addRealtorClickMore];
+//    }
+//    agentSM.moreModel = [FHNewHouseDetailReleatorMoreCellModel modelWithFold:agentSM.isFold];
+//    [self updateAnimated:YES completion:^(BOOL updated) {
+//
+//    }];
+////            [weakSelf.detailViewController refreshSectionModel:weakAgentSM animated:YES];
+//}
 
 - (void)pushMoreReleator{
     NSMutableDictionary *params = @{}.mutableCopy;
@@ -284,7 +267,7 @@
 - (CGSize)sizeForSupplementaryViewOfKind:(NSString *)elementKind
                                  atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2, 64);
+        return CGSizeMake(self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2, 66);
     }
     return CGSizeZero;
 }
@@ -329,85 +312,4 @@
     
 }
 
-#pragma mark - IGListBindingSectionControllerDataSource
-- (NSArray<id<IGListDiffable>> *)sectionController:(IGListBindingSectionController *)sectionController
-                               viewModelsForObject:(id)object {
-    NSMutableArray *viewModels = [NSMutableArray array];
-    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-    if (agentSM.recommendedRealtors.count <= 3) {
-        return agentSM.recommendedRealtors;
-    }
-    if (agentSM.isFold) {
-        [viewModels addObjectsFromArray:[agentSM.recommendedRealtors subarrayWithRange:NSMakeRange(0, 3)]];
-    } else {
-        [viewModels addObjectsFromArray:agentSM.recommendedRealtors];
-    }
-    [viewModels addObject:agentSM.moreModel];
-    return viewModels.copy;
-}
-
-/**
- Return a dequeued cell for a given view model.
-
- @param sectionController The section controller requesting a cell.
- @param viewModel The view model for the cell.
- @param index The index of the view model.
- 
- @return A dequeued cell.
- 
- @note The section controller will call `-bindViewModel:` with the provided view model after the cell is dequeued. You
- should handle cell configuration using this method. However, you can do additional configuration at this stage as well.
- */
-- (UICollectionViewCell<IGListBindable> *)sectionController:(IGListBindingSectionController *)sectionController
-                                           cellForViewModel:(id)viewModel
-                                                    atIndex:(NSInteger)index {
-    __weak typeof(self) weakSelf = self;
-    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
-        //展开，收起
-        FHNewHouseDetailReleatorMoreCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorMoreCell class] forSectionController:self atIndex:index];
-        [cell setFoldButtonActionBlock:^{
-            [weakSelf foldAction];
-        }];
-        cell.foldButton.isFold = agentSM.isFold;
-        return cell;
-    } else {
-        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
-        FHNewHouseDetailReleatorCollectionCell *cell = [self.collectionContext dequeueReusableCellOfClass:[FHNewHouseDetailReleatorCollectionCell class] forSectionController:self atIndex:index];
-        [cell refreshWithData:model];
-        [cell setImClickBlock:^(FHDetailContactModel * _Nonnull model) {
-            [weakSelf imclick:model];
-        }];
-        [cell setPhoneClickBlock:^(FHDetailContactModel * _Nonnull model) {
-            [weakSelf phoneClick:model];
-        }];
-        [cell setLicenseClickBlock:^(FHDetailContactModel * _Nonnull model) {
-            [weakSelf licenseClick:model];
-        }];
-        return cell;
-    }
-    return [super defaultCellAtIndex:index];
-}
-
-- (CGSize)sectionController:(IGListBindingSectionController *)sectionController
-           sizeForViewModel:(id)viewModel
-                    atIndex:(NSInteger)index {
-    FHNewHouseDetailAgentSM *agentSM = (FHNewHouseDetailAgentSM *)self.sectionModel;
-    
-    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
-    CGFloat height = 74;
-    if (index < agentSM.recommendedRealtors.count) {
-        FHDetailContactModel *model = agentSM.recommendedRealtors[index];
-        if (model.agencyDescription.length && model.realtorScoreDisplay.length) {
-            height = 80;
-        }
-    }
-    if(index == agentSM.recommendedRealtors.count - 1){
-        height += 10;
-    }
-    if ((!agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == agentSM.recommendedRealtors.count) || (agentSM.isFold && agentSM.recommendedRealtors.count > 3 && index == 3)) {
-        height = 10;
-    }
-    return CGSizeMake(width, height);
-}
 @end

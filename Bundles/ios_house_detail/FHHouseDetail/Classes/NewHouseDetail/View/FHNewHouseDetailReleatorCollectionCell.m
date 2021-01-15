@@ -30,6 +30,18 @@
 
 @implementation FHNewHouseDetailReleatorCollectionCell
 
++ (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
+    if ([data isKindOfClass:[FHDetailContactModel class]]) {
+        FHDetailContactModel *model = (FHDetailContactModel *)data;
+        CGFloat height = 62;
+        if (model.agencyDescription.length && model.realtorScoreDisplay.length) {
+            height = 77;
+        }
+        return CGSizeMake(width, height);
+    }
+    return CGSizeZero;
+}
+
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.avatorView = [[FHHouseRealtorAvatarView alloc] init];
@@ -39,8 +51,8 @@
 
         [self.avatorView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.height.width.mas_equalTo(50);
-            make.left.mas_equalTo(14);
-            make.centerY.mas_equalTo(self.contentView);
+            make.left.mas_equalTo(12);
+            make.top.mas_equalTo(0);
         }];
         
         self.nameLabel = [[UILabel alloc] init];
@@ -51,14 +63,14 @@
         [self.contentView addSubview:self.nameLabel];
         [self.nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
-            make.top.mas_equalTo(12);
+            make.top.mas_equalTo(0);
         }];
         
         self.scoreLabel = [[UILabel alloc] init];
         [self.contentView addSubview:self.scoreLabel];
         [self.scoreLabel mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.nameLabel.mas_left);
-            make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(8);
+            make.top.mas_equalTo(27);
         }];
         
         __weak typeof(self) weakSelf = self;
@@ -109,8 +121,8 @@
         [self.agencyBac mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self.nameLabel);
             make.height.mas_equalTo(16);
-            make.left.mas_equalTo(self.nameLabel.mas_right).offset(4);
-            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).offset(-10);
+            make.left.mas_equalTo(self.nameLabel.mas_right).mas_offset(4);
+            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).mas_offset(-10);
         }];
         
         self.agencyLabel = [[UILabel alloc] init];
@@ -130,9 +142,9 @@
         [self.contentView addSubview:self.agencyDescriptionBac];
         [self.agencyDescriptionBac mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.nameLabel.mas_left);
-            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left);
+            make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).mas_offset(-10);
             make.height.mas_equalTo(18);
-            make.top.mas_equalTo(self.scoreLabel.mas_bottom).mas_offset(28);
+            make.top.mas_equalTo(47);
         }];
         
         self.agencyDescriptionLabel = [[UILabel alloc] init];
@@ -178,34 +190,34 @@
     [self.avatorView updateAvatarWithModel:model];
     
     if (model.agencyDescription.length && model.realtorScoreDisplay.length) {
+        [self.avatorView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(9);
+        }];
         //3行全有
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
-            make.height.mas_equalTo(16);
-            make.bottom.mas_equalTo(self.scoreLabel.mas_top).offset(-8);
+            make.top.mas_equalTo(0);
+            make.height.mas_equalTo(22);
         }];
         [self.scoreLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-            make.centerY.mas_equalTo(self.avatorView);
-            make.left.mas_equalTo(self.nameLabel);
+            make.left.mas_equalTo(self.nameLabel.mas_left);
+            make.centerY.mas_equalTo(self.avatorView.mas_centerY);
         }];
         [self.agencyDescriptionBac mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.nameLabel.mas_left);
             make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).mas_offset(-10);
             make.height.mas_equalTo(18);
-            make.top.mas_equalTo(self.scoreLabel.mas_bottom).mas_offset(8);
+            make.top.mas_equalTo(47);
         }];
     } else if (model.agencyDescription.length || model.realtorScoreDisplay.length) {
+        [self.avatorView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(0);
+        }];
         //2行
-        CGFloat topMargin = 0;
-        if (model.agencyDescription.length) {
-            topMargin = 16;
-        } else {
-            topMargin = 19;
-        }
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
-            make.top.mas_equalTo(topMargin);
-            make.height.mas_equalTo(16);
+            make.top.mas_equalTo(4);
+            make.height.mas_equalTo(22);
         }];
         
         if (model.agencyDescription.length) {
@@ -213,15 +225,24 @@
                 make.left.mas_equalTo(self.nameLabel.mas_left);
                 make.right.mas_lessThanOrEqualTo(self.imBtn.mas_left).mas_offset(-10);
                 make.height.mas_equalTo(18);
-                make.top.mas_equalTo(self.nameLabel.mas_bottom).mas_offset(8);
+                make.top.mas_equalTo(29);
+            }];
+        } else if (model.realtorScoreDisplay.length) {
+            [self.scoreLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(self.nameLabel.mas_left);
+                make.top.mas_equalTo(29);
             }];
         }
     } else {
+        [self.avatorView mas_updateConstraints:^(MASConstraintMaker *make) {
+            make.top.mas_equalTo(0);
+        }];
+
         //1行 namelabel居中
         [self.nameLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
             make.left.mas_equalTo(self.avatorView.mas_right).mas_offset(10);
             make.centerY.mas_equalTo(self.avatorView);
-            make.height.mas_equalTo(16);
+            make.height.mas_equalTo(22);
         }];
     }
     if (model.agencyDescription.length > 0) {
@@ -230,6 +251,7 @@
         self.agencyDescriptionBac.hidden = YES;
     }
     self.agencyDescriptionLabel.text = model.agencyDescription;
+    
     if (model.realtorScoreDisplay.length > 0) {
         self.scoreLabel.hidden = NO;
         
@@ -241,7 +263,7 @@
         [scoreString appendAttributedString:[[NSAttributedString alloc] initWithString:@" 服务分" attributes:@{NSForegroundColorAttributeName: [UIColor themeGray1], NSFontAttributeName: [UIFont themeFontRegular:12]}]];
         self.scoreLabel.attributedText = scoreString.copy;
     } else {
-        self.scoreLabel.hidden = NO;
+        self.scoreLabel.hidden = YES;
     }
     
     [self setNeedsLayout];
