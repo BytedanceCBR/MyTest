@@ -46,10 +46,6 @@
     
     [self initCollectionView];
     
-    self.messageView = [[FHUGCMessageView alloc] initWithFrame:CGRectZero];
-    _messageView.hidden = YES;
-    [self addSubview:_messageView];
-    
     self.bottomSepView = [[UIView alloc] init];
     _bottomSepView.backgroundColor = [UIColor themeGray7];
     _bottomSepView.hidden = YES;
@@ -89,13 +85,6 @@
         make.height.mas_equalTo(34);
     }];
     
-    [self.messageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.collectionView.mas_bottom).offset(15);
-        make.centerX.mas_equalTo(self);
-        make.width.mas_equalTo(180);
-        make.height.mas_equalTo(42);
-    }];
-    
     [self.bottomSepView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.mas_equalTo(self);
         make.height.mas_equalTo(5);
@@ -113,14 +102,6 @@
     label.font = font;
     label.textColor = textColor;
     return label;
-}
-
-- (void)showMessageView {
-    self.messageView.hidden = NO;
-}
-
-- (void)hideMessageView {
-    self.messageView.hidden = YES;
 }
 
 //跳转到更多小区页面

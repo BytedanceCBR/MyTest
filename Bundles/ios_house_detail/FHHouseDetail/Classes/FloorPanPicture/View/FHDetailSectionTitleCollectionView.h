@@ -25,6 +25,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)setupNeighborhoodDetailStyle;
 
+- (void)setupNewHouseDetailStyle;
+
 - (void)setSubTagView;
 @end
 

@@ -33,8 +33,6 @@
 @interface FHNeighbourhoodCommentsViewModel () <UITableViewDelegate,UITableViewDataSource,FHUGCBaseCellDelegate,UIScrollViewDelegate>
 
 @property(nonatomic, weak) FHNeighbourhoodCommentsController *viewController;
-@property(nonatomic, strong) FHFeedUGCCellModel *guideCellModel;
-@property(nonatomic, assign) BOOL alreadShowFeedGuide;
 
 @end
 
@@ -382,19 +380,11 @@
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
 }
 
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    [self.detailJumpManager goToCommunityDetail:cellModel];
-}
-
 - (void)lookAllLinkClicked:(FHFeedUGCCellModel *)cellModel cell:(nonnull FHUGCBaseCell *)cell {
     self.currentCellModel = cellModel;
     self.currentCell = cell;
     self.detailJumpManager.currentCell = self.currentCell;
     [self.detailJumpManager jumpToDetail:cellModel showComment:NO enterType:@"feed_content_blank"];
-}
-
-- (void)closeFeedGuide:(FHFeedUGCCellModel *)cellModel {
-    self.alreadShowFeedGuide = YES;
 }
 
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {

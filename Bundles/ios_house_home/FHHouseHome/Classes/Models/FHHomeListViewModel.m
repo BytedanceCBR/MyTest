@@ -62,6 +62,12 @@
 @property (nonatomic, assign) NSInteger headerHeight;
 
 @property (nonatomic, strong) NSArray *itemsVCArray;
+@property(nonatomic , assign) CGPoint beginOffSet;
+@property(nonatomic , assign) CGFloat oldX;
+
+
+//beginScroll开始时才通知
+@property (nonatomic, assign) BOOL isBeginDragging;
 
 @end
 
@@ -707,11 +713,21 @@
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     self.isResetingOffsetZero = NO;
+    if (!self.isBeginDragging) {
+        self.isBeginDragging = YES;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeViewBeginDragging" object:nil];
+    }
     if (scrollView == self.homeViewController.scrollView) {
         self.isSelectIndex = NO;
 //        self.tableViewV.scrollEnabled = NO;
           self.previousHouseType = self.houseType;
-    
+        CGFloat x = scrollView.contentOffset.x;
+        if ([self.homeViewController.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
+            FHHomeMainViewController *mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
+            x = mainVC.topView.houseSegmentControl.selectedSegmentIndex * KFHScreenWidth;
+        };
+        self.beginOffSet = CGPointMake(x, scrollView.contentOffset.y);
+        self.oldX = scrollView.contentOffset.x;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollBegin" object:nil];
         
         [self setUpHomeItemScrollView:NO];
@@ -792,16 +808,38 @@
             }
         }
         [self.categoryView refreshSelectionIconFromOffsetX:scrollView.contentOffset.x];
+        CGFloat scrollDistance = scrollView.contentOffset.x - _oldX;
+        CGFloat diff = scrollView.contentOffset.x - self.beginOffSet.x;
+        CGFloat tabIndex = scrollView.contentOffset.x / KFHScreenWidth;
+        if(diff >= 0){
+            tabIndex = floorf(tabIndex);
+        }else if (diff < 0){
+            tabIndex = ceilf(tabIndex);
+        }
+        NSInteger index = (int)tabIndex;
+        
         FHHomeMainViewController *mainVC = nil;
         if ([self.homeViewController.parentViewController isKindOfClass:[FHHomeMainViewController class]]) {
             mainVC = (FHHomeMainViewController *)self.homeViewController.parentViewController;
         };
         
-        if (mainVC.topView.houseSegmentControl.selectedSegmentIndex != scrollIndex) {
+        if (mainVC.topView.houseSegmentControl.selectedSegmentIndex != index) {
             [self updateIndexChangedScrollStatus];
+            mainVC.topView.houseSegmentControl.selectedSegmentIndex = index;
+        } else {
+            if(scrollView.contentOffset.x < 0 || scrollView.contentOffset.x > [UIScreen mainScreen].bounds.size.width * (CGFloat)(mainVC.topView.houseSegmentControl.sectionTitles.count - 1)){
+                mainVC.topView.houseSegmentControl.selectedSegmentIndex = index;
+                if (scrollView.contentOffset.x < 0) {
+                    _oldX = 0;
+                } else {
+                    _oldX = [UIScreen mainScreen].bounds.size.width * (CGFloat)(mainVC.topView.houseSegmentControl.sectionTitles.count - 1);
+                }
+                return;
+            }
+            CGFloat value = scrollDistance / KFHScreenWidth;
+            [mainVC.topView.houseSegmentControl setScrollValue:value isDirectionLeft:diff < 0];
         }
-  
-        mainVC.topView.houseSegmentControl.selectedSegmentIndex = scrollIndex;
+        _oldX = scrollView.contentOffset.x;
     }
 }
 
@@ -851,6 +889,7 @@
     }
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.isBeginDragging = NO;
         [self setUpHomeItemScrollView:YES];
         // 滚动时发出通知
         [[NSNotificationCenter defaultCenter] postNotificationName:@"FHHomeMainDidScrollEnd" object:nil];

@@ -131,8 +131,8 @@
     
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.top.equalTo(self.contentView).offset(-4.5);
+        make.bottom.equalTo(self.contentView).offset(4.5);
     }];
     _headerView = [[FHDetailHeaderView alloc] init];
     _headerView.isShowLoadMore = YES;
@@ -153,8 +153,8 @@
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.headerView.mas_bottom);
-        make.left.mas_equalTo(self.contentView).offset(15);
-        make.right.mas_equalTo(self.contentView).offset(-15);
+        make.left.mas_equalTo(self.contentView).offset(9);
+        make.right.mas_equalTo(self.contentView).offset(-9);
         make.bottom.mas_equalTo(self.shadowImage).offset(-40);
     }];
     

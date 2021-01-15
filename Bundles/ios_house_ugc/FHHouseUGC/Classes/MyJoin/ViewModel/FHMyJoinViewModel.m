@@ -108,36 +108,6 @@
     [self.dataList addObject:model];
 }
 
-- (void)showMessageView {
-    FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
-    if (isEmptyString(model.openUrl) || isEmptyString(model.lastUserAvatar) || [model.unread intValue] <= 0) {
-        return;
-    }
-    self.messageViewHeight = 58;
-    self.isShowMessage = YES;
-    self.viewController.neighbourhoodView.messageView.hidden = NO;
-
-    CGRect frame = self.viewController.neighbourhoodView.frame;
-    frame.size.height = self.viewController.neighbourhoodViewHeight + self.messageViewHeight;
-    self.viewController.neighbourhoodView.frame = frame;
-
-    self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
-    [self.viewController.neighbourhoodView.messageView refreshWithUrl:model.lastUserAvatar messageCount:[model.unread intValue]];
-    [self trackElementShow];
-}
-
-- (void)hideMessageView {
-    self.isShowMessage = NO;
-    self.viewController.neighbourhoodView.messageView.hidden = YES;
-    self.messageViewHeight = 0;
-
-    CGRect frame = self.viewController.neighbourhoodView.frame;
-    frame.size.height = self.viewController.neighbourhoodViewHeight + self.messageViewHeight;
-    self.viewController.neighbourhoodView.frame = frame;
-
-    self.viewController.feedListVC.tableHeaderView = self.viewController.neighbourhoodView;
-}
-
 - (void)onUnreadMessageClick {
     FHUnreadMsgDataUnreadModel *model = [FHMessageNotificationTipsManager sharedManager].tipsModel;
     NSURL *openURL = [NSURL URLWithString:[model.openUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -273,8 +243,7 @@
     if (!self.clientShowDict) {
         self.clientShowDict = [NSMutableDictionary new];
     }
-    
-    NSString *row = [NSString stringWithFormat:@"%i",indexPath.row];
+
     NSString *groupId = cellModel.socialGroupId;
     if(groupId){
         if (self.clientShowDict[groupId] || [groupId isEqualToString:@"-1"]) {

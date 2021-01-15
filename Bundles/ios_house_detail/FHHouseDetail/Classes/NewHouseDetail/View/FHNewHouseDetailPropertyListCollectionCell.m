@@ -60,7 +60,7 @@
         __block CGFloat topOffset = 2;// 高度
         __block CGFloat listRowHeight = 28;//  原来间距是10 现在调整为8,文字距离item的顶部10,文字高20
         __block CGFloat lastTopOffset = 20;
-        CGFloat viewWidth = (self.contentView.bounds.size.width - 30) / 2;
+        CGFloat viewWidth = (self.contentView.bounds.size.width - 12) / 2;
         
 //        __weak typeof(self) weakSelf = self;
         [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -77,8 +77,8 @@
                 [self.itemArray addObject:rowView];
                 rowView.keyLabel.text = obj.attr;
                 rowView.valueLabel.text = obj.value;
-                rowView.keyLabel.font = [UIFont themeFontRegular:14];
-                rowView.valueLabel.font = [UIFont themeFontMedium:14];
+                rowView.keyLabel.font = [UIFont themeFontRegular:16];
+                rowView.valueLabel.font = [UIFont themeFontRegular:16];
                 rowView.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
                 lastView = rowView;
                 lastTopOffset = topOffset;
@@ -86,7 +86,7 @@
                     // 第1列
                     [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
                         make.top.mas_equalTo(topOffset);
-                        make.left.mas_equalTo(15);
+                        make.left.mas_equalTo(12);
                         make.width.mas_equalTo(viewWidth);
                         make.height.mas_equalTo(listRowHeight);
                     }];
@@ -94,7 +94,7 @@
                     // 第2列
                     [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
                         make.top.mas_equalTo(topOffset);
-                        make.left.mas_equalTo(15 + viewWidth);
+                        make.left.mas_equalTo(12 + viewWidth);
                         make.width.mas_equalTo(viewWidth);
                         make.height.mas_equalTo(listRowHeight);
                     }];
@@ -115,14 +115,14 @@
                 [self.itemArray addObject:rowView];
                 [rowView mas_makeConstraints:^(MASConstraintMaker *make) {
                     make.top.mas_equalTo(topOffset);
-                    make.left.mas_equalTo(15);
+                    make.left.mas_equalTo(12);
                     make.width.mas_equalTo(viewWidth * 2);
                     make.height.mas_equalTo(listRowHeight);
                 }];
                 rowView.keyLabel.text = obj.attr;
                 rowView.valueLabel.text = obj.value;
-                rowView.keyLabel.font = [UIFont themeFontRegular:14];
-                rowView.valueLabel.font = [UIFont themeFontMedium:14];
+                rowView.keyLabel.font = [UIFont themeFontRegular:16];
+                rowView.valueLabel.font = [UIFont themeFontRegular:16];
                 rowView.valueLabel.textColor = obj.color.length > 0 ? [UIColor colorWithHexString:obj.color] : [UIColor themeGray1];
                 lastView = rowView;
                 lastTopOffset = topOffset;

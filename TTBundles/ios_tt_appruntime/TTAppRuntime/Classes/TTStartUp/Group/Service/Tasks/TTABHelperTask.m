@@ -106,6 +106,8 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
     
 //    [self addSmallVideoListTest];
     
+    [self addHouseCardReadTest];
+    
     //启动实验引擎，请确保在所有客户端本地分流实验都注册完成后再调用此接口！
     [BDABTestManager launchClientExperimentManager];
     
@@ -122,6 +124,8 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
     id videoPerload = [BDABTestManager getExperimentValueForKey:@"test_video_perload" withExposure:YES];
     NSLog(@"BDClientABTest test_video_perload is %@",videoPerload);
     
+    id res = [BDABTestManager getExperimentValueForKey:@"f_house_read_unread_enable" withExposure:YES];
+    NSLog(@"BDClientABTest f_house_read_enable is %@",res);
 }
 // test 注册字典类型的客户端分层实验
 + (void)addCardStyleTest
@@ -156,6 +160,29 @@ DEC_TASK("TTABHelperTask",FHTaskTypeSerial,TASK_PRIORITY_HIGH+4);
 //    获取曝光结果
 //    NSString *exposureExperiments = [BDABTestManager queryExposureExperiments];
 //    NSLog(@"queryExposureExperiments result is %@", exposureExperiments);
+}
+
+
+//房源卡片已读功能客户端实验:https://data.bytedance.net/libra/flight/578159/edit
++ (void)addHouseCardReadTest {
+    NSInteger count = 2;
+     NSMutableArray *groups = [NSMutableArray arrayWithCapacity:count];
+     for (NSInteger index = 0; index < count; ++index) {
+         NSString *name = [NSString stringWithFormat:@"%ld", 2345078 + index];
+         NSMutableDictionary *params = @{}.mutableCopy;
+         params[@"f_house_read_unread_enable"] = @(index);
+         BDClientABTestGroup *group = [[BDClientABTestGroup alloc] initWithName:name minRegion:1000/count*index maxRegion:1000/count*(index + 1) - 1 results:params];
+         if ([group isLegal]) {
+             [groups addObject:group];
+         }
+     }
+     //生成实验层
+     BDClientABTestLayer *clientLayer = [[BDClientABTestLayer alloc] initWithName:@"f_client_layer1" groups:groups];
+     if ([clientLayer isLegal]) {
+         [BDABTestManager registerClientLayer:clientLayer];
+     }
+     BDClientABTestExperiment *clientEXP = [[BDClientABTestExperiment alloc] initWithKey:@"f_house_read_unread_enable" owner:@"xubinbin.19971226" description:@"列表页大类页开启房源卡片已读功能" defaultValue:@(0) valueType:BDABTestValueTypeDictionary isSticky:NO clientLayer:clientLayer];
+     [BDABTestManager registerExperiment:clientEXP];
 }
 
 // test 注册字符串类型的客户端分层实验

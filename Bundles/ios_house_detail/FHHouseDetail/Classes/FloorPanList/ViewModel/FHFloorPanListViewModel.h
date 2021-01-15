@@ -1,8 +1,8 @@
 //
 //  FHFloorPanListViewModel.h
-//  AFgzipRequestSerializer
+//  FHHouseDetail
 //
-//  Created by 谢飞 on 2019/2/13.
+//  Created by bytedance on 2021/1/4.
 //
 
 #import "FHHouseDetailBaseViewModel.h"
@@ -10,11 +10,10 @@
 #import "HMSegmentedControl.h"
 
 NS_ASSUME_NONNULL_BEGIN
-
 @class FHHouseDetailSubPageViewController;
-@interface FHFloorPanListViewModel : FHHouseDetailBaseViewModel
 
--(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController tableView:(UITableView *)tableView houseType:(FHHouseType)houseType andSegementView:(UIView *)segmentView andItems:(NSMutableArray <FHDetailNewDataFloorpanListListModel *> *)allItems andCourtId:(NSString *)courtId ;
+@interface FHFloorPanListViewModel : FHHouseDetailBaseViewModel
+-(instancetype)initWithController:(FHHouseDetailSubPageViewController *)viewController collectionView:(UICollectionView *)collectionView SegementView:(UIView *)segmentView courtId:(NSString *)courtId;
 
 @end
 

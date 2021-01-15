@@ -21,7 +21,6 @@
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.inset = UIEdgeInsetsMake(-20, 15, 12, 15);
 //        self.minimumLineSpacing = 20;
     }
     return self;
@@ -139,7 +138,7 @@
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     FHNewHouseDetailCoreInfoSM *model = (FHNewHouseDetailCoreInfoSM *)self.sectionModel;
     if (model.items[index] == model.titleCellModel) {
         return [FHNewHouseDetailHeaderTitleCollectionCell cellSizeWithData:model.titleCellModel width:width];

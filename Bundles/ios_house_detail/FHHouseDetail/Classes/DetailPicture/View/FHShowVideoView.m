@@ -10,6 +10,7 @@
 #import <FHCommonUI/UIColor+Theme.h>
 #import <FHCommonUI/UIFont+House.h>
 #import "FHCommonDefines.h"
+#import <KVOController/KVOController.h>
 
 @interface FHShowVideoView ()<FHVideoViewControllerDelegate>
 
@@ -45,6 +46,11 @@
         _vedioView = _videoVC.view;
         
         [self addSubview:_vedioView];
+        __weak typeof(self) weakSelf = self;
+        [self.KVOController observe:self.videoVC keyPath:@"videoFrame" options:NSKeyValueObservingOptionNew block:^(id  _Nullable observer, id  _Nonnull object, NSDictionary<NSString *,id> * _Nonnull change) {
+            [weakSelf setNeedsLayout];
+            [weakSelf layoutIfNeeded];
+        }];
     }
 }
 
@@ -79,7 +85,7 @@
 - (CGRect)showVideoFrame {
     CGRect frame = self.videoVC.videoFrame;
     self.currentImageView.frame = frame;
-    self.currentImageView.center = CGPointMake([UIScreen mainScreen].bounds.size.width / 2, [UIScreen mainScreen].bounds.size.height / 2);
+    self.currentImageView.center = CGPointMake(self.frame.size.width / 2, self.frame.size.height / 2);
     frame = self.currentImageView.frame;
     if (self.videoVC.playbackState != TTVPlaybackState_Stopped) {
         frame = [self videoFrame:frame];
@@ -128,6 +134,10 @@
     if (TTVPlaybackState_Playing == playbackState || TTVPlaybackState_Stopped == playbackState) {
         [self setNeedsLayout];
     }
+}
+
+- (void)playerDidPauseByCellularNet {
+    
 }
 
 // 很不乐意这样加，为了进入和退出全屏，要传递多层代理，balala...

@@ -89,8 +89,6 @@
 }
 
 - (void)initViews {
-    __weak typeof(self) wself = self;
-    
     self.icon = [[UIImageView alloc] init];
     _icon.contentMode = UIViewContentModeScaleAspectFill;
     _icon.layer.masksToBounds = YES;

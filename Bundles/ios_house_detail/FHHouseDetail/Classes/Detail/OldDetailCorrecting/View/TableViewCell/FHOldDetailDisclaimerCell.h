@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 // 免责声明
 @interface FHOldDetailDisclaimerCell : FHDetailBaseCell
 
+- (void)updateLayoutWithOldDetail;
+
 @end
 
 // FHDetailDisclaimerModel

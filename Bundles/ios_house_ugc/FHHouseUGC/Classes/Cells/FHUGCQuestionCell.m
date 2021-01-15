@@ -14,7 +14,7 @@
 #import "FHUGCCellUserInfoView.h"
 
 #define maxLines 3
-#define bottomViewHeight 46
+#define bottomViewHeight 45
 #define guideViewHeight 17
 #define topMargin 15
 #define singleImageViewHeight 90
@@ -56,19 +56,9 @@
 - (void)initViews {
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
-
     
     self.bottomView = [[FHArticleCellBottomView alloc] initWithFrame:CGRectZero];
-    self.bottomView.sepLineMorePadding = 10;
-    __weak typeof(self) wself = self;
-    _bottomView.deleteCellBlock = ^{
-        [wself deleteCell];
-    };
-    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
-    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-    [self.bottomView.positionView addGestureRecognizer:tap];
-    
 }
 
 - (void)initConstraints {
@@ -107,28 +97,15 @@
     //设置userInfo
     [self updateUserInfoView:cellModel];
     
-    self.bottomView.cellModel = cellModel;
-    if (![cellModel.desc.string isEqualToString:@"0个回答"]) {
-        self.bottomView.descLabel.attributedText = cellModel.desc;
-    }else {
-        self.bottomView.descLabel.attributedText = [[NSAttributedString alloc]initWithString:@""];;
-    }
-    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-    self.bottomView.position.text = cellModel.community.name;
-    [self.bottomView showPositionView:showCommunity];
-     [_bottomView updateIsQuestion];
-    [self showGuideView];
+    [self.bottomView refreshWithData:cellModel];
 }
 
 - (void)updateUserInfoView:(FHFeedUGCCellModel *)cellModel {
     [self.userInfoView setTitleModel:cellModel];
-//    UILabel *lab = [[UILabel alloc]init];
-//      lab.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
     NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
-    CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
+    CGRect titleRect = [titleStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : [UIFont themeFontMedium:16]} context:nil];
     CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
-    CGFloat userInfoHeight = 0;
-    if(size.width > maxTitleLabelSizeWidth){
+    if(titleRect.size.width > maxTitleLabelSizeWidth){
         self.userInfoView.height = 50;
     }else {
         self.userInfoView.height = 30;
@@ -143,13 +120,11 @@
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-//        UILabel *lab = [[UILabel alloc]init];
-//        lab.text = !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
         NSString *titleStr =  !isEmptyString(cellModel.originItemModel.content) ?[NSString stringWithFormat:@"问题：%@",cellModel.originItemModel.content] : @"";
-        CGSize size = [titleStr sizeWithFont:[UIFont themeFontMedium:16] constrainedToSize:CGSizeMake(CGFLOAT_MAX, 30) lineBreakMode:NSLineBreakByWordWrapping];
+        CGRect titleRect = [titleStr boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, 30) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName : [UIFont themeFontMedium:16]} context:nil];
         CGFloat maxTitleLabelSizeWidth = [UIScreen mainScreen].bounds.size.width - 10 - 50 -5;
         CGFloat userInfoHeight = 0;
-        if(size.width > maxTitleLabelSizeWidth){
+        if(titleRect.size.width > maxTitleLabelSizeWidth){
             userInfoHeight = 50;
         }else {
             userInfoHeight = 30;
@@ -157,50 +132,9 @@
         
         CGFloat height = userInfoHeight + bottomViewHeight + topMargin + 10;
         
-        if(cellModel.isInsertGuideCell){
-            height += guideViewHeight;
-        }
-        
         return height;
     }
     return 44;
-}
-
-- (void)showGuideView {
-    if(_cellModel.isInsertGuideCell){
-        self.bottomView.height = bottomViewHeight + guideViewHeight;
-    }else{
-        self.bottomView.height = bottomViewHeight;
-    }
-}
-
-- (void)closeGuideView {
-    self.cellModel.isInsertGuideCell = NO;
-    [self.cellModel.tableView beginUpdates];
-    
-    [self showGuideView];
-    self.bottomView.cellModel = self.cellModel;
-    
-    [self setNeedsUpdateConstraints];
-    
-    [self.cellModel.tableView endUpdates];
-    
-    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
-        [self.delegate closeFeedGuide:self.cellModel];
-    }
-}
-
-- (void)deleteCell {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(deleteCell:)]){
-        [self.delegate deleteCell:self.cellModel];
-    }
-}
-
-//进入圈子详情
-- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
-        [self.delegate goToCommunityDetail:self.cellModel];
-    }
 }
 
 @end

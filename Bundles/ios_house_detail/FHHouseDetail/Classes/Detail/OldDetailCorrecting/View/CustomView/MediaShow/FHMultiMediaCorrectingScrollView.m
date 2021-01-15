@@ -16,7 +16,7 @@
 #import "FHVideoModel.h"
 #import <FHHouseBase/FHBaseCollectionView.h>
 #import "FHMultiMediaVRImageCell.h"
-#import "FHDetailHeaderTitleView.h"
+#import "FHOldDetailHeaderTitleView.h"
 #import "UIViewAdditions.h"
 #import "FHHouseDetailHeaderMoreStateView.h"
 #import "FHMultiMediaPanoramaCell.h"
@@ -37,7 +37,7 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
 @property(nonatomic, strong) UIImage *placeHolder;
 @property(nonatomic, strong) NSArray *medias;
 @property(nonatomic, strong) FHVideoAndImageItemCorrectingView *itemView;   //图片户型的标签
-@property(nonatomic, strong) FHDetailHeaderTitleView *titleView;            //头图下面的标题栏
+@property(nonatomic, strong) FHOldDetailHeaderTitleView *titleView;            //头图下面的标题栏
 @property(nonatomic, strong) NSMutableArray *itemIndexArray;
 @property(nonatomic, strong) NSMutableArray *itemArray;
 @property(nonatomic, strong) UICollectionViewCell *lastCell;
@@ -70,7 +70,7 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     
-    _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 281/375) collectionViewLayout:layout];
+    _colletionView = [[FHBaseCollectionView alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, SCREEN_WIDTH * 261/375) collectionViewLayout:layout];
     _colletionView.backgroundColor = [UIColor whiteColor];
     _colletionView.pagingEnabled = YES;
     _colletionView.showsHorizontalScrollIndicator = NO;
@@ -87,6 +87,7 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
     
     // 底部渐变层
     [self addSubview:self.bottomGradientView];
+    
     // 底部banner按钮
     [self addSubview:self.bottomBannerView];
     
@@ -94,11 +95,11 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
     [self addSubview:_noDataImageView];
     _noDataImageView.hidden = YES;
         
-    _titleView = [[FHDetailHeaderTitleView alloc]init];
+    _titleView = [[FHOldDetailHeaderTitleView alloc]init];
     [self addSubview:_titleView];
     
     __weak typeof(self) wself = self;
-    self.itemView = [[FHVideoAndImageItemCorrectingView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 20)];
+    self.itemView = [[FHVideoAndImageItemCorrectingView alloc] initWithFrame:CGRectMake(0, 0, self.bounds.size.width, 22)];
     self.itemView.btd_hitTestEdgeInsets = UIEdgeInsetsMake(-20, -20, -20, -20);
     _itemView.hidden = YES;
     _itemView.selectedBlock = ^(NSInteger index, NSString * _Nonnull name, NSString * _Nonnull value) {
@@ -196,22 +197,22 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
         make.edges.mas_equalTo(self);
     }];
 
-
-    //CGFloat minus = round([UIScreen mainScreen].bounds.size.width / 375.0f * 30 + 0.5);
     [self.titleView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.bottom.equalTo(self);
-        make.top.equalTo(self.colletionView.mas_bottom).offset(-41);
+        make.top.equalTo(self.colletionView.mas_bottom);
     }];
     [self.bottomGradientView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.equalTo(self);
         make.bottom.equalTo(self.colletionView);
-        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
+        // MARK: 不展示底部渐变层视图
+        make.height.mas_equalTo(0);
+//        make.height.mas_equalTo(self.bottomGradientView.frame.size.height);
     }];
     [self.itemView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(self);
-        make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);//
+        make.bottom.mas_equalTo(self.colletionView.mas_bottom).offset(-16);//
         make.width.mas_equalTo(0);
-        make.height.mas_equalTo(20);
+        make.height.mas_equalTo(22);
     }];
     
     [self layoutIfNeeded];
@@ -220,15 +221,14 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
         make.width.mas_equalTo(44);
         make.height.mas_equalTo(22);
         make.right.mas_equalTo(-15);
-        make.bottom.mas_equalTo(self.titleView.mas_top).offset(5);
+        make.bottom.mas_equalTo(self.colletionView.mas_bottom).offset(-16);
     }];
     
     self.totalPagesLabel.width = 54;
     self.totalPagesLabel.height = 22;
     self.totalPagesLabel.left = self.width - self.totalPagesLabel.width - 15;
-    self.totalPagesLabel.bottom = self.titleView.top + 5;
-    
-    
+    self.totalPagesLabel.bottom = self.colletionView.bottom - 16;
+
 }
 
 - (void)selectItem:(NSInteger)index {
@@ -561,8 +561,8 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
             self.headerMoreStateView = [[FHHouseDetailHeaderMoreStateView alloc] init];
             self.headerMoreStateView.moreState = FHHouseDetailHeaderMoreStateBegin;
             [self.colletionView addSubview:self.headerMoreStateView];
-            self.headerMoreStateView.frame = CGRectMake(CGRectGetMaxX(self.colletionView.frame) * self.medias.count, 0, 52, CGRectGetHeight(self.colletionView.frame));
         }
+        self.headerMoreStateView.frame = CGRectMake(CGRectGetMaxX(self.colletionView.frame) * self.medias.count, 0, 52, CGRectGetHeight(self.colletionView.frame));
         [self.colletionView reloadData];
     } else if (_medias.count > 0) {
         [self.colletionView reloadData];

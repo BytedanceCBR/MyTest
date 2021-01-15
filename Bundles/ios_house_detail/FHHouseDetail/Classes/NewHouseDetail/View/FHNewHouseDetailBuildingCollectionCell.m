@@ -6,9 +6,9 @@
 //
 
 #import "FHNewHouseDetailBuildingCollectionCell.h"
-#import "FHBuildingDetailUtils.h"
 #import "FHBuildingDetailTopImageView.h"
 #import "FHDetailNewModel.h"
+#import <TTBaseLib/UIButton+TTAdditions.h>
 
 @interface FHNewHouseDetailBuildingCollectionCell ()
 
@@ -35,14 +35,16 @@
     CGFloat height = 0;
     
     if (model.buildingInfo.buildingImage.url.length && ([model.buildingInfo.buildingImage.height floatValue] > 0) && ([model.buildingInfo.buildingImage.width floatValue] > 0)) {
-        CGSize size = [FHBuildingDetailUtils getDetailBuildingViewSize];
-        height += size.height + 20;
+        CGFloat imageWidth = width - 12 *2;
+        CGFloat photoCellHeight = 177.0;
+        photoCellHeight = round(imageWidth / 313.0f * photoCellHeight + 0.5);
+        height += photoCellHeight + 12;
     }
-    height += 16;
+    height += 18;
     if (model.buildingInfo.list) {
-        height += (model.buildingInfo.list.count * (15 + 16 + 15 + 1));
+        height += (model.buildingInfo.list.count * (12 + 22 + 12 + 1));
     }
-    height += 15 + 40 + 20;
+    height += 40 + 12;
     return CGSizeMake(width, height);
 }
 
@@ -55,8 +57,8 @@
     self.stackView.axis = UILayoutConstraintAxisVertical;
     [self.contentView addSubview:self.stackView];
     [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_offset(15);
-        make.right.mas_offset(-15);
+        make.left.mas_offset(12);
+        make.right.mas_offset(-12);
         make.top.bottom.mas_equalTo(self);
     }];
 }
@@ -70,20 +72,25 @@
     CGFloat stackViewHeight = 0;
     CGFloat itemWidth = 58;
     if (model.buildingInfo.buildingImage.url.length && ([model.buildingInfo.buildingImage.height floatValue] > 0) && ([model.buildingInfo.buildingImage.width floatValue] > 0)) {
-        CGSize size = [FHBuildingDetailUtils getDetailBuildingViewSize];
+        CGFloat width = CGRectGetWidth(self.contentView.bounds) - 12 *2;
+        CGFloat photoCellHeight = 177.0;
+        photoCellHeight = round(width / 313.0f * photoCellHeight + 0.5);
+        CGSize size = CGSizeMake(width, photoCellHeight);
         UIView *containView = [[UIView alloc] init];
         [containView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.width.mas_equalTo(self.stackView);
-            make.height.mas_equalTo(size.height + 20);
+            make.height.mas_equalTo(size.height + 12);
         }];
-        stackViewHeight += size.height + 20;
+        stackViewHeight += size.height + 12;
 
         [self.stackView addArrangedSubview:containView];
         UIView *image = [[UIView alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
         image.clipsToBounds = YES;
-        image.layer.cornerRadius = 10;
+        image.layer.cornerRadius = 3;
         image.contentMode = UIViewContentModeCenter;
-        CGSize imageSize = [FHBuildingDetailUtils getDetailBuildingImageViewSize];
+        
+        photoCellHeight = round(width / 375.0f * 281 + 0.5);
+        CGSize imageSize = CGSizeMake(width, photoCellHeight);
         FHBuildingDetailTopImageView *imageView = [[FHBuildingDetailTopImageView alloc] initWithFrame:CGRectMake(0, 0, imageSize.width, imageSize.height)];
         imageView.center = image.center;
         imageView.userInteractionEnabled = NO;
@@ -117,17 +124,17 @@
     topView.backgroundColor = [UIColor whiteColor];
     [topView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(self.stackView);
-        make.height.mas_equalTo(16);
+        make.height.mas_equalTo(18);
     }];
     [self.stackView addArrangedSubview:topView];
-    stackViewHeight += 16;
+    stackViewHeight += 18;
     
     UILabel *nameLabel = [self buildInfoLabel];
     nameLabel.text = model.buildingInfo.buildingNameText.length ? model.buildingInfo.buildingNameText : @"楼栋名称";
     [topView addSubview:nameLabel];
     [nameLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(0);
-        make.top.mas_equalTo(0);
+        make.centerY.mas_equalTo(topView);
         make.width.mas_equalTo(itemWidth);
     }];
     
@@ -136,7 +143,7 @@
     [topView addSubview:layerLabel];
     [layerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.mas_equalTo(topView);
-        make.top.mas_equalTo(0);
+        make.centerY.mas_equalTo(topView);
         make.width.mas_equalTo(itemWidth);
     }];
     
@@ -145,12 +152,12 @@
     [topView addSubview:familyLabel];
     [familyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(0);
-        make.top.mas_equalTo(0);
+        make.centerY.mas_equalTo(topView);
         make.width.mas_equalTo(itemWidth);
     }];
     
     if (model.buildingInfo.list.count) {
-        stackViewHeight += (model.buildingInfo.list.count * (15 + 16 + 15 + 1));
+        stackViewHeight += (model.buildingInfo.list.count * (12 + 16 + 12 + 1));
         for (NSUInteger index = 0; index < model.buildingInfo.list.count; index ++) {
             FHDetailNewBuildingListItem *item = model.buildingInfo.list[index];
             
@@ -161,7 +168,7 @@
             itemView.backgroundColor = [UIColor whiteColor];
             [itemView mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.width.mas_equalTo(self.stackView);
-                make.height.mas_equalTo(15 + 16 + 15 + 1);
+                make.height.mas_equalTo(12 + 22 + 12 + 1);
             }];
             [self.stackView addArrangedSubview:itemView];
             
@@ -170,7 +177,7 @@
             [itemView addSubview:nameValueLabel];
             [nameValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.left.mas_equalTo(0);
-                make.top.mas_equalTo(15);
+                make.centerY.mas_equalTo(itemView);
                 make.width.mas_equalTo(itemView.mas_width).multipliedBy(0.33);
             }];
             
@@ -179,7 +186,7 @@
             [itemView addSubview:layerValueLabel];
             [layerValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.centerX.mas_equalTo(topView);
-                make.top.mas_equalTo(15);
+                make.centerY.mas_equalTo(itemView);
                 make.width.mas_equalTo(itemWidth);
             }];
             
@@ -188,7 +195,7 @@
             [itemView addSubview:familyValueLabel];
             [familyValueLabel mas_makeConstraints:^(MASConstraintMaker *make) {
                 make.right.mas_equalTo(0);
-                make.top.mas_equalTo(15);
+                make.centerY.mas_equalTo(itemView);
                 make.width.mas_equalTo(itemWidth);
             }];
             
@@ -209,25 +216,31 @@
     UIView *bottomView = [[UIView alloc] init];
     bottomView.backgroundColor = [UIColor whiteColor];
     [self.stackView addArrangedSubview:bottomView];
-    stackViewHeight += (15 + 40 + 20);
+    stackViewHeight += (40 + 12);
     [bottomView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.height.mas_equalTo(15 + 40 + 20);
+        make.height.mas_equalTo(40 + 12);
     }];
     
     UIButton *moreButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [moreButton setBackgroundColor:[UIColor colorWithHexString:@"#fff8ef"]];
+    [moreButton setBackgroundColor:[UIColor colorWithHexString:@"#fafafa"]];
     moreButton.layer.masksToBounds = YES;
-    moreButton.layer.cornerRadius = 20;
+    moreButton.layer.cornerRadius = 1;
     NSString *title = model.buildingInfo.buttonText.length ? model.buildingInfo.buttonText : @"查看全部楼栋信息";
     [moreButton setTitle:title forState:UIControlStateNormal];
-    [moreButton setTitleColor:[UIColor colorWithHexString:@"#ff9629"] forState:UIControlStateNormal];
-    moreButton.titleLabel.font = [UIFont themeFontMedium:16];
+    [moreButton setTitleColor:[UIColor themeGray1] forState:UIControlStateNormal];
+    moreButton.titleLabel.font = [UIFont themeFontRegular:16];
+    [moreButton setImage:[UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"] forState:UIControlStateNormal];
     [moreButton addTarget:self action:@selector(clickMoreButton:) forControlEvents:UIControlEventTouchUpInside];
     [bottomView addSubview:moreButton];
+    
+    [moreButton sizeToFit];
+    moreButton.titleEdgeInsets = UIEdgeInsetsMake(0, -moreButton.imageView.bounds.size.width, 0, moreButton.imageView.bounds.size.width);
+    moreButton.imageEdgeInsets = UIEdgeInsetsMake(0, moreButton.titleLabel.bounds.size.width + 2, 0, -moreButton.titleLabel.bounds.size.width);
+    
     [moreButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.right.mas_equalTo(0);
-        make.top.mas_equalTo(15);
+        make.top.mas_equalTo(0);
         make.height.mas_equalTo(40);
     }];
     

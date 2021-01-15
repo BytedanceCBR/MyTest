@@ -69,29 +69,14 @@
 }
 
 - (void)setupViews {
+    __weak typeof(self) weakSelf = self;
+    
     self.userInfoView = [[FHUGCCellUserInfoView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, userInfoViewHeight)];
     [self.contentView addSubview:_userInfoView];
-    __weak typeof(self) weakSelf = self;
-    self.userInfoView.deleteCellBlock = ^{
-        FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
-        [viewModel.detailController goBack];
-    };
-    
-    self.userInfoView.reportSuccessBlock = ^{
-        FHCommentBaseDetailViewModel *viewModel = weakSelf.baseViewModel;
-        [viewModel.detailController goBack];
-    };
     
     self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectZero];
     _contentLabel.numberOfLines = 0;
     _contentLabel.delegate = self;
-//    NSDictionary *linkAttributes = @{
-//                                     NSForegroundColorAttributeName : [UIColor themeRed3],
-//                                     NSFontAttributeName : [UIFont themeFontRegular:16]
-//                                     };
-//    self.contentLabel.linkAttributes = linkAttributes;
-//    self.contentLabel.activeLinkAttributes = linkAttributes;
-//    self.contentLabel.inactiveLinkAttributes = linkAttributes;
     [self.contentView addSubview:_contentLabel];
     
     UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(didLongPressContentLabel:)];

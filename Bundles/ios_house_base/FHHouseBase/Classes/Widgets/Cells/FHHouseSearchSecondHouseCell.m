@@ -31,6 +31,7 @@
 @property(nonatomic, strong) FHSingleImageInfoCellModel *cellModel;
 @property(nonatomic, strong) FHHomeHouseDataItemsModel *homeItemModel;
 @property (nonatomic, strong) UIView *containerView;
+@property (nonatomic, strong) UIView *backView;
 
 @property (nonatomic, strong) UIView *leftInfoView;
 @property (nonatomic, strong) UIView *maskVRImageView;
@@ -171,6 +172,9 @@
     [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(topMarigin);
     }];
+    [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(topMarigin);
+    }];
 }
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -181,6 +185,7 @@
         } else if ([reuseIdentifier isEqualToString:@"FHHouseHomeSecondHouseCell"]) {
             [self initHomeHouseUI];
         }
+        
         self.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     return self;
@@ -194,6 +199,9 @@
     [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(top);
     }];
+    [self.backView mas_updateConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(top);
+    }];
 }
 
 - (void)initHomeHouseUI {
@@ -202,6 +210,14 @@
 
 - (void)initUI {
     self.contentView.backgroundColor = [UIColor themeGray7];
+    [self.contentView addSubview:self.backView];
+    [self.backView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_equalTo(15);
+        make.right.mas_equalTo(-15);
+        make.top.mas_equalTo(5);
+        make.bottom.mas_equalTo(-5);
+    }];
+    
     [self.contentView addSubview:self.containerView];
     [self.containerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(15);
@@ -378,7 +394,7 @@
             self.closeBtn.hidden = YES;
         }
     }
-    [self refreshOpacityWithData:data];
+    //[self refreshOpacityWithData:data];
 }
 
 - (void)updateVrInfo:(BOOL)hasVr {
@@ -585,12 +601,20 @@
     return _tagLabel;
 }
 
+- (UIView *)backView {
+    if (!_backView) {
+        _backView = [[UIView alloc] init];
+        _backView.backgroundColor = [UIColor whiteColor];
+        _backView.layer.cornerRadius = 10;
+        _backView.layer.masksToBounds = YES;
+    }
+    return _backView;
+}
+
 - (UIView *)containerView {
     if (!_containerView) {
         _containerView = [[UIView alloc] init];
-        _containerView.backgroundColor = [UIColor whiteColor];
-        _containerView.layer.cornerRadius = 10;
-        _containerView.layer.masksToBounds = YES;
+        _containerView.backgroundColor = [UIColor clearColor];
     }
     return _containerView;
 }
@@ -749,6 +773,20 @@
         }else{
             [[ToastManager manager] showToast:@"反馈失败"];
         }
+    }];
+}
+
+#pragma mark - FHHouseCardTouchAnimationProtocol
+
+- (void)shrinkWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.containerView.transform = CGAffineTransformMakeScale(FHHouseCardShrinkRate, FHHouseCardShrinkRate);
+    }];
+}
+
+- (void)restoreWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.containerView.transform = CGAffineTransformMakeScale(1, 1);
     }];
 }
 

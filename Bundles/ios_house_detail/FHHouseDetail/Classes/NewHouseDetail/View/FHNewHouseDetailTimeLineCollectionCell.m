@@ -25,7 +25,7 @@
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
     if (data && [data isKindOfClass:[FHNewHouseDetailTimeLineCellModel class]]) {
-        return CGSizeMake(width, 133);
+        return CGSizeMake(width, 125);
     }
     return CGSizeZero;
 }
@@ -49,7 +49,7 @@
 
     self.flowLayout = [[UICollectionViewFlowLayout alloc] init];
     self.flowLayout.itemSize = CGSizeMake(99, 56);
-    self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 15, 0, 0);
+    self.flowLayout.sectionInset = UIEdgeInsetsMake(0, 12, 0, 0);
     self.flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
     self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:self.flowLayout];
     self.collectionView.showsHorizontalScrollIndicator = NO;
@@ -100,8 +100,8 @@
     [self.containerView addSubview:self.contentLabel];
     [self.contentLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self.collectionView.mas_bottom).offset(12);
-        make.left.mas_equalTo(15);
-        make.right.mas_equalTo(-15);
+        make.left.mas_equalTo(12);
+        make.right.mas_equalTo(-12);
     }];
     
     self.contentBtn = [[UIControl alloc] init];
@@ -150,7 +150,7 @@
     FHNewHouseDetailTimeLineItemCollectionCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([FHNewHouseDetailTimeLineItemCollectionCell class]) forIndexPath:indexPath];
     if (indexPath.row < model.timeLineModel.list.count) {
         if (indexPath.row == self.selectedRow) {
-            [cell updateTitleColor:[UIColor themeOrange1] timeColor:[UIColor themeOrange1] dotColor:[UIColor themeOrange1] backgroundColor:[UIColor colorWithHexStr:@"#fefaf4"]];
+            [cell updateTitleColor:[UIColor colorWithHexString:@"#9c6d43"] timeColor:[UIColor colorWithHexString:@"#9c6d43"] dotColor:[UIColor colorWithHexString:@"#9c6d43"] backgroundColor:[UIColor colorWithHexStr:@"#fefaf4"]];
         } else {
             [cell updateTitleColor:[UIColor themeGray1] timeColor:[UIColor themeGray3] dotColor:[UIColor themeGray2] backgroundColor:[UIColor themeGray7]];
         }

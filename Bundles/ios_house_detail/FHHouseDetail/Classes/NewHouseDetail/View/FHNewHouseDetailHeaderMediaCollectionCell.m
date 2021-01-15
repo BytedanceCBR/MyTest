@@ -25,10 +25,8 @@
 #import "ToastManager.h"
 #import "FHDetailNewMediaHeaderDataHelper.h"
 #import "FHDetailNewMediaHeaderView.h"
-#import "FHVideoViewController.h"
 @interface FHNewHouseDetailHeaderMediaCollectionCell ()
 
-@property (nonatomic, strong) FHVideoViewController *videoVC;
 @property (nonatomic, strong) FHDetailNewMediaHeaderView *headerView;
 @property (nonatomic, strong) FHDetailNewMediaHeaderDataHelper *dataHelper;
 @property (nonatomic, strong) FHMultiMediaModel *model;
@@ -43,7 +41,7 @@
 @implementation FHNewHouseDetailHeaderMediaCollectionCell
 
 + (CGSize)cellSizeWithData:(id)data width:(CGFloat)width {
-    CGFloat photoCellHeight = 281;
+    CGFloat photoCellHeight = 260;
     photoCellHeight = round(width / 375.0f * photoCellHeight + 0.5);
     return CGSizeMake(width, photoCellHeight);
 }
@@ -65,17 +63,6 @@
     self.model.medias = self.dataHelper.headerViewData.mediaItemArray;
     [self.headerView updateMultiMediaModel:self.model];
     [self.headerView setTotalPagesLabelText:[NSString stringWithFormat:@"共%lu张", (unsigned long)self.dataHelper.pictureDetailData.detailPictureModel.itemList.count]];
-}
-
-- (FHVideoViewController *)videoVC {
-    if (!_videoVC) {
-        _videoVC = [[FHVideoViewController alloc] init];
-        _videoVC.view.frame = CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, [FHDetailNewMediaHeaderView cellHeight]);
-        NSMutableDictionary *dict = [self tracerDic].mutableCopy;
-        dict[@"element_type"] = @"large_picture_preview";
-        _videoVC.tracerDic = dict.copy;
-    }
-    return _videoVC;
 }
 
 - (NSDictionary *)tracerDic {
@@ -104,7 +91,7 @@
 #pragma mark - UI
 - (void)createUI {
     self.pictureShowDict = [NSMutableDictionary dictionary];
-    self.headerView = [[FHDetailNewMediaHeaderView alloc] init];
+    self.headerView = [[FHDetailNewMediaHeaderView alloc] initWithFrame:self.contentView.bounds];
     [self.contentView addSubview:self.headerView];
     [self.headerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.edges.equalTo(self.contentView);
@@ -140,8 +127,10 @@
     //视频线索
     pictureDetailViewController.videoImageAssociateInfo = self.dataHelper.pictureDetailData.videoImageAssociateInfo;
     
+    NSMutableDictionary *videoTracerDict = [self tracerDic].mutableCopy;
+    videoTracerDict[@"element_type"] = @"large_picture_preview";
+    pictureDetailViewController.videoTracerDict = videoTracerDict.copy;
     
-    pictureDetailViewController.videoVC = self.videoVC;
     pictureDetailViewController.houseType = FHHouseTypeNewHouse;
     if (self.pictureListViewController) {
         pictureDetailViewController.topVC = self.pictureListViewController;
@@ -188,18 +177,20 @@
         NSValue *frameValue = [NSValue valueWithCGRect:frame];
         [frames addObject:frameValue];
     }
+    pictureDetailViewController.placeholders = placeholders;
     if (!self.pictureListViewController) {
         pictureDetailViewController.placeholderSourceViewFrames = frames;
-        pictureDetailViewController.placeholders = placeholders;
+    } else {
+//        pictureDetailViewController.placeholderSourceViewFrames =
     }
-    
-    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
-        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
-    }];
 
     pictureDetailViewController.saveImageBlock = ^(NSInteger currentIndex) {
         [weakSelf trackSavePictureWithIndex:currentIndex];
     };
+    
+    [pictureDetailViewController presentPhotoScrollViewWithDismissBlock:^{
+        [weakSelf trackPictureLargeStayWithIndex:weakSelf.currentIndex];
+    }];
     [self trackHeaderViewMediaShowWithIndex:index isLarge:YES];
     self.enterTimestamp = [[NSDate date] timeIntervalSince1970];
     self.pictureDetailVC = pictureDetailViewController;
@@ -245,15 +236,15 @@
     pictureListViewController.albumImageBtnClickBlock = ^(NSInteger index) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
         //如果是从大图进入的图片列表，dismiss picturelist
-        if (index < 0 || index >= weakSelf.dataHelper.pictureDetailData.mediaItemArray.count) {
+        if (index < 0 || index >= strongSelf.dataHelper.pictureDetailData.mediaItemArray.count) {
             return;
         }
-        FHMultiMediaItemModel *itemModel = weakSelf.dataHelper.pictureDetailData.mediaItemArray[index];
+        FHMultiMediaItemModel *itemModel = strongSelf.dataHelper.pictureDetailData.mediaItemArray[index];
         if (itemModel.mediaType == FHMultiMediaTypeVRPicture) {
-            [weakSelf gotoVRDetail:itemModel];
+            [strongSelf gotoVRDetail:itemModel];
         } else {
             if (strongSelf.pictureDetailVC) {
-                [strongSelf.pictureListViewController dismissViewControllerAnimated:NO completion:nil];
+                [strongSelf.pictureListViewController.navigationController popViewControllerAnimated:YES];
                 if (index >= 0) {
                     [strongSelf.pictureDetailVC.photoScrollView setContentOffset:CGPointMake(weakSelf.pictureDetailVC.view.frame.size.width * index, 0) animated:NO];
                 }
@@ -265,20 +256,7 @@
     pictureListViewController.topImageClickTabBlock = ^(NSInteger index) {
         [weakSelf trackClickTabWithIndex:index element:@"photo_album"];
     };
-
-    UIViewController *presentedVC;
-    if (self.pictureDetailVC) {
-        presentedVC = self.pictureDetailVC;
-    }
-//    if (!presentedVC) {
-//        presentedVC = data.weakVC;
-//    }
-    if (!presentedVC) {
-        presentedVC = [TTUIResponderHelper visibleTopViewController];
-    }
-    TTNavigationController *navigationController = [[TTNavigationController alloc] initWithRootViewController:pictureListViewController];
-    navigationController.modalPresentationStyle = UIModalPresentationFullScreen;
-    [presentedVC presentViewController:navigationController animated:YES completion:nil];
+    [[TTUIResponderHelper correctTopNavigationControllerFor:self] pushViewController:pictureListViewController animated:YES];
     self.pictureListViewController = pictureListViewController;
 }
 

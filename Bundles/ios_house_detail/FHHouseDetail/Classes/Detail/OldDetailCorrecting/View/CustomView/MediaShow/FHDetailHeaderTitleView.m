@@ -15,6 +15,7 @@
 #import "FHDetailTopBannerView.h"
 #import "FHDetailFeedbackButton.h"
 #import <FHHouseBase/UIImage+FIconFont.h>
+#import "FHHouseDetailBaseViewModel.h"
 
 @interface FHDetailHeaderTitleView ()
 @property (nonatomic, weak) UIImageView *shadowImage;

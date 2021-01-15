@@ -30,7 +30,7 @@
 }
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
-    CGFloat width = self.collectionContext.containerSize.width - 15 * 2;
+    CGFloat width = self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2;
     FHNewHouseDetailBuildingsSM *model = (FHNewHouseDetailBuildingsSM *)self.sectionModel;
     if (model.items[index] == model.buildingCellModel) {
         return [FHNewHouseDetailBuildingCollectionCell cellSizeWithData:model.buildingCellModel width:width];
@@ -62,7 +62,7 @@
 
 - (CGSize)sizeForSupplementaryViewOfKind:(nonnull NSString *)elementKind atIndex:(NSInteger)index {
     if ([elementKind isEqualToString:UICollectionElementKindSectionHeader]) {
-        return CGSizeMake(self.collectionContext.containerSize.width - 15 * 2, 61);
+        return CGSizeMake(self.collectionContext.containerSize.width - FHNewHouseDetailSectionLeftMargin * 2, 46);
     }
     return CGSizeZero;
 }
@@ -70,8 +70,7 @@
 
 - (nonnull __kindof UICollectionReusableView *)viewForSupplementaryElementOfKind:(nonnull NSString *)elementKind atIndex:(NSInteger)index {
     FHDetailSectionTitleCollectionView *titleView = [self.collectionContext dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader forSectionController:self class:[FHDetailSectionTitleCollectionView class] atIndex:index];
-    titleView.titleLabel.font = [UIFont themeFontMedium:20];
-    titleView.titleLabel.textColor = [UIColor themeGray1];
+    [titleView setupNewHouseDetailStyle];
     titleView.titleLabel.text = @"楼栋信息";
     titleView.arrowsImg.hidden = YES;
     titleView.userInteractionEnabled = NO;

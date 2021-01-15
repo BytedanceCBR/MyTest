@@ -31,6 +31,7 @@
 #import <NSDictionary+BTDAdditions.h>
 #import "FHLoadingButton.h"
 #import "FHDetailBaseModel.h"
+#import <FHHouseBase/FHUserTracker.h>
 
 #define kFHDPTopBarHeight 44.f
 #define kFHDPBottomBarHeight 60.f
@@ -40,8 +41,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 
 @interface FHDetailPictureViewController ()<UIScrollViewDelegate, TTShowImageViewDelegate,TTPreviewPanBackDelegate,UIGestureRecognizerDelegate, FHVideoViewDelegate>
 {
-    BOOL alreadyFinished;// 防止多次点击回调造成多次popController
-    BOOL _addedToContainer;
     BOOL _navBarHidden;
     BOOL _statusBarHidden;
     UIStatusBarStyle _lastStatusBarStyle;
@@ -93,6 +92,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 @property (nonatomic, copy) NSArray<NSValue *> *animateFrames;
 
 @property (nonatomic, copy) NSString *currentTypeName;
+
+@property (nonatomic, assign) BOOL isCloseButtonAnimation;
 @end
 
 @implementation FHDetailPictureViewController
@@ -113,9 +114,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         _isShowSegmentView = YES;
         
         self.ttHideNavigationBar = YES;
-        
-        _addedToContainer = NO;
-        
+                
         self.photoViewPools = [[NSMutableSet alloc] initWithCapacity:5];
         self.videoViewPools = [[NSMutableSet alloc] initWithCapacity:3];
         self.vrViewPools = [[NSMutableSet alloc] initWithCapacity:3];
@@ -254,6 +253,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     self.naviView = [[FHDetailPictureNavView alloc] initWithFrame:CGRectMake(0, topInset, self.view.width, kFHDPTopBarHeight)];
     self.naviView.showAlbum = self.albumImageBtnClickBlock ? YES : NO;
     self.naviView.backActionBlock = ^{
+        weakSelf.isCloseButtonAnimation = YES;
         [weakSelf finished];
     };
     self.naviView.albumActionBlock = ^{
@@ -397,7 +397,7 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     }
     UINavigationController *navi = self.topVC.navigationController;
     if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
-        [(TTNavigationController *)navi panRecognizer].enabled = NO;
+        navi.interactivePopGestureRecognizer.enabled = NO;
     }
     // 是否正在显示 视频
 //    if (_isShowBottomBar) {
@@ -430,11 +430,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
         tracerDic[@"biz_trace"] = contactPhone.bizTrace?:@"be_null";
         [FHUserTracker writeEvent:@"lead_show" params:tracerDic];
     }
-}
-
-- (void)closeBtnClick
-{
-    [self finished];
 }
 
 - (NSString *)elementFrom {
@@ -584,14 +579,16 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    UINavigationController *navi = self.topVC.navigationController;
-    if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
-        [(TTNavigationController *)navi panRecognizer].enabled = NO;
-    }
+    
     [self setCurrentStatusStyle];
     __weak typeof(self) weakSelf = self;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [weakSelf setCurrentStatusStyle];
+        
+        UINavigationController *navi = self.topVC.navigationController;
+        if (navi && [navi isKindOfClass:[TTNavigationController class]]) {
+            navi.interactivePopGestureRecognizer.enabled = NO;
+        }
     });
     if ([self isVideoImageView:self.currentIndex] && !self.disableAutoPlayVideo) {
         // 视频
@@ -955,7 +952,26 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 
 - (CGRect)frameForPagingScrollView
 {
-    return self.view.bounds;
+    CGFloat topInset = 0;
+    CGFloat bottomInset = 0;
+    if (@available(iOS 11.0, *)) {
+        topInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.top;
+        bottomInset = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+    }
+    if (topInset < 1) {
+        topInset = 20;
+    }
+    CGFloat topMargin = kFHDPTopBarHeight + topInset + 42;
+    CGFloat botttomMargin = 76 + bottomInset;
+    if (self.detailPictureModel.itemList.count) {
+        FHDetailPictureItemModel *itemModel = self.detailPictureModel.itemList.firstObject;
+        if (itemModel.desc.length) {
+            botttomMargin += 40;
+        }
+    }
+
+    return CGRectMake(0, topMargin, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - topMargin - botttomMargin);
+//    return self.view.bounds;
 }
 
 - (void)setPhotoScrollViewContentSize
@@ -1107,9 +1123,9 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
             showVedioView.backgroundColor = [UIColor clearColor];
             
             FHVideoViewController *videoVC = [[FHVideoViewController alloc] init];
-            videoVC.view.frame = self.videoVC.view.frame;
-            videoVC.videoFrame = self.videoVC.view.frame;
-            videoVC.tracerDic = self.videoVC.tracerDic;
+            videoVC.view.frame = self.photoScrollView.bounds;
+            videoVC.videoFrame = self.photoScrollView.bounds;
+            videoVC.tracerDic = self.videoTracerDict;
             showVedioView.videoVC = videoVC;
         }
         else {
@@ -1269,12 +1285,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     if (_dismissBlock) {
         _dismissBlock();
     }
-    if (_addedToContainer) {
-        [self dismissSelf];
-        _addedToContainer = NO;
-    } else {
-        [self dismissAnimated:NO];
-    }
+    [self dismissSelf];
 }
 
 - (void)albumBtnClick
@@ -1282,29 +1293,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     if (self.albumImageBtnClickBlock) {
         self.albumImageBtnClickBlock(self.currentIndex);
     }
-}
-
-- (void)backButtonClicked
-{
-    [self dismissAnimated:YES];
-}
-
-- (void)dismissAnimated:(BOOL)animated
-{
-    if (alreadyFinished) {
-        return;
-    }
-    
-    if(self.navigationController)
-    {
-        [self.navigationController popViewControllerAnimated:animated];
-    }
-    else
-    {
-        [self dismissViewControllerAnimated:animated completion:NULL];
-    }
-    kFHStaticPhotoBrowserAtTop = NO;
-    alreadyFinished = YES;
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -1675,11 +1663,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
 
 #pragma mark - Present View
 
-- (void)presentPhotoScrollView
-{
-    [self presentPhotoScrollViewWithDismissBlock:nil];
-}
-
 - (void)presentPhotoScrollViewWithDismissBlock:(TTPhotoScrollViewDismissBlock)block
 {
     kFHStaticPhotoBrowserAtTop = YES;
@@ -1697,59 +1680,80 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         rootViewController = self.topVC;
     }
     [rootViewController addChildViewController:self];
-    rootViewController.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    
+    [rootViewController.view addSubview:self.view]; //图片放大动画情况下，先加入view再加入遮罩
     
     self.view.alpha = 0;
-    _addedToContainer = YES;
-    
     TTShowImageView * startShowImageView = [self showImageViewAtIndex:_startWithIndex];
     if (!startShowImageView.isDownloading && self.placeholderSourceViewFrames.count > _startWithIndex && [self.placeholderSourceViewFrames objectAtIndex:_startWithIndex] != [NSNull null]) {
         
         __weak TTShowImageView * weakShowImageView = startShowImageView;
-        __weak FHDetailPictureViewController * weakSelf = self;
+        __weak typeof(self) weakSelf = self;
         
         startShowImageView.loadingCompletedAnimationBlock = ^() {
             
+            __strong typeof(weakSelf) strongSelf = weakSelf;
             UIImageView * largeImageView = [weakShowImageView displayImageView];
             CGRect endFrame = largeImageView.frame;
             
+            UIImageView *animationImageView = [[UIImageView alloc] initWithFrame:endFrame];
+            if ([largeImageView isKindOfClass:[UIImageView class]]) {
+                animationImageView.image = largeImageView.image;
+            }
+            animationImageView.contentMode = largeImageView.contentMode;
+            
             // [largeImageView.superview convertRect:endFrame toView:nil];
             // 全屏展示，无需转换 (由于navigation bar的存在，转换后的y可能差一个navigation bar的高度)
+            //[weakSelf.photoScrollView convertRect:endFrame fromView:largeImageView]
             CGRect transEndFrame = endFrame;
+            transEndFrame = CGRectOffset(transEndFrame, 0, [strongSelf frameForPagingScrollView].origin.y);
             
             UIView *containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
             containerView.backgroundColor = [UIColor clearColor];
             
-            CGRect beginFrame = [[_placeholderSourceViewFrames objectAtIndex:_startWithIndex] CGRectValue];
-            if ([weakShowImageView isKindOfClass:[FHShowVideoView class]] && _startWithIndex == 0) {
+            CGRect beginFrame = [[strongSelf.placeholderSourceViewFrames objectAtIndex:strongSelf.startWithIndex] CGRectValue];
+            if ([weakShowImageView isKindOfClass:[FHShowVideoView class]] && strongSelf.startWithIndex == 0) {
                 // 视频cell
-                beginFrame = self.videoVC.videoFrame;
-                containerView.backgroundColor = [UIColor blackColor];
+                beginFrame = [strongSelf frameForPagingScrollView];
             }
-            largeImageView.frame = beginFrame;
-            largeImageView.alpha = 1;
-            UIView *originalSupperView = largeImageView.superview;
-            [containerView addSubview:largeImageView];
-            [rootViewController.view addSubview:self.view]; //图片放大动画情况下，先加入view再加入遮罩
+            containerView.alpha = 0;
+            largeImageView.alpha = 0;
+            animationImageView.frame = beginFrame;
+            [containerView addSubview:animationImageView];
             [rootViewController.view addSubview:containerView];
+            
+            CGRect topBarFrame = strongSelf.topBar.frame;
+            strongSelf.topBar.frame = CGRectOffset(topBarFrame, 0, -topBarFrame.size.height);
+            strongSelf.topBar.alpha = 0;
+            
+            CGRect bottomBarFrame = strongSelf.bottomBar.frame;
+            strongSelf.bottomBar.frame = CGRectOffset(bottomBarFrame, 0, bottomBarFrame.size.height);
+            strongSelf.bottomBar.alpha = 0;
             
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             
             [UIView animateWithDuration:0.35f animations:^{
-                containerView.backgroundColor = [UIColor blackColor];
-                largeImageView.frame = transEndFrame;
+                containerView.alpha = 1;
+                animationImageView.frame = transEndFrame;
+                
+                strongSelf.topBar.alpha = 1;
+                strongSelf.topBar.frame = topBarFrame;
+                
+                strongSelf.bottomBar.frame = bottomBarFrame;
+                strongSelf.bottomBar.alpha = 1;
+
+                strongSelf.view.alpha = 1;
             } completion:^(BOOL finished) {
-                largeImageView.frame = endFrame;
-                [originalSupperView addSubview:largeImageView];
+                largeImageView.alpha = 1;
+//                [originalSupperView addSubview:largeImageView];
                 [containerView removeFromSuperview];
                 
-                weakSelf.view.alpha = 1;
                 weakShowImageView.loadingCompletedAnimationBlock = nil;
                 [weakShowImageView showGifIfNeeded];
                 [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
                 
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                [self didMoveToParentViewController:rootViewController];
+                [strongSelf didMoveToParentViewController:rootViewController];
             }];
         };
         
@@ -1762,7 +1766,7 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
         
-        [UIView animateWithDuration:.3f animations:^{
+        [UIView animateWithDuration:.2f animations:^{
             self.view.alpha = 1; //本地加载图片，淡入动画
             containerView.backgroundColor = [UIColor blackColor];
         } completion:^(BOOL finished) {
@@ -1781,11 +1785,6 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
                                             withAnimation:NO];
     
     [self willMoveToParentViewController:nil];
-    // 关闭 页面时隐藏
-    self.topBar.hidden = YES;
-    self.bottomBar.hidden = YES;
-    self.pictureTitleView.hidden = YES;
-    self.videoInfoView.hidden = YES;
     
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     while (rootViewController.presentedViewController) {
@@ -1796,128 +1795,155 @@ static BOOL kFHStaticPhotoBrowserAtTop = NO;
     }
     rootViewController.navigationController.interactivePopGestureRecognizer.enabled = YES;
     
+    self.videoInfoView.hidden = YES;
     if (self.reachDismissCondition) {
+        // 关闭 页面时隐藏
+        self.topBar.hidden = YES;
+        self.bottomBar.hidden = YES;
+        
         [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
         
-        [UIView animateWithDuration:.25f animations:^{
+        [UIView animateWithDuration:.2f animations:^{
             self.view.layer.opacity = 0.0f;
         } completion:^(BOOL finished) {
             kFHStaticPhotoBrowserAtTop = NO;
             [self.view removeFromSuperview];
             [self removeFromParentViewController];
             [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-            [self removeFromParentViewController];
         }];
-    } else {
-        if (self.placeholderSourceViewFrames.count > _currentIndex && [self.placeholderSourceViewFrames objectAtIndex:_currentIndex] != [NSNull null]) {
-            // 如果显示图片前后的设备方向不同，直接渐隐动画
-            UIInterfaceOrientation currentOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-            if ((UIInterfaceOrientationIsPortrait(_enterOrientation) && UIInterfaceOrientationIsLandscape(currentOrientation))
-                || (UIInterfaceOrientationIsLandscape(_enterOrientation) && UIInterfaceOrientationIsPortrait(currentOrientation))) {
-                [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-                
-                [UIView animateWithDuration:.2f animations:^{
-                    self.view.alpha = 0.0f;
-                } completion:^(BOOL finished) {
-                    kFHStaticPhotoBrowserAtTop = NO;
-                    [self.view removeFromSuperview];
-                    [self removeFromParentViewController];
-                    [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                    [self removeFromParentViewController];
-                }];
-                return;
-            }
-            
-            TTShowImageView * showImageView = [self showImageViewAtIndex:_currentIndex];
-            UIImageView * largeImageView = [showImageView displayImageView];
-            CGRect endFrame = [[_placeholderSourceViewFrames objectAtIndex:_currentIndex] CGRectValue];
-            if ([showImageView isKindOfClass:[FHShowVideoView class]]) {
-                // 视频cell
-                endFrame = self.videoVC.videoFrame;
-            }
-            largeImageView.hidden = NO;
-            CGRect beginFrame = largeImageView.frame;
-            
-            //largeImageView可能被放大了，因此需要转换
-            CGRect transBeginFrame = [largeImageView.superview convertRect:beginFrame toView:nil];
-            
-            //[showImageView hideGifIfNeeded];
-            largeImageView.frame = transBeginFrame;
-            
+    } else if (self.isCloseButtonAnimation) {
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        
+        CGRect frame = self.view.frame;
+        frame = CGRectOffset(frame, 0, frame.size.height);
 
-            UIView * containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
-            containerView.backgroundColor = [UIColor blackColor];
-            [rootViewController.view addSubview:containerView];
-            
-            //如果有提供dismissInsets来控制放大图片动画的边距
-            if (!UIEdgeInsetsEqualToEdgeInsets(self.dismissMaskInsets, UIEdgeInsetsZero)) {
-                CGRect adjustedRect = UIEdgeInsetsInsetRect(containerView.frame, self.dismissMaskInsets);
-                BOOL isContains = CGRectContainsRect(adjustedRect, endFrame);
-                // 当减去insets后不包含原图的frame时，添加遮罩
-                if (!isContains) {
-                    UIView *maskView = [[UIView alloc] initWithFrame:containerView.frame];
-                    CGRect maskRect = containerView.frame;
-                    CGFloat width = containerView.frame.size.width;
-                    CGFloat height = containerView.frame.size.height;
-                    if (CGRectGetMinX(endFrame) < self.dismissMaskInsets.left) {
-                        maskRect = UIEdgeInsetsInsetRect(maskRect, UIEdgeInsetsMake(0, self.dismissMaskInsets.left, 0, 0));
-                    }
-                    if (width - CGRectGetMaxX(endFrame) < self.dismissMaskInsets.right) {
-                        maskRect = UIEdgeInsetsInsetRect(maskRect, UIEdgeInsetsMake(0, 0, 0, self.dismissMaskInsets.right));
-                    }
-                    if (CGRectGetMinY(endFrame) < self.dismissMaskInsets.top) {
-                        maskRect = UIEdgeInsetsInsetRect(maskRect, UIEdgeInsetsMake(self.dismissMaskInsets.top, 0, 0, 0));
-                    }
-                    if (height - CGRectGetMaxY(endFrame) < self.dismissMaskInsets.bottom) {
-                        maskRect = UIEdgeInsetsInsetRect(maskRect, UIEdgeInsetsMake(0, 0, self.dismissMaskInsets.bottom, 0));
-                    }
-                    
-                    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-                    CGPathRef path = CGPathCreateWithRect(maskRect, NULL);
-                    maskLayer.path = path;
-                    CGPathRelease(path);
-                    maskView.layer.mask = maskLayer;
-                    maskView.backgroundColor = [UIColor clearColor];
-                    
-                    [containerView addSubview:maskView];
-                    [maskView addSubview:largeImageView];
-                } else {
-                    [containerView addSubview:largeImageView];
-                }
-            } else {
-                [containerView addSubview:largeImageView];
-            }
-            
+        [UIView animateWithDuration:0.2f animations:^{
+            self.view.frame = frame;
+        } completion:^(BOOL finished) {
+            kFHStaticPhotoBrowserAtTop = NO;
+            [self.view removeFromSuperview];
+            [self removeFromParentViewController];
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        }];
+    }
+    else if (self.placeholderSourceViewFrames.count > _currentIndex && [self.placeholderSourceViewFrames objectAtIndex:_currentIndex] != [NSNull null]) {
+        // 如果显示图片前后的设备方向不同，直接渐隐动画
+        UIInterfaceOrientation currentOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+        if ((UIInterfaceOrientationIsPortrait(_enterOrientation) && UIInterfaceOrientationIsLandscape(currentOrientation))
+            || (UIInterfaceOrientationIsLandscape(_enterOrientation) && UIInterfaceOrientationIsPortrait(currentOrientation))) {
             [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
             
-            [UIView animateWithDuration:0.25f animations:^{
-                
-                largeImageView.alpha = 0;
-                self.containerView.alpha = 0;
-                containerView.alpha = 0;
-            } completion:^(BOOL finished) {
-                [containerView removeFromSuperview];
-                kFHStaticPhotoBrowserAtTop = NO;
-                [self.view removeFromSuperview];
-                [self removeFromParentViewController];
-                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                [self removeFromParentViewController];
-            }];
-            
-        } else {
-            
-            [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-            
-            [UIView animateWithDuration:.35f animations:^{
+            [UIView animateWithDuration:.2f animations:^{
                 self.view.alpha = 0.0f;
             } completion:^(BOOL finished) {
                 kFHStaticPhotoBrowserAtTop = NO;
                 [self.view removeFromSuperview];
                 [self removeFromParentViewController];
                 [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                [self removeFromParentViewController];
             }];
+            return;
         }
+        
+        TTShowImageView * showImageView = [self showImageViewAtIndex:_currentIndex];
+        UIImageView * largeImageView = [showImageView displayImageView];
+        
+        largeImageView.hidden = NO;
+        CGRect beginFrame = largeImageView.frame;
+        
+        //largeImageView可能被放大了，因此需要转换
+        CGRect transBeginFrame = [largeImageView.superview convertRect:beginFrame toView:nil];
+        //            transBeginFrame = CGRectOffset(transBeginFrame, 0, [self frameForPagingScrollView].origin.y);
+        
+        CGRect endFrame = [[_placeholderSourceViewFrames objectAtIndex:_currentIndex] CGRectValue];
+        if ([showImageView isKindOfClass:[FHShowVideoView class]]) {
+            // 视频cell
+            endFrame = [self frameForPagingScrollView];
+            transBeginFrame = endFrame;
+        }
+        
+        largeImageView.frame = transBeginFrame;
+        
+        UIView * containerView = [[UIView alloc] initWithFrame:rootViewController.view.bounds];
+        containerView.backgroundColor = [UIColor clearColor];
+        [rootViewController.view addSubview:containerView];
+        
+        //如果有提供dismissInsets来控制放大图片动画的边距
+        if (!UIEdgeInsetsEqualToEdgeInsets(self.dismissMaskInsets, UIEdgeInsetsZero)) {
+            CGRect adjustedRect = UIEdgeInsetsInsetRect(containerView.frame, self.dismissMaskInsets);
+            BOOL isContains = CGRectContainsRect(adjustedRect, endFrame);
+            // 当减去insets后不包含原图的frame时，添加遮罩
+            if (!isContains) {
+                UIView *maskView = [[UIView alloc] initWithFrame:containerView.frame];
+                CGRect maskRect = containerView.frame;
+                CGFloat width = containerView.frame.size.width;
+                CGFloat height = containerView.frame.size.height;
+                if (CGRectGetMinX(endFrame) < self.dismissMaskInsets.left) {
+                    maskRect = UIEdgeInsetsInsetRect(maskRect, UIEdgeInsetsMake(0, self.dismissMaskInsets.left, 0, 0));
+                }
+                if (width - CGRectGetMaxX(endFrame) < self.dismissMaskInsets.right) {
+                    maskRect = UIEdgeInsetsInsetRect(maskRect, UIEdgeInsetsMake(0, 0, 0, self.dismissMaskInsets.right));
+                }
+                if (CGRectGetMinY(endFrame) < self.dismissMaskInsets.top) {
+                    maskRect = UIEdgeInsetsInsetRect(maskRect, UIEdgeInsetsMake(self.dismissMaskInsets.top, 0, 0, 0));
+                }
+                if (height - CGRectGetMaxY(endFrame) < self.dismissMaskInsets.bottom) {
+                    maskRect = UIEdgeInsetsInsetRect(maskRect, UIEdgeInsetsMake(0, 0, self.dismissMaskInsets.bottom, 0));
+                }
+                
+                CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+                CGPathRef path = CGPathCreateWithRect(maskRect, NULL);
+                maskLayer.path = path;
+                CGPathRelease(path);
+                maskView.layer.mask = maskLayer;
+                maskView.backgroundColor = [UIColor clearColor];
+                
+                [containerView addSubview:maskView];
+                [maskView addSubview:largeImageView];
+            } else {
+                [containerView addSubview:largeImageView];
+            }
+        } else {
+            [containerView addSubview:largeImageView];
+        }
+        
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        
+        CGRect topBarFrame = self.topBar.frame;
+        topBarFrame = CGRectOffset(topBarFrame, 0, -topBarFrame.size.height);
+        
+        CGRect bottomBarFrame = self.bottomBar.frame;
+        bottomBarFrame = CGRectOffset(bottomBarFrame, 0, bottomBarFrame.size.height);
+        [UIView animateWithDuration:0.35f animations:^{
+            
+            self.topBar.frame = topBarFrame;
+            self.topBar.alpha = 0;
+            
+            self.bottomBar.frame = bottomBarFrame;
+            self.bottomBar.alpha = 0;
+            
+            largeImageView.frame = endFrame;
+            self.view.alpha = 0;
+            containerView.alpha = 0;
+        } completion:^(BOOL finished) {
+            [containerView removeFromSuperview];
+            kFHStaticPhotoBrowserAtTop = NO;
+            [self.view removeFromSuperview];
+            [self removeFromParentViewController];
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        }];
+        
+    } else {
+        
+        [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+        
+        [UIView animateWithDuration:.35f animations:^{
+            self.view.alpha = 0.0f;
+        } completion:^(BOOL finished) {
+            kFHStaticPhotoBrowserAtTop = NO;
+            [self.view removeFromSuperview];
+            [self removeFromParentViewController];
+            [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+        }];
     }
 }
 

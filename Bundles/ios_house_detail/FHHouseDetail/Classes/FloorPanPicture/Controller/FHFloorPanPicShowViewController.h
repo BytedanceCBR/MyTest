@@ -10,7 +10,6 @@
 #import "FHDetailNewModel.h"
 #import "FHDetailBaseModel.h"
 #import "FHHouseDetailContactViewModel.h"
-#import "FHDetailMediaHeaderCell.h"
 #import "FHFloorPanPicShowModel.h"
 
 NS_ASSUME_NONNULL_BEGIN

@@ -29,6 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) FHHouseType houseType;
 @property (nonatomic, assign) FHNeighborListVCType neighborListVCType;
 
+//房源卡片是不是新的样式（不是指新房卡片）
+- (BOOL)isNewLayout;
+
 @end
 
 NS_ASSUME_NONNULL_END

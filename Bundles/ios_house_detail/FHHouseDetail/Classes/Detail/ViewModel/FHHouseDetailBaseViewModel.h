@@ -16,7 +16,6 @@
 #import <Heimdallr/HMDTTMonitor.h>
 #import "FHDetailHalfPopLayer.h"
 #import "FHDetailQuestionButton.h"
-#import "FHDetailSocialEntranceView.h"
 #import "FHDetailBottomBar.h"
 
 

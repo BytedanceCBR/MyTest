@@ -12,14 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface FHHouseFollowUpHelper : NSObject
 
-+ (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel;
-+ (void)silentFollowHouseWithConfig:(NSDictionary *)config;
-+ (void)silentFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel completionBlock:(void(^)(BOOL isSuccess))completionBlock;
 + (void)followHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel;
-+ (void)followHouseWithConfig:(NSDictionary *)config;
+
 + (void)cancelFollowHouseWithConfigModel:(FHHouseFollowUpConfigModel *)configModel;
-+ (void)cancelFollowHouseWithConfig:(NSDictionary *)config;
-+(void)showFollowToast;
+
++ (void)showFollowToast;
 
 @end
 

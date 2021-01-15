@@ -12,6 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FHHouseDeatilRGCCellHeader : UIView
 - (void)refreshWithData:(FHFeedUGCCellModel *)cellModel;
 - (void)hiddenConnectBtn:(BOOL)hidden;
+- (void)setupNewHouseStyle;
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic, copy) void (^imClick)(void);
 @property(nonatomic, copy) void (^headerClick)(void);

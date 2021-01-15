@@ -25,8 +25,9 @@
 #import "FHHouseRealtorDetailPlaceCell.h"
 #import "FHUtils.h"
 #import "FHHouseRealtorDetailPlaceHolderCell.h"
+#import "FHUGCCellHelper.h"
 
-@interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource>
+@interface FHHouseRealtorDetailViewModel()<UITableViewDelegate,UITableViewDataSource,UIScrollViewDelegate>
 @property(nonatomic , weak) UITableView *tableView;
 @property(nonatomic , weak) FHHouseRealtorDetailController *detailController;
 @property(nonatomic, strong) FHErrorView *errorView;
@@ -185,9 +186,11 @@
         switch (cellModel.cellType) {
             case FHUGCFeedListCellTypeUGC:
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerImage;
+                [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 20 - 20 - 30) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:14]];
                 break;
             case FHUGCFeedListCellTypeUGCSmallVideo:
                 cellModel.cellSubType = FHUGCFeedListCellSubTypeUGCBrokerVideo;
+                [FHUGCCellHelper setRichContentWithModel:cellModel width:(screenWidth - 20 - 20 - 30) numberOfLines:cellModel.numberOfLines font:[UIFont themeFontRegular:14]];
                 break;
             default:
                 break;
@@ -213,10 +216,6 @@
     }];
     self.tableView.mj_footer = self.refreshFooter;
     self.tableView.mj_footer.hidden = YES;
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -257,7 +256,7 @@
     if (self.showPlaceHolder) {
         NSString *identifier = @"FHHouseRealtorDetailPlaceHolderCell";
         FHHouseRealtorDetailPlaceHolderCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-        [cell.contentView setBackgroundColor:[UIColor colorWithHexStr:@"#f8f8f8"]];
+        [cell.contentView setBackgroundColor:[UIColor themeGray7]];
         return cell;
     }
     
@@ -344,7 +343,7 @@
     if(!_errorView){
         __weak typeof(self)ws = self;
         _errorView = [[FHErrorView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 500)];
-        _errorView.backgroundColor = [UIColor colorWithHexStr:@"f8f8f8"];
+        _errorView.backgroundColor = [UIColor themeGray7];
         _errorView.retryBlock = ^{
             ws.showPlaceHolder = YES;
             [ws.tableView reloadData];
@@ -371,11 +370,6 @@
     self.currentCell = cell;
     self.detailJumpManager.currentCell = self.currentCell;
     [self.detailJumpManager jumpToDetail:cellModel showComment:YES enterType:@"feed_comment"];
-}
-
-
-- (void)goToCommunityDetail:(FHFeedUGCCellModel *)cellModel {
-    [self.detailJumpManager goToCommunityDetail:cellModel];
 }
 
 - (void)gotoLinkUrl:(FHFeedUGCCellModel *)cellModel url:(NSURL *)url {
@@ -481,4 +475,19 @@
     
     return str;
 }
+
+-(void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self.detailController.pageView tableViewWillBeginDragging:scrollView];
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.detailController.pageView tableViewDidScroll:scrollView];
+}
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [self.detailController.pageView tableViewDidEndDragging:scrollView];
+}
+
 @end
+
+

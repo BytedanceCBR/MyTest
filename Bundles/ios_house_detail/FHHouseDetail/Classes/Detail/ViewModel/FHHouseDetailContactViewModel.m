@@ -50,7 +50,6 @@
 #import "FHUGCConfig.h"
 #import "FHLoginViewController.h"
 #import "FHHouseUGCAPI.h"
-#import "FHHouseNewDetailViewModel.h"
 #import "FHDetailBaseCell.h"
 #import "FHErrorHubManagerUtil.h"
 #import "FHDetailNewModel.h"
@@ -700,14 +699,8 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
             vc.phoneCallRequestId = virtualPhoneNumberModel.requestId;
         }
     }];
-    FHHouseFollowUpConfigModel *configModel = [[FHHouseFollowUpConfigModel alloc]initWithDictionary:reportParamsDict error:nil];
-    configModel.houseType = associatePhone.houseType;
-    configModel.followId = associatePhone.houseId;
-    configModel.actionType = associatePhone.houseType;
-    
-    // 静默关注功能
-    [FHHouseFollowUpHelper silentFollowHouseWithConfigModel:configModel];
 }
+
 - (void)fillFormActionWithParams:(NSDictionary *)formParamsDict
 {
     NSString *title = nil;
@@ -1101,11 +1094,6 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
                     weakSelf.socialInfo.socialGroupInfo.contentCount = socialModel.data.contentCount;
                     
                     weakSelf.socialInfo.socialGroupInfo.userAuth = socialModel.data.userAuth;
-                }
-                // 刷新Cell
-                if (socialModel.data.socialGroupId.length > 0) {
-                    NSDictionary *userInfo = @{@"social_group_id":socialModel.data.socialGroupId};
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"kFHDetailNewUGCSocialCellNotiKey" object:nil userInfo:userInfo];
                 }
                 // 从登录过来的
                 if (isFromLogin) {

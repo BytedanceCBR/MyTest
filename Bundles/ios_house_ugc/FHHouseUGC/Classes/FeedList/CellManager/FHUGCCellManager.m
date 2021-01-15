@@ -9,7 +9,6 @@
 #import "FHUGCRecommendCell.h"
 #import "FHUGCBannerCell.h"
 #import "FHUGCHotTopicCell.h"
-#import "FHUGCVoteCell.h"
 #import "FHUGCVideoCell.h"
 #import "FHUGCSmallVideoCell.h"
 #import "FHUGCVoteDetailCell.h"
@@ -29,6 +28,17 @@
 #import "FHHouseDeatilRGCVideoCell.h"
 #import "FHUGCFullScreenVideoCell.h"
 #import "FHUGCShortVideoListCell.h"
+#import "FHOldHouseDeatilRGCImageCell.h"
+#import "FHOldHouseDeatilRGCVideoCell.h"
+
+//布局类
+#import "FHBaseLayout.h"
+#import "FHArticleLayout.h"
+#import "FHPostLayout.h"
+#import "FHVideoLayout.h"
+#import "FHAnswerLayout.h"
+#import "FHFullScreenVideoLayout.h"
+#import "FHSmallVideoLayout.h"
 
 @interface FHUGCCellManager ()
 
@@ -54,7 +64,6 @@
                                 @"FHUGCLynxBannerCell",
                                 @"FHUGCBannerCell",
                                 @"FHUGCHotTopicCell",
-                                @"FHUGCVoteCell",
                                 @"FHUGCVideoCell",
                                 @"FHUGCSmallVideoCell",
                                 @"FHUGCVoteDetailCell",
@@ -69,7 +78,9 @@
                                 @"FHUGCAnswerCell",
                                 @"FHUGCQuestionCell",
                                 @"FHUGCFullScreenVideoCell",
-                                @"FHUGCShortVideoListCell"
+                                @"FHUGCShortVideoListCell",
+                                @"FHOldHouseDeatilRGCVideoCell",
+                                @"FHOldHouseDeatilRGCImageCell"
                                 //可扩展
                                  ];
 }
@@ -97,9 +108,6 @@
             
         case FHUGCFeedListCellSubTypeUGCHotTopic:
             return [FHUGCHotTopicCell class];
-            
-        case FHUGCFeedListCellSubTypeUGCVote:
-            return [FHUGCVoteCell class];
             
         case FHUGCFeedListCellSubTypeUGCVideo:
             return [FHUGCVideoCell class];
@@ -145,11 +153,92 @@
         case FHUGCFeedListCellSubTypeSmallVideoList:
             return [FHUGCShortVideoListCell class];
             
+        case FHUGCFeedListCellSubTypeOldHouseUGCBrokerImage:
+            return [FHOldHouseDeatilRGCImageCell class];
+            
+        case FHUGCFeedListCellSubTypeOldHouseUGCBrokerVideo:
+            return [FHOldHouseDeatilRGCVideoCell class];
+            
         default:
             break;
     }
     
     return [FHUGCPostCell class];
+}
+
++ (Class)cellLayoutClassFromCellViewType:(FHUGCFeedListCellSubType)cellType cellModel:(FHFeedUGCCellModel *)cellModel {
+    //这里这样写是为了以后一个key可能对应不同cell的变化
+    switch (cellType) {
+        case FHUGCFeedListCellSubTypePost:
+            if([cellModel.cellLayoutStyle isEqualToString:@"10001"]){
+                return nil;
+            }
+            return [FHPostLayout class];
+            
+        case FHUGCFeedListCellSubTypeArticle:
+            return [FHArticleLayout class];
+//
+//        case FHUGCFeedListCellSubTypeUGCRecommend:
+//            return [FHUGCRecommendCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCBanner:
+//            return [[FHLynxManager sharedInstance] checkChannelTemplateIsAvalable:kFHLynxUGCOperationChannel templateKey:[FHLynxManager defaultJSFileName]] ? [FHUGCLynxBannerCell class] : [FHUGCBannerCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCHotTopic:
+//            return [FHUGCHotTopicCell class];
+//
+        case FHUGCFeedListCellSubTypeUGCVideo:
+            return [FHVideoLayout class];
+
+        case FHUGCFeedListCellSubTypeUGCSmallVideo:
+            if([cellModel.cellLayoutStyle isEqualToString:@"10001"]){
+                return nil;
+            }
+            return [FHSmallVideoLayout class];
+//
+//        case FHUGCFeedListCellSubTypeUGCVoteDetail:
+//            return [FHUGCVoteDetailCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCHotCommunity:
+//            return [FHUGCHotCommunityCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCNeighbourhoodQuestion:
+//            return [FHNeighbourhoodQuestionCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCNeighbourhoodComments:
+//            return [FHNeighbourhoodCommentCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCRecommendCircle:
+//            return [FHUGCRecommendCircleCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCEncyclopedias:
+//            return [FHUGCEncyclopediasCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCLynx:
+//            return [FHUGCLynxCommonCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCBrokerImage:
+//            return [FHHouseDeatilRGCImageCell class];
+//
+//        case FHUGCFeedListCellSubTypeUGCBrokerVideo:
+//            return [FHHouseDeatilRGCVideoCell class];
+//
+        case FHUGCFeedListCellSubTypeAnswer:
+            return [FHAnswerLayout class];
+//
+//        case FHUGCFeedListCellSubTypeQuestion:
+//            return [FHUGCQuestionCell class];
+//
+        case FHUGCFeedListCellSubTypeFullVideo:
+            return [FHFullScreenVideoLayout class];
+//        case FHUGCFeedListCellSubTypeSmallVideoList:
+//            return [FHUGCShortVideoListCell class];
+            
+        default:
+            break;
+    }
+    
+    return nil;
 }
 
 + (SSImpressionModelType)impressModelTypeWithCellType:(FHUGCFeedListCellType)cellType {

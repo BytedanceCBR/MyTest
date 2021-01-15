@@ -37,12 +37,10 @@
         }];
         
         self.arrowsImg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"arrowicon-feed-4"]];
-        self.arrowsImg.contentMode = UIViewContentModeCenter;
         self.arrowsImg.hidden = YES;
         [self addSubview:self.arrowsImg];
         [self.arrowsImg mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.right.mas_equalTo(self).offset(-16);
-            make.height.width.mas_equalTo(20);
+            make.right.mas_equalTo(self).offset(-12);
             make.centerY.mas_equalTo(self.titleLabel);
         }];
         
@@ -108,8 +106,8 @@
 
 - (void)setSubTagView{
     [self.titleLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(15);
-        make.top.mas_offset(20);
+        make.left.mas_equalTo(12);
+        make.top.mas_offset(12);
     }];
     if(_tagViews && _tagViews.subviews.count){
         self.tagViews.hidden = NO;
@@ -117,7 +115,7 @@
         CGFloat width = (self.bounds.size.width - 32 - 16)/4;
         [[self getTagName] enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             [[self getTagViewWithName:idx] mas_makeConstraints:^(MASConstraintMaker *make) {
-                make.left.mas_equalTo(self).offset(width*idx + 16);
+                make.left.mas_equalTo(self).offset(width*idx + 11);
                 make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(6);
             }];
         }];
@@ -135,6 +133,10 @@
     }];
     self.subTitleLabel.textColor = [UIColor themeGray1];
     self.arrowsImg.image = [UIImage imageNamed:@"neighborhood_detail_v3_arrow_icon"];
+}
+
+- (void)setupNewHouseDetailStyle {
+    [self setupNeighborhoodDetailStyle];
 }
 
 - (void)moreAction:(UITapGestureRecognizer *)tapGesture {

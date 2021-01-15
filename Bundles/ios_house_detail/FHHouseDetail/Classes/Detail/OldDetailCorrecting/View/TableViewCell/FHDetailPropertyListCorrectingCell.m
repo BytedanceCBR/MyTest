@@ -17,6 +17,7 @@
 #import "FHHouseDetailContactViewModel.h"
 #import <FHHouseBase/FHHouseContactDefines.h>
 #import "FHPropertyListCorrectingRowView.h"
+#import "FHDetailMoreView.h"
 
 extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 @interface FHDetailPropertyListCorrectingCell()
@@ -79,10 +80,10 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     if (count > 0) {
         NSMutableArray *singles = [NSMutableArray new];
         __block NSInteger doubleCount = 0;// 两列计数
-        __block CGFloat listRowHeight = 28;// 30
+        __block CGFloat listRowHeight = 31;// 间距9 + 行高：22
         __block CGFloat lastViewLeftOffset = 20;
         __block CGFloat lastTopOffset = 20;
-        CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 40) / 2;
+        CGFloat viewWidth = (UIScreen.mainScreen.bounds.size.width - 42) / 2;
         [model.baseInfo enumerateObjectsUsingBlock:^(FHHouseBaseInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             if (obj.isSingle) {
                 [singles addObject:obj];
@@ -91,30 +92,36 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
                 if (doubleCount % 2 == 0) {
                     // 第1列
                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
-                    v.valueLabel.font = [UIFont themeFontMedium:14];
-                    v.valueLabel.textColor = [UIColor themeGray2];
+                    v.keyLabel.font = [UIFont themeFontRegular:16];
+                    v.keyLabel.textColor = [UIColor themeGray3];
+                    v.valueLabel.font = [UIFont themeFontRegular:16];
+                    v.valueLabel.textColor = [UIColor themeGray1];
                     [self.containerView addSubview:v];
                     [self.itemArray addObject:v];
-                    v.frame = CGRectMake(31, topOffset,viewWidth, listRowHeight);
+                    
+                    v.frame = CGRectMake(21, topOffset,viewWidth, listRowHeight);
                     v.keyLabel.text = obj.attr;
                     v.valueLabel.text = obj.value;
                     lastView = v;
-                    lastViewLeftOffset = 20;
+                    lastViewLeftOffset = 9;
                     lastTopOffset = topOffset;
                     topOffset += listRowHeight;
                 } else {
                     // 第2列
                     topOffset -= listRowHeight;
                     FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
-                    v.valueLabel.font = [UIFont themeFontMedium:14];
-                    v.valueLabel.textColor = [UIColor themeGray2];
+                    v.keyLabel.font = [UIFont themeFontRegular:16];
+                    v.keyLabel.textColor = [UIColor themeGray3];
+                    v.valueLabel.font = [UIFont themeFontRegular:16];
+                    v.valueLabel.textColor = [UIColor themeGray1];
                     [self.containerView addSubview:v];
                     [self.itemArray addObject:v];
-                    v.frame = CGRectMake(31 + viewWidth, topOffset,viewWidth, listRowHeight);
+                    
+                    v.frame = CGRectMake(21 + viewWidth, topOffset,viewWidth, listRowHeight);
                     v.keyLabel.text = obj.attr;
                     v.valueLabel.text = obj.value;
                     lastView = v;
-                    lastViewLeftOffset = 20 + viewWidth;
+                    lastViewLeftOffset = 9 + viewWidth;
                     lastTopOffset = topOffset;
                     topOffset += listRowHeight;
                 }
@@ -126,23 +133,25 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             // 重新计算topOffset
             [singles enumerateObjectsUsingBlock:^(FHHouseCoreInfoModel*  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 FHPropertyListCorrectingRowView *v = [[FHPropertyListCorrectingRowView alloc] init];
-                v.valueLabel.font = [UIFont themeFontMedium:14];
-                v.valueLabel.textColor = [UIColor themeGray2];
+                v.keyLabel.font = [UIFont themeFontRegular:16];
+                v.keyLabel.textColor = [UIColor themeGray3];
+                v.valueLabel.font = [UIFont themeFontRegular:16];
+                v.valueLabel.textColor = [UIColor themeGray1];
                 [self.containerView addSubview:v];
                 [self.itemArray addObject:v];
-                v.frame = CGRectMake(topOffset, 31, viewWidth*2, listRowHeight);
+                v.frame = CGRectMake(topOffset, 21, viewWidth*2, listRowHeight);
                 v.keyLabel.text = obj.attr;
                 v.valueLabel.text = obj.value;
                 lastView = v;
-                lastViewLeftOffset = 20;
+                lastViewLeftOffset = 9;
                 lastTopOffset = topOffset;
                 topOffset += listRowHeight;
             }];
         }
     }
-    topOffset += 2;
+    topOffset += 6;
     //extra info
-    if (model.extraInfo) {
+     if (model.extraInfo) {
         FHDetailExtarInfoCorrectingRowView *rowView = nil;
         if (model.extraInfo.neighborhoodInfo) {
             rowView = [[FHDetailExtarInfoCorrectingRowView alloc] initWithFrame:CGRectZero];
@@ -150,8 +159,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             [rowView updateWithNeighborhoodInfoData:model.extraInfo.neighborhoodInfo];
             [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
-            rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
-            topOffset += 30;
+            rowView.frame = CGRectMake(21, topOffset, UIScreen.mainScreen.bounds.size.width - 42, 31);
+            topOffset += 31;
             lastView = rowView;
         }
         if (model.extraInfo.budget) {
@@ -160,8 +169,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             [rowView updateWithBudgetData:model.extraInfo.budget];
             [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
-            rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
-            topOffset += 30;
+            rowView.frame = CGRectMake(21, topOffset, UIScreen.mainScreen.bounds.size.width - 42, 31);
+            topOffset += 31;
             lastView = rowView;
         }
         if (model.extraInfo.floorInfo) {
@@ -170,8 +179,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             [rowView updateWithFloorInfo:model.extraInfo.floorInfo];
             [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
-            rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
-            topOffset += 30;
+            rowView.frame = CGRectMake(21, topOffset, UIScreen.mainScreen.bounds.size.width - 42, 31);
+            topOffset += 31;
             lastView = rowView;
         }
         if (model.extraInfo.official) {
@@ -180,8 +189,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             [rowView updateWithOfficalData:model.extraInfo.official];
             [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
-            rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
-            topOffset += 30;
+            rowView.frame = CGRectMake(21, topOffset, UIScreen.mainScreen.bounds.size.width - 42, 31);
+            topOffset += 31;
             lastView = rowView;
         }
         
@@ -191,8 +200,8 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             [rowView updateWithHouseCertificationInfo:model.extraInfo.houseCertificationInfo];
             [self.containerView addSubview:rowView];
             [self.itemArray addObject:rowView];
-            rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
-            topOffset += 30;
+            rowView.frame = CGRectMake(21, topOffset, UIScreen.mainScreen.bounds.size.width - 42, 31);
+            topOffset += 31;
             lastView = rowView;
         }
     }
@@ -203,20 +212,18 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
         [rowView updateWithSecurityInfo:model.rentExtraInfo.securityInformation];
         [self.containerView addSubview:rowView];
         [self.itemArray addObject:rowView];
-        rowView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
-        topOffset += 30;
+        rowView.frame = CGRectMake(21, topOffset, UIScreen.mainScreen.bounds.size.width - 42, 31);
+        topOffset += 31;
         lastView = rowView;              
     }
     
     if (infoView) {
-        infoView.frame = CGRectMake(31, topOffset, UIScreen.mainScreen.bounds.size.width - 62, 30);
+        infoView.frame = CGRectMake(21, topOffset, UIScreen.mainScreen.bounds.size.width - 42, 31);
     }
     
     [self.containerView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.height.mas_equalTo(topOffset);
     }];
-    
-//    [self layoutIfNeeded];
 }
 
 - (NSArray *)elementTypeStringArray:(FHHouseType)houseType
@@ -255,19 +262,12 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 
 - (void)setupUI {
     [self.shadowImage mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.right.equalTo(self.contentView);
-        make.top.equalTo(self.contentView).offset(-14);
-        make.bottom.equalTo(self.contentView).offset(14);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(-4.5, 0, -4.5, 0));
     }];
     _containerView = [[UIView alloc] init];
-    _containerView.clipsToBounds = YES;
     [self.contentView addSubview:_containerView];
     [_containerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.shadowImage).offset(14);
-        make.left.mas_equalTo(self.contentView);
-        make.right.mas_equalTo(self.contentView);
-        make.height.mas_equalTo(0);
-        make.bottom.mas_equalTo(self.shadowImage).offset(-30);
+        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(0, 0, 6+4.5, 0));
     }];
 }
 
@@ -323,7 +323,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             [self imAction:budgetModel.openUrl isFloorAction:NO];
             positionStr = @"loan";
         }else {
-            NSDictionary *userInfoDict = @{@"tracer":@{}};
+            NSDictionary *userInfoDict = self.baseViewModel.detailTracerDic.mutableCopy;
             TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:userInfoDict];
             NSString *openUrl = budgetModel.openUrl;
             if (openUrl.length > 0) {
@@ -402,26 +402,26 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
 }
 
 - (void)setupUI {
-    _nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
+    _nameLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
     _nameLabel.textColor = [UIColor themeGray3];
     [self addSubview:_nameLabel];
 
     
-    _infoLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _infoLabel.font = [UIFont themeFontMedium:14];
-    _infoLabel.textColor = [UIColor themeGray2];
+    _infoLabel = [UILabel createLabel:@"" textColor:@"" fontSize:16];
+    _infoLabel.font = [UIFont themeFontRegular:16];
+    _infoLabel.textColor = [UIColor themeGray1];
     [self addSubview:_infoLabel];
     _infoLabel.textAlignment = NSTextAlignmentLeft;
     
-    UIImage *img = ICON_FONT_IMG(16, @"\U0000e670", [UIColor themeGray3]); //@"detail_entrance_arrow"
+    UIImage *img = [FHDetailMoreView moreArrowImage];
 
     _logoImageView = [[UIImageView alloc] init];
     _logoImageView.image = img;
     _logoImageView.contentMode = UIViewContentModeScaleAspectFit;
     
     _indicatorLabel = [UILabel createLabel:@"" textColor:@"" fontSize:14];
-    _indicatorLabel.font = [UIFont themeFontMedium:14];
-    _indicatorLabel.textColor = [UIColor colorWithHexStr:@"#ff9629"];
+    _indicatorLabel.font = [UIFont themeFontRegular:16];
+    _indicatorLabel.textColor = [UIColor colorWithHexStr:@"#9c6d43"];
     
     _indicator = [[UIImageView alloc]initWithImage:img];
     _indicator.contentMode = UIViewContentModeCenter;
@@ -437,24 +437,24 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }];
     
     [self.infoLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.mas_equalTo(self.nameLabel.mas_right).offset(10);
+        make.left.mas_equalTo(self.nameLabel.mas_right).offset(9);
         make.top.bottom.mas_equalTo(self);
-        make.right.mas_lessThanOrEqualTo(self.logoImageView.mas_left).offset(-10);
+        make.right.mas_lessThanOrEqualTo(self.logoImageView.mas_left).offset(-9);
     }];
     
     [self.indicator mas_makeConstraints:^(MASConstraintMaker *make) {
         make.right.mas_equalTo(0);
-        make.size.mas_equalTo(CGSizeMake(20, 20));
+        make.size.mas_equalTo(CGSizeMake(14, 14));
         make.centerY.mas_equalTo(self);
     }];
     
     [self.indicatorLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-26);
+        make.right.mas_equalTo(-20);
         make.centerY.mas_equalTo(self);
     }];
     
     [self.logoImageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-26);
+        make.right.mas_equalTo(-20);
         make.centerY.mas_equalTo(self);
         make.width.mas_equalTo(0);
     }];
@@ -478,12 +478,12 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
             }
             
             [wself.logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_equalTo(-26);
+                make.right.mas_equalTo(-20);
                 make.size.mas_equalTo(CGSizeMake(width, height));
             }];
             
             [wself.infoLabel mas_updateConstraints:^(MASConstraintMaker *make) {
-                make.right.mas_lessThanOrEqualTo(wself.logoImageView.mas_left).offset(-10);
+                make.right.mas_lessThanOrEqualTo(wself.logoImageView.mas_left).offset(-9);
             }];
         }        
     }];
@@ -513,7 +513,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }];
     
     [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-(31+size.width));
+        make.right.mas_equalTo(-(20 + size.width));
         make.size.mas_equalTo(CGSizeMake(15, 15));
     }];
     
@@ -526,7 +526,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     
     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
     if (!IS_EMPTY_STRING(neighborModel.subName)) {
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:neighborModel.subName attributes:@{NSForegroundColorAttributeName:[UIColor themeGray2],NSFontAttributeName:[UIFont themeFontMedium:14]}];
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:neighborModel.subName attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:16]}];
         [minfoAttrStr appendAttributedString:infoStr];
     }
     _infoLabel.attributedText = minfoAttrStr;
@@ -541,13 +541,13 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     _nameLabel.text = budgetmodel.baseTitle;
     
     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
-    UIColor *infoColor = [UIColor colorWithHexStr:@"#ff9629"];
+    UIColor *infoColor = [UIColor themeGray1];
     if (!IS_EMPTY_STRING(budgetmodel.baseContent)) {
         // 支持贷款及展示
         if (!budgetmodel.canLoan) {
             infoColor = [UIColor themeGray2];
         }
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:budgetmodel.baseContent attributes:@{NSForegroundColorAttributeName:infoColor,NSFontAttributeName:[UIFont themeFontMedium:14]}];
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:budgetmodel.baseContent attributes:@{NSForegroundColorAttributeName:infoColor,NSFontAttributeName:[UIFont themeFontRegular:16]}];
         [minfoAttrStr appendAttributedString:infoStr];
     }
     _infoLabel.attributedText = minfoAttrStr;
@@ -566,7 +566,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }];
     
     [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-(26+size.width));
+        make.right.mas_equalTo(-(20 + size.width));
         make.size.mas_equalTo(CGSizeZero);
     }];
 }
@@ -577,7 +577,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
      _nameLabel.text = floorInfo.baseTitle;
     NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
     if (!IS_EMPTY_STRING(floorInfo.baseContent)) {
-        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:floorInfo.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor themeGray2],NSFontAttributeName:[UIFont themeFontMedium:14]}];
+        NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:floorInfo.baseContent attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:16]}];
         [minfoAttrStr appendAttributedString:infoStr];
     }
     _infoLabel.attributedText = minfoAttrStr;
@@ -596,7 +596,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
     }];
     
     [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.right.mas_equalTo(-(26+size.width));
+        make.right.mas_equalTo(-(20 + size.width));
         make.size.mas_equalTo(CGSizeZero);
     }];
     
@@ -607,7 +607,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
       _nameLabel.text = houseCertificationInfo.baseTitle;
      NSMutableAttributedString *minfoAttrStr = [[NSMutableAttributedString alloc] init];
      if (!IS_EMPTY_STRING(houseCertificationInfo.subName)) {
-         NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:houseCertificationInfo.subName attributes:@{NSForegroundColorAttributeName:[UIColor themeGray2],NSFontAttributeName:[UIFont themeFontMedium:14]}];
+         NSAttributedString *infoStr = [[NSAttributedString alloc] initWithString:houseCertificationInfo.subName attributes:@{NSForegroundColorAttributeName:[UIColor themeGray1],NSFontAttributeName:[UIFont themeFontRegular:16]}];
          [minfoAttrStr appendAttributedString:infoStr];
      }
      _infoLabel.attributedText = minfoAttrStr;
@@ -626,7 +626,7 @@ extern NSString *const DETAIL_SHOW_POP_LAYER_NOTIFICATION ;
      }];
      
      [_logoImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-         make.right.mas_equalTo(-(26+size.width));
+         make.right.mas_equalTo(-(20 + size.width));
          make.size.mas_equalTo(CGSizeZero);
      }];
     

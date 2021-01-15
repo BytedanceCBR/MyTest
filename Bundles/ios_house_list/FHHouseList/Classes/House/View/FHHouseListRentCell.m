@@ -38,7 +38,6 @@
     BOOL isLastCell = NO;
     if([data isKindOfClass:[FHSearchHouseItemModel class]]) {
         FHSearchHouseItemModel *model = (FHSearchHouseItemModel *)data;
-        //isLastCell = model.isLastCell;
         CGFloat reasonHeight = [model showRecommendReason] ? [self recommendReasonHeight] : 0;
         return (isLastCell ? 108 : 88) + reasonHeight;
     }
@@ -46,11 +45,54 @@
 }
 
 - (void)initUI {
-    [super initUI];
-    [self.mainImageView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(12);
+    
+    [self.contentView addSubview:self.houseCellBackView];
+    self.houseCellBackView.hidden = NO;
+    [self.houseCellBackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.mas_equalTo(0);
     }];
-    [self.contentView addSubview:self.distanceLabel];
+    
+    [self.houseCellBackView addSubview:self.mainImageView];
+    [self.mainImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.contentView).offset(12);
+        make.left.equalTo(self.contentView).offset(15);
+        make.size.mas_equalTo(CGSizeMake(85, 64));
+    }];
+    
+    [self.houseCellBackView addSubview:self.mainTitleLabel];
+    [self.mainTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.mainImageView.mas_right).offset(12);
+        make.top.equalTo(self.mainImageView).offset(-2);
+        make.right.equalTo(self.contentView).offset(-15);
+    }];
+    
+    [self.houseCellBackView addSubview:self.subTitleLabel];
+    [self.subTitleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.mainTitleLabel);
+        make.top.equalTo(self.mainTitleLabel.mas_bottom).offset(2);
+    }];
+    
+    [self.houseCellBackView addSubview:self.pricePerSqmLabel];
+    [self.pricePerSqmLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.mas_greaterThanOrEqualTo(self.subTitleLabel.mas_right).offset(2);
+        make.top.equalTo(self.subTitleLabel);
+        make.right.equalTo(self.contentView).offset(-15);
+    }];
+    [self.pricePerSqmLabel setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.pricePerSqmLabel setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+    [self.houseCellBackView addSubview:self.priceLabel];
+    [self.priceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self.pricePerSqmLabel.mas_right);
+        make.top.equalTo(self.pricePerSqmLabel.mas_bottom).offset(4);
+    }];
+    [self.houseCellBackView addSubview:self.tagLabel];
+    [self.tagLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self.mainTitleLabel);
+        make.top.equalTo(self.subTitleLabel.mas_bottom).offset(7);
+        make.right.mas_lessThanOrEqualTo(self.priceLabel.mas_left).offset(-2);
+    }];
+    
+    [self.houseCellBackView addSubview:self.distanceLabel];
     [self.distanceLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.mainTitleLabel);
         make.top.equalTo(self.subTitleLabel.mas_bottom).offset(7);
@@ -67,7 +109,6 @@
     CGFloat opacity = 1;
     if ([[FHHouseCardStatusManager sharedInstance] isReadHouseId:model.id withHouseType:[model.houseType integerValue]]) {
         opacity = [FHEnvContext FHHouseCardReadOpacity];
-        //FHHouseCardReadOpacity;
     }
     self.mainTitleLabel.layer.opacity = opacity;
     self.subTitleLabel.layer.opacity = opacity;
@@ -158,6 +199,20 @@
         _distanceLabel.textAlignment = NSTextAlignmentLeft;
     }
     return _distanceLabel;
+}
+
+#pragma mark - FHHouseCardTouchAnimationProtocol
+
+- (void)shrinkWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.houseCellBackView.transform = CGAffineTransformMakeScale(FHHouseCardShrinkRate, FHHouseCardShrinkRate);
+    }];
+}
+
+- (void)restoreWithAnimation {
+    [UIView animateWithDuration:FHHouseCardTouchAnimateTime animations:^{
+        self.houseCellBackView.transform = CGAffineTransformMakeScale(1, 1);
+    }];
 }
 
 @end

@@ -15,15 +15,15 @@
 #import "FHUGCCellOriginItemView.h"
 #import "TTRoute.h"
 #import "TTBusinessManager+StringUtils.h"
-#import "UIViewAdditions.h"
 #import "FHUGCCellAttachCardView.h"
+#import "FHPostLayout.h"
 
 #define leftMargin 20
 #define rightMargin 20
 #define maxLines 3
 
 #define userInfoViewHeight 40
-#define bottomViewHeight 46
+#define bottomViewHeight 45
 #define guideViewHeight 17
 #define topMargin 20
 #define originViewHeight 80
@@ -39,7 +39,6 @@
 @property(nonatomic ,strong) FHFeedUGCCellModel *cellModel;
 @property(nonatomic ,strong) FHUGCCellOriginItemView *originView;
 @property(nonatomic ,strong) FHUGCCellAttachCardView *attachCardView;
-//@property(nonatomic ,assign) CGFloat imageViewheight;
 
 @end
 
@@ -63,7 +62,6 @@
 
 - (void)initUIs {
     [self initViews];
-    [self initConstraints];
 }
 
 - (void)initViews {
@@ -71,7 +69,7 @@
     __weak typeof(self) wself = self;
     [self.contentView addSubview:_userInfoView];
     
-    self.contentLabel = [[TTUGCAsyncLabel alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin, 0)];
+    self.contentLabel = [[TTUGCAsyncLabel alloc] init];
     _contentLabel.numberOfLines = maxLines;
     _contentLabel.layer.masksToBounds = YES;
     _contentLabel.backgroundColor = [UIColor whiteColor];
@@ -102,48 +100,23 @@
     
     self.bottomView = [[FHUGCCellBottomView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, bottomViewHeight)];
     [_bottomView.commentBtn addTarget:self action:@selector(commentBtnClick) forControlEvents:UIControlEventTouchUpInside];
-    [_bottomView.guideView.closeBtn addTarget:self action:@selector(closeGuideView) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:_bottomView];
-    
-    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goToCommunityDetail:)];
-    [self.bottomView.positionView addGestureRecognizer:tap];
 }
 
-- (void)initConstraints {
-    self.userInfoView.top = topMargin;
-    self.userInfoView.left = 0;
-    self.userInfoView.width = [UIScreen mainScreen].bounds.size.width;
-    self.userInfoView.height = userInfoViewHeight;
+- (void)updateConstraints:(FHBaseLayout *)layout {
+    if (![layout isKindOfClass:[FHPostLayout class]]) {
+        return;
+    }
     
-    self.contentLabel.top = self.userInfoView.bottom + 10;
-    self.contentLabel.left = leftMargin;
-    self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.contentLabel.height = 0;
+    FHPostLayout *cellLayout = (FHPostLayout *)layout;
     
-    self.multiImageView.top = self.userInfoView.bottom + 10;
-    self.multiImageView.left = leftMargin;
-    self.multiImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.multiImageView.height = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-    
-    self.singleImageView.top = self.userInfoView.bottom + 10;
-    self.singleImageView.left = leftMargin;
-    self.singleImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.singleImageView.height = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-
-    self.bottomView.top = self.multiImageView.bottom + 10;
-    self.bottomView.left = 0;
-    self.bottomView.width = [UIScreen mainScreen].bounds.size.width;
-    self.bottomView.height = bottomViewHeight;
-    
-    self.originView.top = self.multiImageView.bottom + 10;
-    self.originView.left = leftMargin;
-    self.originView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.originView.height = originViewHeight;
-    
-    self.attachCardView.top = self.multiImageView.bottom + 10;
-    self.attachCardView.left = leftMargin;
-    self.attachCardView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
-    self.attachCardView.height = attachCardViewHeight;
+    [FHLayoutItem updateView:self.userInfoView withLayout:cellLayout.userInfoViewLayout];
+    [FHLayoutItem updateView:self.contentLabel withLayout:cellLayout.contentLabelLayout];
+    [FHLayoutItem updateView:self.multiImageView withLayout:cellLayout.multiImageViewLayout];
+    [FHLayoutItem updateView:self.singleImageView withLayout:cellLayout.singleImageViewLayout];
+    [FHLayoutItem updateView:self.bottomView withLayout:cellLayout.bottomViewLayout];
+    [FHLayoutItem updateView:self.originView withLayout:cellLayout.originViewLayout];
+    [FHLayoutItem updateView:self.attachCardView withLayout:cellLayout.attachCardViewLayout];
 }
 
 - (UILabel *)LabelWithFont:(UIFont *)font textColor:(UIColor *)textColor {
@@ -169,62 +142,32 @@
     //设置userInfo
     [self.userInfoView refreshWithData:cellModel];
     //设置底部
-    self.bottomView.cellModel = cellModel;
-    
-    BOOL showCommunity = cellModel.showCommunity && !isEmptyString(cellModel.community.name);
-    self.bottomView.position.text = cellModel.community.name;
-    [self.bottomView showPositionView:showCommunity];
-    
-    NSInteger commentCount = [cellModel.commentCount integerValue];
-    if(commentCount == 0){
-        [self.bottomView.commentBtn setTitle:@"评论" forState:UIControlStateNormal];
-    }else{
-        [self.bottomView.commentBtn setTitle:[TTBusinessManager formatCommentCount:commentCount] forState:UIControlStateNormal];
-    }
-    [self.bottomView updateLikeState:cellModel.diggCount userDigg:cellModel.userDigg];
+    [self.bottomView refreshWithData:cellModel];
     //内容
     self.contentLabel.numberOfLines = cellModel.numberOfLines;
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
-        self.contentLabel.height = 0;
-        self.multiImageView.top = self.userInfoView.bottom + 10;
-        self.singleImageView.top = self.userInfoView.bottom + 10;
     }else{
         self.contentLabel.hidden = NO;
-        self.contentLabel.height = cellModel.contentHeight;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
-        self.multiImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
-        self.singleImageView.top = self.userInfoView.bottom + 20 + cellModel.contentHeight;
     }
-    
-    UIView *lastView = self.contentLabel;
-    CGFloat topOffset = 10;
     //图片
     if(cellModel.imageList.count > 1){
-        lastView = self.multiImageView;
         self.multiImageView.hidden = NO;
         self.singleImageView.hidden = YES;
         [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     }else if(cellModel.imageList.count == 1){
-        lastView = self.singleImageView;
         self.multiImageView.hidden = YES;
         self.singleImageView.hidden = NO;
         [self.singleImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
     }else{
-        lastView = self.contentLabel;
         self.multiImageView.hidden = YES;
         self.singleImageView.hidden = YES;
     }
-//    [self.multiImageView updateImageView:cellModel.imageList largeImageList:cellModel.largeImageList];
-    
      //origin
     if(cellModel.originItemModel){
         self.originView.hidden = NO;
         [self.originView refreshWithdata:cellModel];
-        self.originView.top = lastView.bottom + topOffset;
-        self.originView.height = cellModel.originItemHeight;
-        topOffset += cellModel.originItemHeight;
-        topOffset += 10;
     }else{
         self.originView.hidden = YES;
     }
@@ -232,74 +175,19 @@
     if(cellModel.attachCardInfo){
         self.attachCardView.hidden = NO;
         [self.attachCardView refreshWithdata:cellModel];
-        self.attachCardView.top = lastView.bottom + topOffset;
-        topOffset += attachCardViewHeight;
-        topOffset += 10;
     }else{
         self.attachCardView.hidden = YES;
     }
-    
-    self.bottomView.top = lastView.bottom + topOffset;
-    
-    [self showGuideView];
+
+    [self updateConstraints:cellModel.layout];
 }
 
 + (CGFloat)heightForData:(id)data {
     if([data isKindOfClass:[FHFeedUGCCellModel class]]){
         FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
-        CGFloat height = userInfoViewHeight + bottomViewHeight + topMargin + 10;
-        
-        if(!isEmptyString(cellModel.content)){
-            height += (cellModel.contentHeight + 10);
-        }
-        
-        if(cellModel.imageList.count > 1){
-            CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-            height += (imageViewheight + 10);
-        }else if(cellModel.imageList.count == 1){
-            CGFloat imageViewheight = [FHUGCCellMultiImageView viewHeightForCount:1 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin];
-            height += (imageViewheight + 10);
-        }
-        
-        if(cellModel.originItemModel){
-            height += (cellModel.originItemHeight + 10);
-        }
-        
-        if(cellModel.attachCardInfo){
-            height += (attachCardViewHeight + 10);
-        }
-        
-        if(cellModel.isInsertGuideCell){
-            height += guideViewHeight;
-        }
-        
-        return height;
+        return cellModel.layout.height;
     }
     return 44;
-}
-
-- (void)showGuideView {
-    if(_cellModel.isInsertGuideCell){
-        self.bottomView.height = bottomViewHeight + guideViewHeight;
-    }else{
-        self.bottomView.height = bottomViewHeight;
-    }
-}
-
-- (void)closeGuideView {
-    self.cellModel.isInsertGuideCell = NO;
-    [self.cellModel.tableView beginUpdates];
-    
-    [self showGuideView];
-    self.bottomView.cellModel = self.cellModel;
-    
-    [self setNeedsUpdateConstraints];
-    
-    [self.cellModel.tableView endUpdates];
-    
-    if(self.delegate && [self.delegate respondsToSelector:@selector(closeFeedGuide:)]){
-        [self.delegate closeFeedGuide:self.cellModel];
-    }
 }
 
 - (void)deleteCell {
@@ -312,13 +200,6 @@
 - (void)commentBtnClick {
     if(self.delegate && [self.delegate respondsToSelector:@selector(commentClicked:cell:)]){
         [self.delegate commentClicked:self.cellModel cell:self];
-    }
-}
-
-//进入圈子详情
-- (void)goToCommunityDetail:(UITapGestureRecognizer *)sender {
-    if(self.delegate && [self.delegate respondsToSelector:@selector(goToCommunityDetail:)]){
-        [self.delegate goToCommunityDetail:self.cellModel];
     }
 }
 

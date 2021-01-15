@@ -6,8 +6,8 @@
 //
 
 #import "FHDetailBaseCell.h"
-#import "FHDetailNeighborhoodPropertyInfoCell.h"
 #import <IGListKit/IGListKit.h>
+#import <FHHouseBase/FHHouseBaseInfoModel.h>
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FHNeighborhoodDetailPropertyInfoCollectionCell : FHDetailBaseCollectionCell<IGListBindable>
