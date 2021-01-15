@@ -51,8 +51,8 @@
         make.height.mas_offset(16);
     }];
     [self.companyNameLab mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(self.companyBac).offset(5);
-        make.right.equalTo(self.companyBac).offset(-5);
+        make.left.equalTo(self.companyBac).offset(2);
+        make.right.equalTo(self.companyBac).offset(-2);
         make.centerY.equalTo(self.companyBac);
     }];
     [self.licenceIcon mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -126,7 +126,7 @@
 - (UILabel *)infoLab {
     if (!_infoLab) {
         UILabel *infoLab = [[UILabel alloc]init];
-        infoLab.font = [UIFont themeFontMedium:10];
+        infoLab.font = [UIFont themeFontRegular:10];
         infoLab.baselineAdjustment = UIBaselineAdjustmentAlignCenters;
         infoLab.textColor = [UIColor themeGray3];
         [self addSubview:infoLab];
@@ -179,11 +179,11 @@
     if (cellModel.realtor.agencyName.length>0) {
         self.companyNameLab.text = cellModel.realtor.agencyName;
         [self.companyNameLab sizeToFit];
-        if (self.companyNameLab.bounds.size.width < 50) {
+        if (self.companyNameLab.bounds.size.width + 4 < 50) {
             [self.companyBac mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(self.nameLab.mas_right).offset(4);
                 make.centerY.equalTo(self.nameLab);
-                make.width.mas_offset(50);
+                make.width.mas_offset(self.companyNameLab.bounds.size.width + 4);
                 make.height.mas_offset(16);
             }];
         }
