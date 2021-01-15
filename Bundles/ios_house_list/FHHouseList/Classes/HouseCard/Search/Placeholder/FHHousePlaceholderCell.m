@@ -29,7 +29,8 @@
 
 + (CGFloat)viewHeightWithViewModel:(id<FHHouseNewComponentViewModelProtocol>)viewModel {
     if (![viewModel isKindOfClass:FHHousePlaceholderStyle2ViewModel.class]) return 0.0f;
-    return 124;
+    FHHousePlaceholderStyle2ViewModel *styleViewModel = (FHHousePlaceholderStyle2ViewModel *)viewModel;
+    return 114 + styleViewModel.topOffset;
 }
 
 
