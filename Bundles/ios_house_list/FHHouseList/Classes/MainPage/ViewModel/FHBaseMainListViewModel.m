@@ -1723,6 +1723,9 @@ extern NSString *const INSTANT_DATA_KEY;
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (_showPlaceHolder) {
+        if (self.houseType == FHHouseTypeRentHouse) {
+            return 20;
+        }
         return  10;
     }
     
@@ -2936,7 +2939,7 @@ extern NSString *const INSTANT_DATA_KEY;
 - (NSArray<NSArray<id<FHHouseNewComponentViewModelProtocol>> *> *)fhHouse_dataList {
     if (self.showPlaceHolder) {
         if (self.houseType == FHHouseTypeRentHouse) {
-            NSArray *placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle1 count:10];
+            NSArray *placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle1 count:20];
             return @[placeholderViewModels];
         }else {
             NSArray *placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle2 count:10];
