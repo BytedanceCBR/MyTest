@@ -23,7 +23,7 @@
 #import "FHMainApi.h"
 #import "NSDictionary+BTDAdditions.h"
 
-
+#define kRealtorRequestSuccessNotification @"kRealtorRequestSuccessNotification"
 @interface FHShortVideoDetailFetchManager()
 @property (nonatomic, strong) NSMutableArray<FHFeedUGCCellModel *> *awemedDetailItems;
 @property (nonatomic, strong) TSVShortVideoDecoupledFetchManager *decoupledFetchManager;
@@ -191,6 +191,8 @@
             }
             self.awemedDetailItems = awemeDetailItems;
             self.isLoadingRequest = NO;
+            NSDictionary *cellModelDic = @{@"cellModel":cellModel};
+            [[NSNotificationCenter defaultCenter] postNotificationName:kRealtorRequestSuccessNotification object:cellModel userInfo:cellModelDic];
         }];
 
 }
