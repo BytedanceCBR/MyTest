@@ -206,7 +206,7 @@
         UIView *lastView = nil;
         for (NSInteger idx = 0; idx < itemsCount; idx++) {
             FHDetailNewDiscountInfoItemModel *item = model.discountInfo[idx];
-            [_itemTypeArr addObject:[NSString stringWithFormat:@"%ld",item.itemType]];
+            [_itemTypeArr addObject:[NSString stringWithFormat:@"%ld",(long)item.itemType]];
             FHNewHouseDetailSalesItemView *itemView = [[FHNewHouseDetailSalesItemView alloc]initWithFrame:CGRectZero];
             // 添加事件
             itemView.tag = idx;
