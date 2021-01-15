@@ -258,35 +258,38 @@
 }                                      
 
 - (void)setupSegmentedControl {
+    
     _segmentControl = [[HMSegmentedControl alloc] initWithSectionTitles:self.segmentTitles];
+    
     NSDictionary *titleTextAttributes = @{NSFontAttributeName: [UIFont themeFontRegular:16],
                                           NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.titleTextAttributes = titleTextAttributes;
+    
     NSDictionary *selectedTitleTextAttributes = @{NSFontAttributeName: [UIFont themeFontSemibold:18],
                                                   NSForegroundColorAttributeName: [UIColor themeGray1]};
     _segmentControl.selectedTitleTextAttributes = selectedTitleTextAttributes;
     _segmentControl.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
-    _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleFixed;
+    _segmentControl.segmentWidthStyle = HMSegmentedControlSegmentWidthStyleDynamic;
     _segmentControl.isNeedNetworkCheck = NO;
-    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(5, 0, 5, 0);
+    _segmentControl.segmentEdgeInset = UIEdgeInsetsMake(8, 10, 0, 10);
     _segmentControl.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationDown;
     _segmentControl.selectionIndicatorWidth = 20.0f;
     _segmentControl.selectionIndicatorHeight = 4.0f;
+//    _segmentControl.hidden = YES;
     _segmentControl.selectionIndicatorCornerRadius = 2.0f;
-    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, -3, 0);
+    _segmentControl.selectionIndicatorEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0);
     _segmentControl.selectionIndicatorColor = [UIColor colorWithHexStr:@"#ff9629"];
     [_segmentControl setBackgroundColor:[UIColor clearColor]];
+    
     self.viewModel.segmentControl = _segmentControl;
     [self bindTopIndexChanged];
     [self.topView addSubview:_segmentControl];
     NSInteger count = _segmentControl.sectionTitles.count;
-    float tabMargin = ([UIScreen mainScreen].bounds.size.width - (count - 1) * 32 - count * 36 - 18) / 2;
     [_segmentControl mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.topView);
-        make.height.mas_equalTo(44);
+        make.height.mas_equalTo(50);
         make.bottom.mas_equalTo(-60);
-        make.left.mas_equalTo(tabMargin);
-        make.right.mas_equalTo(-tabMargin);
+        make.width.mas_equalTo(62 * count);
     }];
 }
 
