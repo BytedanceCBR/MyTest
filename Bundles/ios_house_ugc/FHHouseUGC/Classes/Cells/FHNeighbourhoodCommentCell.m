@@ -149,7 +149,7 @@
 + (CGFloat)cellWidth:(BOOL)isInList {
     CGFloat ret = SCREEN_WIDTH - 18;
     if(isInList) {
-        SCREEN_WIDTH;
+        ret = SCREEN_WIDTH;
     }
     return ret;
 }
@@ -198,8 +198,11 @@
 //    [self.userInfoView.icon bd_setImageWithURL:[NSURL URLWithString:self.cellModel.user.avatarUrl] placeholder:[UIImage imageNamed:@"fh_mine_avatar"]];
     
     [self.userInfoView refreshWithData:self.cellModel];
-    [self.userInfoView showEssenceIcon];
-    //self.userInfoView.essenceIcon.hidden = YES;
+    if (self.cellModel.isInNeighbourhoodCommentsList) {
+        self.userInfoView.essenceIcon.hidden = YES;
+    } else {
+        [self.userInfoView showEssenceIcon];
+    }
     
     self.userInfoView.moreBtn.hidden = YES;
     
@@ -235,14 +238,15 @@
     self.multiImageView.height = self.imageViewheight;
     //图片
     [self.multiImageView updateImageView:self.cellModel.imageList largeImageList:self.cellModel.largeImageList];
-    
-//    if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
-//        self.decorationImageView.width = 42;
-//        self.decorationImageView.height = 42;
-//        self.decorationImageView.left = cellWidth - rightMargin - rightPadding - 42;
-//        self.decorationImageView.top = self.contentContainer.top + topPadding - 1;
-//        [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence_small"]];
-//    }
+    if (self.cellModel.isInNeighbourhoodCommentsList) {
+        if(self.cellModel.isStick && self.cellModel.stickStyle == FHFeedContentStickStyleGood) {
+            self.decorationImageView.width = 42;
+            self.decorationImageView.height = 42;
+            self.decorationImageView.left = cellWidth - rightMargin - rightPadding - 42;
+            self.decorationImageView.top = self.contentContainer.top + topPadding - 1;
+            [self.decorationImageView setImage:[UIImage imageNamed:@"fh_ugc_wenda_essence_small"]];
+        }
+    }
 }
 
 - (void)deleteCell {
