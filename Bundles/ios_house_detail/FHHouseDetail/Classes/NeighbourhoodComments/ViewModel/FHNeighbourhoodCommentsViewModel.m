@@ -138,8 +138,7 @@
             //TODO: show handle error
             if(isFirst){
                 if(error.code != -999){
-                    [wself.viewController.emptyView showEmptyWithType:FHEmptyMaskViewTypeNetWorkError];
-                    wself.viewController.showenRetryButton = YES;
+                    [wself.viewController.emptyView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNoDataImageName showRetry:YES];
                     wself.refreshFooter.hidden = YES;
                 }
             }else{
@@ -179,8 +178,7 @@
                 [wself updateTableViewWithMoreData:wself.tableView.hasMore];
                 [wself.viewController.emptyView hideEmptyView];
             }else{
-                [wself.viewController.emptyView showEmptyWithTip:@"暂无新内容，快去发布吧" errorImageName:kFHErrorMaskNetWorkErrorImageName showRetry:NO];
-                wself.viewController.showenRetryButton = NO;
+                [wself.viewController.emptyView showEmptyWithTip:@"暂无内容" errorImageName:kFHErrorMaskNoDataImageName showRetry:YES];
                 wself.refreshFooter.hidden = YES;
             }
             [wself.tableView reloadData];

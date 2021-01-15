@@ -174,17 +174,17 @@
         make.bottom.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?-16:0);
     }];
     
-    self.userInfoView.top = cellModel.isInRealtorEvaluationList?18:topMargin;
+    self.userInfoView.top = cellModel.isInRealtorEvaluationList?18:5;
     self.userInfoView.left = 0;
     self.userInfoView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.userInfoView.height = userInfoViewHeight;
     
-    self.headerView.top = cellModel.isInRealtorEvaluationList?18:topMargin;
+    self.headerView.top = cellModel.isInRealtorEvaluationList?18:5;
     self.headerView.left = 0;
-    self.headerView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
+    self.headerView.width = [UIScreen mainScreen].bounds.size.width - 9 * 2;
     self.headerView.height = userInfoViewHeight;
     
-    self.contentLabel.top = self.userInfoView.bottom + 10;
+    self.contentLabel.top = self.userInfoView.bottom + 6;
     self.contentLabel.left = leftMargin;
     self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - 18;
     self.contentLabel.height = 0;
@@ -207,11 +207,11 @@
     if(isEmptyString(cellModel.content)){
         self.contentLabel.hidden = YES;
         self.contentLabel.height = 0;
-        self.videoImageView.top = self.userInfoView.bottom + 10;
+        self.videoImageView.top = self.userInfoView.bottom + 6;
     }else{
         self.contentLabel.hidden = NO;
         self.contentLabel.height = cellModel.contentHeight;
-        self.videoImageView.top = self.contentLabel.bottom + 10 ;
+        self.videoImageView.top = self.contentLabel.bottom + 8 ;
         [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
     }
     self.lineView.top = self.videoImageView.bottom + 11;
@@ -313,7 +313,7 @@
         if (cellModel.isInRealtorEvaluationList) {
             height = cellModel.contentHeight  +150 + 22 + 50 + 130 - 3;
         }else {
-            height = cellModel.contentHeight  +150 + 10 + 50 + 90 - 20 - 3;
+            height = cellModel.contentHeight  +150 + 10 + 50 + 90 - 20 - 3 - 11 + 5;
         }
         return height;
     }

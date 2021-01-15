@@ -123,22 +123,22 @@
         make.bottom.equalTo(self.contentView).offset(cellModel.isInRealtorEvaluationList?-16:0);
     }];
     
-    self.userInfoView.top =cellModel.isInRealtorEvaluationList?18:0;
+    self.userInfoView.top =cellModel.isInRealtorEvaluationList?18:5;
     self.userInfoView.left = 0;
     self.userInfoView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin;
     self.userInfoView.height = userInfoViewHeight;
     
-    self.headerView.top = cellModel.isInRealtorEvaluationList?18:0;
+    self.headerView.top = cellModel.isInRealtorEvaluationList?18:5;
     self.headerView.left = 0;
     self.headerView.width = [UIScreen mainScreen].bounds.size.width - 9 * 2;
     self.headerView.height = userInfoViewHeight;
     
-    self.contentLabel.top = self.userInfoView.bottom + 12;
+    self.contentLabel.top = self.userInfoView.bottom + 6;
     self.contentLabel.left = leftMargin;
     self.contentLabel.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - cellOuterMargin;
     self.contentLabel.height = 0;
     
-    self.multiImageView.top = self.userInfoView.bottom + 9;
+    self.multiImageView.top = self.userInfoView.bottom + 6;
     self.multiImageView.left = leftMargin;
     self.multiImageView.width = [UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - cellOuterMargin;
     self.multiImageView.height = self.imageViewheight;
@@ -156,11 +156,11 @@
     if(isEmptyString(cellModel.content)){
           self.contentLabel.hidden = YES;
           self.contentLabel.height = 0;
-          self.multiImageView.top = self.userInfoView.bottom + 10;
+          self.multiImageView.top = self.userInfoView.bottom + 6;
       }else{
           self.contentLabel.hidden = NO;
           self.contentLabel.height = cellModel.contentHeight;
-          self.multiImageView.top = self.userInfoView.bottom + 10 + cellModel.contentHeight + 10;
+          self.multiImageView.top = self.userInfoView.bottom + 6 + cellModel.contentHeight + 8;
           [FHUGCCellHelper setAsyncRichContent:self.contentLabel model:cellModel];
       }
     
@@ -272,7 +272,7 @@
         if (cellModel.isInRealtorEvaluationList) {
             height =  cellModel.contentHeight  +(cellModel.imageList.count == 0?12:75+ 22)  + 50 + 85;
         }else {
-            height =  cellModel.contentHeight + 10  +(cellModel.imageList.count == 0?0:[FHHouseDetailRGCMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - cellOuterMargin]+ 16)  + 45;
+            height =  cellModel.contentHeight + 10  +(cellModel.imageList.count == 0?0:[FHHouseDetailRGCMultiImageView viewHeightForCount:3 width:[UIScreen mainScreen].bounds.size.width - leftMargin - rightMargin - cellOuterMargin]+ 16)  + 45 - 8 + 5;
         }
         return height;
     }

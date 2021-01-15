@@ -42,13 +42,17 @@ typedef NS_ENUM(NSInteger, TTVPlayerResolutionType) {
      */
     TTVPlayerResolutionTypeFullHD = 2,
     /**
+     *  超清
+     */
+    TTVPlayerResolutionType1080P = 3,
+    /**
      *  自动调节
      */
-    TTVPlayerResolutionTypeAuto = 3,
+    TTVPlayerResolutionTypeAuto = 4,
     /**
      *  未知
      */
-    TTVPlayerResolutionTypeUnkown = 4,
+    TTVPlayerResolutionTypeUnkown = 5,
 
 };
 
