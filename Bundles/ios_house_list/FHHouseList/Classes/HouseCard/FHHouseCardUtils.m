@@ -200,6 +200,35 @@
     return dataList;
 }
 
++ (NSArray *)getHouseListPlaceholderModelsWithStyle:(FHHousePlaceholderStyle)style count:(NSInteger)count {
+    NSMutableArray *dataList = [NSMutableArray array];
+    for (NSInteger index = 0; index < count; index++) {
+        id viewModel = nil;
+        switch (style) {
+            case FHHousePlaceholderStyle1:
+                viewModel = [[FHHousePlaceholderStyle1ViewModel alloc] init];
+                break;
+            case FHHousePlaceholderStyle2: {
+                FHHousePlaceholderStyle2ViewModel *styleViewModel = [[FHHousePlaceholderStyle2ViewModel alloc] init];
+                if (index == 0) {
+                    styleViewModel.topOffset = 5;
+                }
+                
+                viewModel = styleViewModel;
+                break;
+            }
+            default:
+                break;
+        }
+        
+        if (viewModel) {
+            [dataList addObject:viewModel];
+        }
+    }
+    
+    return dataList;
+}
+
 + (void)trackUseListComponentIfNeed {
     NSDictionary *params = @{@"open":@([FHEnvContext isHouseListComponentEnable])};
     [FHUserTracker writeEvent:@"f_houselist_component_enabled" params:params];

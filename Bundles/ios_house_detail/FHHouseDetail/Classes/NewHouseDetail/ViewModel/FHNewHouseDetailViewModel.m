@@ -219,6 +219,18 @@
     
 }
 
+- (void)refreshSocialInfo {
+    @weakify(self);
+    [FHHouseDetailAPI requestNewDetail:self.houseId logPB:self.listLogPB ridcode:self.ridcode realtorId:self.realtorId extraInfo:self.extraInfo completion:^(FHDetailNewModel * _Nullable model, NSError * _Nullable error) {
+        @strongify(self);
+        if ([model isKindOfClass:[FHDetailNewModel class]] && !error) {
+            if (model.data) {
+                self.contactViewModel.socialInfo = model.data.socialInfo;
+            }
+        }
+    }];
+}
+
 // 处理详情页周边新盘请求数据
 - (void)processDetailRelatedData {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{

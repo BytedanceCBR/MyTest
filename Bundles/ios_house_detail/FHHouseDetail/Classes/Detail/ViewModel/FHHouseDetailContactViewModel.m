@@ -967,10 +967,13 @@ NSString *const kFHDetailLoadingNotification = @"kFHDetailLoadingNotification";
     dict[@"is_admin"] = @(self.socialInfo.socialGroupInfo.userAuth > UserAuthTypeNormal);
     dict[@"report_params"] = [reportDic btd_jsonStringEncoded];
     
-//    WeakSelf;
+    WeakSelf;
     dict[@"group_chat_page_exit_block"] = ^(void) {
-//        StrongSelf;
-        // 返回是否需要刷新数据
+        StrongSelf;
+        // 返回是否需要刷新数据,
+        if(self.belongsVC && [self.belongsVC respondsToSelector:@selector(refreshSocialInfo)]) {
+            [self.belongsVC performSelector:@selector(refreshSocialInfo)];
+        }
     };
     TTRouteUserInfo *userInfo = [[TTRouteUserInfo alloc] initWithInfo:dict];
     
