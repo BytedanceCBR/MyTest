@@ -38,6 +38,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) void (^updateLayout)(void);
 
 - (void)startLoadData;
+- (void)refreshSocialInfo;
 
 // 二级页所需数据
 - (NSDictionary *)subPageParams;
