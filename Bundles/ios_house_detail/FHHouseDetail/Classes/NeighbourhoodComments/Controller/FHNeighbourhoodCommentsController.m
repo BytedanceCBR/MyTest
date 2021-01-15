@@ -97,8 +97,8 @@
 
 - (void)initView {
     [self initTableView];
-    [self initBottomView];
     [self addDefaultEmptyViewFullScreen];
+    [self initBottomView];
 }
 
 - (void)initTableView {
@@ -136,7 +136,7 @@
 
 - (void)initBottomView {
     self.bottomView = [[UIView alloc] init];
-    _bottomView.backgroundColor = [UIColor themeGray7];
+    _bottomView.backgroundColor = [UIColor themeWhite];
     [self.view addSubview:_bottomView];
     
     self.bottomBtn = [[UIButton alloc] init];

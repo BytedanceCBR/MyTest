@@ -165,8 +165,10 @@
 
     FHFeedUGCCellModel *cellModel = (FHFeedUGCCellModel *)data;
     if (self.currentModel != cellModel) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-        [self.mainCollection scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+        if (cellModel.videoList.count >0) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            [self.mainCollection scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionTop animated:NO];
+        }
     }
     self.currentModel = cellModel;
     self.datas = [cellModel.videoList mutableCopy];

@@ -229,6 +229,9 @@ static NSString *const kvideo_controller_error_domain = @"kvideo_player_controll
         case TTVPlayerResolutionTypeFullHD:
             return TTVideoEngineResolutionTypeFullHD;
             break;
+        case TTVPlayerResolutionType1080P:
+            return TTVideoEngineResolutionType1080P;
+            break;
         case TTVPlayerResolutionTypeAuto:
             return TTVideoEngineResolutionTypeAuto;
             break;
