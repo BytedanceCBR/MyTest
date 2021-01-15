@@ -15,7 +15,7 @@
 #import "UIViewAdditions.h"
 
 @interface FHUGCAvatarView ()
-
+@property (strong, nonatomic) FHFeedUGCCellModel *cellModel;
 @end
 
 @implementation FHUGCAvatarView
@@ -31,8 +31,18 @@
         _avatarImageView.left = 0;
         _avatarImageView.width = self.width;
         _avatarImageView.height = self.height;
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(realtorChange:) name:@"kRealtorRequestSuccessNotification" object:nil];
     }
     return self;
+}
+- (void)realtorChange:(NSNotification *)notification {
+    if (notification.object == self.cellModel) {
+        NSDictionary *dic = notification.userInfo;
+        FHFeedUGCCellModel *model = dic[@"cellModel"];
+        if (model) {
+            [self updateIdentifyImageURL:model.realtor.avatarTagUrl];
+        }
+    }
 }
 
 -(UIImageView *)identifyImageView {
@@ -96,6 +106,7 @@
 }
 
 -(void)updateAvatarWithUGCCellModel:(FHFeedUGCCellModel *)cellModel {
+    _cellModel = cellModel;
     if (!(cellModel.realtor.avatarTagUrl.length>0) ) {
         self.userId = cellModel.user.userId;
     }
@@ -111,6 +122,7 @@
 }
 
 - (void)updateAvatarWithTSVUserModel:(FHFeedUGCCellModel *)userModel {
+    _cellModel = userModel;
     if (!(userModel.realtor.avatarTagUrl.length> 0)) {
         self.userId = userModel.user.userId;
     }
