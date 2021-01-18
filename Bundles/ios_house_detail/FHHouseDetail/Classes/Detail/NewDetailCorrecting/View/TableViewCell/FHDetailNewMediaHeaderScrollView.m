@@ -207,7 +207,9 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
         }
         if (indexPath && !_closeInfinite) {
             //循环滚动
-            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            UICollectionViewLayoutAttributes *cellAttributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
+            [self.colletionView setContentOffset:CGPointMake(cellAttributes.frame.origin.x, 0) animated:NO];
+//            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
         [self.colletionView layoutIfNeeded];
     }
@@ -240,7 +242,9 @@ static NSString * const k_PANORAMACELLID =    @"panorama_cell_id";
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:1 inSection:0];
             UICollectionViewLayoutAttributes *cellAttributes = [self.colletionView layoutAttributesForItemAtIndexPath:indexPath];
             [self.colletionView setContentOffset:CGPointMake(cellAttributes.frame.origin.x, 0) animated:NO];
-//            [self.colletionView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.colletionView setContentOffset:CGPointMake(cellAttributes.frame.origin.x, 0) animated:NO];
+            });
         }
     } else {
         self.colletionView.hidden = YES;

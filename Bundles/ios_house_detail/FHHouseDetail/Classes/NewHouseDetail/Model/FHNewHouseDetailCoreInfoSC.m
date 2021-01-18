@@ -95,7 +95,7 @@
     FHHouseDetailContactViewModel *contactViewModel = self.detailViewController.viewModel.contactViewModel;
     FHNewHouseDetailPriceNotifyCellModel *model = [(FHNewHouseDetailCoreInfoSM *)self.sectionModel priceNotifyCellModel];
     NSString *title = @"开盘通知";
-    NSString *subtitle = @"订阅开盘通知，楼盘开盘信息会及时发送到您的手机。";
+    NSString *subtitle = @"订阅后，楼盘开盘信息会及时发送到您的手机。";
     NSString *btnTitle = @"提交";
     NSMutableDictionary *associateParamDict = @{}.mutableCopy;
     associateParamDict[kFHAssociateInfo] = model.openAssociateInfo.reportFormInfo;
@@ -115,7 +115,7 @@
     FHHouseDetailContactViewModel *contactViewModel = self.detailViewController.viewModel.contactViewModel;
     FHNewHouseDetailPriceNotifyCellModel *model = [(FHNewHouseDetailCoreInfoSM *)self.sectionModel priceNotifyCellModel];
     NSString *title = @"变价通知";
-    NSString *subtitle = @"订阅变价通知，楼盘变价信息会及时发送到您的手机。";
+    NSString *subtitle = @"订阅后，楼盘变价信息会及时发送到您的手机。";
     NSString *btnTitle = @"提交";
     NSMutableDictionary *associateParamDict = @{}.mutableCopy;
     associateParamDict[kFHAssociateInfo] = model.priceAssociateInfo.reportFormInfo;

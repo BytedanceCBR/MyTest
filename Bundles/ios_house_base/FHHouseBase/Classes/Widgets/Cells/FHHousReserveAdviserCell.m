@@ -441,7 +441,7 @@
         formReportModel.houseType = FHHouseTypeNeighborhood;
         formReportModel.title = @"免费预约";
         formReportModel.btnTitle = @"立即预约";
-        formReportModel.subtitle = @"预约后，我们将为您匹配专业的找房顾问，提供优质的咨询服务。";
+        formReportModel.subtitle = @"预约后，我们将匹配专业的经纪人，为您提供优质的咨询服务。";
         formReportModel.topViewController = self.modelData.belongsVC;
         [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:formReportModel completion:^{
             if(weakSelf.modelData.subscribeCache && weakSelf.modelData.targetId){
