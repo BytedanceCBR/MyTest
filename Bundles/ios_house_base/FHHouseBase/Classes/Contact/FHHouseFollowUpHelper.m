@@ -72,13 +72,13 @@ NSString *const kFHToastCountKey = @"kFHToastCountKey";
     FHFollowActionType actionType = configModel.actionType ? :configModel.houseType;
     
     //115改动，关注状态及时生效，不看接口状态
-    if ([FHPushAuthorizeManager isFollowAlertEnabled]) {
-        NSMutableDictionary *params = @{}.mutableCopy;
-        params[@"page_type"] = configModel.pageType;
-        [FHPushAuthorizeManager showFollowAlertIfNeeded:params];
-    }else {
-        [[ToastManager manager] showToast:@"关注成功"];
-    }
+//    if ([FHPushAuthorizeManager isFollowAlertEnabled]) {
+//        NSMutableDictionary *params = @{}.mutableCopy;
+//        params[@"page_type"] = configModel.pageType;
+//        [FHPushAuthorizeManager showFollowAlertIfNeeded:params];
+//    }else {
+//    }
+    [[ToastManager manager] showToast:@"关注成功"];
     NSMutableDictionary *userInfo = @{}.mutableCopy;
     userInfo[@"followId"] = followId;
     userInfo[@"followStatus"] = @(1);
