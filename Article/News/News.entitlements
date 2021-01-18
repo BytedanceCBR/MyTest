@@ -18,8 +18,6 @@
 	<key>com.apple.developer.networking.wifi-info</key>
 	<true/>
 	<key>com.apple.security.application-groups</key>
-	<array>
-		<string>group.com.f100.client.extension.new</string>
-	</array>
+	<array/>
 </dict>
 </plist>
