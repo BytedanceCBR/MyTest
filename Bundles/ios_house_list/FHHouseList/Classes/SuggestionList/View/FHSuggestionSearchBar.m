@@ -63,6 +63,8 @@
     _searchInput.textColor = [UIColor themeGray1];
     _searchInput.tintColor = [UIColor themeGray1];
     _searchInput.returnKeyType = UIReturnKeySearch;
+    UIButton *clean = [_searchInput valueForKey:@"_clearButton"];
+    [clean setImage:[UIImage imageNamed:@"ic_home_searchbar_clear"] forState:UIControlStateNormal];
     _searchInput.clearButtonMode = UITextFieldViewModeWhileEditing;
     [_searchAreaPanel addSubview:_searchInput];
     [_searchInput mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -71,7 +73,6 @@
         make.centerY.mas_equalTo(self.searchAreaPanel);
         make.right.mas_equalTo(self.searchAreaPanel);
     }];
-    
     // backBtn
     _backBtn = [[UIButton alloc] init];
     [_backBtn setTitle:@"取消" forState:UIControlStateNormal];

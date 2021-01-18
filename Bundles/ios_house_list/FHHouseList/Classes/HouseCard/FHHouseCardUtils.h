@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSArray *)getPlaceholderModelsWithStyle:(FHHousePlaceholderStyle)style count:(NSInteger)count;
 
++ (NSArray *)getHouseListPlaceholderModelsWithStyle:(FHHousePlaceholderStyle)style count:(NSInteger)count;
+
 + (NSObject *)getEntityFromModel:(id)model;
 
 + (id)getNoResultViewModelWithExistModel:(id)existModel containerHeight:(CGFloat)containerHeight;
