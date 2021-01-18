@@ -89,7 +89,7 @@
     
     if ([SSCommonLogic isEnableVerifyFormAssociate]) {
         title = @"领取优惠";
-        subtitle = @"提交后，我们将给您匹配专业的置业顾问为您提供优惠咨询服务。";
+        subtitle = @"提交后，我们将匹配专业的置业顾问，为您提供优惠咨询服务。";
         btnTitle = @"领取优惠";
     }
     
