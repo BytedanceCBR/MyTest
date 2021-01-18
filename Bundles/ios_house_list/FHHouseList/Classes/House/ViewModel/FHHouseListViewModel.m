@@ -2866,12 +2866,12 @@ extern NSString *const INSTANT_DATA_KEY;
         NSInteger count = 10;
         NSArray *placeholderViewModels = @[];
         if (self.houseType == FHHouseTypeRentHouse) {
-            placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle1 count:count];
+            placeholderViewModels = [FHHouseCardUtils getHouseListPlaceholderModelsWithStyle:FHHousePlaceholderStyle1 count:count];
         } else {
             if (self.commute){
-                placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle3 count:count];
+                placeholderViewModels = [FHHouseCardUtils getHouseListPlaceholderModelsWithStyle:FHHousePlaceholderStyle1 count:count];
             } else {
-                placeholderViewModels = [FHHouseCardUtils getPlaceholderModelsWithStyle:FHHousePlaceholderStyle2 count:count];
+                placeholderViewModels = [FHHouseCardUtils getHouseListPlaceholderModelsWithStyle:FHHousePlaceholderStyle2 count:count];
             }
         }
         

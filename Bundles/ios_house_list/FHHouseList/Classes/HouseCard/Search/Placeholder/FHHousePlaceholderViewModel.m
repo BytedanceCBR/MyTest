@@ -13,8 +13,12 @@
 
 @implementation FHHousePlaceholderStyle2ViewModel
 
-- (CGFloat)topOffset {
-    return 15.0f;
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _topOffset = 10.0f;
+    }
+    return self;
 }
 
 @end

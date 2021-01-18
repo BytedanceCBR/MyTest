@@ -487,9 +487,11 @@
 }
 
 - (void)textFieldDidChange:(NSNotification *)noti{
-    [self.optionTextField textFieldDidChangeLimitTextLength:OPTION_LENGTH_LIMIT];
-    if([self.delegate respondsToSelector:@selector(optionCell:didInputText:)]) {
-        [self.delegate optionCell:self didInputText:self.optionTextField.text];
+    if (self.optionTextField == noti.object) {
+        [self.optionTextField textFieldDidChangeLimitTextLength:OPTION_LENGTH_LIMIT];
+        if([self.delegate respondsToSelector:@selector(optionCell:didInputText:)]) {
+            [self.delegate optionCell:self didInputText:self.optionTextField.text];
+        }
     }
 }
 
