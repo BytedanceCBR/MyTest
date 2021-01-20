@@ -285,7 +285,7 @@
         }
     }
     [self.titleView mas_updateConstraints:^(MASConstraintMaker *make) {
-        make.height.mas_offset(titleHeight);
+        make.height.mas_equalTo(titleHeight);
     }];
 }
 

@@ -106,6 +106,9 @@
     if(self.viewController.isLoadingData){
         return;
     }
+    if (self.requestTask) {
+        [self.requestTask cancel];
+    }
     
     NSString *refreshType = @"be_null";
     if(isHead){
@@ -152,7 +155,7 @@
         [extraDic setObject:fCityId forKey:@"f_city_id"];
     }
 
-    self.requestTask = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead isFirst:isFirst listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
+    TTHttpTask *task = [FHHouseUGCAPI requestFeedListWithCategory:self.categoryId behotTime:behotTime loadMore:!isHead isFirst:isFirst listCount:listCount extraDic:extraDic completion:^(id<FHBaseModelProtocol>  _Nonnull model, NSError * _Nonnull error) {
         wself.viewController.isLoadingData = NO;
 
         [wself.collectionView finishPullDownWithSuccess:YES];
@@ -240,6 +243,7 @@
             });
         }
     }];
+    self.requestTask = task;
 }
 
 - (void)updateTableViewWithMoreData:(BOOL)hasMore {
@@ -363,6 +367,13 @@
 #pragma UISCrollViewDelegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if ([scrollView isKindOfClass:[FHBaseCollectionView class]]) {
+        if (self.collectionView ) {
+            if (self.collectionView.contentSize.height - (fabs(scrollView.contentOffset.y +self.collectionView.frame.size.height)) < 200) {
+                [self requestData:NO first:NO];
+            }
+        }
+    }
 }
 
 #pragma mark - 埋点

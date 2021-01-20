@@ -996,7 +996,7 @@ extern NSString *const kFHSubscribeHouseCacheKey;
         formReportModel.houseType = FHHouseTypeNeighborhood;
         formReportModel.title = @"房源订阅";
         formReportModel.btnTitle = @"立即订阅";
-        formReportModel.subtitle = @"订阅后，房源价格、售卖信息变动，专业的找房顾问将第一时间与您联系。";
+        formReportModel.subtitle = @"订阅后，房源价格、售卖信息若有变动，置业顾问将第一时间与您联系。";
         formReportModel.topViewController = self.detailController;
         [FHHouseFillFormHelper fillFormActionWithAssociateReportModel:formReportModel completion:^{
             YYCache *subscribeHouseCache = [[FHEnvContext sharedInstance].generalBizConfig subscribeHouseCache];

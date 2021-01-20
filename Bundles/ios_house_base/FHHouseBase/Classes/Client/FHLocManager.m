@@ -464,11 +464,10 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         // 存储当前定位信息
         [wSelf saveCurrentLocationData];
         wSelf.lastRequestLocTimestamp = [[NSDate date] timeIntervalSince1970];
-        
+        [[FHEnvContext sharedInstance] updateRequestCommonParams];
         if (completion) {
             // 城市选择重新定位需回调
             completion(self.currentAmpReGeocode);
-            [[FHEnvContext sharedInstance] updateRequestCommonParams];
         } else {
             NSInteger cityId = 0;
             if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {
@@ -640,11 +639,10 @@ NSString * const kFHTopSwitchCityLocalKey = @"f_switch_city_top_time_local_key";
         
         // 存储当前定位信息
         [wSelf saveCurrentLocationData];
-        
+        [[FHEnvContext sharedInstance] updateRequestCommonParams];
         if (completion) {
             // 城市选择重新定位需回调
             completion(regeocode);
-            [[FHEnvContext sharedInstance] updateRequestCommonParams];
         } else {
             NSInteger cityId = 0;
             if ([[FHEnvContext getCurrentSelectCityIdFromLocal] respondsToSelector:@selector(integerValue)]) {

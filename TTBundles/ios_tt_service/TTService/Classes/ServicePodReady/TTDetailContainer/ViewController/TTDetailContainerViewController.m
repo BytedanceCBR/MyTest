@@ -357,16 +357,16 @@
         }
     }
 
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if ([className isEqualToString:NSStringFromClass([TTArticleDetailViewController class])]) {
-            NSMutableDictionary *params = @{}.mutableCopy;
-            params[@"category_name"] = self.viewModel.detailModel.categoryID ? : @"be_null";
-            params[@"enter_from"] = [FHTraceEventUtils generateEnterfrom:self.viewModel.detailModel.categoryID] ? : @"be_null";
-            params[@"log_pb"] = self.viewModel.detailModel.logPb ? : @"be_null";
-            params[@"group_id"] = self.viewModel.detailModel.originalGroupID;
-            [FHPushAuthorizeManager showArticleAlertIfNeeded:params];
-        }
-    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        if ([className isEqualToString:NSStringFromClass([TTArticleDetailViewController class])]) {
+//            NSMutableDictionary *params = @{}.mutableCopy;
+//            params[@"category_name"] = self.viewModel.detailModel.categoryID ? : @"be_null";
+//            params[@"enter_from"] = [FHTraceEventUtils generateEnterfrom:self.viewModel.detailModel.categoryID] ? : @"be_null";
+//            params[@"log_pb"] = self.viewModel.detailModel.logPb ? : @"be_null";
+//            params[@"group_id"] = self.viewModel.detailModel.originalGroupID;
+//            [FHPushAuthorizeManager showArticleAlertIfNeeded:params];
+//        }
+//    });
 }
 
 - (void)detailRightNavBarButtonDidChange:(NSDictionary *)change {

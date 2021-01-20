@@ -20,56 +20,56 @@
 
 @implementation FHPushAuthorizeManager
 
-+ (void)showArticleAlertIfNeeded:(NSDictionary *)params
-{
-    BOOL isArticleAlertEnabled = [self isArticleAlertEnabled];
-    if (!isArticleAlertEnabled) {
-        return;
-    }
-    FHPushAuthorizeAlertView *alert = [[FHPushAuthorizeAlertView alloc]initAuthorizeHintWithImageName:@"push_alert_article" title:@"别错过楼市重要资讯！" message:@"打开推送即可获取最新消息" confirmBtnTitle:@"打开通知" completed:^(FHAuthorizeHintCompleteType type) {
-        NSMutableDictionary *paramDict = @{}.mutableCopy;
-        if (params.count > 0) {
-            [paramDict addEntriesFromDictionary:params];
-        }
-        if (type == FHAuthorizeHintCompleteTypeDone) {
-            paramDict[@"click_type"] = @"confirm";
-            NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-            [[UIApplication sharedApplication] openURL:url];
-        }else {
-            paramDict[@"click_type"] = @"cancel";
-        }
-        [FHUserTracker writeEvent:@"article_tip_click" params:paramDict];
-    }];
-    [alert show];
-    NSInteger lastTimeShowArticleAlert = (NSInteger)[[NSDate date] timeIntervalSince1970];
-    [FHPushAuthorizeHelper setLastTimeShowArticleAlert:lastTimeShowArticleAlert];
-    
-    [FHUserTracker writeEvent:@"article_tip_show" params:params];
-}
+//+ (void)showArticleAlertIfNeeded:(NSDictionary *)params
+//{
+//    BOOL isArticleAlertEnabled = [self isArticleAlertEnabled];
+//    if (!isArticleAlertEnabled) {
+//        return;
+//    }
+//    FHPushAuthorizeAlertView *alert = [[FHPushAuthorizeAlertView alloc]initAuthorizeHintWithImageName:@"push_alert_article" title:@"别错过楼市重要资讯！" message:@"打开推送即可获取最新消息" confirmBtnTitle:@"打开通知" completed:^(FHAuthorizeHintCompleteType type) {
+//        NSMutableDictionary *paramDict = @{}.mutableCopy;
+//        if (params.count > 0) {
+//            [paramDict addEntriesFromDictionary:params];
+//        }
+//        if (type == FHAuthorizeHintCompleteTypeDone) {
+//            paramDict[@"click_type"] = @"confirm";
+//            NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+//            [[UIApplication sharedApplication] openURL:url];
+//        }else {
+//            paramDict[@"click_type"] = @"cancel";
+//        }
+//        [FHUserTracker writeEvent:@"article_tip_click" params:paramDict];
+//    }];
+//    [alert show];
+//    NSInteger lastTimeShowArticleAlert = (NSInteger)[[NSDate date] timeIntervalSince1970];
+//    [FHPushAuthorizeHelper setLastTimeShowArticleAlert:lastTimeShowArticleAlert];
+//    
+//    [FHUserTracker writeEvent:@"article_tip_show" params:params];
+//}
 
-+ (void)showFollowAlertIfNeeded:(NSDictionary *)params
-{
-    FHPushAuthorizeAlertView *alert = [[FHPushAuthorizeAlertView alloc]initAuthorizeHintWithImageName:@"push_alert_price" title:@"房源一降价，立刻提醒我！" message:@"打开推送获取及时通知" confirmBtnTitle:@"打开通知" completed:^(FHAuthorizeHintCompleteType type) {
-        NSMutableDictionary *paramDict = @{}.mutableCopy;
-        if (params.count > 0) {
-            [paramDict addEntriesFromDictionary:params];
-        }
-        if (type == FHAuthorizeHintCompleteTypeDone) {
-            paramDict[@"click_type"] = @"confirm";
-            NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-            [[UIApplication sharedApplication] openURL:url];
-        }else {
-            paramDict[@"click_type"] = @"cancel";
-        }
-
-        [FHUserTracker writeEvent:@"tip_click" params:paramDict];
-    }];
-    [alert show];
-    NSInteger lastTimeShowFollowAlert = (NSInteger)[[NSDate date] timeIntervalSince1970];
-    [FHPushAuthorizeHelper setLastTimeShowFollowAlert:lastTimeShowFollowAlert];
-    
-    [FHUserTracker writeEvent:@"tip_show" params:params];
-}
+//+ (void)showFollowAlertIfNeeded:(NSDictionary *)params
+//{
+//    FHPushAuthorizeAlertView *alert = [[FHPushAuthorizeAlertView alloc]initAuthorizeHintWithImageName:@"push_alert_price" title:@"房源一降价，立刻提醒我！" message:@"打开推送获取及时通知" confirmBtnTitle:@"打开通知" completed:^(FHAuthorizeHintCompleteType type) {
+//        NSMutableDictionary *paramDict = @{}.mutableCopy;
+//        if (params.count > 0) {
+//            [paramDict addEntriesFromDictionary:params];
+//        }
+//        if (type == FHAuthorizeHintCompleteTypeDone) {
+//            paramDict[@"click_type"] = @"confirm";
+//            NSURL *url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
+//            [[UIApplication sharedApplication] openURL:url];
+//        }else {
+//            paramDict[@"click_type"] = @"cancel";
+//        }
+//
+//        [FHUserTracker writeEvent:@"tip_click" params:paramDict];
+//    }];
+//    [alert show];
+//    NSInteger lastTimeShowFollowAlert = (NSInteger)[[NSDate date] timeIntervalSince1970];
+//    [FHPushAuthorizeHelper setLastTimeShowFollowAlert:lastTimeShowFollowAlert];
+//    
+//    [FHUserTracker writeEvent:@"tip_show" params:params];
+//}
 
 + (BOOL)isArticleAlertEnabled
 {
