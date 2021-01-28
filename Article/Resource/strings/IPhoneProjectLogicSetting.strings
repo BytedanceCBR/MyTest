@@ -148,7 +148,7 @@
 "city_market_hot_list"   = "FHCityMarketHotCityListViewController";
 
 "second_house_main"   = "FHBaseMainListViewController";
-"new_house_main" = "FHBaseMainListViewController";
+"new_house_main" = "FHBaseTestViewController";
 
 //通勤找房
 "commute_config" = "FHCommuteConfigViewController";
