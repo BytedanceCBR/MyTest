@@ -10,8 +10,6 @@
 #import "FHMineFavoriteItemView.h"
 #import "FHHouseType.h"
 #import <UIKit/UIKit.h>
-#import <UIKit/UIKit.h>
-#import "FHMineTestItemView.h"
 #import <Masonry/Masonry.h>
 #import "TTNavigationController.h"
 #import "TTRoute.h"
