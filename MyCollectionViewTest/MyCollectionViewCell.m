@@ -18,8 +18,6 @@
     if (self) {
         
     }
-    //self.contentView.backgroundColor = [UIColor whiteColor];
-    NSLog(@"123");
     return self;
     
 }
