@@ -37,8 +37,8 @@
         make.left.mas_equalTo(self.view);
         make.width.mas_equalTo(self.view);
         make.height.mas_equalTo(100);
-    
     }];
+    
     
     
 }
