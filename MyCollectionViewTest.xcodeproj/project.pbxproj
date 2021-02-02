@@ -17,6 +17,7 @@
 		2B120DB225C7D2C800F959C2 /* MyCollectionViewTestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B120DB125C7D2C800F959C2 /* MyCollectionViewTestTests.m */; };
 		2B120DBD25C7D2C800F959C2 /* MyCollectionViewTestUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B120DBC25C7D2C800F959C2 /* MyCollectionViewTestUITests.m */; };
 		2B120DD925C7DDCB00F959C2 /* MyCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B120DD825C7DDCB00F959C2 /* MyCollectionViewCell.m */; };
+		2BA1EE7525C8F65F0077FD65 /* MyLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 2BA1EE7425C8F65F0077FD65 /* MyLayout.m */; };
 		76A2C2336182D2D846751F76 /* Pods_MyCollectionViewTestUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DC3FA1693D1434A9E97DC0F /* Pods_MyCollectionViewTestUITests.framework */; };
 		9C73E28CD07A5C6F7B45712D /* Pods_MyCollectionViewTestTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 105BE131E9B3DDA80E31F3B8 /* Pods_MyCollectionViewTestTests.framework */; };
 		A70D57DD3DFA3AE0BEAD6E26 /* Pods_MyCollectionViewTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13EC770A7A006581454609C8 /* Pods_MyCollectionViewTest.framework */; };
@@ -63,6 +64,8 @@
 		2B120DBE25C7D2C800F959C2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2B120DD725C7DDCB00F959C2 /* MyCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyCollectionViewCell.h; sourceTree = "<group>"; };
 		2B120DD825C7DDCB00F959C2 /* MyCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyCollectionViewCell.m; sourceTree = "<group>"; };
+		2BA1EE7325C8F65F0077FD65 /* MyLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MyLayout.h; sourceTree = "<group>"; };
+		2BA1EE7425C8F65F0077FD65 /* MyLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MyLayout.m; sourceTree = "<group>"; };
 		2DC3FA1693D1434A9E97DC0F /* Pods_MyCollectionViewTestUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MyCollectionViewTestUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DE9DE0F78111D9CAF80AA31 /* Pods-MyCollectionViewTestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyCollectionViewTestTests.release.xcconfig"; path = "Target Support Files/Pods-MyCollectionViewTestTests/Pods-MyCollectionViewTestTests.release.xcconfig"; sourceTree = "<group>"; };
 		5D4DA62640CFE83D89B2D6D7 /* Pods-MyCollectionViewTestUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MyCollectionViewTestUITests.release.xcconfig"; path = "Target Support Files/Pods-MyCollectionViewTestUITests/Pods-MyCollectionViewTestUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -137,6 +140,8 @@
 				2B120DA725C7D2C700F959C2 /* main.m */,
 				2B120DD725C7DDCB00F959C2 /* MyCollectionViewCell.h */,
 				2B120DD825C7DDCB00F959C2 /* MyCollectionViewCell.m */,
+				2BA1EE7325C8F65F0077FD65 /* MyLayout.h */,
+				2BA1EE7425C8F65F0077FD65 /* MyLayout.m */,
 			);
 			path = MyCollectionViewTest;
 			sourceTree = "<group>";
@@ -402,6 +407,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B120D9D25C7D2C700F959C2 /* ViewController.m in Sources */,
+				2BA1EE7525C8F65F0077FD65 /* MyLayout.m in Sources */,
 				2B120D9725C7D2C700F959C2 /* AppDelegate.m in Sources */,
 				2B120DA825C7D2C700F959C2 /* main.m in Sources */,
 				2B120D9A25C7D2C700F959C2 /* SceneDelegate.m in Sources */,

@@ -24,7 +24,7 @@
 - (void) initConstraint
 {
     [self.imgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.edges.equalTo(self.contentView).insets(UIEdgeInsetsMake(10, 10, 10, 10));
+        make.edges.equalTo(self.contentView);
     }];
 }
 - (void)update
